@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- * This file is part of Domodroid. * * Domodroid is Copyright (C) 2011 
+	Pierre LAINE, Maxime CHOFARDET * * Domodroid is free software: you can redistribute 
+	it and/or modify it under the * terms of the GNU General Public License as 
+	published by the Free Software * Foundation, either version 3 of the License, 
+	or (at your option) any later * version. * * Domodroid is distributed in 
+	the hope that it will be useful, but WITHOUT ANY * WARRANTY; without even 
+	the implied warranty of MERCHANTABILITY or FITNESS FOR * A PARTICULAR PURPOSE. 
+	See the GNU General Public License for more details. * * You should have 
+	received a copy of the GNU General Public License along with * Domodroid. 
+	If not, see <http://www.gnu.org/licenses/>. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="org.panel" android:versionCode="11" android:versionName="1.1">
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+
+	<uses-sdk android:minSdkVersion="7"></uses-sdk>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+	<application android:label="Domodroid" android:icon="@drawable/domodroid">
+		<activity android:name="Activity_Home" android:theme="@android:style/Theme.NoTitleBar"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name="Activity_Area"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+		<activity android:name="Activity_Options" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="Activity_Room"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+		<activity android:name="Activity_House"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+		<activity android:name="Activity_About" android:theme="@android:style/Theme.NoTitleBar"
+			android:configChanges="orientation"></activity>
+		<activity android:name="Activity_Cam"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:configChanges="orientation"></activity>
+		<activity android:name="Activity_Map"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:configChanges="orientation"></activity>
+		<activity android:name="DialogActivity"></activity>
+		
+		<provider
+    android:authorities="org.provider.DmdContentProvider"
+    android:multiprocess="true"
+    android:name="org.provider.DmdContentProvider"/>
+		
+	</application>
+	
+	<supports-screens android:resizeable="true"
+		android:smallScreens="true" android:normalScreens="true"
+		android:largeScreens="true" android:anyDensity="true" />
+	
+</manifest> 

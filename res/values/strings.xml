@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * This file is part of Domodroid.
+ * 
+ * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
+ * 
+ * Domodroid is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * Domodroid. If not, see <http://www.gnu.org/licenses/>.
+ -->
+<resources>
+	<string name="app_name">Domodroid</string>
+	<string name="button1">Synchronize</string>
+	<string name="button2">Network</string>
+	<string name="button4">About</string>
+	<string name="option">Option</string>
+	
+	
+	<string name="help_Title">Domodroid</string>
+	<string name="help_Text1">Domodroid free Android application under GNU GPLv3 Licence and developped by Pierre Lainé</string>
+	<string name="help_Text2">Dim the lights, get informations about the inside temperature or the outside humidity, all with a single tap on your Android device. Requires a home automation system and a Domogik server. Domodroid offers you control of your Domogik home automation system with a large variety of devices supported</string>
+	<string name="help_Text3">Domogik Project : http://www.domogik.org/</string>
+	<string name="help_Text4">Contact : pierre.laine2@gmail.com</string>
+	
+	<string name="home_splash">This new version of Domodroid contains lot of new features and improvments that have not been tested on all kind of Android devices. If anything goes wrong, you can contact at the following address: pierre.laine2@gmail.com.</string>
+	<string name="home_splash2">Please delete the Domodroid cache data from the \"Application Settings\" panel before using this new version.</string>
+	<string name="home_button1">- Menu -</string>
+	<string name="home_button2">Options</string>
+	<string name="home_button3">Synchronize</string>
+	<string name="home_button4">About</string>
+	
+	<string name="map_button1">Add Widget</string>
+	<string name="map_button2">Remove Widget</string>
+	<string name="map_button3">Help</string>
+	<string name="map_help_text">A folder called \"domodroid\" has been created at the root of the external storage directory (or internal for some devices). Map must be put in that folder using the PNG format or SVG format created from Illustrator (basic shapes supported). </string>
+	
+	<string name="network_Title">- Options -</string>
+	<string name="network_Text1">--Domogik REST IP Address</string>
+	<string name="network_TextHint1">http://address-rest:40405/</string>
+	<string name="network_Text8">--Auto-Update Timer:</string>
+	<string name="network_Text9">2 Secondes</string>
+	<string name="network_Text10">--Graphic Period:</string>
+	<string name="network_Text11">1 Days</string>
+	<string name="network_Text12">--Map Multitouch Features :</string>
+	<string name="network_Text13">Drag:</string>
+    <string name="network_Text14">Zoom:</string>	
+    <string name="network_Text15">--Maximum Map Size:</string>	
+    <string name="network_Text16">300 px</string>
+    <string name="network_Text17">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
+    	
+	<string name="info0">Tornado</string>
+	<string name="info1">Tropical storm</string>
+	<string name="info2">Hurricane</string>
+	<string name="info3">Severe thunderstorms</string>
+	<string name="info4">Thunderstorms</string>
+	<string name="info5">Mixed rain and snow</string>
+	<string name="info6">Mixed rain and sleet</string>
+	<string name="info7">Mixed snow and sleet</string>
+	<string name="info8">Freezing drizzle</string>
+	<string name="info9">Drizzle</string>
+	<string name="info10">Freezing rain</string>
+	<string name="info11">Showers</string>
+	<string name="info12">Showers</string>
+	<string name="info13">Snow flurries</string>
+	<string name="info14">Light snow showers</string>
+	<string name="info15">Blowing snow</string>
+	<string name="info16">Snow</string>
+	<string name="info17">Hail</string>
+	<string name="info18">Sleet</string>
+	<string name="info19">Dust</string>
+	<string name="info20">Foggy</string>
+	<string name="info21">Haze</string>
+	<string name="info22">Smoky</string>
+	<string name="info23">Blustery</string>
+	<string name="info24">Windy</string>
+	<string name="info25">Cold</string>
+	<string name="info26">Cloudy</string>
+	<string name="info27">Mostly cloudy</string>
+	<string name="info28">Mostly cloudy</string>
+	<string name="info29">Partly cloudy</string>
+	<string name="info30">Partly cloudy</string>
+	<string name="info31">Clear (night)</string>
+	<string name="info32">Sunny</string>
+	<string name="info33">Fair (night)</string>
+	<string name="info34">Fair (day)</string>
+	<string name="info35">Mixed rain and hail</string>
+	<string name="info36">Hot</string>
+	<string name="info37">Isolated thunderstorms</string>
+	<string name="info38">Scattered thunderstorms</string>
+	<string name="info39">Scattered thunderstorms</string>
+	<string name="info40">Scattered showers</string>
+	<string name="info41">Heavy snow</string>
+	<string name="info42">Scattered snow showers</string>
+	<string name="info43">Heavy Snow</string>
+	<string name="info44">Party cloudy</string>
+	<string name="info45">Thundershowers</string>
+	<string name="info46">Snow showers</string>
+	<string name="info47">Isolated thundershower</string>
+	<string name="info48">--</string>
+	
+</resources>

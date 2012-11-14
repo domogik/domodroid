@@ -3,6 +3,7 @@ package org.panel;
 import org.connect.Rest_com;
 import org.database.DomodroidDB;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.widgets.Entity_Feature;
 
 import android.app.Activity;

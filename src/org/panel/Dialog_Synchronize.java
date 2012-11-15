@@ -98,6 +98,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		protected Void doInBackground(Void... params) {
 			//Requests
 			try{
+				JSONObject json_rinor = Rest_com.connect(urlAccess);
 				JSONObject json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
 				publishProgress(20);
 				JSONObject json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");

@@ -33,6 +33,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Process;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -68,8 +69,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	private DomodroidDB domodb;
 	private Message msg;
 	private String wname;
-
-
+	
+	
 	public Graphical_Info(Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
 		this.dev_id = dev_id;
@@ -105,7 +106,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 
 		// info panel
-		infoPan = new LinearLayout(context);
+		infoPan = new LinearLayout(context);final int TID = 0;
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
@@ -169,18 +170,20 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				//Log.e("handler entry", "device "+wname);
 				try {
 					float formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
-					if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+"°C");
+					if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+"Â°C");
 					else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+"hPa");
 					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
 					else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+"km");
-					else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+"°C");
+					else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+"Â°C");
 					else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+"km/h");
-					else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+"°C");
+					else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+"Â°C");
 					else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
 					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
 					else value.setText(msg.getData().getString("message"));
+					Log.e("UIThread handler", "Value "+formatedValue+" refreshed for device "+wname);
 					value.setAnimation(animation);
 				} catch (Exception e) {
 					Log.e("handler error", "device "+wname);
@@ -247,18 +250,24 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
-
+		
 		doAsynchronousTask = new TimerTask() {
 
 			@Override
 			public void run() {
-				handler.post(new Runnable() {
+				Log.e("TimerTask.run", "Create Runnable");
+				Runnable myTH = new Runnable() {
 					public void run() {
-						try {
+					try {
 							if(getWindowVisibility()==0 || !activate){
+								Log.e("update Timer", "Execute UpdateThread");
 								new UpdateThread().execute();
+								
 							}else{
-								timer.cancel();
+								if(timer != null) {
+									timer.cancel();
+								}
+								Log.e("update Timer", "Destroy runnable");
 								this.finalize();
 							}
 						} catch (Exception e) {
@@ -266,9 +275,22 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 						} catch (Throwable e) {
 							e.printStackTrace();
 						}
-					}});
-			}
-		};
+					} // Runnable run method
+				}; //Runnable 
+				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
+				try {
+					handler.post(myTH);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				
+				
+			} // TimerTask run method
+
+			
+		}; //TimerTask 
+		
+		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -276,6 +298,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			Log.e("UpdateThread", "Prepare a request for "+dev_id+ " "+wname);
+			
 			Bundle b = new Bundle();
 		    b.putString("message", domodb.requestFeatureState(dev_id, state_key));
 			msg = new Message();

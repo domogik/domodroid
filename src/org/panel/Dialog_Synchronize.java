@@ -108,7 +108,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
 				DomodroidDB db = new DomodroidDB(context);
 				if(Rinor_Api_Version <=0.5){
-					JSONObject json_AreaLnvist = Rest_com.connect(urlAccess+"base/area/list/");
+					JSONObject json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
 					publishProgress(20);
 					JSONObject json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
 					publishProgress(40);

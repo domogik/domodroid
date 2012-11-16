@@ -20,6 +20,7 @@ import org.widgets.Graphical_Boolean;
 import org.widgets.Graphical_Info;
 import org.widgets.Graphical_Range;
 import org.widgets.Graphical_Trigger;
+import org.widgets.Graphical_Info.UpdateThread;
 
 import android.app.Activity;
 import android.content.Context;
@@ -207,13 +208,13 @@ public class MapView extends View {
 			}
 			else if(featureMap.getValue_type().equals("number")){
 				String value;
-				if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
+				if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"ï¿½C";
 				else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
 				else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
 				else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
-				else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
+				else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"ï¿½C";
 				else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
-				else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
+				else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"ï¿½C";
 				else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
 				else value=featureMap.getCurrentState();
 
@@ -401,6 +402,7 @@ public class MapView extends View {
 		return true;
 	}
 
+	
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Handler handler = new Handler();
@@ -409,14 +411,23 @@ public class MapView extends View {
 
 			@Override
 			public void run() {
-				handler.post(new Runnable() {
+				Runnable myTH = new Runnable() {
+					
+				//handler.post(new Runnable() {	//Doume change
 					public void run() {
 						try {
 							new UpdateThread().execute();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-					}});
+					}}
+				//)
+				;
+				try {
+					handler.post(myTH);		//To avoid exception on ICS
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 			}
 		};
 		timer.schedule(doAsynchronousTask, 0, 3000);

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import org.panel.Gradients_Manager;
 import org.panel.Graphics_Manager;
 import org.panel.R;
+import org.widgets.Graphical_Info.UpdateThread;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -237,24 +238,28 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		new CommandeThread().execute();
 		touching=false;
 	}
-
+	
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
-		final Handler handler = new Handler();
 		final Timer timer = new Timer();
-
+		
 		doAsynchronousTask = new TimerTask() {
 
 			@Override
 			public void run() {
-				handler.post(new Runnable() {
+				Log.e("TimerTask.run", "Create Runnable");
+				Runnable myTH = new Runnable() {
 					public void run() {
-						try {
+					try {
 							if(getWindowVisibility()==0 || !activate){
+								Log.e("update Timer", "Execute UpdateThread");
 								new UpdateThread().execute();
+								
 							}else{
-								Log.e("finalize","finalize");
-								timer.cancel();
+								if(timer != null) {
+									timer.cancel();
+								}
+								Log.e("update Timer", "Destroy runnable");
 								this.finalize();
 							}
 						} catch (Exception e) {
@@ -262,9 +267,17 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						} catch (Throwable e) {
 							e.printStackTrace();
 						}
-					}});
-			}
-		};
+					} // Runnable run method
+				}; //Runnable 
+				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
+				try {
+					handler.post(myTH);		//Doume : to avoid exception on ICS
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			} // TimerTask run method
+		}; //TimerTask 
+		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 

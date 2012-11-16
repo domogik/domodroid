@@ -283,13 +283,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				
-				
 			} // TimerTask run method
-
-			
 		}; //TimerTask 
-		
 		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}

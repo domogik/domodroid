@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import org.connect.Rest_com;
 import org.json.JSONObject;
+import org.map.MapView.UpdateThread;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ public class WidgetUpdate {
 		sbanim = anim;
 		Timer();
 	}
+	
 
 	public void Timer() {
 		TimerTask doAsynchronousTask;
@@ -36,22 +38,24 @@ public class WidgetUpdate {
 
 			@Override
 			public void run() {
-				handler.post(new Runnable() {
-					public void run() {
-						try {
-							if(activated){
+				Runnable myTH = new Runnable() {
+					
+					//handler.post(new Runnable() {	//Doume change
+						public void run() {
+							try {
 								new UpdateThread().execute();
-							}else{
-								timer.cancel();
-								this.finalize();
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
+						}}
+					//)
+					;
+					try {
+						handler.post(myTH);		//To avoid exception on ICS
 						} catch (Exception e) {
 							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
 						}
-					}});
-			}
+				}
 		};
 		timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 	}

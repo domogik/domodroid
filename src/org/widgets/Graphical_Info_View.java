@@ -260,7 +260,8 @@ public class Graphical_Info_View extends View{
 
 			@Override
 			public void run() {
-				handler.post(new Runnable() {
+				Runnable myTH = new Runnable() {
+				//handler.post(new Runnable() {	//Doume : to avoid Exception on ICS
 					public void run() {
 						try {
 							if(activate){
@@ -275,9 +276,17 @@ public class Graphical_Info_View extends View{
 						} catch (Throwable e) {
 							e.printStackTrace();
 						}
-					}});
-			}
-		};
+					}}
+				//)
+				;
+				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
+				try {
+					handler.post(myTH);		//Doume : to avoid Exception on ICS
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			} //TimerTask Run method
+		}; //TimerTask
 		timer.schedule(doAsynchronousTask, 0, update*10000);
 	}
 

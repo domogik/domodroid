@@ -287,7 +287,8 @@ public class Graphical_Info_View extends View{
 					}
 			} //TimerTask Run method
 		}; //TimerTask
-		timer.schedule(doAsynchronousTask, 0, update*10000);
+		//timer.schedule(doAsynchronousTask, 0, update*10000);
+		timer.schedule(doAsynchronousTask, 0, update*1000);	// Fix Doume
 	}
 
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{

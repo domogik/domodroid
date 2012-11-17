@@ -68,18 +68,29 @@ public class WidgetUpdate {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			if(sharedparams.getString("UPDATE_URL", null) != null){
+			// Added by Doume to correctly release resources when exiting
+			if(! activated) {
+				domodb = null;
 				try {
-					sbanim.sendEmptyMessage(0);
-					JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
-					Log.e("update url", sharedparams.getString("UPDATE_URL", null).toString());
-					Log.e("result", json_widget_state+"");
-					sbanim.sendEmptyMessage(1);
-					domodb.insertFeatureState(json_widget_state);
-					sbanim.sendEmptyMessage(2);
-				} catch (Exception e) {
-					sbanim.sendEmptyMessage(3);
-					e.printStackTrace();
+					finalize();
+					} 
+				catch (Throwable e) {
+				}
+			//////////////
+			} else {
+				if(sharedparams.getString("UPDATE_URL", null) != null){
+					try {
+						sbanim.sendEmptyMessage(0);
+						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
+						Log.e("update url", sharedparams.getString("UPDATE_URL", null).toString());
+						Log.e("result", json_widget_state+"");
+						sbanim.sendEmptyMessage(1);
+						domodb.insertFeatureState(json_widget_state);
+						sbanim.sendEmptyMessage(2);
+					} catch (Exception e) {
+						sbanim.sendEmptyMessage(3);
+						e.printStackTrace();
+					}
 				}
 			}
 			return null;

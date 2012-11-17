@@ -51,7 +51,7 @@
 						android:layout_height="wrap_content" android:singleLine="true"
 						android:hint="@string/network_TextHint1" android:textSize="14sp" android:layout_weight="1"/>
 				
-				<LinearLayout android:layout_width="120dip"
+				<LinearLayout android:layout_width="350dip"
 				android:layout_height="wrap_content" android:orientation="horizontal"
 				android:paddingTop="2dip" android:paddingLeft="10dip" android:layout_weight="1">
 				<Button
@@ -60,6 +60,13 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="Sync"/>
+				//Added by Doume to allow a full stop of Domodroid
+				<Button
+				    android:id="@+id/Stop_all"
+				    style="?android:attr/buttonStyleSmall"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="Exit Program"/>
 			</LinearLayout>
 				</LinearLayout>
 				

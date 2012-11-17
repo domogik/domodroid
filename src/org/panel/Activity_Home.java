@@ -71,9 +71,10 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private Dialog_Synchronize dialog_sync;
 	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
-	private Handler widgetHandler;
+	private static Handler widgetHandler;
 
 	private Button sync;
+	private Button Exit;	//Added by Doume
 	private EditText localIP;
 	private CheckBox checkbox3;
 	private CheckBox checkbox4;
@@ -123,6 +124,11 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
+		//Added by Doume
+		Exit=(Button)findViewById(R.id.Stop_all);
+		Exit.setOnClickListener(this);
+		Exit.setTag("Exit");
+		//
 		mSeekBar1.setOnSeekBarChangeListener(this);
 		mSeekBar2.setOnSeekBarChangeListener(this);
 		mSeekBar3.setOnSeekBarChangeListener(this);
@@ -354,7 +360,16 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			dialog_sync.setParams(params);
 			dialog_sync.show();
 			dialog_sync.startSync();
-		}	
+		}	else if(v.getTag().equals("Exit")) {
+			//Disconnect all opened sessions....
+			
+			this.wAgent=null;
+			this.widgetHandler=null;
+			widgetUpdate.stopThread();
+			widgetUpdate=null;
+			//And stop main program
+			finish();
+		}
 		else if(v.getTag().equals("about")) {
 			Intent helpI = new Intent(Activity_Home.this,Activity_About.class);
 			startActivity(helpI);

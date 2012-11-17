@@ -208,13 +208,13 @@ public class MapView extends View {
 			}
 			else if(featureMap.getValue_type().equals("number")){
 				String value;
-				if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"�C";
+				if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
 				else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
 				else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
 				else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
-				else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"�C";
+				else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
 				else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
-				else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"�C";
+				else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
 				else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
 				else value=featureMap.getCurrentState();
 

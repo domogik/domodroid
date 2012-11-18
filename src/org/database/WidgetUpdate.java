@@ -88,6 +88,15 @@ public class WidgetUpdate {
 		Log.e(mytag,"restartThread requested....");
 		activated = true;
 	}
+	public void cancelEngine(){
+		Log.e(mytag,"cancelEngine requested....");
+		activated = false;
+		try {
+			finalize();
+		} catch (Throwable e) {
+			
+		}
+	}
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
@@ -95,6 +104,8 @@ public class WidgetUpdate {
 			// Added by Doume to correctly release resources when exiting
 			if(! activated) {
 				//domodb = null;
+				Log.e(mytag,"UpdateThread Destroy....");
+				
 				try {
 					finalize();
 					} 

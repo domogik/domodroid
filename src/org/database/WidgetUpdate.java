@@ -19,11 +19,20 @@ public class WidgetUpdate {
 	private boolean activated;
 	private DomodroidDB domodb;
 	private Handler sbanim;
-
+	private String mytag="WidgetUpdate";
+	/*
+	 * This class is a background engine 
+	 * 		On instanciation, it connects to REST server, and submit queries 
+	 * 		each 'update' timer, to update local database values for all known devices
+	 * When variable 'activated' is set to false, the thread is kept alive, 
+	 *     but each timer is ignored (no more requests to server...)
+	 * When variable 'activated' is true, each timer generates a database update with server's response
+	 */
 	public WidgetUpdate(Activity context, Handler anim, SharedPreferences params){
 		this.sharedparams=params;
 		activated = true;
 		domodb = new DomodroidDB(context);	
+		domodb.owner=mytag;
 		sbanim = anim;
 		Timer();
 	}
@@ -42,10 +51,21 @@ public class WidgetUpdate {
 					
 					//handler.post(new Runnable() {	//Doume change
 						public void run() {
-							try {
-								new UpdateThread().execute();
-							} catch (Exception e) {
-								e.printStackTrace();
+							if(activated) {
+								try {
+									Log.e(mytag,"execute UpdateThread");
+									new UpdateThread().execute();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							} else {
+								Log.e(mytag,"Destroy UpdateThread");
+								timer.cancel();
+								try {
+									this.finalize();
+								} catch (Throwable e) {
+									
+								}
 							}
 						}}
 					//)
@@ -61,16 +81,20 @@ public class WidgetUpdate {
 	}
 
 	public void stopThread(){
+		Log.e(mytag,"stopThread requested....");
 		activated = false;
 	}
-
+	public void restartThread(){
+		Log.e(mytag,"restartThread requested....");
+		activated = true;
+	}
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			// Added by Doume to correctly release resources when exiting
 			if(! activated) {
-				domodb = null;
+				//domodb = null;
 				try {
 					finalize();
 					} 
@@ -78,12 +102,13 @@ public class WidgetUpdate {
 				}
 			//////////////
 			} else {
+			
 				if(sharedparams.getString("UPDATE_URL", null) != null){
 					try {
 						sbanim.sendEmptyMessage(0);
 						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
-						Log.e("update url", sharedparams.getString("UPDATE_URL", null).toString());
-						Log.e("result", json_widget_state+"");
+						Log.e(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
+						Log.e(mytag,"result : "+ json_widget_state);
 						sbanim.sendEmptyMessage(1);
 						domodb.insertFeatureState(json_widget_state);
 						sbanim.sendEmptyMessage(2);

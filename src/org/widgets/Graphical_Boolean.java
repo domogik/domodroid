@@ -73,7 +73,7 @@ public class Graphical_Boolean extends FrameLayout{
 		this.setPadding(5, 5, 5, 5);
 		
 		domodb = new DomodroidDB(context);
-
+		domodb.owner="Graphical_Boolean("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));

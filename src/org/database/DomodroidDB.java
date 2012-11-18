@@ -20,7 +20,11 @@ import android.util.Log;
 public class DomodroidDB {
 
 	private Activity context;
-
+	// Added by Doume to clarify debugging
+	private String mytag="DomodroidDB";
+	public String owner="";
+	//////////////////////////////////////
+	
 	public DomodroidDB(Activity context){
 		this.context = context;
 	}
@@ -116,10 +120,10 @@ public class DomodroidDB {
 			values.put("value", itemArray.getJSONObject(i).getString("value"));
 			if(curs.getInt(0)==0){
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
-				Log.e("debuuuuuuuuuggg insert", itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
+				Log.e(mytag+"("+owner+")", "debuuuuuuuuuggg insert : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
 			}else{
 				context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, "device_id = ? AND key = ?", new String [] {itemArray.getJSONObject(i).getString("device_id")+"",itemArray.getJSONObject(i).getString("skey")});
-				Log.e("debuuuuuuuuuggg update", itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
+				Log.e(mytag+"("+owner+")", "debuuuuuuuuuggg update "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
 			}
 			curs.close();
 		}
@@ -154,7 +158,7 @@ public class DomodroidDB {
 				areas[i]=new Entity_Area(curs.getString(0),curs.getInt(1),curs.getString(2));
 			}
 		} catch (Exception e) {
-			Log.e("request area error", "");
+			Log.e(mytag+"("+owner+")", "request area error");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -176,7 +180,7 @@ public class DomodroidDB {
 						curs.getInt(2),curs.getString(3));
 			}
 		} catch (Exception e) {
-			Log.e("request room", "");
+			Log.e(mytag+"("+owner+")","request room");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -192,7 +196,7 @@ public class DomodroidDB {
 			curs.moveToFirst();
 			icon=new Entity_Icon(curs.getString(0), curs.getString(1), curs.getInt(2));
 		} catch (Exception e) {
-			Log.e("request icon error", "");
+			Log.e(mytag+"("+owner+")","request icon error");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -212,7 +216,7 @@ public class DomodroidDB {
 				features[i]=new Entity_Feature(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10));
 			}
 		} catch (Exception e) {
-			Log.e("request feature error", "");
+			Log.e(mytag+"("+owner+")","request feature error");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -232,7 +236,7 @@ public class DomodroidDB {
 				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));
 			}
 		} catch (Exception e) {
-			Log.e("request feature map error", "");
+			Log.e(mytag+"("+owner+")","request feature map error");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -252,7 +256,7 @@ public class DomodroidDB {
 				features[i]=new Entity_Feature(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10));
 			}
 		} catch (Exception e) {
-			Log.e("request feature error", "");
+			Log.e(mytag+"("+owner+")","request feature error");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -267,7 +271,7 @@ public class DomodroidDB {
 				Cursor curs=null;
 				curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", new String [] {device_id+"", key}, null);
 				curs.moveToPosition(0);
-				Log.e("reque", device_id+ " "+key);
+				Log.e(mytag+"("+owner+")","request for "+ device_id+ " "+key);
 				state=curs.getString(0);
 				curs.close();
 			} catch (Exception e) {

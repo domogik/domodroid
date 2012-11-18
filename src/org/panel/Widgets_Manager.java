@@ -49,6 +49,7 @@ public class Widgets_Manager {
 	public LinearLayout loadActivWidgets(Activity context, int id, String zone, LinearLayout ll, SharedPreferences params) throws JSONException{
 
 		DomodroidDB domodb = new DomodroidDB(context);
+		domodb.owner="Widgets_Manager.loadActivWidgets";
 		Entity_Feature[] listFeature = domodb.requestFeatures(id, zone);
 
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
@@ -122,6 +123,7 @@ public class Widgets_Manager {
 	public LinearLayout loadAreaWidgets(Activity context, LinearLayout ll, SharedPreferences params) throws JSONException {
 
 		DomodroidDB domodb = new DomodroidDB(context);
+		domodb.owner="Widgets_Manager.loadAreaWidgets";
 		Entity_Area[] listArea = domodb.requestArea();
 
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
@@ -178,7 +180,7 @@ public class Widgets_Manager {
 	public LinearLayout loadRoomWidgets(Activity context, int id, LinearLayout ll, SharedPreferences params) throws JSONException {
 
 		DomodroidDB domodb = new DomodroidDB(context);
-
+		domodb.owner="Widgets_Manager.loadRoomWidgets";
 		Entity_Room[] listRoom = domodb.requestRoom(id);
 
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);

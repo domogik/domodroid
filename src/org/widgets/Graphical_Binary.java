@@ -96,7 +96,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.wname = name;
 
 		domodb = new DomodroidDB(context);
-
+		domodb.owner="Graphical_Binary("+dev_id+")";
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 		value0 = jparam.getString("value0");

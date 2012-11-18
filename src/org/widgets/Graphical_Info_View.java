@@ -53,14 +53,17 @@ public class Graphical_Info_View extends View{
 	private Handler handler;
 	public boolean activate=false;
 	public boolean loaded=false;
-
+	private String mytag="";
 
 
 	public Graphical_Info_View(Context context){
 		super(context);
 		invalidate();
 		values = new Vector<Vector<Float>>();
-
+		activate=true;
+		mytag = "Graphical_Info_View";
+		
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -72,18 +75,20 @@ public class Graphical_Info_View extends View{
 	@Override 
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		
 		width = getMeasuredWidth();
 		height = getMeasuredHeight();
-
 		gridStartY = height-15;
 		gridStopY = 15;
 		gridOffset = 15;
 		valueOffset = 10;
+		
 		buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
 		text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);		
 
 		can=new Canvas(buffer);
 		can2=new Canvas(text);
+		
 		drawMessage();
 		
 		try{	
@@ -252,7 +257,7 @@ public class Graphical_Info_View extends View{
 	}
 
 	public void updateTimer() {
-		Log.e("update","timer");
+		Log.e(mytag,"updateTimer");
 
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
@@ -267,7 +272,7 @@ public class Graphical_Info_View extends View{
 							if(activate){
 								new UpdateThread().execute();
 							}else{
-								Log.e("finalize","finalize");
+								Log.e(mytag+"("+dev_id+")","update Timer : Destroy runnable");
 								timer.cancel();
 								this.finalize();
 							}
@@ -279,7 +284,7 @@ public class Graphical_Info_View extends View{
 					}}
 				//)
 				;
-				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
+				Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
 				try {
 					handler.post(myTH);		//Doume : to avoid Exception on ICS
 					} catch (Exception e) {
@@ -295,13 +300,15 @@ public class Graphical_Info_View extends View{
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			if( ! activate)
+				return null;
 			loaded=false;
 			try {
 				avgf=0;
 				values.clear();
 				long currentTimestamp = System.currentTimeMillis()/1000;
 				long lastweekTimestamp = currentTimestamp - 86400*period; 
-				Log.e("update",url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
+				Log.e(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
 
 				JSONObject json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
 				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
@@ -309,7 +316,7 @@ public class Graphical_Info_View extends View{
 
 				minf=(float)valueArray.getJSONArray(0).getDouble(5);
 				maxf=(float)valueArray.getJSONArray(0).getDouble(5);
-				Log.e("update","array size "+valueArray.length());
+				Log.e(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
 
 				for (int i =0; i < valueArray.length(); i++){
 					Vector<Float> vect = new Vector<Float>();

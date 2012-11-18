@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,7 +69,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private TextView menu_white;
 	private TextView menu_green;
 
-
+	private DomodroidDB domodb = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 		mapView = new MapView(this);
 		mapView.setParams(params);
-		mapView.setUpdate(params.getInt("UPDATE",1000));
+		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
 		setContentView(R.layout.activity_map);
 		ViewGroup parent = (ViewGroup) findViewById(R.id.map_container);
 
@@ -194,7 +195,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		builder.setTitle("Select a Widget");
 
 		//get feature list
-		DomodroidDB domodb = new DomodroidDB(this);
+		domodb = new DomodroidDB(this);
+		domodb.owner="Activity_Map";
 		listFeature = domodb.requestFeatures();
 
 
@@ -242,12 +244,26 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
-
+	@Override
+	public void onPause(){
+		super.onPause();
+		panel.setOpen(false, false);
+		Log.e("Activity_Map", "onPause");
+		mapView.stopThread();
+		mapView=null;
+		domodb=null;	//Doume : to stop background dialog with REST
+		try {
+			finalize();
+		} catch (Throwable e) {
+			
+		}
+	}
 
 	public void onPanelClosed(Sliding_Drawer panel) {
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
+		
 	}
 
 

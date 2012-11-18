@@ -72,7 +72,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
 	private static Handler widgetHandler;
-
+	private Intent mapI = null;
 	private Button sync;
 	private Button Exit;	//Added by Doume
 	private EditText localIP;
@@ -350,7 +350,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	public void onPanelOpened(Sliding_Drawer panel) {
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
-		widgetUpdate.stopThread();
+		//widgetUpdate.stopThread();
 	}
 
 	public void onClick(View v) {
@@ -362,7 +362,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			dialog_sync.startSync();
 		}	else if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....
-			
+			Log.e("Activity_Home Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;
 			this.widgetHandler=null;
 			widgetUpdate.stopThread();
@@ -386,7 +386,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		}
 		else if(v.getTag().equals("map")) {
 			if(params.getBoolean("SYNC", false)==true){
-				Intent mapI = new Intent(Activity_Home.this,Activity_Map.class);
+				mapI = new Intent(Activity_Home.this,Activity_Map.class);
 				startActivity(mapI);
 			}else{
 				notSyncAlert.show();
@@ -407,14 +407,29 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		widgetUpdate.stopThread();
+		Log.e("Activity_Home.onPause","Keep WidgetUpdate thread alive !");
+		
+		// onPause, the widgetUpdate engine will be kept running in background....
+		
 	}
-
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		this.mWakeLock.release();
-		widgetUpdate.stopThread();
+		this.mWakeLock.release();	// We allow screen shut, now...
+		Log.e("Activity_Home.onDestroy","Stopping WidgetUpdate thread !");
+		if(widgetUpdate != null) {
+			widgetUpdate.stopThread();	// Normally, Exit choice has already stopped this background engine
+			widgetUpdate=null;
+		}
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.e("Activity_Home.onResume","Try to reactivate  WidgetUpdate thread !");
+		if(widgetUpdate != null) {
+			widgetUpdate.restartThread();	// re-allow timers inside WidgetUpdate background engine
+		}
 	}
 
 

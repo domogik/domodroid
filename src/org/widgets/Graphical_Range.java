@@ -108,7 +108,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.setPadding(5, 5, 5, 5);
 
 		domodb = new DomodroidDB(context);
-
+		domodb.owner="Graphical_Range("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));

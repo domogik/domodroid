@@ -94,18 +94,23 @@ public class MapView extends View {
 
 	private int screen_width;
 	private DomodroidDB domodb;
-
-
+	private Boolean activated; 
+	private String mytag="MapView";
 
 	public MapView(Activity context) {
 		super(context);
 		this.context=context;
+		activated=true;
 		domodb = new DomodroidDB(context);
+		domodb.owner="MapView";
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		screen_width = display.getWidth();
 	}
 
-
+	public void stopThread(){
+		activated = false;
+	}
+	
 	public void initMap(){
 		Toast.makeText(context, files.elementAt(currentFile).substring(0,files.elementAt(currentFile).lastIndexOf('.')), Toast.LENGTH_SHORT).show();
 		
@@ -304,7 +309,7 @@ public class MapView extends View {
 		return b;
 	}
 
-
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		int nbPointers = event.getPointerCount();
@@ -406,7 +411,7 @@ public class MapView extends View {
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Handler handler = new Handler();
-		Timer timer = new Timer();
+		final Timer timer = new Timer();
 		doAsynchronousTask = new TimerTask() {
 
 			@Override
@@ -415,11 +420,26 @@ public class MapView extends View {
 					
 				//handler.post(new Runnable() {	//Doume change
 					public void run() {
-						try {
-							new UpdateThread().execute();
-						} catch (Exception e) {
-							e.printStackTrace();
+						if(activated){
+							Log.e(mytag, "update Timer : Execute UpdateThread");
+							try {
+								new UpdateThread().execute();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							
+						}else{
+							if(timer != null) {
+								timer.cancel();
+							}
+							Log.e(mytag, "update Timer : Destroy runnable");
+							try {
+								this.finalize();
+							} catch (Throwable e) {
+							}
+							
 						}
+						
 					}}
 				//)
 				;
@@ -430,17 +450,34 @@ public class MapView extends View {
 					}
 			}
 		};
-		timer.schedule(doAsynchronousTask, 0, 3000);
+		//timer.schedule(doAsynchronousTask, 0, 3000);
+		Log.e(mytag, "updateTimer : Arming timer of "+update+" seconds");
+		timer.schedule(doAsynchronousTask, 0, update * 1000);
 	}
 
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... p) {
-			for (Entity_Map featureMap : listFeatureMap) {
-				featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
+			Log.e(mytag, "UpdateThread call on timer !");
+			
+			// Added by Doume to correctly release resources when exiting
+			
+			if(! activated) {
+				try {
+					Log.e(mytag, "UpdateThread : Cancel requested...");
+					finalize();
+				} catch (Throwable e) {
+				}
+			} else {
+			
+			//////////////
+				for (Entity_Map featureMap : listFeatureMap) {
+					Log.e(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
+					featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
+				}
+				refreshMap();
 			}
-			refreshMap();
 			return null;
 		}
 	}

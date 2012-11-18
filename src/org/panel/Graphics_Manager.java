@@ -88,6 +88,7 @@ public class Graphics_Manager {
 		case 2:
 			if(usage.equals("light")){return R.drawable.usage_light_on;}
 			else if(usage.equals("temperature")){return R.drawable.usage_temperature_on;}
+			else if(usage.equals("heating")){return R.drawable.usage_temperature_on;}	//Added by Doume
 			else if(usage.equals("water")){return R.drawable.usage_water_on;}
 			else if(usage.equals("heater")){return R.drawable.usage_heating_on;}
 			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}

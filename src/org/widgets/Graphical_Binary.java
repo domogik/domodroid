@@ -168,8 +168,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		background.addView(featurePan);
 
 		this.addView(background);
-		updateTimer();	
-
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -190,6 +189,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 				}
 			}	
 		};
+		updateTimer();	
+
 	}
 
 
@@ -230,11 +231,15 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		
 		doAsynchronousTask = new TimerTask() {
 
+			@SuppressWarnings("unused")
 			@Override
 			public void run() {
+				Runnable myTH = null;
+				Handler loc_handler = handler;
 				Log.e("TimerTask.run", "Create Runnable");
-				Runnable myTH = new Runnable() {
+				myTH = new Runnable() {
 					public void run() {
+						
 					try {
 							if(getWindowVisibility()==0 || !activate){
 								Log.e("update Timer", "Execute UpdateThread");
@@ -254,12 +259,17 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
-				try {
-					handler.post(myTH);
+				if((myTH != null) && (loc_handler != null)) {
+					Log.e("Grapical_Binary","TimerTask.run : Queuing Runnable for Device : "+dev_id);	
+					try {
+						loc_handler.post(myTH);
 					} catch (Exception e) {
+						Log.e("Grapical_Binary","TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 						e.printStackTrace();
 					}
+				} else {
+					Log.e("Grapical_Binary","TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+				}
 			} // TimerTask run method
 		}; //TimerTask 
 		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
@@ -271,16 +281,23 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		@Override
 		protected Void doInBackground(Void... params) {
 			try{
-			if(updating<1){
-				Bundle b = new Bundle();
-				b.putString("message", domodb.requestFeatureState(dev_id, state_key));
-				msg = new Message();
-				msg.setData(b);
-				handler.sendMessage(msg);
-			}
-			updating--;
+				Log.e("Graphical_Binary", "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
+				if(updating<1){
+					Bundle b = new Bundle();
+					String result = domodb.requestFeatureState(dev_id, state_key);
+					if(result != null) {
+						Log.e("Graphical_Binary", "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
+						b.putString("message", result);
+						msg = new Message();
+						msg.setData(b);
+						handler.sendMessage(msg);
+					} else {
+						Log.e("Graphical_Binary", "UpdateThread no DB state for "+dev_id+" "+state_key+" state= "+name);
+					}
+				}
+				updating--;
 			}catch(Exception e){
-				Log.e("error", "request feature state= "+name);
+				Log.e("Graphical_Binary", "error : request feature state= "+name);
 			}
 			return null;
 		}

@@ -64,9 +64,9 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private int state_progress;
 	private String usage;
 	private String url;
-	private int dev_id;
+	private final int dev_id;
 	private Handler handler;
-	private String state_key;
+	private final String state_key;
 	private int range;
 	private int scale;
 	private int valueMin;
@@ -80,7 +80,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private boolean touching;
 	private int updating=0;
 	private DomodroidDB domodb;
-	private String wname;
+	private final String wname;
 
 
 	public Graphical_Range(Activity context, String address, String name,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
@@ -187,9 +187,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		background.addView(bodyPanHorizontal);
 
 		this.addView(background);
-		updateTimer();	
-
-
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -201,6 +199,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 					}else if(msg.what==valueMax){
 						state.setText("State : "+100+"%");
 					}
+					Log.e("Graphical_Range", "UIThread handler : Value "+msg.what+" refreshed for device "+wname);
+					
 					state.setAnimation(animation);
 					new SBAnim(seekBarVaria.getProgress(),msg.what).execute();
 				} catch (Exception e) {
@@ -209,6 +209,9 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				}
 			}	
 		};
+		updateTimer();	
+
+
 	}
 
 
@@ -269,7 +272,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
+				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id+" "+state_key+" "+wname);	
 				try {
 					handler.post(myTH);		//Doume : to avoid exception on ICS
 					} catch (Exception e) {

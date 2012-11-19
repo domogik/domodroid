@@ -364,11 +364,12 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			//Disconnect all opened sessions....
 			Log.e("Activity_Home Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;
-			this.widgetHandler=null;
+			widgetHandler=null;
 			widgetUpdate.stopThread();
 			widgetUpdate=null;
 			//And stop main program
-			finish();
+			this.finish();
+			
 		}
 		else if(v.getTag().equals("about")) {
 			Intent helpI = new Intent(Activity_Home.this,Activity_About.class);

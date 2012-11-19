@@ -166,14 +166,16 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		topPan.addView(featurePan);
 		background.addView(topPan);
 		this.addView(background);
-		updateTimer();
-
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				//Log.e(mytag, "device "+wname);
 				try {
-					float formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
+					float formatedValue = 0;
+					String loc_Value = msg.getData().getString("message");
+					if(loc_Value != null)
+						formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
+					
 					if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+"°C");
 					else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+"hPa");
 					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
@@ -184,14 +186,16 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 					else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
 					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
 					else value.setText(msg.getData().getString("message"));
-					Log.e(mytag, "UIThread handler : Value "+formatedValue+" refreshed for device "+wname);
+					Log.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
 					value.setAnimation(animation);
 				} catch (Exception e) {
 					Log.e(mytag, "handler error device "+wname);
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		};
+		updateTimer();
+
 	}
 
 	public static int ConditionCode(int code){
@@ -294,14 +298,16 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+wname);
+			Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
 				
 			Bundle b = new Bundle();
-		    b.putString("message", domodb.requestFeatureState(dev_id, state_key));
-			msg = new Message();
-		    msg.setData(b);
-		    handler.sendMessage(msg);
-			
+			String state = domodb.requestFeatureState(dev_id, state_key);
+			if(state != null) {
+				b.putString("message", state);
+			    msg = new Message();
+			    msg.setData(b);
+			    handler.sendMessage(msg);
+			}
 			return null;
 		}
 	}

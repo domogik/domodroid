@@ -128,9 +128,7 @@ public class Graphical_Boolean extends FrameLayout{
 		background.addView(featurePan);
 
 		this.addView(background);
-		updateTimer();	
-
-
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
@@ -148,6 +146,9 @@ public class Graphical_Boolean extends FrameLayout{
 				}
 			}	
 		};
+		updateTimer();	
+
+
 	}
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;

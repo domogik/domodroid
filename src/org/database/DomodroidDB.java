@@ -196,8 +196,8 @@ public class DomodroidDB {
 			curs.moveToFirst();
 			icon=new Entity_Icon(curs.getString(0), curs.getString(1), curs.getInt(2));
 		} catch (Exception e) {
-			Log.e(mytag+"("+owner+")","request icon error");
-			e.printStackTrace();
+			Log.e(mytag+"("+owner+")","request icon error for reference = "+reference+" name = "+name);
+			//e.printStackTrace();
 		}
 		curs.close();
 		return icon;
@@ -272,8 +272,10 @@ public class DomodroidDB {
 				curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", new String [] {device_id+"", key}, null);
 				curs.moveToPosition(0);
 				Log.e(mytag+"("+owner+")","request for "+ device_id+ " "+key);
-				state=curs.getString(0);
-				curs.close();
+				if((curs != null) && (curs.getCount() != 0)) {
+					state=curs.getString(0);
+					curs.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

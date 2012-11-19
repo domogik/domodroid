@@ -257,8 +257,7 @@ public class Graphical_Info_View extends View{
 	}
 
 	public void updateTimer() {
-		Log.e(mytag,"updateTimer");
-
+		
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
 		doAsynchronousTask = new TimerTask() {

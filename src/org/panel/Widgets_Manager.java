@@ -95,16 +95,26 @@ public class Widgets_Manager {
 				trigger = new Graphical_Trigger(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),widgetSize);
 				tmpPan.addView(trigger);}
 			if (feature.getValue_type().equals("number")) {
-				Log.e("add",feature.getName());
+				Log.e("Widgets_Manager","add "+feature.getName());
 				info = new Graphical_Info(context,feature.getDevId(),feature.getName(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE_TIMER",300),0);
 				info.setLayoutParams(layout_param);
-				tmpPan.addView(info);}
+				tmpPan.addView(info);
+			}
 			if(feature.getValue_type().equals("string")){
-				cam = new Graphical_Cam(context,feature.getId(),feature.getName(),feature.getAddress(),widgetSize);
-				tmpPan.addView(cam);}
+				if(feature.getDevice_feature_model_id().contains("camera")) {
+					cam = new Graphical_Cam(context,feature.getId(),feature.getName(),feature.getAddress(),widgetSize);
+					tmpPan.addView(cam);
+				} else {
+					info = new Graphical_Info(context,feature.getDevId(),feature.getName(),feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
+					info.setLayoutParams(layout_param);
+					tmpPan.addView(info);
+				}
+				
+			}
 			if(feature.getValue_type().equals("color")){
 				color = new Graphical_Color(context, params, feature.getDevId(),feature.getName(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("UPDATE_TIMER",300),0);
-				tmpPan.addView(color);}
+				tmpPan.addView(color);
+			}
 			if(columns){	
 				if(counter==0){
 					leftPan.addView(tmpPan);

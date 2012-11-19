@@ -70,7 +70,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	private Message msg;
 	private String wname;
 	private String mytag="";
-	
+	private String url = null;
 	
 	public Graphical_Info(Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
@@ -78,6 +78,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		this.state_key = state_key;
 		this.update=update;
 		this.wname = name;
+		this.url = url;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		
@@ -187,8 +188,11 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
 					else value.setText(msg.getData().getString("message"));
 					Log.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
+					
 					value.setAnimation(animation);
 				} catch (Exception e) {
+					// It's probably a String 
+					value.setText(msg.getData().getString("message"));
 					Log.e(mytag, "handler error device "+wname);
 					//e.printStackTrace();
 				}

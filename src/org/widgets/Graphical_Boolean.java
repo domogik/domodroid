@@ -132,17 +132,20 @@ public class Graphical_Boolean extends FrameLayout{
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
-				try {
-					if(msg.getData().getString("message").equals("low")){
-						bool.setImageResource(R.drawable.boolean_off);
-						state.setText("State : Low");
-					}else if(msg.getData().getString("message").equals("high")){
-						bool.setImageResource(R.drawable.boolean_on);
-						state.setText("State : High");
+				String status = msg.getData().getString("message");
+				if(status != null)   {
+					try {
+						if(status.equals("low")){
+							bool.setImageResource(R.drawable.boolean_off);
+							state.setText("State : Low");
+						}else if(status.equals("high")){
+							bool.setImageResource(R.drawable.boolean_on);
+							state.setText("State : High");
+						}
+					} catch (Exception e) {
+						Log.e("Graphical_Boolean", "handler error device "+wname);
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					Log.e("handler error", "device "+wname);
-					e.printStackTrace();
 				}
 			}	
 		};
@@ -158,19 +161,18 @@ public class Graphical_Boolean extends FrameLayout{
 
 			@Override
 			public void run() {
-				Log.e("TimerTask.run", "Create Runnable");
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
 							if(getWindowVisibility()==0 || !activate){
-								Log.e("update Timer", "Execute UpdateThread");
+								Log.e("Graphical_Boolean ("+dev_id+")", "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e("update Timer", "Destroy runnable");
+								Log.e("Graphical_Boolean ("+dev_id+")", "Destroy runnable");
 								this.finalize();
 							}
 						} catch (Exception e) {
@@ -180,7 +182,7 @@ public class Graphical_Boolean extends FrameLayout{
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id);	
+				Log.e("Graphical_Boolean ("+dev_id+")","Queuing Runnable for Device : "+dev_id);	
 				try {
 					handler.post(myTH);	//Doume : to avoid exception on ICS
 					} catch (Exception e) {
@@ -188,7 +190,7 @@ public class Graphical_Boolean extends FrameLayout{
 					}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
+		Log.e("Graphical_Boolean ("+dev_id+")","Init timer for Device ");	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 

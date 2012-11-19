@@ -283,7 +283,7 @@ public class Graphical_Info_View extends View{
 					}}
 				//)
 				;
-				Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
+				Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
 				try {
 					handler.post(myTH);		//Doume : to avoid Exception on ICS
 					} catch (Exception e) {

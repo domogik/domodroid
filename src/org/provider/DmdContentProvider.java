@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Environment;
 
 public class DmdContentProvider extends ContentProvider {
 
@@ -36,7 +37,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int UPDATE_FEATURE_STATE = 300;
 	
 	public static final int UPGRADE_FEATURE_STATE = 400;
-
+	
 	private static final String DOMODROID_BASE_PATH = "domodroid";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH);
 	public static final Uri CONTENT_URI_REQUEST_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_AREA");
@@ -90,10 +91,20 @@ public class DmdContentProvider extends ContentProvider {
 	public boolean onCreate() {
 		mDB = new DatabaseHelper(getContext());
 		return true;
+		
 	}
-
+	public void close() {
+		mDB.close();
+		mDB=null;
+		try{
+			finalize();
+		} catch (Throwable e) {
+			
+		}
+	}
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		// To erase all table contents
 		int uriType = sURIMatcher.match(uri);
 		if(uriType == UPGRADE_FEATURE_STATE){
 			bdd = mDB.getWritableDatabase();
@@ -103,13 +114,31 @@ public class DmdContentProvider extends ContentProvider {
 			bdd.delete("table_feature", null, null);
 			bdd.delete("table_feature_association", null, null);
 			bdd.delete("table_feature_state", null, null);
-			bdd.delete("table_feature_map", null, null);
+			// bdd.delete("table_feature_map", null, null); // Keep maps coordinates alive ! ! !
 			mDB = null;
 			mDB = new DatabaseHelper(getContext());
 		}
 		return 0;
 	}
-
+	/*
+	public int delete_selective(Uri uri, String selection, String[] selectionArgs) {
+		// To only erase tables, BUT NOT maps ! ! ! 
+		int uriType = sURIMatcher.match(uri);
+		if(uriType == UPGRADE_FEATURE_STATE){
+			bdd = mDB.getWritableDatabase();
+			bdd.delete("table_area", null, null);
+			bdd.delete("table_room", null, null);
+			bdd.delete("table_icon", null, null);
+			bdd.delete("table_feature", null, null);
+			bdd.delete("table_feature_association", null, null);
+			bdd.delete("table_feature_state", null, null);
+			//bdd.delete("table_feature_map", null, null);		/keep maps coordinates in database
+			mDB = null;
+			mDB = new DatabaseHelper(getContext());
+		}
+		return 0;
+	}
+	*/
 	@Override
 	public String getType(Uri uri) {
 		return null;
@@ -201,4 +230,5 @@ public class DmdContentProvider extends ContentProvider {
 		getContext().getContentResolver().notifyChange(uri, null);
 		return 0;
 	}
+	
 }

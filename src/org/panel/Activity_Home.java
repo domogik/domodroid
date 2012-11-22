@@ -17,6 +17,15 @@
  */
 package org.panel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.database.WidgetUpdate;
@@ -31,8 +40,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
@@ -88,7 +99,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
 	private int dayOffset = 1;
-	private int secondeOffset = 2;
+	private int secondeOffset = 15;
 	private int sizeOffset = 300;
 	private ViewGroup parent;
 	private LinearLayout ll_area;
@@ -98,8 +109,14 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private int historyPosition;
 	private LinearLayout house_map;
 	private String tempUrl;
-
-
+	private Boolean reload = false;
+	private Boolean init_done = false;
+	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
+	//private Dialog_Reload dialog_reload = null;
+	private AlertDialog.Builder dialog_reload;
+	
+	private Thread waiting_thread = null;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,7 +151,8 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		mSeekBar3.setOnSeekBarChangeListener(this);
 
 		LoadSelections();
-
+		
+		
 		//update thread
 		sbanim = new Handler() {
 			@Override
@@ -151,8 +169,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			}	
 		};
 
-		widgetUpdate = new WidgetUpdate(this,sbanim,params);
-
+		
 		//power management
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
@@ -205,10 +222,79 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 
 		house_map.addView(house);
 		house_map.addView(map);
+		init_done = false;
+		
+		// Detect if it's the 1st use after installation...
+			if(!params.getBoolean("SPLASH", false)){
+				// Yes, 1st use !
+				init_done = false;
+				reload = false;
+				if(backupprefs.exists()) {
+					// A backup exists : Ask if reload it
+					Log.e("Activity_Home","settings backup found after a fresh install...");
+					
+					DialogInterface.OnClickListener reload_listener = new DialogInterface.OnClickListener() {
 
-		//alertDialog not sync
+						public void onClick(DialogInterface dialog, int which) {
+							Log.e("Activity_Home","Reload dialog returns : "+which);
+							if(which == dialog.BUTTON_POSITIVE) {
+								reload = true;
+							}
+							else if(which == dialog.BUTTON_NEGATIVE) {
+								reload = false;
+							}
+							check_answer();
+							dialog.dismiss();						
+						}
+					};
+					dialog_reload = new AlertDialog.Builder(this);
+					dialog_reload.setMessage(getText(R.string.home_reload));
+					dialog_reload.setTitle(getText(R.string.reload_title));
+					dialog_reload.setPositiveButton(getText(R.string.reloadOK), reload_listener);
+					dialog_reload.setNegativeButton(getText(R.string.reloadNO), reload_listener);
+					dialog_reload.show();
+					init_done=false;	//A choice is pending : Rest of init has to be completed...
+				} else {
+					//No settings backup found
+					Log.e("Activity_Home","no settings backup found after fresh install...");
+					end_of_init();
+				}
+			} else {
+				// It's not the 1st use after fresh install
+				Log.e("Activity_Home","First init already done...");
+				end_of_init();
+			}
+			
+			// End of onCreate (UIThread)
+	}
+	
+	private void check_answer() {
+		Log.e("Activity_Home","reload choice done..");
+		if(reload) {
+			// If answer is 'yes', load preferences from backup
+			Log.e("Activity_Home","reload settings..");
+			loadSharedPreferencesFromFile(backupprefs);
+			panel.setOpen(false, false);
+			dialog_sync = new Dialog_Synchronize(this);
+			dialog_sync.reload = this.reload;	//To notify if settings reloaded : don't recreate database !
+			dialog_sync.setParams(params);
+			dialog_sync.show();
+			dialog_sync.startSync();
+		} else {
+			Log.e("Activity_Home","Settings not reloaded : clear database..");
+			File database = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db");
+			if(database.exists()) {
+				database.delete();
+			}
+		}
+
+		if(! init_done)
+			// Complete the UI init
+			end_of_init();
+	}
+	private void createAlert() {
 		notSyncAlert = new AlertDialog.Builder(this);
-		notSyncAlert.setMessage("Domodroid is not synchronized").setTitle("Warning!");
+		notSyncAlert.setMessage(getText(R.string.not_sync)).setTitle("Warning!");
 		notSyncAlert.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
@@ -216,7 +302,16 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			}
 		});
 
-
+	}
+	private void end_of_init() {
+		// Finalize screen appearence
+		Log.e("Activity_Home","Finalize onCreate()..");
+		
+		if(! reload) {
+			//alertDialog not syncsplash
+			if(notSyncAlert == null)
+				createAlert();
+		}
 		//splash
 		if(!params.getBoolean("SPLASH", false)){
 			Dialog_Splash dialog_splash = new Dialog_Splash(this);
@@ -225,33 +320,115 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.putBoolean("SPLASH", true);
 			prefEditor.commit();
 		}
-
-		//load widgets
+		Log.e("Activity_Home", "Starting/restarting WidgetUpdate engine !");
+		if(widgetUpdate != null) {
+			widgetUpdate.cancelEngine();
+			widgetUpdate = null;
+		}
+		widgetUpdate = new WidgetUpdate(this,sbanim,params);
+		
+		if(history != null)
+			history = null;		//Free resource
 		history = new Vector<String[]>();
-
-
+		
+		//load widgets
+		Log.e("Activity_Home", "Starting WidgetHandler thread !");
 		widgetHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				try {
 					historyPosition++;
 					loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-					Log.e("add history", msg.getData().getInt("id")+" "+msg.getData().getString("type"));
+					Log.e("Activity_Home.widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
 					history.add(historyPosition,new String [] {msg.getData().getInt("id")+"",msg.getData().getString("type")});
 				} catch (Exception e) {
-					//Log.e("handler error", "load widget");
+					Log.e("Activity_Home.widgetHandler", "handler error into loadWidgets");
 					e.printStackTrace();
 				}
 			}	
 		};
-
+		Log.e("Activity_Home", "Starting/restarting wAgent !");
+		
 		wAgent=new Widgets_Manager(widgetHandler);
 		loadWigets(0,"root");
 		historyPosition=0;
 		history.add(historyPosition,new String [] {"0","root"});
+		
+		init_done = true;
+	}
+	
+	private boolean saveSharedPreferencesToFile(File dst) {
+	    boolean res = false;
+	    ObjectOutputStream output = null;
+	    try {
+	        output = new ObjectOutputStream(new FileOutputStream(dst));
+	        SharedPreferences pref = 
+	                            getSharedPreferences("PREFS", MODE_PRIVATE);
+	        output.writeObject(pref.getAll());
+
+	        res = true;
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }finally {
+	        try {
+	            if (output != null) {
+	                output.flush();
+	                output.close();
+	            }
+	        } catch (IOException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+	    return res;
 	}
 
-
+	@SuppressWarnings({ "unchecked" })
+	private boolean loadSharedPreferencesFromFile(File src) {
+	    boolean res = false;
+	    ObjectInputStream input = null;
+	    try {
+	        input = new ObjectInputStream(new FileInputStream(src));
+	            Editor prefEdit = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+	            prefEdit.clear();
+	            Map<String, ?> entries = (Map<String, ?>) input.readObject();
+	            for (Entry<String, ?> entry : entries.entrySet()) {
+	                Object v = entry.getValue();
+	                String key = entry.getKey();
+	                Log.e("Activity_Home","Loading pref : "+key+" -> "+v.toString());
+	                if (v instanceof Boolean)
+	                    prefEdit.putBoolean(key, ((Boolean) v).booleanValue());
+	                else if (v instanceof Float)
+	                    prefEdit.putFloat(key, ((Float) v).floatValue());
+	                else if (v instanceof Integer)
+	                    prefEdit.putInt(key, ((Integer) v).intValue());
+	                else if (v instanceof Long)
+	                    prefEdit.putLong(key, ((Long) v).longValue());
+	                else if (v instanceof String)
+	                    prefEdit.putString(key, ((String) v));
+	            }
+	            prefEdit.commit();
+	            this.LoadSelections();	// to set panel with known values
+	        res = true;         
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }finally {
+	        try {
+	            if (input != null) {
+	                input.close();
+	            }
+	        } catch (IOException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+	    return res;
+	}
+	
 	public void loadWigets(int id, String type){
 		parent.removeAllViews();
 		ll_area = new LinearLayout(this);
@@ -276,7 +453,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		parent.addView(ll_activ);
 	}
 
-	/**
+	/**home_reload
 	 * save selections preference
 	 */
 	private void SaveSelections() {
@@ -286,7 +463,10 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.putString("IP1",localIP.getText().toString());
 			prefEditor.putBoolean("DRAG", checkbox3.isChecked());
 			prefEditor.putBoolean("ZOOM", checkbox4.isChecked());
-			prefEditor.putInt("UPDATE_TIMER", mSeekBar1.getProgress()+secondeOffset);
+			int period = mSeekBar1.getProgress();
+			if(period < secondeOffset)
+				period = secondeOffset;
+			prefEditor.putInt("UPDATE_TIMER", period);
 			prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 
@@ -297,7 +477,9 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 
 			prefEditor.putString("URL",format_urlAccess);
 			prefEditor.commit();
-
+			if(backupprefs != null)
+				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
+			
 			if(!tempUrl.equals(localIP.getText().toString())){
 				dialog_sync = new Dialog_Synchronize(this);
 				dialog_sync.setParams(params);
@@ -322,10 +504,15 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 
 	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
 		if(seekBar.getId()==R.id.SeekBar1) {
-			mProgressText1.setText((progress+secondeOffset)+" Secondes");
+			int	value = progress;
+			if(value < secondeOffset) {
+				value = secondeOffset;
+				seekBar.setProgress(value);
+			}
+			mProgressText1.setText((value)+" Secondes");
 		}
 		else if(seekBar.getId()==R.id.SeekBar2) {
-			mProgressText2.setText((progress+dayOffset)+" Days");
+			mProgressText2.setText( (Integer.toString(progress+dayOffset))+ getText(R.string.network_Text11a));
 		}else{
 			mProgressText3.setText((progress+sizeOffset)+" px");
 		}
@@ -344,7 +531,8 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		SaveSelections();
-		widgetUpdate = new WidgetUpdate(this,sbanim,params);
+		if(widgetUpdate == null)
+			widgetUpdate = new WidgetUpdate(this,sbanim,params);
 
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {
@@ -357,6 +545,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		if(v.getTag().equals("sync")) {
 			panel.setOpen(false, false);
 			dialog_sync = new Dialog_Synchronize(this);
+			dialog_sync.reload = this.reload;	//To notify if settings reloaded : don't recreate database !
 			dialog_sync.setParams(params);
 			dialog_sync.show();
 			dialog_sync.startSync();
@@ -365,11 +554,24 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			Log.e("Activity_Home Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;
 			widgetHandler=null;
-			widgetUpdate.stopThread();
+			widgetUpdate.cancelEngine();
 			widgetUpdate=null;
 			//And stop main program
 			this.finish();
-			
+			return;
+		} else if(v.getTag().equals("reload_cancel")) {
+			Log.e("Activity_Home","Choosing no reload settings");
+			reload = false;
+			synchronized(waiting_thread){
+				waiting_thread.notifyAll();
+	        }
+			return;
+		}  else if(v.getTag().equals("reload_ok")) {
+			Log.e("Activity_Home","Choosing settings reload");
+			reload=true;
+			synchronized(waiting_thread){
+				waiting_thread.notifyAll();
+	        }
 		}
 		else if(v.getTag().equals("about")) {
 			Intent helpI = new Intent(Activity_Home.this,Activity_About.class);
@@ -382,6 +584,8 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 				historyPosition++;
 				history.add(historyPosition,new String [] {"0","house"});
 			}else{
+				if(notSyncAlert == null)
+					createAlert();
 				notSyncAlert.show();
 			}
 		}
@@ -390,14 +594,31 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 				mapI = new Intent(Activity_Home.this,Activity_Map.class);
 				startActivity(mapI);
 			}else{
+				if(notSyncAlert == null)
+					createAlert();
 				notSyncAlert.show();
 			}
 		}
 		else if(v.getTag().equals("menu")) {
+			/*
+			EditText address = (EditText)panel.findViewById(R.id.localIP);
+			SeekBar sb1 = (SeekBar)panel.findViewById(R.id.SeekBar1);
+			SeekBar sb2 = (SeekBar)panel.findViewById(R.id.SeekBar2);
+			SeekBar sb3 = (SeekBar)panel.findViewById(R.id.SeekBar3);
+			CheckBox cb3 = (CheckBox)panel.findViewById(R.id.checkbox3);
+			CheckBox cb4 = (CheckBox)panel.findViewById(R.id.checkbox4);
+			
+			address.setText(params.getString("IP1",null));
+			sb1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
+			sb2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
+			sb3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
+			cb3.setChecked(params.getBoolean("DRAG", false));
+			cb4.setChecked(params.getBoolean("ZOOM", false));
+			*/
 			if(!panel.isOpen()){
-				panel.setOpen(true, true);
+				panel.setOpen(true, true);	//open with animation
 			}else{
-				panel.setOpen(false, true);
+				panel.setOpen(false, true);	//hide with animation
 			}
 		}
 	}

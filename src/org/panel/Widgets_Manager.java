@@ -167,7 +167,7 @@ public class Widgets_Manager {
 			try {
 				iconId = domodb.requestIcons(area.getId(), "area").getValue().toString();
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);

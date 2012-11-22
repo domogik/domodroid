@@ -5,6 +5,8 @@ package org.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+import android.util.Log;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -19,11 +21,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String CREATE_TABLE_FEATURE_STATE = "CREATE TABLE table_feature_state (device_id INTEGER, key TEXT, value TEXT);";
 	private static final String CREATE_TABLE_FEATURE_MAP = "CREATE TABLE table_feature_map (id, posx INTEGER, posy INTEGER, map TEXT);";
 
-	private static final String DATABASE_NAME = "domodroid.db";
+	private static final String DATABASE_NAME = Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db";
 	private static final int DATABASE_VERSION = 1;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		Log.e("DatabaseHelper","DATABASE_NAME = "+DATABASE_NAME);
+		
 	}
 
 

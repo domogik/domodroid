@@ -31,6 +31,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	private SharedPreferences params;
 	private LoadConfig sync;
 	private Activity context;
+	public Boolean reload = false;
 	
 
 	public Dialog_Synchronize(Activity context) {
@@ -107,16 +108,22 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				String Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
 				DomodroidDB db = new DomodroidDB(context);
+				JSONObject json_AreaList = null;
+				JSONObject json_RoomList = null;
+				JSONObject json_FeatureList = null;
+				JSONObject json_FeatureAssociationList = null;
+				JSONObject json_IconList = null;
+				
 				if(Rinor_Api_Version <=0.5){
-					JSONObject json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
+					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
 					publishProgress(20);
-					JSONObject json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
+					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
 					publishProgress(40);
-					JSONObject json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
+					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
 					publishProgress(60);
-					JSONObject json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/");
+					json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/");
 					publishProgress(80);
-					JSONObject json_IconList = Rest_com.connect(urlAccess+"base/ui_config/list/");
+					json_IconList = Rest_com.connect(urlAccess+"base/ui_config/list/");
 
 					//Save result in sharedpref
 					prefEditor.putString("AREA_LIST",json_AreaList.toString());
@@ -126,24 +133,18 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
 					
-					//insert in DB
-					db.updateDb();
-					db.insertArea(json_AreaList);
-					db.insertRoom(json_RoomList);
-					db.insertFeature(json_FeatureList);
-					db.insertFeatureAssociation(json_FeatureAssociationList);
-					db.insertIcon(json_IconList);
+					
 				}else{
 					// Fonction special Basilic domogik 0.3
-					JSONObject json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
+					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
 					
 					//JSONObject json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
 					publishProgress(20);
 					
-					JSONObject json_RoomList = new JSONObject();
-					JSONObject json_FeatureAssociationList = new JSONObject();
+					json_RoomList = new JSONObject();
+					json_FeatureAssociationList = new JSONObject();
 					
-					JSONObject json_AreaList = new JSONObject();
+					json_AreaList = new JSONObject();
 					json_AreaList.put("status","OK");
 					json_AreaList.put("code",0);
 					json_AreaList.put("description","None");
@@ -207,16 +208,23 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 //					prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
 					
-					//insert in DB
-					
-					db.updateDb();
-					db.insertArea(json_AreaList);
-					db.insertRoom(json_RoomList);
-					db.insertFeature(json_FeatureList);
-					db.insertFeatureAssociation(json_FeatureAssociationList);
-//					db.insertIcon(json_IconList);
+				}
+				// Insert results into local database
+				
+				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
+				
+				db.insertArea(json_AreaList);
+				db.insertRoom(json_RoomList);
+				db.insertFeature(json_FeatureList);
+				db.insertFeatureAssociation(json_FeatureAssociationList);
+				if(Rinor_Api_Version <=0.5){
+					db.insertIcon(json_IconList);
 				}
 				
+				Log.e("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
+				Log.e("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
+				Log.e("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
+				Log.e("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				for (Entity_Feature feature : listFeature) {

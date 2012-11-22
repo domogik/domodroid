@@ -81,7 +81,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		this.url = url;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
-		
+		Log.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
 		domodb = new DomodroidDB(context);
 		domodb.owner="Graphical_Info("+dev_id+")";
 		//panel with border

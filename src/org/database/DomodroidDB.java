@@ -32,7 +32,9 @@ public class DomodroidDB {
 	public void updateDb(){
 		context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);
 	}
-
+	
+	public void closeDb(){
+	}
 
 	public void insertArea(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();

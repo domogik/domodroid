@@ -20,6 +20,8 @@ public class WidgetUpdate {
 	private DomodroidDB domodb;
 	private Handler sbanim;
 	private String mytag="WidgetUpdate";
+	private int timer_counter = 0;
+	
 	/*
 	 * This class is a background engine 
 	 * 		On instanciation, it connects to REST server, and submit queries 
@@ -39,45 +41,46 @@ public class WidgetUpdate {
 	
 
 	public void Timer() {
+		final Timer timer = new Timer();
+		
 		TimerTask doAsynchronousTask;
 		final Handler handler = new Handler();
-		final Timer timer = new Timer();
-
 		doAsynchronousTask = new TimerTask() {
-
-			@Override
-			public void run() {
-				Runnable myTH = new Runnable() {
-					
-					//handler.post(new Runnable() {	//Doume change
-						public void run() {
-							if(activated) {
-								try {
-									Log.e(mytag,"execute UpdateThread");
-									new UpdateThread().execute();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							} else {
-								Log.e(mytag,"Destroy UpdateThread");
-								timer.cancel();
-								try {
-									this.finalize();
-								} catch (Throwable e) {
-									
-								}
+		
+		@Override
+		public void run() {
+			Runnable myTH = new Runnable() {
+				
+					public void run() {
+						if(activated) {
+							try {
+								Log.e(mytag,"execute UpdateThread");
+								new UpdateThread().execute();
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-						}}
-					//)
-					;
-					try {
-						handler.post(myTH);		//To avoid exception on ICS
-						} catch (Exception e) {
-							e.printStackTrace();
+						} else {
+							Log.e(mytag,"Destroy UpdateThread");
+							timer.cancel();
+							try {
+								this.finalize();
+							} catch (Throwable e) {
+								
+							}
 						}
-				}
+					} //End of run method
+				};	// End of runnable bloc
+				
+				
+				try {
+					handler.post(myTH);		//To avoid exception on ICS
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
 		};
-		timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
+		if(timer != null)
+			timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 	}
 
 	public void stopThread(){
@@ -92,6 +95,7 @@ public class WidgetUpdate {
 		Log.e(mytag,"cancelEngine requested....");
 		activated = false;
 		try {
+			Timer();	//That should cancel running timer
 			finalize();
 		} catch (Throwable e) {
 			
@@ -105,15 +109,16 @@ public class WidgetUpdate {
 			if(! activated) {
 				//domodb = null;
 				Log.e(mytag,"UpdateThread Destroy....");
-				
 				try {
-					finalize();
+					this.finalize();
 					} 
 				catch (Throwable e) {
 				}
+				return null;
 			//////////////
 			} else {
-			
+				Log.e(mytag,"UpdateThread Getting widget infos from server...");
+				
 				if(sharedparams.getString("UPDATE_URL", null) != null){
 					try {
 						sbanim.sendEmptyMessage(0);

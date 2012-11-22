@@ -24,8 +24,10 @@
 				android:id="@+id/home_container">
 			</LinearLayout>
 		</ScrollView>
+		
+		<!-- Panel to configure IP, refresh period, and so on...  -->
 		<org.panel.Sliding_Drawer
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
+		   android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/topPanel" panel:position="top"
 			panel:animationDuration="800" panel:linearFlying="true">
 			<Button android:id="@id/panelHandle" android:layout_width="fill_parent"
@@ -60,7 +62,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="Sync"/>
-				//Added by Doume to allow a full stop of Domodroid
+				<!-- Added by Doume to allow a full stop of Domodroid  -->
 				<Button
 				    android:id="@+id/Stop_all"
 				    style="?android:attr/buttonStyleSmall"
@@ -81,10 +83,11 @@
 					android:textColor="#FFFFFF" 
 					android:text="@string/network_Text9" />
 			</LinearLayout>
-
+			
+			<!--  Refresh period -->
 			<SeekBar android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:id="@+id/SeekBar1"
-				android:max="298" android:paddingTop="10dip" android:paddingLeft="20dip"
+			    android:layout_height="wrap_content" android:id="@+id/SeekBar1"
+				android:max="300" android:paddingTop="10dip" android:paddingLeft="20dip"
 				android:paddingRight="20dip" />
 
 			<LinearLayout android:layout_width="wrap_content"
@@ -98,9 +101,10 @@
 					android:layout_height="wrap_content" android:textColor="#FFFFFF"
 					 android:text="@string/network_Text11" />
 			</LinearLayout>
-
+			
+			<!--  Graphs duration  -->
 			<SeekBar android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:id="@+id/SeekBar2"
+			    android:layout_height="wrap_content" android:id="@+id/SeekBar2"
 				android:max="15" android:paddingTop="10dip" android:paddingLeft="20dip"
 				android:paddingRight="20dip" />
 

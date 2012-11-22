@@ -25,13 +25,22 @@
 	
 	
 	<string name="help_Title">Domodroid</string>
-	<string name="help_Text1">Domodroid free Android application under GNU GPLv3 Licence and developped by Pierre Lainé</string>
+	<string name="help_Text1">Domodroid free Android application under GNU GPLv3 Licence and developed by Pierre Lainé</string>
 	<string name="help_Text2">Dim the lights, get informations about the inside temperature or the outside humidity, all with a single tap on your Android device. Requires a home automation system and a Domogik server. Domodroid offers you control of your Domogik home automation system with a large variety of devices supported</string>
 	<string name="help_Text3">Domogik Project : http://www.domogik.org/</string>
 	<string name="help_Text4">Contact : pierre.laine2@gmail.com</string>
 	
-	<string name="home_splash">This new version of Domodroid contains lot of new features and improvments that have not been tested on all kind of Android devices. If anything goes wrong, you can contact at the following address: pierre.laine2@gmail.com.</string>
+	<string name="splash_title">Welcome to Domodroid 1.2 !</string>
+	<string name="home_splash">This new version of Domodroid contains lot of new features and improvements that have not been tested on all kind of Android devices. If anything goes wrong, you can contact at the following address: pierre.laine2@gmail.com.</string>
 	<string name="home_splash2">Please delete the Domodroid cache data from the \"Application Settings\" panel before using this new version.</string>
+	
+	<string name="reload_title">An existing backup of settings exists !</string>
+	<string name="home_reload">Click \"Yes\" if you wish to reload it,\nor    \"No\" to start with a new setting\n        WARNING : maps will be lost  !</string>
+	<string name="reloadOK">Yes</string>
+	<string name="reloadNO">No</string>
+	
+	<string name="not_sync">Domodroid isn\'t synchronized with a server !</string>
+	
 	<string name="home_button1">- Menu -</string>
 	<string name="home_button2">Options</string>
 	<string name="home_button3">Synchronize</string>
@@ -48,7 +57,8 @@
 	<string name="network_Text8">--Auto-Update Timer:</string>
 	<string name="network_Text9">2 Secondes</string>
 	<string name="network_Text10">--Graphic Period:</string>
-	<string name="network_Text11">1 Days</string>
+	<string name="network_Text11">1 Day(s)</string>
+	<string name="network_Text11a"> Day(s)</string>
 	<string name="network_Text12">--Map Multitouch Features :</string>
 	<string name="network_Text13">Drag:</string>
     <string name="network_Text14">Zoom:</string>	

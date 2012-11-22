@@ -528,6 +528,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 
 
 	public void onPanelClosed(Sliding_Drawer panel) {
+		Log.e("Activity_Home","onPanelClosed");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		SaveSelections();
@@ -536,6 +537,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {
+		Log.e("Activity_Home","onPanelOpened");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
 		//widgetUpdate.stopThread();
@@ -600,21 +602,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			}
 		}
 		else if(v.getTag().equals("menu")) {
-			/*
-			EditText address = (EditText)panel.findViewById(R.id.localIP);
-			SeekBar sb1 = (SeekBar)panel.findViewById(R.id.SeekBar1);
-			SeekBar sb2 = (SeekBar)panel.findViewById(R.id.SeekBar2);
-			SeekBar sb3 = (SeekBar)panel.findViewById(R.id.SeekBar3);
-			CheckBox cb3 = (CheckBox)panel.findViewById(R.id.checkbox3);
-			CheckBox cb4 = (CheckBox)panel.findViewById(R.id.checkbox4);
 			
-			address.setText(params.getString("IP1",null));
-			sb1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
-			sb2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
-			sb3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
-			cb3.setChecked(params.getBoolean("DRAG", false));
-			cb4.setChecked(params.getBoolean("ZOOM", false));
-			*/
 			if(!panel.isOpen()){
 				panel.setOpen(true, true);	//open with animation
 			}else{
@@ -629,8 +617,16 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Log.e("Activity_Home.onPause","Keep WidgetUpdate thread alive !");
-		
+		Log.e("Activity_Home.onPause","Keep WidgetUpdate thread alive !"); 
+		View v = this.getCurrentFocus();
+		if(v == null) {
+			Log.e("Activity_Home.onPause","Going to background !");
+			Log.e("Activity_Home.onPause","Freeze WidgetUpdate engine");
+			if(widgetUpdate != null) {
+				widgetUpdate.stopThread();
+			}
+				
+		} 
 		// onPause, the widgetUpdate engine will be kept running in background....
 		
 	}
@@ -649,9 +645,11 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	public void onResume() {
 		super.onResume();
 		Log.e("Activity_Home.onResume","Try to reactivate  WidgetUpdate thread !");
-		if(widgetUpdate != null) {
+		if(widgetUpdate == null)
+			widgetUpdate = new WidgetUpdate(this,sbanim,params);
+		else
 			widgetUpdate.restartThread();	// re-allow timers inside WidgetUpdate background engine
-		}
+		
 	}
 
 

@@ -54,19 +54,22 @@ public class WidgetUpdate {
 					public void run() {
 						if(activated) {
 							try {
-								Log.e(mytag,"execute UpdateThread");
+								Log.e(mytag,"timer expires : update Database !");
 								new UpdateThread().execute();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+							/*
 						} else {
-							Log.e(mytag,"Destroy UpdateThread");
+							Log.e(mytag,"timer stopped...");
 							timer.cancel();
+							
 							try {
 								this.finalize();
 							} catch (Throwable e) {
 								
 							}
+							*/
 						}
 					} //End of run method
 				};	// End of runnable bloc
@@ -108,13 +111,15 @@ public class WidgetUpdate {
 			// Added by Doume to correctly release resources when exiting
 			if(! activated) {
 				//domodb = null;
-				Log.e(mytag,"UpdateThread Destroy....");
+				Log.e(mytag,"UpdateThread frozen....");
+				/*
 				try {
 					this.finalize();
 					} 
 				catch (Throwable e) {
 				}
 				return null;
+				*/
 			//////////////
 			} else {
 				Log.e(mytag,"UpdateThread Getting widget infos from server...");

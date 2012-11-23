@@ -1,6 +1,3 @@
-
-syntax: regexp
-^bin$
 syntax: glob
 bin/*
 syntax: regexp

@@ -114,7 +114,13 @@ public class MapView extends View {
 	public void startThread(){
 		activated = true;
 	}
-	
+	public void clear_Widgets(){
+		String map_name=files.elementAt(currentFile);
+		Log.e(mytag,"Request to clear widgets from : "+map_name);
+		domodb.cleanFeatureMap(map_name);
+		initMap();
+		
+	}
 	public void initMap(){
 		Toast.makeText(context, files.elementAt(currentFile).substring(0,files.elementAt(currentFile).lastIndexOf('.')), Toast.LENGTH_SHORT).show();
 		

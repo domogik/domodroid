@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 public class DmdContentProvider extends ContentProvider {
 
@@ -32,6 +33,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int INSERT_FEATURE = 230;
 	public static final int INSERT_FEATURE_ASSOCIATION = 240;
 	public static final int INSERT_FEATURE_MAP = 250;
+	public static final int CLEAR_FEATURE_MAP = 251;
 	public static final int INSERT_FEATURE_STATE = 260;
 	
 	public static final int UPDATE_FEATURE_STATE = 300;
@@ -54,6 +56,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_INSERT_FEATURE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE");
 	public static final Uri CONTENT_URI_INSERT_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_INSERT_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP");
+	public static final Uri CONTENT_URI_CLEAR_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP");
 	public static final Uri CONTENT_URI_INSERT_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_STATE");
 
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
@@ -80,6 +83,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE", INSERT_FEATURE);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION", INSERT_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP", INSERT_FEATURE_MAP);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP", CLEAR_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_STATE", INSERT_FEATURE_STATE);
 		
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
@@ -120,25 +124,7 @@ public class DmdContentProvider extends ContentProvider {
 		}
 		return 0;
 	}
-	/*
-	public int delete_selective(Uri uri, String selection, String[] selectionArgs) {
-		// To only erase tables, BUT NOT maps ! ! ! 
-		int uriType = sURIMatcher.match(uri);
-		if(uriType == UPGRADE_FEATURE_STATE){
-			bdd = mDB.getWritableDatabase();
-			bdd.delete("table_area", null, null);
-			bdd.delete("table_room", null, null);
-			bdd.delete("table_icon", null, null);
-			bdd.delete("table_feature", null, null);
-			bdd.delete("table_feature_association", null, null);
-			bdd.delete("table_feature_state", null, null);
-			//bdd.delete("table_feature_map", null, null);		/keep maps coordinates in database
-			mDB = null;
-			mDB = new DatabaseHelper(getContext());
-		}
-		return 0;
-	}
-	*/
+	
 	@Override
 	public String getType(Uri uri) {
 		return null;
@@ -166,6 +152,12 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		case INSERT_FEATURE_MAP:
 			mDB.getWritableDatabase().insert("table_feature_map", null, values);
+			break;
+		case CLEAR_FEATURE_MAP:
+			String[] map_name = new String[1] ;
+			map_name[0] = values.getAsString("map");
+			Log.e("DmdContentProvider","Clear widgets from map : "+values.getAsString("map"));
+			mDB.getWritableDatabase().delete("table_feature_map", "map=?", map_name);
 			break;
 		case INSERT_FEATURE_STATE:
 			mDB.getWritableDatabase().insert("table_feature_state", null, values);

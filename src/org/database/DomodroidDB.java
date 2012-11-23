@@ -122,10 +122,10 @@ public class DomodroidDB {
 			values.put("value", itemArray.getJSONObject(i).getString("value"));
 			if(curs.getInt(0)==0){
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
-				Log.e(mytag+"("+owner+")", "debuuuuuuuuuggg insert : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
+				Log.e(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
 			}else{
 				context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, "device_id = ? AND key = ?", new String [] {itemArray.getJSONObject(i).getString("device_id")+"",itemArray.getJSONObject(i).getString("skey")});
-				Log.e(mytag+"("+owner+")", "debuuuuuuuuuggg update "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
+				Log.e(mytag+"("+owner+")", "Database update feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
 			}
 			curs.close();
 		}
@@ -139,6 +139,12 @@ public class DomodroidDB {
 		values.put("posy", posy);
 		values.put("map", map);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_MAP, values);
+	}
+	
+	public void cleanFeatureMap(String map){
+		ContentValues values = new ContentValues();
+		values.put("map", map);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_MAP,values);
 	}
 
 
@@ -273,10 +279,11 @@ public class DomodroidDB {
 				Cursor curs=null;
 				curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", new String [] {device_id+"", key}, null);
 				curs.moveToPosition(0);
-				Log.e(mytag+"("+owner+")","request for "+ device_id+ " "+key);
 				if((curs != null) && (curs.getCount() != 0)) {
 					state=curs.getString(0);
 					curs.close();
+					Log.e(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
+					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

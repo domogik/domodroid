@@ -50,6 +50,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Button add;
 	private Button help;
 	private Button remove;
+	private Button remove_all;
 	private Dialog dialog_feature;
 
 	private Entity_Feature[] listFeature;
@@ -139,8 +140,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
 		panel.setOnPanelListener(this);
 		panel.setOnTouchListener(new OnTouchListener() {	 
-
 			public boolean onTouch(View v, MotionEvent event) {return true;}});
+		
 		bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
 		panel.setOnPanelListener(this);
 		mapView.setTopDrawer(topPanel);
@@ -171,6 +172,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		help.setTag("help");
 		help.setBackgroundColor(Color.parseColor("#00000000"));
 		help.setOnClickListener(this);
+		
 		remove = new Button(this);
 		remove.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		remove.setPadding(10, 13, 10, 13);
@@ -180,9 +182,21 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		remove.setTag("remove");
 		remove.setBackgroundColor(Color.parseColor("#00000000"));
 		remove.setOnClickListener(this);
+		
+		remove_all = new Button(this);
+		remove_all.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		remove_all.setPadding(10, 13, 10, 13);
+		remove_all.setText(R.string.map_button2b);
+		remove_all.setTextColor(Color.parseColor("#cfD1D1"));
+		remove_all.setTextSize(15);
+		remove_all.setTag("remove_all");
+		remove_all.setBackgroundColor(Color.parseColor("#00000000"));
+		remove_all.setOnClickListener(this);
+		
 		panel_button.addView(add);
 		panel_button.addView(help);
 		panel_button.addView(remove);
+		panel_button.addView(remove_all);
 
 
 		bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
@@ -249,7 +263,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onPause();
 		panel.setOpen(false, false);
 		Log.e("Activity_Map", "onPause");
-		mapView.stopThread();
+		if(mapView != null)
+			mapView.stopThread();
 		mapView=null;
 		domodb=null;	//Doume : to stop background dialog with REST
 		try {
@@ -293,7 +308,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		}else if(v.getTag().equals("add")){
 			panel.setOpen(false, true);
 			if(list_usable_files.isEmpty()){
-				Toast.makeText(this, "No Map Loaded, press \"Help\"", Toast.LENGTH_LONG).show();
+				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
 				dialog_feature.show();
 				remove.setTextColor(Color.parseColor("#cfD1D1"));
@@ -301,7 +316,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 		}else if(v.getTag().equals("remove")){
 			if(list_usable_files.isEmpty()){
-				Toast.makeText(this, "No Map Loaded, press \"Help\"", Toast.LENGTH_LONG).show();
+				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
 				if(mapView.isRemoveMode()==false){
 					remove.setTextColor(Color.GREEN);
@@ -311,6 +326,14 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					mapView.setRemoveMode(false);
 				}
 			}
+		} else if(v.getTag().equals("remove_all")){
+				if(list_usable_files.isEmpty()){
+					Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+				}else{
+					Log.e("Activity_Map","request to clear widgets");
+					mapView.clear_Widgets();
+					
+				}
 		}else if(v.getTag().equals("help")){
 			Dialog_Help dialog_help = new Dialog_Help(this);
 			dialog_help.show();

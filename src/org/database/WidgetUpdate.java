@@ -128,8 +128,8 @@ public class WidgetUpdate {
 					try {
 						sbanim.sendEmptyMessage(0);
 						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
-						Log.e(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
-						Log.e(mytag,"result : "+ json_widget_state);
+						//Log.e(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
+						//Log.e(mytag,"result : "+ json_widget_state);
 						sbanim.sendEmptyMessage(1);
 						domodb.insertFeatureState(json_widget_state);
 						sbanim.sendEmptyMessage(2);

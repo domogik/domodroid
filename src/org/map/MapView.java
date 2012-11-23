@@ -207,7 +207,12 @@ public class MapView extends View {
 					paint_text.setTextSize(16);
 					canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 					paint_text.setTextSize(14);
-					canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+					String label = featureMap.getDescription();
+					if(label.length() < 1)
+						label = featureMap.getDevice_usage_id();
+					Log.e(mytag,"label = "+label);
+					//canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+					canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
 				}
 
 			}
@@ -229,7 +234,11 @@ public class MapView extends View {
 					
 					canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y-10, paint_text);
 					paint_text.setTextSize(15);
-					canvasWidget.drawText(featureMap.getState_key(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+6, paint_text);
+					String label = featureMap.getDescription();
+					if(label.length() < 1)
+						label = featureMap.getState_key();
+					
+					canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+6, paint_text);
 				}
 
 			}else if(featureMap.getValue_type().equals("range")){
@@ -256,20 +265,24 @@ public class MapView extends View {
 		if(panel_widget.getChildCount()!=0){
 			panel_widget.removeAllViews();
 		}
+		String label = feature.getDescription();
+		if(label.length() < 1)
+			label = feature.getName();
+		
 		if (feature.getValue_type().equals("binary")) {
-			onoff = new Graphical_Binary(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+			onoff = new Graphical_Binary(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			panel_widget.addView(onoff);}
 		else if (feature.getValue_type().equals("boolean")) {
-			bool = new Graphical_Boolean(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+			bool = new Graphical_Boolean(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {
-			variator = new Graphical_Range(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+			variator = new Graphical_Range(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
-			trigger = new Graphical_Trigger(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
+			trigger = new Graphical_Trigger(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
-			info = new Graphical_Info(context,feature.getDevId(),feature.getName(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE",300),0);
+			info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE",300),0);
 			panel_widget.addView(info);}
 	}
 
@@ -421,21 +434,11 @@ public class MapView extends View {
 				//handler.post(new Runnable() {	//Doume change
 					public void run() {
 						if(activated){
-							Log.e(mytag, "update Timer : Execute UpdateThread");
+							//Log.e(mytag, "update Timer : Execute UpdateThread");
 							try {
 								new UpdateThread().execute();
 							} catch (Exception e) {
 								e.printStackTrace();
-							}
-							
-						}else{
-							if(timer != null) {
-								timer.cancel();
-							}
-							Log.e(mytag, "update Timer : Destroy runnable");
-							try {
-								this.finalize();
-							} catch (Throwable e) {
 							}
 							
 						}
@@ -459,21 +462,19 @@ public class MapView extends View {
 
 		@Override
 		protected Void doInBackground(Void... p) {
-			Log.e(mytag, "UpdateThread call on timer !");
+			//Log.e(mytag, "UpdateThread call on timer !");
 			
 			// Added by Doume to correctly release resources when exiting
 			
 			if(! activated) {
-				try {
-					Log.e(mytag, "UpdateThread : Cancel requested...");
-					finalize();
-				} catch (Throwable e) {
-				}
+				
+				Log.e(mytag, "UpdateThread : timer frozen...");
+				
 			} else {
 			
 			//////////////
 				for (Entity_Map featureMap : listFeatureMap) {
-					Log.e(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
+					//Log.e(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
 					featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
 				}
 				refreshMap();

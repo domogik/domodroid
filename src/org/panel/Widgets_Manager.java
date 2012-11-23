@@ -82,37 +82,42 @@ public class Widgets_Manager {
 			//-----add component-------
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
+			String label = feature.getDescription();
+			if(label.length() < 1)
+				label = feature.getName();
+			
 			if (feature.getValue_type().equals("binary")) {
-				onoff = new Graphical_Binary(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300),widgetSize);
+				onoff = new Graphical_Binary(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300),widgetSize);
 				tmpPan.addView(onoff);}
 			if (feature.getValue_type().equals("boolean")) {
-				bool = new Graphical_Boolean(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300),widgetSize);
+				bool = new Graphical_Boolean(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300),widgetSize);
 				tmpPan.addView(bool);}
 			if (feature.getValue_type().equals("range")) {
-				variator = new Graphical_Range(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300), widgetSize);
+				variator = new Graphical_Range(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300), widgetSize);
 				tmpPan.addView(variator);}
 			if (feature.getValue_type().equals("trigger")) {
-				trigger = new Graphical_Trigger(context,feature.getAddress(),feature.getName(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),widgetSize);
+				trigger = new Graphical_Trigger(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),widgetSize);
 				tmpPan.addView(trigger);}
 			if (feature.getValue_type().equals("number")) {
 				Log.e("Widgets_Manager","add "+feature.getName());
-				info = new Graphical_Info(context,feature.getDevId(),feature.getName(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE_TIMER",300),0);
+				info = new Graphical_Info(context,feature.getDevId(), label,
+						feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE_TIMER",300),0);
 				info.setLayoutParams(layout_param);
 				tmpPan.addView(info);
 			}
 			if(feature.getValue_type().equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
-					cam = new Graphical_Cam(context,feature.getId(),feature.getName(),feature.getAddress(),widgetSize);
+					cam = new Graphical_Cam(context,feature.getId(),label,feature.getAddress(),widgetSize);
 					tmpPan.addView(cam);
 				} else {
-					info = new Graphical_Info(context,feature.getDevId(),feature.getName(),feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
+					info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
 					info.setLayoutParams(layout_param);
 					tmpPan.addView(info);
 				}
 				
 			}
 			if(feature.getValue_type().equals("color")){
-				color = new Graphical_Color(context, params, feature.getDevId(),feature.getName(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("UPDATE_TIMER",300),0);
+				color = new Graphical_Color(context, params, feature.getDevId(),label,feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("UPDATE_TIMER",300),0);
 				tmpPan.addView(color);
 			}
 			if(columns){	

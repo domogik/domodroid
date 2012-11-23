@@ -48,7 +48,7 @@
 	<string name="map_button1">Ajout widget</string>
 	<string name="map_button2">Effacer Widget</string>
 	<string name="map_button3">Aide</string>
-	<string name="map_help_text">A folder called \"domodroid\" has been created at the root of the external storage directory (or internal for some devices). Map must be put in that folder using the PNG format or SVG format created from Illustrator (basic shapes supported). </string>
+	<string name="map_help_text">Un répertoire nommé \"domodroid\" a été créé à la racine du stockage externe (ou interne suivant les équipements). Les images de cartes doivent y être installées, au format PNG ou SVG créé par votre outil \"Illustrator\" (les textures de base sont supportées). </string>
 	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text1">--Adresse ou IP du serveur REST Domogik</string>

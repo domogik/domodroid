@@ -152,7 +152,7 @@
 		</LinearLayout>
 		</org.panel.Sliding_Drawer>
 
-		<!-- Set center image + backgroud -->
+		<!-- Set center image + background -->
 		<FrameLayout android:layout_width="fill_parent"
 			android:layout_height="40dip" android:id="@+id/TitleBar"
 			android:gravity="center">
@@ -166,6 +166,11 @@
 				android:textColor="#A5C933" android:textSize="16sp"
 				android:paddingLeft="10dip" android:text="@string/home_button1"
 				android:gravity="left" android:paddingTop="4dip" />
+			<TextView android:id="@+id/About_button"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:textColor="#A5C933" android:textSize="16sp"
+				android:paddingLeft="10dip" android:text="@string/button4"
+				android:gravity="center" android:paddingTop="4dip" />
 			<ImageView android:id="@+id/app_name" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:src="@drawable/app_name1"
 				android:layout_gravity="right" android:paddingTop="5dip" android:paddingRight="5dip"/>

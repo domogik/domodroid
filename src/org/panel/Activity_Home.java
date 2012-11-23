@@ -77,10 +77,11 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private Animation animation2;
 	private TextView menu_white;
 	private TextView menu_green;
+	private TextView menu_about;
 	private AlertDialog.Builder notSyncAlert;
 	private Widgets_Manager wAgent;
 	private Dialog_Synchronize dialog_sync;
-	private WidgetUpdate widgetUpdate;
+	public WidgetUpdate widgetUpdate;
 	private Handler sbanim;
 	private static Handler widgetHandler;
 	private Intent mapI = null;
@@ -112,7 +113,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private Boolean reload = false;
 	private Boolean init_done = false;
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
-	//private Dialog_Reload dialog_reload = null;
+	private Boolean dont_freeze = false;
 	private AlertDialog.Builder dialog_reload;
 	
 	private Thread waiting_thread = null;
@@ -186,7 +187,10 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		menu_white.setTag("menu");
 		menu_green = (TextView) findViewById(R.id.menu_button2);
 		menu_green.setVisibility(View.GONE);
-
+		menu_about = (TextView) findViewById(R.id.About_button);
+		menu_about.setOnClickListener(this);
+		menu_about.setTag("about");
+		
 		animation1 = new AlphaAnimation(0.0f, 1.0f);
 		animation1.setDuration(500);
 		animation2 = new AlphaAnimation(1.0f, 0.0f);
@@ -544,6 +548,8 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	}
 
 	public void onClick(View v) {
+		dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
+		
 		if(v.getTag().equals("sync")) {
 			panel.setOpen(false, false);
 			dialog_sync = new Dialog_Synchronize(this);
@@ -576,6 +582,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	        }
 		}
 		else if(v.getTag().equals("about")) {
+			dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 			Intent helpI = new Intent(Activity_Home.this,Activity_About.class);
 			startActivity(helpI);
 		}
@@ -593,6 +600,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		}
 		else if(v.getTag().equals("map")) {
 			if(params.getBoolean("SYNC", false)==true){
+				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 				mapI = new Intent(Activity_Home.this,Activity_Map.class);
 				startActivity(mapI);
 			}else{
@@ -621,11 +629,17 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		View v = this.getCurrentFocus();
 		if(v == null) {
 			Log.e("Activity_Home.onPause","Going to background !");
-			Log.e("Activity_Home.onPause","Freeze WidgetUpdate engine");
-			if(widgetUpdate != null) {
-				widgetUpdate.stopThread();
-			}
+			if(! dont_freeze) {
+				Log.e("Activity_Home.onPause","Freeze WidgetUpdate engine");
+				if(widgetUpdate != null) {
+					widgetUpdate.stopThread();
+				}
+			} else {
+				//Another Activity started : keep WidgetUpdate engine running
+				Log.e("Activity_Home.onPause","Keep WidgetUpdate engine running");
 				
+			}
+			dont_freeze = false;	
 		} 
 		// onPause, the widgetUpdate engine will be kept running in background....
 		

@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import org.database.DomodroidDB;
 import org.json.JSONException;
+import org.panel.Activity_Home;
 import org.panel.R;
 import org.panel.Sliding_Drawer;
 import org.widgets.Entity_Map;
@@ -109,6 +110,9 @@ public class MapView extends View {
 
 	public void stopThread(){
 		activated = false;
+	}
+	public void startThread(){
+		activated = true;
 	}
 	
 	public void initMap(){
@@ -474,7 +478,7 @@ public class MapView extends View {
 			
 			//////////////
 				for (Entity_Map featureMap : listFeatureMap) {
-					//Log.e(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
+					Log.e(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
 					featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
 				}
 				refreshMap();

@@ -76,7 +76,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onCreate(savedInstanceState);
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
-
+		
 		mapView = new MapView(this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));

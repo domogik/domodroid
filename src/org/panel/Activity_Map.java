@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.database.DomodroidDB;
+import org.database.WidgetUpdate;
 import org.map.Dialog_Help;
 import org.map.MapView;
 import org.panel.Sliding_Drawer.OnPanelListener;
@@ -23,6 +24,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -44,6 +47,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Activity_Map extends Activity implements OnPanelListener,OnClickListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Sliding_Drawer panel;
 	private Sliding_Drawer topPanel;
 	private Sliding_Drawer bottomPanel;
@@ -69,7 +76,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Animation animation2;
 	private TextView menu_white;
 	private TextView menu_green;
-
+	
+	private WidgetUpdate widgetUpdate;
+	private Handler sbanim;
+	
 	private DomodroidDB domodb = null;
 
 	@Override
@@ -77,7 +87,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onCreate(savedInstanceState);
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
-		
+		/*
+		Bundle b = null;
+		b = savedInstanceState.getBundle();
+		byte[] serial_engine = getByteArray("engine");// .getExtra("engine"); // getIntent().getByteArrayExtra("engine");
+		engine = (WidgetUpdate) deserializeObject(serial_engine); 
+		*/
 		mapView = new MapView(this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
@@ -153,7 +168,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		mapView.setPanel_widget(panel_widget);
 		mapView.setPanel_button(panel_button);
 
-		//add remove button
+		//add remove buttonObject engine = (Object)widgetUpdate;
 		add = new Button(this);
 		add.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		add.setPadding(10, 13, 10, 13);
@@ -223,7 +238,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			map.put("type",feature.getValue_type());
 			map.put("state_key", feature.getState_key());
 			listItem1.add(map);
-
+			
 		}
 		SimpleAdapter adapter_feature=new SimpleAdapter(getBaseContext(),listItem1,
 				R.layout.item_feature,new String[] {"name","type","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
@@ -249,6 +264,23 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Dialog_Help dialog_help = new Dialog_Help(this);
 			dialog_help.show();
 		}
+		//update thread
+		sbanim = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				/*
+				if(msg.what==0){
+					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name2));
+				}else if(msg.what==1){
+					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name3));
+				}else if(msg.what==2){
+					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name1));
+				}else if(msg.what==3){
+					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
+				}
+				*/
+			}	
+		};
 
 		try {
 			mapView.drawWidgets();
@@ -258,6 +290,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
+	private void startDBEngine() {
+		Log.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
+		if(widgetUpdate != null) {
+			widgetUpdate.cancelEngine();
+			widgetUpdate = null;
+		}
+		widgetUpdate = new WidgetUpdate(this,sbanim,params);
+		
+	}
+	
 	@Override
 	public void onPause(){
 		super.onPause();
@@ -266,15 +308,32 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		if(mapView != null)
 			mapView.stopThread();
 		mapView=null;
-		domodb=null;	//Doume : to stop background dialog with REST
-		try {
-			finalize();
-		} catch (Throwable e) {
-			
+		if(widgetUpdate != null) {
+			widgetUpdate.cancelEngine();
+			widgetUpdate = null;
+		}
+		
+		
+	}
+	public void onResume() {
+		super.onResume();
+		if(widgetUpdate == null) {
+			startDBEngine();
+		}
+		widgetUpdate.restartThread();
+		
+	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.e("ActivityMap.onDestroy","??????????????????????");
+		if(widgetUpdate != null) {
+			widgetUpdate.cancelEngine();
+			widgetUpdate = null;
 		}
 	}
-
 	public void onPanelClosed(Sliding_Drawer panel) {
+		Log.e("ActivityMap.onPanelClosed","??????????????????????");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
@@ -283,6 +342,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	public void onPanelOpened(Sliding_Drawer panel) {
+		Log.e("ActivityMap.onPanelOpened","??????????????????????");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
 	}

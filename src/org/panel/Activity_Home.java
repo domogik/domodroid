@@ -31,7 +31,6 @@ import java.util.Vector;
 import org.database.WidgetUpdate;
 import org.json.JSONException;
 import org.panel.Sliding_Drawer.OnPanelListener;
-import org.widgets.Graphical_Color;
 import org.widgets.Graphical_Feature;
 
 import android.app.Activity;
@@ -67,6 +66,10 @@ import android.widget.TextView;
 
 public class Activity_Home extends Activity implements OnPanelListener,OnClickListener,OnSeekBarChangeListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private Sliding_Drawer topPanel;
 	private Sliding_Drawer panel;
@@ -81,7 +84,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	private AlertDialog.Builder notSyncAlert;
 	private Widgets_Manager wAgent;
 	private Dialog_Synchronize dialog_sync;
-	public WidgetUpdate widgetUpdate;
+	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
 	private static Handler widgetHandler;
 	private Intent mapI = null;
@@ -600,7 +603,7 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 		}
 		else if(v.getTag().equals("map")) {
 			if(params.getBoolean("SYNC", false)==true){
-				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
+				//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 				mapI = new Intent(Activity_Home.this,Activity_Map.class);
 				startActivity(mapI);
 			}else{
@@ -618,25 +621,24 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 			}
 		}
 	}
-
-
+	
+	
 
 	@Override
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Log.e("Activity_Home.onPause","Keep WidgetUpdate thread alive !"); 
 		View v = this.getCurrentFocus();
 		if(v == null) {
 			Log.e("Activity_Home.onPause","Going to background !");
 			if(! dont_freeze) {
-				Log.e("Activity_Home.onPause","Freeze WidgetUpdate engine");
+				Log.e("Activity_Home.onPause","Freeze own WidgetUpdate engine");
 				if(widgetUpdate != null) {
 					widgetUpdate.stopThread();
 				}
 			} else {
 				//Another Activity started : keep WidgetUpdate engine running
-				Log.e("Activity_Home.onPause","Keep WidgetUpdate engine running");
+				Log.e("Activity_Home.onPause","Keep own WidgetUpdate engine running");
 				
 			}
 			dont_freeze = false;	

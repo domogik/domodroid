@@ -1,11 +1,16 @@
 package org.database;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import org.connect.Rest_com;
 import org.json.JSONObject;
-import org.map.MapView.UpdateThread;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -13,14 +18,19 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-public class WidgetUpdate {
+public class WidgetUpdate implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SharedPreferences sharedparams;
+	private static WidgetUpdate instance;
+	
 	private boolean activated;
 	private DomodroidDB domodb;
 	private Handler sbanim;
 	private String mytag="WidgetUpdate";
-	private int timer_counter = 0;
 	
 	/*
 	 * This class is a background engine 
@@ -85,7 +95,8 @@ public class WidgetUpdate {
 		if(timer != null)
 			timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 	}
-
+	 
+	
 	public void stopThread(){
 		Log.e(mytag,"stopThread requested....");
 		activated = false;

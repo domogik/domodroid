@@ -628,22 +628,18 @@ public class Activity_Home extends Activity implements OnPanelListener,OnClickLi
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		View v = this.getCurrentFocus();
-		if(v == null) {
-			Log.e("Activity_Home.onPause","Going to background !");
-			if(! dont_freeze) {
-				Log.e("Activity_Home.onPause","Freeze own WidgetUpdate engine");
-				if(widgetUpdate != null) {
-					widgetUpdate.stopThread();
-				}
-			} else {
-				//Another Activity started : keep WidgetUpdate engine running
-				Log.e("Activity_Home.onPause","Keep own WidgetUpdate engine running");
-				
+		Log.e("Activity_Home.onPause","Going to background !");
+		if(! dont_freeze) {
+			Log.e("Activity_Home.onPause","Freeze own WidgetUpdate engine");
+			if(widgetUpdate != null) {
+				widgetUpdate.stopThread();
 			}
-			dont_freeze = false;	
-		} 
-		// onPause, the widgetUpdate engine will be kept running in background....
+		} else {
+			//Another Activity started : keep WidgetUpdate engine running
+			Log.e("Activity_Home.onPause","Keep own WidgetUpdate engine running");
+			
+		}
+		dont_freeze = false;	
 		
 	}
 	

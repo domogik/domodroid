@@ -1,4 +1,4 @@
-package easing.interpolator;
+package misc;
 
 public class EasingType {
 	public enum Type {

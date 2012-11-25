@@ -1,4 +1,4 @@
-package easing.interpolator;
+package misc;
 
 /*
  *
@@ -32,7 +32,7 @@ package easing.interpolator;
  */
 
 import android.view.animation.Interpolator;
-import easing.interpolator.EasingType.Type;
+import misc.EasingType.Type;
 
 
 public class BounceInterpolator implements Interpolator {

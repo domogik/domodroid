@@ -1,4 +1,8 @@
 syntax: glob
-bin/
-*.orig
-
+bin/*
+syntax: glob
+gen/*
+syntax: glob
+bin
+syntax: glob
+gen

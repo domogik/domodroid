@@ -1,6 +1,4 @@
 syntax: glob
 bin/
-.classpath
-.project
 *.orig
 

@@ -1,0 +1,55 @@
+<manifest package="org.domogik.domodroid"
+    android:versionCode="12"
+    android:versionName="1.2" 
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+	
+    <uses-sdk
+        android:minSdkVersion="8"
+        />
+    <supports-screens android:normalScreens="true" android:anyDensity="true" android:resizeable="true"  android:largeScreens="true" android:smallScreens="true"/>
+    
+	<application  
+	    android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        
+		<activity android:name="activities.Activity_Main" android:theme="@android:style/Theme.NoTitleBar"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name="activities.Activity_Area"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+		<activity android:name="activities.Activity_Options" android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name="activities.Activity_Room"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+		<activity android:name="activities.Activity_House"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+		<activity android:name="activities.Activity_About" android:theme="@android:style/Theme.NoTitleBar"
+			android:configChanges="orientation"></activity>
+		<activity android:name="activities.Activity_Cam"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:configChanges="orientation"></activity>
+		<activity android:name="activities.Activity_Map"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+			android:configChanges="orientation"></activity>
+		<activity android:name="activities.DialogActivity"></activity>
+		
+		<provider
+		    android:authorities="database.DmdContentProvider"
+		    android:multiprocess="true"
+		    android:name="database.DmdContentProvider"
+		    />
+				
+	
+    </application>
+
+</manifest>

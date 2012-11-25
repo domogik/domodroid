@@ -58,10 +58,10 @@
 			panel:animationDuration="500">
 			<Button android:id="@id/panelHandle" android:layout_width="fill_parent"
 				android:layout_height="0dip" />
-			<LinearLayout android:id="@id/panelContent"
+			<LinearLayout android:id="@id/panelContent" 
 				android:orientation="vertical" android:layout_width="fill_parent"
 				android:layout_height="fill_parent">
-				<LinearLayout android:orientation="vertical"
+				<LinearLayout android:orientation="vertical" 
 					android:background="@drawable/drawer_button" android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:layout_gravity="fill_horizontal">
 					<LinearLayout android:orientation="vertical"

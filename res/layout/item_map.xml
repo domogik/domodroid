@@ -5,7 +5,7 @@
 	android:paddingLeft="10px" android:layout_weight="1" android:paddingTop="4dip" android:paddingBottom="4dip">
 
 	<TextView android:id="@+id/name" android:layout_width="wrap_content"
-		android:layout_height="25dip" android:textSize="18sp" 
+		android:layout_height="30dip" android:textSize="18sp" 
 		android:textColor="#AFAFAF" android:paddingLeft="10dip" />
 
 </LinearLayout>

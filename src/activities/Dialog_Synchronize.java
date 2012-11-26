@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -46,7 +47,17 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				try {
+					String loc_Value = msg.getData().getString("message");
+					if(loc_Value.equals("sync_done")) {
+						sync.cancel(true);
+						dismiss();
+						return;
+					}
+				} catch (Exception e) {}
+						
 				message.setText("Connection error");
+				
 			}
 		};		
 	}
@@ -105,6 +116,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				
 				// if API rinor >0.5 génération auto sinon classic
 				JSONObject json_rinor = Rest_com.connect(urlAccess);
+				if(json_rinor == null) {
+					//Cannot connect to server...
+					handler.sendEmptyMessage(0);
+					return null;
+				}
 				String Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
 				DomodroidDB db = new DomodroidDB(context);
@@ -116,15 +132,41 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				
 				if(Rinor_Api_Version <=0.5){
 					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
+					if(json_AreaList == null) {
+						//Cannot connect to server...
+						handler.sendEmptyMessage(0);
+						return null;
+					}
 					publishProgress(20);
 					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
+					if(json_RoomList == null) {
+						//Cannot connect to server...
+						handler.sendEmptyMessage(0);
+						return null;
+					}
 					publishProgress(40);
 					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
+					if(json_FeatureList == null) {
+						//Cannot connect to server...
+						handler.sendEmptyMessage(0);
+						return null;
+					}
 					publishProgress(60);
 					json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/");
+					if(json_FeatureAssociationList == null) {
+						//Cannot connect to server...
+						handler.sendEmptyMessage(0);
+						return null;
+					}
 					publishProgress(80);
 					json_IconList = Rest_com.connect(urlAccess+"base/ui_config/list/");
-
+					if(json_IconList == null) {
+						//Cannot connect to server...
+						handler.sendEmptyMessage(0);
+						return null;
+					}
+					publishProgress(100);
+					
 					//Save result in sharedpref
 					prefEditor.putString("AREA_LIST",json_AreaList.toString());
 					prefEditor.putString("ROOM_LIST",json_RoomList.toString());
@@ -132,16 +174,22 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putString("ASSOCIATION_LIST",json_FeatureAssociationList.toString());
 					prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
+					prefEditor.putBoolean("BY_USAGE", false);
 					
 					
 				}else{
 					// Fonction special Basilic domogik 0.3
 					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
-					
+					if(json_FeatureList == null) {
+						// Cannot connect to Rinor server.....
+						handler.sendEmptyMessage(0);
+						return null;
+					}
 					//JSONObject json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
 					publishProgress(20);
 					
 					json_RoomList = new JSONObject();
+					
 					json_FeatureAssociationList = new JSONObject();
 					
 					json_AreaList = new JSONObject();
@@ -171,6 +219,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					json_FeatureAssociationList.put("code","0");
 					json_FeatureAssociationList.put("description","");
 	                JSONArray ListFeature = new JSONArray();
+	                publishProgress(50);
+					
 					for(int i = 0; i < json_FeatureList.getJSONArray("feature").length(); i++) {
 						usage = json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id");
 						JSONObject Widget = new JSONObject();
@@ -207,12 +257,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putString("ASSOCIATION_LIST",json_FeatureAssociationList.toString());
 //					prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
+					prefEditor.putBoolean("BY_USAGE", true);
 					
 				}
 				// Insert results into local database
 				
 				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
-				
 				db.insertArea(json_AreaList);
 				db.insertRoom(json_RoomList);
 				db.insertFeature(json_FeatureList);
@@ -221,10 +271,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					db.insertIcon(json_IconList);
 				}
 				
-				Log.e("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
-				Log.e("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
-				Log.e("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
-				Log.e("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
+				Log.v("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
+				Log.v("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
+				Log.v("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
+				Log.v("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				for (Entity_Feature feature : listFeature) {
@@ -232,13 +282,24 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				}
 				prefEditor.putString("UPDATE_URL", urlUpdate);
 				prefEditor.commit();
-				Log.e("url", urlUpdate);
-				sync=true;
+				publishProgress(100);
+				
+				Log.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
+				
+				Bundle b = new Bundle();
+				//Notify sync complete to parent Dialog
+				b.putString("message", "sync_done");
+			    Message msg = new Message();
+			    msg.setData(b);
+			    handler.sendMessage(msg);
+				return null;
+				
 
 			}catch(Exception e){
 				handler.sendEmptyMessage(0);
 				e.printStackTrace();
-			}			return null;
+			}			
+			return null;
 		}
 
 	}

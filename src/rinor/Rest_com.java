@@ -26,9 +26,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
  
 public class Rest_com {
  
@@ -59,22 +62,29 @@ public class Rest_com {
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url); 
         HttpResponse response;
+        String result = null;
         try {
             response = httpclient.execute(httpget);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                String result= convertStreamToString(instream);
+                result= convertStreamToString(instream);
                 json=new JSONObject(result);
                 instream.close();
             }
  
  
+        } catch (HttpHostConnectException e) {
+        	Log.e("Rest.com","Connection refused to "+url);
+            //e.printStackTrace();
         } catch (ClientProtocolException e) {
+        	Log.e("Rest.com","Connection refused to "+url);
             e.printStackTrace();
         } catch (IOException e) {
+        	Log.e("Rest.com","Connection failure to "+url);
             e.printStackTrace();
         } catch (JSONException e) {
+        	Log.e("Rest.com","JSON exception on "+result);
             e.printStackTrace();
         }
         return json;

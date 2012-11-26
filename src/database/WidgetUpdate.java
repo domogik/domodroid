@@ -64,22 +64,12 @@ public class WidgetUpdate implements Serializable {
 					public void run() {
 						if(activated) {
 							try {
-								Log.e(mytag,"timer expires : update Database !");
+								//Log.d(mytag,"timer expires : update Database !");
 								new UpdateThread().execute();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							/*
-						} else {
-							Log.e(mytag,"timer stopped...");
-							timer.cancel();
-							
-							try {
-								this.finalize();
-							} catch (Throwable e) {
-								
-							}
-							*/
+						
 						}
 					} //End of run method
 				};	// End of runnable bloc
@@ -98,15 +88,15 @@ public class WidgetUpdate implements Serializable {
 	 
 	
 	public void stopThread(){
-		Log.e(mytag,"stopThread requested....");
+		Log.d(mytag,"stopThread requested....");
 		activated = false;
 	}
 	public void restartThread(){
-		Log.e(mytag,"restartThread requested....");
+		Log.d(mytag,"restartThread requested....");
 		activated = true;
 	}
 	public void cancelEngine(){
-		Log.e(mytag,"cancelEngine requested....");
+		Log.d(mytag,"cancelEngine requested....");
 		activated = false;
 		try {
 			Timer();	//That should cancel running timer
@@ -121,26 +111,16 @@ public class WidgetUpdate implements Serializable {
 		protected Void doInBackground(Void... params) {
 			// Added by Doume to correctly release resources when exiting
 			if(! activated) {
-				//domodb = null;
-				Log.e(mytag,"UpdateThread frozen....");
-				/*
-				try {
-					this.finalize();
-					} 
-				catch (Throwable e) {
-				}
-				return null;
-				*/
-			//////////////
-			} else {
-				Log.e(mytag,"UpdateThread Getting widget infos from server...");
+				Log.d(mytag,"UpdateThread frozen....");
 				
+			} else {
+				Log.d(mytag,"UpdateThread Getting widget infos from server...");
 				if(sharedparams.getString("UPDATE_URL", null) != null){
 					try {
 						sbanim.sendEmptyMessage(0);
 						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
-						//Log.e(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
-						//Log.e(mytag,"result : "+ json_widget_state);
+						//Log.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
+						//Log.d(mytag,"result : "+ json_widget_state);
 						sbanim.sendEmptyMessage(1);
 						domodb.insertFeatureState(json_widget_state);
 						sbanim.sendEmptyMessage(2);

@@ -105,7 +105,13 @@ public class MapView extends View {
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		screen_width = display.getWidth();
 	}
-
+	public void  onWindowVisibilityChanged (int visibility) {
+		Log.i(mytag,"Visibility changed to : "+visibility);
+		if(visibility == View.VISIBLE)
+			this.activated = true;
+		else
+			activated=false;
+	}
 	public void stopThread(){
 		activated = false;
 	}
@@ -114,7 +120,7 @@ public class MapView extends View {
 	}
 	public void clear_Widgets(){
 		String map_name=files.elementAt(currentFile);
-		Log.e(mytag,"Request to clear widgets from : "+map_name);
+		Log.i(mytag,"Request to clear widgets from : "+map_name);
 		domodb.cleanFeatureMap(map_name);
 		initMap();
 		
@@ -218,8 +224,7 @@ public class MapView extends View {
 					String label = featureMap.getDescription();
 					if(label.length() < 1)
 						label = featureMap.getDevice_usage_id();
-					Log.e(mytag,"label = "+label);
-					//canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+					//Log.i(mytag,"label = "+label);
 					canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
 				}
 
@@ -442,7 +447,7 @@ public class MapView extends View {
 				//handler.post(new Runnable() {	//Doume change
 					public void run() {
 						if(activated){
-							//Log.e(mytag, "update Timer : Execute UpdateThread");
+							//Log.i(mytag, "update Timer : Execute UpdateThread");
 							try {
 								new UpdateThread().execute();
 							} catch (Exception e) {
@@ -462,7 +467,7 @@ public class MapView extends View {
 			}
 		};
 		//timer.schedule(doAsynchronousTask, 0, 3000);
-		Log.e(mytag, "updateTimer : Arming timer of "+update+" seconds");
+		Log.i(mytag, "updateTimer : Arming timer of "+update+" seconds");
 		timer.schedule(doAsynchronousTask, 0, update * 1000);
 	}
 
@@ -470,19 +475,19 @@ public class MapView extends View {
 
 		@Override
 		protected Void doInBackground(Void... p) {
-			//Log.e(mytag, "UpdateThread call on timer !");
+			//Log.i(mytag, "UpdateThread call on timer !");
 			
 			// Added by Doume to correctly release resources when exiting
 			
 			if(! activated) {
 				
-				Log.e(mytag, "UpdateThread : timer frozen...");
+				Log.i(mytag, "UpdateThread : timer frozen...");
 				
 			} else {
 			
 			//////////////
 				for (Entity_Map featureMap : listFeatureMap) {
-					Log.e(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
+					Log.i(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
 					featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
 				}
 				refreshMap();

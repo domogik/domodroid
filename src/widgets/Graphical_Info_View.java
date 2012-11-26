@@ -68,7 +68,14 @@ public class Graphical_Info_View extends View{
 			}
 		};
 	}
-
+	public void  onWindowVisibilityChanged (int visibility) {
+		Log.i(mytag,"Visibility changed to : "+visibility);
+		if(visibility == View.VISIBLE)
+			this.activate = true;
+		else
+			activate=false;
+	}
+	
 	@Override 
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -268,7 +275,7 @@ public class Graphical_Info_View extends View{
 							if(activate){
 								new UpdateThread().execute();
 							}else{
-								Log.e(mytag+"("+dev_id+")","update Timer : Destroy runnable");
+								Log.i(mytag+"("+dev_id+")","update Timer : Destroy runnable");
 								timer.cancel();
 								this.finalize();
 							}
@@ -280,7 +287,7 @@ public class Graphical_Info_View extends View{
 					}}
 				//)
 				;
-				Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
+				Log.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
 				try {
 					handler.post(myTH);		//Doume : to avoid Exception on ICS
 					} catch (Exception e) {
@@ -304,7 +311,7 @@ public class Graphical_Info_View extends View{
 				values.clear();
 				long currentTimestamp = System.currentTimeMillis()/1000;
 				long lastweekTimestamp = currentTimestamp - 86400*period; 
-				Log.e(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
+				Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
 
 				JSONObject json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
 				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
@@ -312,7 +319,7 @@ public class Graphical_Info_View extends View{
 
 				minf=(float)valueArray.getJSONArray(0).getDouble(5);
 				maxf=(float)valueArray.getJSONArray(0).getDouble(5);
-				Log.e(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
+				Log.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
 
 				for (int i =0; i < valueArray.length(); i++){
 					Vector<Float> vect = new Vector<Float>();

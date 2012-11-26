@@ -122,10 +122,10 @@ public class DomodroidDB {
 			values.put("value", itemArray.getJSONObject(i).getString("value"));
 			if(curs.getInt(0)==0){
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
-				Log.e(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
+				Log.v(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
 			}else{
 				context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, "device_id = ? AND key = ?", new String [] {itemArray.getJSONObject(i).getString("device_id")+"",itemArray.getJSONObject(i).getString("skey")});
-				Log.e(mytag+"("+owner+")", "Database update feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
+				Log.v(mytag+"("+owner+")", "Database update feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+itemArray.getJSONObject(i).getString("skey")+" "+itemArray.getJSONObject(i).getString("value"));
 			}
 			curs.close();
 		}
@@ -189,7 +189,7 @@ public class DomodroidDB {
 						curs.getInt(2),curs.getString(3));
 			}
 		} catch (Exception e) {
-			Log.e(mytag+"("+owner+")","request room");
+			Log.v(mytag+"("+owner+")","request room");
 			e.printStackTrace();
 		}
 		curs.close();
@@ -283,7 +283,7 @@ public class DomodroidDB {
 				if((curs != null) && (curs.getCount() != 0)) {
 					state=curs.getString(0);
 					curs.close();
-					Log.e(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
+					Log.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
 					
 				}
 			} catch (Exception e) {

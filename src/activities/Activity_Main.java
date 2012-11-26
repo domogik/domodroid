@@ -238,7 +238,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				reload = false;
 				if(backupprefs.exists()) {
 					// A backup exists : Ask if reload it
-					Log.e("Activity_Main","settings backup found after a fresh install...");
+					Log.v("Activity_Main","settings backup found after a fresh install...");
 					
 					DialogInterface.OnClickListener reload_listener = new DialogInterface.OnClickListener() {
 
@@ -263,7 +263,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					init_done=false;	//A choice is pending : Rest of init has to be completed...
 				} else {
 					//No settings backup found
-					Log.e("Activity_Main","no settings backup found after fresh install...");
+					Log.v("Activity_Main","no settings backup found after fresh install...");
 					end_of_init();
 				}
 			} else {
@@ -276,7 +276,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private void check_answer() {
-		Log.e("Activity_Main","reload choice done..");
+		Log.v("Activity_Main","reload choice done..");
 		if(reload) {
 			// If answer is 'yes', load preferences from backup
 			Log.e("Activity_Home","reload settings..");
@@ -288,7 +288,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			dialog_sync.show();
 			dialog_sync.startSync();
 		} else {
-			Log.e("Activity_Main","Settings not reloaded : clear database..");
+			Log.v("Activity_Main","Settings not reloaded : clear database..");
 			File database = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db");
 			if(database.exists()) {
 				database.delete();
@@ -312,7 +312,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	private void end_of_init() {
 		// Finalize screen appearence
-		Log.e("Activity_Main","Finalize onCreate()..");
+		Log.v("Activity_Main","Finalize onCreate()..");
 		
 		if(! reload) {
 			//alertDialog not syncsplash
@@ -346,7 +346,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				try {
 					historyPosition++;
 					loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-					Log.e("Activity_Main.widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
+					Log.v("Activity_Main.widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
 					history.add(historyPosition,new String [] {msg.getData().getInt("id")+"",msg.getData().getString("type")});
 				} catch (Exception e) {
 					Log.e("Activity_Main.widgetHandler", "handler error into loadWidgets");
@@ -354,7 +354,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				}
 			}	
 		};
-		Log.e("Activity_Main", "Starting/restarting wAgent !");
+		Log.v("Activity_Main", "Starting/restarting wAgent !");
 		
 		wAgent=new Widgets_Manager(widgetHandler);
 		loadWigets(0,"root");
@@ -403,7 +403,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	            for (Entry<String, ?> entry : entries.entrySet()) {
 	                Object v = entry.getValue();
 	                String key = entry.getKey();
-	                Log.e("Activity_Main","Loading pref : "+key+" -> "+v.toString());
+	                Log.v("Activity_Main","Loading pref : "+key+" -> "+v.toString());
 	                if (v instanceof Boolean)
 	                    prefEdit.putBoolean(key, ((Boolean) v).booleanValue());
 	                else if (v instanceof Float)
@@ -535,7 +535,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 
 	public void onPanelClosed(Sliding_Drawer panel) {
-		Log.e("Activity_Main","onPanelClosed");
+		Log.v("Activity_Main","onPanelClosed");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		SaveSelections();
@@ -544,7 +544,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {
-		Log.e("Activity_Main","onPanelOpened");
+		Log.v("Activity_Main","onPanelOpened");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
 		//widgetUpdate.stopThread();
@@ -562,7 +562,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			dialog_sync.startSync();
 		}	else if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....
-			Log.e("Activity_Main Exit","Stopping WidgetUpdate thread !");
+			Log.v("Activity_Main Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;
 			widgetHandler=null;
 			widgetUpdate.cancelEngine();
@@ -571,14 +571,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.finish();
 			return;
 		} else if(v.getTag().equals("reload_cancel")) {
-			Log.e("Activity_Main","Choosing no reload settings");
+			Log.v("Activity_Main","Choosing no reload settings");
 			reload = false;
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
 	        }
 			return;
 		}  else if(v.getTag().equals("reload_ok")) {
-			Log.e("Activity_Main","Choosing settings reload");
+			Log.v("Activity_Main","Choosing settings reload");
 			reload=true;
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
@@ -628,9 +628,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Log.e("Activity_Main.onPause","Going to background !");
+		Log.v("Activity_Main.onPause","Going to background !");
 		if(! dont_freeze) {
-			Log.e("Activity_Main.onPause","Freeze own WidgetUpdate engine");
+			Log.v("Activity_Main.onPause","Freeze own WidgetUpdate engine");
 			if(widgetUpdate != null) {
 				widgetUpdate.stopThread();
 			}
@@ -647,7 +647,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onDestroy() {
 		super.onDestroy();
 		this.mWakeLock.release();	// We allow screen shut, now...
-		Log.e("Activity_Main.onDestroy","Stopping WidgetUpdate thread !");
+		Log.v("Activity_Main.onDestroy","Stopping WidgetUpdate thread !");
 		if(widgetUpdate != null) {
 			widgetUpdate.stopThread();	// Normally, Exit choice has already stopped this background engine
 			widgetUpdate=null;
@@ -656,7 +656,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.e("Activity_Main.onResume","Try to reactivate  WidgetUpdate thread !");
+		Log.v("Activity_Main.onResume","Try to reactivate  WidgetUpdate thread !");
 		if(widgetUpdate == null)
 			widgetUpdate = new WidgetUpdate(this,sbanim,params);
 		else

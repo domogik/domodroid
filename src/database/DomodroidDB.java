@@ -34,15 +34,22 @@ public class DomodroidDB {
 	}
 	
 	public void closeDb(){
+		try {
+			context.getContentResolver().cancelSync(null);
+		} catch ( Exception e) {}
 	}
 
 	public void insertArea(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("area");
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_AREA, null);
+
 		for (int i =0; i < itemArray.length(); i++){
 			values.put("description", itemArray.getJSONObject(i).getString("description").toString());
 			values.put("id", itemArray.getJSONObject(i).getInt("id"));
 			values.put("name", itemArray.getJSONObject(i).getString("name").toString());
+			Log.d(mytag,"Inserting Area "+itemArray.getJSONObject(i).getString("name").toString());
+			
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
 		}
 	}
@@ -50,6 +57,8 @@ public class DomodroidDB {
 	public void insertRoom(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("room");
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_ROOM, null);
+
 		int area_id;
 		for (int i =0; i < itemArray.length(); i++){
 			if(itemArray.getJSONObject(i).getString("area_id").equals(""))area_id=0;
@@ -65,6 +74,8 @@ public class DomodroidDB {
 	public void insertIcon(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("ui_config");
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_ICON, null);
+
 		for (int i =0; i < itemArray.length(); i++){
 			values.put("name", itemArray.getJSONObject(i).getString("name").toString());
 			values.put("value", itemArray.getJSONObject(i).getString("value").toString());
@@ -76,6 +87,8 @@ public class DomodroidDB {
 	public void insertFeature(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("feature");
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
+
 		for (int i =0; i < itemArray.length(); i++){
 			values.put("device_feature_model_id", itemArray.getJSONObject(i).getString("device_feature_model_id").toString());
 			values.put("id", itemArray.getJSONObject(i).getInt("id"));
@@ -97,6 +110,8 @@ public class DomodroidDB {
 	public void insertFeatureAssociation(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("feature_association");
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_ASSOCIATION, null);
+
 		for (int i =0; i < itemArray.length(); i++){
 			values.put("place_id", itemArray.getJSONObject(i).getInt("place_id"));
 			values.put("place_type", itemArray.getJSONObject(i).getString("place_type"));
@@ -112,7 +127,8 @@ public class DomodroidDB {
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("stats");
 		String[] projection = {"COUNT(*)"};
-		
+		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
+
 		for (int i =0; i < itemArray.length(); i++){
 			Cursor curs=null;
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", new String [] {itemArray.getJSONObject(i).getString("device_id")+"",itemArray.getJSONObject(i).getString("skey")}, null);
@@ -235,11 +251,24 @@ public class DomodroidDB {
 
 	public Entity_Map[] requestFeatures(String map){
 		Cursor curs=null;
+		String[] projection = {"value"};	
 		Entity_Map[] features=null;
 		try {
-			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP, null, null, null, null);
+			Log.v(mytag+"("+owner+")","Getting database features for map : "+map);
+			/*
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, 
+					projection, 
+					"device_id = ? AND key = ?", 
+					new String [] {device_id+"", key}, null);
+			*/
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP, projection, 
+					"table_feature_map = ?", 
+					new String[] {"\'"+map+"\' "},
+					null);
 			features=new Entity_Map[curs.getCount()];
 			int count=curs.getCount();
+			Log.v(mytag+"("+owner+")","Entities_Map returned for map : "+map+" = "+count);
+			
 			for(int i=0;i<count;i++) {
 				curs.moveToPosition(i);
 				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));

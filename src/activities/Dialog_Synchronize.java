@@ -28,12 +28,13 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	private TextView message;
 	private String urlAccess;
 	private SharedPreferences.Editor prefEditor;
-	private Handler handler;
+	private static Handler handler = null;
 	private SharedPreferences params;
 	private LoadConfig sync;
+	public Boolean need_refresh = false;
 	private Activity context;
 	public Boolean reload = false;
-	
+	private DomodroidDB db = null;
 
 	public Dialog_Synchronize(Activity context) {
 		super(context);
@@ -44,7 +45,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		cancelButton = (Button) findViewById(R.id.CancelButton);
 		cancelButton.setOnClickListener(this);
 		
-		handler = new Handler() {
+		handler = new  Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				try {
@@ -52,6 +53,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					if(loc_Value.equals("sync_done")) {
 						sync.cancel(true);
 						dismiss();
+						
 						return;
 					}
 				} catch (Exception e) {}
@@ -65,6 +67,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	
 	public void onClick(View v) {
 		if (v == cancelButton)
+			need_refresh = false;
 			sync.cancel(true);
 			dismiss();
 	}
@@ -86,6 +89,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 			prefEditor=params.edit();
 			urlAccess = params.getString("URL","1.1.1.1");
 			urlAccess = urlAccess.replaceAll("[\r\n]+", "");
+			if(db == null)
+				db = new DomodroidDB(context);
 		}
 
 		@Override
@@ -123,12 +128,13 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				}
 				String Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
-				DomodroidDB db = new DomodroidDB(context);
+				
 				JSONObject json_AreaList = null;
 				JSONObject json_RoomList = null;
 				JSONObject json_FeatureList = null;
 				JSONObject json_FeatureAssociationList = null;
 				JSONObject json_IconList = null;
+				Log.d("Dialog_Synchronize", "urlAccess = <"+urlAccess+">");
 				
 				if(Rinor_Api_Version <=0.5){
 					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
@@ -137,6 +143,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						handler.sendEmptyMessage(0);
 						return null;
 					}
+					Log.d("Dialog_Synchronize", "AreaList = <"+json_AreaList.toString()+">");
+					
 					publishProgress(20);
 					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
 					if(json_RoomList == null) {
@@ -144,6 +152,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						handler.sendEmptyMessage(0);
 						return null;
 					}
+					//Log.d("Dialog_Synchronize", "RoomList = <"+json_RoomList.toString()+">");
+					
 					publishProgress(40);
 					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
 					if(json_FeatureList == null) {
@@ -151,6 +161,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						handler.sendEmptyMessage(0);
 						return null;
 					}
+					
 					publishProgress(60);
 					json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/");
 					if(json_FeatureAssociationList == null) {
@@ -248,6 +259,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							Widget.put("device_feature", device_feature);
 							ListFeature.put(Widget);
 					}
+					// Common sequence for both versions sync
 					json_RoomList.put("room", rooms);
 					json_FeatureAssociationList.put("feature_association",ListFeature);
 					//Save result in sharedpref
@@ -263,6 +275,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				// Insert results into local database
 				
 				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
+				Log.v("Dialog_Synchronize","Updating database tables with new House configuration");
 				db.insertArea(json_AreaList);
 				db.insertRoom(json_RoomList);
 				db.insertFeature(json_FeatureList);
@@ -270,21 +283,27 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				if(Rinor_Api_Version <=0.5){
 					db.insertIcon(json_IconList);
 				}
-				
+				/*
 				Log.v("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
 				Log.v("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
 				Log.v("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
 				Log.v("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
+				*/
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				for (Entity_Feature feature : listFeature) {
 					urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
 				}
 				prefEditor.putString("UPDATE_URL", urlUpdate);
+				need_refresh = true;	// To notify main activity that screen must be refreshed
 				prefEditor.commit();
+				/*
+				db.closeDb();
+				db = null;
+				*/
 				publishProgress(100);
 				
-				Log.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
+				//Log.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
 				
 				Bundle b = new Bundle();
 				//Notify sync complete to parent Dialog

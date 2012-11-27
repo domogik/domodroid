@@ -27,16 +27,20 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int REQUEST_FEATURE_STATE = 160;
 
 	public static final int INSERT_AREA = 200;
+	public static final int CLEAR_AREA = 201;
 	public static final int INSERT_ROOM = 210;
+	public static final int CLEAR_ROOM = 211;
 	public static final int INSERT_ICON = 220;
+	public static final int CLEAR_ICON = 221;
 	public static final int INSERT_FEATURE = 230;
+	public static final int CLEAR_FEATURE = 231;
 	public static final int INSERT_FEATURE_ASSOCIATION = 240;
+	public static final int CLEAR_FEATURE_ASSOCIATION = 241;
 	public static final int INSERT_FEATURE_MAP = 250;
 	public static final int CLEAR_FEATURE_MAP = 251;
 	public static final int INSERT_FEATURE_STATE = 260;
-	
+	public static final int CLEAR_FEATURE_STATE = 261;
 	public static final int UPDATE_FEATURE_STATE = 300;
-	
 	public static final int UPGRADE_FEATURE_STATE = 400;
 	
 	private static final String DOMODROID_BASE_PATH = "domodroid";
@@ -56,6 +60,12 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_INSERT_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_INSERT_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP");
+	public static final Uri CONTENT_URI_CLEAR_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_AREA");
+	public static final Uri CONTENT_URI_CLEAR_ROOM = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_ROOM");
+	public static final Uri CONTENT_URI_CLEAR_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_ICON");
+	public static final Uri CONTENT_URI_CLEAR_FEATURE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE");
+	public static final Uri CONTENT_URI_CLEAR_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_ASSOCIATION");
+	public static final Uri CONTENT_URI_CLEAR_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_STATE");
 	public static final Uri CONTENT_URI_INSERT_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_STATE");
 
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
@@ -83,6 +93,13 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION", INSERT_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP", INSERT_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP", CLEAR_FEATURE_MAP);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_AREA", CLEAR_AREA);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_ROOM", CLEAR_ROOM);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE", CLEAR_FEATURE);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_ICON",CLEAR_ICON);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_ASSOCIATION",CLEAR_FEATURE_ASSOCIATION);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_STATE",CLEAR_FEATURE_STATE);
+		
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_STATE", INSERT_FEATURE_STATE);
 		
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
@@ -110,17 +127,24 @@ public class DmdContentProvider extends ContentProvider {
 		// To erase all table contents
 		int uriType = sURIMatcher.match(uri);
 		if(uriType == UPGRADE_FEATURE_STATE){
+			Log.d("DmdContentProvider","Cleaning tables content");
 			bdd = mDB.getWritableDatabase();
-			bdd.delete("table_area", null, null);
+			bdd.beginTransaction();
+			bdd.execSQL("delete from table_area where 1=1");
+			
+			//bdd.delete("table_area", null, null);
 			bdd.delete("table_room", null, null);
 			bdd.delete("table_icon", null, null);
 			bdd.delete("table_feature", null, null);
 			bdd.delete("table_feature_association", null, null);
 			bdd.delete("table_feature_state", null, null);
 			// bdd.delete("table_feature_map", null, null); // Keep maps coordinates alive ! ! !
+			bdd.endTransaction();
 			mDB = null;
 			mDB = new DatabaseHelper(getContext());
 		}
+		Log.d("DmdContentProvider","Clear done");
+		
 		return 0;
 	}
 	
@@ -128,27 +152,64 @@ public class DmdContentProvider extends ContentProvider {
 	public String getType(Uri uri) {
 		return null;
 	}
-
+	public Uri clear(Uri uri) {
+		int uriType = sURIMatcher.match(uri);
+		long id = 0;
+		switch (uriType) {
+		case CLEAR_AREA:
+			bdd = mDB.getWritableDatabase();
+			bdd.execSQL("delete from table_area where 1=1");
+			break;
+		}
+		
+		return Uri.parse(DOMODROID_BASE_PATH + "/" + id);
+	}
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		long id = 0;
 		switch (uriType) {
 		case INSERT_AREA:
-			mDB.getWritableDatabase().insert("table_area", null, values);
+			bdd = mDB.getWritableDatabase();
+			bdd.insert("table_area", null, values);
 			break;
+		case CLEAR_AREA:
+			Log.e("DmdContentProvider","Clear areas table");
+			mDB.getWritableDatabase().execSQL("delete from table_area where 1=1");
+			break;
+		
 		case INSERT_ROOM:
 			mDB.getWritableDatabase().insert("table_room", null, values);
 			break;
+		case CLEAR_ROOM:
+			Log.e("DmdContentProvider","Clear rooms table");
+			mDB.getWritableDatabase().execSQL("delete from table_room where 1=1");
+			break;
+		
 		case INSERT_ICON:
 			mDB.getWritableDatabase().insert("table_icon", null, values);
 			break;
+		case CLEAR_ICON:
+			Log.e("DmdContentProvider","Clear icons table");
+			mDB.getWritableDatabase().execSQL("delete from table_icon where 1=1");
+			break;
+		
 		case INSERT_FEATURE:
 			mDB.getWritableDatabase().insert("table_feature", null, values);
 			break;
+		case CLEAR_FEATURE:
+			Log.e("DmdContentProvider","Clear feature table");
+			mDB.getWritableDatabase().execSQL("delete from table_feature where 1=1");
+			break;
+		
 		case INSERT_FEATURE_ASSOCIATION:
 			mDB.getWritableDatabase().insert("table_feature_association", null, values);
 			break;
+		case CLEAR_FEATURE_ASSOCIATION:
+			Log.e("DmdContentProvider","Clear feature_association table");
+			mDB.getWritableDatabase().execSQL("delete from table_feature_association where 1=1");
+			break;
+		
 		case INSERT_FEATURE_MAP:
 			mDB.getWritableDatabase().insert("table_feature_map", null, values);
 			break;
@@ -158,10 +219,15 @@ public class DmdContentProvider extends ContentProvider {
 			Log.e("DmdContentProvider","Clear widgets from map : "+values.getAsString("map"));
 			mDB.getWritableDatabase().delete("table_feature_map", "map=?", map_name);
 			break;
+			
 		case INSERT_FEATURE_STATE:
 			mDB.getWritableDatabase().insert("table_feature_state", null, values);
 			break;
-
+		case CLEAR_FEATURE_STATE:
+			Log.e("DmdContentProvider","Clear feature_state table");
+			mDB.getWritableDatabase().execSQL("delete from table_feature_state where 1=1");
+			break;
+		
 		default:
 			throw new IllegalArgumentException("Unknown URI= "+uri);
 		}
@@ -191,7 +257,12 @@ public class DmdContentProvider extends ContentProvider {
 			cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
 			break;
 		case REQUEST_FEATURE_MAP:
-			cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id",null);
+			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id",null);
+			cursor=mDB.getReadableDatabase().rawQuery(
+					"SELECT * FROM table_feature " +
+					"INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id" +
+					" WHERE table_feature_map.map = "+selectionArgs[0]
+							,null);
 			break;
 		case REQUEST_FEATURE_ID:
 			cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id WHERE table_feature_association.place_id = "+selectionArgs[0]+" AND table_feature_association.place_type="+"\""+selectionArgs[1]+"\"",null);

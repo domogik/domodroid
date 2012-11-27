@@ -103,7 +103,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
 	private int dayOffset = 1;
-	private int secondeOffset = 15;
+	private int secondeOffset = 5;
 	private int sizeOffset = 300;
 	private ViewGroup parent;
 	private LinearLayout ll_area;
@@ -114,17 +114,22 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private LinearLayout house_map;
 	private String tempUrl;
 	private Boolean reload = false;
+	DialogInterface.OnClickListener reload_listener = null;
+	DialogInterface.OnDismissListener sync_listener = null;
+	private Boolean by_usage = false;
 	private Boolean init_done = false;
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
 	private Boolean dont_freeze = false;
 	private AlertDialog.Builder dialog_reload;
 	
 	private Thread waiting_thread = null;
+	private Activity_Main myself = null;
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		myself=this;
 		setContentView(R.layout.activity_home);
 
 		//sharedPref
@@ -156,6 +161,50 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 		LoadSelections();
 		
+		// Prepare a listener to know when a sync dialog is closed...
+		if( sync_listener == null){
+			sync_listener = new DialogInterface.OnDismissListener() {
+
+				public void onDismiss(DialogInterface dialog) {
+					Log.d("Activity_Main","sync dialog has been closed !");
+					
+					// Is it success or fail ?
+					if(((Dialog_Synchronize)dialog).need_refresh) {
+						// Sync has been successful : Force to refresh current main view
+						Log.d("Activity_Main","sync dialog requires a refresh !");
+						reload = true;	// Sync being done, consider shared prefs are OK
+						parent.removeAllViews();
+						/*
+						if(history != null)
+							history = null;		//Free resource
+						history = new Vector<String[]>();
+						historyPosition = -1;
+						*/
+						Bundle b = new Bundle();
+						//Notify sync complete to parent Dialog
+						b.putInt("id", 0);
+						b.putString("type", "root");
+					    Message msg = new Message();
+					    msg.setData(b);
+					    if(widgetHandler != null)
+							widgetHandler.sendMessage(msg); 	// That should force to refresh Views
+						/*
+						ll_area.removeAllViews();
+						ll_room.removeAllViews();
+						ll_activ.removeAllViews();
+						LoadSelections();
+						SaveSelections(true);	// Dont loop on sync....
+						end_of_init();
+						*/
+					    
+					} else {
+						Log.d("Activity_Main","sync dialog done with no refresh !");
+						
+					}
+										
+				}
+			};
+		}
 		
 		//update thread
 		sbanim = new Handler() {
@@ -169,7 +218,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name1));
 				}else if(msg.what==3){
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
-				}
+				} 
 			}	
 		};
 
@@ -275,30 +324,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			// End of onCreate (UIThread)
 	}
 	
-	private void check_answer() {
-		Log.v("Activity_Main","reload choice done..");
-		if(reload) {
-			// If answer is 'yes', load preferences from backup
-			Log.e("Activity_Home","reload settings..");
-			loadSharedPreferencesFromFile(backupprefs);
-			panel.setOpen(false, false);
-			dialog_sync = new Dialog_Synchronize(this);
-			dialog_sync.reload = this.reload;	//To notify if settings reloaded : don't recreate database !
-			dialog_sync.setParams(params);
-			dialog_sync.show();
-			dialog_sync.startSync();
-		} else {
-			Log.v("Activity_Main","Settings not reloaded : clear database..");
-			File database = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db");
-			if(database.exists()) {
-				database.delete();
-			}
-		}
-
-		if(! init_done)
-			// Complete the UI init
-			end_of_init();
-	}
+	
 	private void createAlert() {
 		notSyncAlert = new AlertDialog.Builder(this);
 		notSyncAlert.setMessage(getText(R.string.not_sync)).setTitle("Warning!");
@@ -310,9 +336,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		});
 
 	}
+	
 	private void end_of_init() {
 		// Finalize screen appearence
-		Log.v("Activity_Main","Finalize onCreate()..");
+		Log.v("Activity_Main","Finalize Main Screen..");
 		
 		if(! reload) {
 			//alertDialog not syncsplash
@@ -327,41 +354,72 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.putBoolean("SPLASH", true);
 			prefEditor.commit();
 		}
-		Log.e("Activity_Home", "Starting/restarting WidgetUpdate engine !");
-		if(widgetUpdate != null) {
-			widgetUpdate.cancelEngine();
-			widgetUpdate = null;
+		// WidgetUpdate is a background process, submitting queries to Rinor
+		//		and updating local database
+		if(widgetUpdate == null) {
+			Log.i("Activity_Main", "Starting WidgetUpdate engine !");
+			widgetUpdate = new WidgetUpdate(this,sbanim,params);
 		}
-		widgetUpdate = new WidgetUpdate(this,sbanim,params);
 		
 		if(history != null)
 			history = null;		//Free resource
 		history = new Vector<String[]>();
+		historyPosition = 0;
 		
 		//load widgets
-		Log.e("Activity_Main", "Starting WidgetHandler thread !");
-		widgetHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				try {
-					historyPosition++;
-					loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-					Log.v("Activity_Main.widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
-					history.add(historyPosition,new String [] {msg.getData().getInt("id")+"",msg.getData().getString("type")});
-				} catch (Exception e) {
-					Log.e("Activity_Main.widgetHandler", "handler error into loadWidgets");
-					e.printStackTrace();
-				}
-			}	
-		};
-		Log.v("Activity_Main", "Starting/restarting wAgent !");
-		
-		wAgent=new Widgets_Manager(widgetHandler);
+		if(widgetHandler == null) {
+			Log.i("Activity_Main", "Starting WidgetHandler thread !");
+			widgetHandler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					
+					if(widgetUpdate == null)
+						widgetUpdate = new WidgetUpdate(myself, sbanim, params);
+				
+					try {
+						historyPosition++;
+						loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
+						Log.v("Activity_Main.widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
+						history.add(historyPosition,new String [] {msg.getData().getInt("id")+"",msg.getData().getString("type")});
+					} catch (Exception e) {
+						Log.e("Activity_Main.widgetHandler", "handler error into loadWidgets");
+						e.printStackTrace();
+					}
+				}	
+			};
+		}
+		if(wAgent == null) {
+			Log.v("Activity_Main", "Starting wAgent !");
+			wAgent=new Widgets_Manager(widgetHandler);
+		}
 		loadWigets(0,"root");
 		historyPosition=0;
 		history.add(historyPosition,new String [] {"0","root"});
 		
 		init_done = true;
+	}
+	
+	private void check_answer() {
+		Log.v("Activity_Main","reload choice done..");
+		if(reload) {
+			// If answer is 'yes', load preferences from backup
+			Log.e("Activity_Home","reload settings..");
+			loadSharedPreferencesFromFile(backupprefs);
+			panel.setOpen(false, false);
+			run_sync_dialog();
+			
+		} else {
+			Log.v("Activity_Main","Settings not reloaded : clear database..");
+			File database = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db");
+			if(database.exists()) {
+				database.delete();
+			}
+		}
+
+		if(! init_done) {
+			// Complete the UI init
+			end_of_init();
+		}
 	}
 	
 	private boolean saveSharedPreferencesToFile(File dst) {
@@ -437,6 +495,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	public void loadWigets(int id, String type){
+		Log.d("Activity_Main.loadWidgets","Construct main View");
 		parent.removeAllViews();
 		ll_area = new LinearLayout(this);
 		ll_area.setOrientation(LinearLayout.VERTICAL);
@@ -447,23 +506,37 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 		try {
 			if(type.equals("root")){
+				ll_area.removeAllViews();
 				parent.addView(house_map);
-				ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
+				if( ! by_usage) {
+					Log.d("Activity_Main.loadWidgets","Mode Compatibility 0.2: Load areas");
+					ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
+				} else {
+					Log.d("Activity_Main.loadWidgets","Mode Compatibility 0.3: Don't load areas");
+				}
 			}
-			if(type.equals("root") || type.equals("area"))ll_room = wAgent.loadRoomWidgets(this, id, ll_room, params);
-			if(type.equals("area") || type.equals("room") || type.equals("house"))ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+			if(type.equals("root") || type.equals("area")) {
+				ll_room.removeAllViews();
+				ll_room = wAgent.loadRoomWidgets(this, id, ll_room, params);
+			}
+			if(type.equals("area") || type.equals("room") || type.equals("house"))
+				ll_activ.removeAllViews();
+				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		parent.addView(ll_area);
-		parent.addView(ll_room);
-		parent.addView(ll_activ);
+		if( ! by_usage) {
+			parent.addView(ll_area);
+			parent.addView(ll_room);
+			parent.addView(ll_activ);
+		}
 	}
 
 	/**home_reload
 	 * save selections preference
 	 */
-	private void SaveSelections() {
+	private void SaveSelections(Boolean mode) {
 		try{
 			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 			SharedPreferences.Editor prefEditor=params.edit();
@@ -486,20 +559,33 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.commit();
 			if(backupprefs != null)
 				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
-			
-			if(!tempUrl.equals(localIP.getText().toString())){
-				dialog_sync = new Dialog_Synchronize(this);
-				dialog_sync.setParams(params);
-				dialog_sync.show();
-				dialog_sync.startSync();
-			}
-		}catch(Exception e){}
+			/*
+			if(! mode)
+				run_sync_dialog();	// force a resync with server if just after a reload
+			*/
+		} catch(Exception e){}
 	}
-
+	
+	private void run_sync_dialog() {
+		
+		if(dialog_sync == null)
+			dialog_sync = new Dialog_Synchronize(this);
+		dialog_sync.reload = reload;
+		dialog_sync.setOnDismissListener(sync_listener);
+		dialog_sync.setParams(params);
+		dialog_sync.show();
+		if(widgetUpdate != null) {
+			widgetUpdate.cancelEngine();
+			widgetUpdate = null;	//Try to unlock database....
+		}
+		dialog_sync.startSync();
+	}
+	
 	private void LoadSelections() {
 		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		localIP.setText(params.getString("IP1",null));
 		tempUrl=params.getString("IP1",null);
+		by_usage = params.getBoolean("BY_USAGE", false);
 		checkbox3.setChecked(params.getBoolean("DRAG",false));
 		checkbox4.setChecked(params.getBoolean("ZOOM",false));
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
@@ -538,7 +624,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		Log.v("Activity_Main","onPanelClosed");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
-		SaveSelections();
+		SaveSelections(false);		// To force a sync operation, if something has been modified...
 		if(widgetUpdate == null)
 			widgetUpdate = new WidgetUpdate(this,sbanim,params);
 
@@ -554,12 +640,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
 		
 		if(v.getTag().equals("sync")) {
-			panel.setOpen(false, false);
-			dialog_sync = new Dialog_Synchronize(this);
-			dialog_sync.reload = this.reload;	//To notify if settings reloaded : don't recreate database !
-			dialog_sync.setParams(params);
-			dialog_sync.show();
-			dialog_sync.startSync();
+			// click on 'sync' button into Sliding_Drawer View
+			panel.setOpen(false, false);	// Hide the View
+			run_sync_dialog();		// And run a resync with Rinor server
+			
 		}	else if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....
 			Log.v("Activity_Main Exit","Stopping WidgetUpdate thread !");
@@ -611,7 +695,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					createAlert();
 				notSyncAlert.show();
 			}
-		}
+		}if(widgetUpdate != null)
+			widgetUpdate.restartThread();
+		
 		else if(v.getTag().equals("menu")) {
 			
 			if(!panel.isOpen()){

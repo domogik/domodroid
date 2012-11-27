@@ -140,6 +140,7 @@ public class Widgets_Manager {
 		DomodroidDB domodb = new DomodroidDB(context);
 		domodb.owner="Widgets_Manager.loadAreaWidgets";
 		Entity_Area[] listArea = domodb.requestArea();
+		Log.d("loadAreaWidgets","Areas list size : "+listArea.length);
 
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 		LinearLayout mainPan = new LinearLayout(context);
@@ -176,6 +177,7 @@ public class Widgets_Manager {
 			}
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
+			Log.d("loadRoomWidgets","Adding area : "+area.getName());
 			graph_area = new Graphical_Area(context,area.getId(),area.getName(),area.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_area);
 			if(columns){	
@@ -233,6 +235,7 @@ public class Widgets_Manager {
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
 			graph_room = new Graphical_Room(context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
+			Log.d("loadRoomWidgets","Adding room : "+room.getDescription());
 			tmpPan.addView(graph_room);
 
 			if(columns){	

@@ -264,19 +264,19 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 			@Override
 			public void run() {
-				Log.e(mytag, "TimerTask.run : Create Runnable");
+				//Log.e(mytag, "TimerTask.run : Create Runnable");
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
 							if(getWindowVisibility()==0 || !activate){
-								Log.e(mytag, "update Timer : Execute UpdateThread");
+								//Log.e(mytag, "update Timer : Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e(mytag, "update Timer : Destroy runnable");
+								//Log.e(mytag, "update Timer : Destroy runnable");
 								this.finalize();
 							}
 						} catch (Exception e) {
@@ -286,7 +286,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e(mytag,"TimerTask.run : Queuing Runnable");	
+				//Log.e(mytag,"TimerTask.run : Queuing Runnable");	
 				try {
 					handler.post(myTH);
 					} catch (Exception e) {
@@ -302,7 +302,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+			//Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
 				
 			Bundle b = new Bundle();
 			String state = domodb.requestFeatureState(dev_id, state_key);

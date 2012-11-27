@@ -146,8 +146,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		listeMap.setAdapter(adapter_map);
 		listeMap.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				mapView.setCurrentFile(position);
-				mapView.initMap();
+				Log.d("Activity_Map.onclick","Map selected at Position = "+position);
+				if((position < listItem.size()) && (position > -1) ) {
+					mapView.setCurrentFile(position);
+					mapView.initMap();
+				}
 			}
 		});
 

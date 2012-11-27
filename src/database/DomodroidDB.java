@@ -254,27 +254,21 @@ public class DomodroidDB {
 		String[] projection = {"value"};	
 		Entity_Map[] features=null;
 		try {
-			Log.v(mytag+"("+owner+")","Getting database features for map : "+map);
-			/*
-			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, 
-					projection, 
-					"device_id = ? AND key = ?", 
-					new String [] {device_id+"", key}, null);
-			*/
+			//Log.v(mytag+"("+owner+")","Getting database features for map : "+map);
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP, projection, 
 					"table_feature_map = ?", 
 					new String[] {"\'"+map+"\' "},
 					null);
 			features=new Entity_Map[curs.getCount()];
 			int count=curs.getCount();
-			Log.v(mytag+"("+owner+")","Entities_Map returned for map : "+map+" = "+count);
+			Log.v(mytag+"("+owner+")",count+" Entities_Map returned for map : "+map);
 			
 			for(int i=0;i<count;i++) {
 				curs.moveToPosition(i);
 				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));
 			}
 		} catch (Exception e) {
-			Log.e(mytag+"("+owner+")","request feature map error");
+			Log.e(mytag+"("+owner+")","request feature_map error");
 			e.printStackTrace();
 		}
 		curs.close();

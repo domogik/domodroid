@@ -255,17 +255,80 @@
     </activities.Sliding_Drawer>
 
     <!-- Set center image + background -->
-
+	<!-- Title Bar with 2 menus, About, and logo -->
     <FrameLayout
         android:id="@+id/TitleBar"
         android:layout_width="fill_parent"
         android:layout_height="40dip"
-        android:gravity="center" >
+        android:gravity="center" 
+       >
+        
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+        
+	        <LinearLayout 
+	            android:layout_width="91dp"
+			    android:layout_height="match_parent"
+			    android:layout_gravity="left"
+			    android:gravity="left"
+			    android:orientation="horizontal" 
+                >
+				<!--  menu_green -->
+		        <TextView
+		            android:id="@+id/menu_button1"
+		            android:layout_width="match_parent"
+		            android:layout_height="fill_parent"
+		            android:layout_gravity="left"
+		            android:paddingLeft="10dip"
+			        android:paddingTop="4dip"
+			        android:gravity="center"
+		            android:text="@string/home_button1"
+		            android:textColor="#cfD1D1"
+		            android:textSize="16sp" />
+		
+		       <!--  menu_white -->
+			    <TextView
+			        android:id="@+id/menu_button2"
+			        android:layout_width="match_parent"
+			        android:layout_height="fill_parent"
+			        android:layout_gravity="left"
+			        android:gravity="center"
+			        android:paddingLeft="10dip"
+			        android:paddingTop="4dip"
+			        android:text="@string/home_button1"
+			        android:textColor="#A5C933"
+			        android:textSize="16sp" />
+			    
+	       </LinearLayout>
+	       
 
         <TextView
+            android:id="@+id/About_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.53"
+            android:gravity="center"
+            android:text="@string/button4"
+            android:textColor="#cfD1D1"
+            android:textSize="16sp" />
+
+       <ImageView
+                android:id="@+id/app_name"
+                android:layout_width="164dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:src="@drawable/app_name1" />
+        
+    </LinearLayout>
+        
+	<!-- 
+        <TextView
             android:id="@+id/menu_button1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="left"
             android:paddingLeft="10dip"
             android:paddingTop="4dip"
@@ -275,8 +338,8 @@
 
         <TextView
             android:id="@+id/menu_button2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="left"
             android:paddingLeft="10dip"
             android:paddingTop="4dip"
@@ -288,6 +351,7 @@
             android:id="@+id/About_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
             android:paddingLeft="10dip"
             android:paddingTop="4dip"
@@ -303,6 +367,8 @@
             android:paddingRight="5dip"
             android:paddingTop="5dip"
             android:src="@drawable/app_name1" />
+         -->
+         
     </FrameLayout>
 
 </FrameLayout>

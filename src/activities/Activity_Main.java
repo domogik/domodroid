@@ -234,11 +234,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 
 		//menu button
-		menu_white = (TextView) findViewById(R.id.menu_button1);
-		menu_white.setOnClickListener(this);
-		menu_white.setTag("menu");
+		
 		menu_green = (TextView) findViewById(R.id.menu_button2);
 		menu_green.setVisibility(View.GONE);
+		
+		menu_white = (TextView) findViewById(R.id.menu_button1);
+		menu_white.setOnClickListener(this);
+		menu_white.setVisibility(View.VISIBLE);
+		menu_white.setTag("menu");
+		
 		menu_about = (TextView) findViewById(R.id.About_button);
 		menu_about.setOnClickListener(this);
 		menu_about.setTag("about");
@@ -552,8 +556,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 			urlAccess = localIP.getText().toString();
 
-			if(urlAccess.lastIndexOf("/")==localIP.getText().toString().length()-1) format_urlAccess = urlAccess;
-			else format_urlAccess = urlAccess.concat("/");
+			if(urlAccess.lastIndexOf("/")==localIP.getText().toString().length()-1) 
+				format_urlAccess = urlAccess;
+			else 
+				format_urlAccess = urlAccess.concat("/");
 
 			prefEditor.putString("URL",format_urlAccess);
 			prefEditor.commit();
@@ -638,7 +644,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 	public void onClick(View v) {
 		dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
-		
 		if(v.getTag().equals("sync")) {
 			// click on 'sync' button into Sliding_Drawer View
 			panel.setOpen(false, false);	// Hide the View
@@ -684,8 +689,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					createAlert();
 				notSyncAlert.show();
 			}
-		}
-		else if(v.getTag().equals("map")) {
+		} else if(v.getTag().equals("map")) {
 			if(params.getBoolean("SYNC", false)==true){
 				//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 				mapI = new Intent(Activity_Main.this,Activity_Map.class);
@@ -695,11 +699,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					createAlert();
 				notSyncAlert.show();
 			}
-		}if(widgetUpdate != null)
-			widgetUpdate.restartThread();
+			if(widgetUpdate != null)
+				widgetUpdate.restartThread();
 		
-		else if(v.getTag().equals("menu")) {
-			
+		} else if(v.getTag().equals("menu")) {
+			// A clic on menu will activate/deactivate panel allowing settings configuration and giving
+			//  access to 'sync' button
 			if(!panel.isOpen()){
 				panel.setOpen(true, true);	//open with animation
 			}else{

@@ -283,12 +283,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				if(Rinor_Api_Version <=0.5){
 					db.insertIcon(json_IconList);
 				}
-				/*
-				Log.v("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
-				Log.v("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
-				Log.v("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
-				Log.v("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
-				*/
+				
+				//Log.v("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
+				//Log.v("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
+				//Log.v("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
+				//Log.v("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
+				
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				for (Entity_Feature feature : listFeature) {

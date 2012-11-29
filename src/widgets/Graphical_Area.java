@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +56,7 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 		this.widgetHandler=handler;
 		this.setPadding(5, 5, 5, 5);
 		setOnTouchListener(this);
-
+		//Log.d("Graphical_Area("+id+")","creating view for "+name_area+" "+description_area);
 		//panel with border	
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));

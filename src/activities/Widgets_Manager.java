@@ -199,7 +199,8 @@ public class Widgets_Manager {
 		DomodroidDB domodb = new DomodroidDB(context);
 		domodb.owner="Widgets_Manager.loadRoomWidgets";
 		Entity_Room[] listRoom = domodb.requestRoom(id);
-
+		Log.d("loadRoomWidgets","Rooms list size : "+listRoom.length);
+		
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 		LinearLayout mainPan = new LinearLayout(context);
 		mainPan.setOrientation(LinearLayout.HORIZONTAL);
@@ -235,7 +236,10 @@ public class Widgets_Manager {
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
 			graph_room = new Graphical_Room(context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
-			Log.d("loadRoomWidgets","Adding room : "+room.getDescription());
+			String ref = room.getDescription();
+			if(ref.length() == 0)
+				ref = room.getName();
+			Log.d("loadRoomWidgets","Adding room : "+ref);
 			tmpPan.addView(graph_room);
 
 			if(columns){	

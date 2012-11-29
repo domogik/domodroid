@@ -46,6 +46,7 @@ public class WidgetUpdate implements Serializable {
 		domodb = new DomodroidDB(context);	
 		domodb.owner=mytag;
 		sbanim = anim;
+		Log.d(mytag,"Initial start requested....");
 		Timer();
 	}
 	

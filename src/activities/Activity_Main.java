@@ -112,6 +112,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Vector<String[]> history;
 	private int historyPosition;
 	private LinearLayout house_map;
+	private Graphical_Feature house;
+	private Graphical_Feature map;
 	private String tempUrl;
 	private Boolean reload = false;
 	DialogInterface.OnClickListener reload_listener = null;
@@ -174,12 +176,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						Log.d("Activity_Main","sync dialog requires a refresh !");
 						reload = true;	// Sync being done, consider shared prefs are OK
 						parent.removeAllViews();
-						/*
-						if(history != null)
-							history = null;		//Free resource
-						history = new Vector<String[]>();
-						historyPosition = -1;
-						*/
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
 						b.putInt("id", 0);
@@ -188,20 +184,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					    msg.setData(b);
 					    if(widgetHandler != null)
 							widgetHandler.sendMessage(msg); 	// That should force to refresh Views
-						/*
-						ll_area.removeAllViews();
-						ll_room.removeAllViews();
-						ll_activ.removeAllViews();
-						LoadSelections();
-						SaveSelections(true);	// Dont loop on sync....
-						end_of_init();
-						*/
-					    
+						
 					} else {
-						Log.d("Activity_Main","sync dialog done with no refresh !");
+						Log.d("Activity_Main","sync dialog end with no refresh !");
 						
 					}
-										
+					((Dialog_Synchronize)dialog).need_refresh = false;					
 				}
 			};
 		}
@@ -265,10 +253,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		house_map.setOrientation(LinearLayout.HORIZONTAL);
 		house_map.setPadding(5, 5, 5, 5);
-
-		Graphical_Feature house = new Graphical_Feature(getApplicationContext(),0,"House","","house",0);
+		
+		house = new Graphical_Feature(getApplicationContext(),0,"House","","house",0);
 		house.setPadding(0, 0, 5, 0);
-		Graphical_Feature map = new Graphical_Feature(getApplicationContext(),0,"Map","","map",0);
+		map = new Graphical_Feature(getApplicationContext(),0,"Map","","map",0);
 		map.setPadding(5, 0, 0, 0);
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 
@@ -280,7 +268,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		map.setOnClickListener(this);
 		map.setTag("map");
 
-		house_map.addView(house);
+		if(! by_usage)
+			house_map.addView(house);
+		
 		house_map.addView(map);
 		init_done = false;
 		
@@ -499,7 +489,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	public void loadWigets(int id, String type){
-		Log.d("Activity_Main.loadWidgets","Construct main View");
+		Log.d("Activity_Main.loadWidgets","Construct main View id="+id+" type="+type);
 		parent.removeAllViews();
 		ll_area = new LinearLayout(this);
 		ll_area.setOrientation(LinearLayout.VERTICAL);
@@ -507,34 +497,61 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		ll_room.setOrientation(LinearLayout.VERTICAL);
 		ll_activ = new LinearLayout(this);
 		ll_activ.setOrientation(LinearLayout.VERTICAL);
-
+		
+		house_map.removeAllViews();
+		if( ! by_usage) {
+			house_map.addView(house);
+		}
+		house_map.addView(map);
+		
+		
 		try {
+			
 			if(type.equals("root")){
 				ll_area.removeAllViews();
-				parent.addView(house_map);
-				if( ! by_usage) {
-					Log.d("Activity_Main.loadWidgets","Mode Compatibility 0.2: Load areas");
+				if(! by_usage) {
+					// Version 0.2 : display house, map and areas
+					parent.addView(house_map);	// House & map
 					ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
+					parent.addView(ll_area);	//and areas
 				} else {
-					Log.d("Activity_Main.loadWidgets","Mode Compatibility 0.3: Don't load areas");
+					// by_usage
+					parent.addView(house_map);	// With only map
+					ll_room = wAgent.loadRoomWidgets(this, 1, ll_room, params);	//List of known usages 'as rooms'
+					parent.addView(ll_room);
+					
 				}
-			}
-			if(type.equals("root") || type.equals("area")) {
-				ll_room.removeAllViews();
-				ll_room = wAgent.loadRoomWidgets(this, id, ll_room, params);
-			}
-			if(type.equals("area") || type.equals("room") || type.equals("house"))
+			} else if(type.equals("house")) {
+				//Only possible if version 0.2 (the 'house' is never proposed to be clicked)
+				ll_area.removeAllViews();
+				parent.addView(house_map);	// House & map
+				ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
+				parent.addView(ll_area);	//and areas
 				ll_activ.removeAllViews();
 				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
-			
+				parent.addView(ll_activ);
+				
+			} else 	if(type.equals("area")) {
+				//Only possible if version 0.2 (the area 'usage' is never proposed to be clicked)
+				//parent.addView(house_map);	// House & map
+				ll_room.removeAllViews();
+				ll_room = wAgent.loadRoomWidgets(this, id, ll_room, params);
+				parent.addView(ll_room);
+				ll_activ.removeAllViews();
+				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+				parent.addView(ll_activ);
+			} else 	if(type.equals("room")) {
+				ll_activ.removeAllViews();
+				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+				parent.addView(ll_activ);
+			} 
+				
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		if( ! by_usage) {
-			parent.addView(ll_area);
-			parent.addView(ll_room);
-			parent.addView(ll_activ);
-		}
+		
+		
+		
 	}
 
 	/**home_reload
@@ -579,11 +596,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		dialog_sync.reload = reload;
 		dialog_sync.setOnDismissListener(sync_listener);
 		dialog_sync.setParams(params);
-		dialog_sync.show();
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
-			widgetUpdate = null;	//Try to unlock database....
+			widgetUpdate = null;	//Try to unlock database....to avoid conflicts with sync
 		}
+		dialog_sync.show();
 		dialog_sync.startSync();
 	}
 	

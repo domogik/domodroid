@@ -129,9 +129,13 @@ public class DmdContentProvider extends ContentProvider {
 		if(uriType == UPGRADE_FEATURE_STATE){
 			Log.d("DmdContentProvider","Cleaning tables content");
 			bdd = mDB.getWritableDatabase();
-			bdd.beginTransaction();
 			bdd.execSQL("delete from table_area where 1=1");
+			bdd.execSQL("delete from table_room where 1=1");
+			bdd.execSQL("delete from table_feature where 1=1");
+			bdd.execSQL("delete from table_feature_association where 1=1");
+			bdd.execSQL("delete from table_feature_state where 1=1");
 			
+			/*
 			//bdd.delete("table_area", null, null);
 			bdd.delete("table_room", null, null);
 			bdd.delete("table_icon", null, null);
@@ -139,12 +143,19 @@ public class DmdContentProvider extends ContentProvider {
 			bdd.delete("table_feature_association", null, null);
 			bdd.delete("table_feature_state", null, null);
 			// bdd.delete("table_feature_map", null, null); // Keep maps coordinates alive ! ! !
+			 
 			bdd.endTransaction();
+			bdd.close();
+			bdd=null;
+			/*
 			mDB = null;
 			mDB = new DatabaseHelper(getContext());
+			*/
+			getContext().getContentResolver().notifyChange(uri, null);
+			
 		}
 		Log.d("DmdContentProvider","Clear done");
-		
+		getContext().getContentResolver().notifyChange(uri, null);
 		return 0;
 	}
 	
@@ -168,6 +179,7 @@ public class DmdContentProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		long id = 0;
+		long rowid = 0;
 		switch (uriType) {
 		case INSERT_AREA:
 			bdd = mDB.getWritableDatabase();
@@ -179,7 +191,8 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		
 		case INSERT_ROOM:
-			mDB.getWritableDatabase().insert("table_room", null, values);
+			rowid = mDB.getWritableDatabase().insert("table_room", null, values);
+			Log.d("DmdContentProvider","Inserted room ("+rowid+") "+values.getAsInteger("id")+" "+values.getAsString("name"));
 			break;
 		case CLEAR_ROOM:
 			Log.e("DmdContentProvider","Clear rooms table");
@@ -231,6 +244,8 @@ public class DmdContentProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI= "+uri);
 		}
+		getContext().getContentResolver().notifyChange(uri, null);
+		
 		return Uri.parse(DOMODROID_BASE_PATH + "/" + id);
 	}
 
@@ -242,12 +257,21 @@ public class DmdContentProvider extends ContentProvider {
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
 		case REQUEST_AREA:
-			queryBuilder.setTables("table_area");
-			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
+			//queryBuilder.setTables("table_area");
+			//cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
+			cursor=mDB.getReadableDatabase().rawQuery(
+					"SELECT * FROM table_area "
+					,null);
+			Log.d("DmdContentProvider","Query on table_area return "+cursor.getCount()+" rows");
 			break;
 		case REQUEST_ROOM:
 			queryBuilder.setTables("table_room");
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
+			/* cursor=mDB.getReadableDatabase().rawQuery(
+					"SELECT * FROM table_room "
+					,null);
+					*/
+			Log.d("DmdContentProvider","Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
 			break;
 		case REQUEST_ICON:
 			queryBuilder.setTables("table_icon");
@@ -282,15 +306,21 @@ public class DmdContentProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		int uriType = sURIMatcher.match(uri);
+		int items = 0;
 		switch (uriType) {
 		case UPDATE_FEATURE_STATE:
-			mDB.getWritableDatabase().update("table_feature_state", values, selection,selectionArgs);
+			String id = selectionArgs[0];
+			String skey = selectionArgs[1];
+			Log.d("DMDContentProvider.update","try to updated feature_state with device_id = "+id+" skey = "+skey+" selection="+selection);
+			
+			items=mDB.getWritableDatabase().update("table_feature_state", values, selection,selectionArgs);
+			Log.d("DMDContentProvider.update","Updated rows : "+items);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
-		return 0;
+		return items;
 	}
 	
 }

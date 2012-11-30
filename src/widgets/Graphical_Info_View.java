@@ -314,6 +314,13 @@ public class Graphical_Info_View extends View{
 				Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
 
 				JSONObject json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
+				Log.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
+				if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
+					//That seems to be a zombie
+					loaded=false;
+					handler.sendEmptyMessage(0);	// To force a close of this instance
+					return null;
+				}
 				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
 

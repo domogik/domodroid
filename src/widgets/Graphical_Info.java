@@ -79,6 +79,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		this.update=update;
 		this.wname = name;
 		this.url = url;
+		this.activate=false;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Log.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
@@ -153,7 +154,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		canvas.url = url;
 		canvas.period = period;
 		canvas.update = update;
-
+		
 		featurePan.addView(value);
 		infoPan.addView(nameDevices);
 		infoPan.addView(state_key_view);
@@ -171,30 +172,37 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				try {
-					float formatedValue = 0;
-					String loc_Value = msg.getData().getString("message");
-					if(loc_Value != null)
-						formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
+				if(activate) {
+					//Log.d(mytag,"Handler receives a request to die " );
+						//That seems to be a zombie
+					removeView(background);
 					
-					if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+"°C");
-					else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+"hPa");
-					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
-					else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+"km");
-					else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+"°C");
-					else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+"km/h");
-					else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+"°C");
-					else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
-					else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
-					else value.setText(msg.getData().getString("message"));
-					Log.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
 					
-					value.setAnimation(animation);
-				} catch (Exception e) {
-					// It's probably a String 
-					value.setText(msg.getData().getString("message"));
-					Log.e(mytag, "handler error device "+wname);
-					//e.printStackTrace();
+				} else {
+					try {
+						float formatedValue = 0;
+						String loc_Value = msg.getData().getString("message");
+						if(loc_Value != null)
+							formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
+						
+						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+"°C");
+						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+"hPa");
+						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
+						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+"km");
+						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+"°C");
+						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+"km/h");
+						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+"°C");
+						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
+						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
+						else value.setText(msg.getData().getString("message"));
+						Log.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
+						value.setAnimation(animation);
+					} catch (Exception e) {
+						// It's probably a String that could'nt be converted to a float
+						value.setText(msg.getData().getString("message"));
+						//Log.e(mytag, "handler error device "+wname);
+						//e.printStackTrace();
+					}
 				}
 			}
 		};
@@ -276,8 +284,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 								if(timer != null) {
 									timer.cancel();
 								}
-								//Log.e(mytag, "update Timer : Destroy runnable");
-								this.finalize();
+								Log.d(mytag, "update Timer : No UpdateThread started...");
+								//this.finalize();
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -286,12 +294,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 						}
 					} // Runnable run method
 				}; //Runnable 
-				//Log.e(mytag,"TimerTask.run : Queuing Runnable");	
+				Log.e(mytag,"TimerTask.run : Queuing Runnable");	
 				try {
 					handler.post(myTH);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			} // TimerTask run method
 		}; //TimerTask 
 		Log.e(mytag,"Init timer for Device : "+this.dev_id);	
@@ -302,16 +310,23 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			//Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
-				
-			Bundle b = new Bundle();
-			String state = domodb.requestFeatureState(dev_id, state_key);
-			if(state != null) {
-				b.putString("message", state);
-			    msg = new Message();
-			    msg.setData(b);
-			    handler.sendMessage(msg);
-			}
+			
+				Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+				Bundle b = new Bundle();
+				String state = domodb.requestFeatureState(dev_id, state_key);
+				if(state != null) {
+					activate=false;
+					b.putString("message", state);
+				    msg = new Message();
+				    msg.setData(b);
+				    handler.sendMessage(msg);
+				} else {
+					// This widget has no feature_state : probably a zombie ????
+					activate=true;
+					handler.sendEmptyMessage(0);
+					
+				}
+			
 			return null;
 		}
 	}

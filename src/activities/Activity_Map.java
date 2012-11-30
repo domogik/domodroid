@@ -242,7 +242,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			map.put("type",feature.getValue_type());
 			map.put("state_key", feature.getState_key());
 			listItem1.add(map);
-			
 		}
 		SimpleAdapter adapter_feature=new SimpleAdapter(getBaseContext(),listItem1,
 				R.layout.item_feature,new String[] {"name","type","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});

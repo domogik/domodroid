@@ -120,7 +120,7 @@ public class MapView extends View {
 	}
 	public void clear_Widgets(){
 		String map_name=files.elementAt(currentFile);
-		Log.i(mytag,"Request to clear widgets from : "+map_name);
+		Log.i(mytag,"Request to clear all widgets from : "+map_name);
 		domodb.cleanFeatureMap(map_name);
 		initMap();
 		
@@ -211,70 +211,79 @@ public class MapView extends View {
 
 	public void drawWidgets(){
 		for (Entity_Map featureMap : listFeatureMap) {
-			drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
-			canvasWidget.drawBitmap(drawable, (featureMap.getPosx()*currentScale)-drawable.getWidth()/2, (featureMap.getPosy()*currentScale)-drawable.getWidth()/2, paint_map);
-			//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
-
-			if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
-				for(int j=1;j<5;j++){
-					paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-					paint_text.setTextSize(16);
-					canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
-					paint_text.setTextSize(14);
-					String label = featureMap.getDescription();
-					if(label.length() < 1)
-						label = featureMap.getDevice_usage_id();
-					//Log.i(mytag,"label = "+label);
-					canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-				}
-
-			}
-			else if(featureMap.getValue_type().equals("number")){
-				String value;
-				if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
-				else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
-				else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
-				else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
-				else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
-				else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
-				else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
-				else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
-				else value=featureMap.getCurrentState();
-
-				for(int j=1;j<5;j++){
-					paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-					paint_text.setTextSize(20);
-					if(featureMap != null) {
+			if(featureMap.isalive()) {
+				drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
+				canvasWidget.drawBitmap(drawable, (featureMap.getPosx()*currentScale)-drawable.getWidth()/2, (featureMap.getPosy()*currentScale)-drawable.getWidth()/2, paint_map);
+				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
+	
+				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
+					for(int j=1;j<5;j++){
+						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+						paint_text.setTextSize(16);
+						canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						paint_text.setTextSize(14);
 						String label = featureMap.getDescription();
 						if(label.length() < 1)
-							label = featureMap.getState_key();
-						//Log.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-						canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
-								(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
-								paint_text);
-						paint_text.setTextSize(15);
-						//Log.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
-								(featureMap.getPosy()*currentScale)+text_Offset_Y+6, 
-								paint_text);
+							label = featureMap.getDevice_usage_id();
+						//Log.i(mytag,"label = "+label);
+						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+					}
+				
+				} else if(featureMap.getValue_type().equals("number")){
+					String value;
+					if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
+					else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
+					else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
+					else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
+					else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
+					else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
+					else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
+					else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
+					else value=featureMap.getCurrentState();
+	
+					if(value == null)
+						value = "";
+					
+						for(int j=1;j<5;j++){
+							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+							paint_text.setTextSize(20);
+							if(featureMap != null) {
+								String label = featureMap.getDescription();
+								if(label.length() < 1)
+									label = featureMap.getState_key();
+								if(label == null)
+									label = "";
+								
+								//Log.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+								canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
+										(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
+										paint_text);
+								paint_text.setTextSize(15);
+								//Log.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+								canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
+										(featureMap.getPosy()*currentScale)+text_Offset_Y+6, 
+										paint_text);
+							}
+						}
+				} else if(featureMap.getValue_type().equals("range")){
+					for(int j=1;j<5;j++){
+						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+						paint_text.setTextSize(16);
+						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						paint_text.setTextSize(14);
+						canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+					}
+
+				}else if(featureMap.getValue_type().equals("trigger")){
+					for(int j=1;j<5;j++){
+						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+						paint_text.setTextSize(16);
+						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 					}
 				}
-
-			}else if(featureMap.getValue_type().equals("range")){
-				for(int j=1;j<5;j++){
-					paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-					paint_text.setTextSize(16);
-					canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
-					paint_text.setTextSize(14);
-					canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-				}
-
-			}else if(featureMap.getValue_type().equals("trigger")){
-				for(int j=1;j<5;j++){
-					paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-					paint_text.setTextSize(16);
-					canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
-				}
+			} else {
+				// This widget is'nt alive anymore...
+				canvasWidget = null; //?????
 			}
 		}
 	}	
@@ -363,7 +372,10 @@ public class MapView extends View {
 			pos_X1 = event.getX();
 
 			if (addMode==true){
-				domodb.insertFeatureMap(temp_id, (int)((event.getX()-value[2])/currentScale), (int)((event.getY()-value[5])/currentScale),files.elementAt(currentFile));
+				domodb.insertFeatureMap(temp_id, 
+						(int)((event.getX()-value[2])/currentScale), 
+						(int)((event.getY()-value[5])/currentScale),
+						files.elementAt(currentFile));
 				addMode=false;
 				initMap();
 			}else if(removeMode==true){
@@ -493,8 +505,14 @@ public class MapView extends View {
 			
 			//////////////
 				for (Entity_Map featureMap : listFeatureMap) {
-					Log.i(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
-					featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
+					String state = domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key());
+					if(state != null) {
+						Log.i(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
+						featureMap.setCurrentState(state);
+					} else {
+						Log.i(mytag, "UpdateThread : device :"+featureMap.getDevId()+" seems to be a zombie !");
+						featureMap.setalive(false);
+					}
 				}
 				refreshMap();
 			}

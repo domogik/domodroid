@@ -130,26 +130,38 @@ public class DomodroidDB {
 		JSONArray itemArray = json.getJSONArray("stats");
 		String skey = null;
 		String Val = null;
+		Boolean exists = false;
+		
+		
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
 
 		for (int i =0; i < itemArray.length(); i++){
 			try {
-				skey = itemArray.getJSONObject(i).getString("skey");
+				exists = itemArray.getJSONObject(i).getBoolean("exists");
 			} catch (Exception e) {
-				Log.e(mytag+"("+owner+")", "Database feature No skey for id : "+itemArray.getJSONObject(i).getInt("device_id"));
-				skey = "_";
+				exists = false;
 			}
-			try {
-				Val = itemArray.getJSONObject(i).getString("value");
-			}catch (Exception e) {
-				Log.e(mytag+"("+owner+")", "Database feature No Value for id : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey);
-				Val = "0";
+			if(exists) {
+				try {
+					skey = itemArray.getJSONObject(i).getString("skey");
+				} catch (Exception e) {
+					Log.e(mytag+"("+owner+")", "Database feature No skey for id : "+itemArray.getJSONObject(i).getInt("device_id"));
+					skey = "_";
+				}
+				try {
+					Val = itemArray.getJSONObject(i).getString("value");
+				}catch (Exception e) {
+					Log.e(mytag+"("+owner+")", "Database feature No Value for id : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey);
+					Val = "0";
+				}
+				values.put("device_id", itemArray.getJSONObject(i).getInt("device_id"));
+				values.put("key", skey);
+				values.put("value", Val);
+				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
+				Log.v(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
+			} else {
+				Log.d(mytag+"("+owner+")", "Device : "+itemArray.getJSONObject(i).getInt("device_id")+" does'nt exist anymore....");
 			}
-			values.put("device_id", itemArray.getJSONObject(i).getInt("device_id"));
-			values.put("key", skey);
-			values.put("value", Val);
-			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
-			Log.v(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
 			
 		}
 	}
@@ -245,7 +257,7 @@ public class DomodroidDB {
 		Cursor curs=null;
 		Entity_Feature[] features=null;
 		try {
-			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ID, null, null, new String[] {id+" ", zone}, null);
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ID, null, null, new String[] {id+" ", zone},"state_key ");
 			features=new Entity_Feature[curs.getCount()];
 			int count=curs.getCount();
 			for(int i=0;i<count;i++) {
@@ -310,16 +322,23 @@ public class DomodroidDB {
 
 	public String requestFeatureState(int device_id, String key){
 		String state = null;
-		String[] projection = {"value"};			
+		String[] projection = {"value"};
+		String sortOrder = "key ";
 			try {
 				Cursor curs=null;
-				curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", new String [] {device_id+"", key}, null);
+				curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, 
+						projection, 
+						"device_id = ? AND key = ?", 
+						new String [] {device_id+"", key}, 
+						null);
 				curs.moveToPosition(0);
 				if((curs != null) && (curs.getCount() != 0)) {
 					state=curs.getString(0);
 					curs.close();
 					Log.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
 					
+				} else {
+					Log.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" not found ");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

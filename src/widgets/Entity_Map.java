@@ -39,6 +39,7 @@ public class Entity_Map{
 	private int posx;
 	private int posy;
 	private String map;
+	private Boolean isalive = true;
 	
 	
 	public Entity_Map(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type, int posx, int posy, String map) throws JSONException{
@@ -56,6 +57,7 @@ public class Entity_Map{
 		this.posx = posx;
 		this.posy = posy;
 		this.map = map;
+		this.isalive = true;
 	}
 
 	public int getId() {
@@ -158,8 +160,14 @@ public class Entity_Map{
 	public String getCurrentState() {
 		return currentState;
 	}
+	public Boolean isalive() {
+		return this.isalive;
+	}
 	public void setCurrentState(String currentState) {
 		this.currentState = currentState;
+	}
+	public void setalive(Boolean mode) {
+		this.isalive = mode;
 	}
 	public String getDevice_type_id() {
 		return device_type_id;

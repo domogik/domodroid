@@ -173,7 +173,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
-					//Log.d(mytag,"Handler receives a request to die " );
+					Log.d(mytag,"Handler receives a request to die " );
 						//That seems to be a zombie
 					removeView(background);
 					
@@ -276,7 +276,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
-							if(getWindowVisibility()==0 || !activate){
+							if(getWindowVisibility()== 0){
 								//Log.e(mytag, "update Timer : Execute UpdateThread");
 								new UpdateThread().execute();
 								
@@ -284,7 +284,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.d(mytag, "update Timer : No UpdateThread started...");
+								//Log.d(mytag, "update Timer : No UpdateThread started...");
 								//this.finalize();
 							}
 						} catch (Exception e) {
@@ -294,7 +294,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e(mytag,"TimerTask.run : Queuing Runnable");	
+				//Log.e(mytag,"TimerTask.run : Queuing Runnable");	
 				try {
 					handler.post(myTH);
 				} catch (Exception e) {
@@ -311,21 +311,21 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-				Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
-				Bundle b = new Bundle();
-				String state = domodb.requestFeatureState(dev_id, state_key);
-				if(state != null) {
-					activate=false;
-					b.putString("message", state);
-				    msg = new Message();
-				    msg.setData(b);
-				    handler.sendMessage(msg);
-				} else {
-					// This widget has no feature_state : probably a zombie ????
-					activate=true;
-					handler.sendEmptyMessage(0);
-					
-				}
+			Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+			Bundle b = new Bundle();
+			String state = domodb.requestFeatureState(dev_id, state_key);
+			if(state != null) {
+				activate=false;
+				b.putString("message", state);
+			    msg = new Message();
+			    msg.setData(b);
+			    handler.sendMessage(msg);
+			} else {
+				// This widget has no feature_state : probably a zombie ????
+				activate=true;
+				handler.sendEmptyMessage(0);
+				
+			}
 			
 			return null;
 		}

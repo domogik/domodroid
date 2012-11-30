@@ -138,8 +138,10 @@ public class DomodroidDB {
 		for (int i =0; i < itemArray.length(); i++){
 			try {
 				exists = itemArray.getJSONObject(i).getBoolean("exists");
+				// can be true or false, depends on server's response in version 0.3
 			} catch (Exception e) {
-				exists = false;
+				// Servers 0.2 does'nt return this kind of parameter : set true by default
+				exists = true;
 			}
 			if(exists) {
 				try {

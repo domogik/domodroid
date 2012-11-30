@@ -130,68 +130,27 @@ public class DomodroidDB {
 		JSONArray itemArray = json.getJSONArray("stats");
 		String skey = null;
 		String Val = null;
-		String[] projection = {"COUNT(*)"};
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
 
 		for (int i =0; i < itemArray.length(); i++){
 			try {
 				skey = itemArray.getJSONObject(i).getString("skey");
 			} catch (Exception e) {
-				Log.e(mytag+"("+owner+")", "Database feature No skey : "+itemArray.getJSONObject(i).getInt("device_id"));
+				Log.e(mytag+"("+owner+")", "Database feature No skey for id : "+itemArray.getJSONObject(i).getInt("device_id"));
 				skey = "_";
 			}
 			try {
 				Val = itemArray.getJSONObject(i).getString("value");
 			}catch (Exception e) {
-				Log.e(mytag+"("+owner+")", "Database feature No Value : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey);
+				Log.e(mytag+"("+owner+")", "Database feature No Value for id : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey);
 				Val = "0";
 			}
-			/*
-			Cursor curs=null;
-			
-			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", 
-					new String [] {itemArray.getJSONObject(i).getString("device_id")+"",skey+" "}, 
-					null);
-					*/
-			/*
-			curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, 
-					"device_id = ? AND key = ?", 
-					new String [] {itemArray.getJSONObject(i).getString("device_id")+"",skey+" "}, 
-					null);
-			int items = 0;
-			if(curs != null)
-				items = curs.getCount();
-			else
-				items = 0;
-			curs.close();
-			*/
-			// 1st, try to update....
-			
 			values.put("device_id", itemArray.getJSONObject(i).getInt("device_id"));
 			values.put("key", skey);
 			values.put("value", Val);
-			/*
-			int items = context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, 
-					"device_id = ? AND key = ?", 
-					new String [] {itemArray.getJSONObject(i).getString("device_id")+"",skey});
-			if(items == 0){
-				// Update fails : try to insert !
-				 * */
-				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
-				Log.v(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
-				/*
-			}else{
-				//curs.moveToFirst();
-				 
-				
-				Log.v(mytag+"("+owner+")", "Database update feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
-					context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, 
-						"device_id = ? AND key = ?", 
-						new String [] {itemArray.getJSONObject(i).getString("device_id")+"",skey});
-						*/
-				Log.v(mytag+"("+owner+")", "Database update feature OK : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
-			//}
-			//curs.close();
+			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
+			Log.v(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
+			
 		}
 	}
 

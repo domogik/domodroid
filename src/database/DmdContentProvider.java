@@ -131,31 +131,12 @@ public class DmdContentProvider extends ContentProvider {
 			bdd = mDB.getWritableDatabase();
 			bdd.execSQL("delete from table_area where 1=1");
 			bdd.execSQL("delete from table_room where 1=1");
+			bdd.execSQL("delete from table_icon where 1=1");
 			bdd.execSQL("delete from table_feature where 1=1");
 			bdd.execSQL("delete from table_feature_association where 1=1");
 			bdd.execSQL("delete from table_feature_state where 1=1");
-			
-			/*
-			//bdd.delete("table_area", null, null);
-			bdd.delete("table_room", null, null);
-			bdd.delete("table_icon", null, null);
-			bdd.delete("table_feature", null, null);
-			bdd.delete("table_feature_association", null, null);
-			bdd.delete("table_feature_state", null, null);
-			// bdd.delete("table_feature_map", null, null); // Keep maps coordinates alive ! ! !
-			 
-			bdd.endTransaction();
-			bdd.close();
-			bdd=null;
-			/*
-			mDB = null;
-			mDB = new DatabaseHelper(getContext());
-			*/
 			getContext().getContentResolver().notifyChange(uri, null);
-			
 		}
-		Log.d("DmdContentProvider","Clear done");
-		getContext().getContentResolver().notifyChange(uri, null);
 		return 0;
 	}
 	
@@ -267,11 +248,8 @@ public class DmdContentProvider extends ContentProvider {
 		case REQUEST_ROOM:
 			queryBuilder.setTables("table_room");
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
-			/* cursor=mDB.getReadableDatabase().rawQuery(
-					"SELECT * FROM table_room "
-					,null);
-					*/
-			Log.d("DmdContentProvider","Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
+			
+			//Log.d("DmdContentProvider","Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
 			break;
 		case REQUEST_ICON:
 			queryBuilder.setTables("table_icon");

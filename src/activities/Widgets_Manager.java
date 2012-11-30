@@ -99,7 +99,7 @@ public class Widgets_Manager {
 				trigger = new Graphical_Trigger(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),widgetSize);
 				tmpPan.addView(trigger);}
 			if (feature.getValue_type().equals("number")) {
-				Log.e("Widgets_Manager","add "+feature.getName());
+				//Log.e("Widgets_Manager","add "+feature.getName());
 				info = new Graphical_Info(context,feature.getDevId(), label,
 						feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE_TIMER",300),0);
 				info.setLayoutParams(layout_param);
@@ -140,7 +140,7 @@ public class Widgets_Manager {
 		DomodroidDB domodb = new DomodroidDB(context);
 		domodb.owner="Widgets_Manager.loadAreaWidgets";
 		Entity_Area[] listArea = domodb.requestArea();
-		Log.d("loadAreaWidgets","Areas list size : "+listArea.length);
+		//Log.d("loadAreaWidgets","Areas list size : "+listArea.length);
 
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 		LinearLayout mainPan = new LinearLayout(context);
@@ -177,7 +177,7 @@ public class Widgets_Manager {
 			}
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
-			Log.d("loadRoomWidgets","Adding area : "+area.getName());
+			//Log.d("loadRoomWidgets","Adding area : "+area.getName());
 			graph_area = new Graphical_Area(context,area.getId(),area.getName(),area.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_area);
 			if(columns){	
@@ -199,7 +199,7 @@ public class Widgets_Manager {
 		DomodroidDB domodb = new DomodroidDB(context);
 		domodb.owner="Widgets_Manager.loadRoomWidgets";
 		Entity_Room[] listRoom = domodb.requestRoom(id);
-		Log.d("loadRoomWidgets","Rooms list size : "+listRoom.length);
+		//Log.d("loadRoomWidgets","Rooms list size : "+listRoom.length);
 		
 		LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 		LinearLayout mainPan = new LinearLayout(context);
@@ -239,13 +239,15 @@ public class Widgets_Manager {
 			String ref = room.getDescription();
 			if(ref.length() == 0)
 				ref = room.getName();
-			Log.d("loadRoomWidgets","Adding room : "+ref);
+			//Log.d("loadRoomWidgets","Adding room : "+ref);
 			tmpPan.addView(graph_room);
 
 			if(columns){	
 				if(counter==0){
 					leftPan.addView(tmpPan);
 				}
+				
+				
 				else if(counter==1){
 					rightPan.addView(tmpPan);
 				}

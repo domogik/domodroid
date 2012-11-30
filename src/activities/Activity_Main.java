@@ -503,8 +503,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			house_map.addView(house);
 		}
 		house_map.addView(map);
-		
-		
 		try {
 			
 			if(type.equals("root")){
@@ -554,9 +552,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 	}
 
-	/**home_reload
-	 * save selections preference
-	 */
+	
 	private void SaveSelections(Boolean mode) {
 		try{
 			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);

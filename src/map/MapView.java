@@ -248,12 +248,12 @@ public class MapView extends View {
 						String label = featureMap.getDescription();
 						if(label.length() < 1)
 							label = featureMap.getState_key();
-						Log.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						//Log.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 								(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
 								paint_text);
 						paint_text.setTextSize(15);
-						Log.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						//Log.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 								(featureMap.getPosy()*currentScale)+text_Offset_Y+6, 
 								paint_text);

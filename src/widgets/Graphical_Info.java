@@ -104,7 +104,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		//Log.e("Graphical_Info Frame", "Get icone for usage : "+usage);
+		Log.e("Graphical_Info Frame", "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setOnTouchListener(this);
 
@@ -176,8 +176,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 					Log.d(mytag,"Handler receives a request to die " );
 						//That seems to be a zombie
 					removeView(background);
-					
-					
 				} else {
 					try {
 						float formatedValue = 0;
@@ -185,15 +183,16 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 						if(loc_Value != null)
 							formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
 						
-						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+"°C");
-						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+"hPa");
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
-						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+"km");
-						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+"°C");
-						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+"km/h");
-						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+"°C");
+						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
+						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
+						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
+						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
+						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
+						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+"%");
+						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
 						else value.setText(msg.getData().getString("message"));
 						Log.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
 						value.setAnimation(animation);

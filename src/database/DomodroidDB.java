@@ -132,6 +132,7 @@ public class DomodroidDB {
 		String Val = null;
 		Boolean exists = false;
 		
+		Log.e(mytag+"("+owner+")", "Processing FeatureSate Array : <"+itemArray.toString()+">");
 		
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
 
@@ -304,8 +305,12 @@ public class DomodroidDB {
 
 	public Entity_Feature[] requestFeatures(){
 		Cursor curs=null;
+		String[] projection = {"value"};
+		
 		Entity_Feature[] features=null;
 		try {
+			Log.v(mytag+"("+owner+")","requesting features list");
+			
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ALL, null, null, null, null);
 			features=new Entity_Feature[curs.getCount()];
 			int count=curs.getCount();

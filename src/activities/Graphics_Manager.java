@@ -32,6 +32,7 @@ public class Graphics_Manager {
 			else if(usage.equals("air conditioning")){return R.drawable.usage_heating_off;}
 			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_off;}
 			else if(usage.equals("water")){return R.drawable.usage_water_off;}
+			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
 			else if(usage.equals("heater")){return R.drawable.usage_heating_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
 			else if(usage.equals("server")){return R.drawable.usage_computer_off;}
@@ -50,6 +51,7 @@ public class Graphics_Manager {
 			else if(usage.equals("garage")){return R.drawable.room_garage;}
 			else if(usage.equals("office")){return R.drawable.room_office;}
 			else if(usage.equals("tvlounge")){return R.drawable.room_tvlounge;}
+			else if(usage.equals("usage")){return R.drawable.logo;}
 			//area
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
@@ -73,6 +75,7 @@ public class Graphics_Manager {
 			else if(usage.equals("socket")){return R.drawable.usage_socket_50;}
 			else if(usage.equals("temperature")){return R.drawable.usage_temperature_on;}
 			else if(usage.equals("water")){return R.drawable.usage_heating_on;}
+			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
 			else if(usage.equals("heater")){return R.drawable.usage_heating_on;}
 			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}
 			else if(usage.equals("telephony")){return R.drawable.usage_heating_on;}
@@ -91,6 +94,7 @@ public class Graphics_Manager {
 			else if(usage.equals("temperature")){return R.drawable.usage_temperature_on;}
 			else if(usage.equals("heating")){return R.drawable.usage_temperature_on;}	//Added by Doume
 			else if(usage.equals("water")){return R.drawable.usage_water_on;}
+			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
 			else if(usage.equals("heater")){return R.drawable.usage_heating_on;}
 			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}
 			else if(usage.equals("telephony")){return R.drawable.usage_heating_on;}
@@ -122,6 +126,7 @@ public class Graphics_Manager {
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_off;}
 			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_off;}
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
+			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_off;
 		case 1:
 			if(usage.equals("light")){return R.drawable.map_usage_light_on;}
@@ -132,6 +137,7 @@ public class Graphics_Manager {
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}
 			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_on;}
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
+			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_on;
 		}
 		return R.drawable.map_led_off;

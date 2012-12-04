@@ -159,7 +159,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
 		panel.setOnPanelListener(this);
 		panel.setOnTouchListener(new OnTouchListener() {	 
-			public boolean onTouch(View v, MotionEvent event) {return true;}});
+			public boolean onTouch(View v, MotionEvent event) {
+				return true;
+			}
+		});
 		
 		bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
 		panel.setOnPanelListener(this);
@@ -236,23 +239,27 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		//listview feature
 		ListView listview_feature = new ListView(this);
 		ArrayList<HashMap<String,String>> listItem1=new ArrayList<HashMap<String,String>>();
-		for (Entity_Feature feature : listFeature) {
-			map=new HashMap<String,String>();
-			map.put("name",feature.getName());
-			map.put("type",feature.getValue_type());
-			map.put("state_key", feature.getState_key());
-			listItem1.add(map);
-		}
-		SimpleAdapter adapter_feature=new SimpleAdapter(getBaseContext(),listItem1,
-				R.layout.item_feature,new String[] {"name","type","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
-		listview_feature.setAdapter(adapter_feature);
-		listview_feature.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				mapView.temp_id = listFeature[position].getId();
-				mapView.setAddMode(true);
-				dialog_feature.dismiss();
+		if(listFeature != null) {
+			for (Entity_Feature feature : listFeature) {
+				if(feature != null) {
+					map=new HashMap<String,String>();
+					map.put("name",feature.getName());
+					map.put("type",feature.getValue_type());
+					map.put("state_key", feature.getState_key());
+					listItem1.add(map);
+				}
 			}
-		});
+			SimpleAdapter adapter_feature=new SimpleAdapter(getBaseContext(),listItem1,
+					R.layout.item_feature,new String[] {"name","type","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
+			listview_feature.setAdapter(adapter_feature);
+			listview_feature.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					mapView.temp_id = listFeature[position].getId();
+					mapView.setAddMode(true);
+					dialog_feature.dismiss();
+				}
+			});
+		}
 
 		builder.setView(listview_feature);
 		dialog_feature = builder.create();
@@ -262,8 +269,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			mapView.initMap();
 			mapView.updateTimer();
 			parent.addView(mapView);
-		}
-		else{
+		} else {
 			Dialog_Help dialog_help = new Dialog_Help(this);
 			dialog_help.show();
 		}
@@ -407,6 +413,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.d("Activity_Map","onKeyDown keyCode = "+keyCode);
 		if(keyCode==82 && !topPanel.isOpen()){
 			bottomPanel.setOpen(true, true);
 			panel_button.setVisibility(View.VISIBLE);

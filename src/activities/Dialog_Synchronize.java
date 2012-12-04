@@ -197,7 +197,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						return null;
 					}
 					//JSONObject json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
-					publishProgress(20);
+					publishProgress(25);
 					
 					json_RoomList = new JSONObject();
 					
@@ -214,7 +214,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					map_area.put("name", "Usage");
 					list.put(map_area);
 					json_AreaList.put("area",list);
-					publishProgress(40);
+					publishProgress(45);
 					String usage = new String();
 					json_RoomList.put("status","OK");
 					json_RoomList.put("code",0);
@@ -230,26 +230,44 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					json_FeatureAssociationList.put("code","0");
 					json_FeatureAssociationList.put("description","");
 	                JSONArray ListFeature = new JSONArray();
-	                publishProgress(50);
+	                publishProgress(55);
 					
-					for(int i = 0; i < json_FeatureList.getJSONArray("feature").length(); i++) {
-						usage = json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id");
-						JSONObject Widget = new JSONObject();
-						
-						if (list_usage.contains(usage)== false){
-							publishProgress(100*i/json_FeatureList.getJSONArray("feature").length());
-							JSONObject room = new JSONObject();
-							room.put("area_id","1");
-							room.put("description","");
-							room.put("area",area);
-							room.put("id",j);
-							j++;
-							room.put("name",json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"));
-							rooms.put(room);
-							list_usage.add(json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"));
+	                int list_size = 0;
+	                if(json_FeatureList != null)
+	                	list_size = json_FeatureList.getJSONArray("feature").length();
+	                Log.d("Dialog_Synchronize","Features list size = "+list_size);
+					for(int i = 0; i < list_size; i++) {
+						try {
+							usage = json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id");
+						} catch (Exception e) {
+							// Cannot parse JSON Array or JSONObject
+							 Log.d("Dialog_Synchronize","Exception processing Features list ("+i+")");
+								
 						}
+						 Log.d("Dialog_Synchronize","Features list processing usage = <"+usage+">");
+							
+						// Create a pseudo 'room' for each usage returned by Rinor
+						if (usage != null) {
+							if(! list_usage.contains(usage)){
+								if(json_FeatureList.getJSONArray("feature").length() > 0) {
+									publishProgress(100*i/json_FeatureList.getJSONArray("feature").length());
+									JSONObject room = new JSONObject();
+									room.put("area_id","1");
+									room.put("description","");
+	
+									room.put("area",area);
+									room.put("id",j);
+									j++;
+									room.put("name",json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"));
+									rooms.put(room);
+									list_usage.add(json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"));
+								}
+							}
+							// And its associated widget
+							JSONObject Widget = new JSONObject();
 							Widget.put("place_type","room");
-							Widget.put("place_id",list_usage.indexOf( json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"))+2); //id_rooms);
+							Widget.put("place_id",list_usage.indexOf( 
+									json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"))+2); //id_rooms);
 							Widget.put("device_feature_id",json_FeatureList.getJSONArray("feature").getJSONObject(i).getString("id"));
 							Widget.put("id",50+i);
 							JSONObject device_feature = new JSONObject();
@@ -258,10 +276,13 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							device_feature.put("device_id",json_FeatureList.getJSONArray("feature").getJSONObject(i).getString("device_id"));
 							Widget.put("device_feature", device_feature);
 							ListFeature.put(Widget);
-					}
-					// Common sequence for both versions sync
+						}
+						
+					} // for loop on feature list...
+					//Prepare list of rooms, and list of usable features
 					json_RoomList.put("room", rooms);
 					json_FeatureAssociationList.put("feature_association",ListFeature);
+					
 					//Save result in sharedpref
 					prefEditor.putString("AREA_LIST",json_AreaList.toString());
 					prefEditor.putString("ROOM_LIST",json_RoomList.toString());
@@ -272,6 +293,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putBoolean("BY_USAGE", true);
 					
 				}
+				// Common sequence for both versions sync
+				
 				// Insert results into local database
 				
 				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
@@ -291,6 +314,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
+				Log.v("Dialog_Synchronize","prepare UPDATE_URL items="+listFeature.length);
 				for (Entity_Feature feature : listFeature) {
 					urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
 				}
@@ -303,7 +327,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				*/
 				publishProgress(100);
 				
-				//Log.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
+				Log.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
 				
 				Bundle b = new Bundle();
 				//Notify sync complete to parent Dialog

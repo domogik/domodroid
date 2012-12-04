@@ -232,7 +232,8 @@ public class Widgets_Manager {
 			try{
 				iconId = domodb.requestIcons(room.getId(),"room").getValue().toString();
 			}catch(Exception e){};
-
+			if(iconId.equals("unknown"))
+				iconId="usage";
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
 			graph_room = new Graphical_Room(context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);

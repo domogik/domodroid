@@ -20,6 +20,7 @@ package widgets;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
+import android.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;

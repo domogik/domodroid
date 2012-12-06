@@ -52,12 +52,20 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private Thread threadCommande;
 	private String type; 
 	private String command; 
+	//private Boolean activate=false;
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
+	
 
-
-	public Graphical_Trigger(Context context, String address, String name, int dev_id,String stat_key, String url, String usage, String parameters, String model_id, int widgetSize) throws JSONException {
+	public Graphical_Trigger(Context context, 
+			String address, String name, int dev_id,String stat_key, 
+			String url, String usage, String parameters, 
+			String model_id, int widgetSize) throws JSONException {
+		
 		super(context);
 		this.address = address;
 		this.url = url;
+		this.myself=this;
 
 		//get parameters
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -70,8 +78,11 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
         
 		//panel with border
 		background = new LinearLayout(context);
-		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		if(widgetSize==0)
+			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+		else 
+			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		
 		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
 
 

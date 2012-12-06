@@ -39,6 +39,8 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
@@ -71,6 +73,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	private String wname;
 	private String mytag="";
 	private String url = null;
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 	
 	public Graphical_Info(Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
@@ -79,6 +83,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		this.update=update;
 		this.wname = name;
 		this.url = url;
+		this.myself = this;
 		this.activate=false;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
@@ -174,8 +179,14 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 			public void handleMessage(Message msg) {
 				if(activate) {
 					Log.d(mytag,"Handler receives a request to die " );
-						//That seems to be a zombie
+					//That seems to be a zombie
 					removeView(background);
+					myself.setVisibility(GONE);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
+					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
 				} else {
 					try {
 						float formatedValue = 0;
@@ -310,7 +321,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+			//Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
 			Bundle b = new Bundle();
 			String state = domodb.requestFeatureState(dev_id, state_key);
 			if(state != null) {

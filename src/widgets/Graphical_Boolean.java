@@ -58,7 +58,9 @@ public class Graphical_Boolean extends FrameLayout{
 	private DomodroidDB domodb;
 	private Message msg;
 	private String wname;
-
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
+	
 
 	public Graphical_Boolean(Activity context, String address, String name, int dev_id, String state_key, String usage, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
@@ -66,7 +68,8 @@ public class Graphical_Boolean extends FrameLayout{
 		this.dev_id = dev_id;
 		this.update = update;
 		this.wname = name;
-
+		this.myself=this;
+		this.activate=false;
 		this.setPadding(5, 5, 5, 5);
 		
 		domodb = new DomodroidDB(context);
@@ -129,19 +132,31 @@ public class Graphical_Boolean extends FrameLayout{
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
-				String status = msg.getData().getString("message");
-				if(status != null)   {
-					try {
-						if(status.equals("low")){
-							bool.setImageResource(R.drawable.boolean_off);
-							state.setText("State : Low");
-						}else if(status.equals("high")){
-							bool.setImageResource(R.drawable.boolean_on);
-							state.setText("State : High");
+				if(activate) {
+					Log.d("Graphical_Boolean","Handler receives a request to die " );
+					//That seems to be a zombie
+					removeView(background);
+					myself.setVisibility(GONE);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
+					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+				} else {
+					String status = msg.getData().getString("message");
+					if(status != null)   {
+						try {
+							if(status.equals("low")){
+								bool.setImageResource(R.drawable.boolean_off);
+								state.setText("State : Low");
+							}else if(status.equals("high")){
+								bool.setImageResource(R.drawable.boolean_on);
+								state.setText("State : High");
+							}
+						} catch (Exception e) {
+							Log.e("Graphical_Boolean", "handler error device "+wname);
+							e.printStackTrace();
 						}
-					} catch (Exception e) {
-						Log.e("Graphical_Boolean", "handler error device "+wname);
-						e.printStackTrace();
 					}
 				}
 			}	
@@ -161,16 +176,16 @@ public class Graphical_Boolean extends FrameLayout{
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
-							if(getWindowVisibility()==0 || !activate){
-								Log.e("Graphical_Boolean ("+dev_id+")", "Execute UpdateThread");
+							if(getWindowVisibility()==0 ){
+								//Log.e("Graphical_Boolean ("+dev_id+")", "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e("Graphical_Boolean ("+dev_id+")", "Destroy runnable");
-								this.finalize();
+								//Log.e("Graphical_Boolean ("+dev_id+")", "Destroy runnable");
+								//this.finalize();
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -196,11 +211,21 @@ public class Graphical_Boolean extends FrameLayout{
 		@Override
 		protected Void doInBackground(Void... params) {
 			Bundle b = new Bundle();
-			b.putString("message", domodb.requestFeatureState(dev_id, state_key));
-			msg = new Message();
-			msg.setData(b);
-			handler.sendMessage(msg);
+			String state = domodb.requestFeatureState(dev_id, state_key);
+			if(state != null) {
+				activate=false;
+				b.putString("message", state);
+			    msg = new Message();
+			    msg.setData(b);
+			    handler.sendMessage(msg);
+			} else {
+				// This widget has no feature_state : probably a zombie ????
+				activate=true;
+				handler.sendEmptyMessage(0);
+				
+			}
 			return null;
+			
 		}
 	}
 

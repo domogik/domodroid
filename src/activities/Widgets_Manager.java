@@ -88,21 +88,26 @@ public class Widgets_Manager {
 			
 			if (feature.getValue_type().equals("binary")) {
 				onoff = new Graphical_Binary(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300),widgetSize);
+				onoff.container=tmpPan;
 				tmpPan.addView(onoff);}
 			if (feature.getValue_type().equals("boolean")) {
 				bool = new Graphical_Boolean(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300),widgetSize);
+				bool.container=tmpPan;
 				tmpPan.addView(bool);}
 			if (feature.getValue_type().equals("range")) {
 				variator = new Graphical_Range(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE_TIMER",300), widgetSize);
+				variator.container=tmpPan;
 				tmpPan.addView(variator);}
 			if (feature.getValue_type().equals("trigger")) {
 				trigger = new Graphical_Trigger(context,feature.getAddress(),label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),widgetSize);
+				trigger.container=tmpPan;
 				tmpPan.addView(trigger);}
 			if (feature.getValue_type().equals("number")) {
 				//Log.e("Widgets_Manager","add "+feature.getName());
 				info = new Graphical_Info(context,feature.getDevId(), label,
 						feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("GRAPH",3),params.getInt("UPDATE_TIMER",300),0);
 				info.setLayoutParams(layout_param);
+				info.container=tmpPan;
 				tmpPan.addView(info);
 			}
 			if(feature.getValue_type().equals("string")){

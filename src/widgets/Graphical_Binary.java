@@ -79,7 +79,9 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private Message msg;
 	private String name;
 	private String wname;
-
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
+	
 
 	public Graphical_Binary(Activity context, String address, String name, int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
@@ -92,7 +94,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.name = name;
 		this.setPadding(5, 5, 5, 5);
 		this.wname = name;
-
+		this.myself = this;
+		
 		domodb = new DomodroidDB(context);
 		domodb.owner="Graphical_Binary("+dev_id+")";
 		//get parameters
@@ -170,20 +173,32 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				try {
-					if(msg.getData().getString("message").equals(value0)){
-						state.setText("State : "+value0);
-						new SBAnim(seekBarOnOff.getProgress(),0).execute();
-					}else if(msg.getData().getString("message").equals(value1)){
-						state.setText("State : "+value1);
-						new SBAnim(seekBarOnOff.getProgress(),40).execute();
-					}else{
-						Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+				if(activate) {
+					Log.d("Graphical_Binary","Handler receives a request to die " );
+					//That seems to be a zombie
+					removeView(background);
+					myself.setVisibility(GONE);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
 					}
-					state.setAnimation(animation);
-				} catch (Exception e) {
-					Log.e("handler error", "device "+wname);
-					e.printStackTrace();
+					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+				} else {
+					try {
+						if(msg.getData().getString("message").equals(value0)){
+							state.setText("State : "+value0);
+							new SBAnim(seekBarOnOff.getProgress(),0).execute();
+						}else if(msg.getData().getString("message").equals(value1)){
+							state.setText("State : "+value1);
+							new SBAnim(seekBarOnOff.getProgress(),40).execute();
+						}else{
+							Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+						}
+						state.setAnimation(animation);
+					} catch (Exception e) {
+						Log.e("handler error", "device "+wname);
+						e.printStackTrace();
+					}
 				}
 			}	
 		};

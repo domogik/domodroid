@@ -153,6 +153,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
 		//Added by Doume
+		File storage = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/");
+		if(! storage.exists())
+			storage.mkdirs();
+		
 		Exit=(Button)findViewById(R.id.Stop_all);
 		Exit.setOnClickListener(this);
 		Exit.setTag("Exit");

@@ -79,7 +79,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private int updating=0;
 	private DomodroidDB domodb;
 	private final String wname;
-
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 
 	public Graphical_Range(Activity context, String address, String name,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
@@ -90,6 +91,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.usage = usage;
 		this.update = update;
 		this.wname = name;
+		this.myself=this;
 		stateThread = 1;
 
 		//get parameters
@@ -189,21 +191,33 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				try {
-					if(msg.what==valueMin){
-						state.setText("State : "+0+"%");
-					}else if(msg.what>valueMin && msg.what<valueMax){
-						state.setText("State : "+(int)(msg.what*(100f/(float)valueMax))+"%");
-					}else if(msg.what==valueMax){
-						state.setText("State : "+100+"%");
+				if(activate) {
+					Log.d("Graphical_Range","Handler receives a request to die " );
+					//That seems to be a zombie
+					removeView(background);
+					myself.setVisibility(GONE);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
 					}
-					Log.e("Graphical_Range", "UIThread handler : Value "+msg.what+" refreshed for device "+wname);
-					
-					state.setAnimation(animation);
-					new SBAnim(seekBarVaria.getProgress(),msg.what).execute();
-				} catch (Exception e) {
-					Log.e("handler error", "device "+wname);
-					e.printStackTrace();
+					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+				} else {
+					try {
+						if(msg.what==valueMin){
+							state.setText("State : "+0+"%");
+						}else if(msg.what>valueMin && msg.what<valueMax){
+							state.setText("State : "+(int)(msg.what*(100f/(float)valueMax))+"%");
+						}else if(msg.what==valueMax){
+							state.setText("State : "+100+"%");
+						}
+						Log.e("Graphical_Range", "UIThread handler : Value "+msg.what+" refreshed for device "+wname);
+						
+						state.setAnimation(animation);
+						new SBAnim(seekBarVaria.getProgress(),msg.what).execute();
+					} catch (Exception e) {
+						Log.e("handler error", "device "+wname);
+						e.printStackTrace();
+					}
 				}
 			}	
 		};
@@ -252,15 +266,16 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
-							if(getWindowVisibility()==0 || !activate){
-								Log.e("update Timer", "Execute UpdateThread");
+							if(getWindowVisibility()==0 ){
+								//Log.e("update Timer", "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
+								activate=true;
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e("update Timer", "Destroy runnable");
+								//Log.e("update Timer", "Destroy runnable");
 								this.finalize();
 							}
 						} catch (Exception e) {
@@ -286,11 +301,20 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			if(activate) {
+				handler.sendEmptyMessage(0);
+				return null;
+			}
 			if(updating<1){
-				if(domodb.requestFeatureState(dev_id, state_key)==null){
+				String state = domodb.requestFeatureState(dev_id, state_key);
+				if(state != null) {
+					activate=false;
+					handler.sendEmptyMessage(Integer.parseInt(state));
+					
+				} else {
+					// This widget has no feature_state : probably a zombie ????
+					activate=true;
 					handler.sendEmptyMessage(0);
-				}else{
-					handler.sendEmptyMessage(Integer.parseInt(domodb.requestFeatureState(dev_id, state_key)));
 				}
 			}
 			updating--;

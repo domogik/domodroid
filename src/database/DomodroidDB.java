@@ -132,7 +132,7 @@ public class DomodroidDB {
 		String Val = null;
 		Boolean exists = false;
 		
-		Log.e(mytag+"("+owner+")", "Processing FeatureSate Array : <"+itemArray.toString()+">");
+		//Log.e(mytag+"("+owner+")", "Processing FeatureSate Array : <"+itemArray.toString()+">");
 		
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
 

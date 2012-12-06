@@ -40,6 +40,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class MapView extends View {
@@ -304,18 +305,22 @@ public class MapView extends View {
 		if (feature.getValue_type().equals("binary")) {
 			onoff = new Graphical_Binary(context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+			onoff.container=(FrameLayout) panel_widget;
 			panel_widget.addView(onoff);}
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {
 			variator = new Graphical_Range(context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+			variator.container=(FrameLayout) panel_widget;
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
 			trigger = new Graphical_Trigger(context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
+			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
 			info = new Graphical_Info(context,feature.getDevId(),
@@ -324,6 +329,7 @@ public class MapView extends View {
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),
 					params.getInt("UPDATE",300),0);
+			info.container=(FrameLayout) panel_widget;
 			panel_widget.addView(info);}
 	}
 

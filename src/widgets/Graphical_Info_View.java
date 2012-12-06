@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 
 public class Graphical_Info_View extends View{
@@ -51,7 +52,8 @@ public class Graphical_Info_View extends View{
 	public boolean activate=false;
 	public boolean loaded=false;
 	private String mytag="";
-
+	public FrameLayout container = null;
+	public View myself = null;
 
 	public Graphical_Info_View(Context context){
 		super(context);
@@ -59,12 +61,24 @@ public class Graphical_Info_View extends View{
 		values = new Vector<Vector<Float>>();
 		activate=true;
 		mytag = "Graphical_Info_View";
-		
+		this.myself=this;
 		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				invalidate();
+				if(! activate) {
+					Log.d(mytag,"Handler receives a request to die " );
+					//That seems to be a zombie
+					myself.setVisibility(GONE);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
+					invalidate();
+					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+				} else {
+					invalidate();
+				}
 			}
 		};
 	}
@@ -275,7 +289,7 @@ public class Graphical_Info_View extends View{
 							if(activate){
 								new UpdateThread().execute();
 							}else{
-								Log.i(mytag+"("+dev_id+")","update Timer : Destroy runnable");
+								//Log.i(mytag+"("+dev_id+")","update Timer : Destroy runnable");
 								timer.cancel();
 								this.finalize();
 							}

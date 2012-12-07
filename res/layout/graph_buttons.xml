@@ -10,7 +10,7 @@
         android:tag="Prev"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:text="Prev"
+        android:text="@string/bt_prev"
         android:textSize="10sp" />
 
 	<Button
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
 	    android:layout_height="32dp"
 	    android:layout_marginRight="25px"
-	    android:text="Next"
+	    android:text="@string/bt_next"
 	    android:textSize="10sp" />
 
 	<Button
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
 	    android:layout_height="32dp"
 	    android:layout_marginLeft="10px"
-	    android:text="1 year"
+	    android:text="@string/bt_year"
 	    android:textSize="10sp" />
 	
 	<Button
@@ -36,7 +36,7 @@
         android:tag="Month"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-       	android:text="1 month" 
+       	android:text="@string/bt_month" 
         android:textSize="10sp" />
 	
 	<Button
@@ -44,7 +44,7 @@
         android:tag="Week"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-       	android:text="1 week" 
+       	android:text="@string/bt_week" 
         android:textSize="10sp" />
 	
 	<Button
@@ -52,7 +52,7 @@
         android:tag="Day"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-       	android:text="last day" 
+       	android:text="@string/bt_day"
         android:textSize="10sp" />
 	
 </LinearLayout>

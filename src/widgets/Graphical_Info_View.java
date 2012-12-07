@@ -142,7 +142,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		String tag = (String)v.getTag();
-		Log.d(mytag,"Click on : "+tag);
+		
 		if(tag.equals("Prev")) {
 			
 		} else if(tag.equals("Next")) {

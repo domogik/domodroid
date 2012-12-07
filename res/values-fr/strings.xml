@@ -22,6 +22,12 @@
 	<string name="button2">Réseau</string>
 	<string name="button4">A propos</string>
 	<string name="option">Option</string>
+	<string name="bt_prev">Prec.</string>
+	<string name="bt_next">Suiv.</string>
+	<string name="bt_year">1 Année</string>
+	<string name="bt_month">1 mois</string>
+	<string name="bt_week">1 Sem.</string>
+	<string name="bt_day">1 jour</string>
 	
 	
 	<string name="help_Title">Domodroid</string>

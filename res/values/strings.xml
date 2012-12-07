@@ -22,7 +22,12 @@
 	<string name="button2">Network</string>
 	<string name="button4">About</string>
 	<string name="option">Option</string>
-	
+	<string name="bt_prev">Prev.</string>
+	<string name="bt_next">Next</string>
+	<string name="bt_year">Last year</string>
+	<string name="bt_month">Last month</string>
+	<string name="bt_week">Last week</string>
+	<string name="bt_day">Last day</string>
 	
 	<string name="help_Title">Domodroid</string>
 	<string name="help_Text1">Domodroid free Android application under GNU GPLv3 Licence and developed by Pierre Lainé\n Modified by Dominique DAMBRAIN</string>

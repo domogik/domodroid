@@ -27,6 +27,7 @@ import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -36,13 +37,16 @@ import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,6 +59,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	private LinearLayout background;
 	private LinearLayout featurePan;
 	private LinearLayout featurePan2;
+	private View		  featurePan2_buttons;
 	private LinearLayout infoPan;
 	private LinearLayout topPan;
 	private ImageView img;
@@ -93,8 +98,11 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
-		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		if(widgetSize==0)
+			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+		else 
+			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		
 		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
 
 		//panel with border
@@ -145,11 +153,13 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 
-		//feature panel 2
+		
+		//feature panel 2 which will contain graphic
 		featurePan2=new LinearLayout(context);
 		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		featurePan2.setGravity(Gravity.CENTER_VERTICAL);
 		featurePan2.setPadding(5, 10, 5, 10);
+		
 		
 
 		//canvas
@@ -159,6 +169,28 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		canvas.url = url;
 		canvas.period = period;
 		canvas.update = update;
+		
+		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
+		View v=null;
+		v=featurePan2_buttons.findViewById(R.id.bt_prev);
+		if(v != null)
+			v.setOnClickListener(canvas);
+		v=featurePan2_buttons.findViewById(R.id.bt_next);
+		if(v != null)
+			v.setOnClickListener(canvas);
+		v=featurePan2_buttons.findViewById(R.id.bt_year);
+		if(v != null)
+			v.setOnClickListener(canvas);
+		v=featurePan2_buttons.findViewById(R.id.bt_month);
+		if(v != null)
+			v.setOnClickListener(canvas);
+		v=featurePan2_buttons.findViewById(R.id.bt_week);
+		if(v != null)
+			v.setOnClickListener(canvas);
+		v=featurePan2_buttons.findViewById(R.id.bt_day);
+		if(v != null)
+			v.setOnClickListener(canvas);
 		
 		featurePan.addView(value);
 		infoPan.addView(nameDevices);
@@ -340,16 +372,24 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 			return null;
 		}
 	}
-
+	/*
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		String tag = (String)v.getTag();
+		Log.d(mytag,"Click on : "+tag);
+	}
+	*/
 
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(background.getHeight() != 350){
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
+			background.addView(featurePan2_buttons);
 			background.addView(featurePan2);
 			canvas.activate = true;
 			canvas.updateTimer();
 		}
 		else{
+			background.removeView(featurePan2_buttons);
 			background.removeView(featurePan2);
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer

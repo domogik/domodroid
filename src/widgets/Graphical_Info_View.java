@@ -1,5 +1,8 @@
 package widgets;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -7,6 +10,8 @@ import java.util.Vector;
 import rinor.Rest_com;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import org.domogik.domodroid.*;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -18,10 +23,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 
-public class Graphical_Info_View extends View{
+public class Graphical_Info_View extends View implements OnClickListener {
 
 	private int width;
 	private int height;
@@ -54,7 +62,28 @@ public class Graphical_Info_View extends View{
 	private String mytag="";
 	public FrameLayout container = null;
 	public View myself = null;
-
+	private Calendar calendar = Calendar.getInstance();
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private Date time_start=new Date();
+	private Date time_end=new Date();
+	private int period_type = 0;		// 0 = period defined by settings
+										// 1 = 1 day
+										// 8 = 1 week
+										// 30 = 1 month
+										// 365 = 1 year
+	private View Prev = null;
+	private View Next = null;
+	private Button Year = null;
+	private Button Month = null;
+	private Button Week = null;
+	private Button Day = null;
+	
+	private String step="hour";
+	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
+	private long currentTimestamp = 0;
+	private long startTimestamp = 0; 
+	private   OnClickListener listener = null;
+	
 	public Graphical_Info_View(Context context){
 		super(context);
 		invalidate();
@@ -62,6 +91,34 @@ public class Graphical_Info_View extends View{
 		activate=true;
 		mytag = "Graphical_Info_View";
 		this.myself=this;
+		/*
+		listener = new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String tag = (String)v.getTag();
+				Log.d(mytag,"Click on : "+tag);
+			}
+			
+		};
+		if(listener != null) {
+			Prev = findViewById(R.id.bt_prev);
+			if(Prev != null)
+				Prev.setOnClickListener(listener);
+			
+			Next = findViewById(R.id.bt_prev);
+			Next.setOnClickListener(listener);
+			Year = (Button)findViewById(R.id.bt_prev);
+			Year.setOnClickListener(listener);
+			Month = (Button)findViewById(R.id.bt_prev);
+			Month.setOnClickListener(listener);
+			Week = (Button)findViewById(R.id.bt_prev);
+			Week.setOnClickListener(listener);
+			Day = (Button)findViewById(R.id.bt_prev);
+			Day.setOnClickListener(listener);
+		}
+		*/
+		period_type = 8;	//for tests
 		
 		handler = new Handler() {
 			@Override
@@ -82,6 +139,28 @@ public class Graphical_Info_View extends View{
 			}
 		};
 	}
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		String tag = (String)v.getTag();
+		Log.d(mytag,"Click on : "+tag);
+		if(tag.equals("Prev")) {
+			
+		} else if(tag.equals("Next")) {
+			
+		} else if(tag.equals("Next")) {
+			
+		} else if(tag.equals("Year")) {
+			period_type = 365;
+		}else if(tag.equals("Month")) {
+			period_type = 31;
+		}else if(tag.equals("Week")) {
+			period_type = 8;
+		}else if(tag.equals("Day")) {
+			period_type = 1;
+		}
+		updateTimer();
+	}
+	
 	public void  onWindowVisibilityChanged (int visibility) {
 		Log.i(mytag,"Visibility changed to : "+visibility);
 		if(visibility == View.VISIBLE)
@@ -115,8 +194,10 @@ public class Graphical_Info_View extends View{
 			drawGraph();
 		}catch(Exception e){
 		}
-		if(loaded)canvas.drawBitmap(buffer, 0, 0, new Paint());
-		else canvas.drawBitmap(text, 0, 0, new Paint());
+		if(loaded)
+			canvas.drawBitmap(buffer, 0, 0, new Paint());
+		else 
+			canvas.drawBitmap(text, 0, 0, new Paint());
 	}
 
 	public void drawMessage(){
@@ -319,16 +400,23 @@ public class Graphical_Info_View extends View{
 		protected Void doInBackground(Void... params) {
 			if( ! activate)
 				return null;
+			
 			loaded=false;
 			try {
 				avgf=0;
 				values.clear();
-				long currentTimestamp = System.currentTimeMillis()/1000;
-				long lastweekTimestamp = currentTimestamp - 86400*period; 
-				Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
+				compute_period(true);
+				
+				//Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 
-				JSONObject json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+lastweekTimestamp+"/to/"+currentTimestamp+"/interval/hour/selector/avg");
-				Log.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
+				JSONObject json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
+						state_key+
+						"/from/"+
+						startTimestamp+
+						"/to/"+
+						currentTimestamp+
+						"/interval/"+step+"/selector/avg");
+				//Log.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
 				if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
 					//That seems to be a zombie
 					loaded=false;
@@ -338,51 +426,226 @@ public class Graphical_Info_View extends View{
 				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
 
-				minf=(float)valueArray.getJSONArray(0).getDouble(5);
-				maxf=(float)valueArray.getJSONArray(0).getDouble(5);
-				Log.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
+				//minf=(float)valueArray.getJSONArray(0).getDouble(limit-1);
+				maxf=minf=0;
+				//Log.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
 
 				for (int i =0; i < valueArray.length(); i++){
+					// Create a vector with all entry components
+					
 					Vector<Float> vect = new Vector<Float>();
-					for (int j=0; j < 6; j++){
-						vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
+					Double real_val = valueArray.getJSONArray(i).getDouble(limit-1);	// Get the real 'value'
+					
+					if(limit == 6) {
+						// stats per hour return [ year, month, week, day, hour, value]
+						for (int j=0; j < 6; j++){
+							vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
+						}
+					} else if(limit == 5) {
+						// stats per day return [year, month, week, day, value]
+						for (int j=0; j < 4; j++){
+							vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
+						}
+						vect.addElement((float)0f);	//null hour
+						vect.addElement(real_val.floatValue());
+					} else  {
+						// stats per week return [ year,  week, value ]
+						Calendar date_value = Calendar.getInstance();
+						date_value.setTimeInMillis(0);
+						date_value.set(Calendar.YEAR, (int)valueArray.getJSONArray(i).getDouble(0));
+						date_value.set(Calendar.WEEK_OF_YEAR, (int)valueArray.getJSONArray(i).getDouble(1));
+						Date loc_date = new Date();
+						loc_date.setTime(date_value.getTimeInMillis());
+						//Log.d(mytag,"Case week : Inserting value at "+sdf.format(loc_date));
+						vect.addElement((float)valueArray.getJSONArray(i).getDouble(0));	//year
+						vect.addElement((float)loc_date.getMonth());	// month
+						vect.addElement((float)valueArray.getJSONArray(i).getDouble(1));	//week
+						vect.addElement((float)loc_date.getDay());	// day
+						vect.addElement((float)0f);	//null hour
+						vect.addElement(real_val.floatValue());
 					}
+					// each vector contains 6  floats
 					values.add(vect);
-					avgf+=valueArray.getJSONArray(i).getDouble(5);
-					if(valueArray.getJSONArray(i).getDouble(5) > maxf){  
-						maxf = (float)valueArray.getJSONArray(i).getDouble(5);  
+					if(minf == 0)
+						minf=real_val.floatValue();
+					
+					avgf+=real_val;	// Get the real 'value'
+					if(real_val > maxf){  
+						maxf = real_val.floatValue();  
 					}  
-					if(valueArray.getJSONArray(i).getDouble(5) < minf){  
-						minf = (float)valueArray.getJSONArray(i).getDouble(5); 
+					if(real_val < minf){  
+						minf = real_val.floatValue(); 
 					}
 
-					if(i<valueArray.length()-1){
-						if((int)valueArray.getJSONArray(i).getDouble(4)!=23 && ((int)valueArray.getJSONArray(i).getDouble(4)<(int)valueArray.getJSONArray(i+1).getDouble(4))){
-							if(((int)valueArray.getJSONArray(i).getDouble(4)+1 != (int)valueArray.getJSONArray(i+1).getDouble(4))){
-								for (int k=1; k < (int)valueArray.getJSONArray(i+1).getDouble(4)-(int)valueArray.getJSONArray(i).getDouble(4); k++){
-									Vector<Float> vect2 = new Vector<Float>();
-									vect2.addElement(0f);
-									vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(1)));
-									vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(2)));
-									vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(3)));
-									vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(4))+k);
-									vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(5)));
-									values.add(vect2);
-									avgf+=valueArray.getJSONArray(i).getDouble(5);
+					if( i < valueArray.length()-1){
+						// It's not the last component
+						int loc_hour,loc_hour_next = 0;
+						int loc_day,loc_day_next = 0;
+						int loc_week,loc_week_next = 0;
+						int loc_year = 0;
+						int loc_month = 0;
+						float loc_value = 0;
+						
+						if(limit == 6) {
+							// range between 1 to 8 days (average per hour)
+							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
+							loc_month = (int)valueArray.getJSONArray(i).getDouble(1);
+							loc_week  = (int)valueArray.getJSONArray(i).getDouble(2);
+							loc_day   = (int)valueArray.getJSONArray(i).getDouble(3);
+							loc_hour = (int)valueArray.getJSONArray(i).getDouble(4);
+							loc_hour_next = (int)valueArray.getJSONArray(i+1).getDouble(4);
+							loc_value = (float)valueArray.getJSONArray(i).getDouble(5);
+							//Log.d(mytag,"Case hour : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_hour+" - "+loc_value);
+
+							if(loc_hour != 23 && (loc_hour < loc_hour_next) ) {
+								//no day change
+								//Log.d(mytag,"Case hour 1 ");
+
+								if((loc_hour+1) != loc_hour_next) {
+									//ruptur : simulate next missing steps
+									for (int k=1; k < (loc_hour_next - loc_hour); k++){
+										Vector<Float> vect2 = new Vector<Float>();
+										vect2.addElement(0f);
+										vect2.addElement((float)loc_month);	//month
+										vect2.addElement((float)loc_week);	//week
+										vect2.addElement((float)loc_day);	//day
+										vect2.addElement((float)loc_hour +k);	//hour
+										vect2.addElement(loc_value);	//value
+										values.add(vect2);
+										//Log.e(mytag,"Case 1 : added : 0 - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+(loc_hour+k)+" - "+loc_value);
+										avgf+=loc_value;	//value
+									}
+								}
+							} else {
+								//Log.d(mytag,"Case hour 2 ");
+								//if((loc_hour ==23) && (loc_hour_next != 0) ){
+								if( loc_hour ==23 ){
+									// day change : simulate missing steps
+									//Log.d(mytag,"Case hour 2a ");
+
+									for (int k=0; k < loc_hour_next ; k++){
+										Vector<Float> vect2 = new Vector<Float>();
+										vect2.addElement(0f);
+										vect2.addElement((float)loc_month+1);	//month
+										vect2.addElement((float)loc_week);	//week
+										vect2.addElement((float)loc_day+1);	// next day
+										vect2.addElement((float)k);			//simulated hour
+										vect2.addElement(loc_value);	//value
+										values.add(vect2);
+										//Log.e(mytag,"Case 2 : added : 0 - "+loc_month+" - "+loc_week+" - "+(loc_day+1)+" - "+k+" - "+loc_value);
+										avgf+=loc_value;	//value
+									}
 								}
 							}
-						}
-						if((int)valueArray.getJSONArray(i).getDouble(4)==23 && (int)valueArray.getJSONArray(i+1).getDouble(4)!= 0){
-							for (int k=0; k < (int)valueArray.getJSONArray(i+1).getDouble(4); k++){
-								Vector<Float> vect2 = new Vector<Float>();
-								vect2.addElement(0f);
-								vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(1)));
-								vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(2)));
-								vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(3))+1);
-								vect2.addElement((float)k);
-								vect2.addElement((float)(valueArray.getJSONArray(i).getDouble(5)));
-								values.add(vect2);
-								avgf+=valueArray.getJSONArray(i).getDouble(5);
+						} else if(limit == 5) {
+							// range between 9 to 32 days (average per day)
+							loc_day_next = (int)valueArray.getJSONArray(i+1).getDouble(limit-2);
+							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
+							loc_month = (int)valueArray.getJSONArray(i).getDouble(1);
+							loc_week  = (int)valueArray.getJSONArray(i).getDouble(2);
+							loc_day   = (int)valueArray.getJSONArray(i).getDouble(3);
+							loc_day_next = (int)valueArray.getJSONArray(i+1).getDouble(3);
+							loc_hour = 0;
+							loc_value = (float)valueArray.getJSONArray(i).getDouble(4);
+							//Log.d(mytag,"Case day : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_value);
+
+							//if(loc_day != 31 && (loc_day < loc_day_next) ) {
+							if(loc_day < loc_day_next ) {
+								// month continues...
+								//Log.d(mytag,"Case day 1 ");
+
+								if((loc_day+1) != loc_day_next){
+									// but a hole exists : simulate missing days
+									//Log.d(mytag,"Case day 1a ");
+									for (int k=1; k < (loc_day_next - loc_day); k++){
+										Vector<Float> vect2 = new Vector<Float>();
+										vect2.addElement(0f);
+										vect2.addElement((float)loc_month);	//month
+										vect2.addElement((float)loc_week);	//week
+										vect2.addElement((float)(loc_day+k));	//day
+										vect2.addElement((float)loc_hour); // = 0
+										vect2.addElement(loc_value);	//value
+										values.add(vect2);
+										avgf+=loc_value;	//value
+									}
+								}
+							} else {
+								// next day being less than current day, month has changed !
+								//Log.d(mytag,"Case day 2 ");
+								
+								//if((loc_day == 31) && (loc_day_next != 0) ){
+								if( loc_day_next != 0 ){
+									//Log.d(mytag,"Case day 2a ");
+									
+									for (int k=0; k < loc_day_next ; k++){
+										Vector<Float> vect2 = new Vector<Float>();
+										vect2.addElement(0f);
+										vect2.addElement((float)loc_month);	//month
+										vect2.addElement((float)loc_week);	//week
+										//vect2.addElement(0f);				// no week in scale
+										vect2.addElement((float)k);			//day
+										vect2.addElement((float)loc_hour); // = 0
+										vect2.addElement(loc_value);		//value
+										values.add(vect2);
+										//Log.d(mytag,"Case day 2a with k="+k);
+										
+										avgf+=loc_value;	//value
+									}
+								}
+							}
+						} else if(limit == 3) {
+							Calendar date_value = Calendar.getInstance();
+							date_value.setTimeInMillis(0);
+							date_value.set(Calendar.YEAR, (int)valueArray.getJSONArray(i).getDouble(0));
+							date_value.set(Calendar.WEEK_OF_YEAR, (int)valueArray.getJSONArray(i).getDouble(1));
+							Date loc_date = new Date();
+							loc_date.setTime(date_value.getTimeInMillis());
+							//loc_date.setYear((int)valueArray.getJSONArray(i).getDouble(0));
+							//loc_date.setMonth(date_value.get(Calendar.MONTH));
+							//loc_date.setDate(date_value.get(Calendar.DAY_OF_MONTH));
+							//Log.d(mytag,"Case week : process :"+sdf.format(loc_date));
+							// range of 1 year (average per week)
+							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
+							loc_month=loc_date.getMonth();	// month
+							loc_week  = (int)valueArray.getJSONArray(i).getDouble(1);
+							loc_week_next = (int)valueArray.getJSONArray(i+1).getDouble(1);
+							loc_day   = loc_date.getDate();
+							loc_day_next = 0;
+							loc_hour = loc_date.getHours();
+							loc_value = (float)valueArray.getJSONArray(i).getDouble(2);
+							//Log.d(mytag,"Case week : "+loc_year+" - "+loc_week+" - "+loc_value);
+
+							if(loc_week != 52 && (loc_week < loc_week_next) ) {
+								if((loc_week+1) != loc_week_next){
+									// Changing year
+									for (int k=1; k < (loc_week_next - loc_week); k++){
+										Vector<Float> vect2 = new Vector<Float>();
+										//vect2.addElement((float)loc_year);	//year
+										vect2.addElement(0f);
+										vect2.addElement((float)loc_month);	//month
+										vect2.addElement((float)(loc_week+k));	//week
+										vect2.addElement((float)loc_day);	//day
+										vect2.addElement(0f);	//hour
+										vect2.addElement((float)loc_value);	//value
+										values.add(vect2);
+										avgf+=loc_value;	//value
+									}
+								}
+							}
+							if((loc_week == 52) && (loc_week_next != 0) ){
+								//last week of the year
+								for (int k=0; k < loc_week_next ; k++){
+									Vector<Float> vect2 = new Vector<Float>();
+									//vect2.addElement((float)loc_year);	//year
+									vect2.addElement(0f);
+									vect2.addElement((float)loc_month);	//month
+									vect2.addElement((float)k);	//week
+									vect2.addElement((float)loc_day);	//day
+									vect2.addElement(0f);	//hour
+									vect2.addElement((float)loc_value);	//value
+									values.add(vect2);
+									avgf+=valueArray.getJSONArray(i).getDouble(limit-1);	//value
+								}
 							}
 						}
 					}
@@ -393,8 +656,10 @@ public class Graphical_Info_View extends View{
 			avgf=avgf/values.size();
 
 			gridStartX=Float.toString(maxf).length()*7;
-			if(Float.toString(minf).length()*7>gridStartX)gridStartX=Float.toString(minf).length()*7;
-			if(Float.toString(avgf).length()*7>gridStartX)gridStartX=Float.toString(avgf).length()*7;
+			if(Float.toString(minf).length()*7 > gridStartX)
+				gridStartX=Float.toString(minf).length()*7;
+			if(Float.toString(avgf).length()*7 > gridStartX)
+				gridStartX=Float.toString(avgf).length()*7;
 			gridStopX=width-gridStartX;
 			loaded=true;
 			handler.sendEmptyMessage(0);
@@ -409,4 +674,45 @@ public class Graphical_Info_View extends View{
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
+	
+	
+	
+	private void compute_period(Boolean mode) {
+		// if mode == true, graph should end on actual time
+		//	otherwise, use current time stamps (Next & Previous)
+		
+		long duration = 86400 * 1000 * period;	//By default, get the settings's graph duration, in days;
+		/*
+		period_type = 0;		// 0 = period defined by settings
+		// 1 = 1 day
+		// 8 = 1 week
+		// 30 = 1 month
+		// 365 = 1 year
+		 * */
+		Calendar cal = Calendar.getInstance();
+		if( period_type != 0) {
+			duration = 86400 * 1000 * period_type;
+		}
+		if(mode) {
+			time_end = cal.getTime();	//Get actual system time
+		} else {
+			cal.setTime(time_end);		// keep current end_time, for previous/next
+		}
+		cal.add(Calendar.DATE, - period_type);
+		time_start = cal.getTime();
+		//Log.d(mytag,"Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+		currentTimestamp=time_end.getTime()/1000;
+		startTimestamp=time_start.getTime()/1000;
+		if(period_type < 9) {
+			step="hour";
+			limit=6;
+		} else if(period_type < 32) {
+			step="day";
+			limit=5;
+		} else {
+			step="week";
+			limit=3;
+		}
+	}
+	
 }

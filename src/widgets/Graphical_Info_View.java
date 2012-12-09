@@ -436,7 +436,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				bottom_val1 = values.get(i).get(0).intValue();	//year
 				bottom_val2 = values.get(i+1).get(2).intValue(); // week
 				String tmp = Integer.toString(bottom_val1);
-				tmp = tmp.substring(2);
+				tmp = tmp.substring(2);	//Only keep last 2 digits
 				bottom_txt = tmp+"/"+Integer.toString(bottom_val2);
 			}
 			

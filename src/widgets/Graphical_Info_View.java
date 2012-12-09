@@ -428,7 +428,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				//one year (by weeks )
 				if(values.size() < 18)	//17 weeks
 					rythm = 1;
-				else if (values.size < 36)	//35 weeks
+				else if (values.size() < 36)	//35 weeks
 					rythm = 2;
 				else
 					rythm = 3;		//full year

@@ -72,7 +72,9 @@
     <string name="network_Text15">--Taille maximum carte:</string>	
     <string name="network_Text16">300 pixels</string>
     <string name="network_Text17">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
-    	
+    <string name="from">Du  : </string>	
+	<string name="to">    au : </string>
+		
 	<string name="info0">Tornade</string>
 	<string name="info1">Tempête tropicale</string>
 	<string name="info2">Ouragan</string>

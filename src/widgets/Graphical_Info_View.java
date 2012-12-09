@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 
 public class Graphical_Info_View extends View implements OnClickListener {
@@ -63,16 +64,18 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	public FrameLayout container = null;
 	public View myself = null;
 	private Calendar calendar = Calendar.getInstance();
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	private Date time_start=new Date();
 	private Date time_end=new Date();
+	public TextView dates = null;
 	private int period_type = 0;		// 0 = period defined by settings
 										// 1 = 1 day
 										// 8 = 1 week
 										// 30 = 1 month
 										// 365 = 1 year
-	private View Prev = null;
-	private View Next = null;
+	private int sav_period;
+	private Button Prev = null;
+	private Button Next = null;
 	private Button Year = null;
 	private Button Month = null;
 	private Button Week = null;
@@ -91,34 +94,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		activate=true;
 		mytag = "Graphical_Info_View";
 		this.myself=this;
-		/*
-		listener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				String tag = (String)v.getTag();
-				Log.d(mytag,"Click on : "+tag);
-			}
-			
-		};
-		if(listener != null) {
-			Prev = findViewById(R.id.bt_prev);
-			if(Prev != null)
-				Prev.setOnClickListener(listener);
-			
-			Next = findViewById(R.id.bt_prev);
-			Next.setOnClickListener(listener);
-			Year = (Button)findViewById(R.id.bt_prev);
-			Year.setOnClickListener(listener);
-			Month = (Button)findViewById(R.id.bt_prev);
-			Month.setOnClickListener(listener);
-			Week = (Button)findViewById(R.id.bt_prev);
-			Week.setOnClickListener(listener);
-			Day = (Button)findViewById(R.id.bt_prev);
-			Day.setOnClickListener(listener);
-		}
-		*/
-		period_type = 8;	//for tests
+		period_type = 1;	//by default, display 24 hours
+		compute_period();	//To initialize time_start & time_end
 		
 		handler = new Handler() {
 			@Override
@@ -140,32 +117,73 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		};
 	}
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		String tag = (String)v.getTag();
-		
+		sav_period=period_type;		//Save the current graph period
 		if(tag.equals("Prev")) {
-			
+			Prev=(Button)v;
+			period_type = -1;
 		} else if(tag.equals("Next")) {
-			
-		} else if(tag.equals("Next")) {
-			
+			Next=(Button)v;
+			period_type = 0;
 		} else if(tag.equals("Year")) {
+			Year=(Button)v;
 			period_type = 365;
 		}else if(tag.equals("Month")) {
+			Month=(Button)v;
 			period_type = 31;
 		}else if(tag.equals("Week")) {
+			Week=(Button)v;
 			period_type = 8;
 		}else if(tag.equals("Day")) {
+			Day=(Button)v;
 			period_type = 1;
 		}
+		force_aspect(period_type);
+		compute_period();
 		updateTimer();
+	}
+	private void force_aspect(int which) {
+		float big = 13f;
+		float normal = 10f;
+		
+		if(Prev != null)
+			if(which != -1)
+				Prev.setTextSize(normal);
+			else
+				Prev.setTextSize(big);
+		if(Next != null)
+			if(which != 0)
+				Next.setTextSize(normal);
+			else
+				Next.setTextSize(big);
+		if(Year != null)
+			if(which != 365)
+				Year.setTextSize(normal);
+			else
+				Year.setTextSize(big);
+		if(Month != null)
+			if(which != 31)
+				Month.setTextSize(normal);
+			else
+				Month.setTextSize(big);
+		if(Week != null)
+			if(which != 8)
+				Week.setTextSize(normal);
+			else
+				Week.setTextSize(big);
+		if(Day != null)
+			if(which != 1)
+				Day.setTextSize(normal);
+			else
+				Day.setTextSize(big);
 	}
 	
 	public void  onWindowVisibilityChanged (int visibility) {
 		Log.i(mytag,"Visibility changed to : "+visibility);
-		if(visibility == View.VISIBLE)
+		if(visibility == View.VISIBLE) {
 			this.activate = true;
-		else
+			display_dates();
+		} else
 			activate=false;
 	}
 	
@@ -265,92 +283,196 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		float gridSize_values = (gridStartY-gridOffset)-(gridStopY+gridOffset);
 		float scale_values = gridSize_values/(maxf-minf);
 		float step = (gridStopX-gridStartX)/(values.size()-1);
-
+		int top = 0;
+		String top_txt = "";
+		int rythm = 1;
+		int curr = 0;
+		
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
-
+		Log.i(mytag,"drawGraph limit = "+limit+" , step = "+step+"Array size = "+values.size());
 		for(int i=0; i<values.size();i++){
-
+			if(limit == 6) {
+				top = values.get(i).get(4).intValue();	//get the hour
+				top_txt = top+"'"; 
+			}
+			//top texts on X separators
 			if(step > 24){
 				paint.setStrokeWidth(1);
 				paint.setColor(Color.LTGRAY);
 				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStopY, paint);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStartY-4, paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, 
+						gridStartX+(i*step), 
+						gridStopY, 
+						paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, 
+						gridStartX+(i*step), 
+						gridStartY-4, 
+						paint);
 
 				paint.setAntiAlias(true);
 				paint.setStrokeWidth(0);
 				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(values.get(i).get(4).intValue()+"'", gridStartX+(i*step)-8, gridStopY+gridOffset-20, paint);
+				can.drawText(top_txt, 
+						gridStartX+(i*step)-8, 
+						gridStopY+gridOffset-20, 
+						paint);
 			}
-			else if(step > 8 && (values.get(i).get(4) == 3 || 
-					values.get(i).get(4) == 6 ||
-					values.get(i).get(4) == 9 || 
-					values.get(i).get(4) == 12 || 
-					values.get(i).get(4) == 15 || 
-					values.get(i).get(4) == 18 || 
-					values.get(i).get(4) == 21 ||
-					values.get(i).get(4) == 0)){
+			else if(step > 8 && (top == 3 || 
+					top == 6 ||
+					top == 9 || 
+					top == 12 || 
+					top == 15 || 
+					top == 18 || 
+					top == 21 ||
+					top == 0)){
 				paint.setStrokeWidth(1);
 				paint.setColor(Color.LTGRAY);
 				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStopY, paint);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStartY-4, paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, gridStartX+(i*step), 
+						gridStopY, 
+						paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, gridStartX+(i*step), 
+						gridStartY-4, 
+						paint);
 
 				paint.setAntiAlias(true);
 				paint.setStrokeWidth(0);
 				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(values.get(i).get(4).intValue()+"'", gridStartX+(i*step)-8, gridStopY+gridOffset-20, paint);
+				can.drawText(top_txt, 
+						gridStartX+(i*step)-8, 
+						gridStopY+gridOffset-20, 
+						paint);
 			}
-			else if(step > 4 && (values.get(i).get(4) == 6 ||
-					values.get(i).get(4) == 12 || 
-					values.get(i).get(4) == 18 || 
-					values.get(i).get(4) == 0)){
+			else if(step > 4 && (top == 6 ||
+					top == 12 || 
+					top == 18 || 
+					top == 0)) {
 				paint.setStrokeWidth(1);
 				paint.setColor(Color.LTGRAY);
 				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStopY, paint);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStartY-4, paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, gridStartX+(i*step), 
+						gridStopY, 
+						paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, 
+						gridStartX+(i*step), 
+						gridStartY-4, 
+						paint);
 
 				paint.setAntiAlias(true);
 				paint.setStrokeWidth(0);
 				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(values.get(i).get(4).intValue()+"'", gridStartX+(i*step)-8, gridStopY+gridOffset-20, paint);
-			}
-			else if(step > 2 && (values.get(i).get(4) == 12 || 
-					values.get(i).get(4) == 0)){
+				can.drawText(top_txt, 
+						gridStartX+(i*step)-8, 
+						gridStopY+gridOffset-20, 
+						paint);
+			} else if(step > 2 && (top == 12 || 
+					top == 0)){
 				paint.setStrokeWidth(1);
 				paint.setColor(Color.LTGRAY);
 				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStopY, paint);
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStartY-4, paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, 
+						gridStartX+(i*step), 
+						gridStopY, paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, 
+						gridStartX+(i*step), 
+						gridStartY-4, 
+						paint);
 
 				paint.setAntiAlias(true);
 				paint.setStrokeWidth(0);
 				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(values.get(i).get(4).intValue()+"'", gridStartX+(i*step)-8, gridStopY+gridOffset-20, paint);
+				can.drawText(top_txt, 
+						gridStartX+(i*step)-8, 
+						gridStopY+gridOffset-20, 
+						paint);
 			}
-			if (values.get(i).get(4) == 0){
+			if (top == 0){
 				paint.setAntiAlias(false);
 				paint.setColor(Color.parseColor("#AEB255"));	
-				can.drawLine(gridStartX+(i*step), gridStartY, gridStartX+(i*step), gridStopY, paint);
+				can.drawLine(gridStartX+(i*step), 
+						gridStartY, 
+						gridStartX+(i*step), 
+						gridStopY, 
+						paint);
 			}
 
-
+			// bottom texts
+			int bottom_val1 = 0;
+			int bottom_val2 = 0;
+			int hour = values.get(i+1).get(4).intValue();
+			String bottom_txt = "";
+			
+			if( limit == 6) {
+				//day or week
+				rythm = 1;
+				bottom_val1 = values.get(i+1).get(3).intValue();	//day
+				bottom_val2 = values.get(i).get(1).intValue();		//month
+				bottom_txt = Integer.toString(bottom_val1)+"/"+Integer.toString(bottom_val2);
+			} else if (limit == 5) {
+				//one month
+				rythm = 3;
+				bottom_val1 = values.get(i+1).get(3).intValue();	//day
+				bottom_val2 = values.get(i).get(1).intValue();		//month
+				bottom_txt = Integer.toString(bottom_val1)+"/"+Integer.toString(bottom_val2);
+			} else {
+				//one year (by weeks )
+				if(values.size() < 18)	//17 weeks
+					rythm = 1;
+				else if (values.size < 36)	//35 weeks
+					rythm = 2;
+				else
+					rythm = 3;		//full year
+				
+				bottom_val1 = values.get(i).get(0).intValue();	//year
+				bottom_val2 = values.get(i+1).get(2).intValue(); // week
+				String tmp = Integer.toString(bottom_val1);
+				tmp = tmp.substring(2);
+				bottom_txt = tmp+"/"+Integer.toString(bottom_val2);
+			}
+			
+			
+			// Intermediate points
 			if(values.get(i).get(0).intValue() == 0 || values.get(i+1).get(0).intValue() == 0){
 				paint.setColor(Color.RED);
 			}else{
 				paint.setColor(Color.parseColor("#157C9E"));
 				paint.setStrokeWidth(4);
-				can.drawPoint(gridStartX+(step*(i)), (gridStartY-gridOffset)-((values.get(i).get(5))-minf)*scale_values, paint);
-				can.drawPoint(gridStartX+(step*(i+1)),(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, paint);
+				can.drawPoint(gridStartX+(step*(i)), 
+						(gridStartY-gridOffset)-((values.get(i).get(5))-minf)*scale_values, 
+						paint);
+				can.drawPoint(gridStartX+(step*(i+1)),
+						(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, 
+						paint);
 			}
 			paint.setStrokeWidth(2);
-			can.drawLine(gridStartX+(step*(i)), (gridStartY-gridOffset)-((values.get(i).get(5))-minf)*scale_values,gridStartX+(step*(i+1)),(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, paint);
-			if(values.get(i+1).get(4).intValue() == 0){
-				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(values.get(i+1).get(3).intValue()+"/"+values.get(i).get(1).intValue(), gridStartX+((i+1)*step), gridStartY+gridOffset, paint);
+			can.drawLine(gridStartX+(step*(i)), 
+					(gridStartY-gridOffset)-((values.get(i).get(5))-minf)*scale_values,
+					gridStartX+(step*(i+1)),
+					(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, 
+					paint);
+			
+			//text on X Axis
+			if((curr == 0) || (curr == rythm )) { 
+				if(hour == 0){
+					paint.setColor(Color.parseColor("#157C9E"));
+					can.drawText(bottom_txt, 
+							gridStartX+((i+1)*step), 
+							gridStartY+gridOffset, 
+							paint);
+					curr=1;	//to skip next draw
+				}
+			} else {
+				curr++;	//draw text skipped
 			}
 		}
 	}
@@ -382,7 +504,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					}}
 				//)
 				;
-				Log.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
+				//Log.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
 				try {
 					handler.post(myTH);		//Doume : to avoid Exception on ICS
 					} catch (Exception e) {
@@ -405,17 +527,23 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			try {
 				avgf=0;
 				values.clear();
-				compute_period(true);
+				currentTimestamp=time_end.getTime()/1000;
+				startTimestamp=time_start.getTime()/1000;
+				
 				
 				//Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
-
-				JSONObject json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
+				JSONObject json_GraphValues = null;
+				try {
+					json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
 						state_key+
 						"/from/"+
 						startTimestamp+
 						"/to/"+
 						currentTimestamp+
 						"/interval/"+step+"/selector/avg");
+				} catch (Exception e) {
+					return null;
+				}
 				//Log.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
 				if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
 					//That seems to be a zombie
@@ -677,32 +805,68 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	
 	
 	
-	private void compute_period(Boolean mode) {
-		// if mode == true, graph should end on actual time
-		//	otherwise, use current time stamps (Next & Previous)
-		
-		long duration = 86400 * 1000 * period;	//By default, get the settings's graph duration, in days;
+	private void compute_period() {
+		long duration = 86400l * 1000l * period;	//By default, get the settings's graph duration, in days;
 		/*
-		period_type = 0;		// 0 = period defined by settings
+		period_type = 0;		// 0 = next , -1 = previous
 		// 1 = 1 day
 		// 8 = 1 week
 		// 30 = 1 month
 		// 365 = 1 year
-		 * */
-		Calendar cal = Calendar.getInstance();
-		if( period_type != 0) {
-			duration = 86400 * 1000 * period_type;
+		*/
+		//Calendar cal = Calendar.getInstance(); // The 'now' time
+		
+		switch(period_type ) {
+		case -1 :
+			//user requires the 'Prev' period
+			period_type=sav_period;
+			duration = 86400l * 1000l * period_type;
+			if(time_end != null) {
+				long new_end = time_end.getTime();
+				new_end -= duration;
+				time_end.setTime(new_end);
+				new_end -= duration;
+				time_start.setTime(new_end);
+				
+			}
+			//Log.i(mytag,"type prev on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			break;
+		case 0 :
+			//user requires the 'Next' period
+			period_type=sav_period;
+			duration = 86400l * 1000l * period_type;
+			if(time_start != null) {
+				long new_start = time_start.getTime();
+				new_start += duration;
+				time_start.setTime(new_start);
+				new_start+= duration;
+				time_end.setTime(new_start);
+			}
+			long new_start = time_start.getTime();
+			long new_end = time_end.getTime();
+			long now = System.currentTimeMillis();
+			if(new_end > now) {
+				time_end.setTime(now);
+				double new_timestamp = now - duration;
+				new_start = (long)new_timestamp;
+				time_start.setTime(new_start);
+			}
+			//Log.i(mytag,"type next on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			break;
+		default :
+			//period_type indicates the number of days to graph
+			// relative to 'now' date
+			duration = 86400l * 1000l * period_type;
+			long new_end_time = System.currentTimeMillis();
+			time_end.setTime(new_end_time);	//Get actual system time
+			new_end_time -= duration;
+			time_start.setTime(new_end_time);
+			//Log.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			break;
 		}
-		if(mode) {
-			time_end = cal.getTime();	//Get actual system time
-		} else {
-			cal.setTime(time_end);		// keep current end_time, for previous/next
-		}
-		cal.add(Calendar.DATE, - period_type);
-		time_start = cal.getTime();
-		//Log.d(mytag,"Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
-		currentTimestamp=time_end.getTime()/1000;
-		startTimestamp=time_start.getTime()/1000;
+		// time_start & time_end are set....
+		display_dates();
+		
 		if(period_type < 9) {
 			step="hour";
 			limit=6;
@@ -713,6 +877,13 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			step="week";
 			limit=3;
 		}
+		
 	}
 	
+
+	private void display_dates() {
+		if(dates != null) {
+			dates.setText(getContext().getText(R.string.from)+"  "+sdf.format(time_start)+"   "+getContext().getText(R.string.to)+"  "+sdf.format(time_end));
+		}
+	}
 }

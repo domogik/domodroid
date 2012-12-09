@@ -80,7 +80,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	private String url = null;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
-	
+		
 	public Graphical_Info(Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
 		this.dev_id = dev_id;
@@ -191,6 +191,9 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		v=featurePan2_buttons.findViewById(R.id.bt_day);
 		if(v != null)
 			v.setOnClickListener(canvas);
+		v = featurePan2_buttons.findViewById(R.id.period);
+		if(v != null)
+			canvas.dates=(TextView)v;
 		
 		featurePan.addView(value);
 		infoPan.addView(nameDevices);

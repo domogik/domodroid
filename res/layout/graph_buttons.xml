@@ -40,12 +40,13 @@
         android:textSize="10sp" />
 	
 	<Button
-        android:id="@+id/bt_week"
-        android:tag="Week"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-       	android:text="@string/bt_week" 
-        android:textSize="10sp" />
+	    android:id="@+id/bt_week"
+	    android:layout_width="wrap_content"
+	    android:layout_height="32dp"
+	    android:tag="Week"
+	    android:text="@string/bt_week"
+	    android:textSize="10sp"
+	     />
 	
 	<Button
         android:id="@+id/bt_day"
@@ -54,5 +55,15 @@
         android:layout_height="32dp"
        	android:text="@string/bt_day"
         android:textSize="10sp" />
+
+	<EditText
+	    android:id="@+id/period"
+	    android:layout_width="fill_parent"
+	    android:layout_height="32dp"
+	    android:ems="10"
+	    android:gravity="center"
+	    android:textSize="10sp" >
+	   
+	</EditText>
 	
 </LinearLayout>

@@ -72,7 +72,9 @@
     <string name="network_Text15">--Maximum Map Size:</string>	
     <string name="network_Text16">300 px</string>
     <string name="network_Text17">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
-    	
+    <string name="from">From : </string>	
+	<string name="to">    to : </string>
+		
 	<string name="info0">Tornado</string>
 	<string name="info1">Tropical storm</string>
 	<string name="info2">Hurricane</string>

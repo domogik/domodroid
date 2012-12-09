@@ -35,13 +35,15 @@ public class Graphics_Manager {
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
 			else if(usage.equals("heater")){return R.drawable.usage_heating_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
-			else if(usage.equals("server")){return R.drawable.usage_computer_off;}
+			else if(usage.equals("server")){return R.drawable.usage_server;}
 			else if(usage.equals("tv")){return R.drawable.usage_tv_off;}
 			else if(usage.equals("temperature")){return R.drawable.usage_temperature_off;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_off;}
 			else if(usage.equals("mirror")){return R.drawable.usage_mirror_off;}
 			else if(usage.equals("music")){return R.drawable.usage_music_off;}
 			else if(usage.equals("portal")){return R.drawable.usage_portal_off;}
+			else if(usage.equals("nanoztag")){return R.drawable.usage_nabaztag;}
+			else if(usage.equals("scene")){return R.drawable.usage_scene;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			//room
 			else if(usage.equals("kitchen")){return R.drawable.room_kitchen;}
@@ -78,7 +80,7 @@ public class Graphics_Manager {
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
 			else if(usage.equals("heater")){return R.drawable.usage_heating_on;}
 			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}
-			else if(usage.equals("telephony")){return R.drawable.usage_heating_on;}
+			else if(usage.equals("telephony")){return R.drawable.usage_cid;}
 			else if(usage.equals("mirror")){return R.drawable.usage_mirror_on;}
 			else if(usage.equals("music")){return R.drawable.usage_music_on;}
 			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_on;}
@@ -86,7 +88,7 @@ public class Graphics_Manager {
 			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
 			else if(usage.equals("appliance")){return R.drawable.usage_socket_on;}
 			else if(usage.equals("shutter")){return R.drawable.usage_shutter_on;}
-			else if(usage.equals("server")){return R.drawable.usage_computer_on;}
+			else if(usage.equals("server")){return R.drawable.usage_server;}
 			break;
 
 		case 2:

@@ -146,7 +146,8 @@
                 android:paddingLeft="20dip"
                 android:paddingRight="20dip"
                 android:paddingTop="10dip" />
-
+			<!-- Graph duration  -->
+			<!--  Deleted with new graphs allowing different scales by buttons
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,7 +169,7 @@
                     android:textColor="#FFFFFF" />
             </LinearLayout>
 
-            <!-- Graphs duration -->
+            
 
             <SeekBar
                 android:id="@+id/SeekBar2"
@@ -178,7 +179,7 @@
                 android:paddingLeft="20dip"
                 android:paddingRight="20dip"
                 android:paddingTop="10dip" />
-
+			-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

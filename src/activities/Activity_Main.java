@@ -97,10 +97,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private String format_urlAccess;
 	public static String urlAccess;
 	private TextView mProgressText1;
-	private TextView mProgressText2;
+	//private TextView mProgressText2;
 	private TextView mProgressText3;
 	private SeekBar mSeekBar1;
-	private SeekBar mSeekBar2;
+	//private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
@@ -144,10 +144,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		checkbox4 = (CheckBox)findViewById(R.id.checkbox4);
 		appname = (ImageView)findViewById(R.id.app_name);
 		mProgressText1 = (TextView)findViewById(R.id.progress1);
-		mProgressText2 = (TextView)findViewById(R.id.progress2);
+		//mProgressText2 = (TextView)findViewById(R.id.progress2);
 		mProgressText3 = (TextView)findViewById(R.id.progress3);
 		mSeekBar1=(SeekBar)findViewById(R.id.SeekBar1);
-		mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
+		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
@@ -162,7 +162,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		Exit.setTag("Exit");
 		//
 		mSeekBar1.setOnSeekBarChangeListener(this);
-		mSeekBar2.setOnSeekBarChangeListener(this);
+		//mSeekBar2.setOnSeekBarChangeListener(this);
 		mSeekBar3.setOnSeekBarChangeListener(this);
 
 		LoadSelections();
@@ -568,7 +568,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			if(period < secondeOffset)
 				period = secondeOffset;
 			prefEditor.putInt("UPDATE_TIMER", period);
-			prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
+			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 
 			urlAccess = localIP.getText().toString();
@@ -612,7 +612,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		checkbox3.setChecked(params.getBoolean("DRAG",false));
 		checkbox4.setChecked(params.getBoolean("ZOOM",false));
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
-		mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
+		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 	}
 
@@ -627,9 +627,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			}
 			mProgressText1.setText((value)+" Secondes");
 		}
-		else if(seekBar.getId()==R.id.SeekBar2) {
+		/* else if(seekBar.getId()==R.id.SeekBar2) {
 			mProgressText2.setText( (Integer.toString(progress+dayOffset))+ getText(R.string.network_Text11a));
-		}else{
+		}*/else{
 			mProgressText3.setText((progress+sizeOffset)+" px");
 		}
 	}

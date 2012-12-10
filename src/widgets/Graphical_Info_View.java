@@ -55,7 +55,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	public String state_key;
 	public String url;
 	public Thread thread;
-	public int period;
+	//public int period;
 	public int update;
 	private Handler handler;
 	public boolean activate=false;
@@ -806,7 +806,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	
 	
 	private void compute_period() {
-		long duration = 86400l * 1000l * period;	//By default, get the settings's graph duration, in days;
+		long duration = 0; 
 		/*
 		period_type = 0;		// 0 = next , -1 = previous
 		// 1 = 1 day

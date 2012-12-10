@@ -167,7 +167,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		canvas.dev_id = dev_id;
 		canvas.state_key = state_key;
 		canvas.url = url;
-		canvas.period = period;
+		//canvas.period = period;
 		canvas.update = update;
 		
 		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -375,14 +375,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 			return null;
 		}
 	}
-	/*
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		String tag = (String)v.getTag();
-		Log.d(mytag,"Click on : "+tag);
-	}
-	*/
-
+	
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(background.getHeight() != 350){
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));

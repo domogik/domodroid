@@ -144,7 +144,7 @@ public class DomodroidDB {
 				// Servers 0.2 does'nt return this kind of parameter : set true by default
 				exists = true;
 			}
-			if(exists) {
+			//if(exists) {
 				try {
 					skey = itemArray.getJSONObject(i).getString("skey");
 				} catch (Exception e) {
@@ -162,9 +162,9 @@ public class DomodroidDB {
 				values.put("value", Val);
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
 				Log.v(mytag+"("+owner+")", "Database insert feature : "+itemArray.getJSONObject(i).getInt("device_id")+" "+skey+" "+Val);
-			} else {
-				Log.d(mytag+"("+owner+")", "Device : "+itemArray.getJSONObject(i).getInt("device_id")+" does'nt exist anymore....");
-			}
+			//} else {
+				//Log.d(mytag+"("+owner+")", "Device : "+itemArray.getJSONObject(i).getInt("device_id")+" does'nt exist anymore....");
+			//}
 			
 		}
 	}

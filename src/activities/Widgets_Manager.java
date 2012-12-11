@@ -86,6 +86,13 @@ public class Widgets_Manager {
 			if(label.length() < 1)
 				label = feature.getName();
 			
+			String Value_type = feature.getValue_type();
+			String Address = feature.getAddress();
+			int DevId = feature.getDevId();
+			String State_key = feature.getState_key();
+			
+			Log.i("Widgets_Manager", "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
+			
 			if (feature.getValue_type().equals("binary")) {
 				onoff = new Graphical_Binary(context,feature.getAddress(),label,
 						feature.getDevId(),
@@ -98,8 +105,8 @@ public class Widgets_Manager {
 						widgetSize);
 				onoff.container=tmpPan;
 				tmpPan.addView(onoff);
-			}
-			if (feature.getValue_type().equals("boolean")) {
+				Log.i("Widgets_Manager","   ==> Graphical_Binary");
+			} else if (feature.getValue_type().equals("boolean")) {
 				bool = new Graphical_Boolean(context,feature.getAddress(),label,
 						feature.getDevId(),
 						feature.getState_key(),
@@ -109,8 +116,8 @@ public class Widgets_Manager {
 						widgetSize);
 				bool.container=tmpPan;
 				tmpPan.addView(bool);
-			}
-			if (feature.getValue_type().equals("range")) {
+				Log.i("Widgets_Manager","   ==> Graphical_Boolean");
+			} else if (feature.getValue_type().equals("range")) {
 				variator = new Graphical_Range(context,feature.getAddress(),label,
 						feature.getDevId(),
 						feature.getState_key(),
@@ -122,8 +129,8 @@ public class Widgets_Manager {
 						widgetSize);
 				variator.container=tmpPan;
 				tmpPan.addView(variator);
-			}
-			if (feature.getValue_type().equals("trigger")) {
+				Log.i("Widgets_Manager","   ==> Graphical_Range");
+			} else if (feature.getValue_type().equals("trigger")) {
 				trigger = new Graphical_Trigger(context,feature.getAddress(),label,
 						feature.getDevId(),
 						feature.getState_key(),
@@ -134,9 +141,14 @@ public class Widgets_Manager {
 						widgetSize);
 				trigger.container=tmpPan;
 				tmpPan.addView(trigger);
-			}
-			if (feature.getValue_type().equals("number")) {
-				//Log.e("Widgets_Manager","add "+feature.getName());
+				Log.i("Widgets_Manager","   ==> Graphical_Trigger");
+			//} else if(feature.getValue_type().equals("color")){
+			} else if(feature.getState_key().equals("color")){
+				color = new Graphical_Color(context, params, feature.getDevId(),label,feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("UPDATE_TIMER",300),0);
+				tmpPan.addView(color);
+				Log.i("Widgets_Manager","   ==> Graphical_Color");
+			} else if (feature.getValue_type().equals("number")) {
+				Log.e("Widgets_Manager","add Graphical_Info for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
 				info = new Graphical_Info(context,feature.getDevId(), label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
@@ -147,21 +159,20 @@ public class Widgets_Manager {
 				info.setLayoutParams(layout_param);
 				info.container=tmpPan;
 				tmpPan.addView(info);
-			}
-			if(feature.getValue_type().equals("string")){
+				Log.i("Widgets_Manager","   ==> Graphical_Info + Graphic");
+			} else if(feature.getValue_type().equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(context,feature.getId(),label,feature.getAddress(),widgetSize);
 					tmpPan.addView(cam);
+					Log.i("Widgets_Manager","   ==> Graphical_Cam");
 				} else {
 					info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
 					info.setLayoutParams(layout_param);
+					info.with_graph=false;
 					tmpPan.addView(info);
+					Log.i("Widgets_Manager","   ==> Graphical_Info + No graphic !!!");
 				}
 				
-			}
-			if(feature.getValue_type().equals("color")){
-				color = new Graphical_Color(context, params, feature.getDevId(),label,feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("UPDATE_TIMER",300),0);
-				tmpPan.addView(color);
 			}
 			if(columns){	
 				if(counter==0){

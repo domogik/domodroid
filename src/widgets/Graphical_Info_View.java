@@ -531,7 +531,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				startTimestamp=time_start.getTime()/1000;
 				
 				
-				//Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				JSONObject json_GraphValues = null;
 				try {
 					json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
@@ -861,7 +861,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			time_end.setTime(new_end_time);	//Get actual system time
 			new_end_time -= duration;
 			time_start.setTime(new_end_time);
-			//Log.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			Log.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
 			break;
 		}
 		// time_start & time_end are set....

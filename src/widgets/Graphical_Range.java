@@ -151,7 +151,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 		//name
 		nameDevices=new TextView(context);
-		nameDevices.setText(name);
+		nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
@@ -276,7 +276,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 									timer.cancel();
 								}
 								//Log.e("update Timer", "Destroy runnable");
-								this.finalize();
+								//this.finalize();
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -373,7 +373,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			activate=true;
+			//activate=true;
 		}
 	}
 }

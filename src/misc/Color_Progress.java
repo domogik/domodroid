@@ -113,7 +113,7 @@ public class Color_Progress extends SeekBar{
 			int[] colors = new int[2];
 			colors[0] = Color.HSVToColor(hsv0);
 			colors[1] = Color.HSVToColor(hsv1);
-			Log.e("metri", ""+dpiClassification);
+			//Log.e("metri", ""+dpiClassification);
 			if(dpiClassification==240){
 				Shader shader = new LinearGradient(12, 0, 268, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);

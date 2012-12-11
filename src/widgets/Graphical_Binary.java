@@ -81,7 +81,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private String wname;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
-	
+	private String mytag = "";
 
 	public Graphical_Binary(Activity context, String address, String name, int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
@@ -98,6 +98,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		
 		domodb = new DomodroidDB(context);
 		domodb.owner="Graphical_Binary("+dev_id+")";
+		mytag = domodb.owner;
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 		value0 = jparam.getString("value0");
@@ -130,7 +131,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name);
+		nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
@@ -174,7 +175,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
-					Log.d("Graphical_Binary","Handler receives a request to die " );
+					Log.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -185,18 +186,24 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
 				} else {
 					try {
-						if(msg.getData().getString("message").equals(value0)){
-							state.setText("State : "+value0);
-							new SBAnim(seekBarOnOff.getProgress(),0).execute();
-						}else if(msg.getData().getString("message").equals(value1)){
-							state.setText("State : "+value1);
-							new SBAnim(seekBarOnOff.getProgress(),40).execute();
-						}else{
-							Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+						Bundle b = msg.getData();
+						if(( b != null) && (b.getString("message") != null)) {
+							if (b.getString("message").equals(value0)){
+								state.setText("State : "+value0);
+								new SBAnim(seekBarOnOff.getProgress(),0).execute();
+							}else if(b.getString("message").equals(value1)){
+								state.setText("State : "+value1);
+								new SBAnim(seekBarOnOff.getProgress(),40).execute();
+							}
+							state.setAnimation(animation);
+						} else {
+							if(msg.what == 2) {
+								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+							}
 						}
-						state.setAnimation(animation);
+						
 					} catch (Exception e) {
-						Log.e("handler error", "device "+wname);
+						Log.e(mytag, "Handler error for device "+wname);
 						e.printStackTrace();
 					}
 				}
@@ -249,21 +256,21 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			public void run() {
 				Runnable myTH = null;
 				Handler loc_handler = handler;
-				Log.e("TimerTask.run", "Create Runnable");
+				Log.e(mytag, "Create Runnable");
 				myTH = new Runnable() {
 					public void run() {
 						
 					try {
-							if(getWindowVisibility()==0 || !activate){
-								Log.e("update Timer", "Execute UpdateThread");
+							if(getWindowVisibility()==0){
+								Log.e(mytag, "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e("update Timer", "Destroy runnable");
-								this.finalize();
+								Log.e(mytag, "UpdateTimer : Destroy runnable");
+								//this.finalize();
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -273,19 +280,19 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 					} // Runnable run method
 				}; //Runnable 
 				if((myTH != null) && (loc_handler != null)) {
-					Log.e("Grapical_Binary","TimerTask.run : Queuing Runnable for Device : "+dev_id);	
+					Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
 					try {
 						loc_handler.post(myTH);
 					} catch (Exception e) {
-						Log.e("Grapical_Binary","TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+						Log.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 						e.printStackTrace();
 					}
 				} else {
-					Log.e("Grapical_Binary","TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+					Log.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 				}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
+		Log.e(mytag,"Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -294,23 +301,23 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		@Override
 		protected Void doInBackground(Void... params) {
 			try{
-				Log.e("Graphical_Binary", "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
+				Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
 				if(updating<1){
 					Bundle b = new Bundle();
 					String result = domodb.requestFeatureState(dev_id, state_key);
 					if(result != null) {
-						Log.e("Graphical_Binary", "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
+						Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
 						b.putString("message", result);
 						msg = new Message();
 						msg.setData(b);
 						handler.sendMessage(msg);
 					} else {
-						Log.e("Graphical_Binary", "UpdateThread no DB state for "+dev_id+" "+state_key+" state= "+name);
+						Log.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" state= "+name);
 					}
 				}
 				updating--;
 			}catch(Exception e){
-				Log.e("Graphical_Binary", "error : request feature state= "+name);
+				Log.e(mytag, "error : request feature state= "+name);
 			}
 			return null;
 		}
@@ -368,7 +375,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			activate=true;
+			//activate=true;
 		}
 	}
 }

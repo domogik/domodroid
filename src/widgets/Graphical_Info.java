@@ -80,6 +80,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	private String url = null;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
+	public Boolean with_graph = true;
+	
 		
 	public Graphical_Info(Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
@@ -129,7 +131,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name);
+		nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
@@ -153,55 +155,51 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 
-		
-		//feature panel 2 which will contain graphic
-		featurePan2=new LinearLayout(context);
-		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		featurePan2.setGravity(Gravity.CENTER_VERTICAL);
-		featurePan2.setPadding(5, 10, 5, 10);
-		
-		
-
-		//canvas
-		canvas = new Graphical_Info_View(context);
-		canvas.dev_id = dev_id;
-		canvas.state_key = state_key;
-		canvas.url = url;
-		//canvas.period = period;
-		canvas.update = update;
-		
-		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
-		View v=null;
-		v=featurePan2_buttons.findViewById(R.id.bt_prev);
-		if(v != null)
-			v.setOnClickListener(canvas);
-		v=featurePan2_buttons.findViewById(R.id.bt_next);
-		if(v != null)
-			v.setOnClickListener(canvas);
-		v=featurePan2_buttons.findViewById(R.id.bt_year);
-		if(v != null)
-			v.setOnClickListener(canvas);
-		v=featurePan2_buttons.findViewById(R.id.bt_month);
-		if(v != null)
-			v.setOnClickListener(canvas);
-		v=featurePan2_buttons.findViewById(R.id.bt_week);
-		if(v != null)
-			v.setOnClickListener(canvas);
-		v=featurePan2_buttons.findViewById(R.id.bt_day);
-		if(v != null)
-			v.setOnClickListener(canvas);
-		v = featurePan2_buttons.findViewById(R.id.period);
-		if(v != null)
-			canvas.dates=(TextView)v;
-		
+		if(with_graph) {
+			//feature panel 2 which will contain graphic
+			featurePan2=new LinearLayout(context);
+			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
+			featurePan2.setPadding(5, 10, 5, 10);
+			//canvas
+			canvas = new Graphical_Info_View(context);
+			canvas.dev_id = dev_id;
+			canvas.state_key = state_key;
+			canvas.url = url;
+			//canvas.period = period;
+			canvas.update = update;
+			
+			LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
+			View v=null;
+			v=featurePan2_buttons.findViewById(R.id.bt_prev);
+			if(v != null)
+				v.setOnClickListener(canvas);
+			v=featurePan2_buttons.findViewById(R.id.bt_next);
+			if(v != null)
+				v.setOnClickListener(canvas);
+			v=featurePan2_buttons.findViewById(R.id.bt_year);
+			if(v != null)
+				v.setOnClickListener(canvas);
+			v=featurePan2_buttons.findViewById(R.id.bt_month);
+			if(v != null)
+				v.setOnClickListener(canvas);
+			v=featurePan2_buttons.findViewById(R.id.bt_week);
+			if(v != null)
+				v.setOnClickListener(canvas);
+			v=featurePan2_buttons.findViewById(R.id.bt_day);
+			if(v != null)
+				v.setOnClickListener(canvas);
+			v = featurePan2_buttons.findViewById(R.id.period);
+			if(v != null)
+				canvas.dates=(TextView)v;
+			//background_stats.addView(canvas);
+			featurePan2.addView(canvas);
+		}
 		featurePan.addView(value);
 		infoPan.addView(nameDevices);
 		infoPan.addView(state_key_view);
 		imgPan.addView(img);
-
-		//background_stats.addView(canvas);
-		featurePan2.addView(canvas);
 
 		topPan.addView(imgPan);
 		topPan.addView(infoPan);
@@ -367,7 +365,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 			    handler.sendMessage(msg);
 			} else {
 				// This widget has no feature_state : probably a zombie ????
-				activate=true;
+				//activate=true;
 				handler.sendEmptyMessage(0);
 				
 			}
@@ -377,18 +375,20 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 	}
 	
 	public boolean onTouch(View arg0, MotionEvent arg1) {
-		if(background.getHeight() != 350){
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
-			background.addView(featurePan2_buttons);
-			background.addView(featurePan2);
-			canvas.activate = true;
-			canvas.updateTimer();
-		}
-		else{
-			background.removeView(featurePan2_buttons);
-			background.removeView(featurePan2);
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-			canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer
+		if(with_graph) {
+			if(background.getHeight() != 350){
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
+				background.addView(featurePan2_buttons);
+				background.addView(featurePan2);
+				canvas.activate = true;
+				canvas.updateTimer();
+			}
+			else{
+				background.removeView(featurePan2_buttons);
+				background.removeView(featurePan2);
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+				canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer
+			}
 		}
 		return false;
 	}

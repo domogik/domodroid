@@ -14,16 +14,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListener{
+public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListener,  OnTouchListener{
 
 
 	private int mInitialColor, mDefaultColor;
@@ -110,9 +115,10 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
+		infoPan.setOnTouchListener(this);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name);
+		nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
@@ -263,14 +269,14 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 		featurePan2.addView(color_LeftPan);
 		featurePan2.addView(color_RightPan);
+		featurePan2.setVisibility(INVISIBLE);
 
 		topPan.addView(imgPan);
 		topPan.addView(infoPan);
 		topPan.addView(featurePan);
 
 		background.addView(topPan);
-		background.addView(featurePan2);
-
+		
 		this.addView(background);
 		LoadSelections();
 	}
@@ -358,5 +364,17 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION",255));
 		seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS",255));
 		seekBarPowerBar.setProgress(params.getInt("COLORPOWER",255));
+	}
+	public boolean onTouch(View arg0, MotionEvent arg1) {
+		//Log.i("Graphical_Color", "Touch....");
+		if(featurePan2.getVisibility()== INVISIBLE){
+			background.addView(featurePan2);
+			featurePan2.setVisibility(VISIBLE);
+		}
+		else{
+			background.removeView(featurePan2);
+			featurePan2.setVisibility(INVISIBLE);
+		}
+		return false;
 	}
 }

@@ -96,7 +96,8 @@ public class MapView extends View {
 	private DomodroidDB domodb;
 	private Boolean activated; 
 	private String mytag="MapView";
-
+	private Boolean locked = false;
+	
 	public MapView(Activity context) {
 		super(context);
 		this.context=context;
@@ -211,13 +212,27 @@ public class MapView extends View {
 	}
 
 	public void drawWidgets(){
+		if(locked) {
+			return;
+		}
+		locked=true;
 		for (Entity_Map featureMap : listFeatureMap) {
 			if(featureMap.isalive()) {
+				try {
 				drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
-				canvasWidget.drawBitmap(drawable, 
-						(featureMap.getPosx()*currentScale)-drawable.getWidth()/2, 
-						(featureMap.getPosy()*currentScale)-drawable.getWidth()/2, 
-						paint_map);
+					if(drawable != null) {
+						canvasWidget.drawBitmap(drawable, 
+								(featureMap.getPosx()*currentScale)-drawable.getWidth()/2, 
+								(featureMap.getPosy()*currentScale)-drawable.getWidth()/2, 
+								paint_map);
+					} else {
+						Log.e("MapView","No drawable available for object");
+						return;
+					}
+				} catch (Exception e) {
+					Log.e("MapView","cannot draw object ! ! ! !");
+					return;
+				}
 				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
 	
 				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
@@ -291,6 +306,8 @@ public class MapView extends View {
 				canvasWidget = null; //?????
 			}
 		}
+		locked=false;
+		
 	}	
 
 

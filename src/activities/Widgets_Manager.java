@@ -286,15 +286,18 @@ public class Widgets_Manager {
 			try{
 				iconId = domodb.requestIcons(room.getId(),"room").getValue().toString();
 			}catch(Exception e){};
-			if(iconId.equals("unknown"))
-				iconId="usage";
+			
+			if(iconId.equals("unknown")) {
+				//iconId="usage";
+				iconId=room.getName();
+			}
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
-			graph_room = new Graphical_Room(context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
 			String ref = room.getDescription();
 			if(ref.length() == 0)
 				ref = room.getName();
-			//Log.d("loadRoomWidgets","Adding room : "+ref);
+			Log.d("loadRoomWidgets","Adding room : "+ref);
+			graph_room = new Graphical_Room(context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_room);
 
 			if(columns){	

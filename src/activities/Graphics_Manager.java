@@ -42,8 +42,9 @@ public class Graphics_Manager {
 			else if(usage.equals("mirror")){return R.drawable.usage_mirror_off;}
 			else if(usage.equals("music")){return R.drawable.usage_music_off;}
 			else if(usage.equals("portal")){return R.drawable.usage_portal_off;}
-			else if(usage.equals("nanoztag")){return R.drawable.usage_nabaztag;}
+			else if(usage.equals("nanoztag")){return R.drawable.usage_mirror_off;}
 			else if(usage.equals("scene")){return R.drawable.usage_scene;}
+			else if(usage.equals("security_camera")){return R.drawable.usage_security_cam;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			//room
 			else if(usage.equals("kitchen")){return R.drawable.room_kitchen;}

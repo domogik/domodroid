@@ -165,13 +165,22 @@ public class Widgets_Manager {
 					cam = new Graphical_Cam(context,feature.getId(),label,feature.getAddress(),widgetSize);
 					tmpPan.addView(cam);
 					Log.i("Widgets_Manager","   ==> Graphical_Cam");
-				} else {
+				} else if(feature.getDevice_feature_model_id().contains("communication")){
+					info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
+					info.setLayoutParams(layout_param);
+					info.with_graph=false;
+					tmpPan.addView(info);
+					Log.i("Widgets_Manager","   ==> Phone list !!!");
+				}
+					else {
 					info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					tmpPan.addView(info);
 					Log.i("Widgets_Manager","   ==> Graphical_Info + No graphic !!!");
 				}
+			// missing getvalue_type().equals("list")
+			//used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
 				
 			}
 			if(columns){	

@@ -148,9 +148,13 @@ public class Graphical_Boolean extends FrameLayout{
 						try {
 							if(status.equals("low")){
 								bool.setImageResource(R.drawable.boolean_off);
+								//Il faudrait changer l'icone du device si high ou low comme un binary
+								//img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								state.setText("State : Low");
 							}else if(status.equals("high")){
 								bool.setImageResource(R.drawable.boolean_on);
+								//Il faudrait changer l'icone du device si high ou low comme un binary
+								//img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 								state.setText("State : High");
 							}
 						} catch (Exception e) {

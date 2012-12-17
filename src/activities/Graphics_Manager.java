@@ -24,29 +24,32 @@ public class Graphics_Manager {
 
 	public static int Icones_Agent(String usage, int state){
 		switch(state){
-		case 0:
-			if(usage.equals("light")){return R.drawable.usage_light_off;}
-			else if(usage.equals("appliance")){return R.drawable.usage_socket_off;}
-			else if(usage.equals("socket")){return R.drawable.usage_socket_off;}
-			else if(usage.equals("shutter")){return R.drawable.usage_shutter_off;}
-			else if(usage.equals("air conditioning")){return R.drawable.usage_heating_off;}
-			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_off;}
-			else if(usage.equals("water")){return R.drawable.usage_water_off;}
-			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
-			else if(usage.equals("heater")){return R.drawable.usage_heating_off;}
+		case 0: //Pour off et room
+			//reorder by usage name for easy update
+			if(usage.equals("air conditioning")){return R.drawable.usage_heating_off;}
+			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
+			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
-			else if(usage.equals("server")){return R.drawable.usage_server;}
-			else if(usage.equals("tv")){return R.drawable.usage_tv_off;}
-			else if(usage.equals("telephony")){return R.drawable.usage_cid;}
-			else if(usage.equals("temperature")){return R.drawable.usage_temperature_off;}
+			//else if(usage.equals("door")){return R.drawable.usage_door_off;} - Manque icone
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_off;}
+			else if(usage.equals("heating")){return R.drawable.usage_heating_off;}
+			else if(usage.equals("light")){return R.drawable.usage_light_off;}
 			else if(usage.equals("mirror")){return R.drawable.usage_mirror_off;}
 			else if(usage.equals("music")){return R.drawable.usage_music_off;}
+			else if(usage.equals("nanoztag")){return R.drawable.usage_nanoztag_off;}
 			else if(usage.equals("portal")){return R.drawable.usage_portal_off;}
-			else if(usage.equals("nanoztag")){return R.drawable.usage_nanoztag;}
-			else if(usage.equals("scene")){return R.drawable.usage_scene;}
-			else if(usage.equals("security_camera")){return R.drawable.usage_security_cam;}
-			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
+			else if(usage.equals("scene")){return R.drawable.usage_scene;} //créer une icone onoff
+			else if(usage.equals("security_camera")){return R.drawable.usage_security_cam_off;}
+			else if(usage.equals("server")){return R.drawable.usage_server_off;}
+			else if(usage.equals("socket")){return R.drawable.usage_appliance_off;}
+			else if(usage.equals("shutter")){return R.drawable.usage_shutter_off;}
+			else if(usage.equals("telephony")){return R.drawable.usage_telephony_off;}
+			else if(usage.equals("temperature")){return R.drawable.usage_temperature_off;}
+			else if(usage.equals("tv")){return R.drawable.usage_tv_off;}
+			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_off;}
+			else if(usage.equals("water")){return R.drawable.usage_water_off;}
+			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_off;}
+			//else if(usage.equals("window")){return R.drawable.usage_window_off;} - Manque icone
 			//room
 			else if(usage.equals("kitchen")){return R.drawable.room_kitchen;}
 			else if(usage.equals("bathroom")){return R.drawable.room_bathroom;}
@@ -71,49 +74,65 @@ public class Graphics_Manager {
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("unknown")){return R.drawable.unknown;}
+			//else {return R.drawable.usage_default_off;} -A adapter pour que ça fonctionne 
 			break;
 
-		case 1:
-			if(usage.equals("light")){return R.drawable.usage_light_50;}
-			else if(usage.equals("air conditioning")){return R.drawable.usage_heating_on;}
-			else if(usage.equals("socket")){return R.drawable.usage_socket_50;}
-			else if(usage.equals("temperature")){return R.drawable.usage_temperature_on;}
-			else if(usage.equals("water")){return R.drawable.usage_heating_on;}
-			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
-			else if(usage.equals("heater")){return R.drawable.usage_heating_on;}
-			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}
-			else if(usage.equals("telephony")){return R.drawable.usage_cid;}
-			else if(usage.equals("mirror")){return R.drawable.usage_mirror_on;}
-			else if(usage.equals("music")){return R.drawable.usage_music_on;}
-			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_on;}
-			else if(usage.equals("electricity")){return R.drawable.usage_electricity_on;}
-			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
-			else if(usage.equals("appliance")){return R.drawable.usage_socket_on;}
-			else if(usage.equals("shutter")){return R.drawable.usage_shutter_on;}
-			else if(usage.equals("server")){return R.drawable.usage_server;}
+		case 1: //pour des valeurs moyenne
+			//reorder by usage name for easy update
+			if(usage.equals("air conditioning")){return R.drawable.usage_air_50;}
+			else if(usage.equals("appliance")){return R.drawable.usage_appliance_50;}
+			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
+			else if(usage.equals("computer")){return R.drawable.usage_computer_50;}
+			//else if(usage.equals("door")){return R.drawable.usage_door_on;} - Manque icone
+			else if(usage.equals("electricity")){return R.drawable.usage_electricity_50;}
+			else if(usage.equals("heating")){return R.drawable.usage_heating_50;}
+			else if(usage.equals("light")){return R.drawable.usage_light_50;}
+			else if(usage.equals("mirror")){return R.drawable.usage_mirror_50;}
+			else if(usage.equals("music")){return R.drawable.usage_music_50;}
+			else if(usage.equals("nanoztag")){return R.drawable.usage_nanoztag_50;}
+			else if(usage.equals("portal")){return R.drawable.usage_portal_50;}
+			else if(usage.equals("scene")){return R.drawable.usage_scene;} //faire icone onoff
+			else if(usage.equals("security_camera")){return R.drawable.usage_security_cam_50;}
+			else if(usage.equals("server")){return R.drawable.usage_server_50;}
+			else if(usage.equals("socket")){return R.drawable.usage_appliance_50;}
+			else if(usage.equals("shutter")){return R.drawable.usage_shutter_50;}
+			else if(usage.equals("telephony")){return R.drawable.usage_telephony_50;}
+			else if(usage.equals("temperature")){return R.drawable.usage_temperature_50;}
+			else if(usage.equals("tv")){return R.drawable.usage_tv_50;}
+			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_50;}
+			else if(usage.equals("water")){return R.drawable.usage_heating_50;}
+			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_50;}
+			//else if(usage.equals("window")){return R.drawable.usage_window_on;} - Manque icone
+			//else {return R.drawable.usage_default_50;} -A adapter pour que ça fonctionne 
 			break;
 
-		case 2:
-			if(usage.equals("light")){return R.drawable.usage_light_on;}
-			else if(usage.equals("temperature")){return R.drawable.usage_temperature_on;}
-			else if(usage.equals("heating")){return R.drawable.usage_temperature_on;}	//Added by Doume
-			else if(usage.equals("water")){return R.drawable.usage_water_on;}
-			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank;}
-			else if(usage.equals("heater")){return R.drawable.usage_heating_on;}
-			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}
-			else if(usage.equals("telephony")){return R.drawable.usage_cid;}
-			else if(usage.equals("mirror")){return R.drawable.usage_mirror_on;}
-			else if(usage.equals("music")){return R.drawable.usage_music_on;}
-			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_on;}
-			else if(usage.equals("air conditioning")){return R.drawable.usage_air_on;}
-			else if(usage.equals("electricity")){return R.drawable.usage_electricity_on;}
-			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
-			else if(usage.equals("appliance")){return R.drawable.usage_socket_on;}
-			else if(usage.equals("socket")){return R.drawable.usage_socket_on;}
-			else if(usage.equals("shutter")){return R.drawable.usage_shutter_on;}
-			else if(usage.equals("server")){return R.drawable.usage_computer_on;}
-			else if(usage.equals("portal")){return R.drawable.usage_portal_on;}
+		case 2: //pour on
+			//reorder by usage name for easy update
+			if(usage.equals("air conditioning")){return R.drawable.usage_air_on;}
+			else if(usage.equals("appliance")){return R.drawable.usage_appliance_on;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
+			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
+			//else if(usage.equals("door")){return R.drawable.usage_door_on;} - Manque icone
+			else if(usage.equals("electricity")){return R.drawable.usage_electricity_on;}
+			else if(usage.equals("heating")){return R.drawable.usage_heating_on;}	//Added by Doume
+			else if(usage.equals("light")){return R.drawable.usage_light_on;}
+			else if(usage.equals("mirror")){return R.drawable.usage_mirror_on;}
+			else if(usage.equals("music")){return R.drawable.usage_music_on;}
+			else if(usage.equals("nanoztag")){return R.drawable.usage_nanoztag_on;}
+			else if(usage.equals("portal")){return R.drawable.usage_portal_on;}
+			else if(usage.equals("scene")){return R.drawable.usage_scene;} // faire icone onoff
+			else if(usage.equals("security_camera")){return R.drawable.usage_security_cam_on;}
+			else if(usage.equals("server")){return R.drawable.usage_server_on;}
+			else if(usage.equals("socket")){return R.drawable.usage_appliance_on;}
+			else if(usage.equals("shutter")){return R.drawable.usage_shutter_on;}
+			else if(usage.equals("telephony")){return R.drawable.usage_telephony_on;}
+			else if(usage.equals("temperature")){return R.drawable.usage_temperature_on;}
+			else if(usage.equals("tv")){return R.drawable.usage_tv_on;}
+			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_on;}
+			else if(usage.equals("water")){return R.drawable.usage_water_on;}
+			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_on;}
+			//else if(usage.equals("window")){return R.drawable.usage_window_on;} -Manque icone
+			//else return R.drawable.usage_default_on; -A adapter pour que ça fonctionne 
 			break;	
 		}	
 		return R.drawable.icon;
@@ -122,25 +141,27 @@ public class Graphics_Manager {
 	public static int Map_Agent(String usage, int state){
 		switch(state){
 		case 0:
-			if(usage.equals("light")){return R.drawable.map_usage_light_off;}
-			else if(usage.equals("tv")){return R.drawable.map_usage_tv_off;}
+			//reorder by usage name for easy update
+			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
-			else if(usage.equals("server")){return R.drawable.map_usage_server_off;}
-			else if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_off;}
-			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_off;}
+			else if(usage.equals("light")){return R.drawable.map_usage_light_off;}
+			else if(usage.equals("server")){return R.drawable.map_usage_server_off;}
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
+			else if(usage.equals("tv")){return R.drawable.map_usage_tv_off;}
+			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_off;}
 			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_off;
 		case 1:
-			if(usage.equals("light")){return R.drawable.map_usage_light_on;}
-			else if(usage.equals("tv")){return R.drawable.map_usage_tv_on;}
+			//reorder by usage name for easy update
+			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}
-			else if(usage.equals("server")){return R.drawable.map_usage_server_on;}
-			else if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}
-			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_on;}
+			else if(usage.equals("light")){return R.drawable.map_usage_light_on;}
+			else if(usage.equals("server")){return R.drawable.map_usage_server_on;}
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
+			else if(usage.equals("tv")){return R.drawable.map_usage_tv_on;}
+			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_on;}
 			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_on;
 		}

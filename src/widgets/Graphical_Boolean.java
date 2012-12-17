@@ -62,7 +62,7 @@ public class Graphical_Boolean extends FrameLayout{
 	public FrameLayout myself = null;
 	
 
-	public Graphical_Boolean(Activity context, String address, String name, int dev_id, String state_key, String usage, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Boolean(Activity context, String address, String name, int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.state_key = state_key;
 		this.dev_id = dev_id;
@@ -148,13 +148,11 @@ public class Graphical_Boolean extends FrameLayout{
 						try {
 							if(status.equals("low")){
 								bool.setImageResource(R.drawable.boolean_off);
-								//Il faudrait changer l'icone du device si high ou low comme un binary
-								//img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								state.setText("State : Low");
 							}else if(status.equals("high")){
 								bool.setImageResource(R.drawable.boolean_on);
-								//Il faudrait changer l'icone du device si high ou low comme un binary
-								//img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 								state.setText("State : High");
 							}
 						} catch (Exception e) {

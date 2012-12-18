@@ -88,6 +88,7 @@ public class Graphical_Boolean extends FrameLayout{
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
+		//set default color to (usage,0) off.png
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 
 
@@ -148,10 +149,13 @@ public class Graphical_Boolean extends FrameLayout{
 						try {
 							if(status.equals("low")){
 								bool.setImageResource(R.drawable.boolean_off);
+								//change color if statue=low to (usage, o) means off
+								//note sure if it must be kept as set previously as default color.
 								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								state.setText("State : Low");
 							}else if(status.equals("high")){
 								bool.setImageResource(R.drawable.boolean_on);
+								//change color if statue=high to (usage, 2) means on
 								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 								state.setText("State : High");
 							}

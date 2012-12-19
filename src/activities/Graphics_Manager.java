@@ -76,8 +76,8 @@ public class Graphics_Manager {
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("unknown")){return R.drawable.unknown;}
-			//else {return R.drawable.usage_default_off;} -A adapter pour que ça fonctionne 
-			break;
+			else return R.drawable.usage_default_off;// -A adapter pour que ça fonctionne 
+			//break;
 
 		case 1: //pour des valeurs moyenne
 			//reorder by usage name for easy update
@@ -105,8 +105,8 @@ public class Graphics_Manager {
 			else if(usage.equals("water")){return R.drawable.usage_heating_50;}
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_50;}
 			//else if(usage.equals("window")){return R.drawable.usage_window_on;} - Manque icone
-			//else {return R.drawable.usage_default_50;} -A adapter pour que ça fonctionne 
-			break;
+			else return R.drawable.usage_default_50;// -A adapter pour que ça fonctionne 
+			//break;
 
 		case 2: //pour on
 			//reorder by usage name for easy update
@@ -134,8 +134,8 @@ public class Graphics_Manager {
 			else if(usage.equals("water")){return R.drawable.usage_water_on;}
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_on;}
 			//else if(usage.equals("window")){return R.drawable.usage_window_on;} -Manque icone
-			//else return R.drawable.usage_default_on; -A adapter pour que ça fonctionne 
-			break;	
+			else return R.drawable.usage_default_on; //-A adapter pour que ça fonctionne 
+			//break;	
 		}	
 		return R.drawable.icon;
 	}

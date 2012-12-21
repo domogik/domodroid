@@ -255,7 +255,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 
 	public static int ConditionCode(int code){
 		switch (code){
-		case 0: return  R.string.info0;
+		case 0: return R.string.info0;
 		case 1: return R.string.info1;
 		case 2: return R.string.info2;
 		case 3: return R.string.info3;

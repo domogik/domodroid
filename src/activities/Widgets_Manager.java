@@ -144,7 +144,11 @@ public class Widgets_Manager {
 				Log.i("Widgets_Manager","   ==> Graphical_Trigger");
 			//} else if(feature.getValue_type().equals("color")){
 			} else if(feature.getState_key().equals("color")){
-				color = new Graphical_Color(context, params, feature.getDevId(),label,feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),params.getInt("UPDATE_TIMER",300),0);
+				color = new Graphical_Color(context, params, feature.getDevId(),label,
+						feature.getState_key(),
+						params.getString("URL","1.1.1.1"),
+						feature.getDevice_usage_id(),
+						params.getInt("UPDATE_TIMER",300),0);
 				tmpPan.addView(color);
 				Log.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {
@@ -162,18 +166,33 @@ public class Widgets_Manager {
 				Log.i("Widgets_Manager","   ==> Graphical_Info + Graphic");
 			} else if(feature.getValue_type().equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
-					cam = new Graphical_Cam(context,feature.getId(),label,feature.getAddress(),widgetSize);
+					cam = new Graphical_Cam(context,feature.getId(),label,
+							feature.getAddress(),
+							widgetSize);
 					tmpPan.addView(cam);
 					Log.i("Widgets_Manager","   ==> Graphical_Cam");
-				} else if(feature.getDevice_feature_model_id().contains("communication")){
-					info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
-					info.setLayoutParams(layout_param);
-					info.with_graph=false;
-					tmpPan.addView(info);
-					Log.i("Widgets_Manager","   ==> Phone list !!!");
-				}
+				} //else if(feature.getDevice_feature_model_id().contains("communication")){
+					//info = new Graphical_Info(context,feature.getDevId(),label,
+						//	feature.getState_key(),
+						//	"",
+						//	feature.getDevice_usage_id(),
+						//	0,
+						//	params.getInt("UPDATE_TIMER",300),
+						//	0);
+					//info.setLayoutParams(layout_param);
+					//info.with_graph=false;
+					//tmpPan.addView(info);
+					//Log.i("Widgets_Manager","   ==> Phone list !!!");
+					//Must create a new Graphical widget to get a list of last call instead of just the last one.
+				//}
 					else {
-					info = new Graphical_Info(context,feature.getDevId(),label,feature.getState_key(),"",feature.getDevice_usage_id(),0,params.getInt("UPDATE_TIMER",300),0);
+					info = new Graphical_Info(context,feature.getDevId(),label,
+							feature.getState_key(),
+							"",
+							feature.getDevice_usage_id(),
+							0,
+							params.getInt("UPDATE_TIMER",300),
+							0);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					tmpPan.addView(info);

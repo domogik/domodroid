@@ -36,7 +36,7 @@
 	<string name="help_Text3">Projet Domogik : http://www.domogik.org/</string>
 	<string name="help_Text4">Nous contacter par liste de diffusion :\n domogik-developers@lists.labs.libre-entreprise.org</string>
 	<string name="splash_title">Bienvenue dans Domodroid 1.2 !</string>
-	<string name="home_splash">Cette nouvelle version de Domodroid apporte de nombreuses nouvelles fonctionnalités qui n\'ont pas toutes été testées sur les multiples versions de terminaux Android. En cas de dysfonctionnements, contacter l'équipe de développement : http://wiki.domogik.org/Contact+and+support.</string>
+	<string name="home_splash">Cette nouvelle version de Domodroid apporte de nombreuses nouvelles fonctionnalités qui n\'ont pas toutes été testées sur les multiples versions de terminaux Android. En cas de dysfonctionnements, contacter l\'équipe de développement : http://wiki.domogik.org/Contact+and+support.</string>
 	<string name="home_splash2">Veuillez effacer le cache data de Domodroid depuis \&quot;Paramètres\&quot;,\&quot;Applications\&quot;  avant d\'utiliser cette nouvelle version.</string>
 	
 	<string name="reload_title">Une sauvegarde des réglages a été détectée !</string>

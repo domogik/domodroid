@@ -357,6 +357,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putInt("COLORBRIGHTNESS",seekBarRGBYBar.getProgress());
 		prefEditor.putInt("COLORPOWER",seekBarPowerBar.getProgress());
 		prefEditor.commit();
+		Log.i("Graphical_Color", "SaveSelections");
 	}
 
 	private void LoadSelections() {
@@ -364,16 +365,19 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION",255));
 		seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS",255));
 		seekBarPowerBar.setProgress(params.getInt("COLORPOWER",255));
+		Log.i("Graphical_Color", "LoadSelections");
 	}
 	public boolean onTouch(View arg0, MotionEvent arg1) {
-		//Log.i("Graphical_Color", "Touch....");
+		Log.i("Graphical_Color", "Touch....");
 		if(featurePan2.getVisibility()== INVISIBLE){
 			background.addView(featurePan2);
 			featurePan2.setVisibility(VISIBLE);
+			Log.i("Graphical_Color", "FeaturePan2 INVISIBLE");
 		}
 		else{
 			background.removeView(featurePan2);
 			featurePan2.setVisibility(INVISIBLE);
+			Log.i("Graphical_Color", "FeaturePan2 VISIBLE");
 		}
 		return false;
 	}

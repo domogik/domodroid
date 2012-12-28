@@ -36,7 +36,7 @@
 	<string name="help_Text4">Contacts par mailing list :\n domogik-developers@lists.labs.libre-entreprise.org</string>
 	
 	<string name="splash_title">Welcome to Domodroid 1.2 !</string>
-	<string name="home_splash">This new version of Domodroid contains lot of new features and improvements that have not been tested on all kind of Android devices. If anything goes wrong, you can contact at the following address: pierre.laine2@gmail.com.</string>
+	<string name="home_splash">This new version of Domodroid contains lot of new features and improvements that have not been tested on all kind of Android devices. If anything goes wrong, you can contact dev at the following address: http://wiki.domogik.org/Contact+and+support .</string>
 	<string name="home_splash2">Please delete the Domodroid cache data from the \"Application Settings\" panel before using this new version.</string>
 	
 	<string name="reload_title">An existing backup of settings exists !</string>

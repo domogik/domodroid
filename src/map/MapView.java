@@ -419,7 +419,11 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 						//remove entry
-						//listEntity.remove(i);
+						//domodb.removeFeatureMap(temp_id,
+						//(int)((event.getX()-value[2])/currentScale), 
+						//(int)((event.getY()-value[5])/currentScale),
+						//files.elementAt(currentFile));
+						//removeMode=false;
 						new UpdateThread().execute();
 						initMap();
 					}

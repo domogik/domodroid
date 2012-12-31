@@ -171,6 +171,7 @@ public class DomodroidDB {
 
 
 	public void insertFeatureMap(int id, int posx, int posy, String map){
+		//send value to database to add a widget on map
 		ContentValues values = new ContentValues();
 		values.put("id", id);
 		values.put("posx", posx);
@@ -188,6 +189,7 @@ public class DomodroidDB {
 		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_MAP, values);
 	//}
 	public void cleanFeatureMap(String map){
+		//send map_name to DmdContentProvider to remove all widget on this map in database
 		ContentValues values = new ContentValues();
 		values.put("map", map);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_MAP,values);
@@ -290,15 +292,18 @@ public class DomodroidDB {
 		Entity_Map[] features=null;
 		try {
 			//Log.v(mytag+"("+owner+")","Getting database features for map : "+map);
+			//Getting database features for map current map
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP, projection, 
 					"table_feature_map = ?", 
 					new String[] {"\'"+map+"\' "},
 					null);
+			//Count the number of widgets present in this map
 			features=new Entity_Map[curs.getCount()];
 			int count=curs.getCount();
 			Log.v(mytag+"("+owner+")",count+" Entities_Map returned for map : "+map);
 			
 			for(int i=0;i<count;i++) {
+			//create the Entity_Map with all parameter needed on map for each widget present in the current map
 				curs.moveToPosition(i);
 				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));
 			}

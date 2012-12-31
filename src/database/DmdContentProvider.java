@@ -208,9 +208,13 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		
 		case INSERT_FEATURE_MAP:
+			//case to add an element in table_feature_map table in DB.
+			//Contains device_feature_id (rename as id), posx, posy and map_name
 			mDB.getWritableDatabase().insert("table_feature_map", null, values);
 			break;
 		case CLEAR_FEATURE_MAP:
+			//this case is call when you want to clear all widgets present on map.
+			//it removes them from the table_feature_map table in DB.
 			String[] map_name = new String[1] ;
 			map_name[0] = values.getAsString("map");
 			Log.e("DmdContentProvider","Clear widgets from map : "+values.getAsString("map"));

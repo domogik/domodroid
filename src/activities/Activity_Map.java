@@ -375,33 +375,44 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 		}else if(v.getTag().equals("add")){
+			//Add a widget
 			panel.setOpen(false, true);
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
+				//show list of feature available
 				dialog_feature.show();
 				remove.setTextColor(Color.parseColor("#cfD1D1"));
 				mapView.setRemoveMode(false);
 			}
 		}else if(v.getTag().equals("remove")){
+			//case when user want to remove only one widget
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
 				if(mapView.isRemoveMode()==false){
+					//if remove mode is select for the first time
+					//Turn menu text color to green
 					remove.setTextColor(Color.GREEN);
+					//say Mapview.java to turn on remove mode
 					mapView.setRemoveMode(true);
 				}else{
+					//Remove mode was active, return to normal mode
+					//Turn menu text color back
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
+					//say Mapview.java to turn off remove mode
 					mapView.setRemoveMode(false);
 				}
 			}
 		} else if(v.getTag().equals("remove_all")){
+			//case when user select remove all from menu
 				if(list_usable_files.isEmpty()){
 					Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 				}else{
 					Log.e("Activity_Map","request to clear widgets");
 					mapView.clear_Widgets();
-					
+					remove.setTextColor(Color.parseColor("#cfD1D1"));
+					mapView.setRemoveMode(false);					
 				}
 		}else if(v.getTag().equals("help")){
 			Dialog_Help dialog_help = new Dialog_Help(this);

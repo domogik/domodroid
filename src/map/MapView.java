@@ -217,6 +217,17 @@ public class MapView extends View {
 		}
 		locked=true;
 		for (Entity_Map featureMap : listFeatureMap) {
+
+			//set state to 1 if widget is on or high
+			//set intstate to select correct icon color
+			int intstate = 0;
+			//set intstate to 1 to change color
+			if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))){
+				intstate=1;
+			}
+			//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+			featureMap.setState(intstate);
+			
 			if(featureMap.isalive()) {
 				try {
 				drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
@@ -234,7 +245,8 @@ public class MapView extends View {
 					return;
 				}
 				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
-	
+				
+				
 				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);

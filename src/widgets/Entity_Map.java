@@ -151,7 +151,16 @@ public class Entity_Map{
 		return Graphics_Manager.Map_Agent(getDevice_usage_id(),getState());
 	}
 	public int getState() {
-		return state;
+		//set state to 1 if widget is on or high
+				//set intstate to select correct icon color
+				int intstate = 0;
+				//set intstate to 1 to change color
+				if ((getCurrentState().contains("high")) || (getCurrentState().contains("on"))){
+					intstate=1;
+				}
+				//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+				setState(intstate);
+				return state;
 	}
 	public void setState(int state) {
 		this.state = state;

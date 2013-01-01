@@ -121,13 +121,9 @@ public class MapView extends View {
 		activated = true;
 	}
 	public void clear_Widgets(){
-		//called by activity map when user select remove all in menu
-		//get current map name from curentFile
 		String map_name=files.elementAt(currentFile);
 		Log.i(mytag,"Request to clear all widgets from : "+map_name);
-		//remove all widget present on current map in database
 		domodb.cleanFeatureMap(map_name);
-		//re-init the map
 		initMap();
 		
 	}
@@ -237,11 +233,7 @@ public class MapView extends View {
 					Log.e("MapView","cannot draw object ! ! ! !");
 					return;
 				}
-				//avoid crash if not state in db
-				//will hide it at 
-				if(featureMap.getCurrentState()==null){
-					featureMap.setCurrentState("--");
-				}
+				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
 	
 				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){
@@ -659,7 +651,6 @@ public class MapView extends View {
 	}
 
 	public void setRemoveMode(boolean removeMode) {
-		//call by Activity_map when select remvoe from menu
 		this.removeMode = removeMode;
 	}
 

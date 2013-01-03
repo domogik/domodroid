@@ -354,6 +354,7 @@ containing a value of this type.
         public static final int info30=0x7f060050;
         public static final int info31=0x7f060051;
         public static final int info32=0x7f060052;
+        public static final int info3200=0x7f060063;
         public static final int info33=0x7f060053;
         public static final int info34=0x7f060054;
         public static final int info35=0x7f060055;
@@ -403,7 +404,7 @@ containing a value of this type.
         public static final int reload_title=0x7f060013;
         public static final int splash_title=0x7f060010;
         public static final int to=0x7f060031;
-        public static final int version=0x7f060063;
+        public static final int version=0x7f060064;
     }
     public static final class style {
         /** 

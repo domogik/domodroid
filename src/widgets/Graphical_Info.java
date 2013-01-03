@@ -303,6 +303,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		case 45: return R.string.info45;
 		case 46: return R.string.info46;
 		case 47: return R.string.info47;
+		case 3200: return R.string.info3200;
 		}
 		return R.string.info48;
 	}

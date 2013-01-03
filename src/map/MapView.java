@@ -222,7 +222,7 @@ public class MapView extends View {
 			//set intstate to select correct icon color
 			int intstate = 0;
 			//set intstate to 1 to change color
-			if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))){
+			if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))|| (featureMap.getCurrentState().equals("1"))){
 				intstate=1;
 			}
 			//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources

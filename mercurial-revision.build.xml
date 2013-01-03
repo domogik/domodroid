@@ -1,0 +1,34 @@
+<!--
+ * This code to get version number and name is adapt from 
+ * http://ballardhack.wordpress.com/2010/09/28/subversion-revision-in-android-app-version-with-eclipse/
+ -->
+ <project default="mercurial-revision">
+	<target name="mercurial-revision">
+		<!--
+		Exec `hg heads` to get the revision of the code being built.
+		Note that the output of this command is in "name: value" format
+		so we can pretend it's a java properties file.
+		-->
+		<exec executable="hg" output="mercurial-info.properties">
+			<arg line="heads"/>
+		</exec>
+		<property prefix="mercurial" file="mercurial-info.properties"/>
+		<echo>changeset: ${mercurial.Revision}</echo>
+
+		<!--
+		Write the revision number into the Manifest as the last
+		segment of the VersionName property
+		-->
+		<replaceregexp file="AndroidManifest.xml"
+			match='android:versionName="([^".]+\.[^".]+)(\.[^"]*)?"'
+			replace='android:versionName="\1.${mercurial.Revision}"'
+		/>		
+		
+		<!-- 
+		Clean up
+		-->
+		<delete file="mercurial-info.properties"/>
+		
+	</target>
+</project>
+

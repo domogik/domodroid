@@ -353,6 +353,7 @@ containing a value of this type.
         public static final int info30=0x7f060050;
         public static final int info31=0x7f060051;
         public static final int info32=0x7f060052;
+        public static final int info3200=0x7f060062;
         public static final int info33=0x7f060053;
         public static final int info34=0x7f060054;
         public static final int info35=0x7f060055;
@@ -369,7 +370,7 @@ containing a value of this type.
         public static final int info45=0x7f06005f;
         public static final int info46=0x7f060060;
         public static final int info47=0x7f060061;
-        public static final int info48=0x7f060062;
+        public static final int info48=0x7f060063;
         public static final int info5=0x7f060037;
         public static final int info6=0x7f060038;
         public static final int info7=0x7f060039;

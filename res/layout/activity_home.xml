@@ -102,7 +102,7 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Sync" />
+                        android:text="Sync" />
                     <!-- Added by Doume to allow a full stop of Domodroid -->
 
                     <Button
@@ -110,7 +110,7 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Exit_Program"/>
+                        android:text="Exit_Program"/>
                 </LinearLayout>
             </LinearLayout>
 

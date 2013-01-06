@@ -21,7 +21,7 @@
 			<arg line="log -l 1 -b Basilic"/>
 		</exec>
 		<property prefix="mercurial" file="mercurial-info.properties"/>
-		<echo>changeset: ${mercurial.changeset}:</echo>
+		<echo>changeset: ${mercurial.changeset}</echo>
      
 		<!--
 		Write the revision number into the Manifest as the last

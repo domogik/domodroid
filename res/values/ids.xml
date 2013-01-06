@@ -19,5 +19,4 @@
 <resources>
   <item type="id" name="panelHandle" />
   <item type="id" name="panelContent" />
-  <item type="id" name="versionText" />
 </resources>

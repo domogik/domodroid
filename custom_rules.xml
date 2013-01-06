@@ -18,7 +18,7 @@
      <copy file="AndroidManifest.xml" tofile="AndroidManifest.xml.antbak" preservelastmodified="true" />
 	
      <exec executable="hg" output="mercurial-info.properties">
-			<arg line="heads"/>
+			<arg line="log -l 1 -b $BRANCH_TO_BUILD"/>
 		</exec>
 		<property prefix="mercurial" file="mercurial-info.properties"/>
 		<echo>changeset: ${mercurial.changeset}</echo>

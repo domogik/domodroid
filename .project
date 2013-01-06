@@ -5,19 +5,6 @@
 	<projects>
 	</projects>
 	<buildSpec>
-		<!--
-		Didn't work for the moment with ant
-		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>full,incremental,</triggers>
-			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.ExternalToolBuilders/AddMercurialRevisionToVersion.launch</value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
-		-->
 		<buildCommand>
 			<name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>
 			<arguments>

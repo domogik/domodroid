@@ -15,15 +15,23 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
+/**
+ * This code to get version number and name is adapt from 
+ * http://ballardhack.wordpress.com/2010/09/28/subversion-revision-in-android-app-version-with-eclipse/
+ */
 package activities;
 
 
 import org.domogik.domodroid.R;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 public class Activity_About extends Activity{
     protected PowerManager.WakeLock mWakeLock;
@@ -32,6 +40,12 @@ public class Activity_About extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);	
+		TextView versionText = (TextView) findViewById(R.id.versionText);
+		if (versionText != null) {
+			//set text in the activity_help versiontText textview
+			//it's a concatenation of version from string.xml, the versionCode and versionName from AndroidManifest.xml
+			versionText.setText(getString(R.string.version)+"_"+String.valueOf(getVersionCode())+"_"+getVersionName());
+		}
 		
 		//titlebar
 		final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
@@ -47,5 +61,31 @@ public class Activity_About extends Activity{
     public void onDestroy() {
             this.mWakeLock.release();
             super.onDestroy();
+	}
+	
+	private String getVersionName() {
+		//set a fake version
+		String version = "??";
+		try {
+			//get versionName from AndroidManifest.xml
+			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+			version = pi.versionName;
+		} catch (PackageManager.NameNotFoundException e) {
+			Log.e("Activity_About", "Version name not found in package", e);
+		}
+		return version;
+	}
+
+	private int getVersionCode() {
+		//set a fake code
+		int version = -1;
+		try {
+			//get versionCode from AndroidManifest.xml
+			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+			version = pi.versionCode;
+		} catch (PackageManager.NameNotFoundException e) {
+			Log.e("Activity_About", "Version number not found in package", e);
+		}
+		return version;
 	}
 }

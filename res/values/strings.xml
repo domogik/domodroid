@@ -74,6 +74,8 @@
     <string name="network_Text17">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="from">From : </string>	
 	<string name="to">    to : </string>
+	<string name="Sync">Sync</string>
+	<string name="Exit_Program">Exit Program</string>
 		
 	<string name="info0">Tornado</string>
 	<string name="info1">Tropical storm</string>
@@ -126,4 +128,5 @@
 	<string name="info3200">Not available</string>
 	<string name="info48">--</string>
 	
+	<string name="version">Rev</string>
 </resources>

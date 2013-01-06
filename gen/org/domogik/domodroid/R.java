@@ -235,8 +235,8 @@ containing a value of this type.
         public static final int SeekBar1=0x7f050011;
         public static final int SeekBar3=0x7f050015;
         public static final int Stop_all=0x7f05000f;
-        public static final int TitleBar=0x7f050006;
-        public static final int app_name=0x7f050007;
+        public static final int TitleBar=0x7f050007;
+        public static final int app_name=0x7f050008;
         public static final int bottom=0x7f050001;
         public static final int bottomPanel=0x7f05001d;
         public static final int bt_day=0x7f050034;
@@ -249,7 +249,7 @@ containing a value of this type.
         public static final int checkbox3=0x7f050012;
         public static final int checkbox4=0x7f050013;
         public static final int description=0x7f050038;
-        public static final int domodroid=0x7f050008;
+        public static final int domodroid=0x7f050009;
         public static final int frameLayout1=0x7f050022;
         public static final int home_container=0x7f05000b;
         public static final int image=0x7f05002b;
@@ -284,7 +284,7 @@ containing a value of this type.
         public static final int textView1=0x7f050023;
         public static final int top=0x7f050000;
         public static final int topPanel=0x7f05000c;
-        public static final int versionText=0x7f050009;
+        public static final int versionText=0x7f050006;
     }
     public static final class layout {
         public static final int activity_help=0x7f030000;

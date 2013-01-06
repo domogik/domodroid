@@ -4,7 +4,7 @@
  * http://ballardhack.wordpress.com/2010/09/28/subversion-revision-in-android-app-version-with-eclipse/
  * And from:
  * http://stackoverflow.com/questions/12426750/how-to-automatically-modify-versionname-in-manifest-during-build
- 
+ -->
  <project name="Activity_Main" default="help">
 
   <target name="-pre-build" depends="-custom-manifest-version">
@@ -58,4 +58,3 @@
   </target>
 
 </project>
--->

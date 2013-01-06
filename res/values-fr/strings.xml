@@ -74,6 +74,8 @@
     <string name="network_Text17">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
     <string name="from">Du  : </string>	
 	<string name="to">    au : </string>
+	<string name="Sync">Sync</string>
+	<string name="Exit_Program">Quitter</string>
 		
 	<string name="info0">Tornade</string>
 	<string name="info1">Tempête tropicale</string>
@@ -126,4 +128,5 @@
 	<string name="info3200">Non disponible</string>
 	<string name="info48">--</string>
 	
+	<string name="version">Rev</string>
 </resources>

@@ -32,7 +32,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
-			//else if(usage.equals("door")){return R.drawable.usage_door_off;} - Missing icon
+			else if(usage.equals("door")){return R.drawable.usage_door_off;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_off;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_off;}
 			else if(usage.equals("light")){return R.drawable.usage_light_off;}
@@ -51,7 +51,7 @@ public class Graphics_Manager {
 			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_off;}
 			else if(usage.equals("water")){return R.drawable.usage_water_off;}
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_off;}
-			//else if(usage.equals("window")){return R.drawable.usage_window_off;} - Missing icon
+			else if(usage.equals("window")){return R.drawable.usage_window_off;}
 			//room
 			else if(usage.equals("kitchen")){return R.drawable.room_kitchen;}
 			else if(usage.equals("bathroom")){return R.drawable.room_bathroom;}
@@ -84,7 +84,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_50;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_50;}
-			//else if(usage.equals("door")){return R.drawable.usage_door_on;} - Missing icon
+			else if(usage.equals("door")){return R.drawable.usage_door_50;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_50;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_50;}
 			else if(usage.equals("light")){return R.drawable.usage_light_50;}
@@ -103,7 +103,7 @@ public class Graphics_Manager {
 			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_50;}
 			else if(usage.equals("water")){return R.drawable.usage_heating_50;}
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_50;}
-			//else if(usage.equals("window")){return R.drawable.usage_window_on;} - Missing icon
+			else if(usage.equals("window")){return R.drawable.usage_window_50;}
 			else return R.drawable.usage_default_50;
 
 		case 2: //For on
@@ -112,7 +112,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_on;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
-			//else if(usage.equals("door")){return R.drawable.usage_door_on;} - Missing icon
+			else if(usage.equals("door")){return R.drawable.usage_door_on;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_on;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_on;}	//Added by Doume
 			else if(usage.equals("light")){return R.drawable.usage_light_on;}
@@ -131,7 +131,7 @@ public class Graphics_Manager {
 			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_on;}
 			else if(usage.equals("water")){return R.drawable.usage_water_on;}
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_on;}
-			//else if(usage.equals("window")){return R.drawable.usage_window_on;} -Missing icon
+			else if(usage.equals("window")){return R.drawable.usage_window_on;}
 			else return R.drawable.usage_default_on;
 		}	
 		return R.drawable.icon;

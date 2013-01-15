@@ -5,7 +5,7 @@
  * And from:
  * http://stackoverflow.com/questions/12426750/how-to-automatically-modify-versionname-in-manifest-during-build
  -->
- <project name="Activity_Main_1" default="help">
+ <project name="Activity_Main" default="help">
 
   <target name="-pre-build" depends="-custom-manifest-version">
   </target>

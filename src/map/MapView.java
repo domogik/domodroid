@@ -222,7 +222,10 @@ public class MapView extends View {
 			//set intstate to select correct icon color
 			int intstate = 0;
 			//set intstate to 1 to change color
-			if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))|| (featureMap.getCurrentState().equals("1"))){
+			//Remove the 1 because if temperature is equal to 1°C it put the icon to on 
+			//Replace contains by equals to avoid problem if CurrentState comes from a phone number like "highlander" or "Jhon" 
+			//if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))|| (featureMap.getCurrentState().equals("1"))){
+			if ((featureMap.getCurrentState().equals("high")) || (featureMap.getCurrentState().equals("on"))){
 				intstate=1;
 			}
 			//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources

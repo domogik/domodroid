@@ -38,7 +38,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int CLEAR_FEATURE_ASSOCIATION = 241;
 	public static final int INSERT_FEATURE_MAP = 250;
 	public static final int CLEAR_FEATURE_MAP = 251;
-	//public static final int CLEAR_one_FEATURE_MAP = 251;
+	public static final int CLEAR_one_FEATURE_MAP = 252;
 	public static final int INSERT_FEATURE_STATE = 260;
 	public static final int CLEAR_FEATURE_STATE = 261;
 	public static final int UPDATE_FEATURE_STATE = 300;
@@ -61,7 +61,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_INSERT_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_INSERT_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP");
-	//public static final Uri CONTENT_URI_CLEAR_one_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP");
+	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_AREA");
 	public static final Uri CONTENT_URI_CLEAR_ROOM = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_ROOM");
 	public static final Uri CONTENT_URI_CLEAR_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_ICON");
@@ -95,7 +95,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION", INSERT_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP", INSERT_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP", CLEAR_FEATURE_MAP);
-		//sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP", CLEAR_one_FEATURE_MAP);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP", CLEAR_one_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_AREA", CLEAR_AREA);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_ROOM", CLEAR_ROOM);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE", CLEAR_FEATURE);
@@ -222,12 +222,16 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		//Add a new select case to remove only one widget on map
 		//careful to avoid problem it must be call with id, posx, posy and map
-		//case CLEAR_one_FEATURE_MAP:
-			//String[] map_name = new String[1] ;
-			//map_name[0] = values.getAsString("map");
-			//Log.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map"));//add posx, poxy, id
-			//mDB.getWritableDatabase().delete("table_feature_map", "map=?", map_name);//add posx, posy,id
-			//break;
+		case CLEAR_one_FEATURE_MAP:
+			String[] id_name = new String[1] ;
+			id_name[0] = values.getAsString("id");
+			Log.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
+			//need to be adapt to remove by id on only current map
+			//currently it will remove by id in whole table
+			mDB.getWritableDatabase().execSQL("delete from table_feature_map where id="+id_name[0]);
+			//need this to delete widget from only current map, but it does'nt work 
+			//+" AND map="+values.getAsString("map"));
+			break;
 			
 		case INSERT_FEATURE_STATE:
 			mDB.getWritableDatabase().insert("table_feature_state", null, values);

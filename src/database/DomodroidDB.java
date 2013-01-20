@@ -180,14 +180,14 @@ public class DomodroidDB {
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_MAP, values);
 	}
 	//add a public void to remove one widget
-	//public void removeFeatureMap(int id, int posx, int posy, String map){
-		//ContentValues values = new ContentValues();
-		//values.put("id", id);
-		//values.put("posx", posx);
-		//values.put("posy", posy);
-		//values.put("map", map);
-		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_MAP, values);
-	//}
+	public void removeFeatureMap(int id, int posx, int posy, String map){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		values.put("posx", posx);
+		values.put("posy", posy);
+		values.put("map", map);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_MAP, values);
+	}
 	public void cleanFeatureMap(String map){
 		//send map_name to DmdContentProvider to remove all widget on this map in database
 		ContentValues values = new ContentValues();

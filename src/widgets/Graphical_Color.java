@@ -122,7 +122,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		//infoPan.setOnTouchListener(this);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name+" ("+dev_id+")");
+		nameDevices.setText(name); //debug option
+		//nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);

@@ -131,7 +131,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name+" ("+dev_id+")");
+		nameDevices.setText(name); //debug option
+		//nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);

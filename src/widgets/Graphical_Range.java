@@ -151,7 +151,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 		//name
 		nameDevices=new TextView(context);
-		nameDevices.setText(name+" ("+dev_id+")");
+		nameDevices.setText(name); //debug option
+		//nameDevices.setText(name+" ("+dev_id+")");
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);

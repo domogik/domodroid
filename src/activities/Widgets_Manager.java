@@ -23,6 +23,7 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class Widgets_Manager {
 
@@ -91,8 +92,10 @@ public class Widgets_Manager {
 			int DevId = feature.getDevId();
 			String State_key = feature.getState_key();
 			
-			Log.i("Widgets_Manager", "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
+			//add debug option to change label adding is Id
+			if (params.getBoolean("DEBUG",false)==true) label = label+" ("+DevId+")";
 			
+			Log.i("Widgets_Manager", "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
 			if (feature.getValue_type().equals("binary")) {
 				onoff = new Graphical_Binary(context,feature.getAddress(),label,
 						feature.getDevId(),
@@ -144,7 +147,7 @@ public class Widgets_Manager {
 				Log.i("Widgets_Manager","   ==> Graphical_Trigger");
 			//} else if(feature.getValue_type().equals("color")){
 			} else if(feature.getState_key().equals("color")){
-				Log.e("Widgets_Manager","add Graphical_Color for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
+				Log.e("Widgets_Manager","add Graphical_Color for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
 								color = new Graphical_Color(context, params, feature.getDevId(),label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),

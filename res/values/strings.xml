@@ -68,7 +68,8 @@
 	<string name="network_Text11a"> Day(s)</string>
 	<string name="network_Text12">--Map Multitouch Features :</string>
 	<string name="network_Text13">Drag:</string>
-    <string name="network_Text14">Zoom:</string>	
+    <string name="network_Text14">Zoom:</string>
+    <string name="network_Text18">Debug:</string>	
     <string name="network_Text15">--Maximum Map Size:</string>	
     <string name="network_Text16">300 px</string>
     <string name="network_Text17">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	

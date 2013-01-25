@@ -100,7 +100,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	//private TextView mProgressText2;
 	private TextView mProgressText3;
 	private SeekBar mSeekBar1;
-	//private SeekBar mSeekBar2:
+	//private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
 	private CheckBox debukcheckbox; //Debug option
 	private int dayOffset = 1;

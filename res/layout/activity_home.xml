@@ -224,7 +224,7 @@
                     android:textColor="#FFFFFF" />
 
                 <CheckBox
-                    android:id="@+id/debukcheckbox"
+                    android:id="@+id/debugcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>

@@ -254,7 +254,7 @@ containing a value of this type.
         public static final int cancel=0x7f050021;
         public static final int checkbox3=0x7f050012;
         public static final int checkbox4=0x7f050013;
-        public static final int debukcheckbox=0x7f050014;
+        public static final int debugcheckbox=0x7f050014;
         public static final int description=0x7f050039;
         public static final int domodroid=0x7f050009;
         public static final int frameLayout1=0x7f050023;
@@ -399,10 +399,10 @@ containing a value of this type.
         public static final int network_Text12=0x7f06002a;
         public static final int network_Text13=0x7f06002b;
         public static final int network_Text14=0x7f06002c;
-        public static final int network_Text15=0x7f06002e;
-        public static final int network_Text16=0x7f06002f;
-        public static final int network_Text17=0x7f060030;
-        public static final int network_Text18=0x7f06002d;
+        public static final int network_Text15=0x7f06002d;
+        public static final int network_Text16=0x7f06002e;
+        public static final int network_Text17=0x7f06002f;
+        public static final int network_Text18=0x7f060030;
         public static final int network_Text8=0x7f060025;
         public static final int network_Text9=0x7f060026;
         public static final int network_TextHint1=0x7f060024;

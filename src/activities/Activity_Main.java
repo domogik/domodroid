@@ -102,7 +102,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private SeekBar mSeekBar1;
 	//private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
-	private CheckBox debukcheckbox; //Debug option
+	private CheckBox debugcheckbox; //Debug option
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private int sizeOffset = 300;
@@ -151,7 +151,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		//Debug option
-		debukcheckbox = (CheckBox)findViewById(R.id.debukcheckbox);
+		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
@@ -574,7 +574,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			//Debug option
-			prefEditor.putBoolean("DEBUG", debukcheckbox.isChecked());
+			prefEditor.putBoolean("DEBUG", debugcheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -620,7 +620,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		//Debug option
-		debukcheckbox.setChecked(params.getBoolean("DEBUG",false));
+		debugcheckbox.setChecked(params.getBoolean("DEBUG",false));
 	}
 
 

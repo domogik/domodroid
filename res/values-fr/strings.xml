@@ -69,7 +69,7 @@
 	<string name="network_Text12">--Fonctions multi touches sur Cartes:</string>
 	<string name="network_Text13">Drag:</string>
     <string name="network_Text14">Zoom:</string>
-    <string name="network_Text18">Debug:</string>	
+    <string name="network_Text18">Débug:</string>	
     <string name="network_Text15">--Taille maximum carte:</string>	
     <string name="network_Text16">300 pixels</string>
     <string name="network_Text17">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	

@@ -574,7 +574,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			//Debug option
-			prefEditor.putBoolean("DEBUG", debugcheckbox.isChecked());
+			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -620,7 +620,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		//Debug option
-		debugcheckbox.setChecked(params.getBoolean("DEBUG",false));
+		debugcheckbox.setChecked(params.getBoolean("DEV",false));
 	}
 
 

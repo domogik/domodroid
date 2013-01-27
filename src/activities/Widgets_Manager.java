@@ -93,7 +93,7 @@ public class Widgets_Manager {
 			String State_key = feature.getState_key();
 			
 			//add debug option to change label adding is Id
-			if (params.getBoolean("DEBUG",false)==true) label = label+" ("+DevId+")";
+			if (params.getBoolean("DEV",false)==true) label = label+" ("+DevId+")";
 			
 			Log.i("Widgets_Manager", "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
 			if (feature.getValue_type().equals("binary")) {

@@ -1,0 +1,20 @@
+=========
+Domodroid
+=========
+
+Overview
+========
+
+.. todo::
+    Quick Domodroid description
+
+End User Documentation
+======================
+
+.. todo::
+    Installation
+    Configuration
+    Usage
+    Nightly builds
+    Developpers documentation
+

@@ -1,5 +1,6 @@
 syntax: glob
 bin/*
-*.class
+bin
 *.orig
-
+libs
+_build/*

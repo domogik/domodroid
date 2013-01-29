@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- * This file is part of Domodroid. * * Domodroid is Copyright (C) 2011 
+<!--
+     * This file is part of Domodroid. * * Domodroid is Copyright (C) 2011 
 	Pierre LAINE, Maxime CHOFARDET * * Domodroid is free software: you can redistribute 
 	it and/or modify it under the * terms of the GNU General Public License as 
 	published by the Free Software * Foundation, either version 3 of the License, 
@@ -8,155 +9,379 @@
 	the implied warranty of MERCHANTABILITY or FITNESS FOR * A PARTICULAR PURPOSE. 
 	See the GNU General Public License for more details. * * You should have 
 	received a copy of the GNU General Public License along with * Domodroid. 
-	If not, see <http://www.gnu.org/licenses/>. -->
+	If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid" -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:panel="http://schemas.android.com/apk/res/org.panel"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="@drawable/background">
+    xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid"
+	android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background" >
+    
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="40dip" >
 
-		<ScrollView android:id="@+id/ScrollView01"
-			android:paddingTop="40dip" android:layout_width="fill_parent"
-			android:layout_height="fill_parent">
-			<!-- body -->
-			<LinearLayout android:orientation="vertical"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:id="@+id/home_container">
-			</LinearLayout>
-		</ScrollView>
-		<org.panel.Sliding_Drawer
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:id="@+id/topPanel" panel:position="top"
-			panel:animationDuration="800" panel:linearFlying="true">
-			<Button android:id="@id/panelHandle" android:layout_width="fill_parent"
-				android:layout_height="1dip" android:paddingLeft="5dip"
-				android:paddingRight="10dip" android:background="#00000000"/>
-			<LinearLayout android:id="@id/panelContent"
-			android:orientation="vertical" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:paddingLeft="5dip" android:paddingTop="30dip"
-			android:paddingRight="5dip" android:background="@drawable/drawer_button">
+        <!-- body -->
 
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/network_Text1"
-				android:paddingTop="10dip" android:paddingBottom="10dip"
-				 android:paddingRight="5dip"
-				android:textColor="#FFFFFF" />
+        <LinearLayout
+            android:id="@+id/home_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
 
-			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:orientation="horizontal"
-				android:paddingLeft="10dip" android:paddingRight="20dip">
-				
-					<EditText android:id="@+id/localIP" android:layout_width="fill_parent"
-						android:background="@android:drawable/editbox_background"
-						android:layout_height="wrap_content" android:singleLine="true"
-						android:hint="@string/network_TextHint1" android:textSize="14sp" android:layout_weight="1"/>
-				
-				<LinearLayout android:layout_width="120dip"
-				android:layout_height="wrap_content" android:orientation="horizontal"
-				android:paddingTop="2dip" android:paddingLeft="10dip" android:layout_weight="1">
-				<Button
-				    android:id="@+id/sync"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="Sync"/>
-			</LinearLayout>
-				</LinearLayout>
-				
-			<LinearLayout android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:orientation="horizontal">
-				<TextView android:layout_width="fill_parent"
-					android:layout_height="wrap_content" android:text="@string/network_Text8"
-					android:paddingTop="10dip" 
-					android:paddingRight="5dip" android:textColor="#FFFFFF" />
-				<TextView android:id="@+id/progress1" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:paddingTop="10dip"
-					android:textColor="#FFFFFF" 
-					android:text="@string/network_Text9" />
-			</LinearLayout>
+    <!-- Panel to configure IP, refresh period, and so on... -->
 
-			<SeekBar android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:id="@+id/SeekBar1"
-				android:max="298" android:paddingTop="10dip" android:paddingLeft="20dip"
-				android:paddingRight="20dip" />
+    <activities.Sliding_Drawer
+        android:id="@+id/topPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        panel:animationDuration="800"
+        panel:linearFlying="true"
+        panel:position="top" >
 
-			<LinearLayout android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:orientation="horizontal"
-				android:paddingTop="10dip">
-				<TextView android:layout_width="fill_parent"
-					android:textColor="#FFFFFF" android:layout_height="wrap_content"
-					android:text="@string/network_Text10" 
-					android:paddingRight="5dip" />
-				<TextView android:id="@+id/progress2" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:textColor="#FFFFFF"
-					 android:text="@string/network_Text11" />
-			</LinearLayout>
+        <Button
+            android:id="@id/panelHandle"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="#00000000"
+            android:paddingLeft="5dip"
+            android:paddingRight="10dip" />
 
-			<SeekBar android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:id="@+id/SeekBar2"
-				android:max="15" android:paddingTop="10dip" android:paddingLeft="20dip"
-				android:paddingRight="20dip" />
+        <LinearLayout
+            android:id="@id/panelContent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/drawer_button"
+            android:orientation="vertical"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:paddingTop="30dip" >
 
-			<TextView android:layout_height="wrap_content" android:text="@string/network_Text12"
-				android:layout_width="wrap_content"
-				android:textColor="#FFFFFF" android:paddingTop="10dip" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dip"
+                android:paddingRight="5dip"
+                android:paddingTop="10dip"
+                android:text="@string/network_Text1"
+                android:textColor="#FFFFFF" />
 
-			<LinearLayout android:orientation="horizontal"
-				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:paddingTop="10dip">
-				<TextView android:layout_height="wrap_content"
-					android:text="@string/network_Text13" android:layout_width="wrap_content"
-					android:textColor="#FFFFFF"  />
-				<CheckBox android:id="@+id/checkbox3" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" />
-				<TextView android:layout_height="wrap_content"
-					android:text="@string/network_Text14" android:layout_width="wrap_content"
-					android:textColor="#FFFFFF" 
-					android:paddingLeft="10dip" />
-				<CheckBox android:id="@+id/checkbox4" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" />
-			</LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dip"
+                android:paddingRight="20dip" >
 
-			<LinearLayout android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:orientation="horizontal"
-				android:paddingTop="10dip">
-				<TextView android:layout_width="fill_parent"
-					android:textColor="#FFFFFF" android:layout_height="wrap_content"
-					android:text="@string/network_Text15" 
-					android:paddingRight="5dip" />
-				<TextView android:id="@+id/progress3" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:textColor="#FFFFFF"
-					/>
-			</LinearLayout>
+                <EditText
+                    android:id="@+id/localIP"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:drawable/editbox_background"
+                    android:hint="@string/network_TextHint1"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
 
-			<SeekBar android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:id="@+id/SeekBar3"
-				android:max="1000" android:paddingTop="10dip" android:paddingLeft="20dip"
-				android:paddingRight="20dip" />
+                <LinearLayout
+                    android:layout_width="350dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dip"
+                    android:paddingTop="2dip" >
 
-			<TextView android:layout_height="wrap_content" android:text="@string/network_Text17"
-				android:layout_width="wrap_content" 
-				android:textColor="#FFFFFF" android:paddingBottom="10dip"/>
+                    <Button
+                        android:id="@+id/sync"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Sync" />
+                    <!-- Added by Doume to allow a full stop of Domodroid -->
 
-		</LinearLayout>
-		</org.panel.Sliding_Drawer>
+                    <Button
+                        android:id="@+id/Stop_all"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Exit_Program"/>
+                </LinearLayout>
+            </LinearLayout>
 
-		<!-- Set center image + backgroud -->
-		<FrameLayout android:layout_width="fill_parent"
-			android:layout_height="40dip" android:id="@+id/TitleBar"
-			android:gravity="center">
-			<TextView android:id="@+id/menu_button1"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textColor="#cfD1D1" android:textSize="16sp"
-				android:paddingLeft="10dip" android:text="@string/home_button1"
-				android:gravity="left" android:paddingTop="4dip" />
-			<TextView android:id="@+id/menu_button2"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:textColor="#A5C933" android:textSize="16sp"
-				android:paddingLeft="10dip" android:text="@string/home_button1"
-				android:gravity="left" android:paddingTop="4dip" />
-			<ImageView android:id="@+id/app_name" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:src="@drawable/app_name1"
-				android:layout_gravity="right" android:paddingTop="5dip" android:paddingRight="5dip"/>
-		</FrameLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dip"
+                    android:paddingTop="10dip"
+                    android:text="@string/network_Text8"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/progress1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dip"
+                    android:text="@string/network_Text9"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <!-- Refresh period -->
+
+            <SeekBar
+                android:id="@+id/SeekBar1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:max="300"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip" />
+			<!-- Graph duration  -->
+			<!--  Deleted with new graphs allowing different scales by buttons
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dip"
+                    android:text="@string/network_Text10"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/progress2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/network_Text11"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            
+
+            <SeekBar
+                android:id="@+id/SeekBar2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:max="15"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip" />
+			-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dip"
+                android:text="@string/network_Text12"
+                android:textColor="#FFFFFF" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/network_Text13"
+                    android:textColor="#FFFFFF" />
+
+                <CheckBox
+                    android:id="@+id/checkbox3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:text="@string/network_Text14"
+                    android:textColor="#FFFFFF" />
+
+                <CheckBox
+                    android:id="@+id/checkbox4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:text="@string/network_Text18"
+                    android:textColor="#FFFFFF" />
+
+                <CheckBox
+                    android:id="@+id/debugcheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dip"
+                    android:text="@string/network_Text15"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/progress3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/SeekBar3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:max="1000"
+                android:paddingLeft="20dip"
+                android:paddingRight="20dip"
+                android:paddingTop="10dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dip"
+                android:text="@string/network_Text17"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </activities.Sliding_Drawer>
+
+    <!-- Set center image + background -->
+	<!-- Title Bar with 2 menus, About, and logo -->
+    <FrameLayout
+        android:id="@+id/TitleBar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:gravity="center" 
+       >
+        
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+        
+	        <LinearLayout 
+	            android:layout_width="91dp"
+			    android:layout_height="match_parent"
+			    android:layout_gravity="left"
+			    android:gravity="left"
+			    android:orientation="horizontal" 
+                >
+				<!--  menu_green -->
+		        <TextView
+		            android:id="@+id/menu_button1"
+		            android:layout_width="match_parent"
+		            android:layout_height="fill_parent"
+		            android:layout_gravity="left"
+		            android:paddingLeft="10dip"
+			        android:paddingTop="4dip"
+			        android:gravity="center"
+		            android:text="@string/home_button1"
+		            android:textColor="#cfD1D1"
+		            android:textSize="16sp" />
+		
+		       <!--  menu_white -->
+			    <TextView
+			        android:id="@+id/menu_button2"
+			        android:layout_width="match_parent"
+			        android:layout_height="fill_parent"
+			        android:layout_gravity="left"
+			        android:gravity="center"
+			        android:paddingLeft="10dip"
+			        android:paddingTop="4dip"
+			        android:text="@string/home_button1"
+			        android:textColor="#A5C933"
+			        android:textSize="16sp" />
+			    
+	       </LinearLayout>
+	       
+
+        <TextView
+            android:id="@+id/About_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.53"
+            android:gravity="center"
+            android:text="@string/button4"
+            android:textColor="#cfD1D1"
+            android:textSize="16sp" />
+
+       <ImageView
+                android:id="@+id/app_name"
+                android:layout_width="164dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:src="@drawable/app_name1" />
+        
+    </LinearLayout>
+        
+	<!-- 
+        <TextView
+            android:id="@+id/menu_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="left"
+            android:paddingLeft="10dip"
+            android:paddingTop="4dip"
+            android:text="@string/home_button1"
+            android:textColor="#cfD1D1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/menu_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="left"
+            android:paddingLeft="10dip"
+            android:paddingTop="4dip"
+            android:text="@string/home_button1"
+            android:textColor="#A5C933"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/About_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="10dip"
+            android:paddingTop="4dip"
+            android:text="@string/button4"
+            android:textColor="#A5C933"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingRight="5dip"
+            android:paddingTop="5dip"
+            android:src="@drawable/app_name1" />
+         -->
+         
+    </FrameLayout>
+
 </FrameLayout>

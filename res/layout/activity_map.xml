@@ -11,7 +11,7 @@
 	If not, see <http://www.gnu.org/licenses/>. -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:panel="http://schemas.android.com/apk/res/org.panel"
+	xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:background="@drawable/background">
 
@@ -23,7 +23,7 @@
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-		<org.panel.Sliding_Drawer
+		<activities.Sliding_Drawer
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/map_slidingdrawer" panel:position="top"
 			panel:animationDuration="500" panel:linearFlying="true">
@@ -46,22 +46,22 @@
 				<FrameLayout android:id="@+id/panelWidget"
 					android:layout_width="fill_parent" android:layout_height="wrap_content" />
 			</LinearLayout>
-		</org.panel.Sliding_Drawer>
+		</activities.Sliding_Drawer>
 
 
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:id="@+id/map_container" android:layout_weight="1" />
-		<org.panel.Sliding_Drawer
+		<activities.Sliding_Drawer
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/bottomPanel" panel:position="bottom"
 			panel:animationDuration="500">
 			<Button android:id="@id/panelHandle" android:layout_width="fill_parent"
 				android:layout_height="0dip" />
-			<LinearLayout android:id="@id/panelContent"
+			<LinearLayout android:id="@id/panelContent" 
 				android:orientation="vertical" android:layout_width="fill_parent"
 				android:layout_height="fill_parent">
-				<LinearLayout android:orientation="vertical"
+				<LinearLayout android:orientation="vertical" 
 					android:background="@drawable/drawer_button" android:layout_width="fill_parent"
 					android:layout_height="wrap_content" android:layout_gravity="fill_horizontal">
 					<LinearLayout android:orientation="vertical"
@@ -71,7 +71,7 @@
 						android:layout_height="wrap_content" android:cacheColorHint="#00000000"/>
 				</LinearLayout>
 			</LinearLayout>
-		</org.panel.Sliding_Drawer>
+		</activities.Sliding_Drawer>
 	</LinearLayout>
 	<!-- Set center image + backgroud -->
 	<FrameLayout android:layout_width="fill_parent"

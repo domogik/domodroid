@@ -225,7 +225,18 @@ public class MapView extends View {
 			//Remove the 1 because if temperature is equal to 1°C it put the icon to on 
 			//Replace contains by equals to avoid problem if CurrentState comes from a phone number like "highlander" or "Jhon" 
 			//if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))|| (featureMap.getCurrentState().equals("1"))){
-			if ((featureMap.getCurrentState().equals("high")) || (featureMap.getCurrentState().equals("on"))){
+			String states = "";
+			if(featureMap != null) {
+				states = featureMap.getCurrentState();
+			} else {
+				Log.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
+				return;
+			}
+			
+			if(states == null)
+				states = "";
+			
+			if ((states.equals("high")) || (states.equals("on"))){
 				intstate=1;
 			}
 			//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources

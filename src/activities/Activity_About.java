@@ -35,16 +35,24 @@ import android.widget.TextView;
 
 public class Activity_About extends Activity{
     protected PowerManager.WakeLock mWakeLock;
-
+    private String pn = "";
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		pn = getPackageName();
+		
 		setContentView(R.layout.activity_help);	
 		TextView versionText = (TextView) findViewById(R.id.versionText);
 		if (versionText != null) {
 			//set text in the activity_help versiontText textview
 			//it's a concatenation of version from string.xml, the versionCode and versionName from AndroidManifest.xml
-			versionText.setText(getString(R.string.version)+"_"+String.valueOf(getVersionCode())+"_"+getVersionName());
+			String vcs = "??";
+			String vns = getVersionName();
+			int vc = getVersionCode();
+			if(vc != -1)
+				vcs=Integer.toString(vc);
+			versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
 		}
 		
 		//titlebar
@@ -66,26 +74,31 @@ public class Activity_About extends Activity{
 	private String getVersionName() {
 		//set a fake version
 		String version = "??";
+		Log.i("About","Package name = <"+pn+">");
 		try {
 			//get versionName from AndroidManifest.xml
-			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+			PackageInfo pi = getPackageManager().getPackageInfo( pn, 0);
 			version = pi.versionName;
 		} catch (PackageManager.NameNotFoundException e) {
 			Log.e("Activity_About", "Version name not found in package", e);
 		}
+		Log.i("About","Version name = <"+version+">");
 		return version;
 	}
 
 	private int getVersionCode() {
 		//set a fake code
 		int version = -1;
+		String pn = getPackageName();
+		Log.i("About","Package name = <"+pn+">");
 		try {
 			//get versionCode from AndroidManifest.xml
-			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+			PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
 			version = pi.versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
 			Log.e("Activity_About", "Version number not found in package", e);
 		}
+		Log.i("About","Version value = <"+version+">");
 		return version;
 	}
 }

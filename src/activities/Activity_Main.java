@@ -103,6 +103,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	//private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
 	private CheckBox debugcheckbox; //Debug option
+	//private CheckBox Customcheckbox; //Cutom name option
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private int sizeOffset = 300;
@@ -152,6 +153,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		//Debug option
 		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
+		//Custom name option
+		//customcheckbox = (CheckBox)findViewById(R.id.customcheckbox);		
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
@@ -575,6 +578,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			//Debug option
 			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
+			//Custom name option
+			//prefEditor.putBoolean("CUSTOM", customcheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -621,6 +626,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		//Debug option
 		debugcheckbox.setChecked(params.getBoolean("DEV",false));
+		//Custom name option
+		//customcheckbox.setChecked(params.getBoolean("CUSTOM",false));
 	}
 
 

@@ -92,6 +92,13 @@ public class Widgets_Manager {
 			int DevId = feature.getDevId();
 			String State_key = feature.getState_key();
 			
+			//add Custom name option to change label by a cutomname if not empty
+			//if (params.getBoolean("CUSTOM",false)==true){
+			//if feature.getcustomName()>=1{
+			//label = feature.getcustomName();
+			//}
+			//}
+			
 			//add debug option to change label adding is Id
 			if (params.getBoolean("DEV",false)==true) label = label+" ("+DevId+")";
 			

@@ -232,9 +232,9 @@ public class MapView extends View {
 				Log.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
 				return;
 			}
-			
-			if(states == null)
-				states = "";
+			//Could not be null because it is set to "" 7 rows up
+			//if(states == null)
+			//	states = "";
 			
 			if ((states.equals("high")) || (states.equals("on"))){
 				intstate=1;
@@ -344,6 +344,16 @@ public class MapView extends View {
 		String label = feature.getDescription();
 		if(label.length() < 1)
 			label = feature.getName();
+		
+		//add Custom name option to change label by a custom name if not empty
+		if (params.getBoolean("CUSTOM",false)==true){
+			if (feature.getcustomName()!= null){
+				label = feature.getcustomName();
+			}
+		}
+		
+		//add debug option to change label adding its Id
+		if (params.getBoolean("DEV",false)==true) label = label+" ("+feature.getDevId()+")";	//neutralized by Doume
 		
 		if (feature.getValue_type().equals("binary")) {
 			onoff = new Graphical_Binary(context,feature.getAddress(),

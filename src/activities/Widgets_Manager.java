@@ -93,14 +93,14 @@ public class Widgets_Manager {
 			String State_key = feature.getState_key();
 			
 			//add Custom name option to change label by a custom name if not empty
-			//if (params.getBoolean("CUSTOM",false)==true){
-			//if feature.getcustomName()>=1{
-			//label = feature.getcustomName();
-			//}
-			//}
+			if (params.getBoolean("CUSTOM",false)==true){
+				if (feature.getcustomName()!= null){
+					label = feature.getcustomName();
+				}
+			}
 			
 			//add debug option to change label adding its Id
-			//if (params.getBoolean("DEV",false)==true) label = label+" ("+DevId+")";	//neutralized by Doume
+			if (params.getBoolean("DEV",false)==true) label = label+" ("+DevId+")";	//neutralized by Doume
 			
 			Log.i("Widgets_Manager", "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
 			if (feature.getValue_type().equals("binary")) {

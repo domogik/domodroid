@@ -73,6 +73,7 @@
     <string name="network_Text16">300 px</string>
     <string name="network_Text17">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="network_Text18">Dev:</string>	
+    <string name="network_Text19">Custom:</string>
     <string name="from">From : </string>	
 	<string name="to">    to : </string>
 	<string name="Sync">Sync</string>

@@ -275,7 +275,7 @@ public class DomodroidDB {
 			int count=curs.getCount();
 			for(int i=0;i<count;i++) {
 				curs.moveToPosition(i);
-				features[i]=new Entity_Feature(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10));
+				features[i]=new Entity_Feature(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10), curs.getString(11));
 			}
 		} catch (Exception e) {
 			Log.e(mytag+"("+owner+")","request feature error");
@@ -305,7 +305,7 @@ public class DomodroidDB {
 			for(int i=0;i<count;i++) {
 			//create the Entity_Map with all parameter needed on map for each widget present in the current map
 				curs.moveToPosition(i);
-				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));
+				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getString(11), curs.getInt(12),curs.getInt(13),curs.getString(14));
 			}
 		} catch (Exception e) {
 			Log.e(mytag+"("+owner+")","request feature_map error");
@@ -329,7 +329,7 @@ public class DomodroidDB {
 			int count=curs.getCount();
 			for(int i=0;i<count;i++) {
 				curs.moveToPosition(i);
-				features[i]=new Entity_Feature(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10));
+				features[i]=new Entity_Feature(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10), curs.getString(11));
 			}
 		} catch (Exception e) {
 			Log.e(mytag+"("+owner+")","request feature error");

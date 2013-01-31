@@ -215,7 +215,7 @@
                     android:id="@+id/checkbox4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                
+                <!-- neutralized by Doume
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -227,6 +227,7 @@
                     android:id="@+id/debugcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                -->
             </LinearLayout>
 
             <LinearLayout

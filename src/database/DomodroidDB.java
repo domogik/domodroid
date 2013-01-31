@@ -133,9 +133,9 @@ public class DomodroidDB {
 		Boolean exists = false;
 		
 		//Log.e(mytag+"("+owner+")", "Processing FeatureSate Array : <"+itemArray.toString()+">");
-		
+		// First, erase all old content
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
-
+		// Now, insert new rows
 		for (int i =0; i < itemArray.length(); i++){
 			try {
 				exists = itemArray.getJSONObject(i).getBoolean("exists");

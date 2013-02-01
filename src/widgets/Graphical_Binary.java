@@ -302,18 +302,18 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		@Override
 		protected Void doInBackground(Void... params) {
 			try{
-				Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
+				Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
 				if(updating<1){
 					Bundle b = new Bundle();
 					String result = domodb.requestFeatureState(dev_id, state_key);
 					if(result != null) {
-						Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" state= "+name);
+						Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
 						b.putString("message", result);
 						msg = new Message();
 						msg.setData(b);
 						handler.sendMessage(msg);
 					} else {
-						Log.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" state= "+name);
+						Log.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+name);
 					}
 				}
 				updating--;

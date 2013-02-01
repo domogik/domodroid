@@ -1,5 +1,8 @@
 package widgets;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
@@ -9,10 +12,14 @@ import org.domogik.domodroid.R;
 import org.json.JSONObject;
 
 import rinor.Rest_com;
+import database.DomodroidDB;
 import database.JSONParser;
 
+import widgets.Graphical_Binary.SBAnim;
+import widgets.Graphical_Binary.UpdateThread;
 import widgets.Graphical_Range.CommandeThread;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -20,7 +27,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -31,6 +40,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -69,6 +79,16 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private int updating=0;
 	private int state_progress;
 	
+	private int argb = 0;
+	private String argbS = "";
+	private Message msg;
+	private String mytag = "";
+	private String name;
+	private String wname;
+	private DomodroidDB domodb;
+	private Activity mycontext;
+	private FrameLayout myself = null;
+	
 	public boolean activate=false;
 	private int widgetSize;
 	private Color currentColor;
@@ -99,14 +119,20 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			int widgetSize) {
 		
 		super(context);
+		mycontext = (Activity) context;
 		this.dev_id = dev_id;
 		this.state_key = state_key;
+		this.name=name;
+		this.wname=name;
 		this.url = url;
 		this.update=update;
 		this.widgetSize=widgetSize;
 		this.setPadding(5, 5, 5, 5);
 		this.params = params;
-
+		this.myself = this;
+		domodb = new DomodroidDB(mycontext);
+		domodb.owner="Graphical_Color("+dev_id+")";
+		mytag = domodb.owner;
 
 		//panel with border
 		background = new LinearLayout(context);
@@ -138,7 +164,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		infoPan.setOnTouchListener(this);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name+" ("+dev_id+")");
+		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
@@ -166,20 +192,23 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarOnOff.setThumb(getResources().getDrawable(R.drawable.buttonseekbar));
 		seekBarOnOff.setThumbOffset(0);
 		seekBarOnOff.setOnSeekBarChangeListener(this);
-		seekBarOnOff.setTag("0");
+		seekBarOnOff.setTag("onoff");
 
 		//feature panel 2
 		featurePan2=new LinearLayout(context);
 		featurePan2.setOrientation(LinearLayout.HORIZONTAL);
-		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		//featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		featurePan2.setGravity(Gravity.CENTER_VERTICAL);
-		featurePan2.setPadding(20, 0, 0, 0);
+		featurePan2.setPadding(20, 0, 0, 10);
 
 		//left panel
 		color_LeftPan = new LinearLayout(context);
 		color_LeftPan.setOrientation(LinearLayout.VERTICAL);
-		color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
-
+		//color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,1));
+		color_LeftPan.setPadding(0, 0, 0, 10);
+		
 		TextView title1 = new TextView(context);
 		title1.setText("RGB Color");
 		title1.setTextSize(10);
@@ -259,7 +288,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		color_RightPan = new LinearLayout(context);
 		color_RightPan.setOrientation(LinearLayout.VERTICAL);
 		color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,Gravity.RIGHT));
-		color_RightPan.setPadding(20, 0, 0, 0);
+		color_RightPan.setPadding(20, 0, 0, 10);
 
 		//Color result
 		resultView = new Color_Result(context);
@@ -275,8 +304,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		color_LeftPan.addView(seekBarRGBXBar);
 		color_LeftPan.addView(title3);
 		color_LeftPan.addView(seekBarRGBYBar);
-		color_LeftPan.addView(title4);
-		color_LeftPan.addView(seekBarPowerBar);
+		//color_LeftPan.addView(title4);
+		//color_LeftPan.addView(seekBarPowerBar);
 		color_LeftPan.addView(title5);
 		color_LeftPan.addView(rgbView);
 
@@ -298,13 +327,66 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		background.addView(topPan);
 		
 		this.addView(background);
-		LoadSelections();
+		
+		//LoadSelections();
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if(activate) {
+					Log.d(mytag,"Handler receives a request to die " );
+					//That seems to be a zombie
+					removeView(background);
+					myself.setVisibility(GONE);
+					
+					try { 
+						finalize(); 
+					} catch (Throwable t) {}	//kill the handler thread itself
+					
+				} else {
+					try {
+						Bundle b = msg.getData();
+						if(( b != null) && (b.getString("message") != null)) {
+							argbS =  b.getString("message");
+							argbS = argbS.substring(1);
+							//Log.d(mytag,"Handler ==> RGB string to process = <"+argbS+">" );
+							
+							if (argbS.equals("000000")){
+								seekBarOnOff.setProgress(0);
+								argb = 0;
+								
+							}else {
+								seekBarOnOff.setProgress(100);
+								argb = Integer.parseInt(argbS);
+							}
+							//Convert RGB to HSV color, and set sliders
+							float hsv[] = new float[3];
+							Color.colorToHSV(argb, hsv);
+							seekBarHueBar.setProgress((int) hsv[0]);
+							seekBarRGBXBar.setProgress((int) hsv[1]);
+							seekBarRGBYBar.setProgress((int) hsv[2]);
+							
+						} else {
+							if(msg.what == 2) {
+								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+							}
+						}
+						
+					} catch (Exception e) {
+						Log.e(mytag, "Handler error for device "+wname);
+						e.printStackTrace();
+					}
+				}
+			}	
+		};
+		updateTimer();	
 	}
 
 
 	
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		if(arg0.getTag().equals("hue")){				
+		if(arg0.getTag().equals("onoff")) {
+			//User is moving on/off object....
+		} else	if(arg0.getTag().equals("hue")){				
 			//rgb view
 			mCurrentHue = (255-arg0.getProgress())*360/255;
 			rgbView.mCurrentHue = mCurrentHue;
@@ -324,8 +406,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			seekBarRGBYBar.hsv3 = hsv3;
 			seekBarRGBYBar.invalidate();
 			
-		}
-		if(arg0.getTag().equals("rgbx")){
+		} else if(arg0.getTag().equals("rgbx")){
 			rgbX = arg0.getProgress();
 			float[] hsv2 = {0,0,0};
 			float[] hsv3 = {mCurrentHue,(float)rgbX/255f,1};
@@ -337,8 +418,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			seekBarRGBYBar.invalidate();
 			rgbView.invalidate();
 
-		}
-		if(arg0.getTag().equals("rgby")){
+		}else if(arg0.getTag().equals("rgby")){
 			rgbY = arg0.getProgress();
 			float[] hsv0 = {0,0,(float)rgbY/255f};
 			float[] hsv1 = {mCurrentHue,1,(float)rgbY/255f};
@@ -351,8 +431,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		}
 		
 		float[] hsvCurrent = {mCurrentHue,(float)rgbX/255f,(float)rgbY/255f};
-		int argb = Color.HSVToColor(hsvCurrent);
+		argb = Color.HSVToColor(hsvCurrent);
 		resultView.hsvCurrent = hsvCurrent;
+		argbS = Integer.toHexString((argb>>16)&0xFF)+Integer.toHexString((argb>>8)&0xFF)+Integer.toHexString((argb)&0xFF);
 		title7.setText("Red: "+((argb>>16)&0xFF));
 		title8.setText("Green: "+((argb>>8)&0xFF));
 		title9.setText("Blue: "+((argb)&0xFF));
@@ -369,10 +450,25 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 	
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		state_progress = seekBar.getProgress();
-		SaveSelections();
-		Log.i("Graphical_Color","onStopTrackingTouch -> SaveSelections !");
-		//new CommandeThread().execute();
+		String tag = (String )seekBar.getTag();
+		if(tag.equals("onoff")) {
+			if(seekBar.getProgress()<20){
+				//state_progress = value0;
+				seekBar.setProgress(0);
+			}else{
+				//state_progress = value1;
+				seekBar.setProgress(100);
+			}
+		} else {
+			state_progress = seekBar.getProgress();
+			SaveSelections();
+			Log.i("Graphical_Color","argb value =  #"+argbS );
+			Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
+			Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
+			Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+			Log.i("Graphical_Color","Power  = "+params.getInt("COLORPOWER",0));
+			new CommandeThread().execute();
+		}
 		touching=false;
 		
 	}
@@ -380,11 +476,17 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			String type="arduino";	//For tests...
+			String command = "setcolor";
+			String Url2send = url+"command/"+type+"/"+dev_id+"/"+command+"/#"+argbS;
 			updating=3;
-			//JSONObject json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress);
+			Log.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
+			JSONObject json_Ack = Rest_com.connect(Url2send);
+			if(json_Ack != null)
+				Log.i("Graphical_Color","received from Rinor : <"+json_Ack.toString()+">");
 			try {
 				//@SuppressWarnings("unused")
-				//Boolean ack = JSONParser.Ack(json_Ack);
+				Boolean ack = JSONParser.Ack(json_Ack);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -398,7 +500,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putInt("COLORBRIGHTNESS",seekBarRGBYBar.getProgress());
 		prefEditor.putInt("COLORPOWER",seekBarPowerBar.getProgress());
 		prefEditor.commit();
-		Log.i("Graphical_Color", "SaveSelections");
+		
 	}
 
 	private void LoadSelections() {
@@ -422,4 +524,83 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		}
 		return false;
 	}
+	
+	public void updateTimer() {
+		TimerTask doAsynchronousTask;
+		final Timer timer = new Timer();
+		
+		doAsynchronousTask = new TimerTask() {
+
+			@SuppressWarnings("unused")
+			@Override
+			public void run() {
+				Runnable myTH = null;
+				Handler loc_handler = handler;
+				Log.e(mytag, "Create Runnable");
+				myTH = new Runnable() {
+					public void run() {
+						
+					try {
+							if(getWindowVisibility()==0){
+								Log.e(mytag, "Execute UpdateThread");
+								new UpdateThread().execute();
+								
+							}else{
+								if(timer != null) {
+									timer.cancel();
+								}
+								Log.e(mytag, "UpdateTimer : Destroy runnable");
+								//this.finalize();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+					} // Runnable run method
+				}; //Runnable 
+				if((myTH != null) && (loc_handler != null)) {
+					//Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
+					try {
+						loc_handler.post(myTH);
+					} catch (Exception e) {
+						Log.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+						e.printStackTrace();
+					}
+				} else {
+					Log.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+				}
+			} // TimerTask run method
+		}; //TimerTask 
+		Log.e(mytag,"Init timer for Device : "+this.dev_id);	
+		timer.schedule(doAsynchronousTask, 0, update*1000);
+	}
+
+	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try{
+				Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname);
+				if(updating<1){
+					Bundle b = new Bundle();
+					String result = domodb.requestFeatureState(dev_id, state_key);
+					if(result != null) {
+						Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname+" Value = "+result);
+						b.putString("message", result);
+						msg = new Message();
+						msg.setData(b);
+						handler.sendMessage(msg);
+					} else {
+						Log.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+wname+" (No value!)");
+					}
+				}
+				updating--;
+			}catch(Exception e){
+				Log.e(mytag, "error : request feature state= "+wname);
+			}
+			return null;
+		}
+	}
+
 }

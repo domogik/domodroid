@@ -155,7 +155,7 @@ public class Widgets_Manager {
 			//} else if(feature.getValue_type().equals("color")){
 			} else if(feature.getState_key().equals("color")){
 				Log.e("Widgets_Manager","add Graphical_Color for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
-								color = new Graphical_Color(context, params, feature.getDevId(),label,
+				color = new Graphical_Color(context, params, feature.getDevId(),label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),

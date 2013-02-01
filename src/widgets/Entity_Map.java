@@ -20,6 +20,7 @@ package widgets;
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Graphics_Manager;
+import android.util.Log;
 
 public class Entity_Map{
 	private int id;
@@ -59,6 +60,7 @@ public class Entity_Map{
 		this.map = map;
 		this.isalive = true;
 		this.customname=customname;
+		Log.e("Entity_map","Drawing value for "+id+" X = "+posx+" Y = "+posy);
 	}
 
 	public int getId() {
@@ -203,7 +205,7 @@ public class Entity_Map{
 	}
 
 	public String getcustomName() {
-		return customname;
+		return "";
 	}
 	public void setcustomName(String customname) {
 		this.customname = customname;

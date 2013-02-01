@@ -144,7 +144,11 @@ public class MapView extends View {
 			formatMode=0;
 		}
 
+		//Saved scale should be use here if exists
+		//if (savedScale!=null)
+		//currentScale= savedScale;
 		currentScale = 1;
+		
 		origin = new Matrix();
 		mat = new TransformManager();
 		mat.setZoom(params.getBoolean("ZOOM", false));
@@ -157,7 +161,7 @@ public class MapView extends View {
 		paint_text.setColor(Color.WHITE);
 		paint_text.setShadowLayer(1, 0, 0, Color.BLACK);
 
-
+		//Case using a svg file as map
 		if(formatMode==1){	
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			svg_string = getFileAsString(f);
@@ -169,6 +173,7 @@ public class MapView extends View {
 			canvasMap.drawPicture(picture);
 			widget = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
+		//Case using a png file as map
 		}else if(formatMode==2){
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
@@ -272,6 +277,8 @@ public class MapView extends View {
 							label = featureMap.getDevice_usage_id();
 						//Log.i(mytag,"label = "+label);
 						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						
 					}
 				
 				} else if(featureMap.getValue_type().equals("number")){
@@ -318,6 +325,7 @@ public class MapView extends View {
 						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
 						canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 					}
 
 				}else if(featureMap.getValue_type().equals("trigger")){
@@ -325,6 +333,8 @@ public class MapView extends View {
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						
 					}
 				}
 			} else {
@@ -465,6 +475,7 @@ public class MapView extends View {
 					}
 				}
 			}else{
+				//Move to left
 				if(pos_X1 - pos_X0 > screen_width/2){
 					if(currentFile +1 < files.size()) currentFile++;
 					else currentFile=0;
@@ -474,6 +485,7 @@ public class MapView extends View {
 					initMap();
 					pos_X0=0;
 					pos_X1=0;
+				//Move to right
 				}else if(pos_X0 - pos_X1 > screen_width/2){
 					if(currentFile != 0) currentFile--;
 					else currentFile=files.size()-1;

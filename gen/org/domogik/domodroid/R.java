@@ -310,7 +310,15 @@ containing a value of this type.
         public static final int domodroid=0x7f040000;
     }
     public static final class string {
+        public static final int Blue=0x7f06006f;
+        public static final int Bright=0x7f06006a;
+        public static final int Curcolor=0x7f06006c;
         public static final int Exit_Program=0x7f060034;
+        public static final int Field=0x7f06006b;
+        public static final int Green=0x7f06006e;
+        public static final int Hue=0x7f060068;
+        public static final int Red=0x7f06006d;
+        public static final int Sat=0x7f060069;
         public static final int Sync=0x7f060033;
         public static final int app_name=0x7f060000;
         public static final int bt_day=0x7f06000a;

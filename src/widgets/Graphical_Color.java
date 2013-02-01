@@ -102,7 +102,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private TextView title7;
 	private TextView title8;
 	private TextView title9;
-	
+	private String t7s,t8s,t9s = "";
 	private SharedPreferences params;
 
 
@@ -210,39 +210,42 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		color_LeftPan.setPadding(0, 0, 0, 10);
 		
 		TextView title1 = new TextView(context);
-		title1.setText("RGB Color");
+		title1.setText(context.getString(R.string.Hue));
 		title1.setTextSize(10);
 		title1.setTextColor(Color.parseColor("#333333"));
 		TextView title2 = new TextView(context);
-		title2.setText("RGB Saturation");
+		title2.setText(context.getString(R.string.Sat));
 		title2.setTextSize(10);
 		title2.setTextColor(Color.parseColor("#333333"));
 		TextView title3 = new TextView(context);
-		title3.setText("RGB Brightness");
+		title3.setText(context.getString(R.string.Bright));
 		title3.setTextSize(10);
 		title3.setTextColor(Color.parseColor("#333333"));
-		TextView title4 = new TextView(context);
-		title4.setText("Luminosity");
-		title4.setTextSize(10);
-		title4.setTextColor(Color.parseColor("#333333"));
+		//TextView title4 = new TextView(context);
+		//title4.setText("Luminosity");
+		//title4.setTextSize(10);
+		//title4.setTextColor(Color.parseColor("#333333"));
 		TextView title5 = new TextView(context);
-		title5.setText("RGB Field");
+		title5.setText(context.getString(R.string.Field));
 		title5.setTextSize(10);
 		title5.setTextColor(Color.parseColor("#333333"));
 		TextView title6 = new TextView(context);
-		title6.setText("Current Color");
+		title6.setText(context.getString(R.string.Curcolor));
 		title6.setTextSize(10);
 		title6.setTextColor(Color.parseColor("#333333"));
 		title7 = new TextView(context);
-		title7.setText("Red: 255");
+		t7s = context.getString(R.string.Red);
+		title7.setText(t7s+" : 255");
 		title7.setTextSize(10);
 		title7.setTextColor(Color.parseColor("#333333"));
 		title8 = new TextView(context);
-		title8.setText("Green: 0");
+		t8s = context.getString(R.string.Green);
+		title8.setText(t8s+" : 0");
 		title8.setTextSize(10);
 		title8.setTextColor(Color.parseColor("#333333"));
 		title9 = new TextView(context);
-		title9.setText("Blue: 0");
+		t9s = context.getString(R.string.Blue);
+		title9.setText(t9s+" : 0");
 		title9.setTextSize(10);
 		title9.setTextColor(Color.parseColor("#333333"));
 
@@ -434,9 +437,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		argb = Color.HSVToColor(hsvCurrent);
 		resultView.hsvCurrent = hsvCurrent;
 		argbS = Integer.toHexString((argb>>16)&0xFF)+Integer.toHexString((argb>>8)&0xFF)+Integer.toHexString((argb)&0xFF);
-		title7.setText("Red: "+((argb>>16)&0xFF));
-		title8.setText("Green: "+((argb>>8)&0xFF));
-		title9.setText("Blue: "+((argb)&0xFF));
+		title7.setText(t7s+" : "+((argb>>16)&0xFF));
+		title8.setText(t8s+" : "+((argb>>8)&0xFF));
+		title9.setText(t9s+" : "+((argb)&0xFF));
 		resultView.invalidate();
 	}
 	
@@ -466,7 +469,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
 			Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
 			Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
-			Log.i("Graphical_Color","Power  = "+params.getInt("COLORPOWER",0));
 			new CommandeThread().execute();
 		}
 		touching=false;

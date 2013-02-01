@@ -1,0 +1,4 @@
+.. todo::
+	Explain whole file. How is set the DB, structure, request, etc. How data are update get and push. 
+	How widgets are used and what they're doing. How is used Strings.xml, Id, Manifest, Layout.
+	

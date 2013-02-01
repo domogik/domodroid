@@ -1,0 +1,2 @@
+.. todo::
+    Explain how to install the complete environment using Eclipse/Android SDK/Mercurial repo and plugin

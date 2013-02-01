@@ -1,6 +1,7 @@
-.. todo::
-	Add new menu image  
-	
+=============
+Configuration
+=============
+
 In sync menu, set the IP and PORT of the rest server, for example http://192.168.0.1:40405/.
 
 Set Auto-Update time with the sliding bar to adjust the frequency you want domodroid to get data from rest.
@@ -8,12 +9,12 @@ Set Auto-Update time with the sliding bar to adjust the frequency you want domod
 Graphic period has been removed, and you can now switch graph period directly in the graph view.
 
 Enable option:
-	-Allow drag in map view
-	-Allow zoom in map view
-	-Dev, add the device Id after his name to help debugging
-	-Custom, change the device name by a cutsomisable one
+* Allow drag in map view
+* Allow zoom in map view
+* Dev, add the device Id after his name to help debugging
+* Custom, change the device name by a cutsomisable one (note implement yet)
 
 Max map size in px (be carefull it could make memory error).
 
-.. image:: Menu_sync.png
+.. image:: new_menu.png
    

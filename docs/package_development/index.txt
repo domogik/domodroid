@@ -1,0 +1,6 @@
+===============
+Developers note
+===============
+
+* :doc:`Setting up your environment <developers_environment>` 
+* :doc:`Developers Documentation <developers_documentation>` 

@@ -36,6 +36,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,7 +145,11 @@ public class MapView extends View {
 			formatMode=0;
 		}
 
+		//Saved scale should be use here if exists
+		//if (savedScale!=null)
+		//currentScale= savedScale;
 		currentScale = 1;
+		
 		origin = new Matrix();
 		mat = new TransformManager();
 		mat.setZoom(params.getBoolean("ZOOM", false));
@@ -157,7 +162,7 @@ public class MapView extends View {
 		paint_text.setColor(Color.WHITE);
 		paint_text.setShadowLayer(1, 0, 0, Color.BLACK);
 
-
+		//Case using a svg file as map
 		if(formatMode==1){	
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			svg_string = getFileAsString(f);
@@ -169,6 +174,7 @@ public class MapView extends View {
 			canvasMap.drawPicture(picture);
 			widget = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
+		//Case using a png file as map
 		}else if(formatMode==2){
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
@@ -232,9 +238,9 @@ public class MapView extends View {
 				Log.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
 				return;
 			}
-			
-			if(states == null)
-				states = "";
+			//Could not be null because it is set to "" 7 rows up
+			//if(states == null)
+			//	states = "";
 			
 			if ((states.equals("high")) || (states.equals("on"))){
 				intstate=1;
@@ -272,6 +278,8 @@ public class MapView extends View {
 							label = featureMap.getDevice_usage_id();
 						//Log.i(mytag,"label = "+label);
 						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						
 					}
 				
 				} else if(featureMap.getValue_type().equals("number")){
@@ -318,6 +326,7 @@ public class MapView extends View {
 						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
 						canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 					}
 
 				}else if(featureMap.getValue_type().equals("trigger")){
@@ -325,6 +334,8 @@ public class MapView extends View {
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						
 					}
 				}
 			} else {
@@ -344,6 +355,16 @@ public class MapView extends View {
 		String label = feature.getDescription();
 		if(label.length() < 1)
 			label = feature.getName();
+		
+		//add Custom name option to change label by a custom name if not empty
+		if (params.getBoolean("CUSTOM",false)==true){
+			if (feature.getcustomName()!= null){
+				label = feature.getcustomName();
+			}
+		}
+		
+		//add debug option to change label adding its Id
+		if (params.getBoolean("DEV",false)==true) label = label+" ("+feature.getDevId()+")";	//neutralized by Doume
 		
 		if (feature.getValue_type().equals("binary")) {
 			onoff = new Graphical_Binary(context,feature.getAddress(),
@@ -424,21 +445,27 @@ public class MapView extends View {
 			moves=0;
 			mat.matrix.getValues(saved_value);
 			mat.actionDown(event.getX(), event.getY());
+			//save to pos_XO where was release the press
 			pos_X0 = event.getX();
 			break;
 		case MotionEvent.ACTION_POINTER_DOWN:
 			mat.actionPointerDown(event);
 			break;
+			//when stop pressing
 		case MotionEvent.ACTION_UP:
 			mat.actionUp(event.getX(), event.getY());
+			//save to pos_X1 where was release the press
 			pos_X1 = event.getX();
-
+			//Select what action to do
+			//Add a widget mode
 			if (addMode==true){
+				//insert in the database feature map the device id, his position and name map. 
 				domodb.insertFeatureMap(temp_id, 
 						(int)((event.getX()-value[2])/currentScale), 
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
 				addMode=false;
+				//refresh the map
 				initMap();
 			}else if(removeMode==true){
 				for (Entity_Map featureMap : listFeatureMap) {
@@ -451,26 +478,33 @@ public class MapView extends View {
 						files.elementAt(currentFile));
 						//removeMode=false;
 						new UpdateThread().execute();
+						//refresh the map
 						initMap();
 					}
 				}
 			}else{
+				//Move to left
 				if(pos_X1 - pos_X0 > screen_width/2){
 					if(currentFile +1 < files.size()) currentFile++;
 					else currentFile=0;
 					canvasMap=null;
 					canvasWidget=null;
 					System.gc();
+					//refresh the map
 					initMap();
+					//Re-init last save position
 					pos_X0=0;
 					pos_X1=0;
+				//Move to right
 				}else if(pos_X0 - pos_X1 > screen_width/2){
 					if(currentFile != 0) currentFile--;
 					else currentFile=files.size()-1;
 					canvasMap=null;
 					canvasWidget=null;
 					System.gc();
+					//refresh the map
 					initMap();
+					//Re-init last save position
 					pos_X0=0;
 					pos_X1=0;
 				}else{
@@ -514,9 +548,14 @@ public class MapView extends View {
 			break;
 		}
 		postInvalidate();
-		return true;
+		return gestureDetector.onTouchEvent(event);
 	}
-
+	
+	final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+	    public void onLongPress(MotionEvent e) {
+	        Log.e("", "Longpress detected");
+	    }
+	});
 	
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;

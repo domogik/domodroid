@@ -5,16 +5,18 @@ Domodroid
 Overview
 ========
 
-.. todo::
-    Quick Domodroid description
+* :doc:`Quick </overview/index>` 
+* :doc:`Detailed </overview/detailed>`
 
 End User Documentation
 ======================
 
-.. todo::
-    Installation
-    Configuration
-    Usage
-    Nightly builds
-    Developpers documentation
+* :doc:`Installation </end_user/installation>`
+* :doc:`Configuration </end_user/configuration>`
+* :doc:`Usage </end_user/usage>`
+* :doc:`Nightly builds </end_user/nightly_builds>`
 
+Development Documentation
+======================
+
+* :doc:`Developers documentation </package_development/index>`

@@ -228,9 +228,10 @@ public class DmdContentProvider extends ContentProvider {
 			Log.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
 			//need to be adapt to remove by id on only current map
 			//currently it will remove by id in whole table
-			mDB.getWritableDatabase().execSQL("delete from table_feature_map where table_feature_map.id = '"+id_name[0] +
-			//need this to delete widget from only current map, but it does'nt work (fixed by Doume ?? to be tested ....)
-			"' AND table_feature_map.map = '"+values.getAsString("map")+"' ");
+			mDB.getWritableDatabase().execSQL("delete from table_feature_map where id="+id_name[0]);
+			//need this to delete widget from only current map, but this does'nt work 
+			//mDB.getWritableDatabase().execSQL("delete from table_feature_map where table_feature_map.id = '"+id_name[0] +
+			//"' AND table_feature_map.map = '"+values.getAsString("map")+"' ");
 			break;
 			
 		case INSERT_FEATURE_STATE:

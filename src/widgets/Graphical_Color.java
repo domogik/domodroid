@@ -154,14 +154,13 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-
-
+		img.setOnTouchListener(this);
+		
 		// info panel
 		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
-		infoPan.setOnTouchListener(this);
 		//name of devices
 		nameDevices=new TextView(context);
 		nameDevices.setText(name);

@@ -2,9 +2,9 @@
 Configuration
 =============
 
-In sync menu, set the IP and PORT of the rest server, for example http://192.168.0.1:40405/.
+In sync menu, set the IP and PORT of the Rinor server, for example http://192.168.0.1:40405/.
 
-Set Auto-Update time with the sliding bar to adjust the frequency you want domodroid to get data from rest.
+Set Auto-Update time with the sliding bar to adjust the frequency you want domodroid to get data from Rinor.
 
 Graphic period has been removed, and you can now switch graph period directly in the graph view.
 

@@ -2,7 +2,7 @@ Domodroid 1.0 provides plenty of features:
 General
 
     Multi display compatibility (Smartphone and Tablet)
-    Easy configuration: Set your REST IP/URL access and synchronize
+    Easy configuration: Set your RINOR IP/URL access and synchronize
     Ability to set the widget's update timer from 10 to 300 secondes
     Power Management control keeping your screen on during the use of Domodroid
     Full icon pack supported 

@@ -59,8 +59,8 @@
 	<string name="map_help_text">Un répertoire nommé \"domodroid\" a été créé à la racine du stockage externe (ou interne suivant les équipements). Les images de cartes doivent y être installées, au format PNG ou SVG créé par votre outil \"Illustrator\" (les textures de base sont supportées). </string>
 	
 	<string name="network_Title">- Options -</string>
-	<string name="network_Text1">--Adresse ou IP du serveur REST Domogik</string>
-	<string name="network_TextHint1">http://addresse-rest:40405/</string>
+	<string name="network_Text1">--Adresse ou IP du serveur Rinor Domogik</string>
+	<string name="network_TextHint1">http://addresse-rinor:40405/</string>
 	<string name="network_Text8">-- Tempo. de mise à jour données:</string>
 	<string name="network_Text9">2 Secondes</string>
 	<string name="network_Text10">-- Période des graphiques:</string>

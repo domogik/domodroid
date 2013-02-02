@@ -59,8 +59,8 @@
 	<string name="map_help_text">A folder called \"domodroid\" has been created at the root of the external storage directory (or internal for some devices). Map must be put in that folder using the PNG format or SVG format created from Illustrator (basic shapes supported). </string>
 	
 	<string name="network_Title">- Options -</string>
-	<string name="network_Text1">--Domogik REST IP Address</string>
-	<string name="network_TextHint1">http://address-rest:40405/</string>
+	<string name="network_Text1">--Domogik Rinor IP Address</string>
+	<string name="network_TextHint1">http://address-rinor:40405/</string>
 	<string name="network_Text8">--Auto-Update Timer:</string>
 	<string name="network_Text9">2 Secondes</string>
 	<string name="network_Text10">--Graphic Period:</string>

@@ -265,20 +265,7 @@ public class MapView extends View {
 					return;
 				}
 				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
-				String label = featureMap.getDescription();
-				if(label.length() < 1)
-					label = featureMap.getDevice_usage_id();
-				if(label == null)
-					label = "";
-				//add Custom name option to change label by a custom name if not empty
-				if (params.getBoolean("CUSTOM",false)==true){
-					if (featureMap.getcustomName()!= null){
-						label = featureMap.getcustomName();
-					}
-				}
 				
-				//add debug option to change label adding its Id
-				if (params.getBoolean("DEV",false)==true) label = label+" ("+featureMap.getDevId()+")";	//neutralized by Doume
 				
 				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){
@@ -286,6 +273,9 @@ public class MapView extends View {
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
+						String label = featureMap.getDescription();
+						if(label.length() < 1)
+							label = featureMap.getDevice_usage_id();
 						//Log.i(mytag,"label = "+label);
 						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
 						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
@@ -312,6 +302,12 @@ public class MapView extends View {
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 							paint_text.setTextSize(20);
 							if(featureMap != null) {
+								String label = featureMap.getDescription();
+								if(label.length() < 1)
+									label = featureMap.getState_key();
+								if(label == null)
+									label = "";
+								
 								//Log.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 								canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
@@ -329,7 +325,7 @@ public class MapView extends View {
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
-						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+						canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
 						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 					}
 
@@ -337,8 +333,9 @@ public class MapView extends View {
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
-						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						
 					}
 				}
 			} else {

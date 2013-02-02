@@ -28,15 +28,18 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickListener {
+public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickListener, OnLongClickListener {
 
 
 	private FrameLayout imgPan;
@@ -112,7 +115,8 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(16);
-
+		nameDevices.setOnLongClickListener(this);
+		
 
 		//feature panel
 		featurePan=new LinearLayout(context);
@@ -153,6 +157,14 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		trigger.startAnim();
 		threadCommande = new Thread(this);
 		threadCommande.start();	
+	}
+	public boolean onLongClick(View arg0) {
+		CharSequence text = "longclicked!";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(getContext(), text, duration);
+		toast.show();
+	    Log.e("I've been", "longclicked");
+	    return false;
 	}
 }
 

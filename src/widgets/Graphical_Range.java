@@ -36,6 +36,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
@@ -43,10 +45,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
-public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarChangeListener{
+public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarChangeListener, OnLongClickListener{
 
 	private FrameLayout imgPan;
 	private LinearLayout background;
@@ -156,8 +159,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
-
-
+		nameDevices.setOnLongClickListener(this);
+		
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
 		state.setPadding(20, 0, 0, 0);
@@ -376,5 +379,13 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		if(visibility==0){
 			//activate=true;
 		}
+	}
+	public boolean onLongClick(View arg0) {
+		CharSequence text = "longclicked!";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(getContext(), text, duration);
+		toast.show();
+	    Log.e("I've been", "longclicked");
+	    return false;
 	}
 }

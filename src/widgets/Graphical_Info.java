@@ -42,6 +42,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
@@ -51,8 +52,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class Graphical_Info extends FrameLayout implements OnTouchListener {
+public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLongClickListener {
 
 
 	private FrameLayout imgPan;
@@ -136,6 +138,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
+		nameDevices.setOnLongClickListener(this);
 		//nameDevices.setLines(1);
 
 		//state key
@@ -393,6 +396,15 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener {
 			}
 		}
 		return false;
+	}
+	
+	public boolean onLongClick(View arg0) {
+		CharSequence text = "longclicked!";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(getContext(), text, duration);
+		toast.show();
+	    Log.e("I've been", "longclicked");
+	    return false;
 	}
 
 	@Override

@@ -36,6 +36,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -444,21 +445,27 @@ public class MapView extends View {
 			moves=0;
 			mat.matrix.getValues(saved_value);
 			mat.actionDown(event.getX(), event.getY());
+			//save to pos_XO where was release the press
 			pos_X0 = event.getX();
 			break;
 		case MotionEvent.ACTION_POINTER_DOWN:
 			mat.actionPointerDown(event);
 			break;
+			//when stop pressing
 		case MotionEvent.ACTION_UP:
 			mat.actionUp(event.getX(), event.getY());
+			//save to pos_X1 where was release the press
 			pos_X1 = event.getX();
-
+			//Select what action to do
+			//Add a widget mode
 			if (addMode==true){
+				//insert in the database feature map the device id, his position and name map. 
 				domodb.insertFeatureMap(temp_id, 
 						(int)((event.getX()-value[2])/currentScale), 
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
 				addMode=false;
+				//refresh the map
 				initMap();
 			}else if(removeMode==true){
 				for (Entity_Map featureMap : listFeatureMap) {
@@ -471,6 +478,7 @@ public class MapView extends View {
 						files.elementAt(currentFile));
 						//removeMode=false;
 						new UpdateThread().execute();
+						//refresh the map
 						initMap();
 					}
 				}
@@ -482,7 +490,9 @@ public class MapView extends View {
 					canvasMap=null;
 					canvasWidget=null;
 					System.gc();
+					//refresh the map
 					initMap();
+					//Re-init last save position
 					pos_X0=0;
 					pos_X1=0;
 				//Move to right
@@ -492,7 +502,9 @@ public class MapView extends View {
 					canvasMap=null;
 					canvasWidget=null;
 					System.gc();
+					//refresh the map
 					initMap();
+					//Re-init last save position
 					pos_X0=0;
 					pos_X1=0;
 				}else{
@@ -536,9 +548,14 @@ public class MapView extends View {
 			break;
 		}
 		postInvalidate();
-		return true;
+		return gestureDetector.onTouchEvent(event);
 	}
-
+	
+	final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+	    public void onLongPress(MotionEvent e) {
+	        Log.e("", "Longpress detected");
+	    }
+	});
 	
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;

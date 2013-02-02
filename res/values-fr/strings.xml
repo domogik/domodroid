@@ -33,7 +33,8 @@
 	<string name="help_Text1">Domodroid : Application gratuite Android sous GNU GPLv3 Licence et développée par Pierre Lainé\n Modifiée par Dominique DAMBRAIN</string>
 	<string name="help_Text2">Contrôler les éclairages, Afficher les informations de temperature ou d\'humidité, par de simples commandes sur votre terminal Android. Nécessite l\'accès à votre système domotique Domogik . Domodroid vous facilite le contrôle de votre domotique sous Domogik, avec une grande variété de dispositifs supportés</string>
 	<string name="help_Text3">Projet Domogik : http://www.domogik.org/</string>
-	<string name="help_Text4">Nous contacter par liste de diffusion :\n domogik-developers@lists.labs.libre-entreprise.org</string>
+	<string name="help_Text4">La documentation de Domodroid est disponible ici : http://docs.domogik.org/domodroid/dev/en/</string>
+	<string name="help_Text5">Nous contacter par liste de diffusion :\n domogik-developers@lists.labs.libre-entreprise.org</string>
 	
 	<string name="splash_title">Bienvenue dans Domodroid 1.2 !</string>
 	<string name="home_splash">Cette nouvelle version de Domodroid apporte de nombreuses nouvelles fonctionnalités qui n\'ont pas toutes été testées sur les multiples versions de terminaux Android. En cas de dysfonctionnements, contacter l\'équipe de développement : http://wiki.domogik.org/Contact+and+support.</string>

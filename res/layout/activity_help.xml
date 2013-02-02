@@ -90,7 +90,15 @@
 	        android:paddingTop="10dip"
 	        android:text="@string/help_Text4"
 	        android:textColor="#FFFFFF" />
-
+		
+		<TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:autoLink="web"
+	        android:paddingTop="10dip"
+	        android:text="@string/help_Text5"
+	        android:textColor="#FFFFFF" />
+		
 	    <TextView
 	        android:id="@+id/versionText"
 	     	android:layout_width="wrap_content"

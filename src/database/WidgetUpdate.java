@@ -34,7 +34,7 @@ public class WidgetUpdate implements Serializable {
 	
 	/*
 	 * This class is a background engine 
-	 * 		On instanciation, it connects to REST server, and submit queries 
+	 * 		On instantiation, it connects to Rinor server, and submit queries 
 	 * 		each 'update' timer, to update local database values for all known devices
 	 * When variable 'activated' is set to false, the thread is kept alive, 
 	 *     but each timer is ignored (no more requests to server...)

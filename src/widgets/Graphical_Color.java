@@ -88,6 +88,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private DomodroidDB domodb;
 	private Activity mycontext;
 	private FrameLayout myself = null;
+	Boolean	switch_state = false;
 	
 	public boolean activate=false;
 	private int widgetSize;
@@ -339,6 +340,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					Log.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
+					
 					myself.setVisibility(GONE);
 					
 					try { 
@@ -348,17 +350,29 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				} else {
 					try {
 						Bundle bu = msg.getData();
-						if(( bu != null) && (bu.getString("message") != null)) {
+						if(( bu != null) && (bu.getString("message") != null) ) {
 							argbS =  bu.getString("message");
-							argbS = argbS.substring(1);
-							Log.d(mytag,"Handler ==> RGB string to process = <"+argbS+">" );
+							if(argbS.equals("off")) {
+								switch_state=false;
+								argbS="000000";
+							} else if(argbS.equals("on")) {
+								seekBarOnOff.setProgress(100);
+								switch_state=true;
+								LoadSelections();	//Recall last values known from shared preferences
+								return;
+								
+							} else {
+								argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
+							}
 							
 							if (argbS.equals("000000")){
 								seekBarOnOff.setProgress(0);
+								switch_state=false;
 								argb = 0;
 								
 							}else {
 								seekBarOnOff.setProgress(100);
+								switch_state=true;
 								argb = Integer.parseInt(argbS,16);
 							}
 							//Convert RGB to HSV color, and set sliders
@@ -368,30 +382,21 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 							g=((argb>>8)&0xFF);
 							b=((argb)&0xFF);
 							Color.colorToHSV(argb, hsv);
-							Log.d(mytag,"Handler ==> RGB values after process = <"+r+"> <"+g+"> <"+b+">" );
+							//Log.d(mytag,"Handler ==> RGB values after process = <"+r+"> <"+g+"> <"+b+">" );
+							//Log.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
 							
-							Log.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
-							/*
-							rgbView.mCurrentHue=hsv[0];
-							rgbView.mCurrentX=(int)(hsv[1]*255);
-							rgbView.mCurrentY=(int)(hsv[2]*255);
-							*/
-							Color c = new Color();
+							//Seekbars are in range 0-255 : convert HSV values
+							//Hue is an angle : convert it to linear
+							seekBarHueBar.setProgress((int) ( 255f -(hsv[0]*255f/360)) );
+							seekBarRGBXBar.setProgress((int) (hsv[1]*255f));
+							seekBarRGBYBar.setProgress((int) (hsv[2]*255f));
 							
-							rgbView.setBackgroundColor(c.rgb(r,g,b));
-							seekBarHueBar.setProgress((int) hsv[0]);
-							seekBarRGBXBar.setProgress((int) hsv[1]*255);
-							seekBarRGBYBar.setProgress((int) hsv[2]*255);
-							onProgressChanged(seekBarHueBar, (int) hsv[0],true);
-							onProgressChanged(seekBarRGBXBar, (int) hsv[1],true);
-							onProgressChanged(seekBarRGBXBar, (int) hsv[2],true);
-							/*
-							title7.setText(t7s+" : "+((argb>>16)&0xFF));
-							title8.setText(t8s+" : "+((argb>>8)&0xFF));
-							title9.setText(t9s+" : "+((argb)&0xFF));
-							SaveSelections();
-							LoadSelections();
-							*/
+							title7.setText(t7s+" : "+r);
+							title8.setText(t8s+" : "+g);
+							title9.setText(t9s+" : "+b);
+							if( (r != 0) || (g != 0) || (b != 0)) {
+								SaveSelections();
+							}
 						} else {
 							if(msg.what == 2) {
 								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
@@ -403,8 +408,11 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 						e.printStackTrace();
 					}
 				}
-			}	
-		};
+			}
+		};	
+		
+		//new UpdateThread().execute();
+		updating = 0;
 		updateTimer();	
 	}
 
@@ -480,20 +488,23 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		String tag = (String )seekBar.getTag();
 		if(tag.equals("onoff")) {
 			if(seekBar.getProgress()<20){
-				//state_progress = value0;
 				seekBar.setProgress(0);
+				switch_state=false;
+				Log.i("Graphical_Color","Change switch to OFF" );
 			}else{
-				//state_progress = value1;
 				seekBar.setProgress(100);
+				switch_state=true;
+				Log.i("Graphical_Color","Change switch to ON" );
 			}
+			new CommandeThread().execute();		//And send switch_state to Domogik
+			
 		} else {
 			state_progress = seekBar.getProgress();
 			SaveSelections();
-			Log.i("Graphical_Color","argb value =  #"+argbS );
-			Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
-			Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
-			Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
-			new CommandeThread().execute();
+			Log.i("Graphical_Color","End of change : new rgb value =  #"+argbS );
+			if(seekBarOnOff.getProgress() > 50)
+				if(switch_state)
+					new CommandeThread().execute();		//send new color
 		}
 		touching=false;
 		
@@ -503,10 +514,21 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		@Override
 		protected Void doInBackground(Void... params) {
 			String type="arduino";	//For tests...
-			String command = "setcolor";
-			String Url2send = url+"command/"+type+"/"+dev_id+"/"+command+"/#"+argbS;
+			String Url2send = url+"command/"+type+"/"+dev_id+"/";
+			if( ( argb != 0) && switch_state) {
+				Url2send+="setcolor/#"+argbS;
+			} else {
+				String State="";
+				if(switch_state)
+					State="on";
+				else
+					State="off";
+				
+				Url2send+="set/"+State;
+			}
+				
 			updating=3;
-			/*
+			
 			Log.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
 			
 			JSONObject json_Ack = Rest_com.connect(Url2send);
@@ -518,10 +540,15 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			*/
+			
 			return null;
 		}
 	}
+	/*
+	 * Saving HSV parameters allow to restore them when Domogik server 
+	 * only notify 'on' state (without any RGB parameters)
+	 * We've to know which was the last one, kept by Domogik
+	 */
 	private void SaveSelections() {
 		SharedPreferences.Editor prefEditor=params.edit();
 		prefEditor.putInt("COLORHUE",seekBarHueBar.getProgress());
@@ -529,7 +556,12 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putInt("COLORBRIGHTNESS",seekBarRGBYBar.getProgress());
 		prefEditor.putInt("COLORPOWER",seekBarPowerBar.getProgress());
 		prefEditor.commit();
-		
+		/*
+		Log.i("Graphical_Color", "SaveSelections()");
+		Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
+		Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
+		Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+		*/
 	}
 
 	private void LoadSelections() {
@@ -537,7 +569,12 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION",255));
 		seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS",255));
 		seekBarPowerBar.setProgress(params.getInt("COLORPOWER",255));
-		Log.i("Graphical_Color", "LoadSelections");
+		/*
+		Log.i("Graphical_Color", "LoadSelections()");
+		Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
+		Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
+		Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+		*/
 	}
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		Log.i("Graphical_Color", "Touch....");
@@ -565,13 +602,13 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			public void run() {
 				Runnable myTH = null;
 				Handler loc_handler = handler;
-				Log.e(mytag, "Create Runnable");
+				//Log.e(mytag, "Create Runnable");
 				myTH = new Runnable() {
 					public void run() {
 						
 					try {
 							if(getWindowVisibility()==0){
-								Log.e(mytag, "Execute UpdateThread");
+								//Log.e(mytag, "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
@@ -601,7 +638,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e(mytag,"Init timer for Device : "+this.dev_id);	
+		Log.e(mytag,"Init timer for Device : "+this.dev_id);
+		doAsynchronousTask.run();		//For an immediate update
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -610,12 +648,12 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		@Override
 		protected Void doInBackground(Void... params) {
 			try{
-				Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname);
+				//Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname);
 				if(updating<1){
 					Bundle b = new Bundle();
 					String result = domodb.requestFeatureState(dev_id, state_key);
 					if(result != null) {
-						Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname+" Value = "+result);
+						Log.d(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname+" Value = "+result);
 						b.putString("message", result);
 						msg = new Message();
 						msg.setData(b);

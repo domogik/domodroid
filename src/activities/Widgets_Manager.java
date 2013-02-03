@@ -100,22 +100,31 @@ public class Widgets_Manager {
 			}
 			
 			//add debug option to change label adding its Id
-			if (params.getBoolean("DEV",false)==true) label = label+" ("+DevId+")";	//neutralized by Doume
+			/*
+			if (params.getBoolean("DEV",false)==true) 
+				label = label+" ("+DevId+")";	//neutralized by Doume
+			*/
+			String[] model = feature.getDevice_type_id().split("\\.");
+			String type = model[1];
 			
 			Log.i("Widgets_Manager", "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
 			if (feature.getValue_type().equals("binary")) {
-				onoff = new Graphical_Binary(context,feature.getAddress(),label,
-						feature.getDevId(),
-						feature.getState_key(),
-						params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
-						feature.getParameters(),
-						feature.getDevice_type_id(),
-						params.getInt("UPDATE_TIMER",300),
-						widgetSize);
-				onoff.container=tmpPan;
-				tmpPan.addView(onoff);
-				Log.i("Widgets_Manager","   ==> Graphical_Binary");
+				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
+					//ignore it : it'll have another device for Color, displaying the switch !)
+				} else {
+					onoff = new Graphical_Binary(context,feature.getAddress(),label,
+							feature.getDevId(),
+							feature.getState_key(),
+							params.getString("URL","1.1.1.1"),
+							feature.getDevice_usage_id(),
+							feature.getParameters(),
+							feature.getDevice_type_id(),
+							params.getInt("UPDATE_TIMER",300),
+							widgetSize);
+					onoff.container=tmpPan;
+					tmpPan.addView(onoff);
+					Log.i("Widgets_Manager","   ==> Graphical_Binary");
+				}
 			} else if (feature.getValue_type().equals("boolean")) {
 				bool = new Graphical_Boolean(context,feature.getAddress(),label,
 						feature.getDevId(),
@@ -155,11 +164,17 @@ public class Widgets_Manager {
 			//} else if(feature.getValue_type().equals("color")){
 			} else if(feature.getState_key().equals("color")){
 				Log.e("Widgets_Manager","add Graphical_Color for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
-										color = new Graphical_Color(context, params, feature.getDevId(),label,
-				feature.getState_key(),
+				color = new Graphical_Color(context, 
+						params, 
+						feature.getDevId(),
+						label,
+						feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
+						feature.getAddress(),			//  idem to know the address
+						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
-						params.getInt("UPDATE_TIMER",300),0);
+						params.getInt("UPDATE_TIMER",300),
+						widgetSize);
 				tmpPan.addView(color);
 				Log.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {

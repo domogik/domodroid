@@ -85,6 +85,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private String mytag = "";
 	private String name;
 	private String wname;
+	private String type;
+	private String address;
 	private DomodroidDB domodb;
 	private Activity mycontext;
 	private FrameLayout myself = null;
@@ -112,7 +114,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	public Graphical_Color(Context context, 
 			SharedPreferences params, 
 			int dev_id, 
-			String name, 
+			String name,
+			String model_id,
+			String address,
 			final String state_key, 
 			String url,
 			String usage, 
@@ -125,6 +129,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.state_key = state_key;
 		this.name=name;
 		this.wname=name;
+		this.address=address;
 		this.url = url;
 		this.update=update;
 		this.widgetSize=widgetSize;
@@ -134,7 +139,11 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		domodb = new DomodroidDB(mycontext);
 		domodb.owner="Graphical_Color("+dev_id+")";
 		mytag = domodb.owner;
-
+		
+		String[] model = model_id.split("\\.");
+		type = model[0];
+		Log.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
+		
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -459,7 +468,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			float[] hsv1 = {mCurrentHue,1,(float)rgbY/255f};
 			seekBarRGBXBar.hsv0 = hsv0;
 			seekBarRGBXBar.hsv1 = hsv1;
-			
 			rgbView.mCurrentY = 255-arg0.getProgress();
 			seekBarRGBXBar.invalidate();
 			rgbView.invalidate();
@@ -513,8 +521,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			String type="arduino";	//For tests...
-			String Url2send = url+"command/"+type+"/"+dev_id+"/";
+			String Url2send = url+"command/"+type+"/"+address+"/";
 			if( ( argb != 0) && switch_state) {
 				Url2send+="setcolor/#"+argbS;
 			} else {
@@ -524,7 +531,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				else
 					State="off";
 				
-				Url2send+="set/"+State;
+				Url2send+=State;
 			}
 				
 			updating=3;

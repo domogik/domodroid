@@ -83,7 +83,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	public FrameLayout myself = null;
 	private String mytag = "";
 
-	public Graphical_Binary(Activity context, String address, String name, int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Binary(Activity context, String address, String name, int dev_id,String state_key, String url, String usage, 
+			String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.address = address;
 		this.url = url;
@@ -106,7 +107,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 
 		String[] model = model_id.split("\\.");
 		type = model[0];
-
+		Log.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
+		
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
@@ -329,10 +331,13 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		@Override
 		protected Void doInBackground(Void... params) {
 			updating=3;
-			JSONObject json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+state_progress);
+			String Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
+			Log.i("Graphical_Binary","Sending to Rinor : <"+Url2send+">");
+			JSONObject json_Ack = Rest_com.connect(Url2send);
 			try {
 				Boolean ack = JSONParser.Ack(json_Ack);
 				if(ack==false){
+					Log.i("Graphical_Binary","Received error from Rinor : <"+json_Ack.toString()+">");
 					handler.sendEmptyMessage(2);
 				}
 			} catch (Exception e) {

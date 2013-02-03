@@ -107,6 +107,15 @@ public class DomodroidDB {
 		}
 	}
 
+	//Send custom name to DmdContentProvder so that it could be writ in DB
+	public void updateFeatureCustomname(int id,String customname){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		values.put("customname", customname);
+		Log.e("DomodrdoidDB", "Customname set to: "+customname+" for device: "+id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_CUSTOM_NAME, values);
+	}
+	
 
 
 	public void insertFeatureAssociation(JSONObject json) throws JSONException{

@@ -548,14 +548,9 @@ public class MapView extends View {
 			break;
 		}
 		postInvalidate();
-		return gestureDetector.onTouchEvent(event);
+		return true;
 	}
-	
-	final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
-	    public void onLongPress(MotionEvent e) {
-	        Log.e("", "Longpress detected");
-	    }
-	});
+
 	
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;

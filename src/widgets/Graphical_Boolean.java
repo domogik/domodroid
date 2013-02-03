@@ -26,20 +26,27 @@ import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class Graphical_Boolean extends FrameLayout{
+public class Graphical_Boolean extends FrameLayout implements OnLongClickListener{
 
 
 	private FrameLayout imgPan;
@@ -105,6 +112,7 @@ public class Graphical_Boolean extends FrameLayout{
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(16);
+		nameDevices.setOnLongClickListener(this);
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
@@ -242,6 +250,30 @@ public class Graphical_Boolean extends FrameLayout{
 			activate=true;
 		}
 	}
+	public boolean onLongClick(View arg0) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+		alert.setTitle("Custom Name");
+		alert.setMessage("Set the custom name you want");
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(getContext());
+		alert.setView(input);
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int whichButton) {
+		String result= input.getText().toString(); 
+			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			domodb.updateFeatureCustomname(dev_id,result);
+			}
+		});
+		
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+			  Log.e("Graphical_Boolean", "Customname Canceled.");
+		  }
+		});
+		alert.show();
+	    return false;
+	}
+	
 }
 
 

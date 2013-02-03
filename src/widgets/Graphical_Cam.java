@@ -31,29 +31,31 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.View.OnLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class Graphical_Cam extends FrameLayout implements OnTouchListener{
+public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLongClickListener{
 
 	private FrameLayout imgPan;
 	private LinearLayout background;
 	private LinearLayout mainPan;
 	private LinearLayout infoPan;
 	private ImageView img;
-	private TextView name;
+	private TextView nameDevices;
 	private String name_cam;
 	private int id;
 	private String url;
 	private Context context;
 
 
-	public Graphical_Cam(Context context,int id,String name_cam, String url,int widgetSize) {
+	public Graphical_Cam(Context context,int id,String name, String url,int widgetSize) {
 		super(context);
 		this.id = id;
-		this.name_cam = name_cam;
+		this.name_cam = name;
 		this.url = url;
 		this.context = context;
 		setOnTouchListener(this);
@@ -90,14 +92,15 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener{
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
 
 		//name of room
-		name=new TextView(context);
-		name.setText("Camera: "+name_cam);
-		name.setTextSize(15);
-		name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		name.setTextColor(Color.BLACK);
+		nameDevices=new TextView(context);
+		nameDevices.setText("Camera: "+name);
+		nameDevices.setTextSize(15);
+		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+		nameDevices.setTextColor(Color.BLACK);
+		nameDevices.setOnLongClickListener(this);
 
 		imgPan.addView(img);
-		infoPan.addView(name);		
+		infoPan.addView(nameDevices);		
 		mainPan.addView(imgPan);
 		mainPan.addView(infoPan);
 
@@ -130,5 +133,13 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener{
 			}
 		}
 		return true;
-	}	
+	}
+	public boolean onLongClick(View arg0) {
+		CharSequence text = "longclicked!";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(getContext(), text, duration);
+		toast.show();
+	    Log.e("I've been", "longclicked");
+	    return false;
+	}
 }

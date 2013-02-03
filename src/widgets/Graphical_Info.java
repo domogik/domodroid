@@ -27,7 +27,9 @@ import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -48,6 +50,7 @@ import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -398,15 +401,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		return false;
 	}
 	
-	public boolean onLongClick(View arg0) {
-		CharSequence text = "longclicked!";
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(getContext(), text, duration);
-		toast.show();
-	    Log.e("I've been", "longclicked");
-	    return false;
-	}
-
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
@@ -420,6 +414,30 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
+	public boolean onLongClick(View arg0) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+		alert.setTitle("Custom Name");
+		alert.setMessage("Set the custom name you want");
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(getContext());
+		alert.setView(input);
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int whichButton) {
+		String result= input.getText().toString(); 
+			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			domodb.updateFeatureCustomname(dev_id,result);
+			}
+		});
+		
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+			  Log.e("Graphical_Boolean", "Customname Canceled.");
+		  }
+		});
+		alert.show();
+	    return false;
+	}
+
 }
 
 

@@ -21,7 +21,11 @@ import activities.Activity_Cam;
 import activities.Gradients_Manager;
 import org.domogik.domodroid.R;
 
+import database.DomodroidDB;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -32,6 +36,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.View.OnLongClickListener;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -134,12 +139,28 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		}
 		return true;
 	}
-	public boolean onLongClick(View arg0) {
-		CharSequence text = "longclicked!";
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(getContext(), text, duration);
-		toast.show();
-	    Log.e("I've been", "longclicked");
+		public boolean onLongClick(View arg0) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+		alert.setTitle("Custom Name");
+		alert.setMessage("Set the custom name you want");
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(getContext());
+		alert.setView(input);
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int whichButton) {
+		String result= input.getText().toString(); 
+			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			//don't work looking for dev_id??
+			//DomodroidDB.updateFeatureCustomname(id,result);
+			}
+		});
+		
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+			  Log.e("Graphical_Boolean", "Customname Canceled.");
+		  }
+		});
+		alert.show();
 	    return false;
 	}
 }

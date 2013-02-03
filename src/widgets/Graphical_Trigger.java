@@ -24,7 +24,9 @@ import org.json.JSONObject;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -33,6 +35,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -159,11 +162,26 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		threadCommande.start();	
 	}
 	public boolean onLongClick(View arg0) {
-		CharSequence text = "longclicked!";
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(getContext(), text, duration);
-		toast.show();
-	    Log.e("I've been", "longclicked");
+		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+		alert.setTitle("Custom Name");
+		alert.setMessage("Set the custom name you want");
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(getContext());
+		alert.setView(input);
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int whichButton) {
+		String result= input.getText().toString(); 
+			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			domodb.updateFeatureCustomname(dev_id,result);
+			}
+		});
+		
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+			  Log.e("Graphical_Boolean", "Customname Canceled.");
+		  }
+		});
+		alert.show();
 	    return false;
 	}
 }

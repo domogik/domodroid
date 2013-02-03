@@ -348,11 +348,11 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					
 				} else {
 					try {
-						Bundle b = msg.getData();
-						if(( b != null) && (b.getString("message") != null)) {
-							argbS =  b.getString("message");
+						Bundle bu = msg.getData();
+						if(( bu != null) && (bu.getString("message") != null)) {
+							argbS =  bu.getString("message");
 							argbS = argbS.substring(1);
-							//Log.d(mytag,"Handler ==> RGB string to process = <"+argbS+">" );
+							Log.d(mytag,"Handler ==> RGB string to process = <"+argbS+">" );
 							
 							if (argbS.equals("000000")){
 								seekBarOnOff.setProgress(0);
@@ -360,15 +360,39 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 								
 							}else {
 								seekBarOnOff.setProgress(100);
-								argb = Integer.parseInt(argbS);
+								argb = Integer.parseInt(argbS,16);
 							}
 							//Convert RGB to HSV color, and set sliders
 							float hsv[] = new float[3];
+							int r, g , b;
+							r=((argb>>16)&0xFF);
+							g=((argb>>8)&0xFF);
+							b=((argb)&0xFF);
 							Color.colorToHSV(argb, hsv);
-							seekBarHueBar.setProgress((int) hsv[0]);
-							seekBarRGBXBar.setProgress((int) hsv[1]);
-							seekBarRGBYBar.setProgress((int) hsv[2]);
+							Log.d(mytag,"Handler ==> RGB values after process = <"+r+"> <"+g+"> <"+b+">" );
 							
+							Log.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
+							/*
+							rgbView.mCurrentHue=hsv[0];
+							rgbView.mCurrentX=(int)(hsv[1]*255);
+							rgbView.mCurrentY=(int)(hsv[2]*255);
+							*/
+							Color c = new Color();
+							
+							rgbView.setBackgroundColor(c.rgb(r,g,b));
+							seekBarHueBar.setProgress((int) hsv[0]);
+							seekBarRGBXBar.setProgress((int) hsv[1]*255);
+							seekBarRGBYBar.setProgress((int) hsv[2]*255);
+							onProgressChanged(seekBarHueBar, (int) hsv[0],true);
+							onProgressChanged(seekBarRGBXBar, (int) hsv[1],true);
+							onProgressChanged(seekBarRGBXBar, (int) hsv[2],true);
+							/*
+							title7.setText(t7s+" : "+((argb>>16)&0xFF));
+							title8.setText(t8s+" : "+((argb>>8)&0xFF));
+							title9.setText(t9s+" : "+((argb)&0xFF));
+							SaveSelections();
+							LoadSelections();
+							*/
 						} else {
 							if(msg.what == 2) {
 								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
@@ -483,7 +507,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			String command = "setcolor";
 			String Url2send = url+"command/"+type+"/"+dev_id+"/"+command+"/#"+argbS;
 			updating=3;
+			/*
 			Log.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
+			
 			JSONObject json_Ack = Rest_com.connect(Url2send);
 			if(json_Ack != null)
 				Log.i("Graphical_Color","received from Rinor : <"+json_Ack.toString()+">");
@@ -493,6 +519,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			*/
 			return null;
 		}
 	}

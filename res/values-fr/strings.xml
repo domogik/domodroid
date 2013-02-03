@@ -131,10 +131,10 @@
 	<string name="info3200">Non disponible</string>
 	<string name="info48">--</string>
 	<string name="version">Rev</string>
-	<string name="Hue">Coloris RGB</string>
+	<string name="Hue">Teinte</string>
 	<string name="Sat">Saturation</string>
 	<string name="Bright">Brillance</string>
-	<string name="Field">Palette RGB</string>
+	<string name="Field">Palette</string>
 	<string name="Curcolor">Couleur courante</string>
 	<string name="Red">Rouge</string>
 	<string name="Green">Vert</string>

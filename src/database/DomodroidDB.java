@@ -107,7 +107,7 @@ public class DomodroidDB {
 		}
 	}
 
-	//Send custom name to DmdContentProvder so that it could be writ in DB
+	//Send custom name to DmdContentProvder so that it could be write in DB
 	public void updateFeatureCustomname(int id,String customname){
 		ContentValues values = new ContentValues();
 		values.put("id", id);

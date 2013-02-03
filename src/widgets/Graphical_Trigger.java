@@ -172,7 +172,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
 			Log.e("Graphical_Boolean", "Customname set to: "+result);
-			domodb.updateFeatureCustomname(dev_id,result);
+			//domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		

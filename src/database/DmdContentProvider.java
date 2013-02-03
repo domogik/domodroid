@@ -247,7 +247,7 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		case UPDATE_FEATURE_CUSTOM_NAME:
 			//values contains for example "id= 3 customname=blablabla"
-			Log.d("DMDContentProvider.update","try to updated feature with device_id = "+id+" customname = "+values);
+			Log.d("DMDContentProvider.update","try to updated feature where "+values);
 			//mDB.getWritableDatabase().execSQL("INSERT OR REPLACE INTO table_feature", values , "", customname);
 			Log.e("DmdContentProvider","Insert Custom name");
 			break;

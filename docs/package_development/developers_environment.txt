@@ -1,2 +1,11 @@
 .. todo::
     Explain how to install the complete environment using Eclipse/Android SDK/Mercurial repo and plugin
+    
+You can use a lot of tools.
+
+ECLIPSE is only one of them, but you can use a simple text  editor if you want.
+
+Install Google SDK
+
+Install Mercurial plugin
+http://javaforge.com/project/HGE

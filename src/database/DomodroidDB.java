@@ -355,7 +355,7 @@ public class DomodroidDB {
 
 
 	public String requestFeatureState(int device_id, String key){
-		String state = null;
+		String state = "";
 		String[] projection = {"value"};
 		String sortOrder = "key ";
 			try {
@@ -373,6 +373,7 @@ public class DomodroidDB {
 					
 				} else {
 					Log.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" not found ");
+					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

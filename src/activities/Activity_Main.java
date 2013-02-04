@@ -186,6 +186,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						Log.d("Activity_Main","sync dialog requires a refresh !");
 						reload = true;	// Sync being done, consider shared prefs are OK
 						//parent.removeAllViews();
+						if(widgetUpdate == null) {
+							Log.i("Activity_Main", "Starting WidgetUpdate engine !");
+							widgetUpdate = new WidgetUpdate(myself,sbanim,params);
+						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
 						b.putInt("id", 0);

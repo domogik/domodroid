@@ -83,6 +83,8 @@ public class WidgetUpdate implements Serializable {
 					}
 			}
 		};
+		doAsynchronousTask.run();	//Force a 1st execution immediate (request #1636 )
+		// and arm the timer to do automatically this each 'update' seconds
 		if(timer != null)
 			timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 	}

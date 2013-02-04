@@ -368,25 +368,28 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 							if(argbS.equals("off")) {
 								switch_state=false;
 								argbS="000000";
+								argb=0;
 							} else if(argbS.equals("on")) {
 								seekBarOnOff.setProgress(100);
 								switch_state=true;
 								LoadSelections();	//Recall last values known from shared preferences
+													// argb and argbS will be set when seekBars will be changed
 								return;
 								
 							} else {
 								argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
+								argb = Integer.parseInt(argbS,16);
 							}
 							
-							if (argbS.equals("000000")){
+							if (argb == 0){
 								seekBarOnOff.setProgress(0);
 								switch_state=false;
-								argb = 0;
+								
 								
 							}else {
 								seekBarOnOff.setProgress(100);
 								switch_state=true;
-								argb = Integer.parseInt(argbS,16);
+								
 							}
 							//Convert RGB to HSV color, and set sliders
 							float hsv[] = new float[3];

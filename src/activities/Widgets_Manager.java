@@ -103,10 +103,9 @@ public class Widgets_Manager {
 			}
 			
 			//add debug option to change label adding its Id
-			/*
 			if (params.getBoolean("DEV",false)==true) 
 				label = label+" ("+DevId+")";	//neutralized by Doume
-			*/
+			
 			String[] model = feature.getDevice_type_id().split("\\.");
 			String type = model[1];
 			

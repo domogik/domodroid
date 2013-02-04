@@ -1,4 +1,13 @@
 .. todo::
 	Explain whole file. How is set the DB, structure, request, etc. How data are update get and push. 
 	How widgets are used and what they're doing. How is used Strings.xml, Id, Manifest, Layout.
-	
+
+activities/Graphics_Manager.java
+	It is called to get the right icons in function of the device state.
+	In widget mode, case 0 is used for off, case 1 for 50%, case 2 for on and case 3 for undefined.
+	In map mode, case 0 is for of  and case 1 for on.
+	All case depending of device usage.
+activities/Activity_About.java
+ 	It open the layout About and adapt it to get version code/name and package name
+ 	This is to help developers with nightly build and finally with real version to be sure what version user are running.
+ 	

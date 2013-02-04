@@ -168,7 +168,6 @@ public class Graphics_Manager {
 	public static int Map_Agent(String usage, int state){
 		switch(state){
 		case 0:
-			//Log.d("Graphics_manager","Case state 0");
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
@@ -181,7 +180,6 @@ public class Graphics_Manager {
 			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_off;
 		case 1:
-			//Log.d("Graphics_manager","Case state 1");
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}

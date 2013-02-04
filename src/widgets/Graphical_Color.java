@@ -97,7 +97,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	public WidgetUpdate updateEngine = null;
 	private FrameLayout myself = null;
 	private Boolean switch_state = false;
-	private Boolean off_in_process = false;
+	private Boolean request_in_process = false;
 	private TimerTask doAsynchronousTask;
 	
 	
@@ -382,8 +382,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 								return;
 								
 							} else {
-								if(off_in_process) {
-									off_in_process = false;
+								if(request_in_process) {
+									request_in_process = false;
 									return;		//When a 'off' command has been sent, ignore this update
 												// to don't display old value present in database
 												// let it time to refresh from server
@@ -435,6 +435,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 								//Request to refresh screen now....
 								if(updateEngine != null) {
 									Log.d(mytag,"Handler ==> Request to refresh DB values" );
+									request_in_process=true;
 									updateEngine.refreshNow();	//Force engine to reload states from server
 								}
 								
@@ -566,7 +567,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					
 				} else {
 					State="off";
-					off_in_process = true;
 					seekBarHueBar.setProgress(255);
 					seekBarRGBXBar.setProgress(0);
 					seekBarRGBYBar.setProgress(0);
@@ -577,6 +577,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			updating=1;
 			
 			Log.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
+			request_in_process = true;
 			
 			JSONObject json_Ack = Rest_com.connect(Url2send);
 			Boolean ack = false;

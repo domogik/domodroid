@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import rinor.Rest_com;
 import database.DomodroidDB;
 import database.JSONParser;
+import database.WidgetUpdate;
 
 import widgets.Graphical_Binary.SBAnim;
 import widgets.Graphical_Binary.UpdateThread;
@@ -93,8 +94,12 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private String address;
 	private DomodroidDB domodb;
 	private Activity mycontext;
+	public WidgetUpdate updateEngine = null;
 	private FrameLayout myself = null;
-	Boolean	switch_state = false;
+	private Boolean switch_state = false;
+	private Boolean off_in_process = false;
+	private TimerTask doAsynchronousTask;
+	
 	
 	public boolean activate=false;
 	private int widgetSize;
@@ -377,8 +382,18 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 								return;
 								
 							} else {
+								if(off_in_process) {
+									off_in_process = false;
+									return;		//When a 'off' command has been sent, ignore this update
+												// to don't display old value present in database
+												// let it time to refresh from server
+								}
 								argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
-								argb = Integer.parseInt(argbS,16);
+								try {
+									argb = Integer.parseInt(argbS,16);
+								} catch (Exception e) {
+									argb = 1;
+								}
 							}
 							
 							if (argb == 0){
@@ -415,7 +430,14 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 							}
 						} else {
 							if(msg.what == 2) {
-								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+								Toast.makeText(getContext(), "Command to server rejected", Toast.LENGTH_SHORT).show();
+							}else if(msg.what == 3) {
+								//Request to refresh screen now....
+								if(updateEngine != null) {
+									Log.d(mytag,"Handler ==> Request to refresh DB values" );
+									updateEngine.refreshNow();	//Force engine to reload states from server
+								}
+								
 							}
 						}
 						
@@ -509,6 +531,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			}else{
 				seekBar.setProgress(100);
 				switch_state=true;
+				LoadSelections();
 				Log.i("Graphical_Color","Change switch to ON" );
 			}
 			new CommandeThread().execute();		//And send switch_state to Domogik
@@ -528,33 +551,52 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			String Url2send = url+"command/"+type+"/"+address+"/";
+			String Url2send = url+"command/"+type+"/"+address+"/setcolor/";
+			
 			if( ( argb != 0) && switch_state) {
-				Url2send+="setcolor/#"+argbS;
+				
+				String srgb = Integer.toHexString(argb);
+				if(srgb.length() > 6)
+					srgb = srgb.substring(2);
+				Url2send+="#"+srgb;
 			} else {
 				String State="";
-				if(switch_state)
+				if(switch_state) {
 					State="on";
-				else
+					
+				} else {
 					State="off";
-				
+					off_in_process = true;
+					seekBarHueBar.setProgress(255);
+					seekBarRGBXBar.setProgress(0);
+					seekBarRGBYBar.setProgress(0);
+				}
 				Url2send+=State;
 			}
 				
-			updating=3;
+			updating=1;
 			
 			Log.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
 			
 			JSONObject json_Ack = Rest_com.connect(Url2send);
-			if(json_Ack != null)
-				Log.i("Graphical_Color","received from Rinor : <"+json_Ack.toString()+">");
-			try {
-				//@SuppressWarnings("unused")
-				Boolean ack = JSONParser.Ack(json_Ack);
-			} catch (Exception e) {
-				e.printStackTrace();
+			Boolean ack = false;
+			if(json_Ack != null) {
+				try {
+					//@SuppressWarnings("unused")
+					ack = JSONParser.Ack(json_Ack);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if(ack==false){
+					Log.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+					handler.sendEmptyMessage(2);
+				} else {
+					// TODO Try to refresh immediatly screen....
+					updating=0;
+					handler.sendEmptyMessage(3);
+				}
 			}
-			
+			updating=0;
 			return null;
 		}
 	}
@@ -568,7 +610,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putInt("COLORHUE",seekBarHueBar.getProgress());
 		prefEditor.putInt("COLORSATURATION",seekBarRGBXBar.getProgress());
 		prefEditor.putInt("COLORBRIGHTNESS",seekBarRGBYBar.getProgress());
-		prefEditor.putInt("COLORPOWER",seekBarPowerBar.getProgress());
 		prefEditor.commit();
 		/*
 		Log.i("Graphical_Color", "SaveSelections()");
@@ -582,7 +623,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarHueBar.setProgress(params.getInt("COLORHUE",0));
 		seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION",255));
 		seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS",255));
-		seekBarPowerBar.setProgress(params.getInt("COLORPOWER",255));
 		/*
 		Log.i("Graphical_Color", "LoadSelections()");
 		Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
@@ -606,7 +646,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	}
 	
 	public void updateTimer() {
-		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
 		
 		doAsynchronousTask = new TimerTask() {

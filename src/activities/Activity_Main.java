@@ -332,7 +332,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			// End of onCreate (UIThread)
 	}
 	
-	
+	public void force_DB_update() {
+		if(widgetUpdate != null) {
+			widgetUpdate.refreshNow();
+		}
+	}
 	private void createAlert() {
 		notSyncAlert = new AlertDialog.Builder(this);
 		notSyncAlert.setMessage(getText(R.string.not_sync)).setTitle("Warning!");
@@ -399,6 +403,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		if(wAgent == null) {
 			Log.v("Activity_Main", "Starting wAgent !");
 			wAgent=new Widgets_Manager(widgetHandler);
+			wAgent.widgetupdate = widgetUpdate;
 		}
 		loadWigets(0,"root");
 		historyPosition=0;

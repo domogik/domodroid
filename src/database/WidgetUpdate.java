@@ -31,7 +31,7 @@ public class WidgetUpdate implements Serializable {
 	private DomodroidDB domodb;
 	private Handler sbanim;
 	private String mytag="WidgetUpdate";
-	
+	private TimerTask doAsynchronousTask;
 	/*
 	 * This class is a background engine 
 	 * 		On instantiation, it connects to Rinor server, and submit queries 
@@ -48,24 +48,34 @@ public class WidgetUpdate implements Serializable {
 		sbanim = anim;
 		Log.d(mytag,"Initial start requested....");
 		Timer();
+		refreshNow();	// Force an immediate refresh
 	}
 	
-
+	/* 
+	 * Method allowing external methods to force a refresh
+	 */
+	public void refreshNow() {
+		if(doAsynchronousTask != null)
+			doAsynchronousTask.run();	//To force immediate refresh
+	}
+	
+	/*
+	 * This method should only be called once, to create and arm a cyclic timer 
+	 */
 	public void Timer() {
 		final Timer timer = new Timer();
 		
-		TimerTask doAsynchronousTask;
+		
 		final Handler handler = new Handler();
 		doAsynchronousTask = new TimerTask() {
 		
-		@Override
-		public void run() {
-			Runnable myTH = new Runnable() {
+			@Override
+			public void run() {
+				Runnable myTH = new Runnable() {
 				
 					public void run() {
 						if(activated) {
 							try {
-								//Log.d(mytag,"timer expires : update Database !");
 								new UpdateThread().execute();
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -75,15 +85,14 @@ public class WidgetUpdate implements Serializable {
 					} //End of run method
 				};	// End of runnable bloc
 				
-				
 				try {
 					handler.post(myTH);		//To avoid exception on ICS
-					} catch (Exception e) {
+				} catch (Exception e) {
 						e.printStackTrace();
-					}
+				}
 			}
 		};
-		doAsynchronousTask.run();	//Force a 1st execution immediate (request #1636 )
+		
 		// and arm the timer to do automatically this each 'update' seconds
 		if(timer != null)
 			timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);

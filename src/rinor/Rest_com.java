@@ -31,7 +31,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import misc.Tracer;
  
 public class Rest_com {
  
@@ -75,16 +75,16 @@ public class Rest_com {
  
  
         } catch (HttpHostConnectException e) {
-        	Log.e("Rest.com","Connection refused to "+url);
+        	Tracer.e("Rest.com","Connection refused to "+url);
             //e.printStackTrace();
         } catch (ClientProtocolException e) {
-        	Log.e("Rest.com","Connection refused to "+url);
+        	Tracer.e("Rest.com","Connection refused to "+url);
             e.printStackTrace();
         } catch (IOException e) {
-        	Log.e("Rest.com","Connection failure to "+url);
+        	Tracer.e("Rest.com","Connection failure to "+url);
             e.printStackTrace();
         } catch (JSONException e) {
-        	Log.e("Rest.com","JSON exception on "+result);
+        	Tracer.e("Rest.com","JSON exception on "+result);
             e.printStackTrace();
         }
         return json;

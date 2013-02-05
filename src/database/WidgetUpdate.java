@@ -16,7 +16,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
+import misc.Tracer;
 
 public class WidgetUpdate implements Serializable {
 
@@ -46,7 +46,7 @@ public class WidgetUpdate implements Serializable {
 		domodb = new DomodroidDB(context);	
 		domodb.owner=mytag;
 		sbanim = anim;
-		Log.d(mytag,"Initial start requested....");
+		Tracer.d(mytag,"Initial start requested....");
 		Timer();
 		refreshNow();	// Force an immediate refresh
 	}
@@ -100,15 +100,15 @@ public class WidgetUpdate implements Serializable {
 	 
 	
 	public void stopThread(){
-		Log.d(mytag,"stopThread requested....");
+		Tracer.d(mytag,"stopThread requested....");
 		activated = false;
 	}
 	public void restartThread(){
-		Log.d(mytag,"restartThread requested....");
+		Tracer.d(mytag,"restartThread requested....");
 		activated = true;
 	}
 	public void cancelEngine(){
-		Log.d(mytag,"cancelEngine requested....");
+		Tracer.d(mytag,"cancelEngine requested....");
 		activated = false;
 		try {
 			Timer();	//That should cancel running timer
@@ -123,16 +123,16 @@ public class WidgetUpdate implements Serializable {
 		protected Void doInBackground(Void... params) {
 			// Added by Doume to correctly release resources when exiting
 			if(! activated) {
-				Log.d(mytag,"UpdateThread frozen....");
+				Tracer.d(mytag,"UpdateThread frozen....");
 				
 			} else {
-				Log.d(mytag,"UpdateThread Getting widget infos from server...");
+				Tracer.d(mytag,"UpdateThread Getting widget infos from server...");
 				if(sharedparams.getString("UPDATE_URL", null) != null){
 					try {
 						sbanim.sendEmptyMessage(0);
 						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
-						//Log.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
-						//Log.d(mytag,"result : "+ json_widget_state);
+						//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null).toString());
+						//Tracer.d(mytag,"result : "+ json_widget_state);
 						sbanim.sendEmptyMessage(1);
 						domodb.insertFeatureState(json_widget_state);
 						sbanim.sendEmptyMessage(2);

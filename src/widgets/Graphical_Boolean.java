@@ -35,7 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -143,7 +143,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			@Override
 			public void handleMessage(Message msg) {	
 				if(activate) {
-					Log.d("Graphical_Boolean","Handler receives a request to die " );
+					Tracer.d("Graphical_Boolean","Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -169,7 +169,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 								state.setText("State : High");
 							}
 						} catch (Exception e) {
-							Log.e("Graphical_Boolean", "handler error device "+wname);
+							Tracer.e("Graphical_Boolean", "handler error device "+wname);
 							e.printStackTrace();
 						}
 					}
@@ -192,14 +192,14 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 					public void run() {
 					try {
 							if(getWindowVisibility()==0 ){
-								//Log.e("Graphical_Boolean ("+dev_id+")", "Execute UpdateThread");
+								//Tracer.e("Graphical_Boolean ("+dev_id+")", "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								//Log.e("Graphical_Boolean ("+dev_id+")", "Destroy runnable");
+								//Tracer.e("Graphical_Boolean ("+dev_id+")", "Destroy runnable");
 								//this.finalize();
 							}
 						} catch (Exception e) {
@@ -209,7 +209,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e("Graphical_Boolean ("+dev_id+")","Queuing Runnable for Device : "+dev_id);	
+				Tracer.e("Graphical_Boolean ("+dev_id+")","Queuing Runnable for Device : "+dev_id);	
 				try {
 					handler.post(myTH);	//Doume : to avoid exception on ICS
 					} catch (Exception e) {
@@ -217,7 +217,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 					}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e("Graphical_Boolean ("+dev_id+")","Init timer for Device ");	
+		Tracer.e("Graphical_Boolean ("+dev_id+")","Init timer for Device ");	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -260,14 +260,14 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

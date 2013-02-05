@@ -39,7 +39,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -112,7 +112,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 
 		String[] model = model_id.split("\\.");
 		type = model[0];
-		Log.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
+		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
 		
 		//panel with border
 		background = new LinearLayout(context);
@@ -184,7 +184,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
-					Log.d(mytag,"Handler receives a request to die " );
+					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -212,7 +212,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						}
 						
 					} catch (Exception e) {
-						Log.e(mytag, "Handler error for device "+wname);
+						Tracer.e(mytag, "Handler error for device "+wname);
 						e.printStackTrace();
 					}
 				}
@@ -265,20 +265,20 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			public void run() {
 				Runnable myTH = null;
 				Handler loc_handler = handler;
-				Log.e(mytag, "Create Runnable");
+				Tracer.e(mytag, "Create Runnable");
 				myTH = new Runnable() {
 					public void run() {
 						
 					try {
 							if(getWindowVisibility()==0){
-								Log.e(mytag, "Execute UpdateThread");
+								Tracer.e(mytag, "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e(mytag, "UpdateTimer : Destroy runnable");
+								Tracer.e(mytag, "UpdateTimer : Destroy runnable");
 								//this.finalize();
 							}
 						} catch (Exception e) {
@@ -289,19 +289,19 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 					} // Runnable run method
 				}; //Runnable 
 				if((myTH != null) && (loc_handler != null)) {
-					Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
+					Tracer.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
 					try {
 						loc_handler.post(myTH);
 					} catch (Exception e) {
-						Log.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+						Tracer.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 						e.printStackTrace();
 					}
 				} else {
-					Log.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+					Tracer.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 				}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e(mytag,"Init timer for Device : "+this.dev_id);	
+		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -310,23 +310,23 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		@Override
 		protected Void doInBackground(Void... params) {
 			try{
-				Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
+				Tracer.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
 				if(updating<1){
 					Bundle b = new Bundle();
 					String result = domodb.requestFeatureState(dev_id, state_key);
 					if(result != null) {
-						Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
+						Tracer.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
 						b.putString("message", result);
 						msg = new Message();
 						msg.setData(b);
 						handler.sendMessage(msg);
 					} else {
-						Log.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+name);
+						Tracer.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+name);
 					}
 				}
 				updating--;
 			}catch(Exception e){
-				Log.e(mytag, "error : request feature state= "+name);
+				Tracer.e(mytag, "error : request feature state= "+name);
 			}
 			return null;
 		}
@@ -338,12 +338,12 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		protected Void doInBackground(Void... params) {
 			updating=3;
 			String Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
-			Log.i("Graphical_Binary","Sending to Rinor : <"+Url2send+">");
+			Tracer.i("Graphical_Binary","Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = Rest_com.connect(Url2send);
 			try {
 				Boolean ack = JSONParser.Ack(json_Ack);
 				if(ack==false){
-					Log.i("Graphical_Binary","Received error from Rinor : <"+json_Ack.toString()+">");
+					Tracer.i("Graphical_Binary","Received error from Rinor : <"+json_Ack.toString()+">");
 					handler.sendEmptyMessage(2);
 				}
 			} catch (Exception e) {
@@ -400,14 +400,14 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

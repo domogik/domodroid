@@ -10,7 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
@@ -40,7 +40,7 @@ public class Activity_Cam extends Activity{
 		Bundle b=getIntent().getExtras();
 		name_cam = b.getString("name");
 		url = b.getString("url");
-		Log.e("Activity_Cam","name_cam = "+name_cam+" , url = "+url);
+		Tracer.e("Activity_Cam","name_cam = "+name_cam+" , url = "+url);
 		//typedDimension
 		float scale = getResources().getDisplayMetrics().density; 
 

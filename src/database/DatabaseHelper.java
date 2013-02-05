@@ -6,7 +6,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
-import android.util.Log;
+import misc.Tracer;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		Log.e("DatabaseHelper","DATABASE_NAME = "+DATABASE_NAME);
+		Tracer.e("DatabaseHelper","DATABASE_NAME = "+DATABASE_NAME);
 		
 	}
 
@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
+		Tracer.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS table_area");
 		db.execSQL("DROP TABLE IF EXISTS table_room");

@@ -20,7 +20,7 @@ package widgets;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import misc.Tracer;
 
 public class Entity_Feature_Association {
 	
@@ -39,7 +39,7 @@ public class Entity_Feature_Association {
 		this.place_type=place_type;
 		this.device_feature_id=device_feature_id;
 		this.id=id;	
-		Log.e("JSON", device_feature);
+		Tracer.e("JSON", device_feature);
 		json_device_feature = new JSONObject(device_feature);
 		setFeat_model_id(json_device_feature.getString("device_feature_model_id"));
 		setFeat_id(json_device_feature.getInt("id"));

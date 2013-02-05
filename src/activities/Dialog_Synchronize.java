@@ -16,7 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -136,7 +136,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				JSONObject json_FeatureList = null;
 				JSONObject json_FeatureAssociationList = null;
 				JSONObject json_IconList = null;
-				Log.d("Dialog_Synchronize", "urlAccess = <"+urlAccess+">");
+				Tracer.d("Dialog_Synchronize", "urlAccess = <"+urlAccess+">");
 				
 				if(Rinor_Api_Version <=0.5){
 					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
@@ -145,7 +145,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						handler.sendEmptyMessage(0);
 						return null;
 					}
-					Log.d("Dialog_Synchronize", "AreaList = <"+json_AreaList.toString()+">");
+					Tracer.d("Dialog_Synchronize", "AreaList = <"+json_AreaList.toString()+">");
 					
 					publishProgress(20);
 					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
@@ -154,7 +154,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						handler.sendEmptyMessage(0);
 						return null;
 					}
-					//Log.d("Dialog_Synchronize", "RoomList = <"+json_RoomList.toString()+">");
+					//Tracer.d("Dialog_Synchronize", "RoomList = <"+json_RoomList.toString()+">");
 					
 					publishProgress(40);
 					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
@@ -237,16 +237,16 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	                int list_size = 0;
 	                if(json_FeatureList != null)
 	                	list_size = json_FeatureList.getJSONArray("feature").length();
-	                Log.d("Dialog_Synchronize","Features list size = "+list_size);
+	                Tracer.d("Dialog_Synchronize","Features list size = "+list_size);
 					for(int i = 0; i < list_size; i++) {
 						try {
 							usage = json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id");
 						} catch (Exception e) {
 							// Cannot parse JSON Array or JSONObject
-							 Log.d("Dialog_Synchronize","Exception processing Features list ("+i+")");
+							 Tracer.d("Dialog_Synchronize","Exception processing Features list ("+i+")");
 								
 						}
-						 Log.d("Dialog_Synchronize","Features list processing usage = <"+usage+">");
+						 Tracer.d("Dialog_Synchronize","Features list processing usage = <"+usage+">");
 							
 						// Create a pseudo 'room' for each usage returned by Rinor
 						if (usage != null) {
@@ -300,7 +300,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				// Insert results into local database
 				
 				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
-				Log.v("Dialog_Synchronize","Updating database tables with new House configuration");
+				Tracer.v("Dialog_Synchronize","Updating database tables with new House configuration");
 				db.insertArea(json_AreaList);
 				db.insertRoom(json_RoomList);
 				db.insertFeature(json_FeatureList);
@@ -309,14 +309,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					db.insertIcon(json_IconList);
 				}
 				
-				//Log.v("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
-				//Log.v("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
-				//Log.v("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
-				//Log.v("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
+				//Tracer.v("Dialog_Synchronize", "AreaList = <"+json_AreaList+">");
+				//Tracer.v("Dialog_Synchronize", "RoomList = <"+json_RoomList+">");
+				//Tracer.v("Dialog_Synchronize", "FeatureList = <"+json_FeatureList+">");
+				//Tracer.v("Dialog_Synchronize", "FeatureAssociationList = <"+json_FeatureAssociationList+">");
 				
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
-				Log.v("Dialog_Synchronize","prepare UPDATE_URL items="+listFeature.length);
+				Tracer.v("Dialog_Synchronize","prepare UPDATE_URL items="+listFeature.length);
 				for (Entity_Feature feature : listFeature) {
 					urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
 				}
@@ -329,7 +329,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				*/
 				publishProgress(100);
 				
-				Log.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
+				Tracer.v("Dialog_Synchronize","UPDATE_URL = "+urlUpdate);
 				
 				Bundle b = new Bundle();
 				//Notify sync complete to parent Dialog

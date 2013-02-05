@@ -29,7 +29,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.util.Log;
+import misc.Tracer;
+
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -74,15 +75,15 @@ public class Activity_About extends Activity{
 	private String getVersionName() {
 		//set a fake version
 		String version = "??";
-		Log.i("About","Package name = <"+pn+">");
+		Tracer.i("About","Package name = <"+pn+">");
 		try {
 			//get versionName from AndroidManifest.xml
 			PackageInfo pi = getPackageManager().getPackageInfo( pn, 0);
 			version = pi.versionName;
 		} catch (PackageManager.NameNotFoundException e) {
-			Log.e("Activity_About", "Version name not found in package", e);
+			Tracer.e("Activity_About", "Version name not found in package");
 		}
-		Log.i("About","Version name = <"+version+">");
+		Tracer.i("About","Version name = <"+version+">");
 		return version;
 	}
 
@@ -90,15 +91,15 @@ public class Activity_About extends Activity{
 		//set a fake code
 		int version = -1;
 		String pn = getPackageName();
-		Log.i("About","Package name = <"+pn+">");
+		Tracer.i("About","Package name = <"+pn+">");
 		try {
 			//get versionCode from AndroidManifest.xml
 			PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
 			version = pi.versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
-			Log.e("Activity_About", "Version number not found in package", e);
+			Tracer.e("Activity_About", "Version number not found in package");
 		}
-		Log.i("About","Version value = <"+version+">");
+		Tracer.i("About","Version value = <"+version+">");
 		return version;
 	}
 }

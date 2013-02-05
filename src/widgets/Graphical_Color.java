@@ -33,7 +33,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -151,7 +151,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		
 		String[] model = model_id.split("\\.");
 		type = model[0];
-		Log.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
+		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
 		
 		//panel with border
 		background = new LinearLayout(context);
@@ -355,7 +355,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
-					Log.d(mytag,"Handler receives a request to die " );
+					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					
@@ -413,8 +413,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 							g=((argb>>8)&0xFF);
 							b=((argb)&0xFF);
 							Color.colorToHSV(argb, hsv);
-							//Log.d(mytag,"Handler ==> RGB values after process = <"+r+"> <"+g+"> <"+b+">" );
-							//Log.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
+							//Tracer.d(mytag,"Handler ==> RGB values after process = <"+r+"> <"+g+"> <"+b+">" );
+							//Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
 							
 							//Seekbars are in range 0-255 : convert HSV values
 							//Hue is an angle : convert it to linear
@@ -434,7 +434,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 							}else if(msg.what == 3) {
 								//Request to refresh screen now....
 								if(updateEngine != null) {
-									Log.d(mytag,"Handler ==> Request to refresh DB values" );
+									Tracer.d(mytag,"Handler ==> Request to refresh DB values" );
 									request_in_process=true;
 									updateEngine.refreshNow();	//Force engine to reload states from server
 								}
@@ -443,7 +443,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 						}
 						
 					} catch (Exception e) {
-						Log.e(mytag, "Handler error for device "+wname);
+						Tracer.e(mytag, "Handler error for device "+wname);
 						e.printStackTrace();
 					}
 				}
@@ -528,19 +528,19 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			if(seekBar.getProgress()<20){
 				seekBar.setProgress(0);
 				switch_state=false;
-				Log.i("Graphical_Color","Change switch to OFF" );
+				Tracer.i("Graphical_Color","Change switch to OFF" );
 			}else{
 				seekBar.setProgress(100);
 				switch_state=true;
 				LoadSelections();
-				Log.i("Graphical_Color","Change switch to ON" );
+				Tracer.i("Graphical_Color","Change switch to ON" );
 			}
 			new CommandeThread().execute();		//And send switch_state to Domogik
 			
 		} else {
 			state_progress = seekBar.getProgress();
 			SaveSelections();
-			Log.i("Graphical_Color","End of change : new rgb value =  #"+argbS );
+			Tracer.i("Graphical_Color","End of change : new rgb value =  #"+argbS );
 			if(seekBarOnOff.getProgress() > 50)
 				if(switch_state)
 					new CommandeThread().execute();		//send new color
@@ -576,7 +576,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				
 			updating=1;
 			
-			Log.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
+			Tracer.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
 			request_in_process = true;
 			
 			JSONObject json_Ack = Rest_com.connect(Url2send);
@@ -589,7 +589,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					e.printStackTrace();
 				}
 				if(ack==false){
-					Log.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 					handler.sendEmptyMessage(2);
 				} else {
 					// TODO Try to refresh immediatly screen....
@@ -613,10 +613,10 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putInt("COLORBRIGHTNESS",seekBarRGBYBar.getProgress());
 		prefEditor.commit();
 		/*
-		Log.i("Graphical_Color", "SaveSelections()");
-		Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
-		Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
-		Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+		Tracer.i("Graphical_Color", "SaveSelections()");
+		Tracer.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
+		Tracer.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
+		Tracer.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
 		*/
 	}
 
@@ -625,23 +625,23 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION",255));
 		seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS",255));
 		/*
-		Log.i("Graphical_Color", "LoadSelections()");
-		Log.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
-		Log.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
-		Log.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+		Tracer.i("Graphical_Color", "LoadSelections()");
+		Tracer.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
+		Tracer.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
+		Tracer.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
 		*/
 	}
 	public boolean onTouch(View arg0, MotionEvent arg1) {
-		Log.i("Graphical_Color", "Touch....");
+		Tracer.i("Graphical_Color", "Touch....");
 		if(featurePan2.getVisibility()== INVISIBLE){
 			background.addView(featurePan2);
 			featurePan2.setVisibility(VISIBLE);
-			Log.i("Graphical_Color", "FeaturePan2 set to VISIBLE");
+			Tracer.i("Graphical_Color", "FeaturePan2 set to VISIBLE");
 		}
 		else{
 			background.removeView(featurePan2);
 			featurePan2.setVisibility(INVISIBLE);
-			Log.i("Graphical_Color", "FeaturePan2 set to INVISIBLE");
+			Tracer.i("Graphical_Color", "FeaturePan2 set to INVISIBLE");
 		}
 		return false;
 	}
@@ -656,20 +656,20 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			public void run() {
 				Runnable myTH = null;
 				Handler loc_handler = handler;
-				//Log.e(mytag, "Create Runnable");
+				//Tracer.e(mytag, "Create Runnable");
 				myTH = new Runnable() {
 					public void run() {
 						
 					try {
 							if(getWindowVisibility()==0){
-								//Log.e(mytag, "Execute UpdateThread");
+								//Tracer.e(mytag, "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								Log.e(mytag, "UpdateTimer : Destroy runnable");
+								Tracer.e(mytag, "UpdateTimer : Destroy runnable");
 								//this.finalize();
 							}
 						} catch (Exception e) {
@@ -680,19 +680,19 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					} // Runnable run method
 				}; //Runnable 
 				if((myTH != null) && (loc_handler != null)) {
-					//Log.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
+					//Tracer.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
 					try {
 						loc_handler.post(myTH);
 					} catch (Exception e) {
-						Log.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+						Tracer.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 						e.printStackTrace();
 					}
 				} else {
-					Log.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
+					Tracer.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
 				}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e(mytag,"Init timer for Device : "+this.dev_id);
+		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);
 		doAsynchronousTask.run();		//For an immediate update
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
@@ -702,23 +702,23 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		@Override
 		protected Void doInBackground(Void... params) {
 			try{
-				//Log.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname);
+				//Tracer.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname);
 				if(updating<1){
 					Bundle b = new Bundle();
 					String result = domodb.requestFeatureState(dev_id, state_key);
 					if(result != null) {
-						Log.d(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname+" Value = "+result);
+						Tracer.d(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname+" Value = "+result);
 						b.putString("message", result);
 						msg = new Message();
 						msg.setData(b);
 						handler.sendMessage(msg);
 					} else {
-						Log.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+wname+" (No value!)");
+						Tracer.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+wname+" (No value!)");
 					}
 				}
 				updating--;
 			}catch(Exception e){
-				Log.e(mytag, "error : request feature state= "+wname);
+				Tracer.e(mytag, "error : request feature state= "+wname);
 			}
 			return null;
 		}
@@ -733,14 +733,14 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

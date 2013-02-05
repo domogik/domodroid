@@ -30,7 +30,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -171,14 +171,14 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			//domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

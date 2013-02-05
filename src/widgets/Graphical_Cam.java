@@ -30,7 +30,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -131,7 +131,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 				Intent intent = new Intent(context,Activity_Cam.class);
 				Bundle b = new Bundle();
 				b.putString("url", url);
-				Log.e("tag",""+url);
+				Tracer.e("tag",""+url);
 				b.putString("name",name_cam);
 				intent.putExtras(b);
 				context.startActivity(intent);
@@ -149,7 +149,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			//don't work looking for dev_id??
 			//DomodroidDB.updateFeatureCustomname(id,result);
 			}
@@ -157,7 +157,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

@@ -27,7 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -146,7 +146,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		listeMap.setAdapter(adapter_map);
 		listeMap.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.d("Activity_Map.onclick","Map selected at Position = "+position);
+				Tracer.d("Activity_Map.onclick","Map selected at Position = "+position);
 				if((position < listItem.size()) && (position > -1) ) {
 					mapView.setCurrentFile(position);
 					mapView.initMap();
@@ -300,7 +300,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	}
 	private void startDBEngine() {
-		Log.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
+		Tracer.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
@@ -313,7 +313,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Log.e("Activity_Map", "onPause");
+		Tracer.e("Activity_Map", "onPause");
 		if(mapView != null)
 			mapView.stopThread();
 		mapView=null;
@@ -335,14 +335,14 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.e("ActivityMap.onDestroy","??????????????????????");
+		Tracer.e("ActivityMap.onDestroy","??????????????????????");
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
 		}
 	}
 	public void onPanelClosed(Sliding_Drawer panel) {
-		Log.e("ActivityMap.onPanelClosed","??????????????????????");
+		Tracer.e("ActivityMap.onPanelClosed","??????????????????????");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
@@ -351,7 +351,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	public void onPanelOpened(Sliding_Drawer panel) {
-		Log.e("ActivityMap.onPanelOpened","??????????????????????");
+		Tracer.e("ActivityMap.onPanelOpened","??????????????????????");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
 	}
@@ -409,7 +409,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				if(list_usable_files.isEmpty()){
 					Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 				}else{
-					Log.e("Activity_Map","request to clear widgets");
+					Tracer.e("Activity_Map","request to clear widgets");
 					mapView.clear_Widgets();
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);					
@@ -424,7 +424,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		Log.d("Activity_Map","onKeyDown keyCode = "+keyCode);
+		Tracer.d("Activity_Map","onKeyDown keyCode = "+keyCode);
 		if(keyCode==82 && !topPanel.isOpen()){
 			bottomPanel.setOpen(true, true);
 			panel_button.setVisibility(View.VISIBLE);

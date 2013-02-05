@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.util.Log;
+import misc.Tracer;
 import android.webkit.WebChromeClient.CustomViewCallback;
 
 public class DmdContentProvider extends ContentProvider {
@@ -134,7 +134,7 @@ public class DmdContentProvider extends ContentProvider {
 		// To erase all table contents
 		int uriType = sURIMatcher.match(uri);
 		if(uriType == UPGRADE_FEATURE_STATE){
-			Log.d("DmdContentProvider","Cleaning tables content");
+			Tracer.d("DmdContentProvider","Cleaning tables content");
 			bdd = mDB.getWritableDatabase();
 			bdd.execSQL("delete from table_area where 1=1");
 			bdd.execSQL("delete from table_room where 1=1");
@@ -174,16 +174,16 @@ public class DmdContentProvider extends ContentProvider {
 			bdd.insert("table_area", null, values);
 			break;
 		case CLEAR_AREA:
-			Log.e("DmdContentProvider","Clear areas table");
+			Tracer.e("DmdContentProvider","Clear areas table");
 			mDB.getWritableDatabase().execSQL("delete from table_area where 1=1");
 			break;
 		
 		case INSERT_ROOM:
 			rowid = mDB.getWritableDatabase().insert("table_room", null, values);
-			Log.d("DmdContentProvider","Inserted room ("+rowid+") "+values.getAsInteger("id")+" "+values.getAsString("name"));
+			Tracer.d("DmdContentProvider","Inserted room ("+rowid+") "+values.getAsInteger("id")+" "+values.getAsString("name"));
 			break;
 		case CLEAR_ROOM:
-			Log.e("DmdContentProvider","Clear rooms table");
+			Tracer.e("DmdContentProvider","Clear rooms table");
 			mDB.getWritableDatabase().execSQL("delete from table_room where 1=1");
 			break;
 		
@@ -191,7 +191,7 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().insert("table_icon", null, values);
 			break;
 		case CLEAR_ICON:
-			Log.e("DmdContentProvider","Clear icons table");
+			Tracer.e("DmdContentProvider","Clear icons table");
 			mDB.getWritableDatabase().execSQL("delete from table_icon where 1=1");
 			break;
 		
@@ -199,7 +199,7 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().insert("table_feature", null, values);
 			break;
 		case CLEAR_FEATURE:
-			Log.e("DmdContentProvider","Clear feature table");
+			Tracer.e("DmdContentProvider","Clear feature table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature where 1=1");
 			break;
 		
@@ -207,7 +207,7 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().insert("table_feature_association", null, values);
 			break;
 		case CLEAR_FEATURE_ASSOCIATION:
-			Log.e("DmdContentProvider","Clear feature_association table");
+			Tracer.e("DmdContentProvider","Clear feature_association table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature_association where 1=1");
 			break;
 		
@@ -221,7 +221,7 @@ public class DmdContentProvider extends ContentProvider {
 			//it removes them from the table_feature_map table in DB.
 			String[] map_name = new String[1] ;
 			map_name[0] = values.getAsString("map");
-			Log.e("DmdContentProvider","Clear widgets from map : "+values.getAsString("map"));
+			Tracer.e("DmdContentProvider","Clear widgets from map : "+values.getAsString("map"));
 			mDB.getWritableDatabase().delete("table_feature_map", "map=?", map_name);
 			break;
 		//Add a new select case to remove only one widget on map
@@ -229,7 +229,7 @@ public class DmdContentProvider extends ContentProvider {
 		case CLEAR_one_FEATURE_MAP:
 			String[] id_name = new String[1] ;
 			id_name[0] = values.getAsString("id");
-			Log.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
+			Tracer.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
 			//need to be adapt to remove by id on only current map
 			//currently it will remove by id in whole table
 			mDB.getWritableDatabase().execSQL("delete from table_feature_map where id="+id_name[0]);
@@ -242,14 +242,14 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().insert("table_feature_state", null, values);
 			break;
 		case CLEAR_FEATURE_STATE:
-			Log.e("DmdContentProvider","Clear feature_state table");
+			Tracer.e("DmdContentProvider","Clear feature_state table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature_state where 1=1");
 			break;
 		case UPDATE_FEATURE_CUSTOM_NAME:
 			//values contains for example "id= 3 customname=blablabla"
-			Log.d("DMDContentProvider.update","try to updated feature where "+values);
+			Tracer.d("DMDContentProvider.update","try to updated feature where "+values);
 			//mDB.getWritableDatabase().execSQL("INSERT OR REPLACE INTO table_feature", values , "", customname);
-			Log.e("DmdContentProvider","Insert Custom name");
+			Tracer.e("DmdContentProvider","Insert Custom name");
 			break;
 		
 		default:
@@ -273,13 +273,13 @@ public class DmdContentProvider extends ContentProvider {
 			cursor=mDB.getReadableDatabase().rawQuery(
 					"SELECT * FROM table_area "
 					,null);
-			Log.d("DmdContentProvider","Query on table_area return "+cursor.getCount()+" rows");
+			Tracer.d("DmdContentProvider","Query on table_area return "+cursor.getCount()+" rows");
 			break;
 		case REQUEST_ROOM:
 			queryBuilder.setTables("table_room");
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
 			
-			//Log.d("DmdContentProvider","Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
+			//Tracer.d("DmdContentProvider","Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
 			break;
 		case REQUEST_ICON:
 			queryBuilder.setTables("table_icon");
@@ -323,9 +323,9 @@ public class DmdContentProvider extends ContentProvider {
 		case UPDATE_FEATURE_STATE:
 			String id = selectionArgs[0];
 			String skey = selectionArgs[1];
-			Log.d("DMDContentProvider.update","try to updated feature_state with device_id = "+id+" skey = "+skey+" selection="+selection);
+			Tracer.d("DMDContentProvider.update","try to updated feature_state with device_id = "+id+" skey = "+skey+" selection="+selection);
 			items=mDB.getWritableDatabase().update("table_feature_state", values, selection,selectionArgs);
-			Log.d("DMDContentProvider.update","Updated rows : "+items);
+			Tracer.d("DMDContentProvider.update","Updated rows : "+items);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);

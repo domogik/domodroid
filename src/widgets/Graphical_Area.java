@@ -25,7 +25,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;

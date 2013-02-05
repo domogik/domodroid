@@ -37,7 +37,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -99,7 +99,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		this.activate=false;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
-		Log.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
 		domodb = new DomodroidDB(context);
 		domodb.owner="Graphical_Info("+dev_id+")";
 		//panel with border
@@ -124,7 +124,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		Log.e("Graphical_Info Frame", "Get icone for usage : "+usage);
+		Tracer.e("Graphical_Info Frame", "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setOnTouchListener(this);
 
@@ -218,7 +218,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
-					Log.d(mytag,"Handler receives a request to die " );
+					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -245,12 +245,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
 						else value.setText(msg.getData().getString("message"));
-						Log.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
+						Tracer.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
 						value.setAnimation(animation);
 					} catch (Exception e) {
 						// It's probably a String that could'nt be converted to a float
 						value.setText(msg.getData().getString("message"));
-						//Log.e(mytag, "handler error device "+wname);
+						//Tracer.e(mytag, "handler error device "+wname);
 						//e.printStackTrace();
 					}
 				}
@@ -323,19 +323,19 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 
 			@Override
 			public void run() {
-				//Log.e(mytag, "TimerTask.run : Create Runnable");
+				//Tracer.e(mytag, "TimerTask.run : Create Runnable");
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
 							if(getWindowVisibility()== 0){
-								//Log.e(mytag, "update Timer : Execute UpdateThread");
+								//Tracer.e(mytag, "update Timer : Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
 								if(timer != null) {
 									timer.cancel();
 								}
-								//Log.d(mytag, "update Timer : No UpdateThread started...");
+								//Tracer.d(mytag, "update Timer : No UpdateThread started...");
 								//this.finalize();
 							}
 						} catch (Exception e) {
@@ -345,7 +345,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						}
 					} // Runnable run method
 				}; //Runnable 
-				//Log.e(mytag,"TimerTask.run : Queuing Runnable");	
+				//Tracer.e(mytag,"TimerTask.run : Queuing Runnable");	
 				try {
 					handler.post(myTH);
 				} catch (Exception e) {
@@ -353,7 +353,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e(mytag,"Init timer for Device : "+this.dev_id);	
+		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -362,7 +362,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			//Log.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+			//Tracer.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
 			Bundle b = new Bundle();
 			String state = domodb.requestFeatureState(dev_id, state_key);
 			if(state != null) {
@@ -424,14 +424,14 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

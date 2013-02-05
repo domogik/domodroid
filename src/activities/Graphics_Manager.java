@@ -19,7 +19,6 @@ package activities;
 
 import org.domogik.domodroid.R;
 
-import android.util.Log;
 
 public class Graphics_Manager {
 

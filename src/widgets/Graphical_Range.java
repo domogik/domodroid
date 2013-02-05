@@ -36,7 +36,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -199,7 +199,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
-					Log.d("Graphical_Range","Handler receives a request to die " );
+					Tracer.d("Graphical_Range","Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -217,12 +217,12 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						}else if(msg.what==valueMax){
 							state.setText("State : "+100+"%");
 						}
-						Log.e("Graphical_Range", "UIThread handler : Value "+msg.what+" refreshed for device "+wname);
+						Tracer.e("Graphical_Range", "UIThread handler : Value "+msg.what+" refreshed for device "+wname);
 						
 						state.setAnimation(animation);
 						new SBAnim(seekBarVaria.getProgress(),msg.what).execute();
 					} catch (Exception e) {
-						Log.e("handler error", "device "+wname);
+						Tracer.e("handler error", "device "+wname);
 						e.printStackTrace();
 					}
 				}
@@ -269,12 +269,12 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 			@Override
 			public void run() {
-				Log.e("TimerTask.run", "Create Runnable");
+				Tracer.e("TimerTask.run", "Create Runnable");
 				Runnable myTH = new Runnable() {
 					public void run() {
 					try {
 							if(getWindowVisibility()==0 ){
-								//Log.e("update Timer", "Execute UpdateThread");
+								//Tracer.e("update Timer", "Execute UpdateThread");
 								new UpdateThread().execute();
 								
 							}else{
@@ -282,7 +282,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 								if(timer != null) {
 									timer.cancel();
 								}
-								//Log.e("update Timer", "Destroy runnable");
+								//Tracer.e("update Timer", "Destroy runnable");
 								//this.finalize();
 							}
 						} catch (Exception e) {
@@ -292,7 +292,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						}
 					} // Runnable run method
 				}; //Runnable 
-				Log.e("TimerTask.run","Queuing Runnable for Device : "+dev_id+" "+state_key+" "+wname);	
+				Tracer.e("TimerTask.run","Queuing Runnable for Device : "+dev_id+" "+state_key+" "+wname);	
 				try {
 					handler.post(myTH);		//Doume : to avoid exception on ICS
 					} catch (Exception e) {
@@ -300,7 +300,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 					}
 			} // TimerTask run method
 		}; //TimerTask 
-		Log.e("updateTimer","Init timer for Device : "+this.dev_id);	
+		Tracer.e("updateTimer","Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
 
@@ -393,14 +393,14 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Log.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
 			domodb.updateFeatureCustomname(dev_id,result);
 			}
 		});
 		
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Log.e("Graphical_Boolean", "Customname Canceled.");
+			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
 		  }
 		});
 		alert.show();

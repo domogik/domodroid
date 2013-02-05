@@ -34,7 +34,7 @@ import android.graphics.Picture;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -109,7 +109,7 @@ public class MapView extends View {
 		screen_width = display.getWidth();
 	}
 	public void  onWindowVisibilityChanged (int visibility) {
-		Log.i(mytag,"Visibility changed to : "+visibility);
+		Tracer.i(mytag,"Visibility changed to : "+visibility);
 		if(visibility == View.VISIBLE)
 			this.activated = true;
 		else
@@ -123,7 +123,7 @@ public class MapView extends View {
 	}
 	public void clear_Widgets(){
 		String map_name=files.elementAt(currentFile);
-		Log.i(mytag,"Request to clear all widgets from : "+map_name);
+		Tracer.i(mytag,"Request to clear all widgets from : "+map_name);
 		domodb.cleanFeatureMap(map_name);
 		initMap();
 		
@@ -235,7 +235,7 @@ public class MapView extends View {
 			if(featureMap != null) {
 				states = featureMap.getCurrentState();
 			} else {
-				Log.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
+				Tracer.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
 				return;
 			}
 			//Could not be null because it is set to "" 7 rows up
@@ -257,11 +257,11 @@ public class MapView extends View {
 								(featureMap.getPosy()*currentScale)-drawable.getWidth()/2, 
 								paint_map);
 					} else {
-						Log.e("MapView","No drawable available for object");
+						Tracer.e("MapView","No drawable available for object");
 						return;
 					}
 				} catch (Exception e) {
-					Log.e("MapView","cannot draw object ! ! ! !");
+					Tracer.e("MapView","cannot draw object ! ! ! !");
 					return;
 				}
 				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
@@ -276,9 +276,9 @@ public class MapView extends View {
 						String label = featureMap.getDescription();
 						if(label.length() < 1)
 							label = featureMap.getDevice_usage_id();
-						//Log.i(mytag,"label = "+label);
+						//Tracer.i(mytag,"label = "+label);
 						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						
 					}
 				
@@ -308,12 +308,12 @@ public class MapView extends View {
 								if(label == null)
 									label = "";
 								
-								//Log.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+								//Tracer.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 								canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
 										paint_text);
 								paint_text.setTextSize(15);
-								//Log.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+								//Tracer.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 								canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y+6, 
 										paint_text);
@@ -326,7 +326,7 @@ public class MapView extends View {
 						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
 						canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 					}
 
 				}else if(featureMap.getValue_type().equals("trigger")){
@@ -334,7 +334,7 @@ public class MapView extends View {
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
-						//Log.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						
 					}
 				}
@@ -565,7 +565,7 @@ public class MapView extends View {
 				//handler.post(new Runnable() {	//Doume change
 					public void run() {
 						if(activated){
-							//Log.i(mytag, "update Timer : Execute UpdateThread");
+							//Tracer.i(mytag, "update Timer : Execute UpdateThread");
 							try {
 								new UpdateThread().execute();
 							} catch (Exception e) {
@@ -585,7 +585,7 @@ public class MapView extends View {
 			}
 		};
 		//timer.schedule(doAsynchronousTask, 0, 3000);
-		Log.i(mytag, "updateTimer : Arming timer of "+update+" seconds");
+		Tracer.i(mytag, "updateTimer : Arming timer of "+update+" seconds");
 		timer.schedule(doAsynchronousTask, 0, update * 1000);
 	}
 
@@ -593,13 +593,13 @@ public class MapView extends View {
 
 		@Override
 		protected Void doInBackground(Void... p) {
-			//Log.i(mytag, "UpdateThread call on timer !");
+			//Tracer.i(mytag, "UpdateThread call on timer !");
 			
 			// Added by Doume to correctly release resources when exiting
 			
 			if(! activated) {
 				
-				Log.i(mytag, "UpdateThread : timer frozen...");
+				Tracer.i(mytag, "UpdateThread : timer frozen...");
 				
 			} else {
 			
@@ -607,10 +607,10 @@ public class MapView extends View {
 				for (Entity_Map featureMap : listFeatureMap) {
 					String state = domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key());
 					if(state != null) {
-						Log.i(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
+						Tracer.i(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
 						featureMap.setCurrentState(state);
 					} else {
-						Log.i(mytag, "UpdateThread : device :"+featureMap.getDevId()+" seems to be a zombie !");
+						Tracer.i(mytag, "UpdateThread : device :"+featureMap.getDevId()+" seems to be a zombie !");
 						featureMap.setalive(false);
 					}
 				}

@@ -26,7 +26,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -102,7 +102,7 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 
 		background.addView(imgPan);
 		background.addView(infoPan);
-		//Log.d("Graphical_Room("+id+")","creating view for "+name_room+" "+description_room);
+		//Tracer.d("Graphical_Room("+id+")","creating view for "+name_room+" "+description_room);
 		
 		this.addView(background);
 	}

@@ -21,7 +21,7 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import misc.Tracer;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -101,7 +101,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			@Override
 			public void handleMessage(Message msg) {
 				if(! activate) {
-					Log.d(mytag,"Handler receives a request to die " );
+					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					myself.setVisibility(GONE);
 					if(container != null) {
@@ -179,7 +179,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	}
 	
 	public void  onWindowVisibilityChanged (int visibility) {
-		Log.i(mytag,"Visibility changed to : "+visibility);
+		Tracer.i(mytag,"Visibility changed to : "+visibility);
 		if(visibility == View.VISIBLE) {
 			this.activate = true;
 			display_dates();
@@ -291,7 +291,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
-		Log.i(mytag,"drawGraph limit = "+limit+" , step = "+step+"Array size = "+values.size());
+		Tracer.i(mytag,"drawGraph limit = "+limit+" , step = "+step+"Array size = "+values.size());
 		for(int i=0; i<values.size();i++){
 			if(limit == 6) {
 				top = values.get(i).get(4).intValue();	//get the hour
@@ -492,7 +492,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							if(activate){
 								new UpdateThread().execute();
 							}else{
-								//Log.i(mytag+"("+dev_id+")","update Timer : Destroy runnable");
+								//Tracer.i(mytag+"("+dev_id+")","update Timer : Destroy runnable");
 								timer.cancel();
 								this.finalize();
 							}
@@ -504,7 +504,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					}}
 				//)
 				;
-				//Log.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
+				//Tracer.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
 				try {
 					handler.post(myTH);		//Doume : to avoid Exception on ICS
 					} catch (Exception e) {
@@ -531,7 +531,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				startTimestamp=time_start.getTime()/1000;
 				
 				
-				Log.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				JSONObject json_GraphValues = null;
 				try {
 					json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
@@ -544,7 +544,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				} catch (Exception e) {
 					return null;
 				}
-				//Log.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
+				//Tracer.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
 				if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
 					//That seems to be a zombie
 					loaded=false;
@@ -556,7 +556,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 
 				//minf=(float)valueArray.getJSONArray(0).getDouble(limit-1);
 				maxf=minf=0;
-				//Log.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
+				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
 
 				for (int i =0; i < valueArray.length(); i++){
 					// Create a vector with all entry components
@@ -584,7 +584,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 						date_value.set(Calendar.WEEK_OF_YEAR, (int)valueArray.getJSONArray(i).getDouble(1));
 						Date loc_date = new Date();
 						loc_date.setTime(date_value.getTimeInMillis());
-						//Log.d(mytag,"Case week : Inserting value at "+sdf.format(loc_date));
+						//Tracer.d(mytag,"Case week : Inserting value at "+sdf.format(loc_date));
 						vect.addElement((float)valueArray.getJSONArray(i).getDouble(0));	//year
 						vect.addElement((float)loc_date.getMonth());	// month
 						vect.addElement((float)valueArray.getJSONArray(i).getDouble(1));	//week
@@ -623,11 +623,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							loc_hour = (int)valueArray.getJSONArray(i).getDouble(4);
 							loc_hour_next = (int)valueArray.getJSONArray(i+1).getDouble(4);
 							loc_value = (float)valueArray.getJSONArray(i).getDouble(5);
-							//Log.d(mytag,"Case hour : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_hour+" - "+loc_value);
+							//Tracer.d(mytag,"Case hour : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_hour+" - "+loc_value);
 
 							if(loc_hour != 23 && (loc_hour < loc_hour_next) ) {
 								//no day change
-								//Log.d(mytag,"Case hour 1 ");
+								//Tracer.d(mytag,"Case hour 1 ");
 
 								if((loc_hour+1) != loc_hour_next) {
 									//ruptur : simulate next missing steps
@@ -640,16 +640,16 @@ public class Graphical_Info_View extends View implements OnClickListener {
 										vect2.addElement((float)loc_hour +k);	//hour
 										vect2.addElement(loc_value);	//value
 										values.add(vect2);
-										//Log.e(mytag,"Case 1 : added : 0 - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+(loc_hour+k)+" - "+loc_value);
+										//Tracer.e(mytag,"Case 1 : added : 0 - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+(loc_hour+k)+" - "+loc_value);
 										avgf+=loc_value;	//value
 									}
 								}
 							} else {
-								//Log.d(mytag,"Case hour 2 ");
+								//Tracer.d(mytag,"Case hour 2 ");
 								//if((loc_hour ==23) && (loc_hour_next != 0) ){
 								if( loc_hour ==23 ){
 									// day change : simulate missing steps
-									//Log.d(mytag,"Case hour 2a ");
+									//Tracer.d(mytag,"Case hour 2a ");
 
 									for (int k=0; k < loc_hour_next ; k++){
 										Vector<Float> vect2 = new Vector<Float>();
@@ -660,7 +660,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 										vect2.addElement((float)k);			//simulated hour
 										vect2.addElement(loc_value);	//value
 										values.add(vect2);
-										//Log.e(mytag,"Case 2 : added : 0 - "+loc_month+" - "+loc_week+" - "+(loc_day+1)+" - "+k+" - "+loc_value);
+										//Tracer.e(mytag,"Case 2 : added : 0 - "+loc_month+" - "+loc_week+" - "+(loc_day+1)+" - "+k+" - "+loc_value);
 										avgf+=loc_value;	//value
 									}
 								}
@@ -675,16 +675,16 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							loc_day_next = (int)valueArray.getJSONArray(i+1).getDouble(3);
 							loc_hour = 0;
 							loc_value = (float)valueArray.getJSONArray(i).getDouble(4);
-							//Log.d(mytag,"Case day : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_value);
+							//Tracer.d(mytag,"Case day : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_value);
 
 							//if(loc_day != 31 && (loc_day < loc_day_next) ) {
 							if(loc_day < loc_day_next ) {
 								// month continues...
-								//Log.d(mytag,"Case day 1 ");
+								//Tracer.d(mytag,"Case day 1 ");
 
 								if((loc_day+1) != loc_day_next){
 									// but a hole exists : simulate missing days
-									//Log.d(mytag,"Case day 1a ");
+									//Tracer.d(mytag,"Case day 1a ");
 									for (int k=1; k < (loc_day_next - loc_day); k++){
 										Vector<Float> vect2 = new Vector<Float>();
 										vect2.addElement(0f);
@@ -699,11 +699,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
 								}
 							} else {
 								// next day being less than current day, month has changed !
-								//Log.d(mytag,"Case day 2 ");
+								//Tracer.d(mytag,"Case day 2 ");
 								
 								//if((loc_day == 31) && (loc_day_next != 0) ){
 								if( loc_day_next != 0 ){
-									//Log.d(mytag,"Case day 2a ");
+									//Tracer.d(mytag,"Case day 2a ");
 									
 									for (int k=0; k < loc_day_next ; k++){
 										Vector<Float> vect2 = new Vector<Float>();
@@ -715,7 +715,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 										vect2.addElement((float)loc_hour); // = 0
 										vect2.addElement(loc_value);		//value
 										values.add(vect2);
-										//Log.d(mytag,"Case day 2a with k="+k);
+										//Tracer.d(mytag,"Case day 2a with k="+k);
 										
 										avgf+=loc_value;	//value
 									}
@@ -731,7 +731,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							//loc_date.setYear((int)valueArray.getJSONArray(i).getDouble(0));
 							//loc_date.setMonth(date_value.get(Calendar.MONTH));
 							//loc_date.setDate(date_value.get(Calendar.DAY_OF_MONTH));
-							//Log.d(mytag,"Case week : process :"+sdf.format(loc_date));
+							//Tracer.d(mytag,"Case week : process :"+sdf.format(loc_date));
 							// range of 1 year (average per week)
 							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
 							loc_month=loc_date.getMonth();	// month
@@ -741,7 +741,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							loc_day_next = 0;
 							loc_hour = loc_date.getHours();
 							loc_value = (float)valueArray.getJSONArray(i).getDouble(2);
-							//Log.d(mytag,"Case week : "+loc_year+" - "+loc_week+" - "+loc_value);
+							//Tracer.d(mytag,"Case week : "+loc_year+" - "+loc_week+" - "+loc_value);
 
 							if(loc_week != 52 && (loc_week < loc_week_next) ) {
 								if((loc_week+1) != loc_week_next){
@@ -829,7 +829,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				time_start.setTime(new_end);
 				
 			}
-			//Log.i(mytag,"type prev on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			//Tracer.i(mytag,"type prev on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
 			break;
 		case 0 :
 			//user requires the 'Next' period
@@ -851,7 +851,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				new_start = (long)new_timestamp;
 				time_start.setTime(new_start);
 			}
-			//Log.i(mytag,"type next on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			//Tracer.i(mytag,"type next on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
 			break;
 		default :
 			//period_type indicates the number of days to graph
@@ -861,7 +861,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			time_end.setTime(new_end_time);	//Get actual system time
 			new_end_time -= duration;
 			time_start.setTime(new_end_time);
-			Log.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			Tracer.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
 			break;
 		}
 		// time_start & time_end are set....

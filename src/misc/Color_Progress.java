@@ -7,7 +7,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import misc.Tracer;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;

@@ -230,6 +230,7 @@ public class DmdContentProvider extends ContentProvider {
 			String[] id_name = new String[1] ;
 			id_name[0] = values.getAsString("id");
 			Tracer.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
+			//TODO remove only one widget on map
 			//need to be adapt to remove by id on only current map
 			//currently it will remove by id in whole table
 			mDB.getWritableDatabase().execSQL("delete from table_feature_map where id="+id_name[0]);
@@ -246,8 +247,9 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().execSQL("delete from table_feature_state where 1=1");
 			break;
 		case UPDATE_FEATURE_NAME:
+			//TODO rename a device
 			//values contains for example "id= 3 customname=blablabla"
-			Tracer.d("DMDContentProvider.update","try to updated feature where "+values);
+			//Tracer.d("DMDContentProvider.update","try to updated name for id="+id1+" with value="+value);
 			//mDB.getWritableDatabase().execSQL("INSERT OR REPLACE INTO table_feature", values , "", name);
 			Tracer.e("DmdContentProvider","Modifiy the name");
 			break;

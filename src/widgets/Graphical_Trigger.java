@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -62,9 +63,11 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	//private Boolean activate=false;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
+	private int dev_id;
+	private DomodroidDB domodb;
 	
 
-	public Graphical_Trigger(Context context, 
+	public Graphical_Trigger(Activity context, 
 			String address, String name, int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
 			String model_id, int widgetSize) throws JSONException {
@@ -73,7 +76,10 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		this.address = address;
 		this.url = url;
 		this.myself=this;
-
+		this.dev_id = dev_id;
+		domodb = new DomodroidDB(context);
+		domodb.owner="Graphical_Trigger("+dev_id+")";
+		
 		//get parameters
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
         if(jparam != null)
@@ -173,9 +179,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
 			Tracer.e("Graphical_Trigger", "Name set to: "+result);
-			//TODO
-			//can't find dev_id
-			//DomodroidDB.updateFeaturename(dev_id,result);
+			domodb.updateFeaturename(dev_id,result);
 			}
 		});
 		

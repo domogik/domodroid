@@ -23,6 +23,7 @@ import org.domogik.domodroid.R;
 
 import database.DomodroidDB;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,19 +53,22 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private ImageView img;
 	private TextView nameDevices;
 	private String name_cam;
-	private int id;
+	private int dev_id;
 	private String url;
 	private Context context;
+	private DomodroidDB domodb;
+	
 
-
-	public Graphical_Cam(Context context,int id,String name, String url,int widgetSize) {
+	public Graphical_Cam(Activity context,int dev_id,String name, String url,int widgetSize) {
 		super(context);
-		this.id = id;
+		this.dev_id = dev_id;
 		this.name_cam = name;
 		this.url = url;
 		this.context = context;
 		setOnTouchListener(this);
-
+		domodb = new DomodroidDB(context);
+		domodb.owner="Graphical_Boolean("+dev_id+")";
+		
 		this.setPadding(5, 5, 5, 5);
 
 		//panel with border
@@ -116,7 +120,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	}
 
 	public int getId() {
-		return id;
+		return dev_id;
 	}
 
 	public void setName_cam(String name_cam) {
@@ -150,10 +154,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
 			Tracer.e("Graphical_Cam", "Name set to: "+result);
-			//TODO 
-			//don't work looking for dev_id??
-			//
-			//DomodroidDB.updateFeaturename(id,result);
+			domodb.updateFeaturename(dev_id,result);
 			}
 		});
 		

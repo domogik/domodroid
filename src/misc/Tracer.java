@@ -4,12 +4,13 @@ import java.io.File;
 import android.util.Log;
 
 public class Tracer {
-	// Following booleans define which kind of logging is configured
+	// Following booleans define which kind of log is configured
 	private static Boolean	to_Android = true;
 	private static Boolean	to_txtFile = false;
-	private static String filename = "";
+	private static String filename = null;
+	private static Boolean	filemode = false;		//append by default
 	
-	private File txtFile;
+	private File txtFile = null;
 	
 	public static void d(String tag, String msg) {
 		choose_log(0,tag,msg);
@@ -32,10 +33,22 @@ public class Tracer {
 	 * if filemode == false: write txt file in append mode if filepath exists
 	 */
 	public void set_profile( Boolean system, Boolean txt, String filepath, Boolean filemode) {
-		if(filepath != null)
-			this.filename=filepath;
+		
+		this.filename=filepath;
 		this.to_Android = system;
 		this.to_txtFile = txt;
+		this.filemode = filemode;
+		if(filename == null) {
+			// If no filename given, no log to file, nor in append !
+			to_txtFile = false;
+			this.filemode=false;
+			if(txtFile != null) {
+				txtFile = null;	//close object
+			}
+		} else {
+			// TODO filepath given : try to open it....
+			
+		}
 		
 	}
 	/*

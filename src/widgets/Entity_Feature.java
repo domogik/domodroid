@@ -36,10 +36,9 @@ public class Entity_Feature{
 	private String value_type;
 	private String currentState;
 	private int state;
-	private String customname;
 	
 	
-	public Entity_Feature(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String customname, String state_key, String parameters, String value_type) throws JSONException{
+	public Entity_Feature(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) throws JSONException{
 		this.device_feature_model_id = device_feature_model_id;
 		this.id = id;
 		this.devId = devId;
@@ -51,7 +50,6 @@ public class Entity_Feature{
 		this.state_key = state_key;
 		this.parameters = parameters;
 		this.value_type = value_type;
-		this.customname=customname;
 	}
 
 	public int getId() {
@@ -157,12 +155,5 @@ public class Entity_Feature{
 
 	public void setDevice_type_id(String device_type_id) {
 		this.device_type_id = device_type_id;
-	}
-
-	public String getcustomName() {
-		return customname;
-	}
-	public void setcustomName(String customname) {
-		this.customname = customname;
 	}
 }

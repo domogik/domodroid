@@ -141,7 +141,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	}
 		public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle("Custom Name");
+		alert.setTitle("Rename");
 		alert.setMessage("Set the custom name you want");
 		// Set an EditText view to get user input 
 		final EditText input = new EditText(getContext());
@@ -149,9 +149,11 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
+			Tracer.e("Graphical_Cam", "Name set to: "+result);
+			//TODO 
 			//don't work looking for dev_id??
-			//DomodroidDB.updateFeatureCustomname(id,result);
+			//
+			//DomodroidDB.updateFeaturename(id,result);
 			}
 		});
 		

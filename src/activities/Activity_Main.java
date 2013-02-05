@@ -102,7 +102,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	//private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
 	private CheckBox debugcheckbox; //Debug option Neutralized by Doume
-	private CheckBox customcheckbox; //Custom name option
+	private CheckBox hidecheckbox; //Custom name option
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private int sizeOffset = 300;
@@ -153,7 +153,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//Debug option
 		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox); //neutralized by Doume
 		//Custom name option
-		customcheckbox = (CheckBox)findViewById(R.id.customcheckbox);		
+		hidecheckbox = (CheckBox)findViewById(R.id.hidecheckbox);		
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
@@ -588,7 +588,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//Debug option
 			prefEditor.putBoolean("DEV", debugcheckbox.isChecked()); //neutralized by Doume
 			//Custom name option
-			prefEditor.putBoolean("CUSTOM", customcheckbox.isChecked());
+			prefEditor.putBoolean("HIDE", hidecheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -636,7 +636,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//Debug option
 		debugcheckbox.setChecked(params.getBoolean("DEV",false));	//neutralized by Doume
 		//Custom name option
-		customcheckbox.setChecked(params.getBoolean("CUSTOM",false));
+		hidecheckbox.setChecked(params.getBoolean("HIDE",false));
 	}
 
 

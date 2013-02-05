@@ -220,11 +220,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dip"
-                    android:text="@string/network_Text18"
+                    android:text="@string/network_Text19"
                     android:textColor="#FFFFFF" />
 
                 <CheckBox
-                    android:id="@+id/debugcheckbox"
+                    android:id="@+id/hidecheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 
@@ -232,11 +232,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dip"
-                    android:text="@string/network_Text19"
+                    android:text="@string/network_Text18"
                     android:textColor="#FFFFFF" />
 
                 <CheckBox
-                    android:id="@+id/customcheckbox"
+                    android:id="@+id/debugcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>

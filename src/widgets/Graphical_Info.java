@@ -416,16 +416,16 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	}
 	public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle("Custom Name");
-		alert.setMessage("Set the custom name you want");
+		alert.setTitle("Rename");
+		alert.setMessage("Set the Name you want");
 		// Set an EditText view to get user input 
 		final EditText input = new EditText(getContext());
 		alert.setView(input);
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
-			domodb.updateFeatureCustomname(dev_id,result);
+			Tracer.e("Graphical_info", "Name set to: "+result);
+			domodb.updateFeaturename(dev_id,result);
 			}
 		});
 		

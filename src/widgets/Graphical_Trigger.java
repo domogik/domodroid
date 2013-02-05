@@ -18,6 +18,7 @@
 package widgets;
 
 import rinor.Rest_com;
+import database.DomodroidDB;
 import database.JSONParser;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -163,16 +164,18 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	}
 	public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle("Custom Name");
-		alert.setMessage("Set the custom name you want");
+		alert.setTitle("Rename");
+		alert.setMessage("Set the Name you want");
 		// Set an EditText view to get user input 
 		final EditText input = new EditText(getContext());
 		alert.setView(input);
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton) {
 		String result= input.getText().toString(); 
-			Tracer.e("Graphical_Boolean", "Customname set to: "+result);
-			//domodb.updateFeatureCustomname(dev_id,result);
+			Tracer.e("Graphical_Trigger", "Name set to: "+result);
+			//TODO
+			//can't find dev_id
+			//DomodroidDB.updateFeaturename(dev_id,result);
 			}
 		});
 		

@@ -40,9 +40,8 @@ public class Entity_Map{
 	private int posy;
 	private String map;
 	private Boolean isalive = true;
-	private String customname;
 	
-	public Entity_Map(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String customname, String state_key, String parameters, String value_type, int posx, int posy, String map) throws JSONException{
+	public Entity_Map(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type, int posx, int posy, String map) throws JSONException{
 		this.device_feature_model_id = device_feature_model_id;
 		this.id = id;
 		this.devId = devId;
@@ -58,7 +57,6 @@ public class Entity_Map{
 		this.posy = posy;
 		this.map = map;
 		this.isalive = true;
-		this.customname=customname;
 	}
 
 	public int getId() {
@@ -200,13 +198,6 @@ public class Entity_Map{
 
 	public void setMap(String map) {
 		this.map = map;
-	}
-
-	public String getcustomName() {
-		return customname;
-	}
-	public void setcustomName(String customname) {
-		this.customname = customname;
 	}
 
 }

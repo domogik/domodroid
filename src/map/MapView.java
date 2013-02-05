@@ -356,13 +356,6 @@ public class MapView extends View {
 		if(label.length() < 1)
 			label = feature.getName();
 		
-		//add Custom name option to change label by a custom name if not empty
-		if (params.getBoolean("CUSTOM",false)==true){
-			if (feature.getcustomName()!= null){
-				label = feature.getcustomName();
-			}
-		}
-		
 		//add debug option to change label adding its Id
 		if (params.getBoolean("DEV",false)==true) label = label+" ("+feature.getDevId()+")";	//neutralized by Doume
 		

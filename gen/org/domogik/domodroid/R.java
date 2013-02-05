@@ -285,11 +285,11 @@ containing a value of this type.
         public static final int cancel=0x7f050022;
         public static final int checkbox3=0x7f050012;
         public static final int checkbox4=0x7f050013;
-        public static final int customcheckbox=0x7f050015;
-        public static final int debugcheckbox=0x7f050014;
+        public static final int debugcheckbox=0x7f050015;
         public static final int description=0x7f05003a;
         public static final int domodroid=0x7f050009;
         public static final int frameLayout1=0x7f050024;
+        public static final int hidecheckbox=0x7f050014;
         public static final int home_container=0x7f05000b;
         public static final int image=0x7f05002d;
         public static final int imageView2=0x7f05002a;

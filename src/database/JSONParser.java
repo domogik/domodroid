@@ -87,7 +87,6 @@ public class JSONParser{
 					itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id").toString(),
 					itemArray.getJSONObject(i).getJSONObject("device").getString("description").toString(),
 					itemArray.getJSONObject(i).getJSONObject("device").getString("name").toString(),
-					null,
 					itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("stat_key"),
 					itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("parameters"),
 					itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("value_type"));	

@@ -778,21 +778,27 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onDestroy() {
 		super.onDestroy();
 		this.mWakeLock.release();	// We allow screen shut, now...
-		Log.v("Activity_Main.onDestroy","Stopping WidgetUpdate thread !");
+		Log.v("Activity_Main.onDestroy","Orientation changed : Stopping engines !");
+		this.wAgent=null;
+		widgetHandler=null;
 		if(widgetUpdate != null) {
-			widgetUpdate.stopThread();	// Normally, Exit choice has already stopped this background engine
+			widgetUpdate.cancelEngine();
 			widgetUpdate=null;
 		}
 	}
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.v("Activity_Main.onResume","Try to reactivate  WidgetUpdate thread !");
+		Log.v("Activity_Main.onResume","After orientation changed : Try to reactivate  WidgetUpdate thread !");
+		end_of_init();
+		/*
 		if(widgetUpdate == null)
 			widgetUpdate = new WidgetUpdate(this,sbanim,params);
 		else
 			widgetUpdate.restartThread();	// re-allow timers inside WidgetUpdate background engine
-		
+		Log.v("Activity_Main.onResume","and reload widgets !");
+		this.loadWigets(0,"root");
+		*/
 	}
 
 

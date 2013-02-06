@@ -58,6 +58,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Button add;
 	private Button help;
 	private Button remove;
+	private Button move;
 	private Button remove_all;
 	private Dialog dialog_feature;
 
@@ -215,9 +216,21 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		remove_all.setBackgroundColor(Color.parseColor("#00000000"));
 		remove_all.setOnClickListener(this);
 		
+		move = new Button(this);
+		move.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		move.setPadding(10, 13, 10, 13);
+		move.setText(R.string.map_button2c);
+		move.setTextColor(Color.parseColor("#cfD1D1"));
+		move.setTextSize(15);
+		move.setTag("move");
+		move.setBackgroundColor(Color.parseColor("#00000000"));
+		move.setOnClickListener(this);
+		
+		
 		panel_button.addView(add);
 		panel_button.addView(help);
 		panel_button.addView(remove);
+		panel_button.addView(move);
 		panel_button.addView(remove_all);
 
 
@@ -373,7 +386,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				topPanel.setOpen(false, true);
 			}			
 
-
 		}else if(v.getTag().equals("add")){
 			//Add a widget
 			panel.setOpen(false, true);
@@ -385,6 +397,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				remove.setTextColor(Color.parseColor("#cfD1D1"));
 				mapView.setRemoveMode(false);
 			}
+			
 		}else if(v.getTag().equals("remove")){
 			//case when user want to remove only one widget
 			if(list_usable_files.isEmpty()){
@@ -404,6 +417,28 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					mapView.setRemoveMode(false);
 				}
 			}
+			
+		}else if(v.getTag().equals("move")){
+			//case when user want to move one widget
+			// first step remove, second add the removed widget
+			if(list_usable_files.isEmpty()){
+				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+			}else{
+				if(mapView.isRemoveMode()==false){
+					//if remove mode is select for the first time
+					//Turn menu text color to green
+					move.setTextColor(Color.GREEN);
+					//say Mapview.java to turn on remove mode
+					mapView.setRemoveMode(true);
+				}else{
+					//Remove mode was active, return to normal mode
+					//Turn menu text color back
+					remove.setTextColor(Color.parseColor("#cfD1D1"));
+					//say Mapview.java to turn off remove mode
+					mapView.setRemoveMode(false);
+				}
+			}
+			
 		} else if(v.getTag().equals("remove_all")){
 			//case when user select remove all from menu
 				if(list_usable_files.isEmpty()){

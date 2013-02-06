@@ -430,6 +430,7 @@ containing a value of this type.
         public static final int map_button1=0x7f06001d;
         public static final int map_button2=0x7f06001e;
         public static final int map_button2b=0x7f06001f;
+        public static final int map_button2c=0x7f060072;
         public static final int map_button3=0x7f060021;
         public static final int map_help_text=0x7f060022;
         public static final int map_nothing=0x7f060020;

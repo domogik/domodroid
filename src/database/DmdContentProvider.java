@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
@@ -227,17 +228,18 @@ public class DmdContentProvider extends ContentProvider {
 		//Add a new select case to remove only one widget on map
 		//careful to avoid problem it must be call with id, posx, posy and map
 		case CLEAR_one_FEATURE_MAP:
-			String[] id_name = new String[1] ;
-			id_name[0] = values.getAsString("id");
-			Tracer.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
-			//TODO remove only one widget on map
-			//Read https://developer.am/android/?page=../primefaces/Updating%20data%20already%20in%20the%20database
-			//need to be adapt to remove by id on only current map
-			//currently it will remove by id in whole table
-			mDB.getWritableDatabase().execSQL("delete from table_feature_map where id="+id_name[0]);
-			//need this to delete widget from only current map, but this does'nt work 
-			//mDB.getWritableDatabase().execSQL("delete from table_feature_map where table_feature_map.id = '"+id_name[0] +
-			//"' AND table_feature_map.map = '"+values.getAsString("map")+"' ");
+			//Tracer.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
+			try{
+				//Get a min and max value to be sure not needing a precise click.
+				int posxlow=values.getAsInteger("posx")-20;
+				int posxhigh=values.getAsInteger("posx")+20;
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh);
+				//Tracer.d("DmdContentProvider", "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh);
+				}
+			catch (SQLException e) {
+				Tracer.e("DmdContentProvider", "Error deleting widget: "+e.toString());
+				}
+				
 			break;
 			
 		case INSERT_FEATURE_STATE:
@@ -253,6 +255,18 @@ public class DmdContentProvider extends ContentProvider {
 			//read https://developer.am/android/?page=../primefaces/Updating%20data%20already%20in%20the%20database
 			//Tracer.d("DMDContentProvider.update","try to updated name for id="+id1+" with value="+value);
 			//mDB.getWritableDatabase().execSQL("INSERT OR REPLACE INTO table_feature", values , "", name);
+			//String sql1 =
+			//"UPDATE jobs " +
+			//"SET employer_id = ?, "+
+			//" title = ?, "+
+			//" description = ? "+
+			//"WHERE _id = ? ";
+			//Object[] bindArgs = new Object[]{employer_id, title, description, job_id};
+			//try{
+			//mDB.getWritableDatabase().execSQL(sql1, bindArgs);
+			//} catch (SQLException e) {
+				//Tracer.e("Error writing new job", e.toString());
+			//}
 			Tracer.e("DmdContentProvider","Modifiy the name");
 			break;
 		

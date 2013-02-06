@@ -170,26 +170,29 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	}
 	public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+		//TODO internationalize the title
 		alert.setTitle("Rename");
-		alert.setMessage("Set the Name you want");
+		//TODO internationalize the message
+		alert.setMessage("Set the name you want");
 		// Set an EditText view to get user input 
 		final EditText input = new EditText(getContext());
-		alert.setView(input);
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int whichButton) {
-		String result= input.getText().toString(); 
-			Tracer.e("Graphical_Trigger", "Name set to: "+result);
-			domodb.updateFeaturename(dev_id,result);
-			}
-		});
-		
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
-			  Tracer.e("Graphical_Boolean", "Customname Canceled.");
-		  }
-		});
-		alert.show();
-	    return false;
+			alert.setView(input);
+			//TODO internationalize the button
+			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					String result= input.getText().toString(); 
+					Tracer.e("Graphical_Trigger", "Name set to: "+result);
+					domodb.updateFeaturename(dev_id,result);
+				}
+			});
+			//TODO internationalize the button
+			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					Tracer.e("Graphical_Trigger", "Customname Canceled.");
+				}
+			});
+			alert.show();
+			return false;
 	}
 }
 

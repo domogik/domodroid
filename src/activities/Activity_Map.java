@@ -241,6 +241,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		//TODO internationalize the title
 		builder.setTitle("Select a Widget");
 
 		//get feature list

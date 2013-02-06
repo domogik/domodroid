@@ -239,7 +239,6 @@ public class DmdContentProvider extends ContentProvider {
 			catch (SQLException e) {
 				Tracer.e("DmdContentProvider", "Error deleting widget: "+e.toString());
 				}
-				
 			break;
 			
 		case INSERT_FEATURE_STATE:
@@ -250,24 +249,14 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().execSQL("delete from table_feature_state where 1=1");
 			break;
 		case UPDATE_FEATURE_NAME:
-			//TODO rename a device
-			//values contains for example "id= 3 customname=blablabla"
-			//read https://developer.am/android/?page=../primefaces/Updating%20data%20already%20in%20the%20database
-			//Tracer.d("DMDContentProvider.update","try to updated name for id="+id1+" with value="+value);
-			//mDB.getWritableDatabase().execSQL("INSERT OR REPLACE INTO table_feature", values , "", name);
-			//String sql1 =
-			//"UPDATE jobs " +
-			//"SET employer_id = ?, "+
-			//" title = ?, "+
-			//" description = ? "+
-			//"WHERE _id = ? ";
-			//Object[] bindArgs = new Object[]{employer_id, title, description, job_id};
-			//try{
-			//mDB.getWritableDatabase().execSQL(sql1, bindArgs);
-			//} catch (SQLException e) {
-				//Tracer.e("Error writing new job", e.toString());
-			//}
-			Tracer.e("DmdContentProvider","Modifiy the name");
+			//Rename the description of a device because it's what is first display if exist in a widget
+			try{
+				mDB.getWritableDatabase().execSQL("UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Tracer.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				}
 			break;
 		
 		default:

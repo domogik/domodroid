@@ -139,5 +139,6 @@
 	<string name="Red">Red</string>
 	<string name="Green">Green</string>
 	<string name="Blue">Blue</string>
+	<string name="map_button2c">Move Widgets</string>
 	
 </resources>

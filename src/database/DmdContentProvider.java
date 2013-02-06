@@ -231,6 +231,7 @@ public class DmdContentProvider extends ContentProvider {
 			id_name[0] = values.getAsString("id");
 			Tracer.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
 			//TODO remove only one widget on map
+			//Read https://developer.am/android/?page=../primefaces/Updating%20data%20already%20in%20the%20database
 			//need to be adapt to remove by id on only current map
 			//currently it will remove by id in whole table
 			mDB.getWritableDatabase().execSQL("delete from table_feature_map where id="+id_name[0]);
@@ -249,6 +250,7 @@ public class DmdContentProvider extends ContentProvider {
 		case UPDATE_FEATURE_NAME:
 			//TODO rename a device
 			//values contains for example "id= 3 customname=blablabla"
+			//read https://developer.am/android/?page=../primefaces/Updating%20data%20already%20in%20the%20database
 			//Tracer.d("DMDContentProvider.update","try to updated name for id="+id1+" with value="+value);
 			//mDB.getWritableDatabase().execSQL("INSERT OR REPLACE INTO table_feature", values , "", name);
 			Tracer.e("DmdContentProvider","Modifiy the name");

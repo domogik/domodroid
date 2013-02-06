@@ -11,3 +11,7 @@ There is 2 usage of domodroid depending what domogik version you are using.
 In both case the map view is the same.
 
 .. image:: map1.png
+
+If device description is not empty it will replace the device name displayed
+
+If you do a long click on the name of a device, it will allow you to change is description displayed. It will be lost if you sync again.

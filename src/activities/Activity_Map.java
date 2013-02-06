@@ -241,8 +241,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		//TODO internationalize the title
-		builder.setTitle("Select a Widget");
+		builder.setTitle(R.string.Add_widget_title);
 
 		//get feature list
 		domodb = new DomodroidDB(this);

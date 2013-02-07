@@ -12,7 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import misc.Tracer;
-import android.webkit.WebChromeClient.CustomViewCallback;
 
 public class DmdContentProvider extends ContentProvider {
 

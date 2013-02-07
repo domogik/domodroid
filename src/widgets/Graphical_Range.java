@@ -36,7 +36,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -87,9 +87,11 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private final String wname;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
+	private tracerengine Tracer = null;
 
-	public Graphical_Range(Activity context, String address, String name,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
+		this.Tracer = Trac;
 		this.address = address;
 		this.url = url;
 		this.dev_id=dev_id;
@@ -113,7 +115,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 		this.setPadding(5, 5, 5, 5);
 
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Range("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);

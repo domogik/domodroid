@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import misc.Tracer;
+import misc.tracerengine;
 
 
 
@@ -23,10 +24,13 @@ public class DomodroidDB {
 	// Added by Doume to clarify debugging
 	private String mytag="DomodroidDB";
 	public String owner="";
+	private tracerengine Tracer = null;
+	
 	//////////////////////////////////////
 	
-	public DomodroidDB(Activity context){
+	public DomodroidDB(tracerengine Trac, Activity context){
 		this.context = context;
+		this.Tracer = Trac;
 	}
 
 	public void updateDb(){

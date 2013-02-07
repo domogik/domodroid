@@ -39,7 +39,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -87,10 +87,13 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private String mytag = "";
+	private tracerengine Tracer = null;
 
-	public Graphical_Binary(Activity context, String address, String name, int dev_id,String state_key, String url, String usage, 
+	public Graphical_Binary(tracerengine Trac, 
+			Activity context, String address, String name, int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
+		this.Tracer = Trac;
 		this.address = address;
 		this.url = url;
 		this.state_key = state_key;
@@ -102,7 +105,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.wname = name;
 		this.myself = this;
 		
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Binary("+dev_id+")";
 		mytag = domodb.owner;
 		//get parameters

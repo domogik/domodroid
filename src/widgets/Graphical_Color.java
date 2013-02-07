@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
+import misc.tracerengine;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
@@ -16,9 +17,6 @@ import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
 
-import widgets.Graphical_Binary.SBAnim;
-import widgets.Graphical_Binary.UpdateThread;
-import widgets.Graphical_Range.CommandeThread;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,7 +31,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -116,11 +113,11 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private TextView title9;
 	private String t7s,t8s,t9s = "";
 	private SharedPreferences params;
+	private tracerengine Tracer = null;
 
 
 
-
-	public Graphical_Color(Context context, 
+	public Graphical_Color(tracerengine Trac, Context context, 
 			SharedPreferences params, 
 			int dev_id, 
 			String name,
@@ -133,6 +130,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			int widgetSize) {
 		
 		super(context);
+		this.Tracer = null;
 		mycontext = (Activity) context;
 		this.dev_id = dev_id;
 		this.state_key = state_key;
@@ -145,7 +143,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.setPadding(5, 5, 5, 5);
 		this.params = params;
 		this.myself = this;
-		domodb = new DomodroidDB(mycontext);
+		domodb = new DomodroidDB(Tracer, mycontext);
 		domodb.owner="Graphical_Color("+dev_id+")";
 		mytag = domodb.owner;
 		

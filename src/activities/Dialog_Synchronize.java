@@ -16,7 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -35,10 +35,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	private Activity context;
 	public Boolean reload = false;
 	private DomodroidDB db = null;
+	private tracerengine Tracer = null;
 
-	public Dialog_Synchronize(Activity context) {
+	public Dialog_Synchronize(tracerengine Trac, Activity context) {
 		super(context);
 		this.context = context;
+		this.Tracer = Trac;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_synchronize);
 		message = (TextView) findViewById(R.id.message);
@@ -92,7 +94,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 			//Try to solve #1623
 			urlAccess = urlAccess.replaceAll(" ", "%20");
 			if(db == null)
-				db = new DomodroidDB(context);
+				db = new DomodroidDB(Tracer, context);
 		}
 
 		@Override

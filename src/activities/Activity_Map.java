@@ -27,7 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,19 +83,21 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Handler sbanim;
 	
 	private DomodroidDB domodb = null;
+	private tracerengine Tracer = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
+		Tracer = new tracerengine(params);
 		/*
 		Bundle b = null;
 		b = savedInstanceState.getBundle();
 		byte[] serial_engine = getByteArray("engine");// .getExtra("engine"); // getIntent().getByteArrayExtra("engine");
 		engine = (WidgetUpdate) deserializeObject(serial_engine); 
 		*/
-		mapView = new MapView(this);
+		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
 		setContentView(R.layout.activity_map);
@@ -244,7 +246,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		builder.setTitle(R.string.Add_widget_title);
 
 		//get feature list
-		domodb = new DomodroidDB(this);
+		domodb = new DomodroidDB(Tracer, this);
 		domodb.owner="Activity_Map";
 		listFeature = domodb.requestFeatures();
 
@@ -318,7 +320,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
 		}
-		widgetUpdate = new WidgetUpdate(this,sbanim,params);
+		widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
 		
 	}
 	

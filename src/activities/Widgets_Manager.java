@@ -21,7 +21,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import misc.Tracer;
+import misc.tracerengine;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
@@ -44,15 +44,17 @@ public class Widgets_Manager {
 	private boolean columns=false;
 	private Handler widgetHandler;
 	public WidgetUpdate widgetupdate = null;
+	private tracerengine Tracer = null;
 
-	public Widgets_Manager(Handler handler) {
+	public Widgets_Manager(tracerengine Trac, Handler handler) {
 		super();
 		this.widgetHandler=handler;
+		this.Tracer = Trac;
 	}
 
 	public LinearLayout loadActivWidgets(Activity context, int id, String zone, LinearLayout ll, SharedPreferences params) throws JSONException{
 
-		DomodroidDB domodb = new DomodroidDB(context);
+		DomodroidDB domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Widgets_Manager.loadActivWidgets";
 		Entity_Feature[] listFeature = domodb.requestFeatures(id, zone);
 
@@ -107,7 +109,7 @@ public class Widgets_Manager {
 				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 					//ignore it : it'll have another device for Color, displaying the switch !)
 				} else {
-					onoff = new Graphical_Binary(context,feature.getAddress(),label,
+					onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),label,
 							feature.getDevId(),
 							feature.getState_key(),
 							params.getString("URL","1.1.1.1"),
@@ -121,7 +123,7 @@ public class Widgets_Manager {
 					Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
 				}
 			} else if (feature.getValue_type().equals("boolean")) {
-				bool = new Graphical_Boolean(context,feature.getAddress(),label,
+				bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),label,
 						feature.getDevId(),
 						feature.getState_key(),
 						feature.getDevice_usage_id(), 
@@ -132,7 +134,7 @@ public class Widgets_Manager {
 				tmpPan.addView(bool);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Boolean");
 			} else if (feature.getValue_type().equals("range")) {
-				variator = new Graphical_Range(context,feature.getAddress(),label,
+				variator = new Graphical_Range(Tracer, context,feature.getAddress(),label,
 						feature.getDevId(),
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
@@ -145,7 +147,7 @@ public class Widgets_Manager {
 				tmpPan.addView(variator);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Range");
 			} else if (feature.getValue_type().equals("trigger")) {
-				trigger = new Graphical_Trigger(context,feature.getAddress(),label,
+				trigger = new Graphical_Trigger(Tracer, context,feature.getAddress(),label,
 						feature.getDevId(),
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
@@ -159,7 +161,7 @@ public class Widgets_Manager {
 			//} else if(feature.getValue_type().equals("color")){
 			} else if(feature.getState_key().equals("color")){
 				Tracer.e("Widgets_Manager","add Graphical_Color for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
-				color = new Graphical_Color(context, 
+				color = new Graphical_Color(Tracer, context, 
 						params, 
 						feature.getDevId(),
 						label,
@@ -175,7 +177,7 @@ public class Widgets_Manager {
 				Tracer.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {
 				Tracer.e("Widgets_Manager","add Graphical_Info for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
-				info = new Graphical_Info(context,feature.getDevId(), label,
+				info = new Graphical_Info(Tracer, context,feature.getDevId(), label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
@@ -188,7 +190,7 @@ public class Widgets_Manager {
 				Tracer.i("Widgets_Manager","   ==> Graphical_Info + Graphic");
 			} else if(feature.getValue_type().equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
-					cam = new Graphical_Cam(context,feature.getId(),label,
+					cam = new Graphical_Cam(Tracer, context,feature.getId(),label,
 							feature.getAddress(),
 							widgetSize);
 					tmpPan.addView(cam);
@@ -208,7 +210,7 @@ public class Widgets_Manager {
 					//TODO Must create a new Graphical widget to get a list of last call instead of just the last one.
 				//}
 					else {
-					info = new Graphical_Info(context,feature.getDevId(),label,
+					info = new Graphical_Info(Tracer, context,feature.getDevId(),label,
 							feature.getState_key(),
 							"",
 							feature.getDevice_usage_id(),
@@ -241,7 +243,7 @@ public class Widgets_Manager {
 
 	public LinearLayout loadAreaWidgets(Activity context, LinearLayout ll, SharedPreferences params) throws JSONException {
 
-		DomodroidDB domodb = new DomodroidDB(context);
+		DomodroidDB domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Widgets_Manager.loadAreaWidgets";
 		Entity_Area[] listArea = domodb.requestArea();
 		//Tracer.d("loadAreaWidgets","Areas list size : "+listArea.length);
@@ -300,7 +302,7 @@ public class Widgets_Manager {
 
 	public LinearLayout loadRoomWidgets(Activity context, int id, LinearLayout ll, SharedPreferences params) throws JSONException {
 
-		DomodroidDB domodb = new DomodroidDB(context);
+		DomodroidDB domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Widgets_Manager.loadRoomWidgets";
 		Entity_Room[] listRoom = domodb.requestRoom(id);
 		//Tracer.d("loadRoomWidgets","Rooms list size : "+listRoom.length);

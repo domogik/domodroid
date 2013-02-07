@@ -1,9 +1,5 @@
 package database;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +12,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
-import misc.Tracer;
+import misc.tracerengine;
 
 public class WidgetUpdate implements Serializable {
 
@@ -32,7 +28,9 @@ public class WidgetUpdate implements Serializable {
 	private Handler sbanim;
 	private String mytag="WidgetUpdate";
 	private TimerTask doAsynchronousTask;
-	/*
+	private tracerengine Tracer = null;
+	/*import misc.Tracer;
+
 	 * This class is a background engine 
 	 * 		On instantiation, it connects to Rinor server, and submit queries 
 	 * 		each 'update' timer, to update local database values for all known devices
@@ -40,10 +38,11 @@ public class WidgetUpdate implements Serializable {
 	 *     but each timer is ignored (no more requests to server...)
 	 * When variable 'activated' is true, each timer generates a database update with server's response
 	 */
-	public WidgetUpdate(Activity context, Handler anim, SharedPreferences params){
+	public WidgetUpdate(tracerengine Trac, Activity context, Handler anim, SharedPreferences params){
 		this.sharedparams=params;
+		this.Tracer = Trac;
 		activated = true;
-		domodb = new DomodroidDB(context);	
+		domodb = new DomodroidDB(Tracer, context);	
 		domodb.owner=mytag;
 		sbanim = anim;
 		Tracer.d(mytag,"Initial start requested....");

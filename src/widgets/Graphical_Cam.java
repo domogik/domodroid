@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,16 +58,18 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private String url;
 	private Context context;
 	private DomodroidDB domodb;
+	private tracerengine Tracer = null;
 	
 
-	public Graphical_Cam(Activity context,int dev_id,String name, String url,int widgetSize) {
+	public Graphical_Cam(tracerengine Trac, Activity context,int dev_id,String name, String url,int widgetSize) {
 		super(context);
+		this.Tracer = Trac;
 		this.dev_id = dev_id;
 		this.name_cam = name;
 		this.url = url;
 		this.context = context;
 		setOnTouchListener(this);
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Boolean("+dev_id+")";
 		
 		this.setPadding(5, 5, 5, 5);

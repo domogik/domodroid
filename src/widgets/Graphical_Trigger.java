@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,19 +68,20 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	public FrameLayout myself = null;
 	private int dev_id;
 	private DomodroidDB domodb;
-	
+	private tracerengine Tracer = null;
 
-	public Graphical_Trigger(Activity context, 
+	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name, int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
 			String model_id, int widgetSize) throws JSONException {
 		
 		super(context);
 		this.address = address;
+		this.Tracer = Trac;
 		this.url = url;
 		this.myself=this;
 		this.dev_id = dev_id;
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Trigger("+dev_id+")";
 		
 		//get parameters

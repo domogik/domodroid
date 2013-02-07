@@ -32,7 +32,7 @@ import java.util.Vector;
 import org.json.JSONException;
 
 import widgets.Graphical_Feature;
-import misc.Tracer;
+import misc.tracerengine;
 import database.WidgetUpdate;
 
 import activities.Sliding_Drawer.OnPanelListener;
@@ -127,6 +127,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private Thread waiting_thread = null;
 	private Activity_Main myself = null;
+	private tracerengine Tracer = null;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -138,7 +139,35 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//sharedPref
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
-
+		Tracer = new tracerengine(params);
+		
+		//Added by Doume
+		File storage = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/");
+		if(! storage.exists())
+			storage.mkdirs();
+		//Configure Tracer tool initial state
+		File logpath = new File(Environment.getExternalStorageDirectory()+"/domodroid/.log/");
+		if(! logpath.exists())
+			logpath.mkdirs();
+		
+		String currlogpath = params.getString("LOGNAME", "");
+		if(currlogpath.equals("")) {
+			//Not yet existing prefs : Configure debugging by default, to configure Tracer
+			currlogpath=Environment.getExternalStorageDirectory()+"/domodroid/.log/";
+			prefEditor.putString("LOGPATH",currlogpath);
+			prefEditor.putString("LOGNAME","Domodroid.txt");
+			prefEditor.putBoolean("SYSTEMLOG", false);
+			prefEditor.putBoolean("TEXTLOG", false);
+			prefEditor.putBoolean("SCREENLOG", false);
+			prefEditor.putBoolean("LOGCHANGED", true);
+			prefEditor.putBoolean("LOGAPPEND", false);
+			prefEditor.commit();
+		} else {
+			prefEditor.putBoolean("LOGCHANGED", true);		//To force Tracer to consider current settings
+			prefEditor.commit();
+		}
+		Tracer.set_profile(params);
+		
 		//option
 		localIP = (EditText)findViewById(R.id.localIP);	
 		checkbox3 = (CheckBox)findViewById(R.id.checkbox3);
@@ -157,10 +186,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
-		//Added by Doume
-		File storage = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/");
-		if(! storage.exists())
-			storage.mkdirs();
 		
 		Exit=(Button)findViewById(R.id.Stop_all);
 		Exit.setOnClickListener(this);
@@ -188,7 +213,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						parent.removeAllViews();
 						if(widgetUpdate == null) {
 							Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
-							widgetUpdate = new WidgetUpdate(myself,sbanim,params);
+							widgetUpdate = new WidgetUpdate(Tracer, myself,sbanim,params);
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
@@ -370,7 +395,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//		and updating local database
 		if(widgetUpdate == null) {
 			Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
-			widgetUpdate = new WidgetUpdate(this,sbanim,params);
+			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
 		}
 		
 		if(history != null)
@@ -386,7 +411,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				public void handleMessage(Message msg) {
 					
 					if(widgetUpdate == null)
-						widgetUpdate = new WidgetUpdate(myself, sbanim, params);
+						widgetUpdate = new WidgetUpdate(Tracer, myself, sbanim, params);
 				
 					try {
 						historyPosition++;
@@ -402,7 +427,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		if(wAgent == null) {
 			Tracer.v("Activity_Main", "Starting wAgent !");
-			wAgent=new Widgets_Manager(widgetHandler);
+			wAgent=new Widgets_Manager(Tracer, widgetHandler);
 			wAgent.widgetupdate = widgetUpdate;
 		}
 		loadWigets(0,"root");
@@ -611,7 +636,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private void run_sync_dialog() {
 		
 		if(dialog_sync == null)
-			dialog_sync = new Dialog_Synchronize(this);
+			dialog_sync = new Dialog_Synchronize(Tracer, this);
 		dialog_sync.reload = reload;
 		dialog_sync.setOnDismissListener(sync_listener);
 		dialog_sync.setParams(params);
@@ -672,7 +697,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		menu_green.setVisibility(View.GONE);
 		SaveSelections(false);		// To force a sync operation, if something has been modified...
 		if(widgetUpdate == null)
-			widgetUpdate = new WidgetUpdate(this,sbanim,params);
+			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
 
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {

@@ -2,12 +2,10 @@ package misc;
 
 import java.io.FileWriter;
 import java.io.IOException;
-
 import android.content.SharedPreferences;
 import android.util.Log;
 
-public class Tracer {
-	// Following booleans define which kind of log is configured
+public class tracerengine {
 	private static Boolean	to_Android = true;
 	private static Boolean	to_txtFile = false;
 	private static Boolean	to_screen = false;
@@ -20,29 +18,41 @@ public class Tracer {
 	
 	private static FileWriter txtFile = null;
 	
-	public static void d(String tag, String msg) {
+	public tracerengine(SharedPreferences params){
+		settings = params;
+	}
+	public void close() {
+		if(txtFile != null) {
+			try {
+				txtFile.close();
+			} catch (Exception e) {}
+			
+			txtFile = null;
+		}
+	}
+	public void d(String tag, String msg) {
 		choose_log(0,tag,msg);
 	}
-	public static void e(String tag, String msg) {
+	public void e(String tag, String msg) {
 		choose_log(1,tag,msg);
 	}
-	public static void i(String tag, String msg) {
+	public void i(String tag, String msg) {
 		choose_log(2,tag,msg);
 	}
-	public static void v(String tag, String msg) {
+	public void v(String tag, String msg) {
 		choose_log(3,tag,msg);
 	}
-	public static void w(String tag, String msg) {
+	public void w(String tag, String msg) {
 		choose_log(4,tag,msg);
 	}
 	/*
 	 * Configure Tracer profile
 	 */
-	public static void set_profile( SharedPreferences params) {
+	public void set_profile( SharedPreferences params) {
 		settings = params;
 		get_settings();
 	}
-	private static void get_settings() {
+	private void get_settings() {
 		if(settings != null) {
 			Boolean changed = settings.getBoolean("LOGCHANGED", true);
 			if(changed) {
@@ -90,7 +100,7 @@ public class Tracer {
 	/*
 	 * all modes use this common method, to decide wich kind of logging is configured
 	 */
-	private static void choose_log(int type, String tag, String msg) {
+	private void choose_log(int type, String tag, String msg) {
 		
 		// if needed, log to Android
 		if(to_Android)
@@ -105,13 +115,13 @@ public class Tracer {
 	/*
 	 * TODO Method writing messages to screen view
 	 */
-	private static void screenlog(int type,String tag,String msg) {
+	private void screenlog(int type,String tag,String msg) {
 		
 	}
 	/*
 	 * Method writing messages to text file
 	 */
-	private static void txtlog(int type,String tag,String msg) {
+	private void txtlog(int type,String tag,String msg) {
 		if(txtFile != null) {
 			String typeC = " ";
 			String dateS = " ";
@@ -145,7 +155,7 @@ public class Tracer {
 	/*
 	 * method sending messages to system log ( for Eclipse, and CatLog )
 	 */
-	private static void syslog(int type, String tag, String msg) {
+	private void syslog(int type, String tag, String msg) {
 		switch (type) {
 		case 0:
 			Log.d(tag,msg);

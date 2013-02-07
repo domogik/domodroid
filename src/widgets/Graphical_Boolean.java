@@ -35,7 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -67,10 +67,12 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private String wname;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
+	private tracerengine Tracer = null;
 	
 
-	public Graphical_Boolean(Activity context, String address, String name, int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
+		this.Tracer = Trac;
 		this.state_key = state_key;
 		this.dev_id = dev_id;
 		this.update = update;
@@ -79,7 +81,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.activate=false;
 		this.setPadding(5, 5, 5, 5);
 		
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Boolean("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);

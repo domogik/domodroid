@@ -38,6 +38,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -86,10 +87,11 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	public Boolean with_graph = true;
-	
+	private tracerengine Tracer = null;
 		
-	public Graphical_Info(Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
+	public Graphical_Info(tracerengine Trac,Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
+		this.Tracer = Trac;
 		this.dev_id = dev_id;
 		this.state_key = state_key;
 		this.update=update;
@@ -100,7 +102,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Info("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);

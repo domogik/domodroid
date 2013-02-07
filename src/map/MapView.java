@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -224,13 +225,6 @@ public class MapView extends View {
 		locked=true;
 		for (Entity_Map featureMap : listFeatureMap) {
 
-			//set state to 1 if widget is on or high
-			//set intstate to select correct icon color
-			int intstate = 0;
-			//set intstate to 1 to change color
-			//Remove the 1 because if temperature is equal to 1°C it put the icon to on 
-			//Replace contains by equals to avoid problem if CurrentState comes from a phone number like "highlander" or "Jhon" 
-			//if ((featureMap.getCurrentState().contains("high")) || (featureMap.getCurrentState().contains("on"))|| (featureMap.getCurrentState().equals("1"))){
 			String states = "";
 			if(featureMap != null) {
 				states = featureMap.getCurrentState();
@@ -238,17 +232,17 @@ public class MapView extends View {
 				Tracer.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
 				return;
 			}
-			//Could not be null because it is set to "" 7 rows up
-			//if(states == null)
-			//	states = "";
-			
-			if ((states.equals("high")) || (states.equals("on"))){
-				intstate=1;
-			}
-			//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-			featureMap.setState(intstate);
-			
 			if(featureMap.isalive()) {
+				//set intstate to select correct icon color
+				int intstate = 0;
+				//TODO use value0 and value1
+				if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
+				{
+					intstate=1;
+				}
+				//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+				featureMap.setState(intstate);
+				
 				try {
 				drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
 					if(drawable != null) {
@@ -264,8 +258,6 @@ public class MapView extends View {
 					Tracer.e("MapView","cannot draw object ! ! ! !");
 					return;
 				}
-				//if(listEntity.elementAt(i).getCurrentState()==null)listEntity.elementAt(i).setCurrentState("--");
-				
 				
 				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){

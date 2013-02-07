@@ -37,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import misc.Tracer;
+import misc.tracerengine;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -100,18 +101,14 @@ public class MapView extends View {
 	private Boolean activated; 
 	private String mytag="MapView";
 	private Boolean locked = false;
-	//TODO to use valuemin max 0 and 1
-	//private String parameters;
-	//private int valueMin;
-	//private int valueMax;
-	//private String value0;
-	//private String value1;
+	private tracerengine Tracer = null;
 	
-	public MapView(Activity context) {
+	public MapView(tracerengine Trac, Activity context) {
 		super(context);
+		this.Tracer = Trac;
 		this.context=context;
 		activated=true;
-		domodb = new DomodroidDB(context);
+		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="MapView";
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		screen_width = display.getWidth();
@@ -387,27 +384,27 @@ public class MapView extends View {
 			label = label+" ("+feature.getDevId()+")";
 		
 		if (feature.getValue_type().equals("binary")) {
-			onoff = new Graphical_Binary(context,feature.getAddress(),
+			onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			onoff.container=(FrameLayout) panel_widget;
 			panel_widget.addView(onoff);}
 		else if (feature.getValue_type().equals("boolean")) {
-			bool = new Graphical_Boolean(context,feature.getAddress(),
+			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {
-			variator = new Graphical_Range(context,feature.getAddress(),
+			variator = new Graphical_Range(Tracer, context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			variator.container=(FrameLayout) panel_widget;
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
-			trigger = new Graphical_Trigger(context,feature.getAddress(),
+			trigger = new Graphical_Trigger(Tracer, context,feature.getAddress(),
 					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
-			info = new Graphical_Info(context,feature.getDevId(),
+			info = new Graphical_Info(Tracer, context,feature.getDevId(),
 					label,
 					feature.getState_key(),params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),

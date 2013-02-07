@@ -68,6 +68,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private TextView nameDevices;
 	private TextView value;
 	private int dev_id;
+	private int id;
 	private Handler handler;
 	private String state_key;
 	private Color_Progress seekBarHueBar;
@@ -122,7 +123,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 	public Graphical_Color(Context context, 
 			SharedPreferences params, 
-			int dev_id, 
+			int id,int dev_id,
 			String name,
 			String model_id,
 			String address,
@@ -135,6 +136,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		super(context);
 		mycontext = (Activity) context;
 		this.dev_id = dev_id;
+		this.id = id;
 		this.state_key = state_key;
 		this.name=name;
 		this.wname=name;
@@ -733,8 +735,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Color", "Name set to: "+result);
-					domodb.updateFeaturename(dev_id,result);
+					Tracer.e("Graphical_Color", "Description set to: "+result);
+					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

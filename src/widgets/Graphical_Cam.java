@@ -54,14 +54,16 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private TextView nameDevices;
 	private String name_cam;
 	private int dev_id;
+	private int id;
 	private String url;
 	private Context context;
 	private DomodroidDB domodb;
 	
 
-	public Graphical_Cam(Activity context,int dev_id,String name, String url,int widgetSize) {
+	public Graphical_Cam(Activity context,int id,int dev_id, String name, String url,int widgetSize) {
 		super(context);
 		this.dev_id = dev_id;
+		this.id = id;
 		this.name_cam = name;
 		this.url = url;
 		this.context = context;
@@ -153,8 +155,8 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Cam", "Name set to: "+result);
-					domodb.updateFeaturename(dev_id,result);
+					Tracer.e("Graphical_Cam", "Description set to: "+result);
+					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

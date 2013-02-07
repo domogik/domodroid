@@ -66,17 +66,19 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private int dev_id;
+	private int id;
 	private DomodroidDB domodb;
 	
 
 	public Graphical_Trigger(Activity context, 
-			String address, String name, int dev_id,String stat_key, 
+			String address, String name, int id,int dev_id, String stat_key, 
 			String url, String usage, String parameters, 
 			String model_id, int widgetSize) throws JSONException {
 		
 		super(context);
 		this.address = address;
 		this.url = url;
+		this.id=id;
 		this.myself=this;
 		this.dev_id = dev_id;
 		domodb = new DomodroidDB(context);
@@ -179,8 +181,8 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Trigger", "Name set to: "+result);
-					domodb.updateFeaturename(dev_id,result);
+					Tracer.e("Graphical_Trigger", "Description set to: "+result);
+					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

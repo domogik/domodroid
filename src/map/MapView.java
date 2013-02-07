@@ -257,9 +257,6 @@ public class MapView extends View {
 				//} catch (JSONException e1) {
 					//e1.printStackTrace();
 				//}
-				//TODO use value0 and value1 and get ValueMin for range
-				//All are stored in parameters from table feature.
-				//This crash?????
 				//if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
 				if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
 				{
@@ -388,27 +385,26 @@ public class MapView extends View {
 		
 		if (feature.getValue_type().equals("binary")) {
 			onoff = new Graphical_Binary(context,feature.getAddress(),
-					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(), feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			onoff.container=(FrameLayout) panel_widget;
 			panel_widget.addView(onoff);}
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(context,feature.getAddress(),
-					label,feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(), feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {
 			variator = new Graphical_Range(context,feature.getAddress(),
-					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(), feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
 			variator.container=(FrameLayout) panel_widget;
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
 			trigger = new Graphical_Trigger(context,feature.getAddress(),
-					label,feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
+					label,feature.getId(),feature.getDevId(), feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
-			info = new Graphical_Info(context,feature.getDevId(),
-					label,
+			info = new Graphical_Info(context,feature.getId(),feature.getDevId(), label,
 					feature.getState_key(),params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),

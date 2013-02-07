@@ -101,7 +101,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private SeekBar mSeekBar1;
 	//private SeekBar mSeekBar2;
 	private SeekBar mSeekBar3;
-	private CheckBox debugcheckbox; //Debug option Neutralized by Doume
+	private CheckBox debugcheckbox; //Debug option
 	private CheckBox hidecheckbox; //Custom name option
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
@@ -151,7 +151,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		//Debug option
-		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox); //neutralized by Doume
+		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
 		//Custom name option
 		hidecheckbox = (CheckBox)findViewById(R.id.hidecheckbox);		
 		sync=(Button)findViewById(R.id.sync);
@@ -586,7 +586,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			//Debug option
-			prefEditor.putBoolean("DEV", debugcheckbox.isChecked()); //neutralized by Doume
+			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
 			//Custom name option
 			prefEditor.putBoolean("HIDE", hidecheckbox.isChecked());
 			
@@ -634,7 +634,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		//Debug option
-		debugcheckbox.setChecked(params.getBoolean("DEV",false));	//neutralized by Doume
+		debugcheckbox.setChecked(params.getBoolean("DEV",false));
 		//Custom name option
 		hidecheckbox.setChecked(params.getBoolean("HIDE",false));
 	}

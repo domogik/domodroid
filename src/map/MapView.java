@@ -193,6 +193,7 @@ public class MapView extends View {
 	public void refreshMap(){
 		canvasMap=null;
 		canvasWidget=null;
+		//Case using a svg file as map
 		if(formatMode==1){
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
@@ -201,6 +202,7 @@ public class MapView extends View {
 			canvasMap.drawPicture(picture);	
 			widget = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
+			//Case using a png file as map
 		}else if(formatMode==2){
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
@@ -235,7 +237,7 @@ public class MapView extends View {
 			if(featureMap.isalive()) {
 				//set intstate to select correct icon color
 				int intstate = 0;
-				//TODO use value0 and value1
+				//TODO use value0 and value1 and get ValueMin for range
 				if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
 				{
 					intstate=1;
@@ -265,13 +267,14 @@ public class MapView extends View {
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
-						String label = featureMap.getDescription();
-						if(label.length() < 1)
-							label = featureMap.getDevice_usage_id();
-						//Tracer.i(mytag,"label = "+label);
-						canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-						
+						if (params.getBoolean("HIDE",false)==false){ 
+							String label = featureMap.getDescription();
+							if(label.length() < 1)
+								label = featureMap.getDevice_usage_id();
+							//Tracer.i(mytag,"label = "+label);
+							canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						}
 					}
 				
 				} else if(featureMap.getValue_type().equals("number")){
@@ -306,9 +309,11 @@ public class MapView extends View {
 										paint_text);
 								paint_text.setTextSize(15);
 								//Tracer.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-								canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
+								if (params.getBoolean("HIDE",false)==false){ 
+									canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y+6, 
 										paint_text);
+								}
 							}
 						}
 				} else if(featureMap.getValue_type().equals("range")){
@@ -317,14 +322,20 @@ public class MapView extends View {
 						paint_text.setTextSize(16);
 						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
-						canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						if (params.getBoolean("HIDE",false)==false){ 
+							//TODO see if we should not use label instead of featureMap.getDevice_usage_id()
+							//It is not the same text displayed for this type of device
+							canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						}
 					}
 
 				}else if(featureMap.getValue_type().equals("trigger")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
+						//TODO see if we should not use label instead of featureMap.getName()
+						//It is not the same text displayed for this type of device
 						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						
@@ -349,7 +360,8 @@ public class MapView extends View {
 			label = feature.getName();
 		
 		//add debug option to change label adding its Id
-		if (params.getBoolean("DEV",false)==true) label = label+" ("+feature.getDevId()+")";	//neutralized by Doume
+		if (params.getBoolean("DEV",false)==true)
+			label = label+" ("+feature.getDevId()+")";
 		
 		if (feature.getValue_type().equals("binary")) {
 			onoff = new Graphical_Binary(context,feature.getAddress(),
@@ -380,6 +392,7 @@ public class MapView extends View {
 					params.getInt("UPDATE",300),0);
 			info.container=(FrameLayout) panel_widget;
 			panel_widget.addView(info);}
+	//TODO Seems it miss some device type like in Widgets_Manager.java
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class Widgets_Manager {
 			
 			//add debug option to change label adding its Id
 			if (params.getBoolean("DEV",false)==true) 
-				label = label+" ("+DevId+")";	//neutralized by Doume
+				label = label+" ("+DevId+")";
 			
 			String[] model = feature.getDevice_type_id().split("\\.");
 			String type = model[1];
@@ -205,7 +205,7 @@ public class Widgets_Manager {
 					//info.with_graph=false;
 					//tmpPan.addView(info);
 					//Tracer.i("Widgets_Manager","   ==> Phone list !!!");
-					//Must create a new Graphical widget to get a list of last call instead of just the last one.
+					//TODO Must create a new Graphical widget to get a list of last call instead of just the last one.
 				//}
 					else {
 					info = new Graphical_Info(context,feature.getDevId(),label,

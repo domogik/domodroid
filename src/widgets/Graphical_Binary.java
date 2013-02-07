@@ -138,8 +138,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
 		//name of devices
 		nameDevices=new TextView(context);
-		nameDevices.setText(name); //debug option
-		//nameDevices.setText(name+" ("+dev_id+")");
+		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);

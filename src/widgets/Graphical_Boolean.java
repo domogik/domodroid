@@ -58,6 +58,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private TextView state;
 	private ImageView bool;
 	private int dev_id;
+	private int id;
 	private Handler handler;
 	private String state_key;
 	private int update;
@@ -70,11 +71,12 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private tracerengine Tracer = null;
 	
 
-	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int id,int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.state_key = state_key;
 		this.dev_id = dev_id;
+		this.id = id;
 		this.update = update;
 		this.wname = name;
 		this.myself=this;
@@ -261,8 +263,8 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Boolean", "Name set to: "+result);
-					domodb.updateFeaturename(dev_id,result);
+					Tracer.e("Graphical_Boolean", "Description set to: "+result);
+					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

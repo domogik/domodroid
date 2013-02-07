@@ -72,6 +72,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private TextView nameDevices;
 	private TextView value;
 	private int dev_id;
+	private int id;
 	private Handler handler;
 	private String state_key;
 	private TextView state_key_view;
@@ -89,10 +90,11 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public Boolean with_graph = true;
 	private tracerengine Tracer = null;
 		
-	public Graphical_Info(tracerengine Trac,Activity context, int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
+	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
+		this.id = id;
 		this.state_key = state_key;
 		this.update=update;
 		this.wname = name;
@@ -425,8 +427,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_info", "Name set to: "+result);
-					domodb.updateFeaturename(dev_id,result);
+					Tracer.e("Graphical_info", "Description set to: "+result);
+					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

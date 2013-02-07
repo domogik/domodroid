@@ -69,6 +69,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private String usage;
 	private String url;
 	private final int dev_id;
+	private int id;
 	private Handler handler;
 	private final String state_key;
 	private int range;
@@ -89,12 +90,13 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	public FrameLayout myself = null;
 	private tracerengine Tracer = null;
 
-	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.address = address;
 		this.url = url;
 		this.dev_id=dev_id;
+		this.id=id;
 		this.state_key=state_key;
 		this.usage = usage;
 		this.update = update;
@@ -394,8 +396,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Range", "Name set to: "+result);
-					domodb.updateFeaturename(dev_id,result);
+					Tracer.e("Graphical_Range", "Description set to: "+result);
+					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

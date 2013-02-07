@@ -116,7 +116,7 @@ public class DomodroidDB {
 		ContentValues values = new ContentValues();
 		values.put("id", id);
 		values.put("newname", name);
-		Tracer.e("DomodrdoidDB", "Name set to: "+name+" for device: "+id);
+		Tracer.e("DomodrdoidDB", "Description set to: "+name+" for device: "+id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
 	}
 	

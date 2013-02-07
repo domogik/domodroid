@@ -110,7 +110,7 @@ public class Widgets_Manager {
 					//ignore it : it'll have another device for Color, displaying the switch !)
 				} else {
 					onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),label,
-							feature.getDevId(),
+							feature.getId(),feature.getDevId(),
 							feature.getState_key(),
 							params.getString("URL","1.1.1.1"),
 							feature.getDevice_usage_id(),
@@ -124,7 +124,7 @@ public class Widgets_Manager {
 				}
 			} else if (feature.getValue_type().equals("boolean")) {
 				bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),label,
-						feature.getDevId(),
+						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
 						feature.getDevice_usage_id(), 
 						feature.getDevice_type_id(),
@@ -134,8 +134,8 @@ public class Widgets_Manager {
 				tmpPan.addView(bool);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Boolean");
 			} else if (feature.getValue_type().equals("range")) {
-				variator = new Graphical_Range(Tracer, context,feature.getAddress(),label,
-						feature.getDevId(),
+				variator = new Graphical_Range(Tracer,context,feature.getAddress(),label,
+						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
@@ -148,7 +148,7 @@ public class Widgets_Manager {
 				Tracer.i("Widgets_Manager","   ==> Graphical_Range");
 			} else if (feature.getValue_type().equals("trigger")) {
 				trigger = new Graphical_Trigger(Tracer, context,feature.getAddress(),label,
-						feature.getDevId(),
+						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
@@ -163,7 +163,7 @@ public class Widgets_Manager {
 				Tracer.e("Widgets_Manager","add Graphical_Color for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
 				color = new Graphical_Color(Tracer, context, 
 						params, 
-						feature.getDevId(),
+						feature.getId(),feature.getDevId(),
 						label,
 						feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
 						feature.getAddress(),			//  idem to know the address
@@ -177,7 +177,7 @@ public class Widgets_Manager {
 				Tracer.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {
 				Tracer.e("Widgets_Manager","add Graphical_Info for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
-				info = new Graphical_Info(Tracer, context,feature.getDevId(), label,
+				info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(), label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
@@ -190,7 +190,7 @@ public class Widgets_Manager {
 				Tracer.i("Widgets_Manager","   ==> Graphical_Info + Graphic");
 			} else if(feature.getValue_type().equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
-					cam = new Graphical_Cam(Tracer, context,feature.getId(),label,
+					cam = new Graphical_Cam(Tracer, context,feature.getId(),feature.getDevId(),label,
 							feature.getAddress(),
 							widgetSize);
 					tmpPan.addView(cam);
@@ -210,7 +210,7 @@ public class Widgets_Manager {
 					//TODO Must create a new Graphical widget to get a list of last call instead of just the last one.
 				//}
 					else {
-					info = new Graphical_Info(Tracer, context,feature.getDevId(),label,
+					info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),label,
 							feature.getState_key(),
 							"",
 							feature.getDevice_usage_id(),

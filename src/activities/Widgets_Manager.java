@@ -95,11 +95,12 @@ public class Widgets_Manager {
 			String Value_type = feature.getValue_type();
 			String Address = feature.getAddress();
 			int DevId = feature.getDevId();
+			int Id = feature.getId();
 			String State_key = feature.getState_key();
 			
 			//add debug option to change label adding its Id
 			if (params.getBoolean("DEV",false)==true) 
-				label = label+" ("+DevId+")";
+				label = label+" ("+Id+")";
 			
 			String[] model = feature.getDevice_type_id().split("\\.");
 			String type = model[1];

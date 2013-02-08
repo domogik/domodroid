@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import database.DomodroidDB;
 import org.json.JSONException;
-//import org.json.JSONObject;
+import org.json.JSONObject;
 import activities.Activity_Main;
 import org.domogik.domodroid.R;
 import activities.Sliding_Drawer;
@@ -102,11 +102,11 @@ public class MapView extends View {
 	private String mytag="MapView";
 	private Boolean locked = false;
 	//TODO to use valuemin max 0 and 1
-	//private String parameters;
-	//private int valueMin;
-	//private int valueMax;
-	//private String value0;
-	//private String value1;
+	private String parameters;
+	private int valueMin;
+	private int valueMax;
+	private String value0;
+	private String value1;
 	private tracerengine Tracer = null;
 	
 	public MapView(tracerengine Trac, Activity context) {
@@ -249,19 +249,20 @@ public class MapView extends View {
 				int intstate = 0;
 				//TODO get valuemin,max, 0 and 1
 				//This crash
-				//get parameters
-				//JSONObject jparam;
-				//try {
-					//jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-					//value0 = jparam.getString("value0");
-					//value1 = jparam.getString("value1");
-					//valueMin = jparam.getInt("valueMin");
-					//valueMax = jparam.getInt("valueMax");
-				//} catch (JSONException e1) {
-					//e1.printStackTrace();
-				//}
-				//if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
-				if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
+				//get parameters;
+				JSONObject jparam;
+				parameters=featureMap.getParameters();
+				try {
+					jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+					value0 = jparam.getString("value0");
+					value1 = jparam.getString("value1");
+					valueMin = jparam.getInt("valueMin");
+					valueMax = jparam.getInt("valueMax");
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+				if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
+				//if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
 				{
 					intstate=1;
 				}

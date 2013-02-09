@@ -289,13 +289,14 @@ public class MapView extends View {
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
-						canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						//canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
 						if (params.getBoolean("HIDE",false)==false){ 
 							String label = featureMap.getDescription();
 							if(label.length() < 1)
 								label = featureMap.getDevice_usage_id();
 							//Tracer.i(mytag,"label = "+label);
+							canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 							canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
 							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						}
@@ -344,13 +345,22 @@ public class MapView extends View {
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);
-						canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						//canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 						paint_text.setTextSize(14);
 						if (params.getBoolean("HIDE",false)==false){ 
 							//TODO see if we should not use label instead of featureMap.getDevice_usage_id()
 							//It is not the same text displayed for this type of device
 							canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
+							canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						}else{
+							if  (featureMap.getState_key().equals("light")){
+								if (Integer.parseInt(featureMap.getCurrentState()) > valueMin){
+									canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+								}
+							}else{
+								canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+							}
 						}
 					}
 

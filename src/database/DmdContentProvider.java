@@ -232,8 +232,10 @@ public class DmdContentProvider extends ContentProvider {
 				//Get a min and max value to be sure not needing a precise click.
 				int posxlow=values.getAsInteger("posx")-20;
 				int posxhigh=values.getAsInteger("posx")+20;
-				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh);
-				//Tracer.d("DmdContentProvider", "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh);
+				int posylow=values.getAsInteger("posy")-20;
+				int posyhigh=values.getAsInteger("posy")+20;
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
+				//Tracer.d("DmdContentProvider", "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
 				}
 			catch (SQLException e) {
 				Tracer.e("DmdContentProvider", "Error deleting widget: "+e.toString());

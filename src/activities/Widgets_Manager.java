@@ -208,7 +208,7 @@ public class Widgets_Manager {
 					//info.with_graph=false;
 					//tmpPan.addView(info);
 					//Tracer.i("Widgets_Manager","   ==> Phone list !!!");
-					//TODO Must create a new Graphical widget to get a list of last call instead of just the last one.
+					//FIXME Must create a new Graphical widget to get a list of last call instead of just the last one.
 				//}
 					else {
 					info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),label,
@@ -223,7 +223,7 @@ public class Widgets_Manager {
 					tmpPan.addView(info);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Info + No graphic !!!");
 				}
-			// missing getvalue_type().equals("list")
+			//FIXME missing getvalue_type().equals("list")
 			//used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
 				
 			}

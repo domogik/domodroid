@@ -307,7 +307,7 @@ public class MapView extends View {
 						String test_unite = jparam.getString("unit");
 						value=featureMap.getCurrentState()+test_unite;
 					} catch (JSONException e) {				
-						//Basilic com: no sute that the key state was the better way to find unit 
+						//Basilic com: no sure that the key state was the better way to find unit 
 						if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
 						else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
 						else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";

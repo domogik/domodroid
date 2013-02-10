@@ -304,17 +304,24 @@ public class MapView extends View {
 				
 				} else if(featureMap.getValue_type().equals("number")){
 					String value;
-					if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
-					else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
-					else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
-					else if(featureMap.getState_key().equals("percent"))value=featureMap.getCurrentState()+" %";
-					else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
-					else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
-					else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
-					else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
-					else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
-					else value=featureMap.getCurrentState();
-	
+					try {
+						//Basilic add, number feature has a unit parameter
+						jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+						String test_unite = jparam.getString("unit");
+						value=featureMap.getCurrentState()+test_unite;
+					} catch (JSONException e) {				
+						//Basilic com: no sute that the key state was the better way to find unit 
+						if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
+						else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
+						else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
+						else if(featureMap.getState_key().equals("percent"))value=featureMap.getCurrentState()+" %";
+						else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
+						else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
+						else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
+						else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
+						else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
+						else value=featureMap.getCurrentState();
+					}
 					if(value == null)
 						value = "";
 					

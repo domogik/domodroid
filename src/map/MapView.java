@@ -101,7 +101,6 @@ public class MapView extends View {
 	private Boolean activated; 
 	private String mytag="MapView";
 	private Boolean locked = false;
-	//TODO to use valuemin max 0 and 1
 	private String parameters;
 	private int valueMin;
 	private int valueMax;
@@ -247,9 +246,7 @@ public class MapView extends View {
 			if(featureMap.isalive()) {
 				//set intstate to select correct icon color
 				int intstate = 0;
-				//TODO get valuemin,max, 0 and 1
-				//This crash
-				//get parameters;
+				//get parameters valuemin,max, 0 and 1
 				JSONObject jparam;
 				parameters=featureMap.getParameters();
 				try {

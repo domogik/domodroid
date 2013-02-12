@@ -131,7 +131,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			int widgetSize) {
 		
 		super(context);
-		this.Tracer = null;
+		this.Tracer = Trac;
 		mycontext = (Activity) context;
 		this.dev_id = dev_id;
 		this.id = id;

@@ -328,7 +328,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Tracer.e("Activity_Map", "onPause");
+		if(Tracer != null)
+			Tracer.e("Activity_Map", "onPause");
 		if(mapView != null)
 			mapView.stopThread();
 		mapView=null;
@@ -341,23 +342,34 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	}
 	public void onResume() {
 		super.onResume();
+		if(Tracer == null) {
+			Tracer = new tracerengine(params);
+		}
 		if(widgetUpdate == null) {
 			startDBEngine();
 		}
+		
 		widgetUpdate.restartThread();
 		
 	}
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Tracer.e("ActivityMap.onDestroy","??????????????????????");
+		if(Tracer != null)
+			Tracer.e("ActivityMap.onDestroy","??????????????????????");
+		
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
 		}
+		if(Tracer != null) {
+			Tracer.close();		//To eventually flush and close txt log file
+			Tracer = null;		//Stop own Tracer engine
+		}
 	}
 	public void onPanelClosed(Sliding_Drawer panel) {
-		Tracer.e("ActivityMap.onPanelClosed","??????????????????????");
+		if(Tracer != null)
+			Tracer.e("ActivityMap.onPanelClosed","??????????????????????");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
@@ -366,7 +378,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	public void onPanelOpened(Sliding_Drawer panel) {
-		Tracer.e("ActivityMap.onPanelOpened","??????????????????????");
+		if(Tracer != null)
+			Tracer.e("ActivityMap.onPanelOpened","??????????????????????");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
 	}

@@ -20,6 +20,7 @@ public class tracerengine {
 	
 	public tracerengine(SharedPreferences params){
 		settings = params;
+		set_profile(params);
 	}
 	public void close() {
 		if(txtFile != null) {

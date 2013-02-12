@@ -47,7 +47,7 @@ public class WidgetUpdate implements Serializable {
 		domodb.owner=mytag;
 		sbanim = anim;
 		Timer();
-		//refreshNow();	// Force an immediate refresh
+		refreshNow();	// Force an immediate refresh
 	}
 	
 	/* 

@@ -138,8 +138,56 @@ public class DomodroidDB {
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
 		}
 	}
+	public void insertFeatureState(JSONObject json) throws JSONException{
+		String skey = null;
+		String Val = null;
+		int dev_id = 0;
+		ContentValues values = new ContentValues();
+		JSONArray itemArray = json.getJSONArray("stats");
+		String[] projection = {"COUNT(*)"};
+		
+		for (int i =0; i < itemArray.length(); i++){
+			try {
+				dev_id = itemArray.getJSONObject(i).getInt("device_id");
+			}catch (Exception e) {
+				Tracer.e(mytag+"("+owner+")", "Database feature No id : ");
+				return;
+			}
+			try {
+				skey = itemArray.getJSONObject(i).getString("skey");
+			} catch (Exception e) {
+				Tracer.e(mytag+"("+owner+")", "Database feature No skey for id : "+dev_id);
+				skey = "_";
+				Val = "0";
+			}
+			try {
+				Val = itemArray.getJSONObject(i).getString("value");
+			}catch (Exception e) {
+				Tracer.e(mytag+"("+owner+")", "Database feature No Value for id : "+dev_id+" "+skey);
+				Val = "0";
+			}
+			
+			Cursor curs=null;
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", 
+					new String [] {Integer.toString(dev_id)+" ",skey}, null);
+			curs.moveToFirst();
+			values.put("device_id", dev_id);
+			values.put("key", skey);
+			values.put("value", Val);
+			if(curs.getInt(0)==0){
+				Tracer.e(mytag+"("+owner+")","Insert for : "+dev_id+" ("+skey+") ("+Val+")");
+				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
+				
+			}else{
+				Tracer.e(mytag+"("+owner+")","Update for : "+dev_id+" ("+skey+") ("+Val+")");
+				context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, "device_id = ? AND key = ?", 
+						new String []  {Integer.toString(dev_id)+" ",skey});
+			}
+			curs.close();
+		}
+	}
 
-
+/*
 	public void insertFeatureState(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("stats");
@@ -150,7 +198,7 @@ public class DomodroidDB {
 		//Tracer.e(mytag+"("+owner+")", "Processing FeatureSate Array : <"+itemArray.toString()+">");
 		// First, erase all old content
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
-		// Now, insert new rows
+		// Now, insert/update new rows
 		for (int i =0; i < itemArray.length(); i++){
 			try {
 				exists = itemArray.getJSONObject(i).getBoolean("exists");
@@ -184,7 +232,8 @@ public class DomodroidDB {
 		}
 	}
 
-
+*/
+	
 	public void insertFeatureMap(int id, int posx, int posy, String map){
 		//send value to database to add a widget on map
 		ContentValues values = new ContentValues();
@@ -359,29 +408,29 @@ public class DomodroidDB {
 
 
 	public String requestFeatureState(int device_id, String key){
-		String state = "";
+		String state = " ";
 		String[] projection = {"value"};
 		String sortOrder = "key ";
-			try {
-				Cursor curs=null;
-				curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, 
-						projection, 
-						"device_id = ? AND key = ?", 
-						new String [] {device_id+"", key}, 
-						null);
-				curs.moveToPosition(0);
-				if((curs != null) && (curs.getCount() != 0)) {
-					state=curs.getString(0);
-					curs.close();
-					Tracer.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
-					
-				} else {
-					Tracer.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" not found ");
-					
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+		try {
+			Cursor curs=null;
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, 
+					projection, 
+					"device_id = ? AND key = ?", 
+					new String [] {device_id+"", key}, 
+					null);
+			curs.moveToPosition(0);
+			if((curs != null) && (curs.getCount() != 0)) {
+				state=curs.getString(0);
+				curs.close();
+				Tracer.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
+				
+			} else {
+				Tracer.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" not found ");
+				return null;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 
 		return state;

@@ -337,9 +337,9 @@ public class DmdContentProvider extends ContentProvider {
 		case UPDATE_FEATURE_STATE:
 			String id = selectionArgs[0];
 			String skey = selectionArgs[1];
-			Log.d("DMDContentProvider.update","try to updated feature_state with device_id = "+id+" skey = "+skey+" selection="+selection);
+			//Log.d("DMDContentProvider.update","try to updated feature_state with device_id = "+id+" skey = "+skey+" selection="+selection);
 			items=mDB.getWritableDatabase().update("table_feature_state", values, selection,selectionArgs);
-			Log.d("DMDContentProvider.update","Updated rows : "+items);
+			//Log.d("DMDContentProvider.update","Updated rows : "+items);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);

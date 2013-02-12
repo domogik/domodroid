@@ -355,6 +355,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				}
 			} // TimerTask run method
 		}; //TimerTask 
+		//new UpdateThread().execute();	//For an immediate update
 		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);	
 		timer.schedule(doAsynchronousTask, 0, update*1000);
 	}
@@ -364,7 +365,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			//Tracer.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+			Tracer.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
 			Bundle b = new Bundle();
 			String state = domodb.requestFeatureState(dev_id, state_key);
 			if(state != null) {
@@ -376,6 +377,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			} else {
 				// This widget has no feature_state : probably a zombie ????
 				//activate=true;
+				Tracer.e(mytag, "UpdateThread : No value for "+dev_id+ " "+state_key);
+				
 				handler.sendEmptyMessage(0);
 				
 			}

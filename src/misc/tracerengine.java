@@ -52,17 +52,24 @@ public class tracerengine {
 	public void set_profile( SharedPreferences params) {
 		settings = params;
 		get_settings();
+		
+	}
+	public void refresh_settings() {
+		if(settings != null ) {
+			logpath=settings.getString("LOGPATH", "");
+			logname=settings.getString("LOGNAME", "");
+			to_Android = settings.getBoolean("SYSTEMLOG", false);
+			to_txtFile = settings.getBoolean("TEXTLOG", false);
+			to_screen = settings.getBoolean("SCREENLOG", false);
+			txtappend = settings.getBoolean("LOGAPPEND", false);
+		}
+		
 	}
 	private void get_settings() {
 		if(settings != null) {
 			Boolean changed = settings.getBoolean("LOGCHANGED", true);
 			if(changed) {
-				logpath=settings.getString("LOGPATH", "");
-				logname=settings.getString("LOGNAME", "");
-				to_Android = settings.getBoolean("SYSTEMLOG", false);
-				to_txtFile = settings.getBoolean("TEXTLOG", false);
-				to_screen = settings.getBoolean("SCREENLOG", false);
-				txtappend = settings.getBoolean("LOGAPPEND", false);
+				refresh_settings();
 				if(to_txtFile) {
 					if(logname.equals("")) {
 						// If no filename given, no log to file, nor in append !

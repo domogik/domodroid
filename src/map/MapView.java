@@ -36,7 +36,6 @@ import android.graphics.Picture;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
-import misc.Tracer;
 import misc.tracerengine;
 import android.view.Display;
 import android.view.GestureDetector;

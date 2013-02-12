@@ -270,7 +270,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 		
 		//seekbar huebar
-		seekBarHueBar=new Color_Progress(context,0,0);
+		seekBarHueBar=new Color_Progress(Tracer, context,0,0);
 		seekBarHueBar.setProgress(0);
 		seekBarHueBar.setMax(255);
 		seekBarHueBar.setProgressDrawable(null);
@@ -278,7 +278,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarHueBar.setTag("hue");
 
 		//seekbar rgbbarX
-		seekBarRGBXBar=new Color_Progress(context,1,0);
+		seekBarRGBXBar=new Color_Progress(Tracer, context,1,0);
 		seekBarRGBXBar.setProgress(0);
 		seekBarRGBXBar.setMax(255);
 		seekBarRGBXBar.setProgressDrawable(null);
@@ -286,7 +286,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBXBar.setTag("rgbx");
 
 		//seekbar rgbbarY
-		seekBarRGBYBar=new Color_Progress(context,2,0);
+		seekBarRGBYBar=new Color_Progress(Tracer, context,2,0);
 		seekBarRGBYBar.setProgress(0);
 		seekBarRGBYBar.setMax(255);
 		seekBarRGBYBar.setProgressDrawable(null);
@@ -294,7 +294,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBYBar.setTag("rgby");
 
 		//seekbar powerbar
-		seekBarPowerBar=new Color_Progress(context,3,0);
+		seekBarPowerBar=new Color_Progress(Tracer, context,3,0);
 		seekBarPowerBar.setProgress(0);
 		seekBarPowerBar.setMax(255);
 		seekBarPowerBar.setProgressDrawable(null);

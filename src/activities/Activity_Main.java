@@ -128,6 +128,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Thread waiting_thread = null;
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
+	private String tracer_state = "false";
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -161,11 +162,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.putBoolean("SCREENLOG", false);
 			prefEditor.putBoolean("LOGCHANGED", true);
 			prefEditor.putBoolean("LOGAPPEND", false);
-			prefEditor.commit();
 		} else {
 			prefEditor.putBoolean("LOGCHANGED", true);		//To force Tracer to consider current settings
-			prefEditor.commit();
 		}
+		//prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
+		prefEditor.putBoolean("SYSTEMLOG", true);		// For tests : with system logs....
+		
+		prefEditor.commit();
+		
 		Tracer.set_profile(params);
 		
 		//option

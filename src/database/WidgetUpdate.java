@@ -42,12 +42,12 @@ public class WidgetUpdate implements Serializable {
 		this.sharedparams=params;
 		this.Tracer = Trac;
 		activated = true;
+		Tracer.d(mytag,"Initial start requested....");
 		domodb = new DomodroidDB(Tracer, context);	
 		domodb.owner=mytag;
 		sbanim = anim;
-		Tracer.d(mytag,"Initial start requested....");
 		Timer();
-		refreshNow();	// Force an immediate refresh
+		//refreshNow();	// Force an immediate refresh
 	}
 	
 	/* 

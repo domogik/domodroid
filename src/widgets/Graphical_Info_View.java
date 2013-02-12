@@ -21,7 +21,7 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -86,10 +86,12 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private long currentTimestamp = 0;
 	private long startTimestamp = 0; 
 	private   OnClickListener listener = null;
+	private tracerengine Tracer = null;
 	
-	public Graphical_Info_View(Context context){
+	public Graphical_Info_View(tracerengine Trac, Context context){
 		super(context);
 		invalidate();
+		this.Tracer=Trac;
 		values = new Vector<Vector<Float>>();
 		activate=true;
 		mytag = "Graphical_Info_View";
@@ -291,7 +293,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
-		Tracer.i(mytag,"drawGraph limit = "+limit+" , step = "+step+"Array size = "+values.size());
+		//Tracer.i(mytag,"drawGraph limit = "+limit+" , step = "+step+"Array size = "+values.size());
 		for(int i=0; i<values.size();i++){
 			if(limit == 6) {
 				top = values.get(i).get(4).intValue();	//get the hour
@@ -531,7 +533,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				startTimestamp=time_start.getTime()/1000;
 				
 				
-				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				JSONObject json_GraphValues = null;
 				try {
 					json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
@@ -728,10 +730,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							date_value.set(Calendar.WEEK_OF_YEAR, (int)valueArray.getJSONArray(i).getDouble(1));
 							Date loc_date = new Date();
 							loc_date.setTime(date_value.getTimeInMillis());
-							//loc_date.setYear((int)valueArray.getJSONArray(i).getDouble(0));
-							//loc_date.setMonth(date_value.get(Calendar.MONTH));
-							//loc_date.setDate(date_value.get(Calendar.DAY_OF_MONTH));
-							//Tracer.d(mytag,"Case week : process :"+sdf.format(loc_date));
 							// range of 1 year (average per week)
 							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
 							loc_month=loc_date.getMonth();	// month
@@ -807,13 +805,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	
 	private void compute_period() {
 		long duration = 0; 
-		/*
-		period_type = 0;		// 0 = next , -1 = previous
-		// 1 = 1 day
-		// 8 = 1 week
-		// 30 = 1 month
-		// 365 = 1 year
-		*/
 		//Calendar cal = Calendar.getInstance(); // The 'now' time
 		
 		switch(period_type ) {
@@ -861,7 +852,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			time_end.setTime(new_end_time);	//Get actual system time
 			new_end_time -= duration;
 			time_start.setTime(new_end_time);
-			Tracer.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
+			//Tracer.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
 			break;
 		}
 		// time_start & time_end are set....

@@ -37,7 +37,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
-import misc.Tracer;
 import misc.tracerengine;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -172,7 +171,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
 			featurePan2.setPadding(5, 10, 5, 10);
 			//canvas
-			canvas = new Graphical_Info_View(context);
+			canvas = new Graphical_Info_View(Tracer,context);
 			canvas.dev_id = dev_id;
 			canvas.state_key = state_key;
 			canvas.url = url;

@@ -31,7 +31,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import misc.Tracer;
  
 public class Rest_com {
  
@@ -75,17 +74,13 @@ public class Rest_com {
  
  
         } catch (HttpHostConnectException e) {
-        	Tracer.e("Rest.com","Connection refused to "+url);
-            //e.printStackTrace();
+        	//e.printStackTrace();
         } catch (ClientProtocolException e) {
-        	Tracer.e("Rest.com","Connection refused to "+url);
-            e.printStackTrace();
+        	e.printStackTrace();
         } catch (IOException e) {
-        	Tracer.e("Rest.com","Connection failure to "+url);
-            e.printStackTrace();
+        	e.printStackTrace();
         } catch (JSONException e) {
-        	Tracer.e("Rest.com","JSON exception on "+result);
-            e.printStackTrace();
+        	e.printStackTrace();
         }
         return json;
     }

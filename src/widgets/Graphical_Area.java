@@ -25,7 +25,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,9 +47,11 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 	private String name_area;
 	private int id_area;
 	private Handler widgetHandler;
+	private tracerengine Tracer = null;
 
-	public Graphical_Area(Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
+	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);
+		this.Tracer = Trac;
 		this.id_area = id;
 		this.name_area = name_area;
 		this.context = context;

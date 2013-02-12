@@ -285,7 +285,7 @@ public class Widgets_Manager {
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
 			//Tracer.d("loadRoomWidgets","Adding area : "+area.getName());
-			graph_area = new Graphical_Area(context,area.getId(),area.getName(),area.getDescription(),iconId,widgetSize,widgetHandler);
+			graph_area = new Graphical_Area(Tracer, context,area.getId(),area.getName(),area.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_area);
 			if(columns){	
 				if(counter==0){
@@ -350,7 +350,7 @@ public class Widgets_Manager {
 			if(ref.length() == 0)
 				ref = room.getName();
 			Tracer.d("loadRoomWidgets","Adding room : "+ref);
-			graph_room = new Graphical_Room(context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
+			graph_room = new Graphical_Room(Tracer, context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_room);
 
 			if(columns){	

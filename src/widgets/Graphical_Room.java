@@ -26,7 +26,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import misc.Tracer;
+import misc.tracerengine;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,10 +48,11 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 	private String name_room;
 	private int id_room;
 	private Handler widgetHandler;
+	private tracerengine Tracer = null;
 
-
-	public Graphical_Room(Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
+	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);
+		this.Tracer = Trac;
 		this.id_room = id;
 		this.name_room = name_room;
 		this.context = context;

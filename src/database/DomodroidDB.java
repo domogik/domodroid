@@ -13,7 +13,6 @@ import widgets.Entity_Room;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import misc.Tracer;
 import misc.tracerengine;
 
 
@@ -31,6 +30,9 @@ public class DomodroidDB {
 	public DomodroidDB(tracerengine Trac, Activity context){
 		this.context = context;
 		this.Tracer = Trac;
+		Tracer.refresh_settings();
+		Tracer.i("DomodroidDB", "Instance started...");
+		
 	}
 
 	public void updateDb(){

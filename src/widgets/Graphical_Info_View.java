@@ -553,6 +553,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					handler.sendEmptyMessage(0);	// To force a close of this instance
 					return null;
 				}
+				Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
+				
 				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
 

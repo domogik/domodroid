@@ -293,6 +293,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		case 26: return R.string.info26;
 		case 27: return R.string.info27;
 		case 28: return R.string.info28;
+		
 		case 29: return R.string.info29;
 		case 30: return R.string.info30;
 		case 31: return R.string.info31;
@@ -365,7 +366,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			Tracer.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
+			//Tracer.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
 			Bundle b = new Bundle();
 			String state = domodb.requestFeatureState(dev_id, state_key);
 			if(state != null) {
@@ -378,7 +379,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				// This widget has no feature_state : probably a zombie ????
 				//activate=true;
 				Tracer.e(mytag, "UpdateThread : No value for "+dev_id+ " "+state_key);
-				
 				handler.sendEmptyMessage(0);
 				
 			}

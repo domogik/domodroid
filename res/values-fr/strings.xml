@@ -143,4 +143,14 @@
 	<string name="Green">Vert</string>
 	<string name="Blue">Bleu</string>
 	
+	<string name="debug_settings">Configurer Debug</string>
+	<string name="debug_explain">Cet écran permet la configuration du debug</string>
+	<string name="debug_system">Système log (Catlog)</string>
+	<string name="debug_screen">Log sur écran</string>
+	<string name="debug_file">Log sur fichier texte</string>
+	<string name="debug_dirpath">Répertoire cible du fichier log</string>
+	<string name="debug_filename">Nom du fichier log</string>
+	<string name="debug_bt_apply">Appliquer</string>
+	<string name="debug_bt_cancel">Annuler</string>
+	
 </resources>

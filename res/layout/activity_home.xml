@@ -146,40 +146,7 @@
                 android:paddingLeft="20dip"
                 android:paddingRight="20dip"
                 android:paddingTop="10dip" />
-			<!-- Graph duration  -->
-			<!--  Deleted with new graphs allowing different scales by buttons
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dip"
-                    android:text="@string/network_Text10"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
-                    android:id="@+id/progress2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/network_Text11"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-
-            
-
-            <SeekBar
-                android:id="@+id/SeekBar2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:max="15"
-                android:paddingLeft="20dip"
-                android:paddingRight="20dip"
-                android:paddingTop="10dip" />
-			-->
+			
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -192,7 +159,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dip" >
-
+                
+				
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -246,21 +214,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dip" >
-
+				<!--  Max map size text -->
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="5dip"
                     android:text="@string/network_Text15"
                     android:textColor="#FFFFFF" />
-
+				<!--  Max map size value -->
                 <TextView
                     android:id="@+id/progress3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
-
+			<!-- Old version
             <SeekBar
                 android:id="@+id/SeekBar3"
                 android:layout_width="fill_parent"
@@ -269,7 +237,35 @@
                 android:paddingLeft="20dip"
                 android:paddingRight="20dip"
                 android:paddingTop="10dip" />
-
+             -->
+             <LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="10dip" >
+                
+                 <!--  Choix de la taille des images MAP -->
+	            <SeekBar
+	                android:id="@+id/SeekBar3"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:max="1000"
+	                android:paddingLeft="20dip"
+	                android:paddingRight="20dip"
+	                android:paddingTop="10dip"
+	                android:layout_weight="0.70"
+		    	/>
+	            <!--  Add a button to allow debug configuration -->
+            	<Button
+				    android:id="@+id/bt_debug_settings"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="0.30"
+				    android:text="@string/debug_settings"
+	     		/>
+	    	</LinearLayout>
+	    	
+			<!--  Max map size warning -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -277,6 +273,7 @@
                 android:text="@string/network_Text17"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
+        <!-- End of general config/sync  menu slider -->
     </activities.Sliding_Drawer>
 
     <!-- Set center image + background -->

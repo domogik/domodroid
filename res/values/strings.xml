@@ -144,4 +144,14 @@
 	<string name="Blue">Blue</string>
 	<string name="map_button2c">Move Widgets</string>
 	
+	<string name="debug_settings">Debug configuration</string>
+	<string name="debug_explain">This screen allow debugging configuration</string>
+	<string name="debug_system">Log to system (Catlog)</string>
+	<string name="debug_screen">Log to screen</string>
+	<string name="debug_file">Log to text file</string>
+	<string name="debug_dirpath">Target directory for text file</string>
+	<string name="debug_filename">Log text filename</string>
+	<string name="debug_bt_apply">Apply changes</string>
+	<string name="debug_bt_cancel">Cancel</string>
+	
 </resources>

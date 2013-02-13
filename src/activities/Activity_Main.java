@@ -89,6 +89,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Intent mapI = null;
 	private Button sync;
 	private Button Exit;	//Added by Doume
+	private Button debug_settings;	//Added by Doume
+	private Dialog_Debug debug_set = null; 
 	private EditText localIP;
 	private CheckBox checkbox3;
 	private CheckBox checkbox4;
@@ -199,6 +201,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2.setOnSeekBarChangeListener(this);
 		mSeekBar3.setOnSeekBarChangeListener(this);
 
+		debug_settings=(Button)findViewById(R.id.bt_debug_settings);
+		debug_settings.setOnClickListener(this);
+		debug_settings.setTag("debug_conf");
+		
 		LoadSelections();
 		
 		// Prepare a listener to know when a sync dialog is closed...
@@ -718,7 +724,17 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			panel.setOpen(false, false);	// Hide the View
 			run_sync_dialog();		// And run a resync with Rinor server
 			
-		}	else if(v.getTag().equals("Exit")) {
+		} else if(v.getTag().equals("debug_conf")) {
+			//Disconnect all opened sessions....
+			Tracer.v("Activity_Main.onclick()","Call to Debug settings screen");
+			if(debug_set != null)
+				debug_set.get_params();
+			else
+				debug_set = new Dialog_Debug(Tracer, params, this);
+			
+			debug_set.show();
+			return;
+		} else if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....
 			Tracer.v("Activity_Main Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;

@@ -70,14 +70,15 @@ public class tracerengine {
 			Boolean changed = settings.getBoolean("LOGCHANGED", true);
 			if(changed) {
 				refresh_settings();
+				if(txtFile != null) {
+					txtFile = null;	//close object
+				}
 				if(to_txtFile) {
 					if(logname.equals("")) {
 						// If no filename given, no log to file, nor in append !
 						to_txtFile = false;
 						txtappend=false;
-						if(txtFile != null) {
-							txtFile = null;	//close object
-						}
+						
 					} else {
 						// file path given : try to open it....
 						try {
@@ -85,17 +86,12 @@ public class tracerengine {
 							txtlog(2," ","Starting log session");
 						} catch (Exception e) {
 							txtFile = null;
-							to_txtFile = null;
-							txtappend=null;
+							to_txtFile = false;
+							txtappend=false;
 						}
 						
 					}
-				} else {
-					if(txtFile != null) {
-						// A text file was open....
-						txtFile = null;	//close object
-					}
-				}
+				} 
 				prefEditor=settings.edit();
 				prefEditor.putBoolean("LOGCHANGED", false);
 				prefEditor.putBoolean("TEXTLOG", to_txtFile);	//In case open fails.... don't retry till next change !

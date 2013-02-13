@@ -15,7 +15,7 @@
 		android:orientation="vertical" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:gravity="center">
 
-		<LinearLayout android:id="@+id/linearLayout1"
+		<LinearLayout android:id="@+id/linearLayout2"
 			android:orientation="horizontal" android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:paddingTop="20dip"
 			android:paddingLeft="5dip" android:paddingRight="5dip">

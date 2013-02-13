@@ -62,6 +62,8 @@ public class tracerengine {
 			to_txtFile = settings.getBoolean("TEXTLOG", false);
 			to_screen = settings.getBoolean("SCREENLOG", false);
 			txtappend = settings.getBoolean("LOGAPPEND", false);
+			
+			
 		}
 		
 	}
@@ -129,7 +131,7 @@ public class tracerengine {
 		if(txtFile != null) {
 			String typeC = " ";
 			String dateS = " ";
-			String tagS = String.format("%26c", tag);
+			String tagS = tag;
 			switch (type) {
 			case 0:
 				typeC = "D";
@@ -148,7 +150,9 @@ public class tracerengine {
 				break;
 			}
 			try {
-				txtFile.write(typeC+" | "+dateS+" | "+tagS+" | "+msg);
+				String line = typeC+" | "+dateS+" | "+tagS+" | "+msg;
+				//Log.w("Tracerengine",line);
+				txtFile.write(line+"\n");
 				txtFile.flush();
 			} catch (IOException i) {
 				txtFile = null;		//Abort log to text file in future

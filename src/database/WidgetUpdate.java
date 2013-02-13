@@ -29,6 +29,7 @@ public class WidgetUpdate implements Serializable {
 	private String mytag="WidgetUpdate";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
+	private static Handler handler = null;
 	/*import misc.Tracer;
 
 	 * This class is a background engine 
@@ -46,8 +47,9 @@ public class WidgetUpdate implements Serializable {
 		domodb = new DomodroidDB(Tracer, context);	
 		domodb.owner=mytag;
 		sbanim = anim;
-		Timer();
-		refreshNow();	// Force an immediate refresh
+		//refreshNow();	// Force an immediate refresh
+		Timer();		//and initiate the cyclic timer
+		
 	}
 	
 	/* 
@@ -65,7 +67,7 @@ public class WidgetUpdate implements Serializable {
 		final Timer timer = new Timer();
 		
 		
-		final Handler handler = new Handler();
+		handler = new Handler();
 		doAsynchronousTask = new TimerTask() {
 		
 			@Override

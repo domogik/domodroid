@@ -151,10 +151,13 @@ public class tracerengine {
 			String typeC = " ";
 			String dateS = sdf.format(now);
 			String tagS = String.format("%-26s", tag);
-			/*
-			 int tid = (int)java.lang.Thread.currentThread().hashCode(); // .getId();
+			
+			 int tid = android.os.Process.myTid();
 			 String tids = Integer.toString(tid);
-			 */
+			 /*
+			 int pid = android.os.Process.myPid();
+			 String pids = Integer.toString(pid);
+			 */ 
 			switch (type) {
 			case 0:
 				typeC = "D";
@@ -173,8 +176,8 @@ public class tracerengine {
 				break;
 			}
 			try {
-				//String line = typeC+" | "+dateS+" | "+tids+" | "+tagS+" | "+msg;
-				String line = typeC+" | "+dateS+" | "+tagS+" | "+msg;
+				String line = typeC+" | "+dateS+" | "+tids+" | "+tagS+" | "+msg;
+				//String line = typeC+" | "+dateS+" | "+tagS+" | "+msg;
 				//Log.w("Tracerengine",line);
 				txtFile.write(line+"\n");
 				txtFile.flush();

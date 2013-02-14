@@ -90,7 +90,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private String mytag = "";
 	private tracerengine Tracer = null;
 	private String stateS = "";
-	
+	private String Value_0 = "0";
+	private String Value_1 = "1";
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize) throws JSONException {
@@ -108,10 +109,12 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.wname = name;
 		this.myself = this;
 		this.stateS = getResources().getText(R.string.State).toString();
+
 		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Binary("+dev_id+")";
 		mytag = domodb.owner;
-		//get parameters
+		//get parameters		
+		
 		try {
 			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 			value0 = jparam.getString("value0");
@@ -120,6 +123,18 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			value0 = "0";
 			value1 = "1";
 		}
+		
+		if (usage.equals("light")){
+			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
+			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
+		}else if (usage.equals("shutter")){
+			this.Value_0 =  getResources().getText(R.string.shutter_stat_0).toString();
+			this.Value_1 =  getResources().getText(R.string.shutter_stat_1).toString();
+		}else{
+			this.Value_0 = value0;
+			this.Value_1 = value1;		
+		}
+		
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
@@ -188,7 +203,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		background.addView(featurePan);
 
 		this.addView(background);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -207,10 +222,12 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						Bundle b = msg.getData();
 						if(( b != null) && (b.getString("message") != null)) {
 							if (b.getString("message").equals(value0)){
-								state.setText(stateS+value0);
+								//state.setText(stateS+value0);
+								state.setText(stateS+Value_0);
 								new SBAnim(seekBarOnOff.getProgress(),0).execute();
 							}else if(b.getString("message").equals(value1)){
-								state.setText(stateS+value1);
+								//state.setText(stateS+value1);
+								state.setText(stateS+Value_1);
 								new SBAnim(seekBarOnOff.getProgress(),40).execute();
 							}
 							state.setAnimation(animation);
@@ -236,11 +253,13 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		switch(progress) {
 		case 0:
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-			state.setText(stateS +value0);
+			//state.setText(stateS +value0);
+			state.setText(stateS+Value_0);
 			break;
 		case 40:
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-			state.setText(stateS + value1);
+			//state.setText(stateS + value1);
+			state.setText(stateS+Value_1);
 			break;
 		}
 	}

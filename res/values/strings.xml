@@ -154,5 +154,9 @@
 	<string name="debug_bt_apply">Apply changes</string>
 	<string name="debug_bt_cancel">Cancel</string>
 	<string name="State">State : </string>
+	<string name="light_stat_0">Off</string>
+	<string name="light_stat_1">On</string>
+	<string name="shutter_stat_0">Close</string>
+	<string name="shutter_stat_1">Open</string>
 	
 </resources>

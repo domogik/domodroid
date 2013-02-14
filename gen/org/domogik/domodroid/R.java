@@ -361,15 +361,16 @@ containing a value of this type.
         public static final int activity_home=0x7f030001;
         public static final int activity_map=0x7f030002;
         public static final int dialog=0x7f030003;
-        public static final int dialog_debug=0x7f030004;
-        public static final int dialog_help=0x7f030005;
-        public static final int dialog_items=0x7f030006;
-        public static final int dialog_splash=0x7f030007;
-        public static final int dialog_synchronize=0x7f030008;
-        public static final int graph_buttons=0x7f030009;
-        public static final int item_feature=0x7f03000a;
-        public static final int item_map=0x7f03000b;
-        public static final int layout_seekbar_background=0x7f03000c;
+        public static final int dialog_customname=0x7f030004;
+        public static final int dialog_debug=0x7f030005;
+        public static final int dialog_help=0x7f030006;
+        public static final int dialog_items=0x7f030007;
+        public static final int dialog_splash=0x7f030008;
+        public static final int dialog_synchronize=0x7f030009;
+        public static final int graph_buttons=0x7f03000a;
+        public static final int item_feature=0x7f03000b;
+        public static final int item_map=0x7f03000c;
+        public static final int layout_seekbar_background=0x7f03000d;
     }
     public static final class raw {
         public static final int domodroid=0x7f040000;
@@ -472,6 +473,8 @@ containing a value of this type.
         public static final int info7=0x7f060041;
         public static final int info8=0x7f060042;
         public static final int info9=0x7f060043;
+        public static final int light_stat_0=0x7f060080;
+        public static final int light_stat_1=0x7f060081;
         public static final int map_button1=0x7f06001d;
         public static final int map_button2=0x7f06001e;
         public static final int map_button2b=0x7f06001f;
@@ -500,6 +503,8 @@ containing a value of this type.
         public static final int reloadNO=0x7f060017;
         public static final int reloadOK=0x7f060016;
         public static final int reload_title=0x7f060014;
+        public static final int shutter_stat_0=0x7f060082;
+        public static final int shutter_stat_1=0x7f060083;
         public static final int splash_title=0x7f060011;
         public static final int to=0x7f060034;
         public static final int version=0x7f06006c;

@@ -187,7 +187,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		//Debug option
 		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
-		//Custom name option
+		//Hide name option
 		hidecheckbox = (CheckBox)findViewById(R.id.hidecheckbox);		
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);

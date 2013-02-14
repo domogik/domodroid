@@ -399,14 +399,14 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		final EditText input = new EditText(getContext());
 			alert.setView(input);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Range", "Description set to: "+result);
 					domodb.updateFeaturename(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.e("Graphical_Range", "Customname Canceled.");
 				}
 			});

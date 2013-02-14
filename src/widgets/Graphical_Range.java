@@ -319,7 +319,12 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				String state = domodb.requestFeatureState(dev_id, state_key);
 				if(state != null) {
 					activate=false;
-					handler.sendEmptyMessage(Integer.parseInt(state));
+					try {
+						handler.sendEmptyMessage(Integer.parseInt(state));
+					} catch (Exception e) {
+						// if state = "none", by example, for off state
+						handler.sendEmptyMessage(0);
+					}
 					
 				} else {
 					// This widget has no feature_state : probably a zombie ????

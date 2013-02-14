@@ -2,6 +2,9 @@ package misc;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -9,13 +12,18 @@ public class tracerengine {
 	private static Boolean	to_Android = true;
 	private static Boolean	to_txtFile = false;
 	private static Boolean	to_screen = false;
+	private static Boolean	txtappend = false;		
 	private static String logpath = null;
 	private static String logname = null;
+	private static Boolean	Debug = true;
+	private static Boolean	Info = false;
+	private static Boolean	Error = false;
+	private static Boolean	Verbose = false;	
+	private static Boolean	Warning = false;
 	
-	private static Boolean	txtappend = false;		//append by default
 	private static SharedPreferences settings = null;
 	private static SharedPreferences.Editor prefEditor;
-	
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static FileWriter txtFile = null;
 	
 	public tracerengine(SharedPreferences params){
@@ -32,19 +40,24 @@ public class tracerengine {
 		}
 	}
 	public void d(String tag, String msg) {
-		choose_log(0,tag,msg);
+		if(Debug)
+			choose_log(0,tag,msg);
 	}
 	public void e(String tag, String msg) {
-		choose_log(1,tag,msg);
+		if(Error)
+			choose_log(1,tag,msg);
 	}
 	public void i(String tag, String msg) {
-		choose_log(2,tag,msg);
+		if(Info)
+			choose_log(2,tag,msg);
 	}
 	public void v(String tag, String msg) {
-		choose_log(3,tag,msg);
+		if(Verbose)
+			choose_log(3,tag,msg);
 	}
 	public void w(String tag, String msg) {
-		choose_log(4,tag,msg);
+		if(Warning)
+			choose_log(4,tag,msg);
 	}
 	/*
 	 * Configure Tracer profile
@@ -63,6 +76,11 @@ public class tracerengine {
 			to_screen = settings.getBoolean("SCREENLOG", false);
 			txtappend = settings.getBoolean("LOGAPPEND", false);
 			
+			Debug = settings.getBoolean("LOG_DEBUG", true);
+			Info = settings.getBoolean("LOG_INFO", true);
+			Error = settings.getBoolean("LOG_ERROR", true);
+			Verbose = settings.getBoolean("LOG_VERBOSE", true);
+			Warning = settings.getBoolean("LOG_WARNING", true);
 			
 		}
 		
@@ -129,9 +147,14 @@ public class tracerengine {
 	 */
 	private void txtlog(int type,String tag,String msg) {
 		if(txtFile != null) {
+			Date now = new Date();
 			String typeC = " ";
-			String dateS = " ";
-			String tagS = tag;
+			String dateS = sdf.format(now);
+			String tagS = String.format("%-26s", tag);
+			/*
+			 int tid = (int)java.lang.Thread.currentThread().hashCode(); // .getId();
+			 String tids = Integer.toString(tid);
+			 */
 			switch (type) {
 			case 0:
 				typeC = "D";
@@ -150,6 +173,7 @@ public class tracerengine {
 				break;
 			}
 			try {
+				//String line = typeC+" | "+dateS+" | "+tids+" | "+tagS+" | "+msg;
 				String line = typeC+" | "+dateS+" | "+tagS+" | "+msg;
 				//Log.w("Tracerengine",line);
 				txtFile.write(line+"\n");

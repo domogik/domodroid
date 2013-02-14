@@ -219,7 +219,7 @@ public class MapView extends View {
 			Matrix matScale = new Matrix();
 			matScale.postScale(currentScale, currentScale);
 			canvasMap.setMatrix(matScale);
-			canvasMap.drawBitmap(bitmap, 0, 0, paint_map);
+			canvasMap.drawBitmap(bitmap, 0, 0, paint_map );
 			widget = Bitmap.createBitmap((int)((bitmap.getWidth()+200)*currentScale), (int)((bitmap.getHeight()+200)*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
 		}
@@ -255,7 +255,8 @@ public class MapView extends View {
 					valueMin = jparam.getInt("valueMin");
 					valueMax = jparam.getInt("valueMax");
 				} catch (JSONException e1) {
-					e1.printStackTrace();
+					//e1.printStackTrace();
+					//TODO : what to put into value0, 1, min & max ?
 				}
 				if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
 				//if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))

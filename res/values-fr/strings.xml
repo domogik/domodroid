@@ -152,5 +152,6 @@
 	<string name="debug_filename">Nom du fichier log</string>
 	<string name="debug_bt_apply">Appliquer</string>
 	<string name="debug_bt_cancel">Annuler</string>
+	<string name="State">Etat : </string>
 	
 </resources>

@@ -89,7 +89,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	public FrameLayout myself = null;
 	private String mytag = "";
 	private tracerengine Tracer = null;
-
+	private String stateS = "";
+	
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize) throws JSONException {
@@ -106,18 +107,22 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.setPadding(5, 5, 5, 5);
 		this.wname = name;
 		this.myself = this;
-		
+		this.stateS = getResources().getText(R.string.State).toString();
 		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Binary("+dev_id+")";
 		mytag = domodb.owner;
 		//get parameters
-		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-		value0 = jparam.getString("value0");
-		value1 = jparam.getString("value1");
-
+		try {
+			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+			value0 = jparam.getString("value0");
+			value1 = jparam.getString("value1");
+		} catch (Exception e) {
+			value0 = "0";
+			value1 = "1";
+		}
 		String[] model = model_id.split("\\.");
 		type = model[0];
-		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
+		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
 		
 		//panel with border
 		background = new LinearLayout(context);
@@ -202,10 +207,10 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						Bundle b = msg.getData();
 						if(( b != null) && (b.getString("message") != null)) {
 							if (b.getString("message").equals(value0)){
-								state.setText("State : "+value0);
+								state.setText(stateS+value0);
 								new SBAnim(seekBarOnOff.getProgress(),0).execute();
 							}else if(b.getString("message").equals(value1)){
-								state.setText("State : "+value1);
+								state.setText(stateS+value1);
 								new SBAnim(seekBarOnOff.getProgress(),40).execute();
 							}
 							state.setAnimation(animation);
@@ -231,11 +236,11 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		switch(progress) {
 		case 0:
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-			state.setText("State : "+value0);
+			state.setText(stateS +value0);
 			break;
 		case 40:
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-			state.setText("State : "+value1);
+			state.setText(stateS + value1);
 			break;
 		}
 	}

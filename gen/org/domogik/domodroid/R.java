@@ -387,6 +387,7 @@ containing a value of this type.
         public static final int Rename_message=0x7f060038;
         public static final int Rename_title=0x7f060037;
         public static final int Sat=0x7f06006e;
+        public static final int State=0x7f06007f;
         public static final int Sync=0x7f060035;
         public static final int app_name=0x7f060000;
         public static final int bt_day=0x7f06000a;

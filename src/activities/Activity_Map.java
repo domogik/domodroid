@@ -321,6 +321,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			widgetUpdate = null;
 		}
 		widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
+		Tracer.set_engine(widgetUpdate);
 		
 	}
 	

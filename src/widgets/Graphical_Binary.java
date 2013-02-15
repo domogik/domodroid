@@ -23,6 +23,8 @@ import java.util.TimerTask;
 import rinor.Rest_com;
 import database.DomodroidDB;
 import database.JSONParser;
+import database.WidgetUpdate;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Gradients_Manager;
@@ -92,6 +94,12 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private String stateS = "";
 	private String Value_0 = "0";
 	private String Value_1 = "1";
+	
+	private WidgetUpdate state_engine = null;
+	private Entity_client session = null; 
+	private Boolean realtime = false;
+	
+	
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize) throws JSONException {
@@ -209,6 +217,11 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			public void handleMessage(Message msg) {
 				if(activate) {
 					Tracer.d(mytag,"Handler receives a request to die " );
+					if(realtime) {
+						state_engine.unsubscribe(session);
+						session = null;
+						realtime = false;
+					}
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -234,6 +247,17 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						} else {
 							if(msg.what == 2) {
 								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+							} else if(msg.what == 9999) {
+								//state_engine send us a signal to notify value changed
+								String new_val = session.getValue();
+								Tracer.d(mytag,"Handler receives a new value <"+new_val+">" );
+								if(new_val.equals(value0)) {
+									state.setText(stateS+Value_0);
+									new SBAnim(seekBarOnOff.getProgress(),0).execute();
+								}else if(new_val.equals(value1)){
+									state.setText(stateS+Value_1);
+									new SBAnim(seekBarOnOff.getProgress(),40).execute();
+								}
 							}
 						}
 						
@@ -244,7 +268,24 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 				}
 			}	
 		};
-		updateTimer();	
+		//================================================================================
+		/*
+		 * New mechanism to be notified by widgetupdate engine when our value is changed
+		 * 
+		 */
+		if(Tracer != null) {
+			state_engine = Tracer.get_engine();
+			if(state_engine != null) {
+				session = new Entity_client(dev_id, state_key, mytag, handler);
+				if(state_engine.subscribe(session)) {
+					realtime = true;		//we're connected to engine
+											//each time our value change, the engine will call handler
+					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
+				}
+			}
+		}
+		//================================================================================
+		//updateTimer();	//Don't use anymore cyclic refresh....	
 
 	}
 
@@ -281,7 +322,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		new CommandeThread().execute();
 		touching=false;
 	}
-
+	/*
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
@@ -359,7 +400,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			return null;
 		}
 	}
-
+	 */
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override

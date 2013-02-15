@@ -153,7 +153,7 @@
 	<string name="debug_bt_apply">Appliquer</string>
 	<string name="debug_bt_cancel">Annuler</string>
 	<string name="State">Etat : </string>
-	<string name="light_stat_0">Eteind</string>
+	<string name="light_stat_0">Eteint</string>
 	<string name="light_stat_1">Allumé</string>
 	<string name="shutter_stat_0">Fermé</string>
 	<string name="shutter_stat_1">Ouvert</string>

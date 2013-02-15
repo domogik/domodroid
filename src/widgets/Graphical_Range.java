@@ -21,8 +21,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import rinor.Rest_com;
+import widgets.Graphical_Binary.SBAnim;
 import database.DomodroidDB;
 import database.JSONParser;
+import database.WidgetUpdate;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Gradients_Manager;
@@ -89,7 +92,12 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private tracerengine Tracer = null;
-
+	
+	private WidgetUpdate state_engine = null;
+	private Entity_client session = null; 
+	private Boolean realtime = false;
+	private String stateS = "";
+	
 	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
@@ -103,6 +111,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.wname = name;
 		this.myself=this;
 		stateThread = 1;
+		this.stateS = getResources().getText(R.string.State).toString();
+
 
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -213,17 +223,34 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
 				} else {
 					try {
-						if(msg.what==valueMin){
+						int new_val = 0;
+						if(msg.what == 9999) {
+							//state_engine send us a signal to notify value changed
+							try {
+								new_val = Integer.parseInt(session.getValue());
+							} catch (Exception e) {
+								new_val = 0;
+							}
+							Tracer.d("Graphical_Range","Handler received a new value from cache_engine <"+session.getValue()+">" );
+							if(new_val==valueMin) {
+								state.setText(stateS+"0 %");
+							}else if(msg.what>valueMin && msg.what<valueMax){
+								state.setText(stateS+(int)(new_val*(100f/(float)valueMax))+" %");
+							}else if(new_val==valueMax){
+								state.setText(stateS+"100 %");
+							}
+						} 
+						/* no more UpdateThread results
+						 else 	if(msg.what==valueMin){
 							state.setText("State : "+0+"%");
 						}else if(msg.what>valueMin && msg.what<valueMax){
 							state.setText("State : "+(int)(msg.what*(100f/(float)valueMax))+"%");
 						}else if(msg.what==valueMax){
 							state.setText("State : "+100+"%");
 						}
-						Tracer.e("Graphical_Range", "UIThread handler : Value "+msg.what+" refreshed for device "+wname);
-						
+						*/
 						state.setAnimation(animation);
-						new SBAnim(seekBarVaria.getProgress(),msg.what).execute();
+						new SBAnim(seekBarVaria.getProgress(),new_val).execute();
 					} catch (Exception e) {
 						Tracer.e("handler error", "device "+wname);
 						e.printStackTrace();
@@ -231,7 +258,25 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				}
 			}	
 		};
-		updateTimer();	
+		//================================================================================
+		/*
+		 * New mechanism to be notified by widgetupdate engine when our value is changed
+		 * 
+		 */
+		if(Tracer != null) {
+			state_engine = Tracer.get_engine();
+			if(state_engine != null) {
+				session = new Entity_client(dev_id, state_key, "Graphical_Range", handler);
+				if(state_engine.subscribe(session)) {
+					realtime = true;		//we're connected to engine
+											//each time our value change, the engine will call handler
+					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
+				}
+			}
+		}
+		//================================================================================
+		//updateTimer();	//Don't use anymore cyclic refresh....	
+	
 
 
 	}
@@ -264,6 +309,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		touching=false;
 	}
 	
+	/*
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
@@ -336,7 +382,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			return null;
 		}
 	}
-
+	*/
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override

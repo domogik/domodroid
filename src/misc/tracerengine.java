@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+import database.WidgetUpdate;
+
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -23,6 +25,14 @@ public class tracerengine {
 	
 	private static SharedPreferences settings = null;
 	private static SharedPreferences.Editor prefEditor;
+	
+	/*
+	 * It's not elegant, but Tracer will store the reference to widgetupdate instance,
+	 * and will offer to all users using Tracer to also retrieve instance
+	 * of state engine.....
+	 */
+	private WidgetUpdate state_engine = null;
+	
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static FileWriter txtFile = null;
 	
@@ -208,5 +218,11 @@ public class tracerengine {
 			Log.w(tag,msg);
 			break;
 		}
+	}
+	public WidgetUpdate get_engine() {
+		return state_engine;
+	}
+	public void set_engine(WidgetUpdate engine) {
+		state_engine = engine;
 	}
 }

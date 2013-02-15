@@ -224,6 +224,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						if(widgetUpdate == null) {
 							Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
 							widgetUpdate = new WidgetUpdate(Tracer, myself,sbanim,params);
+							Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
@@ -404,8 +405,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		// WidgetUpdate is a background process, submitting queries to Rinor
 		//		and updating local database
 		if(widgetUpdate == null) {
-			Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
+			Tracer.i("Activity_Main", "End_of_init : Starting WidgetUpdate engine !");
 			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
+			Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
 		}
 		
 		if(history != null)
@@ -420,9 +422,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				@Override
 				public void handleMessage(Message msg) {
 					
-					if(widgetUpdate == null)
+					if(widgetUpdate == null) {
 						widgetUpdate = new WidgetUpdate(Tracer, myself, sbanim, params);
-				
+						Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
+					}
 					try {
 						historyPosition++;
 						loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
@@ -706,9 +709,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		SaveSelections(false);		// To force a sync operation, if something has been modified...
-		if(widgetUpdate == null)
+		if(widgetUpdate == null) {
 			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
-
+			Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
+		}
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {
 		Tracer.v("Activity_Main","onPanelOpened");
@@ -741,6 +745,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			widgetHandler=null;
 			widgetUpdate.cancelEngine();
 			widgetUpdate=null;
+			Tracer.set_engine(null);
 			//And stop main program
 			this.finish();
 			return;

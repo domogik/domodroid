@@ -234,7 +234,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 							Tracer.d("Graphical_Range","Handler received a new value from cache_engine <"+session.getValue()+">" );
 							if(new_val==valueMin) {
 								state.setText(stateS+"0 %");
-							}else if(msg.what>valueMin && msg.what<valueMax){
+							}else if(new_val>valueMin && new_val<valueMax){
 								state.setText(stateS+(int)(new_val*(100f/(float)valueMax))+" %");
 							}else if(new_val==valueMax){
 								state.setText(stateS+"100 %");

@@ -22,9 +22,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import database.DomodroidDB;
+import database.WidgetUpdate;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
+
+import widgets.Graphical_Binary.SBAnim;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -78,7 +81,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Graphical_Info_View canvas;
 	private int update;
 	private Animation animation;
-	public boolean activate=false;	// When true, stop all background activities....
 	private DomodroidDB domodb;
 	private Message msg;
 	private String wname;
@@ -88,6 +90,10 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public FrameLayout myself = null;
 	public Boolean with_graph = true;
 	private tracerengine Tracer = null;
+
+	private WidgetUpdate state_engine = null;
+	private Entity_client session = null; 
+	private Boolean realtime = false;
 		
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
@@ -99,7 +105,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		this.wname = name;
 		this.url = url;
 		this.myself = this;
-		this.activate=false;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
@@ -219,46 +224,75 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if(activate) {
+				if(msg.what == 9) {
 					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
+					if(realtime) {
+						state_engine.unsubscribe(session);
+						session = null;
+						realtime = false;
+					}
 					removeView(background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
 					}
-					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+					try { 
+						finalize(); 
+					} catch (Throwable t) {}	//kill the handler thread itself
 				} else {
-					try {
-						float formatedValue = 0;
-						String loc_Value = msg.getData().getString("message");
-						if(loc_Value != null)
-							formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
-						
-						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
-						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
-						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-						else value.setText(msg.getData().getString("message"));
-						Tracer.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
-						value.setAnimation(animation);
-					} catch (Exception e) {
-						// It's probably a String that could'nt be converted to a float
-						value.setText(msg.getData().getString("message"));
-						//Tracer.e(mytag, "handler error device "+wname);
-						//e.printStackTrace();
+					if(msg.what == 9999) {
+						//Message from widgetupdate
+						//state_engine send us a signal to notify value changed
+						String loc_Value = session.getValue();
+						Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
+						try {
+							float formatedValue = 0;
+							if(loc_Value != null)
+								formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
+							
+							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
+							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
+							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+							else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
+							else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
+							else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
+							else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
+							else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
+							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+							else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
+							else value.setText(msg.getData().getString("message"));
+							Tracer.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
+							value.setAnimation(animation);
+						} catch (Exception e) {
+							// It's probably a String that could'nt be converted to a float
+							Tracer.d(mytag,"Handler exception for new value <"+loc_Value+">" );
+							value.setText(loc_Value);
+							
+						}
 					}
 				}
 			}
 		};
-		updateTimer();
+		//================================================================================
+		/*
+		 * New mechanism to be notified by widgetupdate engine when our value is changed
+		 * 
+		 */
+		if(Tracer != null) {
+			state_engine = Tracer.get_engine();
+			if(state_engine != null) {
+				session = new Entity_client(dev_id, state_key, mytag, handler);
+				if(state_engine.subscribe(session)) {
+					realtime = true;		//we're connected to engine
+											//each time our value change, the engine will call handler
+					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
+				}
+			}
+		}
+		//================================================================================
+		//updateTimer();	//Don't use anymore cyclic refresh....	
 
 	}
 
@@ -317,7 +351,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		}
 		return R.string.info48;
 	}
-
+/*
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
@@ -386,7 +420,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			return null;
 		}
 	}
-	
+*/	
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(with_graph) {
 			if(background.getHeight() != 350){
@@ -409,7 +443,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			activate=true;
+			
 		}
 	}
 	

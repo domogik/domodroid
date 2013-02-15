@@ -257,6 +257,9 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 								}else if(new_val.equals(value1)){
 									state.setText(stateS+Value_1);
 									new SBAnim(seekBarOnOff.getProgress(),40).execute();
+								} else {
+									state.setText(stateS+new_val);
+									new SBAnim(seekBarOnOff.getProgress(),0).execute();
 								}
 							}
 						}
@@ -280,7 +283,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 				if(state_engine.subscribe(session)) {
 					realtime = true;		//we're connected to engine
 											//each time our value change, the engine will call handler
-					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
+					handler.sendEmptyMessage(9999);	//Force to consider current value in session
 				}
 			}
 		}

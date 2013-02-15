@@ -38,7 +38,9 @@ public class WidgetUpdate implements Serializable {
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
 	private static Handler handler = null;
+	
 	private ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
+	private Boolean locked = false;
 	
 	/*
 	 * This class is a background engine 
@@ -229,7 +231,7 @@ public class WidgetUpdate implements Serializable {
 				//found device in list
 				if( (cache.get(i).Value.equals(Val))) {
 					//value not changed
-					Tracer.i(mytag, "cache engine update same value for ("+dev_id+") ("+skey+") ("+Val+")");
+					//Tracer.i(mytag, "cache engine update same value for ("+dev_id+") ("+skey+") ("+Val+")");
 					
 					return;
 				} else {
@@ -281,9 +283,15 @@ public class WidgetUpdate implements Serializable {
 			return false;
 		device = client.getDevId();
 		skey = client.getskey();
-		Tracer.i(mytag, "cache engine subscription from <"+client.getName()+"> Device ("+device+") ("+skey+")");
+		Tracer.i(mytag, "cache engine subscription requested by <"+client.getName()+"> Device ("+device+") ("+skey+")");
 		
-		
+		while(locked) {
+			//Somebody else is updating list...
+			try{
+				Thread.sleep(10);		//Standby 10 milliseconds
+			} catch (Exception e) {};
+		}
+		locked=true;	//Take the lock
 		for(int i = 0; i < cache.size(); i++) {
 			if( (cache.get(i).DevId == device) && (cache.get(i).skey.equals(skey))) {
 				//found device in list
@@ -292,12 +300,15 @@ public class WidgetUpdate implements Serializable {
 				if(client.getClientHandler() == null)
 					return false;
 				cache.get(i).add_client(client);	//The client structure contains also last known value for this device
+				Tracer.i(mytag, "cache engine subscription done for <"+client.getName()+"> Device ("+device+") ("+skey+") Value : "+cache.get(i).Value);
+				locked=false;
 				return true;
 			}
 			// not the good one : check next
 			
 		}	//loop to search this device in cache
 		// device not yet exist in cache
+		locked=false;
 		return false;
 	}
 	
@@ -310,19 +321,29 @@ public class WidgetUpdate implements Serializable {
 			return false;
 		device = client.getDevId();
 		skey = client.getskey();
-		Tracer.i(mytag, "cache engine release subscription from <"+client.getName()+"> Device ("+device+") ("+skey+")");
+		Tracer.i(mytag, "cache engine release subscription requested by <"+client.getName()+"> Device ("+device+") ("+skey+")");
+		
+		while(locked) {
+			//Somebody else is updating list...
+			try{
+				Thread.sleep(10);		//Standby 10 milliseconds
+			} catch (Exception e) {};
+		}
 		for(int i = 0; i < cache.size(); i++) {
 			if( (cache.get(i).DevId == device) && (cache.get(i).skey.equals(skey))) {
 				//found device in list
 				client.setValue(cache.get(i).Value);	//return current stat value
 				// Try to remove this client from list
 				cache.get(i).remove_client(client);
+				Tracer.i(mytag, "cache engine release subscription done for <"+client.getName()+"> Device ("+device+") ("+skey+")");
+				locked=false;
 				return true;
 			}
 			// not the good one : check next
 			
 		}	//loop to search this device in cache
 		client.setClientId(-1);		//subscribing not located...
+		locked=false;
 		return false;
 		
 	}

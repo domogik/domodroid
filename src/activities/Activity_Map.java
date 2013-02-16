@@ -91,9 +91,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
 		Tracer = new tracerengine(params);
-		Tracer.w("Activity_Map","onCreate begin");
-		startDBEngine();
-		
+		/*
+		Bundle b = null;
+		b = savedInstanceState.getBundle();
+		byte[] serial_engine = getByteArray("engine");// .getExtra("engine"); // getIntent().getByteArrayExtra("engine");
+		engine = (WidgetUpdate) deserializeObject(serial_engine); 
+		*/
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
@@ -185,6 +188,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		add.setTag("add");
 		add.setBackgroundColor(Color.parseColor("#00000000"));
 		add.setOnClickListener(this);
+		
 		help = new Button(this);
 		help.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		help.setPadding(10, 13, 10, 13);
@@ -279,7 +283,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 		if(!list_usable_files.isEmpty()){
 			mapView.initMap();
-			//mapView.updateTimer();
+			mapView.updateTimer();
 			parent.addView(mapView);
 		} else {
 			Dialog_Help dialog_help = new Dialog_Help(this);
@@ -311,12 +315,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
-	//////////////////////////// WARNING ABOUT DB ENGINE : If we stop it, all subscribing by widgets are lost...
-	// has to be revised
-	
-	
 	private void startDBEngine() {
-		Tracer.w("Activity_Map", "Starting/restarting WidgetUpdate engine !");
+		Tracer.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
@@ -331,28 +331,26 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onPause();
 		panel.setOpen(false, false);
 		if(Tracer != null)
-			Tracer.w("Activity_Map", "onPause");
+			Tracer.e("Activity_Map", "onPause");
 		if(mapView != null)
 			mapView.stopThread();
 		mapView=null;
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
-			//TODO : how to notify all widgets that subscribing is lost ????
 		}
 		
 		
 	}
 	public void onResume() {
 		super.onResume();
-		Tracer.w("Activity_Map", "onResume");
-		if(widgetUpdate == null) {
-			startDBEngine();
-		}
 		if(Tracer == null) {
 			Tracer = new tracerengine(params);
 		}
-		Tracer.set_engine(widgetUpdate);
+		if(widgetUpdate == null) {
+			startDBEngine();
+		}
+		
 		widgetUpdate.restartThread();
 		
 	}
@@ -360,7 +358,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onDestroy() {
 		super.onDestroy();
 		if(Tracer != null)
-			Tracer.w("ActivityMap","onDestroy");
+			Tracer.e("ActivityMap.onDestroy","??????????????????????");
 		
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
@@ -371,9 +369,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Tracer = null;		//Stop own Tracer engine
 		}
 	}
-	//
-	////////////////////////////WARNING ABOUT DB ENGINE : If we stop it, all subscribing by widgets are lost...
-	
 	public void onPanelClosed(Sliding_Drawer panel) {
 		if(Tracer != null)
 			Tracer.e("ActivityMap.onPanelClosed","??????????????????????");
@@ -417,7 +412,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				//show list of feature available
 				dialog_feature.show();
 				remove.setTextColor(Color.parseColor("#cfD1D1"));
+				move.setTextColor(Color.parseColor("#cfD1D1"));
 				mapView.setRemoveMode(false);
+				mapView.setMoveMode(false);
 			}
 			
 		}else if(v.getTag().equals("remove")){
@@ -428,14 +425,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				if(mapView.isRemoveMode()==false){
 					//if remove mode is select for the first time
 					//Turn menu text color to green
+					move.setTextColor(Color.parseColor("#cfD1D1"));
 					remove.setTextColor(Color.GREEN);
 					//say Mapview.java to turn on remove mode
+					mapView.setMoveMode(false);
 					mapView.setRemoveMode(true);
 				}else{
 					//Remove mode was active, return to normal mode
 					//Turn menu text color back
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					//say Mapview.java to turn off remove mode
+					move.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);
 				}
 			}
@@ -446,17 +445,19 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
-				if(mapView.isRemoveMode()==false){
+				if(mapView.isMoveMode()==false){
 					//if remove mode is select for the first time
 					//Turn menu text color to green
+					remove.setTextColor(Color.parseColor("#cfD1D1"));
 					move.setTextColor(Color.GREEN);
 					//say Mapview.java to turn on remove mode
-					mapView.setRemoveMode(true);
+					mapView.setRemoveMode(false);
+					mapView.setMoveMode(true);
 				}else{
 					//Remove mode was active, return to normal mode
 					//Turn menu text color back
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					//say Mapview.java to turn off remove mode
+					move.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);
 				}
 			}
@@ -476,7 +477,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			dialog_help.show();
 			prefEditor.putBoolean("SPLASH", true);
 			prefEditor.commit();
-		}	
+		}
 	}
 
 	@Override

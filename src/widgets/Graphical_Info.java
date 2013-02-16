@@ -82,6 +82,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private int update;
 	private Animation animation;
 	private DomodroidDB domodb;
+	private Activity context;
 	private Message msg;
 	private String wname;
 	private String mytag="";
@@ -97,6 +98,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
 		this.Tracer = Trac;
+		this.context = context;
 		this.dev_id = dev_id;
 		this.id = id;
 		this.state_key = state_key;
@@ -107,8 +109,10 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		/* Only open database if needed
 		domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Graphical_Info("+dev_id+")";
+		*/
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -355,7 +359,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		case 39: return R.string.info39;
 		case 40: return R.string.info40;
 		case 41: return R.string.info41;
-		case 42: return R.string.info42;
+		case 42: return R.string.info42;	
+		
 		case 43: return R.string.info43;
 		case 44: return R.string.info44;
 		case 45: return R.string.info45;
@@ -478,7 +483,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_info", "Description set to: "+result);
+					if(domodb == null) {
+						domodb = new DomodroidDB(Tracer, context);
+						domodb.owner="Graphical_Info("+dev_id+")";
+					}
 					domodb.updateFeaturename(id,result);
+					domodb = null;		//Release the resource
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

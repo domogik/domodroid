@@ -15,6 +15,8 @@ import database.DomodroidDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Activity_Main;
+import activities.Activity_Map;
+
 import org.domogik.domodroid.R;
 import activities.Sliding_Drawer;
 import widgets.Entity_Map;
@@ -60,7 +62,7 @@ public class MapView extends View {
 	float currentScale = 1;
 	private boolean addMode=false;
 	private boolean removeMode=false;
-
+	private boolean moveMode=false;
 	private int update;
 	private static int text_Offset_X = 25;
 	private static int text_Offset_Y = 0;
@@ -512,10 +514,28 @@ public class MapView extends View {
 						(int)((event.getX()-value[2])/currentScale), 
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
-						//removeMode=false;
+						removeMode=false;
 						new UpdateThread().execute();
 						//refresh the map
 						initMap();
+					}
+				}
+			}else if(moveMode==true){
+				for (Entity_Map featureMap : listFeatureMap) {
+					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
+							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
+						//remove entry
+						domodb.removeFeatureMap(featureMap.getId(),
+						(int)((event.getX()-value[2])/currentScale), 
+						(int)((event.getY()-value[5])/currentScale),
+						files.elementAt(currentFile));
+						moveMode=false;
+						new UpdateThread().execute();
+						//return to add mode on next click
+						//refresh the map
+						initMap();
+						temp_id = featureMap.getId();
+						addMode=true;
 					}
 				}
 			}else{
@@ -800,5 +820,12 @@ public class MapView extends View {
 
 	public void setCurrentFile(int currentFile) {
 		this.currentFile = currentFile;
+	}
+	public boolean isMoveMode() {
+		return moveMode;
+	}
+	public void setMoveMode(boolean moveMode) {
+		this.moveMode = moveMode;
+		
 	}
 }

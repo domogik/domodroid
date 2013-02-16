@@ -514,7 +514,7 @@ public class MapView extends View {
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
 						removeMode=false;
-						new UpdateThread().execute();
+						//new UpdateThread().execute();
 						//refresh the map
 						initMap();
 					}
@@ -529,7 +529,7 @@ public class MapView extends View {
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
 						moveMode=false;
-						new UpdateThread().execute();
+						//new UpdateThread().execute();
 						//return to add mode on next click
 						//refresh the map
 						initMap();

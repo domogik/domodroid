@@ -283,7 +283,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 		if(!list_usable_files.isEmpty()){
 			mapView.initMap();
-			mapView.updateTimer();
+			//mapView.updateTimer();
 			parent.addView(mapView);
 		} else {
 			Dialog_Help dialog_help = new Dialog_Help(this);

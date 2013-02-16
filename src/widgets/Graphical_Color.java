@@ -426,12 +426,20 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					} else {
 						try {
 							argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
+							//Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
 							argb = Integer.parseInt(argbS,16);
+							//Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
 						} catch (Exception e) {
 							argb = 1;
 						}
 					}
-							
+					int r, g , b;
+					int value_save = argb;
+					r=((argb>>16)&0xFF);
+					g=((argb>>8)&0xFF);
+					b=((argb)&0xFF);
+					
+					
 					if (argb == 0){
 						seekBarOnOff.setProgress(0);
 						switch_state=false;
@@ -440,12 +448,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					}
 					//Convert RGB to HSV color, and set sliders
 					float hsv[] = new float[3];
-					int r, g , b;
-					r=((argb>>16)&0xFF);
-					g=((argb>>8)&0xFF);
-					b=((argb)&0xFF);
-					Color.colorToHSV(argb, hsv);
-					//Tracer.d(mytag,"Handler ==> RGB values after process = <"+r+"> <"+g+"> <"+b+">" );
+					
+					Color.colorToHSV(value_save, hsv);
+					//Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
 					//Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
 					
 					//Seekbars are in range 0-255 : convert HSV values
@@ -675,7 +680,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		}
 		return false;
 	}
-	
+	/*
 	public void updateTimer() {
 		final Timer timer = new Timer();
 		
@@ -753,6 +758,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			return null;
 		}
 	}
+	*/
+	
 	public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 		alert.setTitle(R.string.Rename_title);

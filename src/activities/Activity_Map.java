@@ -185,6 +185,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		add.setTag("add");
 		add.setBackgroundColor(Color.parseColor("#00000000"));
 		add.setOnClickListener(this);
+		
 		help = new Button(this);
 		help.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		help.setPadding(10, 13, 10, 13);
@@ -417,7 +418,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				//show list of feature available
 				dialog_feature.show();
 				remove.setTextColor(Color.parseColor("#cfD1D1"));
+				move.setTextColor(Color.parseColor("#cfD1D1"));
 				mapView.setRemoveMode(false);
+				mapView.setMoveMode(false);
 			}
 			
 		}else if(v.getTag().equals("remove")){
@@ -428,14 +431,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				if(mapView.isRemoveMode()==false){
 					//if remove mode is select for the first time
 					//Turn menu text color to green
+					move.setTextColor(Color.parseColor("#cfD1D1"));
 					remove.setTextColor(Color.GREEN);
 					//say Mapview.java to turn on remove mode
+					mapView.setMoveMode(false);
 					mapView.setRemoveMode(true);
 				}else{
 					//Remove mode was active, return to normal mode
 					//Turn menu text color back
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					//say Mapview.java to turn off remove mode
+					move.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);
 				}
 			}
@@ -446,17 +451,19 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
-				if(mapView.isRemoveMode()==false){
+				if(mapView.isMoveMode()==false){
 					//if remove mode is select for the first time
 					//Turn menu text color to green
+					remove.setTextColor(Color.parseColor("#cfD1D1"));
 					move.setTextColor(Color.GREEN);
 					//say Mapview.java to turn on remove mode
-					mapView.setRemoveMode(true);
+					mapView.setRemoveMode(false);
+					mapView.setMoveMode(true);
 				}else{
 					//Remove mode was active, return to normal mode
 					//Turn menu text color back
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					//say Mapview.java to turn off remove mode
+					move.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);
 				}
 			}
@@ -476,7 +483,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			dialog_help.show();
 			prefEditor.putBoolean("SPLASH", true);
 			prefEditor.commit();
-		}	
+		}
 	}
 
 	@Override

@@ -91,7 +91,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private String wname;
 	private String type;
 	private String address;
-	private DomodroidDB domodb;
+	//private DomodroidDB domodb;
 	private Activity mycontext;
 	//public WidgetUpdate updateEngine = null;
 	private FrameLayout myself = null;
@@ -148,9 +148,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.setPadding(5, 5, 5, 5);
 		this.params = params;
 		this.myself = this;
-		domodb = new DomodroidDB(Tracer, mycontext);
-		domodb.owner="Graphical_Color("+dev_id+")";
-		mytag = domodb.owner;
+		mytag="Graphical_Color("+dev_id+")";
 		
 		String[] model = model_id.split("\\.");
 		type = model[0];
@@ -771,7 +769,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Color", "Description set to: "+result);
-					domodb.updateFeaturename(id,result);
+					Tracer.get_engine().descUpdate(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

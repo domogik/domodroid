@@ -87,10 +87,11 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
-	private DomodroidDB domodb;
+	//private DomodroidDB domodb;
 	private final String wname;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
+	private String mytag;
 	private tracerengine Tracer = null;
 	
 	private Entity_client session = null; 
@@ -111,6 +112,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.myself=this;
 		stateThread = 1;
 		this.stateS = getResources().getText(R.string.State).toString();
+		mytag="Graphical_Range("+dev_id+")";
+		
 
 
 		//get parameters
@@ -126,8 +129,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 		this.setPadding(5, 5, 5, 5);
 
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="Graphical_Range("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
@@ -451,7 +452,15 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Range", "Description set to: "+result);
+					/*
+					if(domodb == null) {
+						domodb = new DomodroidDB(Tracer, context);
+						domodb.owner=mytag;
+					}
 					domodb.updateFeaturename(id,result);
+					domodb = null;
+					*/
+					Tracer.get_engine().descUpdate(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

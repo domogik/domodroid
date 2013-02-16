@@ -83,7 +83,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
-	private DomodroidDB domodb;
+	//private DomodroidDB domodb;
 	private Message msg;
 	private String name;
 	private String wname;
@@ -91,6 +91,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	public FrameLayout myself = null;
 	private String mytag = "";
 	private tracerengine Tracer = null;
+	private Activity context = null;
 	private String stateS = "";
 	private String Value_0 = "0";
 	private String Value_1 = "1";
@@ -104,6 +105,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
+		this.context = context;
 		this.address = address;
 		this.url = url;
 		this.state_key = state_key;
@@ -117,9 +119,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.myself = this;
 		this.stateS = getResources().getText(R.string.State).toString();
 
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="Graphical_Binary("+dev_id+")";
-		mytag = domodb.owner;
+		mytag = "Graphical_Binary("+dev_id+")";
 		//get parameters		
 		
 		try {
@@ -486,7 +486,15 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Binary", "Description set to: "+result);
+					/*
+					if(domodb == null) {
+						domodb = new DomodroidDB(Tracer, context);
+						domodb.owner=mytag;
+					}
 					domodb.updateFeaturename(id,result);
+					domodb = null;
+					*/
+					Tracer.get_engine().descUpdate(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -57,7 +57,8 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private int id;
 	private String url;
 	private Context context;
-	private DomodroidDB domodb;
+	//private DomodroidDB domodb;
+	private String mytag;
 	private tracerengine Tracer = null;
 	
 
@@ -70,8 +71,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		this.url = url;
 		this.context = context;
 		setOnTouchListener(this);
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="Graphical_Boolean("+dev_id+")";
+		mytag="Graphical_Boolean("+dev_id+")";
 		
 		this.setPadding(5, 5, 5, 5);
 
@@ -158,7 +158,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Cam", "Description set to: "+result);
-					domodb.updateFeaturename(id,result);
+					Tracer.get_engine().descUpdate(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

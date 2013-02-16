@@ -394,6 +394,12 @@ public class WidgetUpdate implements Serializable {
 			}
 		}
 	}
-	
+	/*
+	 * Some methods to help widgets for database access (they don't have anymore to connect to DomodroidDB !
+	 * 
+	 */
+	public void descUpdate(int id,String new_desc) {
+		domodb.updateFeaturename(id,new_desc);
+	}
 }
 

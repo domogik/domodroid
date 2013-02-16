@@ -81,7 +81,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Graphical_Info_View canvas;
 	private int update;
 	private Animation animation;
-	private DomodroidDB domodb;
+	//private DomodroidDB domodb;
 	private Activity context;
 	private Message msg;
 	private String wname;
@@ -483,12 +483,15 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_info", "Description set to: "+result);
+					/*
 					if(domodb == null) {
 						domodb = new DomodroidDB(Tracer, context);
 						domodb.owner="Graphical_Info("+dev_id+")";
 					}
 					domodb.updateFeaturename(id,result);
 					domodb = null;		//Release the resource
+					*/
+					Tracer.get_engine().descUpdate(id, result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

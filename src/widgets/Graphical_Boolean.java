@@ -63,12 +63,18 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private String state_key;
 	private int update;
 	public boolean activate=false;
-	private DomodroidDB domodb;
+	//private DomodroidDB domodb;
+	private String mytag;
 	private Message msg;
 	private String wname;
+	private String stateS = "";
+	
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private tracerengine Tracer = null;
+	
+	private Entity_client session = null; 
+	private Boolean realtime = false;
 	
 
 	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int id,int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
@@ -82,9 +88,9 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.myself=this;
 		this.activate=false;
 		this.setPadding(5, 5, 5, 5);
-		
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="Graphical_Boolean("+dev_id+")";
+		this.stateS = getResources().getText(R.string.State).toString();
+
+		mytag="Graphical_Boolean("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
@@ -145,6 +151,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
+				///////////// Deprecated method to die //////////////////////////////////
 				if(activate) {
 					Tracer.d("Graphical_Boolean","Handler receives a request to die " );
 					//That seems to be a zombie
@@ -155,34 +162,74 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 						container.recomputeViewAttributes(myself);
 					}
 					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+					//////////////////////////////////////////////////////////////////////
 				} else {
-					String status = msg.getData().getString("message");
-					if(status != null)   {
-						try {
-							if(status.equals("low")){
-								bool.setImageResource(R.drawable.boolean_off);
-								//change color if statue=low to (usage, o) means off
-								//note sure if it must be kept as set previously as default color.
-								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-								state.setText("State : Low");
-							}else if(status.equals("high")){
-								bool.setImageResource(R.drawable.boolean_on);
-								//change color if statue=high to (usage, 2) means on
-								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-								state.setText("State : High");
+					String status;
+					if(msg.what == 9999) {
+						status = session.getValue();
+						if(status != null)   {
+							Tracer.d(mytag,"Handler receives a new status <"+status+">" );
+							
+							try {
+								if(status.equals("low")){
+									bool.setImageResource(R.drawable.boolean_off);
+									//change color if statue=low to (usage, o) means off
+									//note sure if it must be kept as set previously as default color.
+									img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+									state.setText(stateS+"Low");
+								}else if(status.equals("high")){
+									bool.setImageResource(R.drawable.boolean_on);
+									//change color if statue=high to (usage, 2) means on
+									img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+									state.setText(stateS+"High");
+								}
+							} catch (Exception e) {
+								Tracer.e(mytag, "handler error device "+wname);
+								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							Tracer.e("Graphical_Boolean", "handler error device "+wname);
-							e.printStackTrace();
 						}
+					} else if(msg.what == 9998) {
+						// state_engine send us a signal to notify it'll die !
+						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+						session = null;
+						realtime = false;
+						removeView(background);
+						myself.setVisibility(GONE);
+						if(container != null) {
+							container.removeView(myself);
+							container.recomputeViewAttributes(myself);
+						}
+						try { 
+							finalize(); 
+						} catch (Throwable t) {}	//kill the handler thread itself
 					}
+					
 				}
 			}	
 		};
-		updateTimer();	
+		//================================================================================
+		/*
+		 * New mechanism to be notified by widgetupdate engine when our value is changed
+		 * 
+		 */
+		if(Tracer != null) {
+			//state_engine = Tracer.get_engine();
+			if(Tracer.get_engine() != null) {
+				session = new Entity_client(dev_id, state_key, mytag, handler);
+				if(Tracer.get_engine().subscribe(session)) {
+					realtime = true;		//we're connected to engine
+											//each time our value change, the engine will call handler
+					handler.sendEmptyMessage(9999);	//Force to consider current value in session
+				}
+			}
+		}
+		//================================================================================
+		//updateTimer();	//Don't use anymore cyclic refresh....	
+
 
 
 	}
+	/*
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
@@ -246,7 +293,8 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			
 		}
 	}
-
+	*/
+	
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
@@ -264,7 +312,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Boolean", "Description set to: "+result);
-					domodb.updateFeaturename(id,result);
+					Tracer.get_engine().descUpdate(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

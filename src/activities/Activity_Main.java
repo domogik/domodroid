@@ -404,11 +404,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		// WidgetUpdate is a background process, submitting queries to Rinor
 		//		and updating local database
-		if(widgetUpdate == null) {
-			Tracer.i("Activity_Main", "End_of_init : Starting WidgetUpdate engine !");
-			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
-			Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
-		}
+		startDBEngine();
 		
 		if(history != null)
 			history = null;		//Free resource
@@ -705,7 +701,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 
 	public void onPanelClosed(Sliding_Drawer panel) {
-		Tracer.v("Activity_Main","onPanelClosed");
+		Tracer.w("Activity_Main","onPanelClosed");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		SaveSelections(false);		// To force a sync operation, if something has been modified...
@@ -718,7 +714,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		Tracer.v("Activity_Main","onPanelOpened");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
-		//widgetUpdate.stopThread();
+		
 	}
 
 	public void onClick(View v) {
@@ -743,9 +739,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			Tracer.v("Activity_Main Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;
 			widgetHandler=null;
+			Tracer.set_engine(null);
 			widgetUpdate.cancelEngine();
 			widgetUpdate=null;
-			Tracer.set_engine(null);
+			
 			//And stop main program
 			this.finish();
 			return;
@@ -788,7 +785,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				if(notSyncAlert == null)
 					createAlert();
 				notSyncAlert.show();
-			}
+			}	
+			
 			if(widgetUpdate != null)
 				widgetUpdate.restartThread();
 		
@@ -803,24 +801,34 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 	}
 	
+	private void startDBEngine() {
+		Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
+		if(widgetUpdate == null) {
+			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
+			Tracer.set_engine(widgetUpdate);
+		}  else {
+			//widgetUpdate.refreshNow();
+			widgetUpdate.restartThread();
+		} 
+		
+	}
 	
 
 	@Override
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Tracer.v("Activity_Main.onPause","Going to background !");
+		Tracer.w("Activity_Main.onPause","Going to background ! keep widgetUpdate engine alive");
+		
 		if(! dont_freeze) {
 			//Tracer.v("Activity_Main.onPause","Freeze own WidgetUpdate engine");
 			if(widgetUpdate != null) {
+				Tracer.w("Activity_Main.onPause","but freeze it !");
 				widgetUpdate.stopThread();
 			}
-		} else {
-			//Another Activity started : keep WidgetUpdate engine running
-			Tracer.e("Activity_Main.onPause","Keep own WidgetUpdate engine running");
+		} 
+		dont_freeze = false;
 			
-		}
-		dont_freeze = false;	
 		
 	}
 	
@@ -828,10 +836,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onDestroy() {
 		super.onDestroy();
 		this.mWakeLock.release();	// We allow screen shut, now...
-		Tracer.v("Activity_Main.onDestroy","Orientation changed : Stopping engines !");
+		Tracer.w("Activity_Main.onDestroy","Stopping its widgetUpdate engine !");
 		this.wAgent=null;
 		widgetHandler=null;
 		if(widgetUpdate != null) {
+			Tracer.set_engine(null);
 			widgetUpdate.cancelEngine();
 			widgetUpdate=null;
 		}
@@ -839,7 +848,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	@Override
 	public void onResume() {
 		super.onResume();
-		Tracer.v("Activity_Main.onResume","After orientation changed : Try to reactivate  views and engines !");
+		Tracer.w("Activity_Main.onResume","Try to reactivate  views and engines !");
 		end_of_init();
 		
 	}

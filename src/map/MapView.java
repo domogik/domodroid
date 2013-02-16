@@ -16,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Activity_Main;
 import activities.Activity_Map;
-
 import org.domogik.domodroid.R;
 import activities.Sliding_Drawer;
 import widgets.Entity_Map;
@@ -610,7 +609,7 @@ public class MapView extends View {
 		return true;
 	}
 
-	
+	/*
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Handler handler = new Handler();
@@ -678,7 +677,7 @@ public class MapView extends View {
 			return null;
 		}
 	}
-
+	*/
 	public String getFileAsString(File file){ 
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;

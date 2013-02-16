@@ -173,7 +173,6 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("UPDATE_TIMER",300),
 						widgetSize);
-				color.updateEngine = this.widgetupdate;		//Transfer pointer to update DB engine
 				tmpPan.addView(color);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {

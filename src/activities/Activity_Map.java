@@ -446,11 +446,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
 				if(mapView.isMoveMode()==false){
-					//if move mode is select for the first time
+					//if remove mode is select for the first time
 					//Turn menu text color to green
 					remove.setTextColor(Color.parseColor("#cfD1D1"));
 					move.setTextColor(Color.GREEN);
-					//say Mapview.java to turn on move mode
+					//say Mapview.java to turn on remove mode
 					mapView.setRemoveMode(false);
 					mapView.setMoveMode(true);
 				}else{

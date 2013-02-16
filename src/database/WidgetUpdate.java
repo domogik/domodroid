@@ -37,10 +37,11 @@ public class WidgetUpdate implements Serializable {
 	private String mytag="WidgetUpdate";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
-	private static Handler handler = null;
+	//private static Handler handler = null;
 	
 	private ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
 	private Boolean locked = false;
+	private Boolean timer_flag = false;
 	
 	/*
 	 * This class is a background engine 
@@ -64,12 +65,21 @@ public class WidgetUpdate implements Serializable {
 		this.sharedparams=params;
 		this.Tracer = Trac;
 		activated = true;
+		if(Tracer != null) {
+			if(Tracer.DBEngine_running) {
+				try {
+					finalize();
+				} catch (Throwable t) {}
+			}
+			Tracer.DBEngine_running = true;		//To avoid multiple engines running for same Activity
+		}
 		Tracer.d(mytag,"Initial start requested....");
 		domodb = new DomodroidDB(Tracer, context);	
 		domodb.owner=mytag;
 		sbanim = anim;
-		//refreshNow();	// Force an immediate refresh
+		timer_flag = false;
 		Timer();		//and initiate the cyclic timer
+		refreshNow();	// Force an immediate refresh
 		
 	}
 	
@@ -88,7 +98,10 @@ public class WidgetUpdate implements Serializable {
 		final Timer timer = new Timer();
 		
 		
-		handler = new Handler();
+		final Handler loc_handler = new Handler();
+		if(timer_flag)
+			return;	//Don't run many cyclic timers !
+		
 		doAsynchronousTask = new TimerTask() {
 		
 			@Override
@@ -103,12 +116,12 @@ public class WidgetUpdate implements Serializable {
 								e.printStackTrace();
 							}
 						
-						}
-					} //End of run method
+						} 
+					} //End of run methodTimer
 				};	// End of runnable bloc
 				
 				try {
-					handler.post(myTH);		//To avoid exception on ICS
+					loc_handler.post(myTH);		//To avoid exception on ICS
 				} catch (Exception e) {
 						e.printStackTrace();
 				}
@@ -116,6 +129,7 @@ public class WidgetUpdate implements Serializable {
 		};
 		
 		// and arm the timer to do automatically this each 'update' seconds
+		timer_flag=true;	//Cyclic timer is running...
 		if(timer != null)
 			timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 	}
@@ -124,16 +138,21 @@ public class WidgetUpdate implements Serializable {
 	public void stopThread(){
 		Tracer.d(mytag,"stopThread requested....");
 		activated = false;
+		
 	}
 	public void restartThread(){
 		Tracer.d(mytag,"restartThread requested....");
 		activated = true;
+		Timer();
+		refreshNow();
 	}
 	public void cancelEngine(){
 		Tracer.d(mytag,"cancelEngine requested....");
 		activated = false;
+		disconnect_all_clients();
 		try {
-			Timer();	//That should cancel running timer
+			Tracer.DBEngine_running=false;
+			Tracer.set_engine(null);
 			finalize();
 		} catch (Throwable e) {
 			
@@ -148,22 +167,23 @@ public class WidgetUpdate implements Serializable {
 				Tracer.d(mytag,"UpdateThread frozen....");
 				
 			} else {
-				Tracer.d(mytag,"UpdateThread Getting widget infos from server...");
+				if(Tracer != null)
+					Tracer.d(mytag,"Request to server for stats update...");
 				if(sharedparams.getString("UPDATE_URL", null) != null){
 					try {
-						sbanim.sendEmptyMessage(0);
+						//sbanim.sendEmptyMessage(0);
 						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
 						//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));
 						//Tracer.d(mytag,"result : "+ json_widget_state.toString());
 						
 						// new realtime engine : update cache with new values...
-						update_cache(json_widget_state);
-						
-						//sbanim.sendEmptyMessage(1);
-						domodb.insertFeatureState(json_widget_state);
-						//sbanim.sendEmptyMessage(2);
+						int updated_items = update_cache(json_widget_state);
+						// and continue to maintain local database
+						if(updated_items > 0) {
+							domodb.insertFeatureState(json_widget_state);
+						}
 					} catch (Exception e) {
-						sbanim.sendEmptyMessage(3);
+						//sbanim.sendEmptyMessage(3);
 						e.printStackTrace();
 					}
 				}
@@ -179,7 +199,9 @@ public class WidgetUpdate implements Serializable {
 	 * Private method to update values in cache, and eventually notify all connected clients
 	 * Parameter : result of Rest request (multiple stats)
 	 */
-	private Boolean update_cache(JSONObject json_widget_state) {
+	private int update_cache(JSONObject json_widget_state) {
+		int updated_items = 0;
+		Boolean to_process = false;
 		int dev_id = 0;
 		String skey = null;
 		String Val = null;
@@ -187,15 +209,16 @@ public class WidgetUpdate implements Serializable {
 		JSONArray itemArray = null;
 		
 		if(json_widget_state == null)
-			return false;
+			return 0;
 		try {
 			itemArray = json_widget_state.getJSONArray("stats");
+			to_process = true;
 		}catch (Exception e) {
 			Tracer.i(mytag, "Cache update : No stats result !");
-			return false;
+			return 0;
 		}
 		if(itemArray == null)
-			return false;
+			return 0;
 		
 		for (int i =0; i < itemArray.length(); i++){
 			//Retrieve Json infos
@@ -203,7 +226,7 @@ public class WidgetUpdate implements Serializable {
 				dev_id = itemArray.getJSONObject(i).getInt("device_id");
 			}catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No feature id ! ");
-				return false;
+				to_process = false;
 			}
 			try {
 				skey = itemArray.getJSONObject(i).getString("skey");
@@ -217,15 +240,20 @@ public class WidgetUpdate implements Serializable {
 				Val = "0";
 			}
 			// Try to put this in cache, now
-			update_cache_device(dev_id,skey,Val);	//insert, update or ignore new value for this feature
+			if(to_process) {
+				Boolean item_updated = update_cache_device(dev_id,skey,Val);	//insert, update or ignore new value for this feature
+				if(item_updated)
+					updated_items++;
+			}
 			
 		} // end of for loop on stats result
 		
-		return true;
+		return updated_items;
 	}
-	public void update_cache_device(int dev_id,String skey,String Val){
+	
+	public Boolean update_cache_device(int dev_id,String skey,String Val){
 		if(cache == null)
-			return;
+			return false;
 		for(int i = 0; i < cache.size(); i++) {
 			if( (cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
 				//found device in list
@@ -233,7 +261,7 @@ public class WidgetUpdate implements Serializable {
 					//value not changed
 					//Tracer.i(mytag, "cache engine update same value for ("+dev_id+") ("+skey+") ("+Val+")");
 					
-					return;
+					return false;
 				} else {
 					//value changed : has to notify clients....
 					Tracer.i(mytag, "cache engine update value changed for ("+dev_id+") ("+skey+") ("+Val+")");
@@ -253,7 +281,7 @@ public class WidgetUpdate implements Serializable {
 						}
 					}
 					
-					return;
+					return true;
 				}
 			}
 			// not the good one : check next
@@ -264,7 +292,7 @@ public class WidgetUpdate implements Serializable {
 		Tracer.i(mytag, "cache engine inserting ("+dev_id+") ("+skey+") ("+Val+")");
 		Cache_Feature_Element device = new Cache_Feature_Element(dev_id,skey,Val);
 		cache.add(device);
-		return;		// when creating new, it can't have clients !
+		return true;		// when creating new, it can't have clients !
 	}
 	
 	/*
@@ -347,5 +375,25 @@ public class WidgetUpdate implements Serializable {
 		return false;
 		
 	}
+	
+	private void disconnect_all_clients() {
+		//release all pending subscribing (engine itself will die !)
+		for(int i = 0; i < cache.size(); i++) {
+			if(cache.get(i).clients_list != null) {
+				for(int j = 0; j < cache.get(i).clients_list.size(); j++) {
+					//Notify each connected client
+					Handler client = cache.get(i).clients_list.get(j).getClientHandler();
+					if(client != null) {
+						cache.get(i).clients_list.get(j).setClientId(-1);	//note client as not connected
+						try {
+							Tracer.i(mytag, "cache engine send disconnected to client <"+cache.get(i).clients_list.get(j).getName()+">");
+							client.sendEmptyMessage(9998);	//notify the widget with disconnect
+						} catch (Exception e) {}
+					}
+				}
+			}
+		}
+	}
+	
 }
 

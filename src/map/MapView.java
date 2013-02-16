@@ -513,7 +513,7 @@ public class MapView extends View {
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
 						//removeMode=false;
-						new UpdateThread().execute();
+						//new UpdateThread().execute();
 						//refresh the map
 						initMap();
 					}
@@ -590,7 +590,7 @@ public class MapView extends View {
 		return true;
 	}
 
-	
+	/*
 	public void updateTimer() {
 		TimerTask doAsynchronousTask;
 		final Handler handler = new Handler();
@@ -658,7 +658,7 @@ public class MapView extends View {
 			return null;
 		}
 	}
-
+	*/
 	public String getFileAsString(File file){ 
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;

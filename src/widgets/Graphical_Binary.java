@@ -95,7 +95,6 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private String Value_0 = "0";
 	private String Value_1 = "1";
 	
-	private WidgetUpdate state_engine = null;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	
@@ -218,7 +217,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 				if(activate) {
 					Tracer.d(mytag,"Handler receives a request to die " );
 					if(realtime) {
-						state_engine.unsubscribe(session);
+						Tracer.get_engine().unsubscribe(session);
 						session = null;
 						realtime = false;
 					}
@@ -261,6 +260,20 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 									state.setText(stateS+new_val);
 									new SBAnim(seekBarOnOff.getProgress(),0).execute();
 								}
+							} else if(msg.what == 9998) {
+								// state_engine send us a signal to notify it'll die !
+								Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+								session = null;
+								realtime = false;
+								removeView(background);
+								myself.setVisibility(GONE);
+								if(container != null) {
+									container.removeView(myself);
+									container.recomputeViewAttributes(myself);
+								}
+								try { 
+									finalize(); 
+								} catch (Throwable t) {}	//kill the handler thread itself
 							}
 						}
 						
@@ -277,10 +290,10 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		 * 
 		 */
 		if(Tracer != null) {
-			state_engine = Tracer.get_engine();
-			if(state_engine != null) {
+			//state_engine = Tracer.get_engine();
+			if(Tracer.get_engine() != null) {
 				session = new Entity_client(dev_id, state_key, mytag, handler);
-				if(state_engine.subscribe(session)) {
+				if(Tracer.get_engine().subscribe(session)) {
 					realtime = true;		//we're connected to engine
 											//each time our value change, the engine will call handler
 					handler.sendEmptyMessage(9999);	//Force to consider current value in session

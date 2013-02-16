@@ -91,12 +91,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
 		Tracer = new tracerengine(params);
-		/*
-		Bundle b = null;
-		b = savedInstanceState.getBundle();
-		byte[] serial_engine = getByteArray("engine");// .getExtra("engine"); // getIntent().getByteArrayExtra("engine");
-		engine = (WidgetUpdate) deserializeObject(serial_engine); 
-		*/
+		Tracer.w("Activity_Map","onCreate begin");
+		startDBEngine();
+		
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
@@ -282,7 +279,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 		if(!list_usable_files.isEmpty()){
 			mapView.initMap();
-			mapView.updateTimer();
+			//mapView.updateTimer();
 			parent.addView(mapView);
 		} else {
 			Dialog_Help dialog_help = new Dialog_Help(this);
@@ -314,8 +311,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
+	//////////////////////////// WARNING ABOUT DB ENGINE : If we stop it, all subscribing by widgets are lost...
+	// has to be revised
+	
+	
 	private void startDBEngine() {
-		Tracer.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
+		Tracer.w("Activity_Map", "Starting/restarting WidgetUpdate engine !");
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
@@ -330,26 +331,28 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onPause();
 		panel.setOpen(false, false);
 		if(Tracer != null)
-			Tracer.e("Activity_Map", "onPause");
+			Tracer.w("Activity_Map", "onPause");
 		if(mapView != null)
 			mapView.stopThread();
 		mapView=null;
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
+			//TODO : how to notify all widgets that subscribing is lost ????
 		}
 		
 		
 	}
 	public void onResume() {
 		super.onResume();
-		if(Tracer == null) {
-			Tracer = new tracerengine(params);
-		}
+		Tracer.w("Activity_Map", "onResume");
 		if(widgetUpdate == null) {
 			startDBEngine();
 		}
-		
+		if(Tracer == null) {
+			Tracer = new tracerengine(params);
+		}
+		Tracer.set_engine(widgetUpdate);
 		widgetUpdate.restartThread();
 		
 	}
@@ -357,7 +360,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onDestroy() {
 		super.onDestroy();
 		if(Tracer != null)
-			Tracer.e("ActivityMap.onDestroy","??????????????????????");
+			Tracer.w("ActivityMap","onDestroy");
 		
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
@@ -368,6 +371,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Tracer = null;		//Stop own Tracer engine
 		}
 	}
+	//
+	////////////////////////////WARNING ABOUT DB ENGINE : If we stop it, all subscribing by widgets are lost...
+	
 	public void onPanelClosed(Sliding_Drawer panel) {
 		if(Tracer != null)
 			Tracer.e("ActivityMap.onPanelClosed","??????????????????????");

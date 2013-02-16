@@ -36,6 +36,8 @@ public class tracerengine {
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static FileWriter txtFile = null;
 	
+	public Boolean DBEngine_running = false;
+	
 	public tracerengine(SharedPreferences params){
 		settings = params;
 		set_profile(params);

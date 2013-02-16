@@ -91,7 +91,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public Boolean with_graph = true;
 	private tracerengine Tracer = null;
 
-	private WidgetUpdate state_engine = null;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 		
@@ -224,11 +223,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				// deprecated termination //////////////////////////////
 				if(msg.what == 9) {
 					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					if(realtime) {
-						state_engine.unsubscribe(session);
+						Tracer.get_engine().unsubscribe(session);
 						session = null;
 						realtime = false;
 					}
@@ -241,6 +241,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 					try { 
 						finalize(); 
 					} catch (Throwable t) {}	//kill the handler thread itself
+					//////////////////////////////////////////////////////
 				} else {
 					if(msg.what == 9999) {
 						//Message from widgetupdate
@@ -250,7 +251,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						try {
 							float formatedValue = 0;
 							if(loc_Value != null)
-								formatedValue = Round(Float.parseFloat(msg.getData().getString("message")),2);
+								formatedValue = Round(Float.parseFloat(loc_Value),2);
 							
 							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
@@ -262,29 +263,42 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 							else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
 							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 							else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-							else value.setText(msg.getData().getString("message"));
-							Tracer.e(mytag, "UIThread handler : Value "+Float.toString(formatedValue) +" refreshed for device "+state_key+" "+wname);
+							else value.setText(loc_Value);
 							value.setAnimation(animation);
 						} catch (Exception e) {
 							// It's probably a String that could'nt be converted to a float
-							Tracer.d(mytag,"Handler exception for new value <"+loc_Value+">" );
+							Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
 							value.setText(loc_Value);
 							
 						}
+					} else if(msg.what == 9998) {
+						// state_engine send us a signal to notify it'll die !
+						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+						session = null;
+						realtime = false;
+						removeView(background);
+						myself.setVisibility(GONE);
+						if(container != null) {
+							container.removeView(myself);
+							container.recomputeViewAttributes(myself);
+						}
+						try { 
+							finalize(); 
+						} catch (Throwable t) {}	//kill the handler thread itself
 					}
 				}
 			}
 		};
+		
 		//================================================================================
 		/*
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
 		if(Tracer != null) {
-			state_engine = Tracer.get_engine();
-			if(state_engine != null) {
+			if(Tracer.get_engine() != null) {
 				session = new Entity_client(dev_id, state_key, mytag, handler);
-				if(state_engine.subscribe(session)) {
+				if(Tracer.get_engine().subscribe(session)) {
 					realtime = true;		//we're connected to engine
 											//each time our value change, the engine will call handler
 					handler.sendEmptyMessage(9999);	//Force to consider current value in cache

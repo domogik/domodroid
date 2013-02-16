@@ -93,7 +93,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	public FrameLayout myself = null;
 	private tracerengine Tracer = null;
 	
-	private WidgetUpdate state_engine = null;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private String stateS = "";
@@ -211,6 +210,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				/// Deprecated method to die /////////////////////////////////////////
 				if(activate) {
 					Tracer.d("Graphical_Range","Handler receives a request to die " );
 					//That seems to be a zombie
@@ -221,40 +221,44 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						container.recomputeViewAttributes(myself);
 					}
 					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
+					///////////////////////////////////////////////////////////////////
 				} else {
-					try {
-						int new_val = 0;
-						if(msg.what == 9999) {
-							//state_engine send us a signal to notify value changed
-							try {
-								new_val = Integer.parseInt(session.getValue());
-							} catch (Exception e) {
-								new_val = 0;
-							}
-							Tracer.d("Graphical_Range","Handler received a new value from cache_engine <"+session.getValue()+">" );
-							if(new_val==valueMin) {
-								state.setText(stateS+"0 %");
-							}else if(new_val>valueMin && new_val<valueMax){
-								state.setText(stateS+(int)(new_val*(100f/(float)valueMax))+" %");
-							}else if(new_val==valueMax){
-								state.setText(stateS+"100 %");
-							}
-						} 
-						/* no more UpdateThread results
-						 else 	if(msg.what==valueMin){
-							state.setText("State : "+0+"%");
-						}else if(msg.what>valueMin && msg.what<valueMax){
-							state.setText("State : "+(int)(msg.what*(100f/(float)valueMax))+"%");
-						}else if(msg.what==valueMax){
-							state.setText("State : "+100+"%");
+					int new_val = 0;
+					if(msg.what == 9999) {
+						//state_engine send us a signal to notify value changed
+						try {
+							Tracer.d("Graphical_Range","Handler receives a new value from cache_engine <"+session.getValue()+">" );
+							new_val = Integer.parseInt(session.getValue());
+						} catch (Exception e) {
+							new_val = 0;
 						}
-						*/
+						if(new_val==valueMin) {
+							state.setText(stateS+"0 %");
+						}else if(new_val>valueMin && new_val<valueMax){
+							state.setText(stateS+(int)(new_val*(100f/(float)valueMax))+" %");
+						}else if(new_val==valueMax){
+							state.setText(stateS+"100 %");
+						}
 						state.setAnimation(animation);
 						new SBAnim(seekBarVaria.getProgress(),new_val).execute();
-					} catch (Exception e) {
-						Tracer.e("handler error", "device "+wname);
-						e.printStackTrace();
+						
+					} else if(msg.what == 9998) {
+						// state_engine send us a signal to notify it'll die !
+						Tracer.d("Graphical_Range","state engine disappeared ===> Harakiri !" );
+						session = null;
+						realtime = false;
+						removeView(background);
+						myself.setVisibility(GONE);
+						if(container != null) {
+							container.removeView(myself);
+							container.recomputeViewAttributes(myself);
+						}
+						try { 
+							finalize(); 
+						} catch (Throwable t) {}	//kill the handler thread itself
 					}
+					
+					
 				}
 			}	
 		};
@@ -264,10 +268,9 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		 * 
 		 */
 		if(Tracer != null) {
-			state_engine = Tracer.get_engine();
-			if(state_engine != null) {
+			if(Tracer.get_engine() != null) {
 				session = new Entity_client(dev_id, state_key, "Graphical_Range", handler);
-				if(state_engine.subscribe(session)) {
+				if(Tracer.get_engine().subscribe(session)) {
 					realtime = true;		//we're connected to engine
 											//each time our value change, the engine will call handler
 					handler.sendEmptyMessage(9999);	//Force to consider current value in cache

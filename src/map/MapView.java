@@ -409,7 +409,7 @@ public class MapView extends View {
 			panel_widget.addView(onoff);}
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),feature.getParameters(),params.getInt("UPDATE",300),0);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {

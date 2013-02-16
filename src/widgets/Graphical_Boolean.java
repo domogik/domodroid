@@ -22,6 +22,8 @@ import java.util.TimerTask;
 
 import database.DomodroidDB;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
@@ -56,6 +58,10 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private ImageView img;
 	private TextView nameDevices;
 	private TextView state;
+	private String value0;
+	private String value1;
+	private String Value_0;
+	private String Value_1;
 	private ImageView bool;
 	private int dev_id;
 	private int id;
@@ -77,7 +83,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private Boolean realtime = false;
 	
 
-	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int id,int dev_id, String state_key, final String usage, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int id,int dev_id, String state_key, final String usage,String parameters, String model_id, int update, int widgetSize) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.state_key = state_key;
@@ -90,6 +96,26 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
 
+		try {
+			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+			value0 = jparam.getString("value0");
+			value1 = jparam.getString("value1");
+		} catch (Exception e) {
+			value0 = "0";
+			value1 = "1";
+		}		
+		
+		if (usage.equals("light")){
+			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
+			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
+		}else if (usage.equals("shutter")){
+			this.Value_0 =  getResources().getText(R.string.shutter_stat_0).toString();
+			this.Value_1 =  getResources().getText(R.string.shutter_stat_1).toString();
+		}else{
+			this.Value_0 = value0;
+			this.Value_1 = value1;		
+		}
+		
 		mytag="Graphical_Boolean("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);
@@ -171,17 +197,21 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 							Tracer.d(mytag,"Handler receives a new status <"+status+">" );
 							
 							try {
-								if(status.equals("low")){
+
+
+								
+								
+								if(status.equals("value0")){
 									bool.setImageResource(R.drawable.boolean_off);
 									//change color if statue=low to (usage, o) means off
 									//note sure if it must be kept as set previously as default color.
 									img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-									state.setText(stateS+"Low");
-								}else if(status.equals("high")){
+									state.setText(stateS+Value_0);
+								}else if(status.equals("value1")){
 									bool.setImageResource(R.drawable.boolean_on);
 									//change color if statue=high to (usage, 2) means on
 									img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-									state.setText(stateS+"High");
+									state.setText(stateS+Value_1);
 								}
 							} catch (Exception e) {
 								Tracer.e(mytag, "handler error device "+wname);

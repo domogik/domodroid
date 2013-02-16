@@ -128,6 +128,7 @@ public class Widgets_Manager {
 						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
 						feature.getDevice_usage_id(), 
+						feature.getParameters(),
 						feature.getDevice_type_id(),
 						params.getInt("UPDATE_TIMER",300),
 						widgetSize);

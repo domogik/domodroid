@@ -192,6 +192,16 @@ public class MapView extends View {
 					"mini widget",
 					handler);
 			cursession.setType(true);	//It's a mini widget !
+			Boolean said = false;
+			while (! Tracer.get_engine().ready) {
+				if(! said) {
+					Tracer.i(mytag,"state engine not yet ready : Wait a bit !");
+					said=true;
+				}
+				try{
+					Thread.sleep(100);
+				} catch (Exception e) {};
+			}
 			if(Tracer.get_engine().subscribe(cursession) ) {
 				//This widget is connected to state_engine
 				featureMap.setSession(cursession);

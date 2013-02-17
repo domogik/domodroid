@@ -36,14 +36,15 @@ public class WidgetUpdate implements Serializable {
 	private boolean activated;
 	private DomodroidDB domodb;
 	private Handler sbanim;
-	private String mytag="WidgetUpdate";
+	public  String mytag="WidgetUpdate";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
 	
 	private ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
 	private Boolean locked = false;
 	private Boolean timer_flag = false;
-	Handler mapView = null;
+	public Boolean ready = false;
+	private Handler mapView = null;
 	
 	/*
 	 * This class is a background engine 
@@ -64,6 +65,7 @@ public class WidgetUpdate implements Serializable {
 	 * 		use of timer and delayed updates
 	 */
 	public WidgetUpdate(tracerengine Trac, Activity context, Handler anim, SharedPreferences params){
+		super();
 		this.sharedparams=params;
 		this.Tracer = Trac;
 		activated = true;
@@ -80,8 +82,22 @@ public class WidgetUpdate implements Serializable {
 		domodb.owner=mytag;
 		sbanim = anim;
 		timer_flag = false;
+		ready=false;
 		Timer();		//and initiate the cyclic timer
-		refreshNow();	// Force an immediate refresh
+		//refreshNow();	// Force an immediate refresh to obtain a list of feature states in cache
+		new UpdateThread().execute();
+		
+		Boolean said = false;
+		while (! ready) {
+			if(! said) {
+				Tracer.d(mytag,"state engine not yet ready : Wait a bit !");
+				said=true;
+			}
+			try{
+				Thread.sleep(100);
+			} catch (Exception e) {};
+		}
+		Tracer.d(mytag,"state engine ready !");
 		
 	}
 	
@@ -184,6 +200,7 @@ public class WidgetUpdate implements Serializable {
 						if(updated_items > 0) {
 							domodb.insertFeatureState(json_widget_state);
 						}
+						ready = true;		//Accept subscribing, now !
 					} catch (Exception e) {
 						//sbanim.sendEmptyMessage(3);
 						e.printStackTrace();
@@ -333,7 +350,11 @@ public class WidgetUpdate implements Serializable {
 		device = client.getDevId();
 		skey = client.getskey();
 		Tracer.i(mytag, "cache engine subscription requested by <"+client.getName()+"> Device ("+device+") ("+skey+")");
-		
+		if(! ready) {
+			Tracer.i(mytag, "cache engine not yet ready : reject !");
+			return false;
+			
+		}
 		while(locked) {
 			//Somebody else is updating list...
 			try{

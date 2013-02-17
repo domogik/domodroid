@@ -805,6 +805,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
 		if(widgetUpdate == null) {
 			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
+			widgetUpdate.mytag="WidgetUpdate Main";
 			Tracer.set_engine(widgetUpdate);
 		}  else {
 			//widgetUpdate.refreshNow();

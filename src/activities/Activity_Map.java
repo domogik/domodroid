@@ -96,7 +96,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		prefEditor=params.edit();
 		Tracer = new tracerengine(params);
 		startDBEngine();		//Run its own WidgetUpdate engine
-		
+		//When back, the engine should be ready....
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
@@ -317,6 +317,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		if(widgetUpdate == null) {
 			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
 		}
+		widgetUpdate.mytag="WidgetUpdate Map";
 		Tracer.set_engine(widgetUpdate);
 		
 	}

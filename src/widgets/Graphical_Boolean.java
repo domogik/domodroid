@@ -67,7 +67,6 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private Handler handler;
 	private String state_key;
 	private int update;
-	//public boolean activate=false;
 	private String mytag;
 	private Message msg;
 	private String wname;
@@ -96,7 +95,6 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.update = update;
 		this.wname = name;
 		this.myself=this;
-		//this.activate=false;
 		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
 
@@ -181,67 +179,48 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
-				///////////// Deprecated method to die //////////////////////////////////
-				/*
-				if(activate) {
-					Tracer.d("Graphical_Boolean","Handler receives a request to die " );
-					//That seems to be a zombie
+				String status;
+				if(msg.what == 9999) {
+					status = session.getValue();
+					if(status != null)   {
+						Tracer.d(mytag,"Handler receives a new status <"+status+">" );
+						
+						try {
+							if(status.equals("value0")){
+								bool.setImageResource(R.drawable.boolean_off);
+								//change color if statue=low to (usage, o) means off
+								//note sure if it must be kept as set previously as default color.
+								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+								state.setText(stateS+Value_0);
+							}else if(status.equals("value1")){
+								bool.setImageResource(R.drawable.boolean_on);
+								//change color if statue=high to (usage, 2) means on
+								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+								state.setText(stateS+Value_1);
+							}
+						} catch (Exception e) {
+							Tracer.e(mytag, "handler error device "+wname);
+							e.printStackTrace();
+						}
+					}
+				} else if(msg.what == 9998) {
+					// state_engine send us a signal to notify it'll die !
+					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					session = null;
+					realtime = false;
 					removeView(background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
 					}
-					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
-					//////////////////////////////////////////////////////////////////////
-				} else {
-				*/
-					String status;
-					if(msg.what == 9999) {
-						status = session.getValue();
-						if(status != null)   {
-							Tracer.d(mytag,"Handler receives a new status <"+status+">" );
-							
-							try {
-
-
-								
-								
-								if(status.equals("value0")){
-									bool.setImageResource(R.drawable.boolean_off);
-									//change color if statue=low to (usage, o) means off
-									//note sure if it must be kept as set previously as default color.
-									img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-									state.setText(stateS+Value_0);
-								}else if(status.equals("value1")){
-									bool.setImageResource(R.drawable.boolean_on);
-									//change color if statue=high to (usage, 2) means on
-									img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-									state.setText(stateS+Value_1);
-								}
-							} catch (Exception e) {
-								Tracer.e(mytag, "handler error device "+wname);
-								e.printStackTrace();
-							}
-						}
-					} else if(msg.what == 9998) {
-						// state_engine send us a signal to notify it'll die !
-						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
-						session = null;
-						realtime = false;
-						removeView(background);
-						myself.setVisibility(GONE);
-						if(container != null) {
-							container.removeView(myself);
-							container.recomputeViewAttributes(myself);
-						}
-						try { 
-							finalize(); 
-						} catch (Throwable t) {}	//kill the handler thread itself
-					}
-					
+					try { 
+						finalize(); 
+					} catch (Throwable t) {}	//kill the handler thread itself
 				}
-			//}	
+				
+			}
+			
 		};
 		//================================================================================
 		/*
@@ -260,19 +239,14 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			}
 		}
 		//================================================================================
-		//updateTimer();	//Don't use anymore cyclic refresh....	
-
-
-
 	}
 	
 	
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==0){
-			//activate=true;
-		}
+		
 	}
+	
 	public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 		alert.setTitle(R.string.Rename_title);

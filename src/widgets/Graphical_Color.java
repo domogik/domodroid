@@ -94,7 +94,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private TimerTask doAsynchronousTask;
 	
 	
-	public boolean activate=false;
 	private int widgetSize;
 	private Color currentColor;
 	private SeekBar seekBarOnOff;
@@ -350,107 +349,84 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				////////// Deprecated method to die /////////////////////////
-				if(activate) {
-					Tracer.d(mytag,"Handler receives a request to die " );
-					//That seems to be a zombie
+				argbS = "?";
+				if(msg.what == 2) {
+					Toast.makeText(getContext(), "Command to server rejected", Toast.LENGTH_SHORT).show();
+					
+				} else if(msg.what == 9998) {
+					// state_engine send us a signal to notify it'll die !
+					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					session = null;
+					realtime = false;
 					removeView(background);
 					
 					myself.setVisibility(GONE);
 					
 					try { 
 						finalize(); 
-					} catch (Throwable t) {}	//kill the handler thread itself
-				///////// Deprecated method to die /////////////////////////
-						
-				} else {
-					argbS = "?";
-					if(msg.what == 2) {
-						Toast.makeText(getContext(), "Command to server rejected", Toast.LENGTH_SHORT).show();
-					}else if(msg.what == 3) {
-						//Request to refresh screen now....
-						// Deprecated : state_engine will notify new value itself...
-						/*
-						if(updateEngine != null) {
-							Tracer.d(mytag,"Handler ==> Request to refresh DB values" );
-							request_in_process=true;
-							updateEngine.refreshNow();	//Force engine to reload states from server
-						}
-						*/
-					} else if(msg.what == 9998) {
-						// state_engine send us a signal to notify it'll die !
-						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
-						session = null;
-						realtime = false;
-						removeView(background);
-						
-						myself.setVisibility(GONE);
-						
-						try { 
-							finalize(); 
-						} catch (Throwable t) {}	//kill the handler thread itself	
-						
-					} else 	if(msg.what == 9999) {
-						argbS = session.getValue();
-						Tracer.d(mytag,"Handler receives a new value from state engine <"+argbS+">" );
-						
-					}
-					if(argbS.equals("off")) {
-						switch_state=false;
-						argbS="000000";
-						argb=0;
-					} else if(argbS.equals("on")) {
-						seekBarOnOff.setProgress(100);
-						switch_state=true;
-						LoadSelections();	//Recall last values known from shared preferences
-											// argb and argbS will be set when seekBars will be changed
-						return;
-						
-					} else {
-						try {
-							argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
-							//Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
-							argb = Integer.parseInt(argbS,16);
-							//Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
-						} catch (Exception e) {
-							argb = 1;
-						}
-					}
-					int r, g , b;
-					int value_save = argb;
-					r=((argb>>16)&0xFF);
-					g=((argb>>8)&0xFF);
-					b=((argb)&0xFF);
+					} catch (Throwable t) {}	//kill the handler thread itself	
 					
+				} else 	if(msg.what == 9999) {
+					argbS = session.getValue();
+					Tracer.d(mytag,"Handler receives a new value from state engine <"+argbS+">" );
 					
-					if (argb == 0){
-						seekBarOnOff.setProgress(0);
-						switch_state=false;
-					} else {
-						seekBarOnOff.setProgress(100);
-					}
-					//Convert RGB to HSV color, and set sliders
-					float hsv[] = new float[3];
-					
-					Color.colorToHSV(value_save, hsv);
-					//Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
-					//Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
-					
-					//Seekbars are in range 0-255 : convert HSV values
-					//Hue is an angle : convert it to linear
-					seekBarHueBar.setProgress((int) ( 255f -(hsv[0]*255f/360)) );
-					seekBarRGBXBar.setProgress((int) (hsv[1]*255f));
-					seekBarRGBYBar.setProgress((int) (hsv[2]*255f));
-					
-					title7.setText(t7s+" : "+r);
-					title8.setText(t8s+" : "+g);
-					title9.setText(t9s+" : "+b);
-					if( (r != 0) || (g != 0) || (b != 0)) {
-						SaveSelections();
-					}
-											
 				}
+				if(argbS.equals("off")) {
+					switch_state=false;
+					argbS="000000";
+					argb=0;
+				} else if(argbS.equals("on")) {
+					seekBarOnOff.setProgress(100);
+					switch_state=true;
+					LoadSelections();	//Recall last values known from shared preferences
+										// argb and argbS will be set when seekBars will be changed
+					return;
+					
+				} else {
+					try {
+						argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
+						//Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
+						argb = Integer.parseInt(argbS,16);
+						//Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
+					} catch (Exception e) {
+						argb = 1;
+					}
+				}
+				int r, g , b;
+				int value_save = argb;
+				r=((argb>>16)&0xFF);
+				g=((argb>>8)&0xFF);
+				b=((argb)&0xFF);
+				
+				
+				if (argb == 0){
+					seekBarOnOff.setProgress(0);
+					switch_state=false;
+				} else {
+					seekBarOnOff.setProgress(100);
+				}
+				//Convert RGB to HSV color, and set sliders
+				float hsv[] = new float[3];
+				
+				Color.colorToHSV(value_save, hsv);
+				//Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
+				//Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
+				
+				//Seekbars are in range 0-255 : convert HSV values
+				//Hue is an angle : convert it to linear
+				seekBarHueBar.setProgress((int) ( 255f -(hsv[0]*255f/360)) );
+				seekBarRGBXBar.setProgress((int) (hsv[1]*255f));
+				seekBarRGBYBar.setProgress((int) (hsv[2]*255f));
+				
+				title7.setText(t7s+" : "+r);
+				title8.setText(t8s+" : "+g);
+				title9.setText(t9s+" : "+b);
+				if( (r != 0) || (g != 0) || (b != 0)) {
+					SaveSelections();
+				}
+										
 			}
+			
 		};	
 		updating = 0;
 		//================================================================================
@@ -609,11 +585,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				if(ack==false){
 					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 					handler.sendEmptyMessage(2);
-				} else {
-					// TODO Try to refresh immediatly screen....
-					updating=0;
-					//handler.sendEmptyMessage(3);
-				}
+				} 
 			}
 			updating=0;
 			return null;

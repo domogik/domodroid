@@ -19,6 +19,7 @@ import widgets.Entity_Map;
 import widgets.Entity_client;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Boolean;
+import widgets.Graphical_Color;
 import widgets.Graphical_Info;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
@@ -33,6 +34,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Picture;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -83,6 +85,7 @@ public class MapView extends View {
 	private Graphical_Binary onoff;
 	private Graphical_Info info;
 	private Graphical_Boolean bool;
+	private Graphical_Color colorw;
 
 	private Vector<String> files;
 	private Entity_Map[] listFeatureMap;
@@ -183,8 +186,6 @@ public class MapView extends View {
 
 		for (Entity_Map featureMap : listFeatureMap) {
 			// Don't use anymore direct access to database : Use WidgetUpdate as relay, to subscribe each mini widget
-			//featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
-			
 			//Instead, create and subscribe a session to WidgetUpdate, to receive value changed...
 			Entity_client cursession = new Entity_client(
 					featureMap.getDevId(),
@@ -192,16 +193,7 @@ public class MapView extends View {
 					"mini widget",
 					handler);
 			cursession.setType(true);	//It's a mini widget !
-			Boolean said = false;
-			while (! Tracer.get_engine().ready) {
-				if(! said) {
-					Tracer.i(mytag,"state engine not yet ready : Wait a bit !");
-					said=true;
-				}
-				try{
-					Thread.sleep(100);
-				} catch (Exception e) {};
-			}
+			
 			if(Tracer.get_engine().subscribe(cursession) ) {
 				//This widget is connected to state_engine
 				featureMap.setSession(cursession);
@@ -302,8 +294,9 @@ public class MapView extends View {
 		}
 		locked=true;
 		for (Entity_Map featureMap : listFeatureMap) {
-
 			String states = "";
+			JSONObject jparam;
+			
 			if(featureMap != null) {
 				states = featureMap.getCurrentState();
 			} else {
@@ -313,18 +306,23 @@ public class MapView extends View {
 			if(featureMap.isalive()) {
 				//set intstate to select correct icon color
 				int intstate = 0;
-				//get parameters valuemin,max, 0 and 1
-				JSONObject jparam;
-				parameters=featureMap.getParameters();
-				try {
-					jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-					value0 = jparam.getString("value0");
-					value1 = jparam.getString("value1");
-					valueMin = jparam.getInt("valueMin");
-					valueMax = jparam.getInt("valueMax");
-				} catch (JSONException e1) {
-					//e1.printStackTrace();
-					//TODO : what to put into value0, 1, min & max ?
+				if(! (featureMap.getState_key().equals("color"))) {
+					//get parameters valuemin,max, 0 and 1
+					parameters=featureMap.getParameters();
+					try {
+						jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+						value0 = jparam.getString("value0");
+						value1 = jparam.getString("value1");
+						valueMin = jparam.getInt("valueMin");
+						valueMax = jparam.getInt("valueMax");
+					} catch (JSONException e1) {
+						//e1.printStackTrace();
+						//Tracer.e("MapView","DrawWidget No parameters ! ");
+						//Tracer.e("MapView","DrawWidget   for mini widget type <"+featureMap.getValue_type()+">");
+						
+						//TODO : what to put into value0, 1, min & max ?
+					}
+					//Tracer.e("MapView","DrawWidget value0  <"+value0+"> value1 <"+value1+"> valueMin <"+valueMin+"> valueMax <"+valueMax+">");
 				}
 				if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
 				//if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
@@ -335,6 +333,7 @@ public class MapView extends View {
 				featureMap.setState(intstate);
 				
 				try {
+					// Draw symbol of feature
 				drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
 					if(drawable != null) {
 						canvasWidget.drawBitmap(drawable, 
@@ -349,7 +348,7 @@ public class MapView extends View {
 					Tracer.e("MapView","cannot draw object ! ! ! !");
 					return;
 				}
-				
+				// Draw state and description
 				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
@@ -360,7 +359,6 @@ public class MapView extends View {
 							String label = featureMap.getDescription();
 							if(label.length() < 1)
 								label = featureMap.getDevice_usage_id();
-							//Tracer.i(mytag,"label = "+label);
 							canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 							canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
 							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
@@ -375,16 +373,17 @@ public class MapView extends View {
 						String test_unite = jparam.getString("unit");
 						value=featureMap.getCurrentState()+test_unite;
 					} catch (JSONException e) {				
-						//Basilic com: no sure that the key state was the better way to find unit
-						if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+"°C";
-						else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+"hPa";
-						else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+"%";
+						//Basilic : no sure that the key state was the better way to find unit
+						if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+" °C";
+						else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+" hPa";
+						else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+" %";
 						else if(featureMap.getState_key().equals("percent"))value=featureMap.getCurrentState()+" %";
-						else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+"km";
-						else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+"°C";
-						else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+"km/h";
-						else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+"°C";
-						else if(featureMap.getState_key().equals("condition-code") && !featureMap.getCurrentState().equals("--"))value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
+						else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+" km";
+						else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+" °C";
+						else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+" km/h";
+						else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+" °C";
+						else if( (featureMap.getState_key().equals("condition-code")) && (!featureMap.getCurrentState().equals("--") ) )
+							value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
 						else value=featureMap.getCurrentState();
 					}
 					if(value == null)
@@ -422,8 +421,14 @@ public class MapView extends View {
 						if (params.getBoolean("HIDE",false)==false){ 
 							//TODO see if we should not use label instead of featureMap.getDevice_usage_id()
 							//It is not the same text displayed for this type of device
-							canvasWidget.drawText(featureMap.getDevice_usage_id(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+15, paint_text);
-							canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+							canvasWidget.drawText(featureMap.getDevice_usage_id(), 
+									(featureMap.getPosx()*currentScale)+text_Offset_X, 
+									(featureMap.getPosy()*currentScale)+text_Offset_Y+15, 
+									paint_text);
+							canvasWidget.drawText(featureMap.getCurrentState(), 
+									(featureMap.getPosx()*currentScale)+text_Offset_X, 
+									(featureMap.getPosy()*currentScale)+text_Offset_Y, 
+									paint_text);
 							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						}else{
 							if  (featureMap.getState_key().equals("light")){
@@ -442,9 +447,62 @@ public class MapView extends View {
 						paint_text.setTextSize(16);
 						//TODO see if we should not use label instead of featureMap.getName()
 						//It is not the same text displayed for this type of device
-						canvasWidget.drawText(featureMap.getName(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
+						canvasWidget.drawText(featureMap.getName(), 
+								(featureMap.getPosx()*currentScale)+text_Offset_X, 
+								(featureMap.getPosy()*currentScale)+text_Offset_Y, 
+								paint_text);
 						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						
+					}
+				}else if(featureMap.getState_key().equals("color")){
+					Tracer.e("MapView","Drawing color for "+featureMap.getName()+" Value = "+states);
+					Paint paint_color = new Paint();
+					paint_color.setPathEffect(null);
+					paint_color.setAntiAlias(true);
+					//paint_color.setStyle(Paint.Style.FILL_AND_STROKE);
+					paint_color.setStyle(Paint.Style.FILL);
+					String argbS = states;
+					//Process RGB value
+					if(states.equals("off")) {
+						argbS="#000000";
+					} else if(argbS.equals("on")) {
+						argbS=params.getString("COLORRGB", "#FFFFFF");	//Restore last known color, White by default
+						
+					} 
+					//Tracer.e("MapView","Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
+					//Draw first a black background...
+					paint_color.setColor(Color.BLACK);
+					paint_color.setShadowLayer(1, 0, 0, Color.BLACK);
+					int left = (int)(featureMap.getPosx()*currentScale)+text_Offset_X-10;
+					int top  = (int)(featureMap.getPosy()*currentScale)+text_Offset_Y-15;
+					int right= (int)(featureMap.getPosx()*currentScale)+text_Offset_X+85;
+					int bottom=(int)(featureMap.getPosy()*currentScale)+text_Offset_Y+10;
+					Rect r = new Rect(left,top,right,bottom);
+					canvasWidget.drawRect(r, paint_color);
+					
+					//And draw real color inside the 1st one
+					paint_color.setColor(Color.parseColor(argbS));
+					left+=3;
+					top+=3;
+					right-=3;
+					bottom-=3;
+					r = new Rect(left,top,right,bottom);
+					canvasWidget.drawRect(r, paint_color);
+					
+					/*
+						canvasWidget.drawText(featureMap.getCurrentState(), 
+								(featureMap.getPosx()*currentScale)+text_Offset_X, 
+								(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
+								paint_text);
+					*/	
+					for(int j=1;j<5;j++){
+							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+							paint_text.setTextSize(16);
+							
+						canvasWidget.drawText(featureMap.getDescription(), 
+							(featureMap.getPosx()*currentScale)+text_Offset_X, 
+							(featureMap.getPosy()*currentScale)+text_Offset_Y+25, 
+							paint_text);
 					}
 				}
 			} else {
@@ -455,8 +513,7 @@ public class MapView extends View {
 		locked=false;
 		
 	}	
-
-
+	
 	public void showTopWidget(Entity_Map feature) throws JSONException{
 		if(panel_widget.getChildCount()!=0){
 			panel_widget.removeAllViews();
@@ -497,7 +554,24 @@ public class MapView extends View {
 					params.getInt("GRAPH",3),
 					params.getInt("UPDATE",300),0);
 			info.container=(FrameLayout) panel_widget;
-			panel_widget.addView(info);}
+			panel_widget.addView(info);
+		} else if (feature.getState_key().equals("color")) {
+			colorw = new Graphical_Color(Tracer, context,
+					params,
+					feature.getId(),feature.getDevId(),
+					label,
+					feature.getDevice_feature_model_id(),
+					feature.getAddress(),
+					feature.getState_key(),
+					params.getString("URL","1.1.1.1"),
+					feature.getDevice_usage_id(),
+					params.getInt("UPDATE",300),
+					0
+					);
+			colorw.container=(FrameLayout) panel_widget;
+			panel_widget.addView(colorw);
+		}
+		
 	//TODO Seems it miss some device type like in Widgets_Manager.java
 	}
 

@@ -370,7 +370,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
-		
+		mapView.setRemoveMode(false);
+		mapView.setMoveMode(false);
+		remove.setTextColor(Color.parseColor("#cfD1D1"));
+		move.setTextColor(Color.parseColor("#cfD1D1"));
 	}
 
 

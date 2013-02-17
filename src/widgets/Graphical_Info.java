@@ -21,13 +21,10 @@ import java.lang.Thread.State;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import database.DomodroidDB;
-import database.WidgetUpdate;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
 
-import widgets.Graphical_Binary.SBAnim;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -81,7 +78,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Graphical_Info_View canvas;
 	private int update;
 	private Animation animation;
-	//private DomodroidDB domodb;
 	private Activity context;
 	private Message msg;
 	private String wname;
@@ -109,10 +105,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
-		/* Only open database if needed
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="Graphical_Info("+dev_id+")";
-		*/
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -370,76 +362,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		}
 		return R.string.info48;
 	}
-/*
-	public void updateTimer() {
-		TimerTask doAsynchronousTask;
-		final Timer timer = new Timer();
-		
-		doAsynchronousTask = new TimerTask() {
 
-			@Override
-			public void run() {
-				//Tracer.e(mytag, "TimerTask.run : Create Runnable");
-				Runnable myTH = new Runnable() {
-					public void run() {
-					try {
-							if(getWindowVisibility()== 0){
-								//Tracer.e(mytag, "update Timer : Execute UpdateThread");
-								new UpdateThread().execute();
-								
-							}else{
-								if(timer != null) {
-									timer.cancel();
-								}
-								//Tracer.d(mytag, "update Timer : No UpdateThread started...");
-								//this.finalize();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					} // Runnable run method
-				}; //Runnable 
-				//Tracer.e(mytag,"TimerTask.run : Queuing Runnable");	
-				try {
-					handler.post(myTH);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} // TimerTask run method
-		}; //TimerTask 
-		//new UpdateThread().execute();	//For an immediate update
-		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);	
-		timer.schedule(doAsynchronousTask, 0, update*1000);
-	}
-
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			
-			//Tracer.e(mytag, "UpdateThread : Prepare a request for "+dev_id+ " "+state_key+" "+wname);
-			Bundle b = new Bundle();
-			String state = domodb.requestFeatureState(dev_id, state_key);
-			if(state != null) {
-				activate=false;
-				b.putString("message", state);
-			    msg = new Message();
-			    msg.setData(b);
-			    handler.sendMessage(msg);
-			} else {
-				// This widget has no feature_state : probably a zombie ????
-				//activate=true;
-				Tracer.e(mytag, "UpdateThread : No value for "+dev_id+ " "+state_key);
-				handler.sendEmptyMessage(0);
-				
-			}
-			
-			return null;
-		}
-	}
-*/	
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(with_graph) {
 			if(background.getHeight() != 350){
@@ -483,14 +406,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_info", "Description set to: "+result);
-					/*
-					if(domodb == null) {
-						domodb = new DomodroidDB(Tracer, context);
-						domodb.owner="Graphical_Info("+dev_id+")";
-					}
-					domodb.updateFeaturename(id,result);
-					domodb = null;		//Release the resource
-					*/
+					
 					Tracer.get_engine().descUpdate(id, result);
 				}
 			});

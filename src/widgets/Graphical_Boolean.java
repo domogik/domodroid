@@ -20,7 +20,6 @@ package widgets;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import database.DomodroidDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,7 +68,6 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private String state_key;
 	private int update;
 	public boolean activate=false;
-	//private DomodroidDB domodb;
 	private String mytag;
 	private Message msg;
 	private String wname;
@@ -83,7 +81,13 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private Boolean realtime = false;
 	
 
-	public Graphical_Boolean(tracerengine Trac, Activity context, String address, String name, int id,int dev_id, String state_key, final String usage,String parameters, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Boolean(tracerengine Trac, Activity context, 
+			String address, String name, 
+			int id,int dev_id, 
+			String state_key, final String usage,
+			String parameters, 
+			String model_id, int update, 
+			int widgetSize) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.state_key = state_key;
@@ -259,71 +263,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 
 
 	}
-	/*
-	public void updateTimer() {
-		TimerTask doAsynchronousTask;
-		final Timer timer = new Timer();
-		
-		doAsynchronousTask = new TimerTask() {
-
-			@Override
-			public void run() {
-				Runnable myTH = new Runnable() {
-					public void run() {
-					try {
-							if(getWindowVisibility()==0 ){
-								//Tracer.e("Graphical_Boolean ("+dev_id+")", "Execute UpdateThread");
-								new UpdateThread().execute();
-								
-							}else{
-								if(timer != null) {
-									timer.cancel();
-								}
-								//Tracer.e("Graphical_Boolean ("+dev_id+")", "Destroy runnable");
-								//this.finalize();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					} // Runnable run method
-				}; //Runnable 
-				Tracer.e("Graphical_Boolean ("+dev_id+")","Queuing Runnable for Device : "+dev_id);	
-				try {
-					handler.post(myTH);	//Doume : to avoid exception on ICS
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			} // TimerTask run method
-		}; //TimerTask 
-		Tracer.e("Graphical_Boolean ("+dev_id+")","Init timer for Device ");	
-		timer.schedule(doAsynchronousTask, 0, update*1000);
-	}
-
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			Bundle b = new Bundle();
-			String state = domodb.requestFeatureState(dev_id, state_key);
-			if(state != null) {
-				activate=false;
-				b.putString("message", state);
-			    msg = new Message();
-			    msg.setData(b);
-			    handler.sendMessage(msg);
-			} else {
-				// This widget has no feature_state : probably a zombie ????
-				activate=true;
-				handler.sendEmptyMessage(0);
-				
-			}
-			return null;
-			
-		}
-	}
-	*/
+	
 	
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {

@@ -21,7 +21,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import rinor.Rest_com;
-import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
 
@@ -83,7 +82,6 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
-	//private DomodroidDB domodb;
 	private Message msg;
 	private String name;
 	private String wname;
@@ -338,85 +336,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		new CommandeThread().execute();
 		touching=false;
 	}
-	/*
-	public void updateTimer() {
-		TimerTask doAsynchronousTask;
-		final Timer timer = new Timer();
-		
-		doAsynchronousTask = new TimerTask() {
-
-			@SuppressWarnings("unused")
-			@Override
-			public void run() {
-				Runnable myTH = null;
-				Handler loc_handler = handler;
-				Tracer.e(mytag, "Create Runnable");
-				myTH = new Runnable() {
-					public void run() {
-						
-					try {
-							if(getWindowVisibility()==0){
-								Tracer.e(mytag, "Execute UpdateThread");
-								new UpdateThread().execute();
-								
-							}else{
-								if(timer != null) {
-									timer.cancel();
-								}
-								Tracer.e(mytag, "UpdateTimer : Destroy runnable");
-								//this.finalize();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					} // Runnable run method
-				}; //Runnable 
-				if((myTH != null) && (loc_handler != null)) {
-					Tracer.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
-					try {
-						loc_handler.post(myTH);
-					} catch (Exception e) {
-						Tracer.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
-						e.printStackTrace();
-					}
-				} else {
-					Tracer.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
-				}
-			} // TimerTask run method
-		}; //TimerTask 
-		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);	
-		timer.schedule(doAsynchronousTask, 0, update*1000);
-	}
-
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			try{
-				Tracer.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
-				if(updating<1){
-					Bundle b = new Bundle();
-					String result = domodb.requestFeatureState(dev_id, state_key);
-					if(result != null) {
-						Tracer.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+name);
-						b.putString("message", result);
-						msg = new Message();
-						msg.setData(b);
-						handler.sendMessage(msg);
-					} else {
-						Tracer.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+name);
-					}
-				}
-				updating--;
-			}catch(Exception e){
-				Tracer.e(mytag, "error : request feature state= "+name);
-			}
-			return null;
-		}
-	}
-	 */
+	
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
@@ -485,15 +405,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Binary", "Description set to: "+result);
-					/*
-					if(domodb == null) {
-						domodb = new DomodroidDB(Tracer, context);
-						domodb.owner=mytag;
-					}
-					domodb.updateFeaturename(id,result);
-					domodb = null;
-					*/
+					
 					Tracer.get_engine().descUpdate(id,result);
 				}
 			});

@@ -18,7 +18,6 @@
 package widgets;
 
 import rinor.Rest_com;
-import database.DomodroidDB;
 import database.JSONParser;
 
 import org.domogik.domodroid.R;
@@ -62,12 +61,10 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private Thread threadCommande;
 	private String type; 
 	private String command; 
-	//private Boolean activate=false;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private int dev_id;
 	private int id;
-	private DomodroidDB domodb;
 	private tracerengine Tracer = null;
 
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
@@ -82,11 +79,10 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		this.id=id;
 		this.myself=this;
 		this.dev_id = dev_id;
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="Graphical_Trigger("+dev_id+")";
 		
 		//get parameters
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+        
         if(jparam != null)
         	command = jparam.getString("command");
         else
@@ -183,7 +179,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Trigger", "Description set to: "+result);
-					domodb.updateFeaturename(id,result);
+					Tracer.get_engine().descUpdate(id,result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

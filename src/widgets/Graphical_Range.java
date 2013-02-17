@@ -17,12 +17,8 @@
  */
 package widgets;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import rinor.Rest_com;
 import widgets.Graphical_Binary.SBAnim;
-import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
 
@@ -87,7 +83,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
-	//private DomodroidDB domodb;
 	private final String wname;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
@@ -114,8 +109,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.stateS = getResources().getText(R.string.State).toString();
 		mytag="Graphical_Range("+dev_id+")";
 		
-
-
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 		command = jparam.getString("command");
@@ -279,10 +272,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			}
 		}
 		//================================================================================
-		//updateTimer();	//Don't use anymore cyclic refresh....	
-	
-
-
+		
 	}
 
 
@@ -313,80 +303,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		touching=false;
 	}
 	
-	/*
-	public void updateTimer() {
-		TimerTask doAsynchronousTask;
-		final Timer timer = new Timer();
-		
-		doAsynchronousTask = new TimerTask() {
-
-			@Override
-			public void run() {
-				Tracer.e("TimerTask.run", "Create Runnable");
-				Runnable myTH = new Runnable() {
-					public void run() {
-					try {
-							if(getWindowVisibility()==0 ){
-								//Tracer.e("update Timer", "Execute UpdateThread");
-								new UpdateThread().execute();
-								
-							}else{
-								activate=true;
-								if(timer != null) {
-									timer.cancel();
-								}
-								//Tracer.e("update Timer", "Destroy runnable");
-								//this.finalize();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					} // Runnable run method
-				}; //Runnable 
-				Tracer.e("TimerTask.run","Queuing Runnable for Device : "+dev_id+" "+state_key+" "+wname);	
-				try {
-					handler.post(myTH);		//Doume : to avoid exception on ICS
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			} // TimerTask run method
-		}; //TimerTask 
-		Tracer.e("updateTimer","Init timer for Device : "+this.dev_id);	
-		timer.schedule(doAsynchronousTask, 0, update*1000);
-	}
-
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			if(activate) {
-				handler.sendEmptyMessage(0);
-				return null;
-			}
-			if(updating<1){
-				String state = domodb.requestFeatureState(dev_id, state_key);
-				if(state != null) {
-					activate=false;
-					try {
-						handler.sendEmptyMessage(Integer.parseInt(state));
-					} catch (Exception e) {
-						// if state = "none", by example, for off state
-						handler.sendEmptyMessage(0);
-					}
-					
-				} else {
-					// This widget has no feature_state : probably a zombie ????
-					activate=true;
-					handler.sendEmptyMessage(0);
-				}
-			}
-			updating--;
-			return null;
-		}
-	}
-	*/
+	
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
@@ -452,14 +369,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_Range", "Description set to: "+result);
-					/*
-					if(domodb == null) {
-						domodb = new DomodroidDB(Tracer, context);
-						domodb.owner=mytag;
-					}
-					domodb.updateFeaturename(id,result);
-					domodb = null;
-					*/
 					Tracer.get_engine().descUpdate(id,result);
 				}
 			});

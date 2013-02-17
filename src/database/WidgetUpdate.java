@@ -9,6 +9,8 @@ import java.util.TimerTask;
 
 
 import rinor.Rest_com;
+import widgets.Entity_Feature;
+import widgets.Entity_Map;
 import widgets.Entity_client;
 
 import org.json.JSONArray;
@@ -37,11 +39,11 @@ public class WidgetUpdate implements Serializable {
 	private String mytag="WidgetUpdate";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
-	//private static Handler handler = null;
 	
 	private ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
 	private Boolean locked = false;
 	private Boolean timer_flag = false;
+	Handler mapView = null;
 	
 	/*
 	 * This class is a background engine 
@@ -219,7 +221,7 @@ public class WidgetUpdate implements Serializable {
 		}
 		if(itemArray == null)
 			return 0;
-		
+		mapView = null;
 		for (int i =0; i < itemArray.length(); i++){
 			//Retrieve Json infos
 			try {
@@ -247,6 +249,15 @@ public class WidgetUpdate implements Serializable {
 			}
 			
 		} // end of for loop on stats result
+		if(mapView != null ) {
+			//At least 1 mini widget has to be notified
+			// send a 'group' notification to MapView !
+			try {
+				Tracer.i(mytag, "cache engine send a unique notification to MapView");
+				mapView.sendEmptyMessage(9997);	//notify the group of widgets a new value is there
+			} catch (Exception e) {}
+		}
+		mapView = null;
 		
 		return updated_items;
 	}
@@ -273,12 +284,22 @@ public class WidgetUpdate implements Serializable {
 							Handler client = cache.get(i).clients_list.get(j).getClientHandler();
 							if(client != null) {
 								cache.get(i).clients_list.get(j).setValue(Val);	//update the session structure with new value
-								try {
-									Tracer.i(mytag, "cache engine send ("+Val+") to client <"+cache.get(i).clients_list.get(j).getName()+">");
-									client.sendEmptyMessage(9999);	//notify the widget a new value is ready for display
-								} catch (Exception e) {}
+								if(cache.get(i).clients_list.get(j).is_Miniwidget()) {
+									// One client of the list is a mapView's miniwidget
+									// Don't' notify it immediately
+									// A unique notification will be done after all updates processed !
+									mapView = client;
+								} else {
+									// It's not a mini_widget : notify it
+									try {
+										Tracer.i(mytag, "cache engine send ("+Val+") to client <"+cache.get(i).clients_list.get(j).getName()+">");
+										client.sendEmptyMessage(9999);	//notify the widget a new value is ready for display
+									} catch (Exception e) {}
+								}
 							}
 						}
+						
+						
 					}
 					
 					return true;
@@ -401,5 +422,28 @@ public class WidgetUpdate implements Serializable {
 	public void descUpdate(int id,String new_desc) {
 		domodb.updateFeaturename(id,new_desc);
 	}
+	/*
+	 * This one allow MapView to clean all widgets from a map
+	 */
+	public void cleanFeatureMap(String map_name){
+		domodb.cleanFeatureMap(map_name);
+	}
+	/*
+	 * Obtain the list of feature located on a map
+	 */
+	public Entity_Map[]  getMapFeaturesList(String currentmap) {
+		return domodb.requestFeatures(currentmap);
+	}
+	public void insertFeatureMap(int id,int posx, int posy, String mapname) {
+		domodb.insertFeatureMap(id, posx, posy, mapname);
+				
+	}
+	public void removeFeatureMap(int id,int posx, int posy, String mapname) {
+		domodb.removeFeatureMap(id, posx, posy, mapname);
+	}
+	public Entity_Feature[] requestFeatures(){
+		return domodb.requestFeatures();		
+	}
+	
 }
 

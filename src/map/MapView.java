@@ -11,19 +11,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import database.DomodroidDB;
 import org.json.JSONException;
 import org.json.JSONObject;
-import activities.Activity_Main;
-import activities.Activity_Map;
 import org.domogik.domodroid.R;
 import activities.Sliding_Drawer;
 import widgets.Entity_Map;
+import widgets.Entity_client;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Boolean;
 import widgets.Graphical_Info;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
+import widgets.Graphical_Binary.SBAnim;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -37,6 +36,7 @@ import android.graphics.Picture;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import misc.tracerengine;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -97,8 +97,7 @@ public class MapView extends View {
 	private float pos_X1=0;
 
 	private int screen_width;
-	private DomodroidDB domodb;
-	private Boolean activated; 
+	//private Boolean activated; 
 	private String mytag="MapView";
 	private Boolean locked = false;
 	private String parameters;
@@ -106,45 +105,103 @@ public class MapView extends View {
 	private int valueMax;
 	private String value0;
 	private String value1;
+	private static Handler handler = null;
 	private tracerengine Tracer = null;
 	
 	public MapView(tracerengine Trac, Activity context) {
 		super(context);
 		this.Tracer = Trac;
 		this.context=context;
-		activated=true;
-		domodb = new DomodroidDB(Tracer, context);
-		domodb.owner="MapView";
+		//activated=true;
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		screen_width = display.getWidth();
+		
+		/*
+		 * This view has only one handler for all mini widgets displayed on map
+		 * It'll receive a unique notification from WidgetUpdate when one or more values have changed
+		 */
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if(msg.what == 9997) {
+					//state_engine send us a signal to notify at least one value changed
+					Tracer.d(mytag,"state engine notify change for mini widget(s) : refresh all of them !" );
+					
+					for (Entity_Map featureMap : listFeatureMap) {
+						// if a miniwidget was connected to engine, session's value could have changed....
+						if(featureMap.getSession() != null) {
+							featureMap.setCurrentState(featureMap.getSession().getValue());
+						} 
+						
+					}
+					drawWidgets();
+					
+				} else if(msg.what == 9998) {
+					// state_engine send us a signal to notify it'll die !
+					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					
+					try {
+						finalize();
+					} catch (Throwable t) {}
+					
+					
+				}
+			}	
+		};
+		//End of create method ///////////////////////
+		
 	}
 	public void  onWindowVisibilityChanged (int visibility) {
 		Tracer.i(mytag,"Visibility changed to : "+visibility);
+		/*
 		if(visibility == View.VISIBLE)
-			this.activated = true;
+			//this.activated = true;
 		else
-			activated=false;
+			//activated=false;
+		 */
 	}
+	/*
 	public void stopThread(){
 		activated = false;
 	}
 	public void startThread(){
 		activated = true;
 	}
+	*/
 	public void clear_Widgets(){
 		String map_name=files.elementAt(currentFile);
 		Tracer.i(mytag,"Request to clear all widgets from : "+map_name);
-		domodb.cleanFeatureMap(map_name);
+		Tracer.get_engine().cleanFeatureMap(map_name);
 		initMap();
 		
 	}
 	public void initMap(){
 		Toast.makeText(context, files.elementAt(currentFile).substring(0,files.elementAt(currentFile).lastIndexOf('.')), Toast.LENGTH_SHORT).show();
 		
-		listFeatureMap = domodb.requestFeatures(files.elementAt(currentFile));
+		//listFeatureMap = domodb.requestFeatures(files.elementAt(currentFile));
+		listFeatureMap = Tracer.get_engine().getMapFeaturesList(files.elementAt(currentFile));
 
 		for (Entity_Map featureMap : listFeatureMap) {
-			featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
+			// Don't use anymore direct access to database : Use WidgetUpdate as relay, to subscribe each mini widget
+			//featureMap.setCurrentState(domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key()));
+			
+			//Instead, create and subscribe a session to WidgetUpdate, to receive value changed...
+			Entity_client cursession = new Entity_client(
+					featureMap.getDevId(),
+					featureMap.getState_key(), 
+					"mini widget",
+					handler);
+			cursession.setType(true);	//It's a mini widget !
+			if(Tracer.get_engine().subscribe(cursession) ) {
+				//This widget is connected to state_engine
+				featureMap.setSession(cursession);
+				featureMap.setCurrentState(cursession.getValue());
+			} else {
+				// cannot connect it ????
+				Tracer.i(mytag,"Cannot connect mini widget to state engine : ("+cursession.getDevId()+") ("+cursession.getskey()+") => it'll not be updated !");
+				featureMap.setCurrentState("????");
+			}
+			
 		}
 		
 		if(files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".svg")){
@@ -497,7 +554,7 @@ public class MapView extends View {
 			//Add a widget mode
 			if (addMode==true){
 				//insert in the database feature map the device id, his position and name map. 
-				domodb.insertFeatureMap(temp_id, 
+				Tracer.get_engine().insertFeatureMap(temp_id, 
 						(int)((event.getX()-value[2])/currentScale), 
 						(int)((event.getY()-value[5])/currentScale),
 						files.elementAt(currentFile));
@@ -509,10 +566,10 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 						//remove entry
-						domodb.removeFeatureMap(featureMap.getId(),
-						(int)((event.getX()-value[2])/currentScale), 
-						(int)((event.getY()-value[5])/currentScale),
-						files.elementAt(currentFile));
+						Tracer.get_engine().removeFeatureMap(featureMap.getId(),
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
 						removeMode=false;
 						//new UpdateThread().execute();
 						//refresh the map
@@ -524,10 +581,10 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 						//remove entry
-						domodb.removeFeatureMap(featureMap.getId(),
-						(int)((event.getX()-value[2])/currentScale), 
-						(int)((event.getY()-value[5])/currentScale),
-						files.elementAt(currentFile));
+						Tracer.get_engine().removeFeatureMap(featureMap.getId(),
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
 						moveMode=false;
 						//new UpdateThread().execute();
 						//return to add mode on next click

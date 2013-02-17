@@ -518,6 +518,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		timer.schedule(doAsynchronousTask, 0, update*1000);	// Fix Doume
 	}
 
+	/*
+	 * Graphs are refreshed using a direct request to Domogik server
+	 */
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override

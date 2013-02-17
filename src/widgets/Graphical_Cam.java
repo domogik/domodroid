@@ -21,8 +21,6 @@ import activities.Activity_Cam;
 import activities.Gradients_Manager;
 import org.domogik.domodroid.R;
 
-import database.DomodroidDB;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -57,7 +55,6 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private int id;
 	private String url;
 	private Context context;
-	//private DomodroidDB domodb;
 	private String mytag;
 	private tracerengine Tracer = null;
 	

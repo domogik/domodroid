@@ -40,6 +40,7 @@ public class Entity_Map{
 	private int posy;
 	private String map;
 	private Boolean isalive = true;
+	private Entity_client session;		//Structure to connect to WidgetUpdate, and receive notifications on change
 	
 	public Entity_Map(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type, int posx, int posy, String map) throws JSONException{
 		this.device_feature_model_id = device_feature_model_id;
@@ -199,5 +200,10 @@ public class Entity_Map{
 	public void setMap(String map) {
 		this.map = map;
 	}
-
+	public void setSession(Entity_client session) {
+		this.session = session;
+	}
+	public Entity_client getSession() {
+		return session;
+	}
 }

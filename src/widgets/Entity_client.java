@@ -27,6 +27,7 @@ public class Entity_client{
 	private String skey;				// 	//
 	private String currentState;		// last value exchanged with client
 	private String client_name;			// To have a clear debugging !
+	private Boolean miniwidget;
 	private Handler client_handler = null;
 	
 	
@@ -37,6 +38,7 @@ public class Entity_client{
 		this.client_name = Name;
 		this.client_handler = handler;
 		this.client_id = -1;	//Initially not connected
+		this.miniwidget = false;	//By default, it's not a map widget
 	}
 	/*
 	 * Methods to set content
@@ -58,6 +60,9 @@ public class Entity_client{
 	}
 	public void setName(String Name) {
 		this.client_name =Name;
+	}
+	public void setType(Boolean type) {
+		this.miniwidget =type;
 	}
 	public void setHandler(Handler handler) {
 		this.client_handler = handler;
@@ -85,6 +90,10 @@ public class Entity_client{
 	public String getName() {
 		return client_name;
 	}
+	public Boolean is_Miniwidget() {
+		return miniwidget;
+	}
+	
 	public Handler getClientHandler() {
 		return client_handler;
 	}

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import database.DomodroidDB;
 import database.WidgetUpdate;
 import map.Dialog_Help;
 import map.MapView;
@@ -82,21 +81,22 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
 	
-	private DomodroidDB domodb = null;
 	private tracerengine Tracer = null;
 
+	/*
+	 * WARNING : this class does'nt access anymore directly the database
+	 * 		It must use methods located into WidgetUpdate engine
+	 * 		which is permanently connected to local database
+	 * 
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
 		Tracer = new tracerengine(params);
-		/*
-		Bundle b = null;
-		b = savedInstanceState.getBundle();
-		byte[] serial_engine = getByteArray("engine");// .getExtra("engine"); // getIntent().getByteArrayExtra("engine");
-		engine = (WidgetUpdate) deserializeObject(serial_engine); 
-		*/
+		startDBEngine();		//Run its own WidgetUpdate engine
+		
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
@@ -247,11 +247,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		builder.setTitle(R.string.Add_widget_title);
 
 		//get feature list
-		domodb = new DomodroidDB(Tracer, this);
-		domodb.owner="Activity_Map";
-		listFeature = domodb.requestFeatures();
-
-
+		listFeature = Tracer.get_engine().requestFeatures();
+		
 		//listview feature
 		ListView listview_feature = new ListView(this);
 		ArrayList<HashMap<String,String>> listItem1=new ArrayList<HashMap<String,String>>();
@@ -317,11 +314,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	}
 	private void startDBEngine() {
 		Tracer.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
-		if(widgetUpdate != null) {
-			widgetUpdate.cancelEngine();
-			widgetUpdate = null;
+		if(widgetUpdate == null) {
+			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
 		}
-		widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
 		Tracer.set_engine(widgetUpdate);
 		
 	}
@@ -332,14 +327,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		panel.setOpen(false, false);
 		if(Tracer != null)
 			Tracer.e("Activity_Map", "onPause");
-		if(mapView != null)
-			mapView.stopThread();
-		mapView=null;
 		if(widgetUpdate != null) {
-			widgetUpdate.cancelEngine();
-			widgetUpdate = null;
+			widgetUpdate.stopThread();
 		}
-		
 		
 	}
 	public void onResume() {
@@ -350,7 +340,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		if(widgetUpdate == null) {
 			startDBEngine();
 		}
-		
 		widgetUpdate.restartThread();
 		
 	}
@@ -358,17 +347,22 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onDestroy() {
 		super.onDestroy();
 		if(Tracer != null)
-			Tracer.e("ActivityMap.onDestroy","??????????????????????");
+			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : release engines");
 		
 		if(widgetUpdate != null) {
 			widgetUpdate.cancelEngine();
 			widgetUpdate = null;
 		}
+		if(mapView != null)
+			mapView=null;
+		
 		if(Tracer != null) {
 			Tracer.close();		//To eventually flush and close txt log file
 			Tracer = null;		//Stop own Tracer engine
 		}
+		System.gc();
 	}
+	
 	public void onPanelClosed(Sliding_Drawer panel) {
 		if(Tracer != null)
 			Tracer.e("ActivityMap.onPanelClosed","??????????????????????");

@@ -14,10 +14,7 @@ import org.json.JSONObject;
 
 import rinor.Rest_com;
 import widgets.Graphical_Binary.SBAnim;
-import database.DomodroidDB;
 import database.JSONParser;
-import database.WidgetUpdate;
-
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -91,12 +88,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private String wname;
 	private String type;
 	private String address;
-	//private DomodroidDB domodb;
 	private Activity mycontext;
-	//public WidgetUpdate updateEngine = null;
 	private FrameLayout myself = null;
 	private Boolean switch_state = false;
-	//private Boolean request_in_process = false;
 	private TimerTask doAsynchronousTask;
 	
 	
@@ -399,16 +393,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 						argbS = session.getValue();
 						Tracer.d(mytag,"Handler receives a new value from state engine <"+argbS+">" );
 						
-					} else {
-						//////////// Deprecated method to pass Value.... ////////////////
-						try {
-							Bundle bu = msg.getData();
-							argbS =  bu.getString("message");
-							Tracer.d(mytag,"UpdateThread send a new value <"+argbS+">" );
-							
-						} catch (Exception e) {
-						} 
-						/////////////////////////////////////////////////////////////////
 					}
 					if(argbS.equals("off")) {
 						switch_state=false;
@@ -678,85 +662,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		}
 		return false;
 	}
-	/*
-	public void updateTimer() {
-		final Timer timer = new Timer();
-		
-		doAsynchronousTask = new TimerTask() {
-
-			@SuppressWarnings("unused")
-			@Override
-			public void run() {
-				Runnable myTH = null;
-				Handler loc_handler = handler;
-				//Tracer.e(mytag, "Create Runnable");
-				myTH = new Runnable() {
-					public void run() {
-						
-					try {
-							if(getWindowVisibility()==0){
-								//Tracer.e(mytag, "Execute UpdateThread");
-								new UpdateThread().execute();
-								
-							}else{
-								if(timer != null) {
-									timer.cancel();
-								}
-								Tracer.e(mytag, "UpdateTimer : Destroy runnable");
-								//this.finalize();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					} // Runnable run method
-				}; //Runnable 
-				if((myTH != null) && (loc_handler != null)) {
-					//Tracer.e(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);	
-					try {
-						loc_handler.post(myTH);
-					} catch (Exception e) {
-						Tracer.e(mytag,"TimerTask.run : Cannot post refresh for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
-						e.printStackTrace();
-					}
-				} else {
-					Tracer.e(mytag,"TimerTask.run : Cannot create Runnable for Device : "+dev_id+" Widget will not be refreshed ! ! !");	
-				}
-			} // TimerTask run method
-		}; //TimerTask 
-		Tracer.e(mytag,"Init timer for Device : "+this.dev_id);
-		doAsynchronousTask.run();		//For an immediate update
-		timer.schedule(doAsynchronousTask, 0, update*1000);
-	}
-
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			try{
-				//Tracer.e(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname);
-				if(updating<1){
-					Bundle b = new Bundle();
-					String result = domodb.requestFeatureState(dev_id, state_key);
-					if(result != null) {
-						Tracer.d(mytag, "UpdateThread for device "+dev_id+" "+state_key+" description= "+wname+" Value = "+result);
-						b.putString("message", result);
-						msg = new Message();
-						msg.setData(b);
-						handler.sendMessage(msg);
-					} else {
-						Tracer.e(mytag, "UpdateThread no DB state for "+dev_id+" "+state_key+" description= "+wname+" (No value!)");
-					}
-				}
-				updating--;
-			}catch(Exception e){
-				Tracer.e(mytag, "error : request feature state= "+wname);
-			}
-			return null;
-		}
-	}
-	*/
 	
 	public boolean onLongClick(View arg0) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());

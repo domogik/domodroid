@@ -134,7 +134,7 @@ public class MapView extends View {
 						} 
 						
 					}
-					drawWidgets();
+					refreshMap();
 					
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !

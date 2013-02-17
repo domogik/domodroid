@@ -198,7 +198,7 @@ public class WidgetUpdate implements Serializable {
 						int updated_items = update_cache(json_widget_state);
 						// and continue to maintain local database
 						if(updated_items > 0) {
-							domodb.insertFeatureState(json_widget_state);
+							//domodb.insertFeatureState(json_widget_state);
 						}
 						ready = true;		//Accept subscribing, now !
 					} catch (Exception e) {

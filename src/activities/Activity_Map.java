@@ -366,7 +366,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	
 	public void onPanelClosed(Sliding_Drawer panel) {
 		if(Tracer != null)
-			Tracer.e("ActivityMap.onPanelClosed","??????????????????????");
+			Tracer.e("ActivityMap.onPanelClosed","panel request to close");
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
@@ -376,7 +376,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	public void onPanelOpened(Sliding_Drawer panel) {
 		if(Tracer != null)
-			Tracer.e("ActivityMap.onPanelOpened","??????????????????????");
+			Tracer.e("ActivityMap.onPanelOpened","panel request to be displayed");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
 	}

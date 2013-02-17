@@ -67,7 +67,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private Handler handler;
 	private String state_key;
 	private int update;
-	public boolean activate=false;
+	//public boolean activate=false;
 	private String mytag;
 	private Message msg;
 	private String wname;
@@ -96,7 +96,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.update = update;
 		this.wname = name;
 		this.myself=this;
-		this.activate=false;
+		//this.activate=false;
 		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
 
@@ -182,6 +182,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			@Override
 			public void handleMessage(Message msg) {	
 				///////////// Deprecated method to die //////////////////////////////////
+				/*
 				if(activate) {
 					Tracer.d("Graphical_Boolean","Handler receives a request to die " );
 					//That seems to be a zombie
@@ -194,6 +195,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
 					//////////////////////////////////////////////////////////////////////
 				} else {
+				*/
 					String status;
 					if(msg.what == 9999) {
 						status = session.getValue();
@@ -239,7 +241,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 					}
 					
 				}
-			}	
+			//}	
 		};
 		//================================================================================
 		/*
@@ -268,7 +270,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			activate=true;
+			//activate=true;
 		}
 	}
 	public boolean onLongClick(View arg0) {

@@ -112,6 +112,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private tracerengine Tracer = null;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
+	public View container = null;
 	
 
 
@@ -628,6 +629,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putInt("COLORHUE",seekBarHueBar.getProgress());
 		prefEditor.putInt("COLORSATURATION",seekBarRGBXBar.getProgress());
 		prefEditor.putInt("COLORBRIGHTNESS",seekBarRGBYBar.getProgress());
+		prefEditor.putString("COLORRGB","#"+argbS);
 		prefEditor.commit();
 		/*
 		Tracer.i("Graphical_Color", "SaveSelections()");

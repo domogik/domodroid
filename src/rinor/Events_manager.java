@@ -29,7 +29,7 @@ public class Events_manager {
 	private ListenerThread listener = null;
 	private Boolean alive = false;
 	
-	private JSONObject[] event_stack = new JSONObject[stack_size];
+	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	
 	public Events_manager(tracerengine Trac, Activity context, 
 			Handler state_engine_handler, 
@@ -111,48 +111,61 @@ public class Events_manager {
 					//An event is available...
 					Tracer.w(mytag,"Processing event");
 					// First, take the ticket ID to resubmit an event request....
-					JSONArray json_ValuesList = null;
+					
 					int list_size = 0;
 	                if(event != null) {
 	                	String ticket = "";
 	                	String device_id = "";
-	                	JSONObject objectest;
-	                	JSONArray arraytest;
 	                	try {
 	                		list_size = event.getJSONArray("event").length();
-	                	} catch (Exception e) {}
-	                	
+	                	} catch (Exception e) {
+	                		Tracer.w(mytag,"Very strange message, ignored !");
+							request=ticket_request;
+	                		break;
+	                	}
+	                	// Process the event array
 						for(int i = 0; i < list_size; i++) {
-							try {
-								ticket = event.getJSONArray("event").getJSONObject(i).getString("ticket_id");
-								Tracer.w(mytag,"Ticket = "+ticket);
-								device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
-								Tracer.w(mytag,"Device_id = "+device_id);
+								try {
+									ticket = event.getJSONArray("event").getJSONObject(i).getString("ticket_id");
+								} catch (Exception e) {
+									Tracer.w(mytag,"Wrong event : No ticket !");
+									request = ticket_request;
+									break;
+								}
+								try {
+									device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
+								} catch (Exception e) {
+									//No device_id : it's a timeout
+									Tracer.w(mytag,"It's a timeout !");
+									request = urlAccess+"events/request/get/"+ticket;
+									break;		//Force to redo the loop from while(alive)
+								}
 								//json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
-								int data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
+								int data_size = 0;
+								try {
+									data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
+								} catch (Exception e) {
+									data_size = 0;	//No data ==> no values to process !
+								}
 								for(int j = 0; j < data_size; j++) {
 									try {
 										String New_Key =event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
 										String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
-										Tracer.w(mytag,"Device_id = "+New_Key);										
-										Tracer.w(mytag,"Device_id = "+New_Value);
-										} catch (Exception e){
-											//je sais pas quoi mettre dans les catch :)
-										}
+										Tracer.w(mytag,"event to stack : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
+										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), Integer.parseInt(device_id), New_Key, New_Value);
+										put_event(to_stack);
+										notify_engine();
+									} catch (Exception e){
+										Tracer.w(mytag,"Malformed data entry ?????????????????");
 									}
+								}
 								//Tracer.w(mytag,"ValuesList <"+json_ValuesList.toString()+">");
-								
-							} catch (Exception e) {
-								// Cannot parse JSON Array or JSONObject
-								 Tracer.d("Dialog_Synchronize","Exception processing event ("+i+")");
-									
-							}
 							
-						}
+						} // End of loop on event array
 	                }
 				}
 				
-			}
+			}	//Infinite loop on alive
 			
 			//Should never reach the end of thread !!!!
 			Tracer.e(mytag,"ListenerThread going down !!!!!!!!!!!!!!!!!");
@@ -162,7 +175,7 @@ public class Events_manager {
 	/*
 	 * Fill stack with events received from server
 	 */
-	private int put_event(JSONObject event) {
+	private int put_event(Rinor_event event) {
 		event_stack[next_event] = event;
 		Tracer.w(mytag,"Event stored at position : "+next_event);
 		next_event++;
@@ -174,7 +187,7 @@ public class Events_manager {
 	}
 	
 	/*
-	 * Notify WidgetUpdate that some JSONObject is available in stack
+	 * Notify WidgetUpdate that some Rinor_event is available in stack
 	 */
 	private void notify_engine() {
 		if(state_engine_handler != null) {
@@ -184,7 +197,7 @@ public class Events_manager {
 	/*
 	 * This method works only if one client extracts elements....
 	 */
-	private JSONObject get_event() {
+	public Rinor_event get_event() {
 		Boolean ok = false;
 		int to_return = 0;
 		

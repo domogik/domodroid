@@ -116,18 +116,31 @@ public class Events_manager {
 	                if(event != null) {
 	                	String ticket = "";
 	                	String device_id = "";
+	                	JSONObject objectest;
+	                	JSONArray arraytest;
 	                	try {
 	                		list_size = event.getJSONArray("event").length();
 	                	} catch (Exception e) {}
 	                	
 						for(int i = 0; i < list_size; i++) {
 							try {
-								ticket = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getString("ticket_id");
+								ticket = event.getJSONArray("event").getJSONObject(i).getString("ticket_id");
 								Tracer.w(mytag,"Ticket = "+ticket);
-								device_id = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getString("device_id");
+								device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
 								Tracer.w(mytag,"Device_id = "+device_id);
-								json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
-								Tracer.w(mytag,"ValuesList <"+json_ValuesList.toString()+">");
+								//json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
+								int data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
+								for(int j = 0; j < data_size; j++) {
+									try {
+										String New_Key =event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
+										String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
+										Tracer.w(mytag,"Device_id = "+New_Key);										
+										Tracer.w(mytag,"Device_id = "+New_Value);
+										} catch (Exception e){
+											//je sais pas quoi mettre dans les catch :)
+										}
+									}
+								//Tracer.w(mytag,"ValuesList <"+json_ValuesList.toString()+">");
 								
 							} catch (Exception e) {
 								// Cannot parse JSON Array or JSONObject

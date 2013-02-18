@@ -184,6 +184,7 @@ public class WidgetUpdate implements Serializable {
 		Tracer.d(mytag,"cancelEngine requested....");
 		activated = false;
 		if(eventsManager != null) {
+			eventsManager.cancel();
 			eventsManager = null;
 		}
 		disconnect_all_clients();

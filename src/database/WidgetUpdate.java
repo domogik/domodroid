@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import rinor.Events_manager;
 import rinor.Rest_com;
 import widgets.Entity_Feature;
 import widgets.Entity_Map;
@@ -17,11 +18,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Message;
 import misc.tracerengine;
 
 public class WidgetUpdate implements Serializable {
@@ -40,11 +43,13 @@ public class WidgetUpdate implements Serializable {
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
 	
-	private ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
+	public ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
 	private Boolean locked = false;
 	private Boolean timer_flag = false;
 	public Boolean ready = false;
 	private Handler mapView = null;
+	private Events_manager eventsManager ;
+	private static Handler myselfHandler ;
 	
 	/*
 	 * This class is a background engine 
@@ -64,6 +69,7 @@ public class WidgetUpdate implements Serializable {
 	 * May be in future, this engine will also use Rest events with server, to avoid
 	 * 		use of timer and delayed updates
 	 */
+	@SuppressLint("HandlerLeak")
 	public WidgetUpdate(tracerengine Trac, Activity context, Handler anim, SharedPreferences params){
 		super();
 		this.sharedparams=params;
@@ -98,7 +104,17 @@ public class WidgetUpdate implements Serializable {
 			} catch (Exception e) {};
 		}
 		Tracer.d(mytag,"state engine ready !");
-		
+		myselfHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				//This handler will receive notifications from Events_Manager
+				if(msg.what == 9900) {
+				
+				}
+			}
+		};
+		// Cache contains list of existing devices, now !
+		eventsManager = new Events_manager(Tracer, context,myselfHandler, cache, params);
 	}
 	
 	/* 
@@ -167,6 +183,9 @@ public class WidgetUpdate implements Serializable {
 	public void cancelEngine(){
 		Tracer.d(mytag,"cancelEngine requested....");
 		activated = false;
+		if(eventsManager != null) {
+			eventsManager = null;
+		}
 		disconnect_all_clients();
 		try {
 			Tracer.DBEngine_running=false;

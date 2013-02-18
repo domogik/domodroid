@@ -219,27 +219,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// deprecated termination //////////////////////////////
-				if(msg.what == 9) {
-					Tracer.d(mytag,"Handler receives a request to die " );
-					//That seems to be a zombie
-					if(realtime) {
-						Tracer.get_engine().unsubscribe(session);
-						session = null;
-						realtime = false;
-					}
-					removeView(background);
-					myself.setVisibility(GONE);
-					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-					try { 
-						finalize(); 
-					} catch (Throwable t) {}	//kill the handler thread itself
-					//////////////////////////////////////////////////////
-				} else {
-					if(msg.what == 9999) {
+				if(msg.what == 9999) {
 						//Message from widgetupdate
 						//state_engine send us a signal to notify value changed
 						String loc_Value = session.getValue();
@@ -283,7 +263,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						} catch (Throwable t) {}	//kill the handler thread itself
 					}
 				}
-			}
+			
 		};
 		
 		//================================================================================

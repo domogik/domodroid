@@ -153,7 +153,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
-		state.setText("State : Low");
+		state.setText("State :"+this.Value_0);
 
 
 		//feature panel
@@ -186,13 +186,13 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 						Tracer.d(mytag,"Handler receives a new status <"+status+">" );
 						
 						try {
-							if(status.equals("value0")){
+							if(status.equals(value0)){
 								bool.setImageResource(R.drawable.boolean_off);
 								//change color if statue=low to (usage, o) means off
 								//note sure if it must be kept as set previously as default color.
 								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								state.setText(stateS+Value_0);
-							}else if(status.equals("value1")){
+							}else if(status.equals(value1)){
 								bool.setImageResource(R.drawable.boolean_on);
 								//change color if statue=high to (usage, 2) means on
 								img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));

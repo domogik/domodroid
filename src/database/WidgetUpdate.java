@@ -10,6 +10,7 @@ import java.util.TimerTask;
 
 import rinor.Events_manager;
 import rinor.Rest_com;
+import rinor.Rinor_event;
 import widgets.Entity_Feature;
 import widgets.Entity_Map;
 import widgets.Entity_client;
@@ -104,16 +105,25 @@ public class WidgetUpdate implements Serializable {
 			} catch (Exception e) {};
 		}
 		Tracer.d(mytag,"state engine ready !");
+		// Cache contains list of existing devices, now !
+		
+		///////// Create an handler to exchange with Events_Manager///////////////////
 		myselfHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				//This handler will receive notifications from Events_Manager
 				if(msg.what == 9900) {
-				
+					Tracer.d(mytag,"Event received from Events_Manager");
+					if(eventsManager != null) {
+						Rinor_event event = eventsManager.get_event();
+						if(event != null) {
+							update_cache_device(event.device_id,event.key,event.Value);
+						}
+					}
 				}
 			}
 		};
-		// Cache contains list of existing devices, now !
+		///////// and pass to it now///////////////////
 		eventsManager = new Events_manager(Tracer, context,myselfHandler, cache, params);
 	}
 	
@@ -164,8 +174,10 @@ public class WidgetUpdate implements Serializable {
 		
 		// and arm the timer to do automatically this each 'update' seconds
 		timer_flag=true;	//Cyclic timer is running...
-		if(timer != null)
-			timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
+		if(timer != null) {
+			timer.schedule(doAsynchronousTask, 0, 30*1000);	// for tests with Events_Manager
+			//timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
+		}
 	}
 	 
 	

@@ -217,11 +217,13 @@ public class WidgetUpdate implements Serializable {
 	public void stopThread(){
 		Tracer.d(mytag,"stopThread requested....stopping also events manager");
 		activated = false;
+		/*
 		if(eventsManager != null) {
 			eventsManager.alive=false;	// To force the ListenerThread to stop on next event
 			eventsManager.cancel();
 			eventsManager = null;
 		}
+		*/
 	}
 	public void restartThread(){
 		Tracer.d(mytag,"restartThread requested....");

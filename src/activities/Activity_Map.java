@@ -82,7 +82,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Handler sbanim;
 	
 	private tracerengine Tracer = null;
-
+	private String owner = "Map";
 	/*
 	 * WARNING : this class does'nt access anymore directly the database
 	 * 		It must use methods located into WidgetUpdate engine
@@ -315,9 +315,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private void startDBEngine() {
 		Tracer.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
 		if(widgetUpdate == null) {
-			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
+			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params, owner);	 	//That should also start an event_manager
 		}
-		widgetUpdate.mytag="WidgetUpdate Map";
 		Tracer.set_engine(widgetUpdate);
 		
 	}
@@ -351,7 +350,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : release engines");
 		
 		if(widgetUpdate != null) {
-			widgetUpdate.cancelEngine();
+			widgetUpdate.cancelEngine();	//That'll stop events manager, too
 			widgetUpdate = null;
 		}
 		if(mapView != null)

@@ -131,6 +131,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
 	private String tracer_state = "false";
+	private String owner = "Main";
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -223,7 +224,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						parent.removeAllViews();
 						if(widgetUpdate == null) {
 							Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
-							widgetUpdate = new WidgetUpdate(Tracer, myself,sbanim,params);
+							widgetUpdate = new WidgetUpdate(Tracer, myself,sbanim,params, owner);
 							Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
 						}
 						Bundle b = new Bundle();
@@ -419,7 +420,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				public void handleMessage(Message msg) {
 					
 					if(widgetUpdate == null) {
-						widgetUpdate = new WidgetUpdate(Tracer, myself, sbanim, params);
+						widgetUpdate = new WidgetUpdate(Tracer, myself, sbanim, params, owner);
 						Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
 					}
 					try {
@@ -706,8 +707,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		menu_green.setVisibility(View.GONE);
 		SaveSelections(false);		// To force a sync operation, if something has been modified...
 		if(widgetUpdate == null) {
-			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
-			Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
+			startDBEngine();
 		}
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {
@@ -740,7 +740,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.wAgent=null;
 			widgetHandler=null;
 			Tracer.set_engine(null);
-			widgetUpdate.cancelEngine();
+			widgetUpdate.cancelEngine();	//That should also stop events manager
 			widgetUpdate=null;
 			
 			//And stop main program
@@ -804,8 +804,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private void startDBEngine() {
 		Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
 		if(widgetUpdate == null) {
-			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params);
-			widgetUpdate.mytag="WidgetUpdate Main";
+			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params, owner);
 			Tracer.set_engine(widgetUpdate);
 		}  else {
 			//widgetUpdate.refreshNow();
@@ -825,7 +824,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//Tracer.v("Activity_Main.onPause","Freeze own WidgetUpdate engine");
 			if(widgetUpdate != null) {
 				Tracer.w("Activity_Main.onPause","but freeze it !");
-				widgetUpdate.stopThread();
+				widgetUpdate.stopThread();	//That should also stop events manager
+				
 			}
 		} 
 		dont_freeze = false;
@@ -842,7 +842,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		widgetHandler=null;
 		if(widgetUpdate != null) {
 			Tracer.set_engine(null);
-			widgetUpdate.cancelEngine();
+			widgetUpdate.cancelEngine();	//That should also stop events manager	
 			widgetUpdate=null;
 		}
 	}

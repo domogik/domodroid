@@ -35,12 +35,13 @@ public class WidgetUpdate implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private SharedPreferences sharedparams;
-	private static WidgetUpdate instance;
 	
 	private boolean activated;
 	private DomodroidDB domodb;
 	private Handler sbanim;
+	private Activity context;
 	public  String mytag="WidgetUpdate";
+	public  String owner="";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
 	
@@ -49,8 +50,10 @@ public class WidgetUpdate implements Serializable {
 	private Boolean timer_flag = false;
 	public Boolean ready = false;
 	private Handler mapView = null;
-	private Events_manager eventsManager ;
+	public Events_manager eventsManager ;
 	private static Handler myselfHandler ;
+	private int last_ticket = -1;
+	private int last_position = -1;
 	
 	/*
 	 * This class is a background engine 
@@ -71,10 +74,13 @@ public class WidgetUpdate implements Serializable {
 	 * 		use of timer and delayed updates
 	 */
 	@SuppressLint("HandlerLeak")
-	public WidgetUpdate(tracerengine Trac, Activity context, Handler anim, SharedPreferences params){
+	public WidgetUpdate(tracerengine Trac, Activity context, Handler anim, SharedPreferences params, String owner){
 		super();
 		this.sharedparams=params;
 		this.Tracer = Trac;
+		this.context = context;
+		this.owner = owner;
+		mytag = "WidgetUpdate "+owner;
 		activated = true;
 		if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -91,8 +97,8 @@ public class WidgetUpdate implements Serializable {
 		timer_flag = false;
 		ready=false;
 		Timer();		//and initiate the cyclic timer
-		//refreshNow();	// Force an immediate refresh to obtain a list of feature states in cache
-		new UpdateThread().execute();
+		new UpdateThread().execute();	//And force an immediate refres
+		Tracer.d(mytag,"state engine waiting for initial setting of cache !");
 		
 		Boolean said = false;
 		while (! ready) {
@@ -112,19 +118,44 @@ public class WidgetUpdate implements Serializable {
 			@Override
 			public void handleMessage(Message msg) {
 				//This handler will receive notifications from Events_Manager
+				// 1 message => 1 event : so, it's serialized !
 				if(msg.what == 9900) {
-					Tracer.d(mytag,"Event received from Events_Manager");
 					if(eventsManager != null) {
 						Rinor_event event = eventsManager.get_event();
 						if(event != null) {
+							Tracer.d(mytag,"Event received from Events_Manager, ticket : "+event.ticket_id+" # "+event.item);
+						
+							if(last_ticket == -1) {
+								last_ticket=event.item;	//Initial synchro on item
+							} else {
+								if(! ( (last_ticket + 1)== event.item)) {
+									Tracer.d(mytag,"Handler event lost ? expected # "+(last_ticket + 1)+" Received # "+event.item);
+								} 
+								last_ticket=event.item;
+							}
+						
+						
+							mapView = null;
 							update_cache_device(event.device_id,event.key,event.Value);
+							if(mapView != null) {
+								//It was a mini widget, not yet notified : do it now..
+								try {
+									Tracer.i(mytag, "Handler send a notification to MapView");
+									mapView.sendEmptyMessage(9997);	//notify the group of widgets a new value is there
+								} catch (Exception e) {}
+							}
+						} else {
+							Tracer.d(mytag,"Null Event received from Events_Manager ! ! ! ");
+							
 						}
+					} else {
+						Tracer.d(mytag,"No Events_Manager known ! ! ! ");
 					}
 				}
 			}
 		};
 		///////// and pass to it now///////////////////
-		eventsManager = new Events_manager(Tracer, context,myselfHandler, cache, params);
+		eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
 	}
 	
 	/* 
@@ -175,27 +206,43 @@ public class WidgetUpdate implements Serializable {
 		// and arm the timer to do automatically this each 'update' seconds
 		timer_flag=true;	//Cyclic timer is running...
 		if(timer != null) {
-			timer.schedule(doAsynchronousTask, 0, 30*1000);	// for tests with Events_Manager
+			timer.schedule(doAsynchronousTask, 0, 125*1000);	// for tests with Events_Manager 
+																// 2'05 is a bit more than events timeout by server (2')
+			
 			//timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 		}
 	}
 	 
 	
 	public void stopThread(){
-		Tracer.d(mytag,"stopThread requested....");
+		Tracer.d(mytag,"stopThread requested....stopping also events manager");
 		activated = false;
-		
+		if(eventsManager != null) {
+			eventsManager.alive=false;	// To force the ListenerThread to stop on next event
+			eventsManager.cancel();
+			eventsManager = null;
+		}
 	}
 	public void restartThread(){
 		Tracer.d(mytag,"restartThread requested....");
 		activated = true;
-		Timer();
-		refreshNow();
+		if(eventsManager == null) {
+			Tracer.d(mytag,"restartThread ....create events manager");
+			eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
+		} /* else {
+			eventsManager.cancel();
+			eventsManager = null;
+			System.gc();
+			Tracer.d(mytag,"restartThread ....re-create a new  events manager");
+			eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
+		}*/
+		
 	}
 	public void cancelEngine(){
 		Tracer.d(mytag,"cancelEngine requested....");
 		activated = false;
 		if(eventsManager != null) {
+			eventsManager.alive=false;
 			eventsManager.cancel();
 			eventsManager = null;
 		}
@@ -217,6 +264,17 @@ public class WidgetUpdate implements Serializable {
 				Tracer.d(mytag,"UpdateThread frozen....");
 				
 			} else {
+				int count = 0;
+				if(eventsManager != null)
+					count=eventsManager.getAndResetEventCount();
+				
+				if(count > 0) {
+					if(Tracer != null)
+						Tracer.d(mytag,"Events detected since last loop = "+count+" No stats !");
+					return null;
+				}
+					
+					
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");
 				if(sharedparams.getString("UPDATE_URL", null) != null){
@@ -310,59 +368,86 @@ public class WidgetUpdate implements Serializable {
 		
 		return updated_items;
 	}
-	
+	/*
+	 * Update device value in cache, and eventually notify clients about change
+	 * This sequence must be protected against concurrent access
+	 */
 	public Boolean update_cache_device(int dev_id,String skey,String Val){
 		if(cache == null)
 			return false;
-		for(int i = 0; i < cache.size(); i++) {
-			if( (cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
-				//found device in list
-				if( (cache.get(i).Value.equals(Val))) {
+		synchronized(this) {
+			Boolean result = false;
+			int cache_position = -1;
+			
+			cache_position = locate_device(dev_id,skey,last_position); // Try to retrieve it in cache from the last accessed position
+																	   // because 'stats' return them always in the same order 
+			if(cache_position >=0) {
+				//device found
+				last_position = cache_position;		//Keep the position, for next search
+				if( (cache.get(cache_position).Value.equals(Val))) {
 					//value not changed
-					//Tracer.i(mytag, "cache engine update same value for ("+dev_id+") ("+skey+") ("+Val+")");
+					Tracer.i(mytag, "cache engine no value change for ("+dev_id+") ("+skey+") ("+Val+")");
 					
-					return false;
 				} else {
 					//value changed : has to notify clients....
 					Tracer.i(mytag, "cache engine update value changed for ("+dev_id+") ("+skey+") ("+Val+")");
-					cache.get(i).Value = Val;
-					
-					if(cache.get(i).clients_list != null) {
-						for(int j = 0; j < cache.get(i).clients_list.size(); j++) {
+					cache.get(cache_position).Value = Val;
+					result=true;
+					if(cache.get(cache_position).clients_list != null) {
+						for(int j = 0; j < cache.get(cache_position).clients_list.size(); j++) {
 							//Notify each connected client
-							Handler client = cache.get(i).clients_list.get(j).getClientHandler();
+							Handler client = cache.get(cache_position).clients_list.get(j).getClientHandler();
 							if(client != null) {
-								cache.get(i).clients_list.get(j).setValue(Val);	//update the session structure with new value
-								if(cache.get(i).clients_list.get(j).is_Miniwidget()) {
-									// One client of the list is a mapView's miniwidget
+								cache.get(cache_position).clients_list.get(j).setValue(Val);	//update the session structure with new value
+								if(cache.get(cache_position).clients_list.get(j).is_Miniwidget()) {
+									// This client is a mapView's miniwidget
 									// Don't' notify it immediately
-									// A unique notification will be done after all updates processed !
+									// A unique notification will be done by Handler, or higher level after all updates processed !
 									mapView = client;
 								} else {
-									// It's not a mini_widget : notify it
+									// It's not a mini_widget : notify it now
 									try {
-										Tracer.i(mytag, "cache engine send ("+Val+") to client <"+cache.get(i).clients_list.get(j).getName()+">");
+										Tracer.i(mytag, "cache engine send ("+Val+") to client <"+cache.get(cache_position).clients_list.get(j).getName()+">");
 										client.sendEmptyMessage(9999);	//notify the widget a new value is ready for display
 									} catch (Exception e) {}
 								}
 							}
 						}
-						
-						
 					}
 					
-					return true;
 				}
+			} else {
+				// device not yet exist in cache
+				// when creating a new cache entry, it can't have clients !
+				Tracer.i(mytag, "cache engine inserting ("+dev_id+") ("+skey+") ("+Val+")");
+				Cache_Feature_Element device = new Cache_Feature_Element(dev_id,skey,Val);
+				cache.add(device);
+				result=true;
 			}
-			// not the good one : check next
+			return result;		
+		} // End protected bloc
+	}
+	private int locate_device(int dev_id,String skey,int from) {
+		if(cache.size() == 0)
+			return -1;		//empty cache
+		int pos = from+1;
+		if(pos >= cache.size() || pos < 0)
+			pos=0;
 			
-		}	//loop to search this device in cache
-		
-		// device not yet exist in cache
-		Tracer.i(mytag, "cache engine inserting ("+dev_id+") ("+skey+") ("+Val+")");
-		Cache_Feature_Element device = new Cache_Feature_Element(dev_id,skey,Val);
-		cache.add(device);
-		return true;		// when creating new, it can't have clients !
+		//Check if following entry in cache is the good one...
+		for(int i = pos; i < cache.size(); i++) {
+			if((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
+				return i;		//Bingo, the next one was the good one !
+			}
+		}
+		// If here, it's because from the location 'from + 1', till end of cache, the device was not found !
+		// Search from the beginning of table
+		for(int i=0; i <= pos; i++) {
+			if((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
+				return i;		//Bingo, found !
+			}
+		}
+		return -1;	//Not found in cache !
 	}
 	
 	/*

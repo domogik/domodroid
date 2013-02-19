@@ -1,6 +1,7 @@
 package rinor;
 
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,51 +21,92 @@ public class Events_manager {
 	private SharedPreferences params;
 	private Handler state_engine_handler;
 	private ArrayList<Cache_Feature_Element> engine_cache;
-	private int next_to_extract = 0;
-	private int next_event = 0;
-	private Boolean endloop = false;
+	private int stack_in = -1;
+	private int stack_out = -1;
+	private int event_item = 0;
 	private int stack_size = 500;
-	private String mytag = "Events_manager";
+	private String mytag ;
 	private String urlAccess;
 	private ListenerThread listener = null;
-	private Boolean alive = false;
+	public Boolean alive = false;
+	private int events_seen = 0;
+	TimerTask doAsynchronousTask = null;
+	private Boolean listener_running = false;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	
 	public Events_manager(tracerengine Trac, Activity context, 
 			Handler state_engine_handler, 
 			ArrayList<Cache_Feature_Element> engine_cache,
-			SharedPreferences params
-			) {
+			SharedPreferences params,
+			String owner) {
 		super();
 		this.Tracer = Trac;
 		this.context = context;
 		this.state_engine_handler = state_engine_handler;
 		this.engine_cache =  engine_cache;
 		this.params = params;
+		mytag="Events_manager "+owner;
 		urlAccess = params.getString("URL","1.1.1.1");
 		urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 		//Try to solve #1623
 		urlAccess = urlAccess.replaceAll(" ", "%20");
 		//The engine cache should already contain a list of devices features
 		Tracer.w(mytag,"Events Manager created....start background task for events listening");
-		try {
+		if(listener == null) {
+			/*
+			doAsynchronousTask = new TimerTask() {
+				@Override
+				public void run() {
+				*/
+					Runnable myrunnable = new Runnable() {
+						public void run() {
+							try {
+									new ListenerThread().execute();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							
+							} 
+						}; //End of run method
+				/*	
+				}; // End of run bloc
+			
+			};
+			
 			listener = new ListenerThread();
-			if(listener != null)
-				listener.execute();
-		} catch (Exception e) {
-			Tracer.w(mytag,"Events Manager exeception starting background task : Abort event engine");
-			e.printStackTrace();
+			listener.doInBackground((Void[]) null);
+			
+			
 			try {
-				this.finalize();
-			} catch (Throwable t) {}
+				doAsynchronousTask.run(); 
+			} catch (Exception e) {
+				Tracer.w(mytag,"Events Manager exception starting background task : Abort event engine");
+				e.printStackTrace();
+				try {
+					this.finalize();
+				} catch (Throwable t) {}
+			}
+			*/
+			listener = new ListenerThread();
+			Thread mylistener = new Thread(myrunnable);
+			mylistener.run();
 		}
+		Tracer.w(mytag,"Events Manager ready");
+		
 	}	//End of Constructor
 	
 	public void cancel() {
 		alive = false;
-		if(listener != null)
+		if(listener != null) {
+			listener.cancel(true);
 			listener = null;
+			listener_running = false;
+		}
+		try {
+			finalize();
+		} catch (Throwable t) {}
+		
 	}
 	public class ListenerThread extends AsyncTask<Void, Integer, Void>{
 
@@ -72,7 +114,18 @@ public class Events_manager {
 		protected Void doInBackground(Void... params) {
 			
 			alive = true;
+			if(listener_running) {
+				Tracer.e(mytag,"One ListenerThread is already running");
+				
+				return null;
+			}
+			listener_running = true;
+			
 			// First, construct the event request
+			if(engine_cache.size() == 0) {
+				Tracer.e(mytag,"Empty WidgetUpdate cache : cannot create ticket : ListenerThread aborted ! ! !");
+				return null;
+			}
 			String ticket_request = urlAccess+"events/request/new";
 			for(int i = 0; i < engine_cache.size(); i++) {
 				String skey = engine_cache.get(i).skey;
@@ -85,6 +138,8 @@ public class Events_manager {
 			String request = ticket_request;
 			JSONObject event = null;
 			Boolean ack = false;
+			Tracer.e(mytag,"ListenerThread starts the loop");
+			
 			while(alive) {
 				try {
 					Tracer.w(mytag,"Requesting server <"+request+">");
@@ -96,7 +151,9 @@ public class Events_manager {
 					alive=false;
 					break;
 				}
-				
+				if(! alive) {
+					break;		//The father asks to die...
+				}
 				try {
 					ack = JSONParser.Ack(event);
 				} catch (Exception e) {
@@ -104,9 +161,9 @@ public class Events_manager {
 				}
 				if(ack==false){
 					// The server's response is'nt "OK"
-					Tracer.w(mytag,"Event ERROR <"+event.toString()+">");
-					alive=false;
-					break;
+					Tracer.w(mytag,"Event ERROR <"+event.toString()+"> : ignored !");
+					//alive=false;		// will stop the event engine..
+					//break;
 				} else {
 					//An event is available...
 					Tracer.w(mytag,"Processing event");
@@ -123,21 +180,26 @@ public class Events_manager {
 							request=ticket_request;
 	                		break;
 	                	}
+	                	ticket = null;
 	                	// Process the event array
 						for(int i = 0; i < list_size; i++) {
 								try {
 									ticket = event.getJSONArray("event").getJSONObject(i).getString("ticket_id");
 								} catch (Exception e) {
 									Tracer.w(mytag,"Wrong event : No ticket !");
-									request = ticket_request;
+									request = ticket_request;	//Create a new ticket on next query, now !
 									break;
 								}
+								if(ticket != null)
+									request = urlAccess+"events/request/get/"+ticket;	//Use the ticket on next query
+								else
+									request = ticket_request;	//Create a new ticket on next query
+								events_seen++;
 								try {
 									device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
 								} catch (Exception e) {
 									//No device_id : it's a timeout
 									Tracer.w(mytag,"It's a timeout !");
-									request = urlAccess+"events/request/get/"+ticket;
 									break;		//Force to redo the loop from while(alive)
 								}
 								//json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
@@ -151,41 +213,75 @@ public class Events_manager {
 									try {
 										String New_Key =event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
 										String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
-										Tracer.w(mytag,"event to stack : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
-										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), Integer.parseInt(device_id), New_Key, New_Value);
+										Tracer.w(mytag,"event to stack  : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
+										event_item++;
+										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
 										put_event(to_stack);
 										notify_engine();
+										alive=true;
 									} catch (Exception e){
 										Tracer.w(mytag,"Malformed data entry ?????????????????");
 									}
 								}
-								//Tracer.w(mytag,"ValuesList <"+json_ValuesList.toString()+">");
-							
+								
 						} // End of loop on event array
-	                }
-				}
+	                }	// if event not null
+				}	// if ack
 				
 			}	//Infinite loop on alive
 			
 			//Should never reach the end of thread !!!!
 			Tracer.e(mytag,"ListenerThread going down !!!!!!!!!!!!!!!!!");
+			listener_running = false;
 			return null;
 		}
 	}
 	/*
-	 * Fill stack with events received from server
+	 * Fill stack with events received from server (by ListenerThread)
 	 */
-	private int put_event(Rinor_event event) {
-		event_stack[next_event] = event;
-		Tracer.w(mytag,"Event stored at position : "+next_event);
-		next_event++;
-		if(next_event >= stack_size) {
-			next_event = 0;
-			endloop = true;
-		}
-		return 0;
+	private void put_event(Rinor_event event) {
+		//synchronized(this) {
+			stack_in++;
+			if(stack_in >= stack_size)
+				stack_in = 0;
+			if(event_stack[stack_in] == null) {
+				//Position is free !
+				Tracer.w(mytag,"Event stacked at :"+stack_in);
+				event_stack[stack_in] = event;
+			} else {
+				Tracer.w(mytag,"stack is full ! ! !  Event will be lost");
+			
+			}
+		//}	// protected bloc
 	}
-	
+	/*
+	 * This method works only if one client extracts elements....( WidgetUpdate handler, normally
+	 */
+	public Rinor_event get_event() {
+		//synchronized(this) {
+			stack_out++;
+			if(stack_out >= stack_size)
+				stack_out = 0;
+			if(event_stack[stack_out] == null) {
+				Tracer.w(mytag,"Stack is empty @ "+stack_out);
+				stack_out--;
+				if(stack_out < 0) {
+					stack_out = stack_size;
+				}
+				return null;
+			} else {
+				Rinor_event result = event_stack[stack_out];
+				Tracer.w(mytag,"Event unstacked from "+stack_out);
+				event_stack[stack_out] = null;		//free the entry
+				return result;
+			}
+		//} // protected bloc
+	}
+	public int getAndResetEventCount() {
+		int	count = events_seen;
+		events_seen = 0;
+		return count;
+	}
 	/*
 	 * Notify WidgetUpdate that some Rinor_event is available in stack
 	 */
@@ -194,38 +290,5 @@ public class Events_manager {
 			state_engine_handler.sendEmptyMessage(9900);
 		}
 	}
-	/*
-	 * This method works only if one client extracts elements....
-	 */
-	public Rinor_event get_event() {
-		Boolean ok = false;
-		int to_return = 0;
-		
-		if(! endloop) {
-			if (next_to_extract < next_event) {
-				//We're not overpassing entries
-				to_return = next_to_extract;
-				ok=true;
-			} else {
-				// No available event...
-				return null;
-			}
-		} else {
-			// we're near end of stack, but next_event is back to beginning
-			ok=true;
-			to_return = next_to_extract;
-		}
-		if(ok) {
-			next_to_extract++;
-			if(next_to_extract >= stack_size) {
-				next_to_extract = 0;		//restart from beginning of stack
-				endloop = false;
-			}
-			Tracer.w(mytag,"Event extracted from position : "+to_return);
-			return event_stack[to_return];
-		} else {
-			Tracer.w(mytag,"No available event ! ");
-			return null;
-		}
-	}
+	
 }

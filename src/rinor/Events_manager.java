@@ -1,25 +1,28 @@
 package rinor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import database.Cache_Feature_Element;
 import database.JSONParser;
-import database.WidgetUpdate.UpdateThread;
+import database.WidgetUpdate;
 import misc.tracerengine;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 public class Events_manager {
+	private static Events_manager instance;
 	private tracerengine Tracer;
-	private Activity context;
 	private SharedPreferences params;
-	private Handler state_engine_handler;
+	public Handler state_engine_handler;
+	private WidgetUpdate father = null;
+	public String owner = null;
 	private ArrayList<Cache_Feature_Element> engine_cache;
 	private int stack_in = -1;
 	private int stack_out = -1;
@@ -35,29 +38,65 @@ public class Events_manager {
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	
-	public Events_manager(tracerengine Trac, Activity context, 
+	/*******************************************************************************
+	*		Internal Constructor
+	*******************************************************************************/
+		private Events_manager()
+		{
+			super();
+		}
+	/*
+	 * 	(tracerengine Trac, Activity context, 
 			Handler state_engine_handler, 
 			ArrayList<Cache_Feature_Element> engine_cache,
 			SharedPreferences params,
-			String owner) {
-		super();
+			String owner,
+			WidgetUpdate caller)
+	 */
+
+	public static Events_manager getInstance() {
+		if(instance == null) {
+			Log.e("Events_Manager", "Creating instance........................");
+			instance = new Events_manager();
+		}
+		return instance;
+		
+	}
+	public void init(tracerengine Trac, 
+			Handler state_engine_handler, 
+			ArrayList<Cache_Feature_Element> engine_cache,
+			SharedPreferences params,
+			String owner,
+			WidgetUpdate caller) {	
+		
 		this.Tracer = Trac;
-		this.context = context;
-		this.state_engine_handler = state_engine_handler;
 		this.engine_cache =  engine_cache;
 		this.params = params;
+		this.father = caller;
+		setOwner(owner, state_engine_handler);
 		mytag="Events_manager "+owner;
 		urlAccess = params.getString("URL","1.1.1.1");
 		urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 		//Try to solve #1623
 		urlAccess = urlAccess.replaceAll(" ", "%20");
-		//The engine cache should already contain a list of devices features
-		Tracer.w(mytag,"Events Manager created....start background task for events listening");
+		//The father's cache should already contain a list of devices features
+		Tracer.w(mytag,"Events Manager initialized for "+owner);
+		if(listener == null) {
+			Tracer.w(mytag,"....start background task for events listening");
+			start_listener();
+		}
+		
+		Tracer.w(mytag,"Events Manager ready");
+		
+	}	//End of Constructor
+	
+	private void start_listener() {
 		if(listener == null) {
 			Runnable myrunnable = new Runnable() {
 					public void run() {
 						try {
-								new ListenerThread().execute();
+								listener = new ListenerThread();
+								listener.execute();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -65,29 +104,57 @@ public class Events_manager {
 					} 
 			}; //End of runnable
 			
-			listener = new ListenerThread();
 			Thread mylistener = new Thread(myrunnable);
 			mylistener.run();
 		}
-		Tracer.w(mytag,"Events Manager ready");
+	}
+	public void setOwner(String owner, Handler father) {
+		this.owner = owner;
+		this.state_engine_handler = father;
+		if (this.owner != null) {
+			mytag = "Events_Manager "+owner;
+		} else {
+			mytag = "Events_Manager ????";
+		}
+	}
+	public void Destroy() {
+		Tracer.w(mytag,"Destroy requested !");
+		//alive = false;
+		state_engine_handler = null;
 		
-	}	//End of Constructor
-	
-	public void cancel() {
-		Tracer.w(mytag,"cancel requested !");
-		alive = false;
 		if(listener != null) {
 			listener.cancel(true);
 			listener = null;
 			listener_running = false;
 		}
-		try {
-			finalize();
-		} catch (Throwable t) {}
 		
 	}
+	public void Pause() {
+		Tracer.w(mytag,"Pause requested !");
+		//alive = false;		//On newt wake up, the listener will die....
+	}
+	public void Resume() {
+		Tracer.w(mytag,"Resume requested !");
+		if( (alive) && (listener != null) ) {
+			//Listener is still alive
+			return;
+		} else {
+			alive = true;
+			start_listener();	// Start a new listener thread
+		}
+	}
+	
 	public class ListenerThread extends AsyncTask<Void, Integer, Void>{
-
+		
+	
+		public void cancel() {
+			try {
+				finalize();
+			} catch (Throwable t) {
+				
+			}
+		}
+		
 		@Override
 		protected Void doInBackground(Void... params) {
 			
@@ -180,6 +247,7 @@ public class Events_manager {
 								} catch (Exception e) {
 									//No device_id : it's a timeout
 									Tracer.w(mytag,"It's a timeout !");
+									notify_engine(9902); //Time out seen
 									break;		//Force to redo the loop from while(alive)
 								}
 								//json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
@@ -197,10 +265,10 @@ public class Events_manager {
 										event_item++;
 										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
 										put_event(to_stack);
-										notify_engine(9900); //An event is available
-										alive=true;
+										//notify_engine(9900); //An event is available
+										
 									} catch (Exception e){
-										Tracer.w(mytag,"Malformed data entry ?????????????????");
+										Tracer.e(mytag,"Malformed data entry ?????????????????");
 									}
 								}
 								
@@ -210,17 +278,19 @@ public class Events_manager {
 				
 			}	//Infinite loop on alive
 			
-			//Should never reach the end of thread !!!!
+			// a stop of listener has been required ( alive = false)
 			Tracer.e(mytag,"ListenerThread going down !!!!!!!!!!!!!!!!!");
 			listener_running = false;
-			notify_engine(9901); //Listener down
+			if(state_engine_handler != null) {
+				state_engine_handler.sendEmptyMessage(9901);
+			}
 			// Try to free the ticket, if available
 			if(! ticket.equals("")) {
 				request = urlAccess+"events/request/free/"+ticket;	//Use the ticket #
 				try {
 					Tracer.w(mytag,"Freeing ticket <"+request+">");
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
-					Tracer.w(mytag,"Received on free = <"+event.toString()+">");
+					Tracer.w(mytag,"Received on free ticket = <"+event.toString()+">");
 				} catch (Exception e) {
 					
 				}
@@ -242,6 +312,7 @@ public class Events_manager {
 				//Position is free !
 				Tracer.w(mytag,"Event stacked at :"+stack_in);
 				event_stack[stack_in] = event;
+				notify_engine(9900); //An event is available
 			} else {
 				Tracer.w(mytag,"stack is full ! ! !  Event will be lost");
 			
@@ -249,15 +320,14 @@ public class Events_manager {
 		//}	// protected bloc
 	}
 	/*
-	 * This method works only if one client extracts elements....( WidgetUpdate handler, normally
+	 * This method works only if one client extracts elements....( WidgetUpdate handler, normally)
 	 */
 	public Rinor_event get_event() {
-		//synchronized(this) {
 			stack_out++;
 			if(stack_out >= stack_size)
 				stack_out = 0;
 			if(event_stack[stack_out] == null) {
-				Tracer.w(mytag,"Stack is empty @ "+stack_out);
+				//Tracer.w(mytag,"Stack is empty @ "+stack_out);
 				stack_out--;
 				if(stack_out < 0) {
 					stack_out = stack_size;
@@ -269,8 +339,8 @@ public class Events_manager {
 				event_stack[stack_out] = null;		//free the entry
 				return result;
 			}
-		//} // protected bloc
 	}
+	
 	public int getAndResetEventCount() {
 		int	count = events_seen;
 		events_seen = 0;
@@ -280,8 +350,19 @@ public class Events_manager {
 	 * Notify WidgetUpdate that some Rinor_event is available in stack
 	 */
 	private void notify_engine(int what) {
-		if(state_engine_handler != null) {
-			state_engine_handler.sendEmptyMessage(what);
+		if(alive) {
+			if(father.owner.equals(owner) ) {
+				if(state_engine_handler != null) {
+					state_engine_handler.sendEmptyMessage(what);
+				} else {
+					Tracer.w(mytag,"No handler to notify father for "+stack_out);
+				}
+			} else {
+				Tracer.e(mytag,"On Notify : WidgetUpdate ("+father.owner+") target name does'nt match my instance ("+owner+")");
+				
+			}
+		} else {
+			Tracer.w(mytag,"when notifying father for "+stack_out+" , ListenerThread is in Pause state...");
 		}
 	}
 	

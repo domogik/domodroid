@@ -83,10 +83,9 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		//get parameters
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
         
-        if(jparam != null)
+        if(jparam != null) {
         	command = jparam.getString("command");
-        else
-        	command="";
+        } 
 
         String[] model = model_id.split("\\.");
         type = model[0];

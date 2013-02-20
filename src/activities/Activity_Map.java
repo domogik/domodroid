@@ -246,8 +246,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.Add_widget_title);
 
+		startDBEngine();
+		
 		//get feature list
-		listFeature = Tracer.get_engine().requestFeatures();
+		listFeature = widgetUpdate.requestFeatures();
 		
 		//listview feature
 		ListView listview_feature = new ListView(this);
@@ -313,11 +315,20 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	}
 	private void startDBEngine() {
-		Tracer.e("Activity_Map", "Starting/restarting WidgetUpdate engine !");
+		
 		if(widgetUpdate == null) {
-			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params, owner);	 	//That should also start an event_manager
+			Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
+			widgetUpdate = WidgetUpdate.getInstance();
+			widgetUpdate.init(Tracer, this,params, "Map");
+		}  
+		Boolean success = widgetUpdate.get_ownership("Map");
+		while(! success) {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {}
 		}
 		Tracer.set_engine(widgetUpdate);
+		Tracer.w("Activity_Map", "WidgetUpdate engine connected !");
 		
 	}
 	
@@ -328,30 +339,31 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		if(Tracer != null)
 			Tracer.e("Activity_Map", "onPause");
 		if(widgetUpdate != null) {
-			widgetUpdate.stopThread();
+			widgetUpdate.Disconnect("Map");
+			Tracer.e("Activity_Map", "Disconnect from engine");
 		}
 		
 	}
 	public void onResume() {
 		super.onResume();
+		Tracer.e("Activity_Map.onResume","Try to connect on cache engine !");
 		if(Tracer == null) {
 			Tracer = new tracerengine(params);
 		}
-		if(widgetUpdate == null) {
-			startDBEngine();
-		}
-		widgetUpdate.restartThread();
+		startDBEngine();
+		
 		
 	}
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		if(Tracer != null)
-			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : release engines");
+			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : disconnect from engines");
 		
 		if(widgetUpdate != null) {
-			widgetUpdate.cancelEngine();	//That'll stop events manager, too
-			widgetUpdate = null;
+			widgetUpdate.Disconnect("Map");	//That'll stop events manager, too
+			
+			//widgetUpdate = null;
 		}
 		if(mapView != null)
 			mapView=null;

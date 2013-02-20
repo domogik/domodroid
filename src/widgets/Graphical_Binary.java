@@ -17,18 +17,14 @@
  */
 package widgets;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import rinor.Rest_com;
 import database.JSONParser;
-import database.WidgetUpdate;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -55,6 +51,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("HandlerLeak")
 public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeListener, OnLongClickListener{
 
 
@@ -246,6 +243,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
 							} else if(msg.what == 9999) {
 								//state_engine send us a signal to notify value changed
+								if(session == null)
+									return;
 								String new_val = session.getValue();
 								Tracer.d(mytag,"Handler receives a new value <"+new_val+">" );
 								if(new_val.equals(value0)) {

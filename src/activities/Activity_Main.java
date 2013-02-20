@@ -224,8 +224,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						parent.removeAllViews();
 						if(widgetUpdate == null) {
 							Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
+							/*
 							widgetUpdate = new WidgetUpdate(Tracer, myself,sbanim,params, owner);
 							Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
+							*/
+							startDBEngine();
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
@@ -405,7 +408,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		// WidgetUpdate is a background process, submitting queries to Rinor
 		//		and updating local database
-		startDBEngine();
+		if(widgetUpdate == null)
+			startDBEngine();
 		
 		if(history != null)
 			history = null;		//Free resource
@@ -420,8 +424,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				public void handleMessage(Message msg) {
 					
 					if(widgetUpdate == null) {
-						widgetUpdate = new WidgetUpdate(Tracer, myself, sbanim, params, owner);
-						Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
+						startDBEngine();
 					}
 					try {
 						historyPosition++;
@@ -650,10 +653,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		dialog_sync.reload = reload;
 		dialog_sync.setOnDismissListener(sync_listener);
 		dialog_sync.setParams(params);
-		if(widgetUpdate != null) {
-			widgetUpdate.cancelEngine();
-			widgetUpdate = null;	//Try to unlock database....to avoid conflicts with sync
-		}
 		dialog_sync.show();
 		dialog_sync.startSync();
 	}
@@ -740,7 +739,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.wAgent=null;
 			widgetHandler=null;
 			Tracer.set_engine(null);
-			widgetUpdate.cancelEngine();	//That should also stop events manager
+			widgetUpdate.Disconnect("Main");	//That should also stop events manager
 			widgetUpdate=null;
 			
 			//And stop main program
@@ -787,8 +786,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				notSyncAlert.show();
 			}	
 			
-			if(widgetUpdate != null)
-				widgetUpdate.restartThread();
+			
 		
 		} else if(v.getTag().equals("menu")) {
 			// A clic on menu will activate/deactivate panel allowing settings configuration and giving
@@ -802,14 +800,19 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private void startDBEngine() {
-		Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
 		if(widgetUpdate == null) {
-			widgetUpdate = new WidgetUpdate(Tracer, this,sbanim,params, owner);
-			Tracer.set_engine(widgetUpdate);
-		}  else {
-			//widgetUpdate.refreshNow();
-			widgetUpdate.restartThread();
-		} 
+			Tracer.w("Activity_Main", "Starting WidgetUpdate engine !");
+			widgetUpdate = WidgetUpdate.getInstance();
+			widgetUpdate.init(Tracer, this,params, "Main");
+		}  
+		Boolean success = widgetUpdate.get_ownership("Main");
+		while(! success) {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {}
+		}
+		Tracer.e("Activity_Main","widgetUpdate is available for Main, now !");
+		Tracer.set_engine(widgetUpdate);
 		
 	}
 	
@@ -820,15 +823,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		panel.setOpen(false, false);
 		Tracer.w("Activity_Main.onPause","Going to background ! keep widgetUpdate engine alive");
 		
-		if(! dont_freeze) {
-			//Tracer.v("Activity_Main.onPause","Freeze own WidgetUpdate engine");
-			if(widgetUpdate != null) {
-				Tracer.w("Activity_Main.onPause","but freeze it !");
-				widgetUpdate.stopThread();	//That should also stop events manager
-				
-			}
-		} 
-		dont_freeze = false;
+		if(widgetUpdate != null)
+			widgetUpdate.Disconnect("Main");
 			
 		
 	}
@@ -837,20 +833,30 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onDestroy() {
 		super.onDestroy();
 		this.mWakeLock.release();	// We allow screen shut, now...
-		Tracer.w("Activity_Main.onDestroy","Stopping its widgetUpdate engine !");
+		Tracer.w("Activity_Main.onDestroy","Disconnecting from engine !");
 		this.wAgent=null;
 		widgetHandler=null;
 		if(widgetUpdate != null) {
-			Tracer.set_engine(null);
-			widgetUpdate.cancelEngine();	//That should also stop events manager	
+			//Tracer.set_engine(null);
+			widgetUpdate.Disconnect("Main");	//That should also stop events manager	
 			widgetUpdate=null;
 		}
 	}
 	@Override
 	public void onResume() {
 		super.onResume();
-		Tracer.w("Activity_Main.onResume","Try to reactivate  views and engines !");
-		end_of_init();
+		Tracer.e("Activity_Main.onResume","Try to reconnect to cache engine !");
+		if(widgetUpdate != null) {
+			Boolean success = widgetUpdate.get_ownership("Main");
+			while(! success) {
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {}
+			}
+			Tracer.e("Activity_Main.onResume","widgetUpdate is available for us, now !");
+			
+		}
+		end_of_init();	//will start widgetUpdate if necessary, or resume it
 		
 	}
 

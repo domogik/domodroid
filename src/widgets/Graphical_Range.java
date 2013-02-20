@@ -220,6 +220,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 					int new_val = 0;
 					if(msg.what == 9999) {
 						//state_engine send us a signal to notify value changed
+						if(session == null)
+							return;
 						try {
 							Tracer.d("Graphical_Range","Handler receives a new value from cache_engine <"+session.getValue()+">" );
 							new_val = Integer.parseInt(session.getValue());

@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import misc.tracerengine;
 
 public class WidgetUpdate implements Serializable {
@@ -33,12 +34,12 @@ public class WidgetUpdate implements Serializable {
 	/**
 	 * 
 	 */
+	private static WidgetUpdate instance;
 	private static final long serialVersionUID = 1L;
 	private SharedPreferences sharedparams;
 	
 	private boolean activated;
 	private DomodroidDB domodb;
-	private Handler sbanim;
 	private Activity context;
 	public  String mytag="WidgetUpdate";
 	public  String owner="";
@@ -54,6 +55,9 @@ public class WidgetUpdate implements Serializable {
 	private static Handler myselfHandler ;
 	private int last_ticket = -1;
 	private int last_position = -1;
+	private Timer timer = null;
+	private int callback_counts = 0;
+	private Boolean init_done = false;
 	
 	/*
 	 * This class is a background engine 
@@ -73,13 +77,41 @@ public class WidgetUpdate implements Serializable {
 	 * May be in future, this engine will also use Rest events with server, to avoid
 	 * 		use of timer and delayed updates
 	 */
+	/*******************************************************************************
+	*		Internal Constructor
+	*******************************************************************************/
+		private WidgetUpdate()
+		{
+			super();
+		}
+	/*
+	 * 	(tracerengine Trac, Activity context, 
+			Handler state_engine_handler, 
+			ArrayList<Cache_Feature_Element> engine_cache,
+			SharedPreferences params,
+			String owner,
+			WidgetUpdate caller)
+	 */
+
+	public static WidgetUpdate getInstance() {
+		if(instance == null) {
+			Log.e("Events_Manager", "Creating instance........................");
+			instance = new WidgetUpdate();
+		}
+		return instance;
+		
+	}
+	
 	@SuppressLint("HandlerLeak")
-	public WidgetUpdate(tracerengine Trac, Activity context, Handler anim, SharedPreferences params, String owner){
-		super();
+	public void init(tracerengine Trac, Activity context,   SharedPreferences params, String owner){
+		if(init_done) {
+			Log.e("WidgetUpdate","init already done , current owner is "+this.owner+". init requested by "+owner);
+			return;
+		}
 		this.sharedparams=params;
 		this.Tracer = Trac;
-		this.context = context;
 		this.owner = owner;
+		this.context = context;
 		mytag = "WidgetUpdate "+owner;
 		activated = true;
 		if(Tracer != null) {
@@ -93,7 +125,6 @@ public class WidgetUpdate implements Serializable {
 		Tracer.d(mytag,"Initial start requested....");
 		domodb = new DomodroidDB(Tracer, context);	
 		domodb.owner=mytag;
-		sbanim = anim;
 		timer_flag = false;
 		ready=false;
 		Timer();		//and initiate the cyclic timer
@@ -121,9 +152,10 @@ public class WidgetUpdate implements Serializable {
 				// 1 message => 1 event : so, it's serialized !
 				if(msg.what == 9900) {
 					if(eventsManager != null) {
+						callback_counts++;
 						Rinor_event event = eventsManager.get_event();
-						if(event != null) {
-							Tracer.d(mytag,"Event received from Events_Manager, ticket : "+event.ticket_id+" # "+event.item);
+						while(event != null) {
+							Tracer.d(mytag,"Event from Events_Manager found, ticket : "+event.ticket_id+" # "+event.item);
 						
 							if(last_ticket == -1) {
 								last_ticket=event.item;	//Initial synchro on item
@@ -144,24 +176,107 @@ public class WidgetUpdate implements Serializable {
 									mapView.sendEmptyMessage(9997);	//notify the group of widgets a new value is there
 								} catch (Exception e) {}
 							}
-						} else {
-							Tracer.d(mytag,"Null Event received from Events_Manager ! ! ! ");
-							
-						}
+							event = eventsManager.get_event();		//Try to get the next...
+						} // While loop
 					} else {
 						Tracer.d(mytag,"No Events_Manager known ! ! ! ");
 					}
 				} else if (msg.what == 9901) {
 					// Events_Manager thread is dead....
-					eventsManager = null;
+					if(eventsManager != null) {
+						eventsManager.Destroy();
+						eventsManager = null;
+					}
 					Tracer.i(mytag,"No more Events_Manager now ! ! ! ");
+					
+				} else if (msg.what == 9902) {
+					//Time out processed
+					callback_counts++;
+					
 				}
 			}
 		};
 		///////// and pass to it now///////////////////
-		eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
+		eventsManager = Events_manager.getInstance(); 
+		eventsManager.init(Tracer, myselfHandler, cache, params, owner, instance);
+		init_done = true;
 	}
 	
+	public Boolean get_ownership(String owner) {
+		if(eventsManager == null)
+			return false;
+		if(this.owner != null) {
+			if(! this.owner.equals(owner))
+				return false;
+		}
+		this.owner = owner;
+		eventsManager.owner = owner;
+		return true;
+		
+	}
+	/*
+	 * Methods to manage life cycle
+	 */
+	/*
+	public void Pause(){
+		Tracer.d(mytag,"Pause requested....pausing also events manager");
+		activated = false;
+		ready=false;
+		
+		if(timer != null)
+			timer.cancel();
+		timer=null;
+		
+	}
+	*/
+	
+	/*
+	public void Reconnect(String new_owner){
+		Tracer.d(mytag,"Resume requested....");
+		activated = true;
+		callback_counts = 0;
+		Timer();
+		new UpdateThread().execute();	//And force an immediate refresh of cache using stats
+		Tracer.d(mytag,"state engine waiting for initial setting of cache after restart !");
+		
+		Boolean said = false;
+		while (! ready) {
+			if(! said) {
+				Tracer.d(mytag,"state engine not yet ready : Wait a bit !");
+				said=true;
+			}
+			try{
+				Thread.sleep(100);
+			} catch (Exception e) {};
+		}
+		Tracer.d(mytag,"state engine ready after restart !");
+		if(eventsManager == null) {
+			Tracer.d(mytag,"Resume ....create events manager");
+			eventsManager = Events_manager.getInstance(); 
+			eventsManager.init(Tracer, myselfHandler, cache, sharedparams, new_owner,instance);
+			//eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner, myself); 
+		} else {
+			eventsManager.Resume();
+			eventsManager.owner = owner;
+			eventsManager.state_engine_handler = myselfHandler;
+			//eventsManager.alive=true;				// Try to let ListenerThread alive, if not too late !
+			myselfHandler.sendEmptyMessage(9900);	//Force to drain the pending stack events
+		}
+		
+	}
+	*/
+	public void Disconnect(String owner){
+		Tracer.d(mytag,"Disconnect requested by "+owner);
+		//activated = false;
+		if ( this.owner.equals(owner)) {
+			//disconnect_all_clients();
+			this.owner=null;
+			this.mytag = "WidgetUpdate ???";
+			eventsManager.setOwner(null,myselfHandler);	// Allow the cache to be taken by another activity
+			
+		}
+		
+	}
 	/* 
 	 * Method allowing external methods to force a refresh
 	 */
@@ -174,7 +289,7 @@ public class WidgetUpdate implements Serializable {
 	 * This method should only be called once, to create and arm a cyclic timer 
 	 */
 	public void Timer() {
-		final Timer timer = new Timer();
+		timer = new Timer();
 		
 		
 		final Handler loc_handler = new Handler();
@@ -218,45 +333,7 @@ public class WidgetUpdate implements Serializable {
 	}
 	 
 	
-	public void stopThread(){
-		Tracer.d(mytag,"stopThread requested....stopping also events manager");
-		activated = false;
-		
-		if(eventsManager != null) {
-			eventsManager.alive=false;	// To force the ListenerThread to stop on next event
-										// It'll notify us when listener goes down....
-		}
-		
-	}
-	public void restartThread(){
-		Tracer.d(mytag,"restartThread requested....");
-		activated = true;
-		if(eventsManager == null) {
-			Tracer.d(mytag,"restartThread ....create events manager");
-			eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
-		} else {
-			eventsManager.alive=true;	// Try to let ListenerThread alive, if not too late !
-			
-		}
-		
-	}
-	public void cancelEngine(){
-		Tracer.d(mytag,"cancelEngine requested....");
-		activated = false;
-		if(eventsManager != null) {
-			eventsManager.alive=false;
-			eventsManager.cancel();
-			eventsManager = null;
-		}
-		disconnect_all_clients();
-		try {
-			Tracer.DBEngine_running=false;
-			Tracer.set_engine(null);
-			finalize();
-		} catch (Throwable e) {
-			
-		}
-	}
+	
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
@@ -266,20 +343,23 @@ public class WidgetUpdate implements Serializable {
 				Tracer.d(mytag,"UpdateThread frozen....");
 				
 			} else {
-				int count = 0;
-				if(eventsManager != null)
-					count=eventsManager.getAndResetEventCount();
 				
-				if(count > 0) {
+				if(callback_counts > 0) {
 					if(Tracer != null)
-						Tracer.d(mytag,"Events detected since last loop = "+count+" No stats !");
+						Tracer.d(mytag,"Events detected since last loop = "+callback_counts+" No stats !");
+					//myselfHandler.sendEmptyMessage(9900);	//Force to drain the pending stack events
+					callback_counts = 0;
 					return null;
 				}
+				/*
 				if(eventsManager == null) {
 					Tracer.d(mytag,"Events manager dead ? try to restart it....");
-					eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
+					eventsManager = Events_manager.getInstance(); 
+					eventsManager.init(Tracer, myselfHandler, cache, sharedparams, owner, myself);
+					//eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner, myself);
 				}	
-					
+				*/
+				
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");
 				if(sharedparams.getString("UPDATE_URL", null) != null){

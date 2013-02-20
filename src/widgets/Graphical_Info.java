@@ -26,6 +26,7 @@ import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -91,6 +92,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 		
+	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
 		super(context);
 		this.Tracer = Trac;
@@ -222,46 +224,49 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				if(msg.what == 9999) {
 						//Message from widgetupdate
 						//state_engine send us a signal to notify value changed
-						String loc_Value = session.getValue();
-						Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
-						try {
-							float formatedValue = 0;
-							if(loc_Value != null)
-								formatedValue = Round(Float.parseFloat(loc_Value),2);
-							
-							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
-							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
-							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-							else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
-							else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
-							else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
-							else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-							else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
-							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-							else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-							else value.setText(loc_Value);
-							value.setAnimation(animation);
-						} catch (Exception e) {
-							// It's probably a String that could'nt be converted to a float
-							Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
-							value.setText(loc_Value);
-							
-						}
-					} else if(msg.what == 9998) {
-						// state_engine send us a signal to notify it'll die !
-						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
-						session = null;
-						realtime = false;
-						removeView(background);
-						myself.setVisibility(GONE);
-						if(container != null) {
-							container.removeView(myself);
-							container.recomputeViewAttributes(myself);
-						}
-						try { 
-							finalize(); 
-						} catch (Throwable t) {}	//kill the handler thread itself
+					if(session == null)
+						return;
+					
+					String loc_Value = session.getValue();
+					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
+					try {
+						float formatedValue = 0;
+						if(loc_Value != null)
+							formatedValue = Round(Float.parseFloat(loc_Value),2);
+						
+						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
+						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
+						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
+						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
+						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
+						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
+						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
+						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
+						else value.setText(loc_Value);
+						value.setAnimation(animation);
+					} catch (Exception e) {
+						// It's probably a String that could'nt be converted to a float
+						Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
+						value.setText(loc_Value);
+						
 					}
+				} else if(msg.what == 9998) {
+					// state_engine send us a signal to notify it'll die !
+					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					session = null;
+					realtime = false;
+					removeView(background);
+					myself.setVisibility(GONE);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
+					try { 
+						finalize(); 
+					} catch (Throwable t) {}	//kill the handler thread itself
+				}
 				}
 			
 		};

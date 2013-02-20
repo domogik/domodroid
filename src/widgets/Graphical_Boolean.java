@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -80,6 +81,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private Boolean realtime = false;
 	
 
+	@SuppressLint("HandlerLeak")
 	public Graphical_Boolean(tracerengine Trac, Activity context, 
 			String address, String name, 
 			int id,int dev_id, 
@@ -181,6 +183,8 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			public void handleMessage(Message msg) {	
 				String status;
 				if(msg.what == 9999) {
+					if(session == null)
+						return;
 					status = session.getValue();
 					if(status != null)   {
 						Tracer.d(mytag,"Handler receives a new status <"+status+">" );

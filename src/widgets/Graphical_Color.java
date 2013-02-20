@@ -16,6 +16,7 @@ import rinor.Rest_com;
 import widgets.Graphical_Binary.SBAnim;
 import database.JSONParser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -115,6 +116,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	
 
 
+	@SuppressLint("HandlerLeak")
 	public Graphical_Color(tracerengine Trac, Context context, 
 			SharedPreferences params, 
 			int id,int dev_id, 
@@ -367,7 +369,10 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					} catch (Throwable t) {}	//kill the handler thread itself	
 					
 				} else 	if(msg.what == 9999) {
-					argbS = session.getValue();
+					if(session != null)
+						argbS = session.getValue();
+					else
+						return;
 					Tracer.d(mytag,"Handler receives a new value from state engine <"+argbS+">" );
 					
 				}

@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.domogik.domodroid.*;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -63,6 +64,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private String mytag="";
 	public FrameLayout container = null;
 	public View myself = null;
+	@SuppressLint("SimpleDateFormat")
 	private Calendar calendar = Calendar.getInstance();
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	private Date time_start=new Date();
@@ -88,6 +90,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private   OnClickListener listener = null;
 	private tracerengine Tracer = null;
 	
+	@SuppressLint("HandlerLeak")
 	public Graphical_Info_View(tracerengine Trac, Context context){
 		super(context);
 		invalidate();
@@ -200,9 +203,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		gridOffset = 15;
 		valueOffset = 10;
 		
+
 		buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
 		text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);		
-
 		can=new Canvas(buffer);
 		can2=new Canvas(text);
 		

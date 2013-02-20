@@ -54,40 +54,17 @@ public class Events_manager {
 		//The engine cache should already contain a list of devices features
 		Tracer.w(mytag,"Events Manager created....start background task for events listening");
 		if(listener == null) {
-			/*
-			doAsynchronousTask = new TimerTask() {
-				@Override
-				public void run() {
-				*/
-					Runnable myrunnable = new Runnable() {
-						public void run() {
-							try {
-									new ListenerThread().execute();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							
-							} 
-						}; //End of run method
-				/*	
-				}; // End of run bloc
+			Runnable myrunnable = new Runnable() {
+					public void run() {
+						try {
+								new ListenerThread().execute();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						
+					} 
+			}; //End of runnable
 			
-			};
-			
-			listener = new ListenerThread();
-			listener.doInBackground((Void[]) null);
-			
-			
-			try {
-				doAsynchronousTask.run(); 
-			} catch (Exception e) {
-				Tracer.w(mytag,"Events Manager exception starting background task : Abort event engine");
-				e.printStackTrace();
-				try {
-					this.finalize();
-				} catch (Throwable t) {}
-			}
-			*/
 			listener = new ListenerThread();
 			Thread mylistener = new Thread(myrunnable);
 			mylistener.run();
@@ -97,6 +74,7 @@ public class Events_manager {
 	}	//End of Constructor
 	
 	public void cancel() {
+		Tracer.w(mytag,"cancel requested !");
 		alive = false;
 		if(listener != null) {
 			listener.cancel(true);
@@ -139,18 +117,19 @@ public class Events_manager {
 			JSONObject event = null;
 			Boolean ack = false;
 			Tracer.e(mytag,"ListenerThread starts the loop");
-			
+			String ticket = "";
+        	
 			while(alive) {
 				try {
 					Tracer.w(mytag,"Requesting server <"+request+">");
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
 					Tracer.w(mytag,"Received event = <"+event.toString()+">");
 				} catch (Exception e) {
-					Tracer.e(mytag,"Exception on wait for event ! ! !");
-					e.printStackTrace();
+					Tracer.e(mytag,"Exception on wait for event ! ! ! Socket disconnected ?");
 					alive=false;
 					break;
 				}
+				
 				if(! alive) {
 					break;		//The father asks to die...
 				}
@@ -171,7 +150,6 @@ public class Events_manager {
 					
 					int list_size = 0;
 	                if(event != null) {
-	                	String ticket = "";
 	                	String device_id = "";
 	                	try {
 	                		list_size = event.getJSONArray("event").length();
@@ -180,7 +158,7 @@ public class Events_manager {
 							request=ticket_request;
 	                		break;
 	                	}
-	                	ticket = null;
+	                	ticket="";
 	                	// Process the event array
 						for(int i = 0; i < list_size; i++) {
 								try {
@@ -190,10 +168,12 @@ public class Events_manager {
 									request = ticket_request;	//Create a new ticket on next query, now !
 									break;
 								}
-								if(ticket != null)
+								if( (ticket != null) && (! ticket.equals("")))
 									request = urlAccess+"events/request/get/"+ticket;	//Use the ticket on next query
-								else
+								else {
+									ticket="";
 									request = ticket_request;	//Create a new ticket on next query
+								}
 								events_seen++;
 								try {
 									device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
@@ -217,7 +197,7 @@ public class Events_manager {
 										event_item++;
 										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
 										put_event(to_stack);
-										notify_engine();
+										notify_engine(9900); //An event is available
 										alive=true;
 									} catch (Exception e){
 										Tracer.w(mytag,"Malformed data entry ?????????????????");
@@ -233,6 +213,20 @@ public class Events_manager {
 			//Should never reach the end of thread !!!!
 			Tracer.e(mytag,"ListenerThread going down !!!!!!!!!!!!!!!!!");
 			listener_running = false;
+			notify_engine(9901); //Listener down
+			// Try to free the ticket, if available
+			if(! ticket.equals("")) {
+				request = urlAccess+"events/request/free/"+ticket;	//Use the ticket #
+				try {
+					Tracer.w(mytag,"Freeing ticket <"+request+">");
+					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
+					Tracer.w(mytag,"Received on free = <"+event.toString()+">");
+				} catch (Exception e) {
+					
+				}
+				
+			}
+			listener=null;
 			return null;
 		}
 	}
@@ -285,9 +279,9 @@ public class Events_manager {
 	/*
 	 * Notify WidgetUpdate that some Rinor_event is available in stack
 	 */
-	private void notify_engine() {
+	private void notify_engine(int what) {
 		if(state_engine_handler != null) {
-			state_engine_handler.sendEmptyMessage(9900);
+			state_engine_handler.sendEmptyMessage(what);
 		}
 	}
 	

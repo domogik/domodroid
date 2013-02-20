@@ -151,6 +151,10 @@ public class WidgetUpdate implements Serializable {
 					} else {
 						Tracer.d(mytag,"No Events_Manager known ! ! ! ");
 					}
+				} else if (msg.what == 9901) {
+					// Events_Manager thread is dead....
+					eventsManager = null;
+					Tracer.i(mytag,"No more Events_Manager now ! ! ! ");
 				}
 			}
 		};
@@ -217,13 +221,12 @@ public class WidgetUpdate implements Serializable {
 	public void stopThread(){
 		Tracer.d(mytag,"stopThread requested....stopping also events manager");
 		activated = false;
-		/*
+		
 		if(eventsManager != null) {
 			eventsManager.alive=false;	// To force the ListenerThread to stop on next event
-			eventsManager.cancel();
-			eventsManager = null;
+										// It'll notify us when listener goes down....
 		}
-		*/
+		
 	}
 	public void restartThread(){
 		Tracer.d(mytag,"restartThread requested....");
@@ -231,13 +234,10 @@ public class WidgetUpdate implements Serializable {
 		if(eventsManager == null) {
 			Tracer.d(mytag,"restartThread ....create events manager");
 			eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
-		} /* else {
-			eventsManager.cancel();
-			eventsManager = null;
-			System.gc();
-			Tracer.d(mytag,"restartThread ....re-create a new  events manager");
-			eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
-		}*/
+		} else {
+			eventsManager.alive=true;	// Try to let ListenerThread alive, if not too late !
+			
+		}
 		
 	}
 	public void cancelEngine(){
@@ -275,7 +275,10 @@ public class WidgetUpdate implements Serializable {
 						Tracer.d(mytag,"Events detected since last loop = "+count+" No stats !");
 					return null;
 				}
-					
+				if(eventsManager == null) {
+					Tracer.d(mytag,"Events manager dead ? try to restart it....");
+					eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner);
+				}	
 					
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");

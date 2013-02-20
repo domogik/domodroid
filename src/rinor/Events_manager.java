@@ -351,18 +351,13 @@ public class Events_manager {
 	 */
 	private void notify_engine(int what) {
 		if(alive) {
-			if(father.owner.equals(owner) ) {
-				if(state_engine_handler != null) {
-					state_engine_handler.sendEmptyMessage(what);
-				} else {
-					Tracer.w(mytag,"No handler to notify father for "+stack_out);
-				}
+			if(state_engine_handler != null) {
+				state_engine_handler.sendEmptyMessage(what);
 			} else {
-				Tracer.e(mytag,"On Notify : WidgetUpdate ("+father.owner+") target name does'nt match my instance ("+owner+")");
-				
+				Tracer.w(mytag,"No handler to notify for "+stack_out);
 			}
 		} else {
-			Tracer.w(mytag,"when notifying father for "+stack_out+" , ListenerThread is in Pause state...");
+			Tracer.w(mytag,"Trying to notify father for "+stack_out+" , while ListenerThread is in Pause state...");
 		}
 	}
 	

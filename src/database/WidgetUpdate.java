@@ -569,7 +569,8 @@ public class WidgetUpdate implements Serializable {
 				//found device in list
 				client.setValue(cache.get(i).Value);	//return current stat value
 				// Try to add this client to list
-				if(client.getClientHandler() == null)
+				Handler h = client.getClientHandler();
+				if(h == null)
 					return false;
 				cache.get(i).add_client(client);	//The client structure contains also last known value for this device
 				Tracer.i(mytag, "cache engine subscription done for <"+client.getName()+"> Device ("+device+") ("+skey+") Value : "+cache.get(i).Value);

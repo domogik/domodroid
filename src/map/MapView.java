@@ -14,6 +14,8 @@ import java.util.Vector;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.domogik.domodroid.R;
+
+import database.WidgetUpdate;
 import activities.Sliding_Drawer;
 import widgets.Entity_Map;
 import widgets.Entity_client;
@@ -110,6 +112,8 @@ public class MapView extends View {
 	private String value1;
 	private static Handler handler = null;
 	private tracerengine Tracer = null;
+	private int mytype = 2;
+	private WidgetUpdate cache_engine = null;
 	
 	public MapView(tracerengine Trac, Activity context) {
 		super(context);
@@ -118,7 +122,7 @@ public class MapView extends View {
 		//activated=true;
 		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		screen_width = display.getWidth();
-		
+		startCacheEngine();
 		/*
 		 * This view has only one handler for all mini widgets displayed on map
 		 * It'll receive a unique notification from WidgetUpdate when one or more values have changed
@@ -154,6 +158,22 @@ public class MapView extends View {
 		//End of create method ///////////////////////
 		
 	}
+	private void startCacheEngine() {
+		
+		if(cache_engine == null) {
+			Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
+			cache_engine = WidgetUpdate.getInstance();
+			//MapView is'nt the first caller, so init is'nt required (already done by View)
+			cache_engine.set_handler(handler, mytype);	//Put our main handler to cache engine (as MapView)
+		}  
+		Tracer.set_engine(cache_engine);
+		Tracer.w("Activity_Map", "WidgetUpdate engine connected !");
+		
+	}
+	
+	public void purge() {
+		// TODO We've to unsubscribe all connected mini widgets from cache engine
+	}
 	public void  onWindowVisibilityChanged (int visibility) {
 		Tracer.i(mytag,"Visibility changed to : "+visibility);
 		/*
@@ -163,14 +183,7 @@ public class MapView extends View {
 			//activated=false;
 		 */
 	}
-	/*
-	public void stopThread(){
-		activated = false;
-	}
-	public void startThread(){
-		activated = true;
-	}
-	*/
+	
 	public void clear_Widgets(){
 		String map_name=files.elementAt(currentFile);
 		Tracer.i(mytag,"Request to clear all widgets from : "+map_name);
@@ -191,7 +204,8 @@ public class MapView extends View {
 					featureMap.getDevId(),
 					featureMap.getState_key(), 
 					"mini widget",
-					handler);
+					handler,
+					mytype);
 			cursession.setType(true);	//It's a mini widget !
 			
 			if(Tracer.get_engine().subscribe(cursession) ) {
@@ -528,22 +542,30 @@ public class MapView extends View {
 		
 		if (feature.getValue_type().equals("binary")) {
 			onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(),feature.getState_key(),
+					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
+					feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
 			onoff.container=(FrameLayout) panel_widget;
 			panel_widget.addView(onoff);}
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),feature.getDevice_usage_id(), feature.getDevice_type_id(),feature.getParameters(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(),feature.getState_key(),
+					feature.getDevice_usage_id(), feature.getDevice_type_id(),
+					feature.getParameters(),params.getInt("UPDATE",300),0, mytype);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {
 			variator = new Graphical_Range(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0);
+					label,feature.getId(),feature.getDevId(),feature.getState_key(),
+					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
+					feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
 			variator.container=(FrameLayout) panel_widget;
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
 			trigger = new Graphical_Trigger(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),feature.getParameters(),feature.getDevice_type_id(),0);
+					label,feature.getId(),feature.getDevId(),feature.getState_key(),
+					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
+					feature.getParameters(),feature.getDevice_type_id(),0, mytype);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
@@ -552,7 +574,7 @@ public class MapView extends View {
 					feature.getState_key(),params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),
-					params.getInt("UPDATE",300),0);
+					params.getInt("UPDATE",300),0, mytype);
 			info.container=(FrameLayout) panel_widget;
 			panel_widget.addView(info);
 		} else if (feature.getState_key().equals("color")) {
@@ -566,7 +588,7 @@ public class MapView extends View {
 					params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("UPDATE",300),
-					0
+					0, mytype
 					);
 			colorw.container=(FrameLayout) panel_widget;
 			panel_widget.addView(colorw);

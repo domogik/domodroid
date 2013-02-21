@@ -37,11 +37,12 @@ public class Graphical_Feature extends FrameLayout{
 	private TextView name;
 	private TextView description;
 	private int id;
+	private int session_type;
 
-	public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize) {
+	public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
 		super(context);
 		this.id = id;
-
+		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 
 		//panel with border	

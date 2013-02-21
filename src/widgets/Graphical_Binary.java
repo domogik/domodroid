@@ -19,6 +19,8 @@ package widgets;
 
 import rinor.Rest_com;
 import database.JSONParser;
+import database.WidgetUpdate;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Gradients_Manager;
@@ -93,11 +95,12 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
+	private int session_type;
 	
 	
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, String usage, 
-			String parameters, String model_id, int update, int widgetSize) throws JSONException {
+			String parameters, String model_id, int update, int widgetSize, int session_type) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -112,6 +115,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.setPadding(5, 5, 5, 5);
 		this.wname = name;
 		this.myself = this;
+		this.session_type = session_type;
 		this.stateS = getResources().getText(R.string.State).toString();
 
 		mytag = "Graphical_Binary("+dev_id+")";
@@ -286,16 +290,15 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		if(Tracer != null) {
-			//state_engine = Tracer.get_engine();
-			if(Tracer.get_engine() != null) {
-				session = new Entity_client(dev_id, state_key, mytag, handler);
-				if(Tracer.get_engine().subscribe(session)) {
-					realtime = true;		//we're connected to engine
-											//each time our value change, the engine will call handler
-					handler.sendEmptyMessage(9999);	//Force to consider current value in session
-				}
+		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+		if(cache_engine != null) {
+			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if(Tracer.get_engine().subscribe(session)) {
+				realtime = true;		//we're connected to engine
+										//each time our value change, the engine will call handler
+				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
+			
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	

@@ -131,7 +131,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
 	private String tracer_state = "false";
-	private String owner = "Main";
+	private int mytype = 0;		// All objects will be 'Main" type
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -222,14 +222,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						Tracer.d("Activity_Main","sync dialog requires a refresh !");
 						reload = true;	// Sync being done, consider shared prefs are OK
 						parent.removeAllViews();
-						if(widgetUpdate == null) {
-							Tracer.i("Activity_Main", "Starting WidgetUpdate engine !");
-							/*
-							widgetUpdate = new WidgetUpdate(Tracer, myself,sbanim,params, owner);
-							Tracer.set_engine(widgetUpdate);	//Store instance reference to Tracer
-							*/
-							startDBEngine();
-						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
 						b.putInt("id", 0);
@@ -308,9 +300,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house_map.setOrientation(LinearLayout.HORIZONTAL);
 		house_map.setPadding(5, 5, 5, 5);
 		
-		house = new Graphical_Feature(getApplicationContext(),0,"House","","house",0);
+		house = new Graphical_Feature(getApplicationContext(),0,"House","","house",0, mytype);
 		house.setPadding(0, 0, 5, 0);
-		map = new Graphical_Feature(getApplicationContext(),0,"Map","","map",0);
+		map = new Graphical_Feature(getApplicationContext(),0,"Map","","map",0, mytype);
 		map.setPadding(5, 0, 0, 0);
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 
@@ -407,9 +399,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.commit();
 		}
 		// WidgetUpdate is a background process, submitting queries to Rinor
-		//		and updating local database
-		if(widgetUpdate == null)
-			startDBEngine();
+		//		and updating its cache for values per device
+		startCacheEngine();
 		
 		if(history != null)
 			history = null;		//Free resource
@@ -423,9 +414,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				@Override
 				public void handleMessage(Message msg) {
 					
-					if(widgetUpdate == null) {
-						startDBEngine();
-					}
 					try {
 						historyPosition++;
 						loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
@@ -583,7 +571,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
 				parent.addView(ll_area);	//and areas
 				ll_activ.removeAllViews();
-				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params, mytype);
 				parent.addView(ll_activ);
 				
 			} else 	if(type.equals("area")) {
@@ -593,11 +581,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				ll_room = wAgent.loadRoomWidgets(this, id, ll_room, params);
 				parent.addView(ll_room);
 				ll_activ.removeAllViews();
-				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params, mytype);
 				parent.addView(ll_activ);
 			} else 	if(type.equals("room")) {
 				ll_activ.removeAllViews();
-				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params);
+				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params, mytype);
 				parent.addView(ll_activ);
 			} 
 				
@@ -705,9 +693,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		SaveSelections(false);		// To force a sync operation, if something has been modified...
+		/*
 		if(widgetUpdate == null) {
 			startDBEngine();
 		}
+		*/
 	}
 	public void onPanelOpened(Sliding_Drawer panel) {
 		Tracer.v("Activity_Main","onPanelOpened");
@@ -739,9 +729,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.wAgent=null;
 			widgetHandler=null;
 			Tracer.set_engine(null);
-			widgetUpdate.Disconnect("Main");	//That should also stop events manager
+			widgetUpdate.Disconnect(0);	//That should also stop events manager
+			widgetUpdate.cancel();
 			widgetUpdate=null;
-			
 			//And stop main program
 			this.finish();
 			return;
@@ -778,7 +768,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		} else if(v.getTag().equals("map")) {
 			if(params.getBoolean("SYNC", false)==true){
 				//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
+				Tracer.w("Activity_Main","Before call to Map, Disconnect widgets from engine !");
+				if(widgetUpdate != null) {
+					widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
+					widgetUpdate.dump_cache();	//For debug
+				}
 				mapI = new Intent(Activity_Main.this,Activity_Map.class);
+				Tracer.d("Activity_Main","Call to Map, run it now !");
 				startActivity(mapI);
 			}else{
 				if(notSyncAlert == null)
@@ -799,19 +795,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 	}
 	
-	private void startDBEngine() {
+	private void startCacheEngine() {
 		if(widgetUpdate == null) {
-			Tracer.w("Activity_Main", "Starting WidgetUpdate engine !");
+			Tracer.w("Activity_Main", "Starting WidgetUpdate cache engine !");
 			widgetUpdate = WidgetUpdate.getInstance();
-			widgetUpdate.init(Tracer, this,params, "Main");
+			widgetUpdate.init(Tracer, this,params);
+			widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)
 		}  
-		Boolean success = widgetUpdate.get_ownership("Main");
-		while(! success) {
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {}
-		}
-		Tracer.e("Activity_Main","widgetUpdate is available for Main, now !");
+		Tracer.e("Activity_Main","WidgetUpdate is available for Main, now !");
 		Tracer.set_engine(widgetUpdate);
 		
 	}
@@ -821,12 +812,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		Tracer.w("Activity_Main.onPause","Going to background ! keep widgetUpdate engine alive");
-		
-		if(widgetUpdate != null)
-			widgetUpdate.Disconnect("Main");
-			
-		
+		Tracer.w("Activity_Main.onPause","Going to background !");
 	}
 	
 	@Override
@@ -838,7 +824,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		widgetHandler=null;
 		if(widgetUpdate != null) {
 			//Tracer.set_engine(null);
-			widgetUpdate.Disconnect("Main");	//That should also stop events manager	
+			widgetUpdate.Disconnect(0);	//That should also stop events manager	
+			widgetUpdate.cancel();
 			widgetUpdate=null;
 		}
 	}
@@ -847,16 +834,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		super.onResume();
 		Tracer.e("Activity_Main.onResume","Try to reconnect to cache engine !");
 		if(widgetUpdate != null) {
-			Boolean success = widgetUpdate.get_ownership("Main");
-			while(! success) {
-				try {
-					Thread.sleep(100);
-				} catch (Exception e) {}
-			}
-			Tracer.e("Activity_Main.onResume","widgetUpdate is available for us, now !");
+			Tracer.e("Activity_Main.onResume","widgetUpdate is available !");
 			
 		}
-		end_of_init();	//will start widgetUpdate if necessary, or resume it
+		end_of_init();	//all client widgets will be re-created
 		
 	}
 

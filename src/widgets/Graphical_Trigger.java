@@ -66,11 +66,12 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private int dev_id;
 	private int id;
 	private tracerengine Tracer = null;
+	private int session_type;
 
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
-			String model_id, int widgetSize) throws JSONException {
+			String model_id, int widgetSize,int session_type) throws JSONException {
 		
 		super(context);
 		this.address = address;
@@ -78,6 +79,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		this.url = url;
 		this.id=id;
 		this.myself=this;
+		this.session_type = session_type;
 		this.dev_id = dev_id;
 		
 		//get parameters

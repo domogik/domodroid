@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import rinor.Rest_com;
 import widgets.Graphical_Binary.SBAnim;
 import database.JSONParser;
+import database.WidgetUpdate;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -113,7 +114,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	public View container = null;
-	
+	private int session_type;
 
 
 	@SuppressLint("HandlerLeak")
@@ -127,7 +128,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			String url,
 			String usage, 
 			int update, 
-			int widgetSize) {
+			int widgetSize,
+			int session_type) {
 		
 		super(context);
 		this.Tracer = Trac;
@@ -144,6 +146,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.setPadding(5, 5, 5, 5);
 		this.params = params;
 		this.myself = this;
+		this.session_type = session_type;
 		mytag="Graphical_Color("+dev_id+")";
 		
 		String[] model = model_id.split("\\.");
@@ -439,15 +442,15 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		if(Tracer != null) {
-			if(Tracer.get_engine() != null) {
-				session = new Entity_client(dev_id, state_key, mytag, handler);
-				if(Tracer.get_engine().subscribe(session)) {
-					realtime = true;		//we're connected to engine
-											//each time our value change, the engine will call handler
-					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
-				}
+		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+		if(cache_engine != null) {
+			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if(Tracer.get_engine().subscribe(session)) {
+				realtime = true;		//we're connected to engine
+										//each time our value change, the engine will call handler
+				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
+			
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....		

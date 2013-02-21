@@ -25,6 +25,8 @@ import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
 
+import database.WidgetUpdate;
+
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -91,9 +93,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 
 	private Entity_client session = null; 
 	private Boolean realtime = false;
+	private int session_type;
 		
 	@SuppressLint("HandlerLeak")
-	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, final String state_key, String url,String usage, int period, int update, int widgetSize) {
+	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+			final String state_key, String url,String usage, int period, int update, 
+			int widgetSize, int session_type) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -104,6 +109,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		this.wname = name;
 		this.url = url;
 		this.myself = this;
+		this.session_type = session_type;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
@@ -276,15 +282,15 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		if(Tracer != null) {
-			if(Tracer.get_engine() != null) {
-				session = new Entity_client(dev_id, state_key, mytag, handler);
-				if(Tracer.get_engine().subscribe(session)) {
-					realtime = true;		//we're connected to engine
-											//each time our value change, the engine will call handler
-					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
-				}
+		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+		if(cache_engine != null) {
+			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if(Tracer.get_engine().subscribe(session)) {
+				realtime = true;		//we're connected to engine
+										//each time our value change, the engine will call handler
+				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
+			
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	

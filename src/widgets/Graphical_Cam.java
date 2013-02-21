@@ -57,9 +57,10 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private Context context;
 	private String mytag;
 	private tracerengine Tracer = null;
+	private int session_type;
 	
 
-	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,int widgetSize) {
+	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,int widgetSize, int session_type) {
 		super(context);
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
@@ -67,6 +68,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		this.name_cam = name;
 		this.url = url;
 		this.context = context;
+		this.session_type = session_type;
 		setOnTouchListener(this);
 		mytag="Graphical_Boolean("+dev_id+")";
 		

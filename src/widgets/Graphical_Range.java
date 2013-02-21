@@ -91,9 +91,13 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
+	private int session_type;
 	private String stateS = "";
 	
-	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,String state_key, String url, String usage, String parameters, String model_id, int update, int widgetSize) throws JSONException {
+	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,
+			String state_key, String url, String usage, 
+			String parameters, String model_id, int update, 
+			int widgetSize, int session_type) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.address = address;
@@ -105,6 +109,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.update = update;
 		this.wname = name;
 		this.myself=this;
+		this.session_type = session_type;
 		stateThread = 1;
 		this.stateS = getResources().getText(R.string.State).toString();
 		mytag="Graphical_Range("+dev_id+")";
@@ -263,15 +268,15 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		if(Tracer != null) {
-			if(Tracer.get_engine() != null) {
-				session = new Entity_client(dev_id, state_key, "Graphical_Range", handler);
-				if(Tracer.get_engine().subscribe(session)) {
-					realtime = true;		//we're connected to engine
-											//each time our value change, the engine will call handler
-					handler.sendEmptyMessage(9999);	//Force to consider current value in cache
-				}
+		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+		if(cache_engine != null) {
+			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if(Tracer.get_engine().subscribe(session)) {
+				realtime = true;		//we're connected to engine
+										//each time our value change, the engine will call handler
+				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
+			
 		}
 		//================================================================================
 		

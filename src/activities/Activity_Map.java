@@ -95,7 +95,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
 		Tracer = new tracerengine(params);
-		startDBEngine();		//Run its own WidgetUpdate engine
+		startCacheEngine();		//Run its own WidgetUpdate engine
 		//When back, the engine should be ready....
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
@@ -246,7 +246,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.Add_widget_title);
 
-		startDBEngine();
 		
 		//get feature list
 		listFeature = widgetUpdate.requestFeatures();
@@ -314,19 +313,15 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
-	private void startDBEngine() {
+	private void startCacheEngine() {
 		
 		if(widgetUpdate == null) {
 			Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
 			widgetUpdate = WidgetUpdate.getInstance();
-			widgetUpdate.init(Tracer, this,params, "Map");
+			//Map is'nt the first caller, so init is'nt required (already done by View)
+			//widgetUpdate.init(Tracer, this,params);
+			widgetUpdate.set_handler(sbanim, 1);	//Put our main handler to cache engine (as Map)
 		}  
-		Boolean success = widgetUpdate.get_ownership("Map");
-		while(! success) {
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {}
-		}
 		Tracer.set_engine(widgetUpdate);
 		Tracer.w("Activity_Map", "WidgetUpdate engine connected !");
 		
@@ -338,10 +333,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		panel.setOpen(false, false);
 		if(Tracer != null)
 			Tracer.e("Activity_Map", "onPause");
+		/*
 		if(widgetUpdate != null) {
-			widgetUpdate.Disconnect("Map");
-			Tracer.e("Activity_Map", "Disconnect from engine");
+			widgetUpdate.Disconnect(1);	//That'll purge all connected widgets for Map
+			widgetUpdate.Disconnect(2);	//That'll purge all connected widgets for MapView
 		}
+		*/
 		
 	}
 	public void onResume() {
@@ -350,7 +347,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		if(Tracer == null) {
 			Tracer = new tracerengine(params);
 		}
-		startDBEngine();
+		startCacheEngine();
 		
 		
 	}
@@ -361,11 +358,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : disconnect from engines");
 		
 		if(widgetUpdate != null) {
-			widgetUpdate.Disconnect("Map");	//That'll stop events manager, too
-			
-			//widgetUpdate = null;
+			//widgetUpdate.Disconnect(1);	//That'll purge all connected widgets for Map
+			widgetUpdate.Disconnect(2);	//That'll purge all connected widgets for MapView
+			//widgetUpdate.dump_cache();	//For debug
 		}
 		if(mapView != null)
+			mapView.purge();
 			mapView=null;
 		
 		if(Tracer != null) {

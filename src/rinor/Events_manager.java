@@ -28,13 +28,14 @@ public class Events_manager {
 	private int stack_out = -1;
 	private int event_item = 0;
 	private int stack_size = 500;
-	private String mytag ;
+	private String mytag ="Events";
 	private String urlAccess;
 	private ListenerThread listener = null;
 	public Boolean alive = false;
 	private int events_seen = 0;
 	TimerTask doAsynchronousTask = null;
 	private Boolean listener_running = false;
+	private Boolean init_done = false;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	
@@ -45,15 +46,7 @@ public class Events_manager {
 		{
 			super();
 		}
-	/*
-	 * 	(tracerengine Trac, Activity context, 
-			Handler state_engine_handler, 
-			ArrayList<Cache_Feature_Element> engine_cache,
-			SharedPreferences params,
-			String owner,
-			WidgetUpdate caller)
-	 */
-
+	
 	public static Events_manager getInstance() {
 		if(instance == null) {
 			Log.e("Events_Manager", "Creating instance........................");
@@ -66,15 +59,17 @@ public class Events_manager {
 			Handler state_engine_handler, 
 			ArrayList<Cache_Feature_Element> engine_cache,
 			SharedPreferences params,
-			String owner,
 			WidgetUpdate caller) {	
+		
+		if(init_done)
+			return;
 		
 		this.Tracer = Trac;
 		this.engine_cache =  engine_cache;
 		this.params = params;
 		this.father = caller;
 		setOwner(owner, state_engine_handler);
-		mytag="Events_manager "+owner;
+		mytag="Events";
 		urlAccess = params.getString("URL","1.1.1.1");
 		urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 		//Try to solve #1623
@@ -87,7 +82,7 @@ public class Events_manager {
 		}
 		
 		Tracer.w(mytag,"Events Manager ready");
-		
+		init_done = true;
 	}	//End of Constructor
 	
 	private void start_listener() {
@@ -118,30 +113,7 @@ public class Events_manager {
 		}
 	}
 	public void Destroy() {
-		Tracer.w(mytag,"Destroy requested !");
-		//alive = false;
-		state_engine_handler = null;
 		
-		if(listener != null) {
-			listener.cancel(true);
-			listener = null;
-			listener_running = false;
-		}
-		
-	}
-	public void Pause() {
-		Tracer.w(mytag,"Pause requested !");
-		//alive = false;		//On newt wake up, the listener will die....
-	}
-	public void Resume() {
-		Tracer.w(mytag,"Resume requested !");
-		if( (alive) && (listener != null) ) {
-			//Listener is still alive
-			return;
-		} else {
-			alive = true;
-			start_listener();	// Start a new listener thread
-		}
 	}
 	
 	public class ListenerThread extends AsyncTask<Void, Integer, Void>{

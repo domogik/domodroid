@@ -26,6 +26,8 @@ import org.json.JSONObject;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
+
+import database.WidgetUpdate;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -79,7 +81,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	
+	private int session_type;
 
 	@SuppressLint("HandlerLeak")
 	public Graphical_Boolean(tracerengine Trac, Activity context, 
@@ -88,7 +90,8 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			String state_key, final String usage,
 			String parameters, 
 			String model_id, int update, 
-			int widgetSize) throws JSONException {
+			int widgetSize,
+			int session_type) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.state_key = state_key;
@@ -97,6 +100,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.update = update;
 		this.wname = name;
 		this.myself=this;
+		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
 
@@ -231,17 +235,17 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		if(Tracer != null) {
-			//state_engine = Tracer.get_engine();
-			if(Tracer.get_engine() != null) {
-				session = new Entity_client(dev_id, state_key, mytag, handler);
-				if(Tracer.get_engine().subscribe(session)) {
-					realtime = true;		//we're connected to engine
-											//each time our value change, the engine will call handler
-					handler.sendEmptyMessage(9999);	//Force to consider current value in session
-				}
+		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+		if(cache_engine != null) {
+			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if(Tracer.get_engine().subscribe(session)) {
+				realtime = true;		//we're connected to engine
+										//each time our value change, the engine will call handler
+				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
+			
 		}
+		
 		//================================================================================
 	}
 	

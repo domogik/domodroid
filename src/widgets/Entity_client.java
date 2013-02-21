@@ -21,6 +21,7 @@ import android.os.Handler;
 
 
 public class Entity_client{
+	private int client_type = -1;		// 0= Main , 1 = Map, 2 = MapView
 	private int client_id = -1;		//unique ID for client 
 	private int cache_id;				// pointer into cache list
 	private int devId;					// Reference to feature
@@ -31,18 +32,22 @@ public class Entity_client{
 	private Handler client_handler = null;
 	
 	
-	public Entity_client(int devId, String skey, String Name, Handler handler) {
-		super();
+	public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
+		//super();
 		this.devId = devId;
 		this.skey = skey;
 		this.client_name = Name;
 		this.client_handler = handler;
 		this.client_id = -1;	//Initially not connected
+		this.client_type = session_type;
 		this.miniwidget = false;	//By default, it's not a map widget
 	}
 	/*
 	 * Methods to set content
 	 */
+	public void setClientType(int type) {
+		this.client_type = type;
+	}
 	public void setClientId(int id) {
 		this.client_id = id;
 	}
@@ -71,7 +76,9 @@ public class Entity_client{
 	/*
 	 * Public methods to get content
 	 */
-
+	public int getClientType() {
+		return client_type;
+	}
 	public int getClientId() {
 		return client_id;
 	}

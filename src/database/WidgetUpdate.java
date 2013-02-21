@@ -39,10 +39,9 @@ public class WidgetUpdate implements Serializable {
 	private SharedPreferences sharedparams;
 	
 	private boolean activated;
-	private DomodroidDB domodb;
 	private Activity context;
+	private DomodroidDB domodb;
 	public  String mytag="WidgetUpdate";
-	public  String owner="";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
 	
@@ -58,6 +57,12 @@ public class WidgetUpdate implements Serializable {
 	private Timer timer = null;
 	private int callback_counts = 0;
 	private Boolean init_done = false;
+	//
+	// Table of handlers to notify
+	// pos 0 = Main
+	// pos 1 = Map
+	// pos 2 = MapView
+	private Handler[] parent = new Handler[3];
 	
 	/*
 	 * This class is a background engine 
@@ -84,15 +89,7 @@ public class WidgetUpdate implements Serializable {
 		{
 			super();
 		}
-	/*
-	 * 	(tracerengine Trac, Activity context, 
-			Handler state_engine_handler, 
-			ArrayList<Cache_Feature_Element> engine_cache,
-			SharedPreferences params,
-			String owner,
-			WidgetUpdate caller)
-	 */
-
+	
 	public static WidgetUpdate getInstance() {
 		if(instance == null) {
 			Log.e("Events_Manager", "Creating instance........................");
@@ -103,16 +100,14 @@ public class WidgetUpdate implements Serializable {
 	}
 	
 	@SuppressLint("HandlerLeak")
-	public void init(tracerengine Trac, Activity context,   SharedPreferences params, String owner){
+	public void init(tracerengine Trac, Activity context, SharedPreferences params){
 		if(init_done) {
-			Log.e("WidgetUpdate","init already done , current owner is "+this.owner+". init requested by "+owner);
+			Log.e(mytag,"init already done");
 			return;
 		}
 		this.sharedparams=params;
 		this.Tracer = Trac;
-		this.owner = owner;
 		this.context = context;
-		mytag = "WidgetUpdate "+owner;
 		activated = true;
 		if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -134,14 +129,23 @@ public class WidgetUpdate implements Serializable {
 		Boolean said = false;
 		while (! ready) {
 			if(! said) {
-				Tracer.d(mytag,"state engine not yet ready : Wait a bit !");
+				Tracer.d(mytag,"cache engine not yet ready : Wait a bit !");
 				said=true;
 			}
-			try{
+			try{/*
+				 * 	(tracerengine Trac, Activity context, 
+				Handler state_engine_handler, 
+				ArrayList<Cache_Feature_Element> engine_cache,
+				SharedPreferences params,
+				String owner,
+				WidgetUpdate caller)
+		 */
+
 				Thread.sleep(100);
 			} catch (Exception e) {};
 		}
-		Tracer.d(mytag,"state engine ready !");
+		Tracer.d(mytag,"cache engine ready !");
+		
 		// Cache contains list of existing devices, now !
 		
 		///////// Create an handler to exchange with Events_Manager///////////////////
@@ -198,83 +202,155 @@ public class WidgetUpdate implements Serializable {
 		};
 		///////// and pass to it now///////////////////
 		eventsManager = Events_manager.getInstance(); 
-		eventsManager.init(Tracer, myselfHandler, cache, params, owner, instance);
+		eventsManager.init(Tracer, myselfHandler, cache, params, instance);
 		init_done = true;
 	}
-	
-	public Boolean get_ownership(String owner) {
-		if(eventsManager == null)
-			return false;
-		if(this.owner != null) {
-			if(! this.owner.equals(owner))
-				return false;
-		}
-		this.owner = owner;
-		eventsManager.owner = owner;
-		return true;
-		
-	}
 	/*
-	 * Methods to manage life cycle
+	 * Allow callers to set their handler in table
 	 */
-	/*
-	public void Pause(){
-		Tracer.d(mytag,"Pause requested....pausing also events manager");
-		activated = false;
-		ready=false;
-		
-		if(timer != null)
-			timer.cancel();
-		timer=null;
-		
+	public void set_handler(Handler parent, int type) {
+		//type = 0 if View , or 1 if Map
+		if((type >= 0) && (type <= 2))
+			this.parent[type] = parent;
 	}
-	*/
 	
-	/*
-	public void Reconnect(String new_owner){
-		Tracer.d(mytag,"Resume requested....");
-		activated = true;
-		callback_counts = 0;
-		Timer();
-		new UpdateThread().execute();	//And force an immediate refresh of cache using stats
-		Tracer.d(mytag,"state engine waiting for initial setting of cache after restart !");
+	public void cancel() {
+		activated = false;
+		eventsManager.Destroy();
+	}
+	
+	public void Disconnect(int type){
+		String name = "???";
 		
-		Boolean said = false;
-		while (! ready) {
-			if(! said) {
-				Tracer.d(mytag,"state engine not yet ready : Wait a bit !");
-				said=true;
-			}
+		if(type == 0)
+			name="Main";
+		else if (type == 1)
+			name="Map";
+		else if (type == 2)
+			name="MapView";
+		//Tracer.d(mytag,"Disconnect requested by "+name);
+		
+		// Purge all clients matching this container, as soon cache is unlocked
+		while(locked) {
+			//Somebody else is updating list...
 			try{
-				Thread.sleep(100);
+				Thread.sleep(10);		//Standby 10 milliseconds
 			} catch (Exception e) {};
 		}
-		Tracer.d(mytag,"state engine ready after restart !");
-		if(eventsManager == null) {
-			Tracer.d(mytag,"Resume ....create events manager");
-			eventsManager = Events_manager.getInstance(); 
-			eventsManager.init(Tracer, myselfHandler, cache, sharedparams, new_owner,instance);
-			//eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner, myself); 
-		} else {
-			eventsManager.Resume();
-			eventsManager.owner = owner;
-			eventsManager.state_engine_handler = myselfHandler;
-			//eventsManager.alive=true;				// Try to let ListenerThread alive, if not too late !
-			myselfHandler.sendEmptyMessage(9900);	//Force to drain the pending stack events
-		}
+		locked=true;
 		
-	}
-	*/
-	public void Disconnect(String owner){
-		Tracer.d(mytag,"Disconnect requested by "+owner);
-		//activated = false;
-		if ( this.owner.equals(owner)) {
-			//disconnect_all_clients();
-			this.owner=null;
-			this.mytag = "WidgetUpdate ???";
-			eventsManager.setOwner(null,myselfHandler);	// Allow the cache to be taken by another activity
+		
+		for(int i=0; i < cache.size(); i++) {
+			Cache_Feature_Element cache_entry = cache.get(i);
+			ArrayList<Entity_client> clients_list = null;
+			ArrayList<Entity_client> temp_list = null;
 			
+			if(cache_entry != null) {
+				clients_list = cache_entry.clients_list;
+			}
+			if(clients_list != null) {
+				int cs = clients_list.size();
+				//Tracer.i(mytag, "Processing cache entry # "+i+" <"+cache_entry.DevId+"> clients # = "+cs);
+				if(cs > 0) {
+					temp_list = cache_entry.clone_clients_list();
+					int deleted = 0;
+					for(int j = 0; j < cs; j++) {
+						//Tracer.i(mytag, "   Processing client "+j+"/"+(cs-1));
+						Entity_client curclient = null;
+						
+						try {
+							curclient = clients_list.get(j);
+								
+						} catch (Exception e) {
+							Tracer.i(mytag, "   Exception on client # "+j);
+							curclient = null;
+						}
+						//check each connected client pointed by list
+						if(curclient != null) {
+							int cat = curclient.getClientType();
+							if(cat == type) {
+								//This client was owned by requestor... Remove it  from list
+								Tracer.i(mytag, "remove client # "+j+" <"+curclient.getName()+"> from list "+name);
+								curclient.setClientId(-1);	//note client disconnected
+								curclient.setClientType(-1);	//this entry is'nt owned by anybody
+								curclient.setHandler(null);	//And must not be notified anymore
+								temp_list.remove(j-deleted);
+								deleted++;
+								if(temp_list.size() == 0) {
+									//List is empty : remove it from the device entry
+									temp_list = null;
+									break;
+								}
+								
+							}
+						}
+					}	//End of loop on clients list, for a cache entry
+					cache_entry.clients_list=temp_list;
+				}
+			}
+			//Next cache entry
+		} // End of loop on cache items
+		locked=false;
+		//dump_cache();	//During development, help to debug !
+		return;
+	}
+	public void dump_cache() {
+		String[] name = new String[]{ "Main   ","Map    ","MapView", "???    "};
+		int size = cache.size(); 
+		Tracer.e(mytag, "Dump of Cache , size = "+cache.size());
+		
+		while(locked) {
+			//Somebody else is updating list...
+			try{
+				Thread.sleep(10);		//Standby 10 milliseconds
+			} catch (Exception e) {};
 		}
+		locked=true;
+		
+		
+		for(int i=0; i < size; i++) {
+			Cache_Feature_Element cache_entry = cache.get(i);
+			ArrayList<Entity_client> clients_list = null;
+			if(cache_entry == null) {
+				Tracer.e(mytag, "Cache entry # "+i+"   empty ! ");
+			} else {
+				clients_list = cache_entry.clients_list;
+				int clients_list_size = 0;
+				if(clients_list != null)
+					clients_list_size = clients_list.size();
+				
+				Tracer.e(mytag, "Cache entry # "+i+"   DevID : "+cache_entry.DevId+" Skey : "+cache_entry.skey+" Clients # :"+clients_list_size);
+				if(clients_list_size > 0) {
+					for(int j = 0; j < clients_list_size; j++) {
+						if(clients_list.get(j) == null) 
+							break;
+						
+						int cat = clients_list.get(j).getClientType();
+						String client_name = clients_list.get(j).getName();
+						Handler h = clients_list.get(j).getClientHandler();
+						String state = "connected";
+						if(h == null)
+							state="zombie";
+						String type ="widget";
+						if (clients_list.get(j).is_Miniwidget())
+							type = "mini widget";
+						int ctype = clients_list.get(j).getClientType();
+						if (ctype == -1)
+							ctype = 3;
+						
+						Tracer.e(mytag, "           ==> entry : "+j+" owner : "+name[ctype]
+								+" client name : "+client_name
+								+" type = "+type
+								+" state = "+state);
+								
+					}	
+				}
+			}
+				
+		}	//End of loop on clients list, for a cache entry
+			
+		locked=false;
+		Tracer.e(mytag, "End of cache dump ");
 		
 	}
 	/* 
@@ -450,6 +526,7 @@ public class WidgetUpdate implements Serializable {
 			} catch (Exception e) {}
 		}
 		mapView = null;
+		Tracer.i(mytag, "cache size = "+cache.size());
 		
 		return updated_items;
 	}
@@ -471,7 +548,7 @@ public class WidgetUpdate implements Serializable {
 				last_position = cache_position;		//Keep the position, for next search
 				if( (cache.get(cache_position).Value.equals(Val))) {
 					//value not changed
-					Tracer.i(mytag, "cache engine no value change for ("+dev_id+") ("+skey+") ("+Val+")");
+					//Tracer.i(mytag, "cache engine no value change for ("+dev_id+") ("+skey+") ("+Val+")");
 					
 				} else {
 					//value changed : has to notify clients....
@@ -496,7 +573,7 @@ public class WidgetUpdate implements Serializable {
 										client.sendEmptyMessage(9999);	//notify the widget a new value is ready for display
 									} catch (Exception e) {}
 								}
-							}
+							} // test of valid client handler
 						}
 					}
 					
@@ -545,18 +622,22 @@ public class WidgetUpdate implements Serializable {
 	public Boolean subscribe (Entity_client client) {
 		int device = -1;
 		String skey = "";
-		
+		Boolean result = false;
 		
 		if(client == null)
-			return false;
+			return result;
+		Handler h = client.getClientHandler();
+		if(h == null)
+			return result;
 		device = client.getDevId();
 		skey = client.getskey();
 		Tracer.i(mytag, "cache engine subscription requested by <"+client.getName()+"> Device ("+device+") ("+skey+")");
 		if(! ready) {
 			Tracer.i(mytag, "cache engine not yet ready : reject !");
-			return false;
+			return result;
 			
 		}
+		
 		while(locked) {
 			//Somebody else is updating list...
 			try{
@@ -564,34 +645,32 @@ public class WidgetUpdate implements Serializable {
 			} catch (Exception e) {};
 		}
 		locked=true;	//Take the lock
+		
 		for(int i = 0; i < cache.size(); i++) {
 			if( (cache.get(i).DevId == device) && (cache.get(i).skey.equals(skey))) {
 				//found device in list
 				client.setValue(cache.get(i).Value);	//return current stat value
 				// Try to add this client to list
-				Handler h = client.getClientHandler();
-				if(h == null)
-					return false;
-				cache.get(i).add_client(client);	//The client structure contains also last known value for this device
+				
+				cache.get(i).add_client(client);	//The client structure will contain also last known value for this device
 				Tracer.i(mytag, "cache engine subscription done for <"+client.getName()+"> Device ("+device+") ("+skey+") Value : "+cache.get(i).Value);
-				locked=false;
-				return true;
+				result = true;
+				break;
 			}
 			// not the good one : check next
-			
 		}	//loop to search this device in cache
-		// device not yet exist in cache
 		locked=false;
-		return false;
+		//dump_cache();
+		return result;
 	}
 	
 	public Boolean unsubscribe (Entity_client client) {
 		int device = -1;
 		String skey = "";
-		
+		Boolean result = false;
 		
 		if(client == null)
-			return false;
+			return result;
 		device = client.getDevId();
 		skey = client.getskey();
 		Tracer.i(mytag, "cache engine release subscription requested by <"+client.getName()+"> Device ("+device+") ("+skey+")");
@@ -602,43 +681,26 @@ public class WidgetUpdate implements Serializable {
 				Thread.sleep(10);		//Standby 10 milliseconds
 			} catch (Exception e) {};
 		}
+		locked=true;
 		for(int i = 0; i < cache.size(); i++) {
 			if( (cache.get(i).DevId == device) && (cache.get(i).skey.equals(skey))) {
 				//found device in list
 				client.setValue(cache.get(i).Value);	//return current stat value
 				// Try to remove this client from list
 				cache.get(i).remove_client(client);
-				Tracer.i(mytag, "cache engine release subscription done for <"+client.getName()+"> Device ("+device+") ("+skey+")");
-				locked=false;
-				return true;
+				Tracer.i(mytag, "cache engine release subscription OK for <"+client.getName()+"> Device ("+device+") ("+skey+")");
+				result = true;
+				break;
 			}
 			// not the good one : check next
 			
 		}	//loop to search this device in cache
+		
 		client.setClientId(-1);		//subscribing not located...
 		locked=false;
-		return false;
-		
+		return result;
 	}
 	
-	private void disconnect_all_clients() {
-		//release all pending subscribing (engine itself will die !)
-		for(int i = 0; i < cache.size(); i++) {
-			if(cache.get(i).clients_list != null) {
-				for(int j = 0; j < cache.get(i).clients_list.size(); j++) {
-					//Notify each connected client
-					Handler client = cache.get(i).clients_list.get(j).getClientHandler();
-					if(client != null) {
-						cache.get(i).clients_list.get(j).setClientId(-1);	//note client as not connected
-						try {
-							Tracer.i(mytag, "cache engine send disconnected to client <"+cache.get(i).clients_list.get(j).getName()+">");
-							client.sendEmptyMessage(9998);	//notify the widget with disconnect
-						} catch (Exception e) {}
-					}
-				}
-			}
-		}
-	}
 	/*
 	 * Some methods to help widgets for database access (they don't have anymore to connect to DomodroidDB !
 	 * 

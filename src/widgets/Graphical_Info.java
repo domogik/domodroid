@@ -357,6 +357,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(with_graph) {
 			if(background.getHeight() != 350){
+				try {
+					background.removeView(featurePan2_buttons);
+					background.removeView(featurePan2);
+					
+				} catch (Exception e) {}
+				
 				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
 				background.addView(featurePan2_buttons);
 				background.addView(featurePan2);

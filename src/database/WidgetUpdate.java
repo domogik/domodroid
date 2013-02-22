@@ -29,7 +29,8 @@ import android.os.Message;
 import android.util.Log;
 import misc.tracerengine;
 
-public class WidgetUpdate implements Serializable {
+public class WidgetUpdate  {
+	//implements Serializable {
 
 	/**
 	 * 

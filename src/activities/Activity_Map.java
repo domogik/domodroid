@@ -93,10 +93,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		prefEditor=params.edit();
-		Tracer = new tracerengine(params);
+		Tracer = tracerengine.getInstance(params);
 		startCacheEngine();		//Run its own WidgetUpdate engine
 		//When back, the engine should be ready....
+		prefEditor=params.edit();
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
@@ -343,10 +343,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	}
 	public void onResume() {
 		super.onResume();
-		Tracer.e("Activity_Map.onResume","Try to connect on cache engine !");
 		if(Tracer == null) {
-			Tracer = new tracerengine(params);
+			Tracer = tracerengine.getInstance(params);
 		}
+		Tracer.e("Activity_Map.onResume","Try to connect on cache engine !");
+		
 		startCacheEngine();
 		
 		

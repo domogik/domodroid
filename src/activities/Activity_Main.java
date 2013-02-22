@@ -66,6 +66,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+@SuppressWarnings({ "static-access", "static-access" })
 public class Activity_Main extends Activity implements OnPanelListener,OnClickListener,OnSeekBarChangeListener{
 
 	
@@ -143,7 +144,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//sharedPref
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
-		Tracer = new tracerengine(params);
+		Tracer = tracerengine.getInstance(params);
 		
 		//Added by Doume
 		File storage = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/");
@@ -771,7 +772,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				Tracer.w("Activity_Main","Before call to Map, Disconnect widgets from engine !");
 				if(widgetUpdate != null) {
 					widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
-					widgetUpdate.dump_cache();	//For debug
+					//widgetUpdate.dump_cache();	//For debug
 				}
 				mapI = new Intent(Activity_Main.this,Activity_Map.class);
 				Tracer.d("Activity_Main","Call to Map, run it now !");
@@ -828,7 +829,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			widgetUpdate.cancel();
 			widgetUpdate=null;
 		}
+		if(Tracer != null) {
+			Tracer.close();		//To flush text file, eventually
+			Tracer = null;
+		}
 	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();

@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 public class tracerengine {
+	private static tracerengine instance;
 	private static Boolean	to_Android = true;
 	private static Boolean	to_txtFile = false;
 	private static Boolean	to_screen = false;
@@ -31,18 +32,44 @@ public class tracerengine {
 	 * and will offer to all users using Tracer to also retrieve instance
 	 * of state engine.....
 	 */
-	private WidgetUpdate state_engine = null;
+	private static WidgetUpdate state_engine = null;
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static FileWriter txtFile = null;
 	
 	public Boolean DBEngine_running = false;
 	
-	public tracerengine(SharedPreferences params){
+	/*
+	 * This class is fully static 
+	 * Only one instance will be started (by Main) and used by all other components
+	 */
+	/*******************************************************************************
+	*		Internal Constructor
+	*******************************************************************************/
+	private tracerengine()
+	{
+		super();
+	}
+
+	public static tracerengine getInstance(SharedPreferences params) {
+		if(instance == null) {
+			Log.e("tracerengine", "Creating instance........................");
+			instance = new tracerengine();
+		}
 		settings = params;
 		set_profile(params);
+		return instance;
+		
 	}
-	public void close() {
+	public static tracerengine getInstance() {
+		if(instance == null) {
+			Log.e("tracerengine", "Creating instance........................");
+			instance = new tracerengine();
+		}
+		return instance;
+		
+	}
+	public void close() { 
 		if(txtFile != null) {
 			try {
 				txtFile.close();
@@ -51,35 +78,35 @@ public class tracerengine {
 			txtFile = null;
 		}
 	}
-	public void d(String tag, String msg) {
+	public static void d(String tag, String msg) {
 		if(Debug)
 			choose_log(0,tag,msg);
 	}
-	public void e(String tag, String msg) {
+	public static void e(String tag, String msg) {
 		if(Error)
 			choose_log(1,tag,msg);
 	}
-	public void i(String tag, String msg) {
+	public static void i(String tag, String msg) {
 		if(Info)
 			choose_log(2,tag,msg);
 	}
-	public void v(String tag, String msg) {
+	public static void v(String tag, String msg) {
 		if(Verbose)
 			choose_log(3,tag,msg);
 	}
-	public void w(String tag, String msg) {
+	public static void w(String tag, String msg) {
 		if(Warning)
 			choose_log(4,tag,msg);
 	}
 	/*
 	 * Configure Tracer profile
 	 */
-	public void set_profile( SharedPreferences params) {
+	public static void set_profile( SharedPreferences params) {
 		settings = params;
 		get_settings();
 		
 	}
-	public void refresh_settings() {
+	public static void refresh_settings() {
 		if(settings != null ) {
 			logpath=settings.getString("LOGPATH", "");
 			logname=settings.getString("LOGNAME", "");
@@ -97,7 +124,7 @@ public class tracerengine {
 		}
 		
 	}
-	private void get_settings() {
+	private static void get_settings() {
 		if(settings != null) {
 			Boolean changed = settings.getBoolean("LOGCHANGED", true);
 			if(changed) {
@@ -136,7 +163,7 @@ public class tracerengine {
 	/*
 	 * all modes use this common method, to decide wich kind of logging is configured
 	 */
-	private void choose_log(int type, String tag, String msg) {
+	private static void choose_log(int type, String tag, String msg) {
 		
 		// if needed, log to Android
 		if(to_Android)
@@ -151,13 +178,13 @@ public class tracerengine {
 	/*
 	 * TODO Method writing messages to screen view
 	 */
-	private void screenlog(int type,String tag,String msg) {
+	private static void screenlog(int type,String tag,String msg) {
 		
 	}
 	/*
 	 * Method writing messages to text file
 	 */
-	private void txtlog(int type,String tag,String msg) {
+	private static void txtlog(int type,String tag,String msg) {
 		if(txtFile != null) {
 			Date now = new Date();
 			String typeC = " ";
@@ -192,7 +219,7 @@ public class tracerengine {
 				//String line = typeC+" | "+dateS+" | "+tagS+" | "+msg;
 				//Log.w("Tracerengine",line);
 				txtFile.write(line+"\n");
-				txtFile.flush();
+				//txtFile.flush(); 	//To improve performances, don't flush on each write
 			} catch (IOException i) {
 				txtFile = null;		//Abort log to text file in future
 				to_txtFile = false;
@@ -202,7 +229,7 @@ public class tracerengine {
 	/*
 	 * method sending messages to system log ( for Eclipse, and CatLog )
 	 */
-	private void syslog(int type, String tag, String msg) {
+	private static void syslog(int type, String tag, String msg) {
 		switch (type) {
 		case 0:
 			Log.d(tag,msg);
@@ -221,10 +248,10 @@ public class tracerengine {
 			break;
 		}
 	}
-	public WidgetUpdate get_engine() {
+	public static WidgetUpdate get_engine() {
 		return state_engine;
 	}
-	public void set_engine(WidgetUpdate engine) {
+	public static void set_engine(WidgetUpdate engine) {
 		state_engine = engine;
 	}
 }

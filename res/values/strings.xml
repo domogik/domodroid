@@ -163,5 +163,11 @@
 	<string name="stats_title_period">Period : </string>
 	<string name="stats_cumuls">Cumulated</string>
 	<string name="stats_period">Last period</string>
+	<string name="stats_received">Stats : Received : </string>
+	<string name="stats_sent">--------Sent : </string>
+	<string name="events_received">Events : Received : </string>
+	<string name="events_sent">---------Sent : </string>
+	<string name="packets">packets</string>
+	<string name="bytes">bytes</string>
 	
 </resources>

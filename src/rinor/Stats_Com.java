@@ -17,26 +17,26 @@ public class Stats_Com {
 	public static final int STATS_SEND  = 3; 
 	public static final int STATS_RCV   = 4; 
 	//Cumulative counters
-	private static int cumul_events_sent_packets = 0;
-	private static int cumul_events_recv_packets = 0;
-	private static int cumul_events_sent_bytes = 0;
-	private static int cumul_events_recv_bytes = 0;
+	public static int cumul_events_sent_packets = 0;
+	public static int cumul_events_recv_packets = 0;
+	public static int cumul_events_sent_bytes = 0;
+	public static int cumul_events_recv_bytes = 0;
 	
-	private static int cumul_stats_sent_packets = 0;
-	private static int cumul_stats_recv_packets = 0;
-	private static int cumul_stats_sent_bytes = 0;
-	private static int cumul_stats_recv_bytes = 0;
+	public static int cumul_stats_sent_packets = 0;
+	public static int cumul_stats_recv_packets = 0;
+	public static int cumul_stats_sent_bytes = 0;
+	public static int cumul_stats_recv_bytes = 0;
 	
 	//periodic counters
-	private static int periodic_events_sent_packets = 0;
-	private static int periodic_events_recv_packets = 0;
-	private static int periodic_events_sent_bytes = 0;
-	private static int periodic_events_recv_bytes = 0;
+	public static int periodic_events_sent_packets = 0;
+	public static int periodic_events_recv_packets = 0;
+	public static int periodic_events_sent_bytes = 0;
+	public static int periodic_events_recv_bytes = 0;
 	
-	private static int periodic_stats_sent_packets = 0;
-	private static int periodic_stats_recv_packets = 0;
-	private static int periodic_stats_sent_bytes = 0;
-	private static int periodic_stats_recv_bytes = 0;
+	public static int periodic_stats_sent_packets = 0;
+	public static int periodic_stats_recv_packets = 0;
+	public static int periodic_stats_sent_bytes = 0;
+	public static int periodic_stats_recv_bytes = 0;
 	
 	public static int elapsed_period = 0;
 	public static int period;				// Number of seconds between periodic clears

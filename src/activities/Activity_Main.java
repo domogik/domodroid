@@ -31,6 +31,7 @@ import java.util.Vector;
 
 import org.json.JSONException;
 
+import widgets.Com_Stats;
 import widgets.Graphical_Feature;
 import misc.tracerengine;
 import database.WidgetUpdate;
@@ -120,6 +121,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private LinearLayout house_map;
 	private Graphical_Feature house;
 	private Graphical_Feature map;
+	private Graphical_Feature stats;
+	
 	private String tempUrl;
 	private Boolean reload = false;
 	DialogInterface.OnClickListener reload_listener = null;
@@ -129,7 +132,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
 	private Boolean dont_freeze = false;
 	private AlertDialog.Builder dialog_reload;
-	
 	private Thread waiting_thread = null;
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
@@ -315,8 +317,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house.setPadding(0, 0, 5, 0);
 		map = new Graphical_Feature(getApplicationContext(),0,"Map","","map",0, mytype);
 		map.setPadding(5, 0, 0, 0);
+		stats = new Graphical_Feature(getApplicationContext(),0,"Com statistics","","map",0, mytype);
+		stats.setPadding(0, 0, 5, 0);
+		
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 
+		
 		house.setLayoutParams(param);
 		house.setOnClickListener(this);
 		house.setTag("house");
@@ -324,9 +330,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		map.setLayoutParams(param);
 		map.setOnClickListener(this);
 		map.setTag("map");
+		
+		stats.setLayoutParams(param);
+		stats.setOnClickListener(this);
+		stats.setTag("stats");
 
 		if(! by_usage)
 			house_map.addView(house);
+		else
+			house_map.addView(stats);
 		
 		house_map.addView(map);
 		init_done = false;
@@ -572,8 +584,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house_map.removeAllViews();
 		if( ! by_usage) {
 			house_map.addView(house);
+			house_map.addView(map);
+		} else {
+			house_map.addView(stats);
+			house_map.addView(map);
 		}
-		house_map.addView(map);
 		try {
 			
 			if(type.equals("root")){
@@ -585,6 +600,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					parent.addView(ll_area);	//and areas
 				} else {
 					// by_usage
+					
 					parent.addView(house_map);	// With only map
 					ll_room = wAgent.loadRoomWidgets(this, 1, ll_room, params);	//List of known usages 'as rooms'
 					parent.addView(ll_room);
@@ -598,6 +614,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				parent.addView(ll_area);	//and areas
 				ll_activ.removeAllViews();
 				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params, mytype);
+				parent.addView(ll_activ);
+				
+			}else if(type.equals("statistics")) {
+				//Only possible if by_usage (the 'stats' is never proposed with version 0.2)
+				ll_area.removeAllViews();
+				ll_activ.removeAllViews();
+				ll_activ = wAgent.loadActivWidgets(this, -1, type, ll_activ ,params, mytype);
 				parent.addView(ll_activ);
 				
 			} else 	if(type.equals("area")) {
@@ -791,6 +814,16 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					createAlert();
 				notSyncAlert.show();
 			}
+		} else if(v.getTag().equals("stats")) {
+			if(params.getBoolean("SYNC", false)==true){
+				loadWigets(0, "statistics");
+				historyPosition++;
+				history.add(historyPosition,new String [] {"0","statistics"});
+			}else{
+				if(notSyncAlert == null)
+					createAlert();
+				notSyncAlert.show();
+			}	
 		} else if(v.getTag().equals("map")) {
 			if(params.getBoolean("SYNC", false)==true){
 				//dont_freeze=true;		//To avoid WidgetUpdate engine freeze

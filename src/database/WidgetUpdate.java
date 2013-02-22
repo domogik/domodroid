@@ -94,8 +94,7 @@ public class WidgetUpdate  {
 		private WidgetUpdate()
 		{
 			super();
-			stats_com = Stats_Com.getInstance();	//Create a statistic counter, with all 0 values
-			suspend=false;
+			
 		}
 	
 	public static WidgetUpdate getInstance() {
@@ -113,6 +112,8 @@ public class WidgetUpdate  {
 			Log.e(mytag,"init already done");
 			return;
 		}
+		stats_com = Stats_Com.getInstance();	//Create a statistic counter, with all 0 values
+		suspend=false;
 		this.sharedparams=params;
 		this.Tracer = Trac;
 		this.context = context;
@@ -475,7 +476,8 @@ public class WidgetUpdate  {
 						JSONObject json_widget_state = Rest_com.connect(request);
 						//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));
 						//Tracer.d(mytag,"result : "+ json_widget_state.toString());
-						stats_com.add(Stats_Com.STATS_RCV, json_widget_state.length());
+						if(json_widget_state != null)
+							stats_com.add(Stats_Com.STATS_RCV, json_widget_state.toString().length());
 						
 						// new realtime engine : update cache with new values...
 						int updated_items = update_cache(json_widget_state);

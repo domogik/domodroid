@@ -4,6 +4,10 @@ import database.DomodroidDB;
 import database.WidgetUpdate;
 
 import org.json.JSONException;
+
+import rinor.Stats_Com;
+
+import widgets.Com_Stats;
 import widgets.Entity_Area;
 import widgets.Entity_Feature;
 import widgets.Entity_Room;
@@ -53,7 +57,9 @@ public class Widgets_Manager {
 	}
 
 	public LinearLayout loadActivWidgets(Activity context, int id, 
-			String zone, LinearLayout ll, SharedPreferences params, int session_type) throws JSONException{
+			String zone, LinearLayout ll, SharedPreferences params, int session_type) throws JSONException
+			{
+		
 		int mytype = session_type;
 		DomodroidDB domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Widgets_Manager.loadActivWidgets";
@@ -83,7 +89,15 @@ public class Widgets_Manager {
 			mainPan.addView(rightPan);
 			ll.addView(mainPan);
 		}
-
+		if(id == -1) {
+			//We've to display statistics widget
+			Tracer.i("Widgets_Manager", "Call to process statistics widget");
+			Com_Stats  statistics = new Com_Stats(Tracer, context, counter);
+			statistics.container=tmpPan;
+			tmpPan.addView(statistics);
+			ll.addView(tmpPan);
+			return ll;
+		}
 		for (Entity_Feature feature : listFeature) {
 
 			//-----add component-------

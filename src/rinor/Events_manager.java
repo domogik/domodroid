@@ -170,7 +170,7 @@ public class Events_manager {
 					stats_com.add(Stats_Com.EVENTS_SEND, request.length());
 					Tracer.w(mytag,"Requesting server <"+request+">");
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
-					stats_com.add(Stats_Com.EVENTS_RCV, event.length());
+					stats_com.add(Stats_Com.EVENTS_RCV, event.toString().length());
 					
 					//Tracer.w(mytag,"Received event = <"+event.toString()+">");
 				} catch (Exception e) {

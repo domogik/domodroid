@@ -574,7 +574,7 @@ public class MapView extends View {
 					feature.getState_key(),params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),
-					params.getInt("UPDATE",300),0, mytype);
+					params.getInt("UPDATE",300),0, mytype, feature.getParameters());
 			info.container=(FrameLayout) panel_widget;
 			panel_widget.addView(info);
 		} else if (feature.getState_key().equals("color")) {

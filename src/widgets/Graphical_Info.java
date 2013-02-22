@@ -24,6 +24,8 @@ import java.util.TimerTask;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import database.WidgetUpdate;
 
@@ -90,7 +92,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	public FrameLayout myself = null;
 	public Boolean with_graph = true;
 	private tracerengine Tracer = null;
-
+	private String parameters;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
@@ -98,7 +100,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int period, int update, 
-			int widgetSize, int session_type) {
+			int widgetSize, int session_type, final String parameters) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -110,6 +112,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		this.url = url;
 		this.myself = this;
 		this.session_type = session_type;
+		this.parameters = parameters;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
@@ -239,7 +242,12 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						float formatedValue = 0;
 						if(loc_Value != null)
 							formatedValue = Round(Float.parseFloat(loc_Value),2);
-						
+						try {
+							//Basilic add, number feature has a unit parameter
+							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+							String test_unite = jparam.getString("unit");
+							value.setText(formatedValue+ " "+test_unite);
+						} catch (JSONException e) {							
 						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
@@ -251,6 +259,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
 						else value.setText(loc_Value);
+						}
 						value.setAnimation(animation);
 					} catch (Exception e) {
 						// It's probably a String that could'nt be converted to a float

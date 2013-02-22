@@ -199,7 +199,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype);
+						widgetSize, mytype, feature.getParameters());
 				info.setLayoutParams(layout_param);
 				info.container=tmpPan;
 				tmpPan.addView(info);
@@ -232,7 +232,7 @@ public class Widgets_Manager {
 							feature.getDevice_usage_id(),
 							0,
 							params.getInt("UPDATE_TIMER",300),
-							0, mytype);
+							0, mytype, feature.getParameters());
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					tmpPan.addView(info);

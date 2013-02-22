@@ -59,6 +59,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,6 +83,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private TextView menu_green;
 	private TextView menu_about;
 	private AlertDialog.Builder notSyncAlert;
+	private Toast starting;
 	private Widgets_Manager wAgent;
 	private Dialog_Synchronize dialog_sync;
 	private WidgetUpdate widgetUpdate;
@@ -140,7 +142,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		super.onCreate(savedInstanceState);
 		myself=this;
 		setContentView(R.layout.activity_home);
-
+		
+		starting = Toast.makeText(this, "Building Objects...",Toast.LENGTH_LONG);
+		starting.show();
+		
 		//sharedPref
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		prefEditor=params.edit();
@@ -401,6 +406,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		// WidgetUpdate is a background process, submitting queries to Rinor
 		//		and updating its cache for values per device
+		if(starting != null) {
+			starting.setText("Loading cache from Domogik server....");
+			starting.setDuration(Toast.LENGTH_LONG);
+			starting.show();
+		}
+		
 		startCacheEngine();
 		
 		if(history != null)
@@ -432,11 +443,19 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			wAgent=new Widgets_Manager(Tracer, widgetHandler);
 			wAgent.widgetupdate = widgetUpdate;
 		}
+		if(starting != null) {
+			starting.setText("Creating widgets....");
+		}
 		loadWigets(0,"root");
 		historyPosition=0;
 		history.add(historyPosition,new String [] {"0","root"});
-		
+		if(starting != null) {
+			starting.setText("Ready....");
+			starting.setDuration(Toast.LENGTH_SHORT);
+			starting.show();
+		}
 		init_done = true;
+		starting = null;
 	}
 	
 	private void check_answer() {

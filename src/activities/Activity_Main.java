@@ -417,7 +417,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			starting.show();
 		}
 		
-		if(! init_done)
+		if(params.getString("UPDATE_URL", null) != null)
 			startCacheEngine();
 		
 		if(history != null)

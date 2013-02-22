@@ -78,27 +78,29 @@ public class tracerengine {
 			txtFile = null;
 		}
 	}
-	public static void d(String tag, String msg) {
+	
+	public void d(String tag, String msg) {
 		if(Debug)
 			choose_log(0,tag,msg);
 	}
-	public static void e(String tag, String msg) {
+	public void e(String tag, String msg) {
 		if(Error)
 			choose_log(1,tag,msg);
 	}
-	public static void i(String tag, String msg) {
+	public void i(String tag, String msg) {
 		if(Info)
 			choose_log(2,tag,msg);
 	}
-	public static void v(String tag, String msg) {
+	public void v(String tag, String msg) {
 		if(Verbose)
 			choose_log(3,tag,msg);
 	}
-	public static void w(String tag, String msg) {
+	public void w(String tag, String msg) {
 		if(Warning)
 			choose_log(4,tag,msg);
 	}
 	/*
+	 *
 	 * Configure Tracer profile
 	 */
 	public static void set_profile( SharedPreferences params) {

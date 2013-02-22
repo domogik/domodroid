@@ -36,8 +36,10 @@ public class Events_manager {
 	TimerTask doAsynchronousTask = null;
 	private Boolean listener_running = false;
 	private Boolean init_done = false;
+	private Boolean suspend = false;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
+	private static Stats_Com stats_com = null; 
 	
 	/*******************************************************************************
 	*		Internal Constructor
@@ -45,6 +47,8 @@ public class Events_manager {
 		private Events_manager()
 		{
 			super();
+			stats_com = Stats_Com.getInstance();	//Create a statistic counter, with all 0 values
+			suspend=false;
 		}
 	
 	public static Events_manager getInstance() {
@@ -157,12 +161,18 @@ public class Events_manager {
 			Boolean ack = false;
 			Tracer.e(mytag,"ListenerThread starts the loop");
 			String ticket = "";
-        	
+			int counter = 2 * 60 * 1000;		//2 minutes
 			while(alive) {
+				while(suspend) {
+					
+				}
 				try {
+					stats_com.add(Stats_Com.EVENTS_SEND, request.length());
 					Tracer.w(mytag,"Requesting server <"+request+">");
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
-					Tracer.w(mytag,"Received event = <"+event.toString()+">");
+					stats_com.add(Stats_Com.EVENTS_RCV, event.length());
+					
+					//Tracer.w(mytag,"Received event = <"+event.toString()+">");
 				} catch (Exception e) {
 					Tracer.e(mytag,"Exception on wait for event ! ! ! Socket disconnected ?");
 					alive=false;
@@ -184,9 +194,9 @@ public class Events_manager {
 					//break;
 				} else {
 					//An event is available...
-					Tracer.w(mytag,"Processing event");
-					// First, take the ticket ID to resubmit an event request....
+					//Tracer.w(mytag,"Processing event");
 					
+					// First, take the ticket ID to resubmit an event request....
 					int list_size = 0;
 	                if(event != null) {
 	                	String device_id = "";
@@ -261,7 +271,9 @@ public class Events_manager {
 				request = urlAccess+"events/request/free/"+ticket;	//Use the ticket #
 				try {
 					Tracer.w(mytag,"Freeing ticket <"+request+">");
+					stats_com.add(Stats_Com.EVENTS_SEND, request.length());
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
+					stats_com.add(Stats_Com.EVENTS_RCV, event.length());
 					Tracer.w(mytag,"Received on free ticket = <"+event.toString()+">");
 				} catch (Exception e) {
 					

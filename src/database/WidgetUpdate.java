@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
+import rinor.Stats_Com;
 import widgets.Entity_Feature;
 import widgets.Entity_Map;
 import widgets.Entity_client;
@@ -58,6 +59,10 @@ public class WidgetUpdate  {
 	private Timer timer = null;
 	private int callback_counts = 0;
 	private Boolean init_done = false;
+	
+	private Boolean suspend = false;
+	private static Stats_Com stats_com = null; 
+	
 	//
 	// Table of handlers to notify
 	// pos 0 = Main
@@ -89,6 +94,8 @@ public class WidgetUpdate  {
 		private WidgetUpdate()
 		{
 			super();
+			stats_com = Stats_Com.getInstance();	//Create a statistic counter, with all 0 values
+			suspend=false;
 		}
 	
 	public static WidgetUpdate getInstance() {
@@ -361,7 +368,37 @@ public class WidgetUpdate  {
 		if(doAsynchronousTask != null)
 			doAsynchronousTask.run();	//To force immediate refresh
 	}
-	
+	public void resync(){
+		//May be URL has been changed : force engine to reconstruct cache
+		Disconnect(0);
+		Disconnect(1);
+		Disconnect(2);
+		locked = true;
+		cache=null;
+		cache = new ArrayList<Cache_Feature_Element>();
+		ready=false;
+		refreshNow();	//To reconstruct cache
+		Tracer.d(mytag,"state engine resync : waiting for initial setting of cache !");
+		
+		Boolean said = false;
+		int counter = 0;
+		while (! ready) {
+			if(! said) {
+				Tracer.d(mytag,"cache engine not yet ready : Wait a bit !");
+				said=true;
+			}
+			try{
+				Thread.sleep(100);
+				counter++;
+				if(counter > 100) {
+					// 10 seconds elapsed
+					//finalize();
+				}
+			} catch (Exception e) {};
+		}
+		Tracer.d(mytag,"cache engine ready after resync !");
+		locked=false;
+	}
 	/*
 	 * This method should only be called once, to create and arm a cyclic timer 
 	 */
@@ -428,23 +465,17 @@ public class WidgetUpdate  {
 					callback_counts = 0;
 					return null;
 				}
-				/*
-				if(eventsManager == null) {
-					Tracer.d(mytag,"Events manager dead ? try to restart it....");
-					eventsManager = Events_manager.getInstance(); 
-					eventsManager.init(Tracer, myselfHandler, cache, sharedparams, owner, myself);
-					//eventsManager = new Events_manager(Tracer, context, myselfHandler, cache, sharedparams, owner, myself);
-				}	
-				*/
-				
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");
-				if(sharedparams.getString("UPDATE_URL", null) != null){
+				String request = sharedparams.getString("UPDATE_URL", null);
+				if(request != null){
 					try {
-						//sbanim.sendEmptyMessage(0);
-						JSONObject json_widget_state = Rest_com.connect(sharedparams.getString("UPDATE_URL", null));
+						
+						stats_com.add(Stats_Com.STATS_SEND, request.length());
+						JSONObject json_widget_state = Rest_com.connect(request);
 						//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));
 						//Tracer.d(mytag,"result : "+ json_widget_state.toString());
+						stats_com.add(Stats_Com.STATS_RCV, json_widget_state.length());
 						
 						// new realtime engine : update cache with new values...
 						int updated_items = update_cache(json_widget_state);

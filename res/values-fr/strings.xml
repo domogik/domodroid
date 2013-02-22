@@ -158,4 +158,9 @@
 	<string name="shutter_stat_0">Fermé</string>
 	<string name="shutter_stat_1">Ouvert</string>
 	
+	<string name="stats_title">Stats coms Domogik</string>
+	<string name="stats_title_period">Période: </string>
+	<string name="stats_cumuls">Cumulé</string>
+	<string name="stats_period">Dernière période</string>
+	
 </resources>

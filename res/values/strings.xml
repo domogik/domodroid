@@ -159,4 +159,9 @@
 	<string name="shutter_stat_0">Close</string>
 	<string name="shutter_stat_1">Open</string>
 	
+	<string name="stats_title">Stats Domogik link</string>
+	<string name="stats_title_period">Period : </string>
+	<string name="stats_cumuls">Cumulated</string>
+	<string name="stats_period">Last period</string>
+	
 </resources>

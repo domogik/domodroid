@@ -228,6 +228,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						Tracer.d("Activity_Main","sync dialog requires a refresh !");
 						reload = true;	// Sync being done, consider shared prefs are OK
 						parent.removeAllViews();
+						if(widgetUpdate != null) {
+							widgetUpdate.resync();
+						} else {
+							startCacheEngine();
+						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
 						b.putInt("id", 0);
@@ -412,7 +417,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			starting.show();
 		}
 		
-		startCacheEngine();
+		if(! init_done)
+			startCacheEngine();
 		
 		if(history != null)
 			history = null;		//Free resource

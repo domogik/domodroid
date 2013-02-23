@@ -39,6 +39,7 @@ public class Stats_Com {
 	public static int periodic_stats_recv_bytes = 0;
 	
 	public static int elapsed_period = 0;
+	public static int cumul_period = 0;
 	public static int period;				// Number of seconds between periodic clears
 	private static Timer timer=null;
 	
@@ -124,6 +125,7 @@ public class Stats_Com {
 			public void run() {
 						try {
 							elapsed_period++;
+							cumul_period++;
 							if(elapsed_period >= period) {
 								clear();
 							}

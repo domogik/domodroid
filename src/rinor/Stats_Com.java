@@ -42,6 +42,7 @@ public class Stats_Com {
 	public static int cumul_period = 0;
 	public static int period;				// Number of seconds between periodic clears
 	private static Timer timer=null;
+	private static Boolean sleeping = false;
 	
 	/*******************************************************************************
 	*		Internal Constructor
@@ -103,18 +104,53 @@ public class Stats_Com {
 		periodic_stats_recv_bytes = 0;
 		elapsed_period = 0;
 	}
-	public String get_elapsed_period() {
-		String result = "0 sec";
-		if(! (elapsed_period == 0)) {
-			if(elapsed_period < 60) {
-				result = elapsed_period+" secs";
-			} else {
-				int minuts = elapsed_period / 60;
-				int reste = elapsed_period - (minuts * 60);
-				result = minuts+" mins "+reste+" secs";
+	private String get_Period_String(int seconds) {
+		String result = "";
+		int hours=0;
+		int minutes=0;
+		int reste = 0;
+		
+		if(seconds != 0) {
+			
+			if(seconds <= 60) {
+				result = seconds+" secs";
+			} else if (seconds > 3600) {
+				hours = seconds / 3600;
+				result+=hours+" h ";
+				reste=seconds - (hours * 3600);
+				if(reste <= 60) {
+					result+="0 mn "+reste+" sec";
+				} else {
+					minutes = reste / 60;
+					reste = reste - (minutes * 60);
+					result+=minutes+" mn "+reste+" sec";
+				}
+			} else if(seconds > 60) {
+				minutes = seconds / 60;
+				reste = seconds - (minutes * 60);
+				result = minutes+" mn "+reste+" sec";
 			}
 		}
 		return result;
+	}
+	public String get_elapsed_period() {
+		return get_Period_String(elapsed_period);
+	}
+	public String get_cumul_period() {
+		return get_Period_String(elapsed_period);
+	}
+	public void set_sleeping() {
+		sleeping=true;
+	}
+	public void wakeup() {
+		sleeping=false;
+	}
+	public void cancel() {
+		if(timer != null)
+			timer.cancel();
+		try {
+			this.finalize();
+		} catch (Throwable t) {}
 	}
 	private void Timer() {
 		timer = new Timer();
@@ -125,7 +161,8 @@ public class Stats_Com {
 			public void run() {
 						try {
 							elapsed_period++;
-							cumul_period++;
+							if(! sleeping)
+								cumul_period++;
 							if(elapsed_period >= period) {
 								clear();
 							}

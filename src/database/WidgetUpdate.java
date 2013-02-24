@@ -60,7 +60,7 @@ public class WidgetUpdate  {
 	private int callback_counts = 0;
 	private Boolean init_done = false;
 	
-	private Boolean suspend = false;
+	private Boolean sleeping = false;
 	private static Stats_Com stats_com = null; 
 	
 	//
@@ -107,17 +107,19 @@ public class WidgetUpdate  {
 	}
 	
 	@SuppressLint("HandlerLeak")
-	public void init(tracerengine Trac, Activity context, SharedPreferences params){
+	public Boolean init(tracerengine Trac, Activity context, SharedPreferences params){
+		Boolean result = false;
 		if(init_done) {
 			Log.e(mytag,"init already done");
-			return;
+			return true;
 		}
 		stats_com = Stats_Com.getInstance();	//Create a statistic counter, with all 0 values
-		suspend=false;
+		sleeping=false;
 		this.sharedparams=params;
 		this.Tracer = Trac;
 		this.context = context;
 		activated = true;
+		/*
 		if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
 				try {
@@ -126,6 +128,7 @@ public class WidgetUpdate  {
 			}
 			Tracer.DBEngine_running = true;		//To avoid multiple engines running for same Activity
 		}
+		*/
 		Tracer.d(mytag,"Initial start requested....");
 		domodb = new DomodroidDB(Tracer, context);	
 		domodb.owner=mytag;
@@ -136,22 +139,23 @@ public class WidgetUpdate  {
 		Tracer.d(mytag,"state engine waiting for initial setting of cache !");
 		
 		Boolean said = false;
+		int max_time_for_sync = 15 * 1000;		// On initial cache initialization, return an error 
+												// if cannot connect in 15 seconds
+												// Probably wrong URL ?
+		int sync_duration = 0;
 		while (! ready) {
 			if(! said) {
 				Tracer.d(mytag,"cache engine not yet ready : Wait a bit !");
 				said=true;
 			}
-			try{/*
-				 * 	(tracerengine Trac, Activity context, 
-				Handler state_engine_handler, 
-				ArrayList<Cache_Feature_Element> engine_cache,
-				SharedPreferences params,
-				String owner,
-				WidgetUpdate caller)
-		 */
-
-				Thread.sleep(100);
+			try{
+				Thread.sleep(200);		// Wait 0,2 second
 			} catch (Exception e) {};
+			sync_duration += 200;
+			if(sync_duration > max_time_for_sync) {
+				Tracer.d(mytag,"cache engine not synced after "+(max_time_for_sync/1000)+" seconds : Abort !");
+				return result;		//false, if sync not success
+			}
 		}
 		Tracer.d(mytag,"cache engine ready !");
 		
@@ -213,6 +217,8 @@ public class WidgetUpdate  {
 		eventsManager = Events_manager.getInstance(); 
 		eventsManager.init(Tracer, myselfHandler, cache, params, instance);
 		init_done = true;
+		result=true;
+		return result;
 	}
 	/*
 	 * Allow callers to set their handler in table
@@ -225,7 +231,20 @@ public class WidgetUpdate  {
 	
 	public void cancel() {
 		activated = false;
-		eventsManager.Destroy();
+		if(timer != null)
+			timer.cancel();
+		if(eventsManager != null)
+			eventsManager.Destroy();
+		eventsManager = null;
+		if(stats_com != null)
+			stats_com.cancel();
+		stats_com = null;
+		Tracer.d(mytag,"cache engine cancel requested : Bye !");
+		
+		try {
+			this.finalize();
+		} catch (Throwable t) {}
+		
 	}
 	
 	public void Disconnect(int type){
@@ -446,7 +465,31 @@ public class WidgetUpdate  {
 			//timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
 		}
 	}
-	 
+	
+	/*
+	 * Method to freeze/wakeup server exchanges and cache state ( on Pause / Resume, by example )
+	 */
+	public void set_sleeping() {
+		Tracer.d(mytag,"Pause requested...");
+		if(eventsManager != null) {
+			eventsManager.set_sleeping();
+		}
+		if(stats_com != null)
+			stats_com.set_sleeping();
+		
+		sleeping = true;
+	}
+	
+	public void wakeup() {
+		Tracer.d(mytag,"Wake up requested...");
+		if(eventsManager != null) {
+			eventsManager.wakeup();
+		}
+		if(stats_com != null)
+			stats_com.wakeup();
+		
+		sleeping = false;
+	}
 	
 	
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
@@ -458,7 +501,9 @@ public class WidgetUpdate  {
 				Tracer.d(mytag,"UpdateThread frozen....");
 				
 			} else {
-				
+				if(sleeping) {
+					return null;	//Will check stats in 2 minutes
+				}
 				if(callback_counts > 0) {
 					if(Tracer != null)
 						Tracer.d(mytag,"Events detected since last loop = "+callback_counts+" No stats !");
@@ -470,25 +515,26 @@ public class WidgetUpdate  {
 					Tracer.d(mytag,"Request to server for stats update...");
 				String request = sharedparams.getString("UPDATE_URL", null);
 				if(request != null){
-					try {
-						
-						stats_com.add(Stats_Com.STATS_SEND, request.length());
-						JSONObject json_widget_state = Rest_com.connect(request);
-						//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));
-						//Tracer.d(mytag,"result : "+ json_widget_state.toString());
-						if(json_widget_state != null)
-							stats_com.add(Stats_Com.STATS_RCV, json_widget_state.toString().length());
-						
-						// new realtime engine : update cache with new values...
-						int updated_items = update_cache(json_widget_state);
-						// and continue to maintain local database
-						if(updated_items > 0) {
-							//domodb.insertFeatureState(json_widget_state);
-						}
-						ready = true;		//Accept subscribing, now !
+					JSONObject json_widget_state = null;
+					stats_com.add(Stats_Com.STATS_SEND, request.length());
+					try{
+						json_widget_state = Rest_com.connect(request);
 					} catch (Exception e) {
-						//sbanim.sendEmptyMessage(3);
-						e.printStackTrace();
+						//stats request cannot be completed (broken link or terminal in standby ?)
+						//Will retry automatically in 2'05, if no events received
+						Tracer.e(mytag,"get stats : Rinor error <"+e.getMessage()+">");
+						return null;
+					}
+					//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));
+					//Tracer.d(mytag,"result : "+ json_widget_state.toString());
+					if(json_widget_state != null) {
+						stats_com.add(Stats_Com.STATS_RCV, json_widget_state.toString().length());
+						// cache engine : update cache with new values...
+						int updated_items = update_cache(json_widget_state);
+						//if(updated_items > 0) {
+							//domodb.insertFeatureState(json_widget_state);
+						//}
+						ready = true;		//Accept subscribing, now !
 					}
 				}
 			}

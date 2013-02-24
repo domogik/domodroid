@@ -94,8 +94,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onCreate(savedInstanceState);
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		Tracer = tracerengine.getInstance(params);
-		startCacheEngine();		//Run its own WidgetUpdate engine
-		//When back, the engine should be ready....
 		prefEditor=params.edit();
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);
@@ -246,6 +244,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.Add_widget_title);
 
+		startCacheEngine();		//Get reference to WidgetUpdate engine
+		//When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
+		
 		
 		//get feature list
 		listFeature = widgetUpdate.requestFeatures();
@@ -277,7 +278,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 		builder.setView(listview_feature);
 		dialog_feature = builder.create();
-
 
 		if(!list_usable_files.isEmpty()){
 			mapView.initMap();
@@ -321,6 +321,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			//Map is'nt the first caller, so init is'nt required (already done by View)
 			//widgetUpdate.init(Tracer, this,params);
 			widgetUpdate.set_handler(sbanim, 1);	//Put our main handler to cache engine (as Map)
+			widgetUpdate.wakeup();
 		}  
 		Tracer.set_engine(widgetUpdate);
 		Tracer.w("Activity_Map", "WidgetUpdate engine connected !");

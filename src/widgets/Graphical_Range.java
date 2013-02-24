@@ -316,7 +316,12 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		@Override
 		protected Void doInBackground(Void... params) {
 			updating=3;
-			JSONObject json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress);
+			JSONObject json_Ack = null;
+			try {
+				json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress);
+			} catch (Exception e) {
+				Tracer.e(mytag, "Rest exception getting state : <"+e.getMessage()+">");
+			}
 			try {
 				@SuppressWarnings("unused")
 				Boolean ack = JSONParser.Ack(json_Ack);

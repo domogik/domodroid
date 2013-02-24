@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -55,8 +57,9 @@ public class Rest_com {
         return sb.toString();
     }
  
-    public static JSONObject connect(String url)
+    public static JSONObject connect(String url) throws Exception
     {
+    	String message = "???";
     	JSONObject json = null;
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url); 
@@ -70,19 +73,29 @@ public class Rest_com {
                 result= convertStreamToString(instream);
                 json=new JSONObject(result);
                 instream.close();
+                return json;
             }
  
  
         } catch (HttpHostConnectException e) {
+        	message = " HttpHostConnectException";
+        	//e.printStackTrace();
+        } catch (SocketException e) {
+        	message = " SocketException";
         	//e.printStackTrace();
         } catch (ClientProtocolException e) {
-        	e.printStackTrace();
+        	message = " ClientProtocolException";
+        	//e.printStackTrace();
         } catch (IOException e) {
-        	e.printStackTrace();
+        	message = " IOException";
+        	//e.printStackTrace();
         } catch (JSONException e) {
-        	e.printStackTrace();
+        	message = " JSONException";
+        	//e.printStackTrace();
         }
-        return json;
+        Exception e = new Exception("Rest error :"+message);
+        throw e;
+        
     }
  
 }

@@ -145,8 +145,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		myself=this;
 		setContentView(R.layout.activity_home);
 		
-		starting = Toast.makeText(this, "Building Objects...",Toast.LENGTH_LONG);
-		starting.show();
 		
 		//sharedPref
 		params = getSharedPreferences("PREFS",MODE_PRIVATE);
@@ -383,6 +381,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				Tracer.e("Activity_Main","First init already done...");
 				end_of_init();
 			}
+			starting = Toast.makeText(this, "Building screen done...",Toast.LENGTH_LONG);
+			starting.show();
 			
 			// End of onCreate (UIThread)
 	}
@@ -406,10 +406,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private void end_of_init() {
 		// Finalize screen appearence
-		Tracer.v("Activity_Main","Finalize Main Screen..");
+		Tracer.v("Activity_Main","end_of_init Main Screen..");
 		
 		if(! reload) {
-			//alertDialog not syncsplash
+			//alertDialog not sync splash
 			if(notSyncAlert == null)
 				createAlert();
 		}
@@ -428,10 +428,22 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			starting.setDuration(Toast.LENGTH_LONG);
 			starting.show();
 		}
-		
+		Boolean connected = false;
 		if(params.getString("UPDATE_URL", null) != null)
-			startCacheEngine();
+			connected = startCacheEngine();
 		
+		if(! connected) {
+			if(widgetUpdate != null) {
+				widgetUpdate.cancel();
+				widgetUpdate = null;
+			}
+			if(starting != null) {
+				starting.setText("Error connecting to server ! review settings, please !");
+				starting.setDuration(Toast.LENGTH_LONG);
+				starting.show();
+			}
+			
+		}
 		if(history != null)
 			history = null;		//Free resource
 		history = new Vector<String[]>();
@@ -463,7 +475,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		if(starting != null) {
 			starting.setText("Creating widgets....");
+			starting.setDuration(Toast.LENGTH_SHORT);
+			starting.show();
 		}
+		
 		loadWigets(0,"root");
 		historyPosition=0;
 		history.add(historyPosition,new String [] {"0","root"});
@@ -475,7 +490,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		init_done = true;
 		starting = null;
 	}
-	
+	/*
+	 * Check the answer after the proposal to reload existing settings (fresh install)
+	 */
 	private void check_answer() {
 		Tracer.v("Activity_Main","reload choice done..");
 		if(reload) {
@@ -854,16 +871,17 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 	}
 	
-	private void startCacheEngine() {
+	private Boolean startCacheEngine() {
 		if(widgetUpdate == null) {
 			Tracer.w("Activity_Main", "Starting WidgetUpdate cache engine !");
 			widgetUpdate = WidgetUpdate.getInstance();
-			widgetUpdate.init(Tracer, this,params);
 			widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)
+			Boolean result = widgetUpdate.init(Tracer, this,params);
+			if(! result)
+				return result;
 		}  
-		Tracer.e("Activity_Main","WidgetUpdate is available for Main, now !");
 		Tracer.set_engine(widgetUpdate);
-		
+		return true;
 	}
 	
 
@@ -872,6 +890,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		super.onPause();
 		panel.setOpen(false, false);
 		Tracer.w("Activity_Main.onPause","Going to background !");
+		if(widgetUpdate != null) 
+			widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
 	}
 	
 	@Override
@@ -884,6 +904,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		if(widgetUpdate != null) {
 			//Tracer.set_engine(null);
 			widgetUpdate.Disconnect(0);	//That should also stop events manager	
+			widgetUpdate.set_sleeping();
 			widgetUpdate.cancel();
 			widgetUpdate=null;
 		}
@@ -899,7 +920,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		Tracer.e("Activity_Main.onResume","Try to reconnect to cache engine !");
 		if(widgetUpdate != null) {
 			Tracer.e("Activity_Main.onResume","widgetUpdate is available !");
-			
+			widgetUpdate.wakeup();
 		}
 		end_of_init();	//all client widgets will be re-created
 		

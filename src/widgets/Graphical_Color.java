@@ -580,8 +580,12 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			updating=1;
 			
 			Tracer.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
-			
-			JSONObject json_Ack = Rest_com.connect(Url2send);
+			JSONObject json_Ack = null;
+			try {
+				json_Ack = Rest_com.connect(Url2send);
+			} catch (Exception e) {
+				Tracer.e(mytag, "Rest exception sending command : <"+e.getMessage()+">");
+			}
 			Boolean ack = false;
 			if(json_Ack != null) {
 				try {

@@ -1,6 +1,7 @@
 package rinor;
 
 import java.io.File;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -36,7 +37,8 @@ public class Events_manager {
 	TimerTask doAsynchronousTask = null;
 	private Boolean listener_running = false;
 	private Boolean init_done = false;
-	private Boolean suspend = false;
+	private Boolean com_broken = false;
+	private Boolean sleeping = false;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
@@ -48,7 +50,7 @@ public class Events_manager {
 		{
 			super();
 			stats_com = Stats_Com.getInstance();	//Create a statistic counter, with all 0 values
-			suspend=false;
+			com_broken=false;
 		}
 	
 	public static Events_manager getInstance() {
@@ -72,22 +74,47 @@ public class Events_manager {
 		this.engine_cache =  engine_cache;
 		this.params = params;
 		this.father = caller;
-		setOwner(owner, state_engine_handler);
+		//setOwner(owner, state_engine_handler);
 		mytag="Events";
 		urlAccess = params.getString("URL","1.1.1.1");
 		urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 		//Try to solve #1623
 		urlAccess = urlAccess.replaceAll(" ", "%20");
 		//The father's cache should already contain a list of devices features
+		this.state_engine_handler = state_engine_handler;
 		Tracer.w(mytag,"Events Manager initialized for "+owner);
 		if(listener == null) {
 			Tracer.w(mytag,"....start background task for events listening");
+			sleeping = false;
 			start_listener();
 		}
 		
 		Tracer.w(mytag,"Events Manager ready");
 		init_done = true;
 	}	//End of Constructor
+	
+	public void set_sleeping() {
+		Tracer.d(mytag,"Pause requested...");
+		sleeping=true;
+	}
+	public void wakeup() {
+		Tracer.d(mytag,"Wake up requested...");
+		sleeping=false;
+	}
+	/*
+	 * Request to release all resources and die (when Main is onDestroy ! )
+	 */
+	public void Destroy() {
+		alive = false;
+		if(listener != null)
+			listener.cancel();
+		listener=null;
+		stats_com = null; 
+		Tracer.d(mytag,"events engine Destroy() requested : Bye !");
+		try {
+			this.finalize();
+		} catch (Throwable t) {}
+	}
 	
 	private void start_listener() {
 		if(listener == null) {
@@ -107,22 +134,10 @@ public class Events_manager {
 			mylistener.run();
 		}
 	}
-	public void setOwner(String owner, Handler father) {
-		this.owner = owner;
-		this.state_engine_handler = father;
-		if (this.owner != null) {
-			mytag = "Events_Manager "+owner;
-		} else {
-			mytag = "Events_Manager ????";
-		}
-	}
-	public void Destroy() {
-		
-	}
+	
 	
 	public class ListenerThread extends AsyncTask<Void, Integer, Void>{
 		
-	
 		public void cancel() {
 			try {
 				finalize();
@@ -135,9 +150,9 @@ public class Events_manager {
 		protected Void doInBackground(Void... params) {
 			
 			alive = true;
+			sleeping = false;
 			if(listener_running) {
 				Tracer.e(mytag,"One ListenerThread is already running");
-				
 				return null;
 			}
 			listener_running = true;
@@ -147,6 +162,7 @@ public class Events_manager {
 				Tracer.e(mytag,"Empty WidgetUpdate cache : cannot create ticket : ListenerThread aborted ! ! !");
 				return null;
 			}
+			//Build the list of devices concerned by ticket request
 			String ticket_request = urlAccess+"events/request/new";
 			for(int i = 0; i < engine_cache.size(); i++) {
 				String skey = engine_cache.get(i).skey;
@@ -161,23 +177,73 @@ public class Events_manager {
 			Boolean ack = false;
 			Tracer.e(mytag,"ListenerThread starts the loop");
 			String ticket = "";
-			int counter = 2 * 60 * 1000;		//2 minutes
+			int counter_max = 5 * 60 * 1000;		//5 minutes max between 2 retry
+			int counter_current = 0;
+			int loop_time = 10000;			//10 seconds per wait at beginning, and grow it till counter_max
+			int max_time_for_ticket = 110 * 1000;	//After 1'50 , ticket is dead... So, prepare to recreate another !
+			int sleep_time = 2 * 1000;				//When sleeping, check every 2 seconds
+			int sleep_duration = 0;
+			
+			com_broken=false;
 			while(alive) {
-				while(suspend) {
-					
+				while(sleeping) {
+					try {
+						Thread.sleep(sleep_time);	//Wait for 2s
+					} catch (Throwable t) {}
+					sleep_duration+=sleep_time;
+					if(sleep_duration > max_time_for_ticket) {
+						request = ticket_request;
+						com_broken = false;		//Retry immediatly to reconnect
+					}
 				}
+				// Exit from sleep loop ( wake up requested )
+				// If sleep was less 1'50, the ticket is still alive
+				// Otherwise, the next request will be a get new ticket
+				sleep_duration = 0;		// for next sleep.....
+				
+				if(com_broken) {
+					//Link is probably broken... Wait a bit before to re-submit a request to server
+					alive=true;
+					counter_current += loop_time;
+					if(counter_current > counter_max)
+						counter_current = counter_max;
+					
+					Tracer.e(mytag,"ListenerThread waiting "+(counter_current/1000)+" seconds before error recovery retry");
+					try {
+						Thread.sleep(loop_time);	//Wait for 10s, 20s, 30s, ... (max 5 minutes)
+					} catch (Throwable t) {}
+					//And try to reconnect
+					com_broken=false;
+				}
+				int error = 1;
+				
+				stats_com.add(Stats_Com.EVENTS_SEND, request.length());
+				Tracer.w(mytag,"Requesting server <"+request+">");
 				try {
-					stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-					Tracer.w(mytag,"Requesting server <"+request+">");
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
-					stats_com.add(Stats_Com.EVENTS_RCV, event.toString().length());
-					
-					//Tracer.w(mytag,"Received event = <"+event.toString()+">");
+					error=0;
 				} catch (Exception e) {
-					Tracer.e(mytag,"Exception on wait for event ! ! ! Socket disconnected ?");
-					alive=false;
-					break;
+						error = 1;
+						Tracer.e(mytag,"Rinor error : <"+e.getMessage()+">");
+						com_broken = true;		//Next retry has to be delayed, waiting for an operational link....
+						request = ticket_request;	//Having detected a broken link, the current ticket with server is probably lost
+													//Create a new one !
+						break;	//restart the loop on alive
+				
+				} finally {
+					if(error != 0) {
+						Tracer.e(mytag,"Finally error = "+error);
+						com_broken = true;		//Next retry has to be delayed, waiting for an operational link....
+						request = ticket_request;	//Having detected a broken link, the current ticket with server is probably lost
+													//Create a new one !
+						break;	//restart the loop on alive
+					}
 				}
+					
+				
+				stats_com.add(Stats_Com.EVENTS_RCV, event.toString().length());
+				counter_current = 0;	//One packet received : the link is operational !
+				com_broken = false;		//no need to temporize before next send...
 				
 				if(! alive) {
 					break;		//The father asks to die...

@@ -67,14 +67,7 @@
 	<string name="network_Text10">--Graphic Period:</string>
 	<string name="network_Text11">1 Day(s)</string>
 	<string name="network_Text11a"> Day(s)</string>
-	<string name="network_Text12">--Map Multitouch Features :</string>
-	<string name="network_Text13">Drag:</string>
-    <string name="network_Text14">Zoom:</string>
-    <string name="network_Text15">--Maximum Map Size:</string>	
-    <string name="network_Text16">300 px</string>
-    <string name="network_Text17">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
-    <string name="network_Text18">Dev:</string>	
-    <string name="network_Text19">Hide text:</string>
+	<string name="network_Text18">Dev:</string>	
     <string name="from">From : </string>	
 	<string name="to">    to : </string>
 	<string name="Sync">Sync</string>
@@ -153,6 +146,19 @@
 	<string name="debug_filename">Log text filename</string>
 	<string name="debug_bt_apply">Apply changes</string>
 	<string name="debug_bt_cancel">Cancel</string>
+	
+	<string name="map_settings">Map configuration</string>
+	<string name="map_explain">This screen allow map view configuration</string>
+	<string name="map_bt_apply">Apply changes</string>
+	<string name="map_bt_cancel">Cancel</string>
+	<string name="map_menu_explain">--Map Multitouch Features :</string>
+	<string name="map_option_drag">Drag:</string>
+    <string name="map_option_zoom">Zoom:</string>
+    <string name="map_option_max_size">--Maximum Map Size:</string>	
+    <string name="network_Text16">300 px</string>
+    <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
+    <string name="map_option_hide_text">Hide text:</string>
+    
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>
 	<string name="light_stat_1">On</string>

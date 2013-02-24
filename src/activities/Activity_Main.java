@@ -94,21 +94,18 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Button sync;
 	private Button Exit;	//Added by Doume
 	private Button debug_settings;	//Added by Doume
-	private Dialog_Debug debug_set = null; 
+	private Button map_settings;	//Added by Tikismoke
+	private Dialog_Debug debug_set = null;
+	private Dialog_Map map_set = null;
 	private EditText localIP;
-	private CheckBox checkbox3;
-	private CheckBox checkbox4;
 	private ImageView appname;
 	private String format_urlAccess;
 	public static String urlAccess;
 	private TextView mProgressText1;
 	//private TextView mProgressText2;
-	private TextView mProgressText3;
 	private SeekBar mSeekBar1;
 	//private SeekBar mSeekBar2;
-	private SeekBar mSeekBar3;
 	private CheckBox debugcheckbox; //Debug option
-	private CheckBox hidecheckbox; //Custom name option
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private int sizeOffset = 300;
@@ -183,19 +180,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		//option
 		localIP = (EditText)findViewById(R.id.localIP);	
-		checkbox3 = (CheckBox)findViewById(R.id.checkbox3);
-		checkbox4 = (CheckBox)findViewById(R.id.checkbox4);
 		appname = (ImageView)findViewById(R.id.app_name);
 		mProgressText1 = (TextView)findViewById(R.id.progress1);
 		//mProgressText2 = (TextView)findViewById(R.id.progress2);
-		mProgressText3 = (TextView)findViewById(R.id.progress3);
 		mSeekBar1=(SeekBar)findViewById(R.id.SeekBar1);
 		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
-		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		//Debug option
 		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
-		//Hide name option
-		hidecheckbox = (CheckBox)findViewById(R.id.hidecheckbox);		
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
@@ -206,8 +197,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//
 		mSeekBar1.setOnSeekBarChangeListener(this);
 		//mSeekBar2.setOnSeekBarChangeListener(this);
-		mSeekBar3.setOnSeekBarChangeListener(this);
+		//mSeekBar3.setOnSeekBarChangeListener(this);
 
+		map_settings=(Button)findViewById(R.id.bt_map_settings);
+		map_settings.setOnClickListener(this);
+		map_settings.setTag("map_conf");
+		
 		debug_settings=(Button)findViewById(R.id.bt_debug_settings);
 		debug_settings.setOnClickListener(this);
 		debug_settings.setTag("debug_conf");
@@ -669,18 +664,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 			SharedPreferences.Editor prefEditor=params.edit();
 			prefEditor.putString("IP1",localIP.getText().toString());
-			prefEditor.putBoolean("DRAG", checkbox3.isChecked());
-			prefEditor.putBoolean("ZOOM", checkbox4.isChecked());
 			int period = mSeekBar1.getProgress();
 			if(period < secondeOffset)
 				period = secondeOffset;
 			prefEditor.putInt("UPDATE_TIMER", period);
 			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
-			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			//Debug option
 			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
-			//Custom name option
-			prefEditor.putBoolean("HIDE", hidecheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -716,15 +706,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		localIP.setText(params.getString("IP1",null));
 		tempUrl=params.getString("IP1",null);
 		by_usage = params.getBoolean("BY_USAGE", false);
-		checkbox3.setChecked(params.getBoolean("DRAG",false));
-		checkbox4.setChecked(params.getBoolean("ZOOM",false));
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
 		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
-		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		//Debug option
 		debugcheckbox.setChecked(params.getBoolean("DEV",false));
-		//Custom name option
-		hidecheckbox.setChecked(params.getBoolean("HIDE",false));
 	}
 
 
@@ -741,7 +726,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		/* else if(seekBar.getId()==R.id.SeekBar2) {
 			mProgressText2.setText( (Integer.toString(progress+dayOffset))+ getText(R.string.network_Text11a));
 		}*/else{
-			mProgressText3.setText((progress+sizeOffset)+" px");
+			
 		}
 	}
 
@@ -788,6 +773,16 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				debug_set = new Dialog_Debug(Tracer, params, this);
 			
 			debug_set.show();
+			return;
+		} else if(v.getTag().equals("map_conf")) {
+			//Disconnect all opened sessions....
+			Tracer.v("Activity_Main.onclick()","Call to Map settings screen");
+			if(map_set != null)
+				map_set.get_params();
+			else
+				map_set = new Dialog_Map(Tracer, params, this);
+			
+			map_set.show();
 			return;
 		} else if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....

@@ -147,55 +147,12 @@
                 android:paddingRight="20dip"
                 android:paddingTop="10dip" />
 			
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dip"
-                android:text="@string/network_Text12"
-                android:textColor="#FFFFFF" />
-
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dip" >
-                
-				
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/network_Text13"
-                    android:textColor="#FFFFFF" />
-
-                <CheckBox
-                    android:id="@+id/checkbox3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/network_Text14"
-                    android:textColor="#FFFFFF" />
-
-                <CheckBox
-                    android:id="@+id/checkbox4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/network_Text19"
-                    android:textColor="#FFFFFF" />
-
-                <CheckBox
-                    android:id="@+id/hidecheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                
+                                
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -209,52 +166,12 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-				<!--  Max map size text -->
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dip"
-                    android:text="@string/network_Text15"
-                    android:textColor="#FFFFFF" />
-				<!--  Max map size value -->
-                <TextView
-                    android:id="@+id/progress3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-			<!-- Old version
-            <SeekBar
-                android:id="@+id/SeekBar3"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:max="1000"
-                android:paddingLeft="20dip"
-                android:paddingRight="20dip"
-                android:paddingTop="10dip" />
-             -->
              <LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="10dip" >
                 
-                 <!--  Choix de la taille des images MAP -->
-	            <SeekBar
-	                android:id="@+id/SeekBar3"
-	                android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:max="1000"
-	                android:paddingLeft="20dip"
-	                android:paddingRight="20dip"
-	                android:paddingTop="10dip"
-	                android:layout_weight="0.70"
-		    	/>
 	            <!--  Add a button to allow debug configuration -->
             	<Button
 				    android:id="@+id/bt_debug_settings"
@@ -263,15 +180,16 @@
 				    android:layout_weight="0.30"
 				    android:text="@string/debug_settings"
 	     		/>
+	            <!--  Add a button to allow debug configuration -->
+            	<Button
+				    android:id="@+id/bt_map_settings"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="0.30"
+				    android:text="@string/map_settings"
+	     		/>
 	    	</LinearLayout>
-	    	
-			<!--  Max map size warning -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dip"
-                android:text="@string/network_Text17"
-                android:textColor="#FFFFFF" />
+
         </LinearLayout>
         <!-- End of general config/sync  menu slider -->
     </activities.Sliding_Drawer>

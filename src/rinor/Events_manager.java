@@ -178,7 +178,7 @@ public class Events_manager {
 			Tracer.e(mytag,"ListenerThread starts the loop");
 			String ticket = "";
 			int counter_max = 5 * 60 * 1000;		//5 minutes max between 2 retry
-			int counter_current = 0;
+			int counter_current = 0;			// 0 + 10 seconds per loop, at beginning
 			int loop_time = 10000;			//10 seconds per wait at beginning, and grow it till counter_max
 			int max_time_for_ticket = 110 * 1000;	//After 1'50 , ticket is dead... So, prepare to recreate another !
 			int sleep_time = 2 * 1000;				//When sleeping, check every 2 seconds
@@ -201,22 +201,22 @@ public class Events_manager {
 				// Otherwise, the next request will be a get new ticket
 				sleep_duration = 0;		// for next sleep.....
 				
-				while(com_broken) {
+				if(com_broken) {
 					//Link is probably broken... Wait a bit before to re-submit a request to server
-					alive=true;
 					counter_current += loop_time;
 					if(counter_current > counter_max)
 						counter_current = counter_max;
 					
 					Tracer.e(mytag,"ListenerThread waiting "+(counter_current/1000)+" seconds before error recovery retry");
 					try {
-						Thread.sleep(loop_time);	//Wait for 10s, 20s, 30s, ... (max 5 minutes)
+						Thread.sleep(counter_current);	//Wait for 10s, 20s, 30s, ... (max 5 minutes)
 					} catch (Throwable t) {}
 					//And try to reconnect
-					com_broken=false;
+					
 				}
 				int error = 1;
 				
+				// Try to connect to server and send request
 				stats_com.add(Stats_Com.EVENTS_SEND, request.length());
 				Tracer.w(mytag,"Requesting server <"+request+">");
 				try {
@@ -225,106 +225,106 @@ public class Events_manager {
 				} catch (Exception e) {
 					error = 1;
 					Tracer.e(mytag,"Rinor error : <"+e.getMessage()+">");
-				} 
+				} catch (Throwable t) {
+					error = 2;
+					Tracer.e(mytag,"Rinor Throwable error ");
+				} finally {
+					
+				}
 				
 				if(error != 0) {
 					Tracer.e(mytag,"Exception Error ==> Network probably not yet ready !");
 					com_broken = true;		//Next retry has to be delayed, waiting for an operational link....
 					request = ticket_request;	//Having detected a broken link, the current ticket with server is probably lost
 												//Create a new one !
-					break;	//restart the loop on alive
-				}
-				
 					
-				
-				stats_com.add(Stats_Com.EVENTS_RCV, event.toString().length());
-				counter_current = 0;	//One packet received : the link is operational !
-				com_broken = false;		//no need to temporize before next send...
-				
-				if(! alive) {
-					break;		//The father asks to die...
-				}
-				try {
-					ack = JSONParser.Ack(event);
-				} catch (Exception e) {
-					ack=false;
-				}
-				if(ack==false){
-					// The server's response is'nt "OK"
-					Tracer.w(mytag,"Event ERROR <"+event.toString()+"> : ignored !");
-					//alive=false;		// will stop the event engine..
-					break;
 				} else {
-					//An event is available...
-					//Tracer.w(mytag,"Processing event");
+					//No error
+					stats_com.add(Stats_Com.EVENTS_RCV, event.toString().length());
+					counter_current = 0;	//One packet received : the link is operational !
+					com_broken = false;		//no need to temporize before next send...
 					
-					// First, take the ticket ID to resubmit an event request....
-					int list_size = 0;
-	                if(event != null) {
-	                	String device_id = "";
-	                	try {
-	                		list_size = event.getJSONArray("event").length();
-	                	} catch (Exception e) {
-	                		Tracer.w(mytag,"Very strange message, ignored !");
-							request=ticket_request;
-	                		break;
-	                	}
-	                	ticket="";
-	                	// Process the event array
-						for(int i = 0; i < list_size; i++) {
-								try {
-									ticket = event.getJSONArray("event").getJSONObject(i).getString("ticket_id");
-								} catch (Exception e) {
-									Tracer.w(mytag,"Wrong event : No ticket !");
-									request = ticket_request;	//Create a new ticket on next query, now !
-									break;
-								}
-								if( (ticket != null) && (! ticket.equals("")))
-									request = urlAccess+"events/request/get/"+ticket;	//Use the ticket on next query
-								else {
-									ticket="";
-									request = ticket_request;	//Create a new ticket on next query
-								}
-								events_seen++;
-								try {
-									device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
-								} catch (Exception e) {
-									//No device_id : it's a timeout
-									Tracer.w(mytag,"Timeout received !");
-									notify_engine(9902); //Time out seen
-									break;		//Force to redo the loop from while(alive)
-								}
-								//json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
-								int data_size = 0;
-								try {
-									data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
-								} catch (Exception e) {
-									data_size = 0;	//No data ==> no values to process !
-								}
-								for(int j = 0; j < data_size; j++) {
+					try {
+						ack = JSONParser.Ack(event);
+					} catch (Exception e) {
+						ack=false;
+					}
+					if(ack==false){
+						// The server's response is'nt "OK"
+						Tracer.w(mytag,"Event ERROR <"+event.toString()+"> : ignored !");
+						
+					} else {
+						//An event is available...
+						//Tracer.w(mytag,"Processing event");
+						
+						// First, take the ticket ID to resubmit an event request....
+						int list_size = 0;
+		                if(event != null) {
+		                	String device_id = "";
+		                	try {
+		                		list_size = event.getJSONArray("event").length();
+		                	} catch (Exception e) {
+		                		Tracer.w(mytag,"Very strange message, ignored !");
+								request=ticket_request;
+		                		break;
+		                	}
+		                	ticket="";
+		                	// Process the event array
+							for(int i = 0; i < list_size; i++) {
 									try {
-										String New_Key =event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
-										String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
-										Tracer.w(mytag,"event ready : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
-										event_item++;
-										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
-										put_event(to_stack);	//Put in stack, and notify cache engine
-									} catch (Exception e){
-										Tracer.e(mytag,"Malformed data entry ?????????????????");
+										ticket = event.getJSONArray("event").getJSONObject(i).getString("ticket_id");
+									} catch (Exception e) {
+										Tracer.w(mytag,"Wrong event : No ticket !");
+										request = ticket_request;	//Create a new ticket on next query, now !
+										break;
 									}
-								}
-								
-						} // End of loop on event array
-	                }	// if event not null
-				}	// if ack
+									if( (ticket != null) && (! ticket.equals("")))
+										request = urlAccess+"events/request/get/"+ticket;	//Use the ticket on next query
+									else {
+										ticket="";
+										request = ticket_request;	//Create a new ticket on next query
+									}
+									events_seen++;
+									try {
+										device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
+									} catch (Exception e) {
+										//No device_id : it's a timeout
+										Tracer.w(mytag,"Timeout received !");
+										notify_engine(9902); //Time out seen
+										break;		//Force to redo the loop from while(alive)
+									}
+									//json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
+									int data_size = 0;
+									try {
+										data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
+									} catch (Exception e) {
+										data_size = 0;	//No data ==> no values to process !
+									}
+									for(int j = 0; j < data_size; j++) {
+										try {
+											String New_Key =event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
+											String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
+											Tracer.w(mytag,"event ready : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
+											event_item++;
+											Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
+											put_event(to_stack);	//Put in stack, and notify cache engine
+										} catch (Exception e){
+											Tracer.e(mytag,"Malformed data entry ?????????????????");
+										}
+									}
+									
+							} // End of loop on event array
+		                }	// if event not null
+					}	// if ack
+				}	// if error
 				
-			}	//Infinite loop on alive
+			}	//Infinite loop of thread
 			
-			// a stop of listener has been required ( alive = false)
+			// should never reach this code.....
 			Tracer.e(mytag,"ListenerThread going down !!!!!!!!!!!!!!!!!");
 			listener_running = false;
 			if(state_engine_handler != null) {
-				state_engine_handler.sendEmptyMessage(9901);
+				state_engine_handler.sendEmptyMessage(9901);	//I'm going down....
 			}
 			// Try to free the ticket, if available
 			if(! ticket.equals("")) {

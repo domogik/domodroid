@@ -154,10 +154,11 @@
 	<string name="map_option_drag">Drag:</string>
     <string name="map_option_zoom">Zoom:</string>
     <string name="map_option_max_size">--Taille maximum carte:</string>	
-    <string name="network_Text16">300 pixels</string>
+    <string name="map_option_size">300 pixels</string>
     <string name="map_option_advert">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
     <string name="map_option_hide_text">Masquer texte:</string>
-   
+    <string name="map_option_menu_disable">Interdire l\'accès au menu en mode map</string>
+    
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>
 	<string name="light_stat_1">Allumé</string>

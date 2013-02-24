@@ -28,9 +28,10 @@ import android.widget.TextView;
 public class Dialog_Map extends Dialog implements OnClickListener {
 	private Button cancelButton;
 	private Button OKButton;
-	private CheckBox checkbox3;
-	private CheckBox checkbox4;
-	private CheckBox hidecheckbox; //Custom name option
+	private CheckBox checkbox_drag;
+	private CheckBox checkbox_zoom;
+	private CheckBox checkbox_hide; //Custom name option
+	private CheckBox checkbox_menu_disable; //Custom name option
 	private TextView mProgressText3;
 	private SeekBar mSeekBar3;
 	private int sizeOffset = 300;
@@ -55,9 +56,10 @@ public class Dialog_Map extends Dialog implements OnClickListener {
 		OKButton.setTag("map_ok");
 		OKButton.setOnClickListener(this);
 		//Hide name option
-		checkbox3 = (CheckBox)findViewById(R.id.checkbox3);
-		checkbox4 = (CheckBox)findViewById(R.id.checkbox4);
-		hidecheckbox = (CheckBox)findViewById(R.id.hidecheckbox);		
+		checkbox_drag = (CheckBox)findViewById(R.id.checkbox_drag);
+		checkbox_zoom = (CheckBox)findViewById(R.id.checkbox_zoom);
+		checkbox_hide = (CheckBox)findViewById(R.id.checkbox_hide);		
+		checkbox_menu_disable = (CheckBox)findViewById(R.id.checkbox_menu_disable);		
 		mProgressText3 = (TextView)findViewById(R.id.progress3);
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 				
@@ -66,9 +68,10 @@ public class Dialog_Map extends Dialog implements OnClickListener {
 	}
 
 	public void get_params() {
-		checkbox3.setChecked(params.getBoolean("DRAG", true));
-		checkbox4.setChecked(params.getBoolean("ZOOM", true));
-		hidecheckbox.setChecked(params.getBoolean("HIDE", true));
+		checkbox_drag.setChecked(params.getBoolean("DRAG", true));
+		checkbox_zoom.setChecked(params.getBoolean("ZOOM", true));
+		checkbox_hide.setChecked(params.getBoolean("HIDE", true));
+		checkbox_menu_disable.setChecked(params.getBoolean("map_menu_disable", true));
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		
 		
@@ -81,10 +84,12 @@ public class Dialog_Map extends Dialog implements OnClickListener {
 		else if (tag.equals("map_ok")) {
 			//Something has been changed : store values in params
 			prefEditor=params.edit();
-			prefEditor.putBoolean("DRAG", checkbox3.isChecked());
-			prefEditor.putBoolean("ZOOM", checkbox4.isChecked());
+			prefEditor.putBoolean("DRAG", checkbox_drag.isChecked());
+			prefEditor.putBoolean("ZOOM", checkbox_zoom.isChecked());
 			//Custom name option
-			prefEditor.putBoolean("HIDE", hidecheckbox.isChecked());
+			prefEditor.putBoolean("HIDE", checkbox_hide.isChecked());
+			prefEditor.putBoolean("map_menu_disable", checkbox_menu_disable.isChecked());
+			
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			
 			prefEditor.commit();

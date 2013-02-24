@@ -108,7 +108,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private CheckBox debugcheckbox; //Debug option
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
-	private int sizeOffset = 300;
 	private ViewGroup parent;
 	private LinearLayout ll_area;
 	private LinearLayout ll_room;
@@ -721,6 +720,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				value = secondeOffset;
 				seekBar.setProgress(value);
 			}
+			//TODO problem with translation of this!!
 			mProgressText1.setText((value)+" Secondes");
 		}
 		/* else if(seekBar.getId()==R.id.SeekBar2) {

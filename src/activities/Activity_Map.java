@@ -390,30 +390,37 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	public void onPanelOpened(Sliding_Drawer panel) {
-		if(Tracer != null)
-			Tracer.e("ActivityMap.onPanelOpened","panel request to be displayed");
-		menu_green.setVisibility(View.VISIBLE);
-		menu_green.startAnimation(animation1);
+		//disable menu if set in option
+		if(params.getBoolean("map_menu_disable",false)==false){ 
+			if(Tracer != null)
+				Tracer.e("ActivityMap.onPanelOpened","panel request to be displayed");
+			menu_green.setVisibility(View.VISIBLE);
+			menu_green.startAnimation(animation1);
+		}
 	}
 
 
 
 	public void onClick(View v) {
 		if(v.getTag().equals("menu")){
-			if(!topPanel.isOpen()){
-				bottomPanel.setOpen(true, true);
-				panel_button.setVisibility(View.VISIBLE);
-				topPanel.setOpen(true, true);
-			}else if(topPanel.isOpen() && !bottomPanel.isOpen()){
-				panel_widget.setVisibility(View.GONE);
-				panel_button.setVisibility(View.VISIBLE);
-				bottomPanel.setOpen(true, true);
-			}else{
-				bottomPanel.setOpen(false, true);
-				topPanel.setOpen(false, true);
-			}			
+			//disable menu if set in option
+			if(params.getBoolean("map_menu_disable",false)==false){ 
+				if(!topPanel.isOpen()){
+					bottomPanel.setOpen(true, true);
+					panel_button.setVisibility(View.VISIBLE);
+					topPanel.setOpen(true, true);
+				}else if(topPanel.isOpen() && !bottomPanel.isOpen()){
+					panel_widget.setVisibility(View.GONE);
+					panel_button.setVisibility(View.VISIBLE);
+					bottomPanel.setOpen(true, true);
+				}else{
+					bottomPanel.setOpen(false, true);
+					topPanel.setOpen(false, true);
+				}			
 
-		}else if(v.getTag().equals("add")){
+			}
+		}
+		else if(v.getTag().equals("add")){
 			//Add a widget
 			panel.setOpen(false, true);
 			if(list_usable_files.isEmpty()){
@@ -492,23 +499,26 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		Tracer.d("Activity_Map","onKeyDown keyCode = "+keyCode);
-		if(keyCode==82 && !topPanel.isOpen()){
-			bottomPanel.setOpen(true, true);
-			panel_button.setVisibility(View.VISIBLE);
-			topPanel.setOpen(true, true);
-			return false;
+		//disable menu if set in option
+		if(params.getBoolean("map_menu_disable",false)==false){ 
+			Tracer.d("Activity_Map","onKeyDown keyCode = "+keyCode);
+			if(keyCode==82 && !topPanel.isOpen()){
+				bottomPanel.setOpen(true, true);
+				panel_button.setVisibility(View.VISIBLE);
+				topPanel.setOpen(true, true);
+				return false;
 
-		}else if(keyCode==82 && topPanel.isOpen() && !bottomPanel.isOpen()){
-			panel_widget.setVisibility(View.GONE);
-			panel_button.setVisibility(View.VISIBLE);
-			bottomPanel.setOpen(true, true);
-			return false;
+			}else if(keyCode==82 && topPanel.isOpen() && !bottomPanel.isOpen()){
+				panel_widget.setVisibility(View.GONE);
+				panel_button.setVisibility(View.VISIBLE);
+				bottomPanel.setOpen(true, true);
+				return false;
 
-		}else if((keyCode==82 || keyCode == 4) && topPanel.isOpen()){
-			bottomPanel.setOpen(false, true);
-			topPanel.setOpen(false, true);
-			return false;
+			}else if((keyCode==82 || keyCode == 4) && topPanel.isOpen()){
+				bottomPanel.setOpen(false, true);
+				topPanel.setOpen(false, true);
+				return false;
+			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}

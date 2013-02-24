@@ -17,19 +17,8 @@
 	        android:layout_weight="0.5"
 	        android:gravity="left"
 	        android:text="@string/stats_title"  />
-	    <TextView
-	        android:id="@+id/textstatsPeriod"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5"
-	        android:gravity="right"
-	        android:text="@string/stats_title_period"  />
-	    <TextView
-	        android:id="@+id/textPeriodValue"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:text="10 m 0 sec"  />
+
+	    
 	</LinearLayout>
 	
 	<View
@@ -53,12 +42,26 @@
 		    android:layout_weight="0.5"
 	        android:orientation="vertical" >
 	    	<!--  title  -->
-            <TextView
-	        android:id="@+id/text_cumuls_title"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:text="@string/stats_cumuls"  />
+	    	<LinearLayout
+			    android:id="@+id/layout_title_period"
+		        android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal" >
+      			<TextView
+			        android:id="@+id/text_cumuls_title"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="0.5"
+	        	    android:gravity="center"
+			        android:text="@string/stats_cumuls"  />
+            	<TextView
+			        android:id="@+id/textCumulValue"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="0.5"
+	        	    android:gravity="center"
+			        android:text="1 h 10 m 0 sec"  />
+			</LinearLayout>
             <View
 			    android:layout_width="fill_parent"
 			    android:layout_height="1.6dp"
@@ -313,12 +316,26 @@
 		    android:layout_weight="0.5"
 	        android:orientation="vertical" >
 	    	<!-- Title -->
-            <TextView
-		        android:id="@+id/text_period_title"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:gravity="center"
-		        android:text="@string/stats_period"  />
+			<LinearLayout
+			    android:id="@+id/layout_title_period"
+		        android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal" >
+      			<TextView
+	      		    android:id="@+id/textstatsPeriod"
+	      		    android:layout_width="wrap_content"
+	      		    android:layout_height="wrap_content"
+	      		    android:layout_weight="0.5"
+	        	    android:gravity="center"
+	      		    android:text="@string/stats_title_period" />
+	      		<TextView
+			        android:id="@+id/textPeriodValue"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="0.5"
+	        	    android:gravity="center"
+			        android:text="10 m 0 sec"  />
+			</LinearLayout>
             <View
 			    android:layout_width="fill_parent"
 			    android:layout_height="1.6dp"

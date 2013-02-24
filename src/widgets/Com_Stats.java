@@ -85,6 +85,7 @@ public class Com_Stats extends FrameLayout  {
 	private Stats_Com stats = null;
 	private static Timer timer=null;
 	private TextView elapsed_period;
+	private TextView cumul_period;
 	private TextView cum_statsPR;
 	private TextView cum_statsBR;
 	private TextView cum_statsPS;
@@ -131,6 +132,7 @@ public class Com_Stats extends FrameLayout  {
 		background.addView(view);
 		this.addView(background);
 		elapsed_period = (TextView) findViewById(R.id.textPeriodValue);
+		cumul_period = (TextView) findViewById(R.id.textCumulValue);
 		cum_statsPR = (TextView) findViewById(R.id.statsPR);
 		cum_statsBR = (TextView) findViewById(R.id.statsBR);
 		cum_statsPS = (TextView) findViewById(R.id.statsPS);
@@ -154,6 +156,7 @@ public class Com_Stats extends FrameLayout  {
 			public void handleMessage(Message msg) {
 				if(msg.what == 0) {
 					//Message from timer expired
+					cumul_period.setText(stats.get_cumul_period());
 					elapsed_period.setText(stats.get_elapsed_period());
 					cum_statsPR.setText(Integer.toString(stats.cumul_stats_recv_packets));
 					cum_statsBR.setText(Integer.toString(stats.cumul_stats_recv_bytes));

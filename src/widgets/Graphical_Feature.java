@@ -47,8 +47,11 @@ public class Graphical_Feature extends FrameLayout{
 
 		//panel with border	
 		background = new LinearLayout(context);
-		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		if(widgetSize==0)
+			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+		else 
+			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		
 		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("black",background.getHeight()));
 
 		//panel to set img with padding left

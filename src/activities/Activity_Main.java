@@ -310,7 +310,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house.setPadding(0, 0, 5, 0);
 		map = new Graphical_Feature(getApplicationContext(),0,"Map","","map",0, mytype);
 		map.setPadding(5, 0, 0, 0);
-		stats = new Graphical_Feature(getApplicationContext(),0,"Com statistics","","map",0, mytype);
+		stats = new Graphical_Feature(getApplicationContext(),0,"Com statistics","","statistics",0, mytype);
 		stats.setPadding(0, 0, 5, 0);
 		
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);

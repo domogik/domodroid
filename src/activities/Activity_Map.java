@@ -83,6 +83,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	
 	private tracerengine Tracer = null;
 	private String owner = "Map";
+	private Boolean dont_freeze = false;
 	/*
 	 * WARNING : this class does'nt access anymore directly the database
 	 * 		It must use methods located into WidgetUpdate engine

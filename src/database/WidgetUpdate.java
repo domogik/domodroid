@@ -204,18 +204,25 @@ public class WidgetUpdate  {
 						eventsManager.Destroy();
 						eventsManager = null;
 					}
-					Tracer.i(mytag,"No more Events_Manager now ! ! ! ");
+					System.gc();
+					Tracer.i(mytag,"No more Events_Manager now ! ! ! Try to restart it");
+					myselfHandler.sendEmptyMessage(9903);
 					
 				} else if (msg.what == 9902) {
 					//Time out processed
 					callback_counts++;
 					
+				}else if (msg.what == 9903) {
+					Tracer.i(mytag,"Events manager needs to be restarted");
+					
+					eventsManager = Events_manager.getInstance(); 
+					eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
 				}
 			}
 		};
 		///////// and pass to it now///////////////////
 		eventsManager = Events_manager.getInstance(); 
-		eventsManager.init(Tracer, myselfHandler, cache, params, instance);
+		eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
 		init_done = true;
 		result=true;
 		return result;

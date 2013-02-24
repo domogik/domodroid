@@ -74,7 +74,8 @@ public class Graphics_Manager {
 			else if(usage.equals("area")){return R.drawable.area_area;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
-			else if(usage.equals("unknown")){return R.drawable.unknown;}
+			else if(usage.equals("map")){return R.drawable.map;}
+			else if(usage.equals("statistics")){return R.drawable.statistics;}
 			else return R.drawable.usage_default_off;
 
 		case 1: //For median value (50%)

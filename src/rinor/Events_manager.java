@@ -185,7 +185,7 @@ public class Events_manager {
 			int sleep_duration = 0;
 			
 			com_broken=false;
-			while(alive) {
+			while(1 == 1) {
 				while(sleeping) {
 					try {
 						Thread.sleep(sleep_time);	//Wait for 2s
@@ -201,7 +201,7 @@ public class Events_manager {
 				// Otherwise, the next request will be a get new ticket
 				sleep_duration = 0;		// for next sleep.....
 				
-				if(com_broken) {
+				while(com_broken) {
 					//Link is probably broken... Wait a bit before to re-submit a request to server
 					alive=true;
 					counter_current += loop_time;
@@ -223,22 +223,18 @@ public class Events_manager {
 					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
 					error=0;
 				} catch (Exception e) {
-						error = 1;
-						Tracer.e(mytag,"Rinor error : <"+e.getMessage()+">");
-						com_broken = true;		//Next retry has to be delayed, waiting for an operational link....
-						request = ticket_request;	//Having detected a broken link, the current ticket with server is probably lost
-													//Create a new one !
-						break;	//restart the loop on alive
+					error = 1;
+					Tracer.e(mytag,"Rinor error : <"+e.getMessage()+">");
+				} 
 				
-				} finally {
-					if(error != 0) {
-						Tracer.e(mytag,"Finally error = "+error);
-						com_broken = true;		//Next retry has to be delayed, waiting for an operational link....
-						request = ticket_request;	//Having detected a broken link, the current ticket with server is probably lost
-													//Create a new one !
-						break;	//restart the loop on alive
-					}
+				if(error != 0) {
+					Tracer.e(mytag,"Exception Error ==> Network probably not yet ready !");
+					com_broken = true;		//Next retry has to be delayed, waiting for an operational link....
+					request = ticket_request;	//Having detected a broken link, the current ticket with server is probably lost
+												//Create a new one !
+					break;	//restart the loop on alive
 				}
+				
 					
 				
 				stats_com.add(Stats_Com.EVENTS_RCV, event.toString().length());
@@ -257,7 +253,7 @@ public class Events_manager {
 					// The server's response is'nt "OK"
 					Tracer.w(mytag,"Event ERROR <"+event.toString()+"> : ignored !");
 					//alive=false;		// will stop the event engine..
-					//break;
+					break;
 				} else {
 					//An event is available...
 					//Tracer.w(mytag,"Processing event");
@@ -294,7 +290,7 @@ public class Events_manager {
 									device_id = event.getJSONArray("event").getJSONObject(i).getString("device_id");
 								} catch (Exception e) {
 									//No device_id : it's a timeout
-									Tracer.w(mytag,"It's a timeout !");
+									Tracer.w(mytag,"Timeout received !");
 									notify_engine(9902); //Time out seen
 									break;		//Force to redo the loop from while(alive)
 								}
@@ -309,12 +305,10 @@ public class Events_manager {
 									try {
 										String New_Key =event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
 										String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
-										Tracer.w(mytag,"event to stack  : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
+										Tracer.w(mytag,"event ready : Ticket = "+ticket+" Device_id = "+device_id+" Key = "+New_Key+" Value = "+New_Value);
 										event_item++;
 										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
-										put_event(to_stack);
-										//notify_engine(9900); //An event is available
-										
+										put_event(to_stack);	//Put in stack, and notify cache engine
 									} catch (Exception e){
 										Tracer.e(mytag,"Malformed data entry ?????????????????");
 									}

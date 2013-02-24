@@ -155,10 +155,11 @@
 	<string name="map_option_drag">Drag:</string>
     <string name="map_option_zoom">Zoom:</string>
     <string name="map_option_max_size">--Maximum Map Size:</string>	
-    <string name="network_Text16">300 px</string>
+    <string name="map_option_size">300 px</string>
     <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="map_option_hide_text">Hide text:</string>
-    
+    <string name="map_option_menu_disable">Disallow access to menu in map mode</string>
+   
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>
 	<string name="light_stat_1">On</string>

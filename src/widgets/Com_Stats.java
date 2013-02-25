@@ -61,6 +61,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.FrameLayout.LayoutParams;
 
 public class Com_Stats extends FrameLayout  {
 
@@ -123,12 +124,20 @@ public class Com_Stats extends FrameLayout  {
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		else 
 			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		
-		//background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
+		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
+
+		//panel with border
+		topPan = new LinearLayout(context);
+		topPan.setOrientation(LinearLayout.HORIZONTAL);
+		topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+		//topPan.setTextColor(Color.parseColor("#333333"));
+
 		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = layoutInflater.inflate(R.layout.com_stats,null);
 		
-		background.addView(view);
+		topPan.addView(view);
+		background.addView(topPan);
+		
 		this.addView(background);
 		elapsed_period = (TextView) findViewById(R.id.textPeriodValue);
 		cumul_period = (TextView) findViewById(R.id.textCumulValue);

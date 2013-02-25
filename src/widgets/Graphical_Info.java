@@ -144,7 +144,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 
 
 		// info panel
-		infoPan = new LinearLayout(context);final int TID = 0;
+		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
@@ -192,27 +192,35 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
 			View v=null;
+			
 			v=featurePan2_buttons.findViewById(R.id.bt_prev);
 			if(v != null)
 				v.setOnClickListener(canvas);
+			
 			v=featurePan2_buttons.findViewById(R.id.bt_next);
 			if(v != null)
 				v.setOnClickListener(canvas);
+			
 			v=featurePan2_buttons.findViewById(R.id.bt_year);
 			if(v != null)
 				v.setOnClickListener(canvas);
+			
 			v=featurePan2_buttons.findViewById(R.id.bt_month);
 			if(v != null)
 				v.setOnClickListener(canvas);
+			
 			v=featurePan2_buttons.findViewById(R.id.bt_week);
 			if(v != null)
 				v.setOnClickListener(canvas);
+			
 			v=featurePan2_buttons.findViewById(R.id.bt_day);
 			if(v != null)
 				v.setOnClickListener(canvas);
+			
 			v = featurePan2_buttons.findViewById(R.id.period);
 			if(v != null)
 				canvas.dates=(TextView)v;
+			
 			//background_stats.addView(canvas);
 			featurePan2.addView(canvas);
 		}

@@ -110,7 +110,6 @@ public class Com_Stats extends FrameLayout  {
 		this.Tracer = Trac;
 		this.context = context;
 		this.myself = this;
-		this.container = container;
 		
 		mytag="Com_Stats";
 		this.setPadding(5, 5, 5, 5);
@@ -156,33 +155,32 @@ public class Com_Stats extends FrameLayout  {
 			public void handleMessage(Message msg) {
 				if(msg.what == 0) {
 					//Message from timer expired
-					cumul_period.setText(stats.get_cumul_period());
-					elapsed_period.setText(stats.get_elapsed_period());
-					cum_statsPR.setText(Integer.toString(stats.cumul_stats_recv_packets));
-					cum_statsBR.setText(Integer.toString(stats.cumul_stats_recv_bytes));
-					cum_statsPS.setText(Integer.toString(stats.cumul_stats_sent_packets));
-					cum_statsBS.setText(Integer.toString(stats.cumul_stats_sent_bytes));
-					cum_eventsPR.setText(Integer.toString(stats.cumul_events_recv_packets));
-					cum_eventsBR.setText(Integer.toString(stats.cumul_events_recv_bytes));
-					cum_eventsPS.setText(Integer.toString(stats.cumul_events_sent_packets));
-					cum_eventsBS.setText(Integer.toString(stats.cumul_events_sent_bytes));
-					
-					period_statsPR.setText(Integer.toString(stats.periodic_stats_recv_packets));
-					period_statsBR.setText(Integer.toString(stats.periodic_stats_recv_bytes));
-					period_statsPS.setText(Integer.toString(stats.periodic_stats_sent_packets));
-					period_statsBS.setText(Integer.toString(stats.periodic_stats_sent_bytes));
-					period_eventsPR.setText(Integer.toString(stats.periodic_events_recv_packets));
-					period_eventsBR.setText(Integer.toString(stats.periodic_events_recv_bytes));
-					period_eventsPS.setText(Integer.toString(stats.periodic_events_sent_packets));
-					period_eventsBS.setText(Integer.toString(stats.periodic_events_sent_bytes));
-					
-					//elapsed_period.setText(Integer.toString(stats.elapsed_period));
+					if(stats != null) {
+						cumul_period.setText(stats.get_cumul_period());
+						elapsed_period.setText(stats.get_elapsed_period());
+						cum_statsPR.setText(Integer.toString(stats.cumul_stats_recv_packets));
+						cum_statsBR.setText(Integer.toString(stats.cumul_stats_recv_bytes));
+						cum_statsPS.setText(Integer.toString(stats.cumul_stats_sent_packets));
+						cum_statsBS.setText(Integer.toString(stats.cumul_stats_sent_bytes));
+						cum_eventsPR.setText(Integer.toString(stats.cumul_events_recv_packets));
+						cum_eventsBR.setText(Integer.toString(stats.cumul_events_recv_bytes));
+						cum_eventsPS.setText(Integer.toString(stats.cumul_events_sent_packets));
+						cum_eventsBS.setText(Integer.toString(stats.cumul_events_sent_bytes));
+						
+						period_statsPR.setText(Integer.toString(stats.periodic_stats_recv_packets));
+						period_statsBR.setText(Integer.toString(stats.periodic_stats_recv_bytes));
+						period_statsPS.setText(Integer.toString(stats.periodic_stats_sent_packets));
+						period_statsBS.setText(Integer.toString(stats.periodic_stats_sent_bytes));
+						period_eventsPR.setText(Integer.toString(stats.periodic_events_recv_packets));
+						period_eventsBR.setText(Integer.toString(stats.periodic_events_recv_bytes));
+						period_eventsPS.setText(Integer.toString(stats.periodic_events_sent_packets));
+						period_eventsBS.setText(Integer.toString(stats.periodic_events_sent_bytes));
+					}
 				} 
 			}
 			
 		};
 		Tracer.e(mytag,"Instance created");
-		
 		Timer();	
 		
 
@@ -206,7 +204,7 @@ public class Com_Stats extends FrameLayout  {
 		};
 		if(timer != null) {
 			timer.schedule(doAsynchronousTask, 0, 5000);	// Once per 5 seconds	
-			
+			doAsynchronousTask.run();
 		}
 	}
 	

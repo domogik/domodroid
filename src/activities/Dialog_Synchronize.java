@@ -124,7 +124,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 			try{
 				
 				// if API rinor >0.5 génération auto sinon classic
-				JSONObject json_rinor = Rest_com.connect(urlAccess);
+				JSONObject json_rinor = null;
+				try {
+					json_rinor = Rest_com.connect(urlAccess);
+				} catch (Exception e) {
+					json_rinor = null;
+				}
 				if(json_rinor == null) {
 					//Cannot connect to server...
 					handler.sendEmptyMessage(0);

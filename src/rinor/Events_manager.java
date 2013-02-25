@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 public class Events_manager {
@@ -22,8 +23,8 @@ public class Events_manager {
 	private tracerengine Tracer;
 	private SharedPreferences params;
 	public Handler state_engine_handler;
+	public Handler events_engine_handler;
 	private WidgetUpdate father = null;
-	public String owner = null;
 	private ArrayList<Cache_Feature_Element> engine_cache;
 	private int stack_in = -1;
 	private int stack_out = -1;
@@ -82,13 +83,29 @@ public class Events_manager {
 		urlAccess = urlAccess.replaceAll(" ", "%20");
 		//The father's cache should already contain a list of devices features
 		this.state_engine_handler = state_engine_handler;
-		Tracer.w(mytag,"Events Manager initialized for "+owner);
+		Tracer.w(mytag,"Events Manager initialized");
 		if(listener == null) {
 			Tracer.w(mytag,"....start background task for events listening");
 			sleeping = false;
 			start_listener();
 		}
-		
+		events_engine_handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if(msg.what == 9999) {
+					listener = null;	//It's dead
+					stats_com = null; 	//let the instance to stop
+					init_done = false;
+					Tracer.w(mytag,"Events Manager really ending");
+					
+					try {
+						this.finalize();
+					} catch (Throwable t) {
+						
+					}
+				}
+			};
+		};
 		Tracer.w(mytag,"Events Manager ready");
 		init_done = true;
 	}	//End of Constructor
@@ -96,6 +113,10 @@ public class Events_manager {
 	public void set_sleeping() {
 		Tracer.d(mytag,"Pause requested...");
 		sleeping=true;
+		/*
+		if(stats_com != null)		//Already done by cache engine !
+			stats_com.set_sleeping();
+			*/
 	}
 	public void wakeup() {
 		Tracer.d(mytag,"Wake up requested...");
@@ -105,15 +126,10 @@ public class Events_manager {
 	 * Request to release all resources and die (when Main is onDestroy ! )
 	 */
 	public void Destroy() {
-		alive = false;
-		if(listener != null)
-			listener.cancel();
-		listener=null;
-		stats_com = null; 
-		Tracer.d(mytag,"events engine Destroy() requested : Bye !");
-		try {
-			this.finalize();
-		} catch (Throwable t) {}
+		alive = false;		//The end of loop into listener will generate a message
+							// to local handler, to complete the destroy
+		Tracer.d(mytag,"events engine Destroy() requested : Let the Listener thread to exit !");
+		
 	}
 	
 	private void start_listener() {
@@ -139,11 +155,7 @@ public class Events_manager {
 	public class ListenerThread extends AsyncTask<Void, Integer, Void>{
 		
 		public void cancel() {
-			try {
-				finalize();
-			} catch (Throwable t) {
-				
-			}
+			
 		}
 		
 		@Override
@@ -156,7 +168,9 @@ public class Events_manager {
 				return null;
 			}
 			listener_running = true;
-			
+			if(stats_com == null)
+				stats_com = Stats_Com.getInstance();
+			stats_com.wakeup();		//Engine is running... 
 			// First, construct the event request
 			if(engine_cache.size() == 0) {
 				Tracer.e(mytag,"Empty WidgetUpdate cache : cannot create ticket : ListenerThread aborted ! ! !");
@@ -185,7 +199,7 @@ public class Events_manager {
 			int sleep_duration = 0;
 			
 			com_broken=false;
-			while(1 == 1) {
+			while(alive) {
 				while(sleeping) {
 					try {
 						Thread.sleep(sleep_time);	//Wait for 2s
@@ -340,8 +354,9 @@ public class Events_manager {
 				}
 				
 			}
+			events_engine_handler.sendEmptyMessage(9999);	//Notify main thread to die
 			listener=null;
-			return null;
+			return null;	//And die myself
 		}
 	}
 	/*

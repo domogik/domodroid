@@ -52,6 +52,7 @@ public class Stats_Com {
 		super();
 		if(period < 10)
 			period = 10 * 60;	//10 minutes by default
+		cumul_period = 0;
 		Timer();
 	}
 
@@ -137,7 +138,7 @@ public class Stats_Com {
 		return get_Period_String(elapsed_period);
 	}
 	public String get_cumul_period() {
-		return get_Period_String(elapsed_period);
+		return get_Period_String(cumul_period);
 	}
 	public void set_sleeping() {
 		sleeping=true;
@@ -146,6 +147,8 @@ public class Stats_Com {
 		sleeping=false;
 	}
 	public void cancel() {
+		Log.w("Stats","cancel requested !");
+		
 		if(timer != null)
 			timer.cancel();
 		try {
@@ -161,8 +164,9 @@ public class Stats_Com {
 			public void run() {
 						try {
 							elapsed_period++;
-							if(! sleeping)
+							if(! sleeping) 
 								cumul_period++;
+							
 							if(elapsed_period >= period) {
 								clear();
 							}

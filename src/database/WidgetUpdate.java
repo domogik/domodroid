@@ -134,8 +134,10 @@ public class WidgetUpdate  {
 		domodb.owner=mytag;
 		timer_flag = false;
 		ready=false;
+		Tracer.d(mytag,"cache engine starting timer for periodic cache update");
 		Timer();		//and initiate the cyclic timer
 		new UpdateThread().execute();	//And force an immediate refres
+		this.callback_counts = 0;	//To force a refresh
 		Tracer.d(mytag,"state engine waiting for initial setting of cache !");
 		
 		Boolean said = false;
@@ -200,23 +202,25 @@ public class WidgetUpdate  {
 					}
 				} else if (msg.what == 9901) {
 					// Events_Manager thread is dead....
-					if(eventsManager != null) {
-						eventsManager.Destroy();
-						eventsManager = null;
-					}
+					eventsManager = null;
+					init_done = false;
+					Tracer.i(mytag,"No more Events_Manager now ! ! ! ");
+					//Clean all resources
+					domodb = null;
+					if(timer != null)
+						timer.cancel();
+					timer = null;
+					doAsynchronousTask = null;
 					System.gc();
-					Tracer.i(mytag,"No more Events_Manager now ! ! ! Try to restart it");
-					myselfHandler.sendEmptyMessage(9903);
+					Tracer.i(mytag,"We can really go to end...");
+					try {
+						this.finalize();
+					} catch (Throwable t) {}
 					
 				} else if (msg.what == 9902) {
 					//Time out processed
 					callback_counts++;
 					
-				}else if (msg.what == 9903) {
-					Tracer.i(mytag,"Events manager needs to be restarted");
-					
-					eventsManager = Events_manager.getInstance(); 
-					eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
 				}
 			}
 		};
@@ -242,15 +246,12 @@ public class WidgetUpdate  {
 			timer.cancel();
 		if(eventsManager != null)
 			eventsManager.Destroy();
-		eventsManager = null;
 		if(stats_com != null)
 			stats_com.cancel();
 		stats_com = null;
-		Tracer.d(mytag,"cache engine cancel requested : Bye !");
+		Tracer.d(mytag,"cache engine cancel requested : Waiting for events_manager dead !");
 		
-		try {
-			this.finalize();
-		} catch (Throwable t) {}
+		
 		
 	}
 	

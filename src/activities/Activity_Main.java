@@ -900,8 +900,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//Tracer.set_engine(null);
 			widgetUpdate.Disconnect(0);	//That should also stop events manager	
 			widgetUpdate.set_sleeping();
-			//widgetUpdate.cancel();
-			//widgetUpdate=null;
+			widgetUpdate.cancel();
+			widgetUpdate=null;
 		}
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually

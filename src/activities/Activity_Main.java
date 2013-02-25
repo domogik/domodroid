@@ -906,6 +906,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				widgetUpdate.cancel();
 				widgetUpdate=null;
 			}
+			dont_kill = false;
 		}
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually

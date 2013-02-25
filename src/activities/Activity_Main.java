@@ -132,6 +132,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
 	private String tracer_state = "false";
+	Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
 	private int mytype = 0;		// All objects will be 'Main" type
 	
 	/** Called when the activity is first created. */
@@ -482,6 +483,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			starting.show();
 		}
 		init_done = true;
+		dont_kill = false;	//By default, the onDestroy activity will also kill engines
 		starting = null;
 	}
 	/*
@@ -790,9 +792,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.wAgent=null;
 			widgetHandler=null;
 			Tracer.set_engine(null);
-			widgetUpdate.Disconnect(0);	//That should also stop events manager
-			widgetUpdate.cancel();
-			widgetUpdate=null;
+			widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
+			dont_kill = false;		//To force OnDestroy() to also kill engines
 			//And stop main program
 			this.finish();
 			return;
@@ -843,6 +844,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				if(widgetUpdate != null) {
 					widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
 					//widgetUpdate.dump_cache();	//For debug
+					dont_kill = true;	// to avoid engines kill when onDestroy()
 				}
 				mapI = new Intent(Activity_Main.this,Activity_Map.class);
 				Tracer.d("Activity_Main","Call to Map, run it now !");
@@ -898,10 +900,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		widgetHandler=null;
 		if(widgetUpdate != null) {
 			//Tracer.set_engine(null);
-			widgetUpdate.Disconnect(0);	//That should also stop events manager	
-			widgetUpdate.set_sleeping();
-			//widgetUpdate.cancel();
-			//widgetUpdate=null;
+			if( ! dont_kill) {
+				widgetUpdate.Disconnect(0);	//done by onPause
+				//widgetUpdate.set_sleeping(); // already done by onPause
+				widgetUpdate.cancel();
+				widgetUpdate=null;
+			}
 		}
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually

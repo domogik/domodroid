@@ -169,11 +169,9 @@
 	<string name="stats_title_period">Dernière Période : </string>
 	<string name="stats_cumuls">Activité cumulée : </string>
 	<string name="stats_period">Dernière période : </string>
-	<string name="stats_received">Stats : Reçu : </string>
-	<string name="stats_sent">--------Emis : </string>
-	<string name="events_received">Events : Reçu : </string>
-	<string name="events_sent">---------Emis : </string>
-	<string name="packets">paquets</string>
-	<string name="bytes">octets</string>
+	<string name="Send">Emis</string>
+	<string name="Received">Reçus</string>
+	<string name="packets">Paquets</string>
+	<string name="bytes">Octets</string>
 	
 </resources>

@@ -17,6 +17,7 @@ import widgets.Graphical_Boolean;
 import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
 import widgets.Graphical_Info;
+import widgets.Graphical_List;
 import widgets.Graphical_Range;
 import widgets.Graphical_Room;
 import widgets.Graphical_Trigger;
@@ -37,6 +38,7 @@ public class Widgets_Manager {
 	private Graphical_Boolean bool;
 	private Graphical_Range variator;
 	private Graphical_Info info;
+	private Graphical_List list;
 	private Graphical_Trigger trigger;
 	private Graphical_Cam cam;
 	private Graphical_Color color;
@@ -204,6 +206,19 @@ public class Widgets_Manager {
 				info.container=tmpPan;
 				tmpPan.addView(info);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Info + Graphic");
+			} else if (feature.getValue_type().equals("list")) {
+				Tracer.e("Widgets_Manager","add Graphical_List for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
+				list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
+						feature.getState_key(),
+						params.getString("URL","1.1.1.1"),
+						feature.getDevice_usage_id(),
+						params.getInt("GRAPH",3),
+						params.getInt("UPDATE_TIMER",300),
+						widgetSize, mytype, feature.getParameters());
+				list.setLayoutParams(layout_param);
+				list.container=tmpPan;
+				tmpPan.addView(list);
+				Tracer.i("Widgets_Manager","   ==> Graphical_List");
 			} else if(feature.getValue_type().equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,feature.getId(),feature.getDevId(),label,

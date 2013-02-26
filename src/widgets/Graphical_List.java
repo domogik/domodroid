@@ -21,6 +21,7 @@ package widgets;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid.R;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,6 +92,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
+	private String[] known_values;
 		
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -133,7 +135,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		Tracer.e("Graphical_Info Frame", "Get icone for usage : "+usage);
+		Tracer.e(mytag, "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setOnTouchListener(this);
 
@@ -220,6 +222,42 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 			featurePan2.addView(canvas);
 		}
 		if(with_list) {
+			//Exploit parameters
+			JSONObject jparam = null;
+			String command;
+			JSONArray commandValues = null;
+			try {
+				jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+				command = jparam.getString("command");
+				commandValues = jparam.getJSONArray("commandValues");
+			} catch (Exception e) {
+				command = "";
+				commandValues = null;
+			}
+			int nbitems = 0;
+			String list = "";
+			if(commandValues != null) {
+				nbitems = commandValues.length();
+				if(nbitems > 0) {
+					if(known_values != null)
+						known_values = null;
+					
+					known_values = new String[nbitems];
+					for(int i=0; i < nbitems; i++) {
+						try {
+							known_values[i] = commandValues.getString(i);
+						} catch (Exception e) {
+							known_values[i] = "???";
+						}
+						list+=known_values[i];
+						list+=", ";
+						
+					}
+				}
+					
+			}
+			Tracer.e(mytag, "command = <"+command+"> Values list = <"+list+">");
+				
 			//feature panel 2 which will contain list of selected choices
 			featurePan2=new LinearLayout(context);
 			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));

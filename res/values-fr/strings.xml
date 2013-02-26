@@ -174,4 +174,31 @@
 	<string name="packets">Paquets</string>
 	<string name="bytes">Octets</string>
 	
+	<string name="conditioning">Climatisation</string>
+	<string name="appliance">Appliance</string>
+	<string name="christmas_tree">Arbre de Noël</string>
+	<string name="computer">Ordinateurs</string>
+	<string name="door">Détecteurs portes</string>
+	<string name="electricity">Compteur électrique</string>
+	<string name="heating">Chauffage</string>
+	<string name="light">Eclairage</string>
+	<string name="mirror">Mirror</string>
+	<string name="music">Musique</string>
+	<string name="nanoztag">Nanoztag</string>
+	<string name="portal">Portail</string>
+	<string name="scene">Scenes</string>
+	<string name="camera">Camera de sécurité</string>
+	<string name="server">Serveur</string>
+	<string name="socket">Socket</string>
+	<string name="shutter">Volets</string>
+	<string name="telephony">Telephonie</string>
+	<string name="temperature">Température</string>
+	<string name="tv">TV</string>
+	<string name="ventilation">Ventilation</string>
+	<string name="water">Compteur d\'eau</string>
+	<string name="water_tank">Cuves / Niveaux</string>
+	<string name="window">Fenêtres</string>
+	<string name="map">Plans</string>
+	
+	
 </resources>

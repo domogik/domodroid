@@ -18,6 +18,10 @@
 package activities;
 
 import org.domogik.domodroid.R;
+import org.domogik.domodroid.*;
+
+import android.app.Activity;
+import android.content.Context;
 
 
 public class Graphics_Manager {
@@ -73,7 +77,6 @@ public class Graphics_Manager {
 			else if(usage.equals("basement2")){return R.drawable.area_basement;}
 			else if(usage.equals("area")){return R.drawable.area_area;}
 			else if(usage.equals("house")){return R.drawable.house;}
-			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("statistics")){return R.drawable.statistics;}
 			else return R.drawable.usage_default_off;
@@ -165,6 +168,65 @@ public class Graphics_Manager {
 		return R.drawable.icon;
 	}
 
+	public static String Names_Agent(Context context, String usage){
+		
+			//reorder by usage name for easy update
+			if(usage.equals("air conditioning")){
+				return context.getResources().getText(R.string.conditioning).toString();
+			}
+			else if(usage.equals("appliance")){return context.getResources().getText(R.string.appliance).toString();}
+			else if(usage.equals("christmas_tree")){return context.getResources().getText(R.string.christmas_tree).toString();}
+			else if(usage.equals("computer")){return context.getResources().getText(R.string.computer).toString();}
+			else if(usage.equals("door")){return context.getResources().getText(R.string.door).toString();}
+			else if(usage.equals("electricity")){return context.getResources().getText(R.string.electricity).toString();}
+			else if(usage.equals("heating")){return context.getResources().getText(R.string.heating).toString();}
+			else if(usage.equals("light")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("mirror")){return context.getResources().getText(R.string.mirror).toString();}
+			else if(usage.equals("music")){return context.getResources().getText(R.string.music).toString();}
+			else if(usage.equals("nanoztag")){return context.getResources().getText(R.string.nanoztag).toString();}
+			else if(usage.equals("portal")){return context.getResources().getText(R.string.portal).toString();}
+			else if(usage.equals("scene")){return context.getResources().getText(R.string.scene).toString();}
+			else if(usage.equals("security_camera")){return context.getResources().getText(R.string.camera).toString();}
+			else if(usage.equals("server")){return context.getResources().getText(R.string.server).toString();}
+			else if(usage.equals("socket")){return context.getResources().getText(R.string.socket).toString();}
+			else if(usage.equals("shutter")){return context.getResources().getText(R.string.shutter).toString();}
+			else if(usage.equals("telephony")){return context.getResources().getText(R.string.telephony).toString();}
+			else if(usage.equals("temperature")){return context.getResources().getText(R.string.temperature).toString();}
+			else if(usage.equals("tv")){return context.getResources().getText(R.string.tv).toString();}
+			else if(usage.equals("ventilation")){return context.getResources().getText(R.string.ventilation).toString();}
+			else if(usage.equals("water")){return context.getResources().getText(R.string.water).toString();}
+			else if(usage.equals("water_tank")){return context.getResources().getText(R.string.water_tank).toString();}
+			else if(usage.equals("window")){return context.getResources().getText(R.string.window).toString();}
+			//roomelse if(usage.equals("map")){return R.drawable.map;}
+			
+			else if(usage.equals("kitchen")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("bathroom")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("kidsroom")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("bedroom")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("garage")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("office")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("tvlounge")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("usage")){return context.getResources().getText(R.string.light).toString();}
+			//area
+			else if(usage.equals("basement")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("garage")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("garden")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("groundfloor")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("firstfloor")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("secondfloor")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("groundfloor2")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("firstfloor2")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("secondfloor2")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("basement2")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("area")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("house")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("map")){return context.getResources().getText(R.string.map).toString();}
+			else if(usage.equals("statistics")){return context.getResources().getText(R.string.light).toString();}
+			else return usage;
+
+		
+	}
+	
 	public static int Map_Agent(String usage, int state){
 		switch(state){
 		case 0:

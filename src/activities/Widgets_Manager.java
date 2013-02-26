@@ -380,7 +380,9 @@ public class Widgets_Manager {
 			if(ref.length() == 0)
 				ref = room.getName();
 			Tracer.d("loadRoomWidgets","Adding room : "+ref);
-			graph_room = new Graphical_Room(Tracer, context,room.getId(),room.getName(),room.getDescription(),iconId,widgetSize,widgetHandler);
+			String name = room.getName();
+			name = Graphics_Manager.Names_Agent(context, name);
+			graph_room = new Graphical_Room(Tracer, context,room.getId(),name,room.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_room);
 
 			if(columns){	

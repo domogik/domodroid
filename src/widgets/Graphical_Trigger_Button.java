@@ -1,6 +1,6 @@
 package widgets;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid.*;
 
 import android.content.Context;
 import android.os.AsyncTask;

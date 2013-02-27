@@ -30,6 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import rinor.Rest_com;
+
+import database.JSONParser;
 import database.WidgetUpdate;
 
 
@@ -41,6 +44,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import misc.tracerengine;
@@ -105,11 +109,15 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private ArrayList<HashMap<String,String>> listItem;
 	private Vector<String> list_usable_choices;
 	private ListView listeChoices;
-	
+	private TextView cmd_to_send = null;
+	private String cmd_requested = null;
+	private String address;
+	private String type;
 	
 		
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+			String type, String address,
 			final String state_key, String url,String usage, int period, int update, 
 			int widgetSize, int session_type, final String parameters) {
 		super(context);
@@ -117,6 +125,8 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		this.context = context;
 		this.dev_id = dev_id;
 		this.id = id;
+		this.address = address;
+		this.type = type;
 		this.state_key = state_key;
 		this.update=update;
 		this.wname = name;
@@ -224,7 +234,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 			}
 			Tracer.e(mytag, "command = <"+command+"> Values list = <"+list+">");
 			
-
+			cmd_to_send = (TextView) findViewById(R.id.cmd_to_send);
 			//list of choices
 			
 			listeChoices = new ListView(context);
@@ -238,20 +248,24 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 				list_usable_choices.add(ValueCode(known_values[i]));
 				HashMap<String,String> map=new HashMap<String,String>();
 					map.put("choice",ValueCode( known_values[i]));
-					map.put("position",String.valueOf(i));
+					map.put("cmd_to_send",known_values[i]);
 					listItem.add(map);
 				
 			}
 			
 
 			SimpleAdapter adapter_map=new SimpleAdapter(getContext(),listItem,
-					R.layout.item_choice,new String[] {"choice"},new int[] {R.id.choice});
+					R.layout.item_choice,new String[] {"choice", "cmd_to_send"},new int[] {R.id.choice, R.id.cmd_to_send});
 			listeChoices.setAdapter(adapter_map);
 			listeChoices.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Tracer.d(mytag,"command selected at Position = "+position);
 					if((position < listItem.size()) && (position > -1) ) {
-						//TODO Process command
+						//process selected command
+						HashMap<String,String> map=new HashMap<String,String>();
+						map = listItem.get(position);
+						cmd_requested = map.get("cmd_to_send");
+						Tracer.d(mytag,"command selected at Position = "+position+"  Commande = "+cmd_requested);
+						new CommandeThread().execute();
 					}
 				}
 			});
@@ -279,46 +293,24 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if(msg.what == 9999) {
-						//Message from widgetupdate
-						//state_engine send us a signal to notify value changed
+				
+				if(msg.what == 2) {
+					Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+					
+				} else if(msg.what == 9999) {
+				
+					//Message from cache engine
+					//state_engine send us a signal to notify value changed
 					if(session == null)
 						return;
 					
 					String loc_Value = session.getValue();
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
-					try {
-						float formatedValue = 0;
-						if(loc_Value != null)
-							formatedValue = Round(Float.parseFloat(loc_Value),2);
-						try {
-							//Basilic add, number feature has a unit parameter
-							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-							String test_unite = jparam.getString("unit");
-							value.setText(formatedValue+ " "+test_unite);
-						} catch (JSONException e) {							
-						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
-						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
-						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-						//else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-						else value.setText(ValueCode(loc_Value));
-						}
-						value.setAnimation(animation);
-					} catch (Exception e) {
-						// It's probably a String that could'nt be converted to a float
-						Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
-						value.setText(loc_Value);
-						
-					}
+					value.setText(ValueCode(loc_Value));
+					
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
-					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					Tracer.d(mytag,"cache engine disappeared ===> Harakiri !" );
 					session = null;
 					realtime = false;
 					removeView(background);
@@ -331,9 +323,9 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 						finalize(); 
 					} catch (Throwable t) {}	//kill the handler thread itself
 				}
-				}
+			}	
 			
-		};
+		};	//End of handler
 		
 		//================================================================================
 		/*
@@ -354,6 +346,32 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		//updateTimer();	//Don't use anymore cyclic refresh....	
 
 	}
+	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			if(cmd_requested != null) {
+				String Url2send = url+"command/"+type+"/"+address+"/"+cmd_requested;
+				Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+				JSONObject json_Ack = null;
+				try {
+					json_Ack = Rest_com.connect(Url2send);
+				} catch (Exception e) {
+					Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+				}
+				try {
+					Boolean ack = JSONParser.Ack(json_Ack);
+					if(ack==false){
+						Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+						handler.sendEmptyMessage(2);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+	}
 
 	public String ValueCode(String ValueType){
 		String result = ValueType;
@@ -367,7 +385,6 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		else if (ValueType.equals("HVACnormal"))
 			result = context.getResources().getText(R.string.HVACnormal).toString();
 	
-		Tracer.e(mytag,"Converting <"+ValueType+"> to <"+result+">");
 		return result;
 	}
 

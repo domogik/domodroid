@@ -209,6 +209,8 @@ public class Widgets_Manager {
 			} else if (feature.getValue_type().equals("list")) {
 				Tracer.e("Widgets_Manager","add Graphical_List for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
 				list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
+						feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
+						feature.getAddress(),			//  idem to know the address
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
@@ -226,21 +228,7 @@ public class Widgets_Manager {
 							widgetSize, mytype);
 					tmpPan.addView(cam);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Cam");
-				} //else if(feature.getDevice_feature_model_id().contains("communication")){
-					//info = new Graphical_Info(context,feature.getDevId(),label,
-						//	feature.getState_key(),
-						//	"",
-						//	feature.getDevice_usage_id(),
-						//	0,
-						//	params.getInt("UPDATE_TIMER",300),
-						//	0);
-					//info.setLayoutParams(layout_param);
-					//info.with_graph=false;
-					//tmpPan.addView(info);
-					//Tracer.i("Widgets_Manager","   ==> Phone list !!!");
-					//FIXME Must create a new Graphical widget to get a list of last call instead of just the last one.
-				//}
-					else {
+				} else {
 					info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),label,
 							feature.getState_key(),
 							"",
@@ -253,7 +241,6 @@ public class Widgets_Manager {
 					tmpPan.addView(info);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Info + No graphic !!!");
 				}
-			//FIXME missing getvalue_type().equals("list")
 			//used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
 				
 			}

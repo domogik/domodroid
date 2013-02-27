@@ -194,7 +194,7 @@ public class Widgets_Manager {
 				tmpPan.addView(color);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {
-				Tracer.e("Widgets_Manager","add Graphical_Info for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
+				Tracer.e("Widgets_Manager","add Graphical_Info for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
 				info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(), label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
@@ -207,7 +207,7 @@ public class Widgets_Manager {
 				tmpPan.addView(info);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Info + Graphic");
 			} else if (feature.getValue_type().equals("list")) {
-				Tracer.e("Widgets_Manager","add Graphical_List for"+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
+				Tracer.e("Widgets_Manager","add Graphical_List for "+feature.getName()+" ("+feature.getDevId()+") key="+feature.getState_key());
 				list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
 						feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
 						feature.getAddress(),			//  idem to know the address

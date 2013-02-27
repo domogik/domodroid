@@ -176,7 +176,7 @@
 	<string name="packets">packets</string>
 	<string name="bytes">bytes</string>
 	
-	<string name="conditioning">Heating</string>
+	<string name="conditioning">Climatized air</string>
 	<string name="appliance">Appliance</string>
 	<string name="christmas_tree">Christmas tree</string>
 	<string name="computer">Computers</string>

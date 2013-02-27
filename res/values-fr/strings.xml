@@ -200,5 +200,9 @@
 	<string name="window">Fenêtres</string>
 	<string name="map">Plans</string>
 	
+	<string name="HVACstop">Arrêt</string>
+	<string name="HVACnofreeze">Hors gel</string>
+	<string name="HVACeco">Economique</string>
+	<string name="HVACnormal">Confort</string>
 	
 </resources>

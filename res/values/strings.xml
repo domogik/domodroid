@@ -202,4 +202,9 @@
 	<string name="window">Windows</string>
 	<string name="map">Map</string>
 	
+	<string name="HVACstop">Stop</string>
+	<string name="HVACnofreeze">Out of freeze</string>
+	<string name="HVACeco">Economic</string>
+	<string name="HVACnormal">Comfort mode</string>
+	
 </resources>

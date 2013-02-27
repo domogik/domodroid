@@ -18,9 +18,14 @@
 package widgets;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
+import android.content.Context;
+
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
-import org.domogik.domodroid.R;
+import org.domogik.domodroid.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +36,7 @@ import database.WidgetUpdate;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -49,13 +55,17 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class Graphical_List extends FrameLayout implements OnTouchListener, OnLongClickListener {
 
@@ -64,7 +74,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private LinearLayout background;
 	private LinearLayout featurePan;
 	private LinearLayout featurePan2;
-	private View		  featurePan2_buttons;
+	//private View		  featurePan2_buttons;
 	private LinearLayout infoPan;
 	private LinearLayout topPan;
 	private ImageView img;
@@ -75,17 +85,16 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private Handler handler;
 	private String state_key;
 	private TextView state_key_view;
-	private Graphical_Info_View canvas;
+	//private Graphical_Info_View canvas;
 	private int update;
 	private Animation animation;
-	private Activity context;
+	private final Context context;
 	private Message msg;
 	private String wname;
 	private String mytag="";
 	private String url = null;
 	public FrameLayout container = null;
-	public FrameLayout myself = null;
-	public Boolean with_graph = false;
+	public static FrameLayout myself = null;
 	public Boolean with_list = true;
 	private tracerengine Tracer = null;
 	private String parameters;
@@ -93,6 +102,11 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private Boolean realtime = false;
 	private int session_type;
 	private String[] known_values;
+	private ArrayList<HashMap<String,String>> listItem;
+	private Vector<String> list_usable_choices;
+	private ListView listeChoices;
+	
+	
 		
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -107,7 +121,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		this.update=update;
 		this.wname = name;
 		this.url = url;
-		this.myself = this;
+		Graphical_List.myself = this;
 		this.session_type = session_type;
 		this.parameters = parameters;
 		mytag="Graphical_List ("+dev_id+")";
@@ -172,55 +186,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 
-		if(with_graph) {
-			//feature panel 2 which will contain graphic
-			featurePan2=new LinearLayout(context);
-			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
-			featurePan2.setPadding(5, 10, 5, 10);
-			//canvas
-			canvas = new Graphical_Info_View(Tracer,context);
-			canvas.dev_id = dev_id;
-			canvas.state_key = state_key;
-			canvas.url = url;
-			//canvas.period = period;
-			canvas.update = update;
-			
-			LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
-			View v=null;
-			
-			v=featurePan2_buttons.findViewById(R.id.bt_prev);
-			if(v != null)
-				v.setOnClickListener(canvas);
-			
-			v=featurePan2_buttons.findViewById(R.id.bt_next);
-			if(v != null)
-				v.setOnClickListener(canvas);
-			
-			v=featurePan2_buttons.findViewById(R.id.bt_year);
-			if(v != null)
-				v.setOnClickListener(canvas);
-			
-			v=featurePan2_buttons.findViewById(R.id.bt_month);
-			if(v != null)
-				v.setOnClickListener(canvas);
-			
-			v=featurePan2_buttons.findViewById(R.id.bt_week);
-			if(v != null)
-				v.setOnClickListener(canvas);
-			
-			v=featurePan2_buttons.findViewById(R.id.bt_day);
-			if(v != null)
-				v.setOnClickListener(canvas);
-			
-			v = featurePan2_buttons.findViewById(R.id.period);
-			if(v != null)
-				canvas.dates=(TextView)v;
-			
-			//background_stats.addView(canvas);
-			featurePan2.addView(canvas);
-		}
+		
 		if(with_list) {
 			//Exploit parameters
 			JSONObject jparam = null;
@@ -257,18 +223,51 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 					
 			}
 			Tracer.e(mytag, "command = <"+command+"> Values list = <"+list+">");
+			
+
+			//list of choices
+			
+			listeChoices = new ListView(context);
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
+			
+			listeChoices.setLayoutParams(lp);
+			
+			listItem=new ArrayList<HashMap<String,String>>();
+			list_usable_choices = new Vector<String>();
+			for (int i=0;i<known_values.length;i++) {
+				list_usable_choices.add(ValueCode(known_values[i]));
+				HashMap<String,String> map=new HashMap<String,String>();
+					map.put("choice",ValueCode( known_values[i]));
+					map.put("position",String.valueOf(i));
+					listItem.add(map);
 				
-			//feature panel 2 which will contain list of selected choices
+			}
+			
+
+			SimpleAdapter adapter_map=new SimpleAdapter(getContext(),listItem,
+					R.layout.item_choice,new String[] {"choice"},new int[] {R.id.choice});
+			listeChoices.setAdapter(adapter_map);
+			listeChoices.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Tracer.d(mytag,"command selected at Position = "+position);
+					if((position < listItem.size()) && (position > -1) ) {
+						//TODO Process command
+					}
+				}
+			});
+
+			
+			//feature panel 2 which will contain list of selectable choices
 			featurePan2=new LinearLayout(context);
-			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
 			featurePan2.setPadding(5, 10, 5, 10);
-			
+			featurePan2.addView(listeChoices);
 			
 		}
 		featurePan.addView(value);
 		infoPan.addView(nameDevices);
-		infoPan.addView(state_key_view);
+		//infoPan.addView(state_key_view);
 		imgPan.addView(img);
 
 		topPan.addView(imgPan);
@@ -305,10 +304,10 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
 						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
+						//else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-						else value.setText(loc_Value);
+						else value.setText(ValueCode(loc_Value));
 						}
 						value.setAnimation(animation);
 					} catch (Exception e) {
@@ -344,7 +343,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
 			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			if(Tracer.get_engine().subscribe(session)) {
+			if(tracerengine.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
@@ -356,83 +355,37 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 
 	}
 
-	public static int ConditionCode(int code){
-		switch (code){
-		case 0: return R.string.info0;
-		case 1: return R.string.info1;
-		case 2: return R.string.info2;
-		case 3: return R.string.info3;
-		case 4: return R.string.info4;
-		case 5: return R.string.info5;
-		case 6: return R.string.info6;
-		case 7: return R.string.info7;
-		case 8: return R.string.info8;
-		case 9: return R.string.info9;
-		case 10: return R.string.info10;
-		case 11: return R.string.info11;
-		case 12: return R.string.info12;
-		case 13: return R.string.info13;
-		case 14: return R.string.info14;
-		case 15: return R.string.info15;
-		case 16: return R.string.info16;
-		case 17: return R.string.info17;
-		case 18: return R.string.info18;
-		case 19: return R.string.info19;
-		case 20: return R.string.info20;
-		case 21: return R.string.info21;
-		case 22: return R.string.info22;
-		case 23: return R.string.info23;
-		case 24: return R.string.info24;
-		case 25: return R.string.info25;
-		case 26: return R.string.info26;
-		case 27: return R.string.info27;
-		case 28: return R.string.info28;
+	public String ValueCode(String ValueType){
+		String result = ValueType;
 		
-		case 29: return R.string.info29;
-		case 30: return R.string.info30;
-		case 31: return R.string.info31;
-		case 32: return R.string.info32;
-		case 33: return R.string.info33;
-		case 34: return R.string.info34;
-		case 35: return R.string.info35;
-		case 36: return R.string.info36;
-		case 37: return R.string.info37;
-		case 38: return R.string.info38;
-		case 39: return R.string.info39;
-		case 40: return R.string.info40;
-		case 41: return R.string.info41;
-		case 42: return R.string.info42;	
-		
-		case 43: return R.string.info43;
-		case 44: return R.string.info44;
-		case 45: return R.string.info45;
-		case 46: return R.string.info46;
-		case 47: return R.string.info47;
-		case 3200: return R.string.info3200;
-		}
-		return R.string.info48;
+		if(ValueType.equals("HVACstop"))
+			result = context.getResources().getText(R.string.HVACstop).toString();
+		else if (ValueType.equals("HVACnofreeze"))
+			result = context.getResources().getText(R.string.HVACnofreeze).toString();
+		else if (ValueType.equals("HVACeco"))
+			result = context.getResources().getText(R.string.HVACeco).toString();
+		else if (ValueType.equals("HVACnormal"))
+			result = context.getResources().getText(R.string.HVACnormal).toString();
+	
+		Tracer.e(mytag,"Converting <"+ValueType+"> to <"+result+">");
+		return result;
 	}
 
 	public boolean onTouch(View arg0, MotionEvent arg1) {
-		if(with_graph) {
+		if(with_list) {
 			if(background.getHeight() != 350){
 				try {
-					background.removeView(featurePan2_buttons);
 					background.removeView(featurePan2);
 					
 				} catch (Exception e) {}
 				
 				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
-				background.addView(featurePan2_buttons);
 				background.addView(featurePan2);
-				canvas.activate = true;
-				canvas.updateTimer();
+				
 			}
 			else{
-				background.removeView(featurePan2_buttons);
 				background.removeView(featurePan2);
 				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-				canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer
 			}
 		}
 		return false;
@@ -463,7 +416,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 					String result= input.getText().toString(); 
 					Tracer.e("Graphical_info", "Description set to: "+result);
 					
-					Tracer.get_engine().descUpdate(id, result);
+					tracerengine.get_engine().descUpdate(id, result);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -733,7 +733,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				value = secondeOffset;
 				seekBar.setProgress(value);
 			}
-			mProgressText1.setText((value)+" "+R.string.seconds);
+			mProgressText1.setText((value)+" "+getString(R.string.seconds));
 		}
 		/* else if(seekBar.getId()==R.id.SeekBar2) {
 			mProgressText2.setText( (Integer.toString(progress+dayOffset))+ getText(R.string.network_Text11a));

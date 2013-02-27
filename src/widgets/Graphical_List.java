@@ -138,7 +138,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		this.parameters = parameters;
 		mytag="Graphical_List ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
-		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -234,9 +234,6 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 				}
 					
 			}
-			Tracer.e(mytag, "command = <"+command+"> Values list = <"+list+">");
-			
-			cmd_to_send = (TextView) findViewById(R.id.cmd_to_send);
 			//list of choices
 			
 			listeChoices = new ListView(context);

@@ -402,9 +402,7 @@ public class MapView extends View {
 						else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+" km/h";
 						else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+" °C";
 						else if( (featureMap.getState_key().equals("condition-code")) && (!featureMap.getCurrentState().equals("--") ) )
-							//value=context.getString(ConditionCode(Integer.parseInt(featureMap.getCurrentState())));
 							value=context.getString(Graphics_Manager.Names_conditioncodes(Integer.parseInt(featureMap.getCurrentState())));
-						
 						else value=featureMap.getCurrentState();
 					}
 					if(value == null)

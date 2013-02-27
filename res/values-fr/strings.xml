@@ -198,7 +198,30 @@
 	<string name="water">Compteur d\'eau</string>
 	<string name="water_tank">Cuves / Niveaux</string>
 	<string name="window">Fenêtres</string>
-	<string name="map">Plans</string>
+	<string name="kitchen">Cuisine</string>
+	<string name="bathroom">Salle de bains</string>
+	<string name="kidsroom">Salle de jeux</string>
+	<string name="bedroom">Chambre</string>
+	<string name="garage">Garage</string>
+	<string name="office">Bureau</string>
+	<string name="tvlounge">Salon TV</string>
+	<string name="usage">Par usage</string>
+	
+	<string name="basement">Sous sol</string>
+	<string name="garden">Jardin</string>
+	<string name="groundfloor">Rez de chaussée</string>
+	<string name="firstfloor">1er étage</string>
+	<string name="secondfloor">2ème étage</string>
+	<string name="groundfloor2">Rez de chaussée 2</string>
+	<string name="firstfloor2">Etage 2</string>
+	<string name="secondfloor2">2nd étage 2</string>
+	<string name="basement2">Sous sol 2</string>
+	<string name="area">Zone</string>
+	
+	
+	<string name="Map">Plans</string>
+	<string name="House">Maison</string>
+	<string name="statistics">Statistiques Serveur</string>
 	
 	<string name="HVACstop">Arrêt</string>
 	<string name="HVACnofreeze">Hors gel</string>

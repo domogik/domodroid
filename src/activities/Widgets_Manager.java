@@ -314,8 +314,11 @@ public class Widgets_Manager {
 			}
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
-			//Tracer.d("loadRoomWidgets","Adding area : "+area.getName());
-			graph_area = new Graphical_Area(Tracer, context,area.getId(),area.getName(),area.getDescription(),iconId,widgetSize,widgetHandler);
+			Tracer.d("loadRoomWidgets","Adding area : "+area.getName());
+			String name = area.getName();
+			name = Graphics_Manager.Names_Agent(context, name);
+			
+			graph_area = new Graphical_Area(Tracer, context,area.getId(),name,area.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_area);
 			if(columns){	
 				if(counter==0){

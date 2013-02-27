@@ -199,14 +199,14 @@ public class Graphics_Manager {
 			else if(usage.equals("window")){return context.getResources().getText(R.string.window).toString();}
 			//roomelse if(usage.equals("map")){return R.drawable.map;}
 			
-			else if(usage.equals("kitchen")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("bathroom")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("kidsroom")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("bedroom")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("garage")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("office")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("tvlounge")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("usage")){return context.getResources().getText(R.string.light).toString();}
+			else if(usage.equals("kitchen")){return context.getResources().getText(R.string.kitchen).toString();}
+			else if(usage.equals("bathroom")){return context.getResources().getText(R.string.bathroom).toString();}
+			else if(usage.equals("kidsroom")){return context.getResources().getText(R.string.kidsroom).toString();}
+			else if(usage.equals("bedroom")){return context.getResources().getText(R.string.bedroom).toString();}
+			else if(usage.equals("garage")){return context.getResources().getText(R.string.garage).toString();}
+			else if(usage.equals("office")){return context.getResources().getText(R.string.office).toString();}
+			else if(usage.equals("tvlounge")){return context.getResources().getText(R.string.tvlounge).toString();}
+			else if(usage.equals("usage")){return context.getResources().getText(R.string.usage).toString();}
 			//area
 			else if(usage.equals("basement")){return context.getResources().getText(R.string.light).toString();}
 			else if(usage.equals("garage")){return context.getResources().getText(R.string.light).toString();}
@@ -219,9 +219,10 @@ public class Graphics_Manager {
 			else if(usage.equals("secondfloor2")){return context.getResources().getText(R.string.light).toString();}
 			else if(usage.equals("basement2")){return context.getResources().getText(R.string.light).toString();}
 			else if(usage.equals("area")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("house")){return context.getResources().getText(R.string.light).toString();}
-			else if(usage.equals("map")){return context.getResources().getText(R.string.map).toString();}
-			else if(usage.equals("statistics")){return context.getResources().getText(R.string.light).toString();}
+			
+			else if(usage.equals("House")){return context.getResources().getText(R.string.House).toString();}
+			else if(usage.equals("Map")){return context.getResources().getText(R.string.Map).toString();}
+			else if(usage.equals("statistics")){return context.getResources().getText(R.string.statistics).toString();}
 			else return usage;
 
 		

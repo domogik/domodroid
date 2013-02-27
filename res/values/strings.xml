@@ -200,7 +200,18 @@
 	<string name="water">Water</string>
 	<string name="water_tank">Water tank</string>
 	<string name="window">Windows</string>
-	<string name="map">Map</string>
+	<string name="kitchen">Kitchen</string>
+	<string name="bathroom">Bathroom</string>
+	<string name="kidsroom">Kids room</string>
+	<string name="bedroom">Bedroom</string>
+	<string name="garage">Kitchen</string>
+	<string name="office">Bathroom</string>
+	<string name="tvlounge">Kids room</string>
+	<string name="usage">Bedroom</string>
+	
+	<string name="Map">Map</string>
+	<string name="House">House</string>
+	<string name="statistics">Server statistics</string>
 	
 	<string name="HVACstop">Stop</string>
 	<string name="HVACnofreeze">Out of freeze</string>

@@ -592,6 +592,8 @@ public class MapView extends View {
 			panel_widget.addView(info);}
 		 else if (feature.getValue_type().equals("list")) {
 			list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
+					feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
+					feature.getAddress(),			//  idem to know the address
 					feature.getState_key(),
 					params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),

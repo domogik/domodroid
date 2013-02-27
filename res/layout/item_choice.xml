@@ -8,12 +8,36 @@
 	android:layout_weight="1" 
 	android:paddingTop="4dip" 
 	android:paddingBottom="4dip">
-
-	<TextView android:id="@+id/choice" 
-	    android:layout_width="wrap_content"
-		android:layout_height="30dip" 
-		android:textSize="18sp" 
-		android:textColor="@android:color/black"
-		android:paddingLeft="10dip" />
-
+	<LinearLayout 
+	    android:orientation="horizontal" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center_vertical"
+		android:paddingLeft="10px" 
+		android:paddingTop="4dip" 
+		android:paddingBottom="4dip"
+	    >
+	    
+		<TextView android:id="@+id/choice" 
+		    android:layout_width="wrap_content"
+			android:layout_height="30dip"
+			android:layout_weight="0.6"
+			android:gravity="left" 
+			android:textSize="18sp" 
+			android:textColor="@android:color/black"
+			android:paddingLeft="10dip" />
+		
+		<TextView
+		    android:id="@+id/cmd_to_send"
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent"
+		    android:layout_weight="0.4"
+		    android:gravity="right"
+		    android:paddingRight="10dip"
+		    android:textColor="@android:color/black"
+		    android:textSize="12sp"
+		    android:visibility="invisible" />
+		
+	</LinearLayout>
+	
 </LinearLayout>

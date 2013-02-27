@@ -21,8 +21,10 @@ import widgets.Entity_Map;
 import widgets.Entity_client;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Boolean;
+import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
 import widgets.Graphical_Info;
+import widgets.Graphical_List;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
 import widgets.Graphical_Binary.SBAnim;
@@ -88,7 +90,9 @@ public class MapView extends View {
 	private Graphical_Info info;
 	private Graphical_Boolean bool;
 	private Graphical_Color colorw;
-
+	private Graphical_List list;
+	private Graphical_Cam cam;
+	
 	private Vector<String> files;
 	private Entity_Map[] listFeatureMap;
 	private int mode;
@@ -536,17 +540,26 @@ public class MapView extends View {
 		if(label.length() < 1)
 			label = feature.getName();
 		
+		String State_key = feature.getState_key();
+		
 		//add debug option to change label adding its Id
 		if (params.getBoolean("DEV",false)==true)
 			label = label+" ("+feature.getDevId()+")";
 		
+		String[] model = feature.getDevice_type_id().split("\\.");
+		String type = model[1];
+		
 		if (feature.getValue_type().equals("binary")) {
-			onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),
-					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-					feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
+			if(type.equals("rgb_leds") && (State_key.equals("command"))) {
+				//ignore it : it'll have another device for Color, displaying the switch !)
+			} else {
+				onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
+				label,feature.getId(),feature.getDevId(),feature.getState_key(),
+				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
+				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
 			onoff.container=(FrameLayout) panel_widget;
 			panel_widget.addView(onoff);}
+		}
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),
 					label,feature.getId(),feature.getDevId(),feature.getState_key(),
@@ -576,8 +589,17 @@ public class MapView extends View {
 					params.getInt("GRAPH",3),
 					params.getInt("UPDATE",300),0, mytype, feature.getParameters());
 			info.container=(FrameLayout) panel_widget;
-			panel_widget.addView(info);
-		} else if (feature.getState_key().equals("color")) {
+			panel_widget.addView(info);}
+		 else if (feature.getValue_type().equals("list")) {
+			list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
+					feature.getState_key(),
+					params.getString("URL","1.1.1.1"),
+					feature.getDevice_usage_id(),
+					params.getInt("GRAPH",3),
+					params.getInt("UPDATE",300),0, mytype, feature.getParameters());
+			list.container=(FrameLayout) panel_widget;
+			panel_widget.addView(list);}
+		else if (feature.getState_key().equals("color")) {
 			colorw = new Graphical_Color(Tracer, context,
 					params,
 					feature.getId(),feature.getDevId(),
@@ -591,8 +613,27 @@ public class MapView extends View {
 					0, mytype
 					);
 			colorw.container=(FrameLayout) panel_widget;
-			panel_widget.addView(colorw);
-		}
+			panel_widget.addView(colorw);}
+		 else if(feature.getValue_type().equals("string")){
+			if(feature.getDevice_feature_model_id().contains("camera")) {
+				cam = new Graphical_Cam(Tracer, context,
+					feature.getId(),
+					feature.getDevId(),
+					label,
+					feature.getAddress(),0, mytype);
+				panel_widget.addView(cam);}
+			else {
+				info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),label,
+						feature.getState_key(),
+						"",
+						feature.getDevice_usage_id(),
+						0,
+						params.getInt("UPDATE_TIMER",300),
+						0, mytype, feature.getParameters());
+				info.container=(FrameLayout) panel_widget;
+				info.with_graph=false;
+				panel_widget.addView(info);}
+			}
 		
 	//TODO Seems it miss some device type like in Widgets_Manager.java
 	}

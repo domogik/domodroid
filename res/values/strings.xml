@@ -165,6 +165,7 @@
 	<string name="light_stat_1">On</string>
 	<string name="shutter_stat_0">Close</string>
 	<string name="shutter_stat_1">Open</string>
+	<string name="seconds">Seconds</string>
 	
 	<string name="stats_title">Statistics about Domogik requests</string>
 	<string name="stats_title_period">Last Period : </string>
@@ -174,37 +175,5 @@
 	<string name="Received">Received</string>
 	<string name="packets">packets</string>
 	<string name="bytes">bytes</string>
-	
-	<string name="conditioning">Heating</string>
-	<string name="appliance">Appliance</string>
-	<string name="christmas_tree">Christmas tree</string>
-	<string name="computer">Computers</string>
-	<string name="door">Doors switches</string>
-	<string name="electricity">Electricity</string>
-	<string name="heating">Heating</string>
-	<string name="light">Light</string>
-	<string name="mirror">Mirror</string>
-	<string name="music">Music</string>
-	<string name="nanoztag">Nanoztag</string>
-	
-	<string name="portal">Portal</string>
-	<string name="scene">Scenes</string>
-	<string name="camera">Camera</string>
-	<string name="server">Server</string>
-	<string name="socket">Socket</string>
-	<string name="shutter">Shutter</string>
-	<string name="telephony">Telephony</string>
-	<string name="temperature">Temperature</string>
-	<string name="tv">TV</string>
-	<string name="ventilation">Ventilation</string>
-	<string name="water">Water</string>
-	<string name="water_tank">Water tank</string>
-	<string name="window">Windows</string>
-	<string name="map">Map</string>
-	
-	<string name="HVACstop">Stop</string>
-	<string name="HVACnofreeze">Out of freeze</string>
-	<string name="HVACeco">Economic</string>
-	<string name="HVACnormal">Comfort mode</string>
 	
 </resources>

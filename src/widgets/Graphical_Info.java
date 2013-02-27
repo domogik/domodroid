@@ -263,7 +263,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
 						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
+						//else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(ConditionCode(Integer.parseInt(msg.getData().getString("message"))));
+						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(Graphics_Manager.Names_conditioncodes(Integer.parseInt(msg.getData().getString("message"))));
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
 						else value.setText(loc_Value);
@@ -312,63 +313,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
 
-	}
-
-	public static int ConditionCode(int code){
-		switch (code){
-		case 0: return R.string.info0;
-		case 1: return R.string.info1;
-		case 2: return R.string.info2;
-		case 3: return R.string.info3;
-		case 4: return R.string.info4;
-		case 5: return R.string.info5;
-		case 6: return R.string.info6;
-		case 7: return R.string.info7;
-		case 8: return R.string.info8;
-		case 9: return R.string.info9;
-		case 10: return R.string.info10;
-		case 11: return R.string.info11;
-		case 12: return R.string.info12;
-		case 13: return R.string.info13;
-		case 14: return R.string.info14;
-		case 15: return R.string.info15;
-		case 16: return R.string.info16;
-		case 17: return R.string.info17;
-		case 18: return R.string.info18;
-		case 19: return R.string.info19;
-		case 20: return R.string.info20;
-		case 21: return R.string.info21;
-		case 22: return R.string.info22;
-		case 23: return R.string.info23;
-		case 24: return R.string.info24;
-		case 25: return R.string.info25;
-		case 26: return R.string.info26;
-		case 27: return R.string.info27;
-		case 28: return R.string.info28;
-		
-		case 29: return R.string.info29;
-		case 30: return R.string.info30;
-		case 31: return R.string.info31;
-		case 32: return R.string.info32;
-		case 33: return R.string.info33;
-		case 34: return R.string.info34;
-		case 35: return R.string.info35;
-		case 36: return R.string.info36;
-		case 37: return R.string.info37;
-		case 38: return R.string.info38;
-		case 39: return R.string.info39;
-		case 40: return R.string.info40;
-		case 41: return R.string.info41;
-		case 42: return R.string.info42;	
-		
-		case 43: return R.string.info43;
-		case 44: return R.string.info44;
-		case 45: return R.string.info45;
-		case 46: return R.string.info46;
-		case 47: return R.string.info47;
-		case 3200: return R.string.info3200;
-		}
-		return R.string.info48;
 	}
 
 	public boolean onTouch(View arg0, MotionEvent arg1) {

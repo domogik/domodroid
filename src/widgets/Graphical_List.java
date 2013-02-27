@@ -379,22 +379,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	      return context.getString(resId);
 	    }
 	
-	/*
-	public String ValueCode(String ValueType){
-		String result = ValueType;
-		
-		if(ValueType.equals("HVACstop"))
-			result = context.getResources().getText(R.string.HVACstop).toString();
-		else if (ValueType.equals("HVACnofreeze"))
-			result = context.getResources().getText(R.string.HVACnofreeze).toString();
-		else if (ValueType.equals("HVACeco"))
-			result = context.getResources().getText(R.string.HVACeco).toString();
-		else if (ValueType.equals("HVACnormal"))
-			result = context.getResources().getText(R.string.HVACnormal).toString();
 	
-		return result;
-	}
-	*/
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(with_list) {
 			if(background.getHeight() != 350){

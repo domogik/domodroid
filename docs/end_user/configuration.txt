@@ -8,13 +8,26 @@ Set Auto-Update time with the sliding bar to adjust the frequency you want domod
 
 Graphic period has been removed, and you can now switch graph period directly in the graph view.
 
-Enable option:
+* Dev, add the device Id after his name to help debugging
+
+Map option:
 * Allow drag in map view
 * Allow zoom in map view
-* Dev, add the device Id after his name to help debugging
-* Custom, change the device name by a cutsomisable one (note implement yet)
+* Hide text, will hide the text of all widget on map
+* Lock menu will lock acces to menu in map mode to avoid someone add/remove widget
 
 Max map size in px (be carefull it could make memory error).
 
 .. image:: new_menu.png
-   
+
+Debug option:
+* Allow Debug message
+* Allow Error message
+* Allow Info message
+* Allow Verbose message
+* Allow Warning message
+* In catlog
+* In Screen view
+* In text file
+* You have to select the dirname and filename where you want it to be save.
+

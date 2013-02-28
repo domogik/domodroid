@@ -176,7 +176,7 @@
 	<string name="bytes">Octets</string>
 	
 	<string name="conditioning">Climatisation</string>
-	<string name="appliance">Appliance</string>
+	<string name="appliance">Appareils</string>
 	<string name="christmas_tree">Arbre de Noël</string>
 	<string name="computer">Ordinateurs</string>
 	<string name="door">Détecteurs portes</string>
@@ -187,7 +187,7 @@
 	<string name="music">Musique</string>
 	<string name="nanoztag">Nanoztag</string>
 	<string name="portal">Portail</string>
-	<string name="scene">Scenes</string>
+	<string name="scene">Scénario</string>
 	<string name="camera">Camera de sécurité</string>
 	<string name="server">Serveur</string>
 	<string name="socket">Socket</string>
@@ -201,7 +201,7 @@
 	<string name="window">Fenêtres</string>
 	<string name="kitchen">Cuisine</string>
 	<string name="bathroom">Salle de bains</string>
-	<string name="kidsroom">Salle de jeux</string>
+	<string name="kidsroom">Nurserie</string>
 	<string name="bedroom">Chambre</string>
 	<string name="garage">Garage</string>
 	<string name="office">Bureau</string>

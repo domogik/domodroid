@@ -113,7 +113,8 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private String cmd_requested = null;
 	private String address;
 	private String type;
-	
+	private String packageName ;
+    
 		
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -131,12 +132,13 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		this.update=update;
 		this.wname = name;
 		this.url = url;
+		packageName = context.getPackageName();
 		Graphical_List.myself = this;
 		this.session_type = session_type;
 		this.parameters = parameters;
 		mytag="Graphical_List ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
-		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -232,9 +234,6 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 				}
 					
 			}
-			Tracer.e(mytag, "command = <"+command+"> Values list = <"+list+">");
-			
-			cmd_to_send = (TextView) findViewById(R.id.cmd_to_send);
 			//list of choices
 			
 			listeChoices = new ListView(context);
@@ -245,9 +244,9 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 			listItem=new ArrayList<HashMap<String,String>>();
 			list_usable_choices = new Vector<String>();
 			for (int i=0;i<known_values.length;i++) {
-				list_usable_choices.add(ValueCode(known_values[i]));
+				list_usable_choices.add(getStringResourceByName(known_values[i]));
 				HashMap<String,String> map=new HashMap<String,String>();
-					map.put("choice",ValueCode( known_values[i]));
+					map.put("choice",getStringResourceByName( known_values[i]));
 					map.put("cmd_to_send",known_values[i]);
 					listItem.add(map);
 				
@@ -306,7 +305,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 					
 					String loc_Value = session.getValue();
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
-					value.setText(ValueCode(loc_Value));
+					value.setText(getStringResourceByName(loc_Value));
 					
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
@@ -373,21 +372,14 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		}
 	}
 
-	public String ValueCode(String ValueType){
-		String result = ValueType;
-		
-		if(ValueType.equals("HVACstop"))
-			result = context.getResources().getText(R.string.HVACstop).toString();
-		else if (ValueType.equals("HVACnofreeze"))
-			result = context.getResources().getText(R.string.HVACnofreeze).toString();
-		else if (ValueType.equals("HVACeco"))
-			result = context.getResources().getText(R.string.HVACeco).toString();
-		else if (ValueType.equals("HVACnormal"))
-			result = context.getResources().getText(R.string.HVACnormal).toString();
 	
-		return result;
-	}
-
+	private String getStringResourceByName(String stringName) {
+	      String packageName = context.getPackageName();
+	      int resId = getResources().getIdentifier(stringName, "string", packageName);
+	      return context.getString(resId);
+	    }
+	
+	
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		if(with_list) {
 			if(background.getHeight() != 350){

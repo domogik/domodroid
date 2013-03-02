@@ -168,16 +168,22 @@ public class Graphics_Manager {
 	}
 
 	public static String Names_Agent(Context context, String usage){
+			  int resId;
+			  String result = usage;
 		      String packageName = context.getPackageName();
 		      String search = usage;
 		      if(search.equals("air conditioning"))
 		    	  search = "conditioning";
 		      
-		      int resId = context.getResources().getIdentifier(search, "string", packageName);
-		      if(resId != 0)
-		    	  return context.getString(resId);
-		      else 
-		    	  return usage;
+		      resId = context.getResources().getIdentifier(search, "string", packageName);
+		      if(resId != 0) {
+		    	  try {
+		    		  result = context.getString(resId);
+		    	  } catch (Exception e) {
+		    		  result = usage;
+		    	  }
+		      }
+		      return result;
 	}
 	
 	public static int Names_conditioncodes(int code){

@@ -3,6 +3,8 @@ Installation
 ============
 You need to allow unknown source
 
+Download the last apk from http://repo.domogik.org/domodroid-nightly/ if the apps didn't work (because of nightly build) ask a working version to somebody on irc.
+
 Just copy/paste the apk you've just download
 
 Open it from your device and install it.

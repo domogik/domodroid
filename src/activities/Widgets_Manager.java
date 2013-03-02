@@ -216,7 +216,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters());
+						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id());
 				list.setLayoutParams(layout_param);
 				list.container=tmpPan;
 				tmpPan.addView(list);

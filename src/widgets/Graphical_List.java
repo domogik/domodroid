@@ -120,18 +120,21 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			String type, String address,
 			final String state_key, String url,String usage, int period, int update, 
-			int widgetSize, int session_type, final String parameters) {
+			int widgetSize, int session_type, final String parameters,String model_id) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
 		this.dev_id = dev_id;
 		this.id = id;
 		this.address = address;
-		this.type = type;
+		//this.type = type;
 		this.state_key = state_key;
 		this.update=update;
 		this.wname = name;
 		this.url = url;
+		String[] model = model_id.split("\\.");
+		this.type = model[0];
+		
 		packageName = context.getPackageName();
 		Graphical_List.myself = this;
 		this.session_type = session_type;
@@ -235,7 +238,6 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 					
 			}
 			//list of choices
-			
 			listeChoices = new ListView(context);
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
 			

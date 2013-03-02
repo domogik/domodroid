@@ -224,9 +224,9 @@
 	<string name="House">Maison</string>
 	<string name="statistics">Statistiques Serveur</string>
 	
-	<string name="HVACstop">Arrêt</string>
-	<string name="HVACnofreeze">Hors gel</string>
-	<string name="HVACeco">Economique</string>
-	<string name="HVACnormal">Confort</string>
+	<string name="hvacstop">Arrêt</string>
+	<string name="hvacnofreeze">Hors gel</string>
+	<string name="hvaceco">Economique</string>
+	<string name="hvacnormal">Confort</string>
 	
 </resources>

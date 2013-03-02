@@ -428,10 +428,6 @@ containing a value of this type.
         public static final int Exit_Program=0x7f06002f;
         public static final int Field=0x7f060069;
         public static final int Green=0x7f06006c;
-        public static final int HVACeco=0x7f0600b7;
-        public static final int HVACnofreeze=0x7f0600b6;
-        public static final int HVACnormal=0x7f0600b8;
-        public static final int HVACstop=0x7f0600b5;
         public static final int House=0x7f0600b3;
         public static final int Hue=0x7f060066;
         public static final int Map=0x7f0600b2;
@@ -496,6 +492,10 @@ containing a value of this type.
         public static final int home_reload=0x7f060015;
         public static final int home_splash=0x7f060012;
         public static final int home_splash2=0x7f060013;
+        public static final int hvaceco=0x7f0600b7;
+        public static final int hvacnofreeze=0x7f0600b6;
+        public static final int hvacnormal=0x7f0600b8;
+        public static final int hvacstop=0x7f0600b5;
         public static final int info0=0x7f060033;
         public static final int info1=0x7f060034;
         public static final int info10=0x7f06003d;

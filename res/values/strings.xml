@@ -214,9 +214,9 @@
 	<string name="House">House</string>
 	<string name="statistics">Server statistics</string>
 	
-	<string name="HVACstop">Stop</string>
-	<string name="HVACnofreeze">Out of freeze</string>
-	<string name="HVACeco">Economic</string>
-	<string name="HVACnormal">Comfort mode</string>
+	<string name="hvacstop">Stop</string>
+	<string name="hvacnofreeze">Out of freeze</string>
+	<string name="hvaceco">Economic</string>
+	<string name="hvacnormal">Comfort mode</string>
 	
 </resources>

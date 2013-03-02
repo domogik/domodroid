@@ -375,8 +375,17 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	
 	private String getStringResourceByName(String stringName) {
 	      String packageName = context.getPackageName();
-	      int resId = getResources().getIdentifier(stringName, "string", packageName);
-	      return context.getString(resId);
+	      String search = stringName.toLowerCase(null);
+	      int resId = 0;
+	   
+	      resId = getResources().getIdentifier(search, "string", packageName);
+	      String result = "";
+	      try {
+	    	  result = context.getString(resId);
+	      } catch (Exception e) {
+	    	  result = stringName;
+	      }
+	      return result;
 	    }
 	
 	

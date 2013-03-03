@@ -24,8 +24,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class Dialog_Map extends Dialog implements OnClickListener {
+public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChangeListener {
 	private Button cancelButton;
 	private Button OKButton;
 	private CheckBox checkbox_drag;
@@ -99,8 +100,22 @@ public class Dialog_Map extends Dialog implements OnClickListener {
 		}
 	}
 	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-		mProgressText3.setText((progress+sizeOffset)+" px");	
+		if(seekBar.getId()==R.id.SeekBar3) {
+			int	value = progress;
+			if(value < sizeOffset) {
+				value = sizeOffset;
+				seekBar.setProgress(value);
+			}
+			mProgressText3.setText((value)+" "+(R.string.pixels));
+		}
 	}
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	}
+
+
+	public void onStopTrackingTouch(SeekBar seekBar) {
+	}
+
 	
 	
 	

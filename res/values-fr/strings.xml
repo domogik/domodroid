@@ -165,6 +165,7 @@
 	<string name="shutter_stat_0">Fermé</string>
 	<string name="shutter_stat_1">Ouvert</string>
 	<string name="seconds">Secondes</string>
+	<string name="pixels">Pixels</string>
 	
 	<string name="stats_title">Echanges avec serveur Domogik</string>
 	<string name="stats_title_period">Dernière Période : </string>

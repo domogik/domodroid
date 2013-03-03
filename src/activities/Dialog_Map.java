@@ -63,6 +63,8 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 		checkbox_menu_disable = (CheckBox)findViewById(R.id.checkbox_menu_disable);		
 		mProgressText3 = (TextView)findViewById(R.id.progress3);
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
+		mSeekBar3.setTag("seekbar3");
+		mSeekBar3.setOnSeekBarChangeListener(this);
 				
 		get_params();	//retrieve actual settings and prepare to display them
 		
@@ -100,13 +102,14 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 		}
 	}
 	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-		if(seekBar.getId()==R.id.SeekBar3) {
+		if(seekBar.getTag().equals("seekbar3")) {
 			int	value = progress;
 			if(value < sizeOffset) {
 				value = sizeOffset;
 				seekBar.setProgress(value);
 			}
-			mProgressText3.setText((value)+" "+(R.string.pixels));
+			//Tracer.e("Dialog_Map", "Updating size : "+value+" "+context.getString(R.string.pixels));
+			mProgressText3.setText((value)+" "+context.getString(R.string.pixels));
 		}
 	}
 	public void onStartTrackingTouch(SeekBar seekBar) {

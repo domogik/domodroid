@@ -23,7 +23,7 @@ Creation of the "Domodroid" directory at the root of the external storage direct
 * Change map: 3 fingers tap 
 
 
-    Multi-touch gesture (Zoom, Drag, Change Map) can be activated from the "Options" screen. 
+    Multi-touch gesture (Zoom, Drag, Change Map, Hide text) can be activated from the "MAP Options" screen. 
 
 Gesture activation must be activated only on powerfull devices otherwise Domodroid will certainly crashes. Bitmap rezising might cause OutOfMemory exception so domodroid will automatically reduce bitmaps exceeding 800*800px by √2.
 
@@ -45,7 +45,16 @@ This library supports a subset of the SVG Basic 1.1 specification. Typically, yo
     Add widgets button allows users to place a widget on the map by choosing an item from the feature list and touching the map to place the widget. 
 
 
-    Remove widgets button allows users to remove the widget from the map 
+    Help open the map mode help splash screen. 
+
+
+    Remove widgets button allows users to remove the widget from the current map. 
+
+
+    Move widgets button allows users to move the widget from the current map, select it and replace it somewhere else.
+
+
+    Remove all  button allows users to remove all widget from the current map. 
 
 
 Image

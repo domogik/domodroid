@@ -57,7 +57,7 @@ This library supports a subset of the SVG Basic 1.1 specification. Typically, yo
     Remove all  button allows users to remove all widget from the current map. 
 
 
-Image
+.. image:: Menu_open_in_map.png
 
 Camera
 

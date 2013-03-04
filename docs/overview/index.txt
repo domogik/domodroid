@@ -28,7 +28,7 @@ Interactivity, linking, scripting and animation.
 Arc commands in paths (work on this is in progress). 
 
 Add widgets button allows users to place a widget on the map by choosing an item from the feature list and touching the map to place the widget. 
-Remove widgets button allows users to remove the widget from the map. 
+You can also Move,Remove one widgets or remove all widgets from the current map. 
 
 .. image:: map1.png
 

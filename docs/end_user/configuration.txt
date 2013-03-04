@@ -10,6 +10,8 @@ Graphic period has been removed, and you can now switch graph period directly in
 
 * Dev, add the device Id after his name to help debugging
 
+.. image:: new_menu.png
+
 Map option:
 * Allow drag in map view
 * Allow zoom in map view
@@ -18,7 +20,7 @@ Map option:
 
 Max map size in px (be carefull it could make memory error).
 
-.. image:: new_menu.png
+.. image:: Map conf menu.png
 
 Debug option:
 * Allow Debug message
@@ -31,3 +33,4 @@ Debug option:
 * In text file
 * You have to select the dirname and filename where you want it to be save.
 
+.. image:: Debug Conf menu.png

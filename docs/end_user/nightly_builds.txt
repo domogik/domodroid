@@ -1,0 +1,22 @@
+==============
+Nightly Builds
+==============
+
+Nightly builds are Android apk available at:
+
+http://repo.domogik.org/domodroid-nightly/
+
+They're build every night and can be build by developers at any time with a special link.
+
+You should use the last one to be sure having last update.
+
+To know witch version you're using, you could use the "About" menu it's write behind the rev number.
+
+For example in this view the Dev version is 336 :
+
+.. image:: About.png
+
+
+If you find a bug or want an evolution don't forget to tell us witch version it is.
+
+You can user the Tracker at: http://tracker.domogik.org/projects/domodroid to submit anythings. 

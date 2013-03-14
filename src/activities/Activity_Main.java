@@ -39,6 +39,7 @@ import database.WidgetUpdate;
 import activities.Sliding_Drawer.OnPanelListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,6 +51,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -132,8 +134,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
 	private String tracer_state = "false";
-	Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
+	private Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
 	private int mytype = 0;		// All objects will be 'Main" type
+	//private AlertDialog.Builder dialog_message;
+	protected ProgressDialog dialog_message;
+	private Boolean cache_ready = false;
+	private Boolean end_of_init_requested = true;
+	private LinearLayout info;
+	private TextView info_msg;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -258,7 +266,24 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name1));
 				}else if(msg.what==3){
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
-				} 
+				} else if(msg.what==8000){
+					/*
+					Tracer.e("Activity_Main","Request to display message : 8000");
+					if(dialog_message == null) {
+						Create_message_box();
+					}
+					dialog_message.setMessage("Starting cache engine...");
+					dialog_message.show();
+					
+					*/
+				} else if(msg.what==8999){
+					//Cache engine is ready for use....
+					Tracer.e("Activity_Main","Cache engine has notified it's ready !");
+					cache_ready=true;
+					if(end_of_init_requested)
+						end_of_init();
+					dialog_message.dismiss();
+				}
 			}	
 		};
 
@@ -294,13 +319,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 		//Parent view
 		parent = (ViewGroup) findViewById(R.id.home_container);
-
 		//sliding drawer
 		topPanel = panel = (Sliding_Drawer) findViewById(R.id.topPanel);
 		panel.setOnPanelListener(this);
 		//panel.setPadding(0, 45, 0, 0);
 
-
+		
 		house_map = new LinearLayout(this);
 		house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		house_map.setOrientation(LinearLayout.HORIZONTAL);
@@ -346,10 +370,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		house_map.addView(map);
 		init_done = false;
-		/*
-		starting = Toast.makeText(this, "Building screen done...",Toast.LENGTH_LONG);
-		starting.show();
-		*/
 		// Detect if it's the 1st use after installation...
 			if(!params.getBoolean("SPLASH", false)){
 				// Yes, 1st use !
@@ -383,18 +403,27 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				} else {
 					//No settings backup found
 					Tracer.v("Activity_Main","no settings backup found after fresh install...");
-					end_of_init();
+					end_of_init_requested = true;
 				}
 			} else {
 				// It's not the 1st use after fresh install
-				Tracer.e("Activity_Main","First init already done...");
-				end_of_init();
+				// This method will be followed by 'onResume()'
+				end_of_init_requested = true;
 			}
 			
-			
+			Tracer.e("Activity_Main","OnCreate() complete !");
 			// End of onCreate (UIThread)
 	}
-	
+	private void Create_message_box() {
+		if(dialog_message != null)
+			return;
+		
+		
+		dialog_message = new ProgressDialog(this);
+		dialog_message.setMessage(getText(R.string.init_in_process));
+		//dialog_reload.setPositiveButton("OK", message_listener);
+		dialog_message.setTitle(getText(R.string.please_wait));
+	}
 	public void force_DB_update() {
 		if(widgetUpdate != null) {
 			widgetUpdate.refreshNow();
@@ -431,16 +460,23 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		// WidgetUpdate is a background process, submitting queries to Rinor
 		//		and updating its cache for values per device
-		starting = Toast.makeText(this, "Loading cache from Domogik server....",Toast.LENGTH_LONG);
-		starting.show();
+		
+		
 		/*
 			starting.setText("Loading cache from Domogik server....");
 			starting.setDuration(Toast.LENGTH_LONG);
 			starting.show();
 		*/
+		//Normally, this sequence is only executed when cache is ready....
+		/*
 		Boolean connected = false;
 		if(params.getString("UPDATE_URL", null) != null)
 			connected = startCacheEngine();
+		while(! cache_ready) {
+			try {
+				Thread.sleep(100);
+			} catch (Throwable t) {}
+		}
 		
 		if(! connected) {
 			if(widgetUpdate != null) {
@@ -455,6 +491,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			}
 			
 		}
+		*/
 		if(history != null)
 			history = null;		//Free resource
 		history = new Vector<String[]>();
@@ -502,7 +539,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		init_done = true;
 		dont_kill = false;	//By default, the onDestroy activity will also kill engines
-		starting = null;
+		//starting = null;
 	}
 	/*
 	 * Check the answer after the proposal to reload existing settings (fresh install)
@@ -912,18 +949,21 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onDestroy() {
 		super.onDestroy();
 		this.mWakeLock.release();	// We allow screen shut, now...
-		Tracer.w("Activity_Main.onDestroy","Disconnecting from engine !");
+		Tracer.w("Activity_Main.onDestroy","cache engine set to sleeping !");
 		this.wAgent=null;
 		widgetHandler=null;
 		if(widgetUpdate != null) {
+			widgetUpdate.Disconnect(0);	//remove all pending subscribings
+			widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
 			//Tracer.set_engine(null);
+			/*
 			if( ! dont_kill) {
-				widgetUpdate.Disconnect(0);	//done by onPause
 				//widgetUpdate.set_sleeping(); // already done by onPause
 				widgetUpdate.cancel();
 				widgetUpdate=null;
 			}
 			dont_kill = false;
+			*/
 		}
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
@@ -934,12 +974,22 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	@Override
 	public void onResume() {
 		super.onResume();
-		Tracer.e("Activity_Main.onResume","Try to reconnect to cache engine !");
-		if(widgetUpdate != null) {
-			Tracer.e("Activity_Main.onResume","widgetUpdate is available !");
-			widgetUpdate.wakeup();
+		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
+		
+		if(! init_done) {
+			cache_ready = false;
+			this.Create_message_box();
+			dialog_message.setMessage(getText(R.string.loading_cache)); 
+			dialog_message.show();
+			startCacheEngine();
+			//end_of_init();		//Will be done when cache will be ready
+		} else {
+			if(widgetUpdate != null) {
+				widgetUpdate.wakeup();
+			}
+			end_of_init();	//all client widgets will be re-created
 		}
-		end_of_init();	//all client widgets will be re-created
+		
 		
 	}
 

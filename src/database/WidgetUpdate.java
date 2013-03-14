@@ -52,8 +52,8 @@ public class WidgetUpdate  {
 	private Boolean timer_flag = false;
 	public Boolean ready = false;
 	private Handler mapView = null;
-	public Events_manager eventsManager ;
-	private static Handler myselfHandler ;
+	public Events_manager eventsManager = null;
+	private static Handler myselfHandler = null ;
 	private int last_ticket = -1;
 	private int last_position = -1;
 	private Timer timer = null;
@@ -68,7 +68,7 @@ public class WidgetUpdate  {
 	// pos 0 = Main
 	// pos 1 = Map
 	// pos 2 = MapView
-	private Handler[] parent = new Handler[3];
+	private static Handler[] parent = new Handler[3];
 	
 	/*
 	 * This class is a background engine 
@@ -134,12 +134,16 @@ public class WidgetUpdate  {
 		domodb.owner=mytag;
 		timer_flag = false;
 		ready=false;
+		/*
+		if(parent[0] != null) {
+			parent[0].sendEmptyMessage(8000);	//Ask main to display message
+		}
+		*/
 		Tracer.d(mytag,"cache engine starting timer for periodic cache update");
 		Timer();		//and initiate the cyclic timer
-		new UpdateThread().execute();	//And force an immediate refres
+		new UpdateThread().execute();	//And force an immediate refresh
 		this.callback_counts = 0;	//To force a refresh
-		Tracer.d(mytag,"state engine waiting for initial setting of cache !");
-		
+		/*
 		Boolean said = false;
 		int max_time_for_sync = 15 * 1000;		// On initial cache initialization, return an error 
 												// if cannot connect in 15 seconds
@@ -155,21 +159,38 @@ public class WidgetUpdate  {
 			} catch (Exception e) {};
 			sync_duration += 200;
 			if(sync_duration > max_time_for_sync) {
-				Tracer.d(mytag,"cache engine not synced after "+(max_time_for_sync/1000)+" seconds : Abort !");
-				return result;		//false, if sync not success
+				Tracer.d(mytag,"cache engine not synced after "+(max_time_for_sync/1000)+" seconds !");
+				sync_duration = 0;
+				//return result;		//false, if sync not success
 			}
 		}
+		if(parent[0] != null) {
+			parent[0].sendEmptyMessage(8999);	//hide Toast message
+		}
 		Tracer.d(mytag,"cache engine ready !");
-		
+		*/
 		// Cache contains list of existing devices, now !
 		
 		///////// Create an handler to exchange with Events_Manager///////////////////
 		myselfHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				//This handler will receive notifications from Events_Manager
+				//This handler will receive notifications from Events_Manager and from waitingThread running in background
 				// 1 message => 1 event : so, it's serialized !
-				if(msg.what == 9900) {
+				if(msg.what == 8999) {
+					// Cache engine being ready, we can start events manager
+					Tracer.d(mytag,"Main thread handler : Cache engine is now ready....");
+					
+					if(eventsManager == null) {
+						eventsManager = Events_manager.getInstance(); 
+					}
+					eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
+					/*
+					if(parent[0] != null) {
+						parent[0].sendEmptyMessage(8999);	//Forward event to Main
+					}
+					*/
+				} else	if(msg.what == 9900) {
 					if(eventsManager != null) {
 						callback_counts++;
 						Rinor_event event = eventsManager.get_event();
@@ -225,8 +246,10 @@ public class WidgetUpdate  {
 			}
 		};
 		///////// and pass to it now///////////////////
-		eventsManager = Events_manager.getInstance(); 
-		eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
+		Tracer.d(mytag,"Waiting thread started to notify main when cache ready !");
+		new waitingThread().execute();
+		
+		Tracer.d(mytag,"cache engine initialized !");
 		init_done = true;
 		result=true;
 		return result;
@@ -498,7 +521,38 @@ public class WidgetUpdate  {
 		
 		sleeping = false;
 	}
-	
+	public class waitingThread extends AsyncTask<Void, Integer, Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			Boolean said = false;
+			int counter = 0;
+			while (! ready) {
+				if(! said) {
+					Tracer.d(mytag,"cache engine not yet ready : Wait a bit !");
+					said=true;
+				}
+				try{
+					Thread.sleep(100);
+					counter++;
+					if(counter > 100) {
+						said = false;
+						counter = 0;
+					}
+				} catch (Exception e) {};
+			}
+			if(myselfHandler != null) {
+				Tracer.d(mytag,"cache engine ready  ! Notify it....");
+				myselfHandler.sendEmptyMessage(8999);	// cache engine ready.....
+			}
+			if(parent[0] != null) {
+				Tracer.d(mytag,"cache engine ready  ! Notify Main activity....");
+				parent[0].sendEmptyMessage(8999);	//hide Toast message
+			}
+			Tracer.d(mytag,"cache engine ready  ! Exiting Waiting thread ....");
+			return null;
+		}
+		
+	}
 	
 	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
 
@@ -568,6 +622,8 @@ public class WidgetUpdate  {
 		
 		if(json_widget_state == null)
 			return 0;
+		//Tracer.i(mytag, "Cache update : stats result <"+json_widget_state.toString()+">");
+		
 		try {
 			itemArray = json_widget_state.getJSONArray("stats");
 			to_process = true;
@@ -728,8 +784,9 @@ public class WidgetUpdate  {
 		
 		while(locked) {
 			//Somebody else is updating list...
+			//Tracer.i(mytag, "cache engine locked : wait !");
 			try{
-				Thread.sleep(10);		//Standby 10 milliseconds
+				Thread.sleep(100);		//Standby 10 milliseconds
 			} catch (Exception e) {};
 		}
 		locked=true;	//Take the lock

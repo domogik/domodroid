@@ -520,6 +520,12 @@ public class WidgetUpdate  {
 			stats_com.wakeup();
 		
 		sleeping = false;
+		if(ready) {
+			if(parent[0] != null) {
+				parent[0].sendEmptyMessage(8999);	//Notify cache is ready
+			}
+			
+		}
 	}
 	public class waitingThread extends AsyncTask<Void, Integer, Void>{
 		@Override

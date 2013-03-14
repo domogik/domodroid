@@ -928,6 +928,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			widgetUpdate = WidgetUpdate.getInstance();
 			widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)
 			Boolean result = widgetUpdate.init(Tracer, this,params);
+			widgetUpdate.wakeup();
 			if(! result)
 				return result;
 		}  
@@ -955,15 +956,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		if(widgetUpdate != null) {
 			widgetUpdate.Disconnect(0);	//remove all pending subscribings
 			widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
-			//Tracer.set_engine(null);
-			/*
-			if( ! dont_kill) {
-				//widgetUpdate.set_sleeping(); // already done by onPause
-				widgetUpdate.cancel();
-				widgetUpdate=null;
-			}
-			dont_kill = false;
-			*/
+			
 		}
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
@@ -984,10 +977,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			startCacheEngine();
 			//end_of_init();		//Will be done when cache will be ready
 		} else {
+			end_of_init_requested=true;
 			if(widgetUpdate != null) {
-				widgetUpdate.wakeup();
+				widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
 			}
-			end_of_init();	//all client widgets will be re-created
+			//end_of_init();	//all client widgets will be re-created
 		}
 		
 		

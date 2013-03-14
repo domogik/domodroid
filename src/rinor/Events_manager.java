@@ -34,6 +34,7 @@ public class Events_manager {
 	private String urlAccess;
 	private ListenerThread listener = null;
 	public Boolean alive = false;
+	public Boolean cache_out_of_date = false;
 	private int events_seen = 0;
 	TimerTask doAsynchronousTask = null;
 	private Boolean listener_running = false;
@@ -206,6 +207,7 @@ public class Events_manager {
 					} catch (Throwable t) {}
 					sleep_duration+=sleep_time;
 					if(sleep_duration > max_time_for_ticket) {
+						cache_out_of_date = true;
 						request = ticket_request;
 						com_broken = false;		//Retry immediatly to reconnect
 					}

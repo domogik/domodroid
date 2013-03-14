@@ -520,6 +520,12 @@ public class WidgetUpdate  {
 			stats_com.wakeup();
 		
 		sleeping = false;
+		//TODO : if sleep period too long (> 1'50) , we must force a refresh of cache values, because events have been 'masked' !
+		if((eventsManager != null) && eventsManager.cache_out_of_date) {
+			callback_counts = 0;
+			new UpdateThread().execute();	//Force an immediate cache refresh
+			eventsManager.cache_out_of_date = false;
+		}
 		if(ready) {
 			if(parent[0] != null) {
 				parent[0].sendEmptyMessage(8999);	//Notify cache is ready
@@ -547,7 +553,7 @@ public class WidgetUpdate  {
 				} catch (Exception e) {};
 			}
 			if(myselfHandler != null) {
-				Tracer.d(mytag,"cache engine ready  ! Notify it....");
+				//Tracer.d(mytag,"cache engine ready  ! Notify it....");
 				myselfHandler.sendEmptyMessage(8999);	// cache engine ready.....
 			}
 			if(parent[0] != null) {

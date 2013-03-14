@@ -346,7 +346,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		house_map.addView(map);
 		init_done = false;
-		
+		/*
+		starting = Toast.makeText(this, "Building screen done...",Toast.LENGTH_LONG);
+		starting.show();
+		*/
 		// Detect if it's the 1st use after installation...
 			if(!params.getBoolean("SPLASH", false)){
 				// Yes, 1st use !
@@ -387,8 +390,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				Tracer.e("Activity_Main","First init already done...");
 				end_of_init();
 			}
-			starting = Toast.makeText(this, "Building screen done...",Toast.LENGTH_LONG);
-			starting.show();
+			
 			
 			// End of onCreate (UIThread)
 	}
@@ -429,11 +431,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		// WidgetUpdate is a background process, submitting queries to Rinor
 		//		and updating its cache for values per device
-		if(starting != null) {
+		starting = Toast.makeText(this, "Loading cache from Domogik server....",Toast.LENGTH_LONG);
+		starting.show();
+		/*
 			starting.setText("Loading cache from Domogik server....");
 			starting.setDuration(Toast.LENGTH_LONG);
 			starting.show();
-		}
+		*/
 		Boolean connected = false;
 		if(params.getString("UPDATE_URL", null) != null)
 			connected = startCacheEngine();
@@ -444,6 +448,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				widgetUpdate = null;
 			}
 			if(starting != null) {
+				starting.cancel();
 				starting.setText("Error connecting to server ! review settings, please !");
 				starting.setDuration(Toast.LENGTH_LONG);
 				starting.show();
@@ -480,6 +485,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			wAgent.widgetupdate = widgetUpdate;
 		}
 		if(starting != null) {
+			starting.cancel();
 			starting.setText("Creating widgets....");
 			starting.setDuration(Toast.LENGTH_SHORT);
 			starting.show();
@@ -489,6 +495,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		historyPosition=0;
 		history.add(historyPosition,new String [] {"0","root"});
 		if(starting != null) {
+			starting.cancel();
 			starting.setText("Ready....");
 			starting.setDuration(Toast.LENGTH_SHORT);
 			starting.show();

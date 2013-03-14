@@ -367,8 +367,21 @@ public class MapView extends View {
 					Tracer.e("MapView","cannot draw object ! ! ! !");
 					return;
 				}
+				
 				// Draw state and description
-				if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
+				
+				if(featureMap.getValue_type().equals("string")){
+					if(! featureMap.getDevice_feature_model_id().contains("camera")) {
+						for(int j=1;j<5;j++){
+							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+							paint_text.setTextSize(16);
+							canvasWidget.drawText(featureMap.getCurrentState(), 
+									(featureMap.getPosx()*currentScale)+text_Offset_X, 
+									(featureMap.getPosy()*currentScale)+text_Offset_Y, 
+									paint_text);
+						}
+					}
+				} else if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(16);

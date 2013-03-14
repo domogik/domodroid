@@ -230,4 +230,8 @@
 	<string name="hvaceco">Economique</string>
 	<string name="hvacnormal">Confort</string>
 	
+	<string name="init_in_process">Initialisation en cours....</string>
+	<string name="please_wait">Veuillez patienter....</string>
+	<string name="loading_cache">Chargement initial du cache à partir du serveur Domogik....</string>
+	
 </resources>

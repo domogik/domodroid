@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  -->
- 
-<FrameLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" 
-	android:layout_height="450dp"
-	android:background="@drawable/background">
+ <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="fill_parent"
+     android:layout_height="fill_parent"
+     android:background="@drawable/background"
+     android:scrollbarAlwaysDrawVerticalTrack="false" >
 
 	<!-- Set center image + backgroud -->
 	<FrameLayout android:layout_width="fill_parent"
@@ -86,16 +85,27 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dip" >
-                
+
+                <CheckBox
+                    android:id="@+id/checkbox_drag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 				
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/map_option_drag"
                     android:textColor="#FFFFFF" />
+               </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
 
                 <CheckBox
-                    android:id="@+id/checkbox_drag"
+                    android:id="@+id/checkbox_zoom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -105,41 +115,47 @@
                     android:paddingLeft="10dip"
                     android:text="@string/map_option_zoom"
                     android:textColor="#FFFFFF" />
-                <CheckBox
-                    android:id="@+id/checkbox_zoom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-               </LinearLayout>
+            </LinearLayout>
                
                <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dip" >
-             
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/map_option_hide_text"
-                    android:textColor="#FFFFFF" />
-                <CheckBox
-                    android:id="@+id/checkbox_hide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/map_option_menu_disable"
-                    android:textColor="#FFFFFF" />
-                <CheckBox
-                    android:id="@+id/checkbox_menu_disable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+
+                   <CheckBox
+                       android:id="@+id/checkbox_hide"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:paddingLeft="10dip"
+                       android:text="@string/map_option_hide_text"
+                       android:textColor="#FFFFFF" />
 		        
 			</LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:paddingTop="10dip" >
+
+                   <CheckBox
+                       android:id="@+id/checkbox_menu_disable"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:paddingLeft="10dip"
+                       android:text="@string/map_option_menu_disable"
+                       android:textColor="#FFFFFF" />
+               </LinearLayout>
+
 			<LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -564,8 +564,8 @@ public class MapView extends View {
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),
 					label,feature.getId(),feature.getDevId(),feature.getState_key(),
-					feature.getDevice_usage_id(), feature.getDevice_type_id(),
-					feature.getParameters(),params.getInt("UPDATE",300),0, mytype);
+					feature.getDevice_usage_id(),feature.getParameters(),
+					feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {

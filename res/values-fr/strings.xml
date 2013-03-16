@@ -52,7 +52,7 @@
 	<string name="home_button3">Synchroniser</string>
 	<string name="home_button4">A propos</string>
 	
-	<string name="map_button1">Ajout widget</string>
+	<string name="map_button1">Ajouter Widget</string>
 	<string name="map_button2">Effacer Widget</string>
 	<string name="map_button2b">Supprimer tous les Widgets</string>
 	<string name="map_nothing">Aucune carte chargée, Cliquez \"Aide\"</string>

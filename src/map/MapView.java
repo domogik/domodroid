@@ -73,7 +73,8 @@ public class MapView extends View {
 	private static int text_Offset_X = 25;
 	private static int text_Offset_Y = 0;
 	private int moves;
-
+	private SharedPreferences.Editor prefEditor;
+	
 	public int temp_id;
 
 	private Paint paint_map;
@@ -237,8 +238,12 @@ public class MapView extends View {
 		//Saved scale should be use here if exists
 		//if (savedScale!=null)
 		//currentScale= savedScale;
-		currentScale = 1;
-		
+		if(params.getFloat("Mapscale", 1)!=1){
+			currentScale=params.getFloat("Mapscale", 1);
+		}
+		else{
+			currentScale = 1;
+		}
 		origin = new Matrix();
 		mat = new TransformManager();
 		mat.setZoom(params.getBoolean("ZOOM", false));
@@ -814,7 +819,9 @@ public class MapView extends View {
 			break;
 		case MotionEvent.ACTION_POINTER_UP:
 			mat.matrix.getValues(value);
-			currentScale*=value[0];			
+			currentScale*=value[0];
+			prefEditor=params.edit();
+			prefEditor.putFloat("Mapscale", value[0]);
 			value[0]=1;
 			value[4]=1;
 			mat.matrix.setValues(value);
@@ -993,4 +1000,12 @@ public class MapView extends View {
 		this.moveMode = moveMode;
 		
 	}
+
+//Next map
+	//if(currentFile +1 < files.size()) currentFile++;
+	//	else currentFile=0;
+//Previous map
+	//if(currentFile != 0) currentFile--;
+	//	else currentFile=files.size()-1;
+		
 }

@@ -73,8 +73,8 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 	public void get_params() {
 		checkbox_drag.setChecked(params.getBoolean("DRAG", true));
 		checkbox_zoom.setChecked(params.getBoolean("ZOOM", true));
-		checkbox_hide.setChecked(params.getBoolean("HIDE", true));
-		checkbox_menu_disable.setChecked(params.getBoolean("map_menu_disable", true));
+		checkbox_hide.setChecked(params.getBoolean("HIDE", false));
+		checkbox_menu_disable.setChecked(params.getBoolean("map_menu_disable", false));
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
 		
 		

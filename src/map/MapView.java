@@ -232,7 +232,8 @@ public class MapView extends View {
 		}else{
 			formatMode=0;
 		}
-
+		
+		//TODO save scale
 		//Saved scale should be use here if exists
 		//if (savedScale!=null)
 		//currentScale= savedScale;

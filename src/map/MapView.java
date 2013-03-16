@@ -238,11 +238,9 @@ public class MapView extends View {
 		//Saved scale should be use here if exists
 		//if (savedScale!=null)
 		//currentScale= savedScale;
+		currentScale = 1;
 		if(params.getFloat("Mapscale", 1)!=1){
 			currentScale=params.getFloat("Mapscale", 1);
-		}
-		else{
-			currentScale = 1;
 		}
 		origin = new Matrix();
 		mat = new TransformManager();
@@ -821,7 +819,7 @@ public class MapView extends View {
 			mat.matrix.getValues(value);
 			currentScale*=value[0];
 			prefEditor=params.edit();
-			prefEditor.putFloat("Mapscale", value[0]);
+			prefEditor.putFloat("Mapscale", currentScale);
 			value[0]=1;
 			value[4]=1;
 			mat.matrix.setValues(value);

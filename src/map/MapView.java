@@ -76,6 +76,8 @@ public class MapView extends View {
 	private SharedPreferences.Editor prefEditor;
 	
 	public int temp_id;
+	public int map_id;
+	public String map_name = "";
 
 	private Paint paint_map;
 	private Paint paint_text;
@@ -374,7 +376,7 @@ public class MapView extends View {
 				
 				// Draw state and description
 				
-				if(featureMap.getValue_type().equals("string")){
+				if(featureMap.getValue_type().equals("string") && (! featureMap.getState_key().equals("color"))){
 					if(! featureMap.getDevice_feature_model_id().contains("camera")) {
 						for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);

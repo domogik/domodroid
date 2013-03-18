@@ -148,7 +148,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		listeMap.setAdapter(adapter_map);
 		listeMap.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Tracer.d("Activity_Map.onclick","Map selected at Position = "+position);
+				//Tracer.d("Activity_Map.onclick","Map selected at Position = "+position);
 				if((position < listItem.size()) && (position > -1) ) {
 					mapView.setCurrentFile(position);
 					mapView.initMap();
@@ -265,12 +265,32 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					listItem1.add(map);
 				}
 			}
+		}
+		if(list_usable_files != null) {
+			for (int i=0;i<list_usable_files.size();i++) {
+				map=new HashMap<String,String>();
+				map.put("name","Switch to map ");
+				map.put("type", "");
+				map.put("state_key", list_usable_files.elementAt(i));
+				listItem1.add(map);
+			}
+		}
+		if((listItem1 != null) && (listItem1.size() > 0) ) {
 			SimpleAdapter adapter_feature=new SimpleAdapter(getBaseContext(),listItem1,
 					R.layout.item_feature,new String[] {"name","type","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
 			listview_feature.setAdapter(adapter_feature);
 			listview_feature.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					mapView.temp_id = listFeature[position].getId();
+					if(position < listFeature.length) {
+						// It's a feature element
+						mapView.map_id = -1;
+						mapView.temp_id = listFeature[position].getId();
+					} else {
+						//It's a map switch element
+						mapView.temp_id = -1;
+						mapView.map_id = position - listFeature.length;
+						Tracer.e("Activity_Main","map selected <"+list_usable_files.elementAt(mapView.map_id)+">");
+					}
 					mapView.setAddMode(true);
 					dialog_feature.dismiss();
 				}
@@ -359,7 +379,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onDestroy();
 		if(Tracer != null)
 			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : disconnect from engines");
-		
 		if(widgetUpdate != null) {
 			//widgetUpdate.Disconnect(1);	//That'll purge all connected widgets for Map
 			widgetUpdate.Disconnect(2);	//That'll purge all connected widgets for MapView

@@ -286,6 +286,8 @@ public class MapView extends View {
 	public void refreshMap(){
 		canvasMap=null;
 		canvasWidget=null;
+		System.gc();	//Run garbage collector to free maximum of memory
+		
 		//Case using a svg file as map
 		if(formatMode==1){
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
@@ -305,6 +307,7 @@ public class MapView extends View {
 			matScale.postScale(currentScale, currentScale);
 			canvasMap.setMatrix(matScale);
 			canvasMap.drawBitmap(bitmap, 0, 0, paint_map );
+			Tracer.e(mytag, "Trying to create widget at scale : "+currentScale);
 			widget = Bitmap.createBitmap((int)((bitmap.getWidth()+200)*currentScale), (int)((bitmap.getHeight()+200)*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
 		}

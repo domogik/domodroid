@@ -81,7 +81,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	
 	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
-	
+	private File f = null;
+	String files[] = null;
 	private tracerengine Tracer = null;
 	private String owner = "Map";
 	private Boolean dont_freeze = false;
@@ -120,59 +121,17 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		animation2.setDuration(500);
 
 		//read files from SDCARD + create directory
-		String files[] = null;
+		
 		createDirIfNotExists();
-		File f=new File(Environment.getExternalStorageDirectory()+"/domodroid/"); 
+		f=new File(Environment.getExternalStorageDirectory()+"/domodroid/"); 
 		if(f.isDirectory()){ 
 			files= f.list(); 
 		}
 
 
-		//list Map
-		listeMap = (ListView)findViewById(R.id.listeMap);
-		listItem=new ArrayList<HashMap<String,String>>();
-		list_usable_files = new Vector<String>();
-		int i = 0;
-		for ( i=0;i<files.length;i++) {
-			if(!files[i].startsWith(".")){
-				list_usable_files.add(files[i]);
-				map=new HashMap<String,String>();
-				map.put("name",files[i].substring(0, files[i].lastIndexOf('.')));
-				map.put("position",String.valueOf(i));
-				listItem.add(map);
-			}
-		}
-		mapView.setFiles(list_usable_files);
+		build_maps_list();
 		
-		if((Tracer != null) && (Tracer.Map_as_main )) {
-			// Add possibility to invoke Main activity
-			map=new HashMap<String,String>();
-			map.put("name",getText(R.string.go_Main).toString());
-			map.put("position",String.valueOf(i));
-			listItem.add(map);
-		}
-		SimpleAdapter adapter_map=new SimpleAdapter(getBaseContext(),listItem,
-				R.layout.item_map,new String[] {"name"},new int[] {R.id.name});
-		listeMap.setAdapter(adapter_map);
-		listeMap.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//Tracer.d("Activity_Map.onclick","Map selected at Position = "+position);
-				if((position < listItem.size() -1) && (position > -1) ) {
-					mapView.setCurrentFile(position);
-					mapView.initMap();
-				} else {
-					if(position == listItem.size()-1) {
-						//Go to main screen...
-						Tracer.force_Main = true;	//Flag to allow widgets display, even if START_ON_MAP is set !
-						Intent mapI = new Intent(Activity_Map.this,Activity_Main.class);
-						Tracer.d("Activity_Map","Call to Main, run it now !");
-						startActivity(mapI);
-					}
-				}
-			}
-		});
-
-
+		
 		//sliding drawer
 		topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
 		panel.setOnPanelListener(this);
@@ -282,6 +241,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				}
 			}
 		}
+		int i;
 		if(list_usable_files != null) {
 			for ( i=0;i<list_usable_files.size();i++) {
 				map=new HashMap<String,String>();
@@ -364,6 +324,63 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		
 	}
 	
+	private void build_maps_list() {
+		
+		if(listeMap != null)
+			listeMap = null;
+		if(listItem != null)
+			listItem = null;
+		if(list_usable_files != null)
+			list_usable_files = null;
+		
+		//list Map
+		listeMap = (ListView)findViewById(R.id.listeMap);
+		listItem=new ArrayList<HashMap<String,String>>();
+		list_usable_files = new Vector<String>();
+		int i = 0;
+		for ( i=0;i<files.length;i++) {
+			if(!files[i].startsWith(".")){
+				list_usable_files.add(files[i]);
+				map=new HashMap<String,String>();
+				map.put("name",files[i].substring(0, files[i].lastIndexOf('.')));
+				map.put("position",String.valueOf(i));
+				listItem.add(map);
+			}
+		}
+		if(mapView != null)
+			mapView.setFiles(list_usable_files);
+		
+		if((Tracer != null) && (Tracer.Map_as_main )) {
+			// Add possibility to invoke Main activity
+			map=new HashMap<String,String>();
+			map.put("name",getText(R.string.go_Main).toString());
+			map.put("position",String.valueOf(i));
+			listItem.add(map);
+		}
+		SimpleAdapter adapter_map=new SimpleAdapter(getBaseContext(),listItem,
+				R.layout.item_map,new String[] {"name"},new int[] {R.id.name});
+		listeMap.setAdapter(adapter_map);
+		listeMap.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				//Tracer.d("Activity_Map.onclick","Map selected at Position = "+position);
+				int last_map = list_usable_files.size() - 1;
+				if((position <= last_map) && (position > -1) ) {
+					mapView.setCurrentFile(position);
+					mapView.initMap();
+				} else {
+					if((position > last_map) && (Tracer.Map_as_main)) { 
+						//Go to main screen...
+						Tracer.force_Main = true;	//Flag to allow widgets display, even if START_ON_MAP is set !
+						Intent mapI = new Intent(Activity_Map.this,Activity_Main.class);
+						Tracer.d("Activity_Map","Call to Main, run it now !");
+						startActivity(mapI);
+					}
+				}
+			}
+		});
+
+
+	}
 	@Override
 	public void onPause(){
 		super.onPause();
@@ -388,17 +405,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			startCacheEngine();
 		} else {
 			widgetUpdate.wakeup();
+			build_maps_list();
 			if(mapView != null) {
 				mapView.refreshMap();
 			}
 		}
-		if(! Tracer.Map_as_main) {
-			if(list_usable_files.size() < listItem.size()) {
-				//The call to Main activity must be removed from list
-				// because we are not the initial activity
-				listItem.remove(listItem.size()-1);
-			}
-		} 
+		
 		
 		
 	}

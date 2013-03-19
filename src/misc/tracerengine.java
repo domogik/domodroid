@@ -39,6 +39,7 @@ public class tracerengine {
 	
 	public Boolean DBEngine_running = false;
 	public Boolean force_Main = false;
+	public Boolean Map_as_main = false;
 	/*
 	 * This class is fully static 
 	 * Only one instance will be started (by Main) and used by all other components
@@ -50,6 +51,7 @@ public class tracerengine {
 	{
 		super();
 		force_Main = false;
+		Map_as_main = false;
 	}
 
 	public static tracerengine getInstance(SharedPreferences params) {

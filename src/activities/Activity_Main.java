@@ -503,6 +503,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		if((params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
 			Tracer.e("Activity_Main", "Direct start on Map requested...");
+			Tracer.Map_as_main = true;		//Memorize that Map is now the main screen
 			mapI = new Intent(Activity_Main.this,Activity_Map.class);
 			startActivity(mapI);
 		} else {
@@ -838,8 +839,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
 	        }
-		}
-		else if(v.getTag().equals("about")) {
+		} else if(v.getTag().equals("about")) {
 			dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 			Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
 			startActivity(helpI);
@@ -884,7 +884,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			}	
 			
 			
-		
 		} else if(v.getTag().equals("menu")) {
 			// A clic on menu will activate/deactivate panel allowing settings configuration and giving
 			//  access to 'sync' button
@@ -916,26 +915,37 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		super.onPause();
 		panel.setOpen(false, false);
 		Tracer.w("Activity_Main.onPause","Going to background !");
-		if(widgetUpdate != null) 
-			widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
+		if(widgetUpdate != null)  {
+			if(! Tracer.Map_as_main) {
+				// We're the main initial activity
+				widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
+			}
+		}
+			
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		this.mWakeLock.release();	// We allow screen shut, now...
-		Tracer.w("Activity_Main.onDestroy","cache engine set to sleeping !");
 		this.wAgent=null;
 		widgetHandler=null;
 		if(widgetUpdate != null) {
 			widgetUpdate.Disconnect(0);	//remove all pending subscribings
-			widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
+			if(! Tracer.Map_as_main) {
+				// We're the main initial activity
+				Tracer.w("Activity_Main.onDestroy","cache engine set to sleeping !");
+				this.mWakeLock.release();	// We allow screen shut, now...
+				widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
+												// only if we are the main initial activity
+			}
 			
 		}
+		/*
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
 			Tracer = null;
 		}
+		*/
 	}
 	
 	@Override

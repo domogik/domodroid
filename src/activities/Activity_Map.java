@@ -144,11 +144,13 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		}
 		mapView.setFiles(list_usable_files);
 		
-		map=new HashMap<String,String>();
-		map.put("name",getText(R.string.go_Main).toString());
-		map.put("position",String.valueOf(i));
-		listItem.add(map);
-
+		if((Tracer != null) && (Tracer.Map_as_main )) {
+			// Add possibility to invoke Main activity
+			map=new HashMap<String,String>();
+			map.put("name",getText(R.string.go_Main).toString());
+			map.put("position",String.valueOf(i));
+			listItem.add(map);
+		}
 		SimpleAdapter adapter_map=new SimpleAdapter(getBaseContext(),listItem,
 				R.layout.item_map,new String[] {"name"},new int[] {R.id.name});
 		listeMap.setAdapter(adapter_map);
@@ -366,8 +368,13 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onPause(){
 		super.onPause();
 		panel.setOpen(false, false);
-		if(Tracer != null)
+		if(Tracer != null) {
 			Tracer.e("Activity_Map", "onPause");
+			if(Tracer.Map_as_main) {
+				widgetUpdate.set_sleeping();	//We act as main screen : if going to pause, freeze cache engine
+			}
+		}
+		
 	}
 	
 	public void onResume() {
@@ -377,7 +384,14 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		}
 		Tracer.e("Activity_Map.onResume","Try to connect on cache engine !");
 		
-		startCacheEngine();
+		if(widgetUpdate == null) {
+			startCacheEngine();
+		} else {
+			widgetUpdate.wakeup();
+			if(mapView != null) {
+				mapView.refreshMap();
+			}
+		}
 		
 		
 	}
@@ -386,11 +400,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		super.onDestroy();
 		if(Tracer != null)
 			Tracer.e("ActivityMap.onDestroy","Leaving Map_Activity : disconnect from engines");
+		
 		if(widgetUpdate != null) {
-			//widgetUpdate.Disconnect(1);	//That'll purge all connected widgets for Map
 			widgetUpdate.Disconnect(2);	//That'll purge all connected widgets for MapView
-			//widgetUpdate.dump_cache();	//For debug
 		}
+	
 		if(mapView != null)
 			mapView.purge();
 			mapView=null;
@@ -399,6 +413,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Tracer.close();		//To eventually flush and close txt log file
 			Tracer = null;		//Stop own Tracer engine
 		}
+		
 		System.gc();
 	}
 	

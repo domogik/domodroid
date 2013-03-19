@@ -236,11 +236,8 @@ public class MapView extends View {
 			formatMode=0;
 		}
 		
-		//TODO save scale
-		//Saved scale should be use here if exists
-		//if (savedScale!=null)
-		//currentScale= savedScale;
 		currentScale = 1;
+		//Load current scale if it exists.
 		if(params.getFloat("Mapscale", 1)!=1){
 			currentScale=params.getFloat("Mapscale", 1);
 		}
@@ -823,6 +820,7 @@ public class MapView extends View {
 		case MotionEvent.ACTION_POINTER_UP:
 			mat.matrix.getValues(value);
 			currentScale*=value[0];
+			//Save current zoom scale
 			prefEditor=params.edit();
 			prefEditor.putFloat("Mapscale", currentScale);
 			prefEditor.commit();	//To save it really !

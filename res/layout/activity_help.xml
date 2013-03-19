@@ -30,7 +30,9 @@
 				android:layout_height="wrap_content" android:src="@drawable/app_name"
 				android:layout_gravity="right" android:paddingTop="5dip" android:paddingRight="5dip"/>
 		</FrameLayout>
-
+<ScrollView android:layout_height="wrap_content" android:id="@+id/scrollView1"
+		android:layout_width="fill_parent">
+	
 	<LinearLayout
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"

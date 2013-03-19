@@ -326,9 +326,7 @@
 		    </LinearLayout>
 			
 	    </LinearLayout>
-		
-	</LinearLayout>
-	<!--  Layout for bottom buttons -->
+		<!--  Layout for bottom buttons -->
 	<LinearLayout
 			    android:id="@+id/layout_buttons"
 		        android:layout_width="fill_parent"
@@ -354,5 +352,7 @@
 		     />
 
 	 </LinearLayout>
+	</LinearLayout>
+	
 </ScrollView>	   
 </FrameLayout>	

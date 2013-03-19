@@ -822,6 +822,7 @@ public class MapView extends View {
 			currentScale*=value[0];
 			prefEditor=params.edit();
 			prefEditor.putFloat("Mapscale", currentScale);
+			prefEditor.commit();	//To save it really !
 			value[0]=1;
 			value[4]=1;
 			mat.matrix.setValues(value);

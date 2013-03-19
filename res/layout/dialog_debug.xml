@@ -39,7 +39,9 @@
 			android:paddingTop="5dip" 
 			android:paddingRight="5dip"/>
 	</FrameLayout>
-
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="wrap_content">
+	
 	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -352,5 +354,5 @@
 		     />
 
 	 </LinearLayout>
-	   
+</ScrollView>	   
 </FrameLayout>	

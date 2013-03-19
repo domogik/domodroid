@@ -38,7 +38,7 @@ public class tracerengine {
 	private static FileWriter txtFile = null;
 	
 	public Boolean DBEngine_running = false;
-	
+	public Boolean force_Main = false;
 	/*
 	 * This class is fully static 
 	 * Only one instance will be started (by Main) and used by all other components
@@ -49,6 +49,7 @@ public class tracerengine {
 	private tracerengine()
 	{
 		super();
+		force_Main = false;
 	}
 
 	public static tracerengine getInstance(SharedPreferences params) {

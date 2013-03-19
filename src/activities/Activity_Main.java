@@ -278,7 +278,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					*/
 				} else if(msg.what==8999){
 					//Cache engine is ready for use....
-					Tracer.e("Activity_Main","Cache engine has notified it's ready !");
+					if(Tracer != null)
+						Tracer.e("Activity_Main","Cache engine has notified it's ready !");
 					cache_ready=true;
 					if(end_of_init_requested)
 						end_of_init();
@@ -443,7 +444,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private void end_of_init() {
 		// Finalize screen appearence
+		if(Tracer == null)
+			Tracer = Tracer.getInstance();
+		
 		Tracer.v("Activity_Main","end_of_init Main Screen..");
+		end_of_init_requested = false;
 		
 		if(! reload) {
 			//alertDialog not sync splash
@@ -458,40 +463,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.putBoolean("SPLASH", true);
 			prefEditor.commit();
 		}
-		// WidgetUpdate is a background process, submitting queries to Rinor
-		//		and updating its cache for values per device
 		
-		
-		/*
-			starting.setText("Loading cache from Domogik server....");
-			starting.setDuration(Toast.LENGTH_LONG);
-			starting.show();
-		*/
-		//Normally, this sequence is only executed when cache is ready....
-		/*
-		Boolean connected = false;
-		if(params.getString("UPDATE_URL", null) != null)
-			connected = startCacheEngine();
-		while(! cache_ready) {
-			try {
-				Thread.sleep(100);
-			} catch (Throwable t) {}
-		}
-		
-		if(! connected) {
-			if(widgetUpdate != null) {
-				widgetUpdate.cancel();
-				widgetUpdate = null;
-			}
-			if(starting != null) {
-				starting.cancel();
-				starting.setText("Error connecting to server ! review settings, please !");
-				starting.setDuration(Toast.LENGTH_LONG);
-				starting.show();
-			}
-			
-		}
-		*/
 		if(history != null)
 			history = null;		//Free resource
 		history = new Vector<String[]>();
@@ -527,19 +499,21 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			starting.setDuration(Toast.LENGTH_SHORT);
 			starting.show();
 		}
+		init_done = true;
 		
-		loadWigets(0,"root");
-		historyPosition=0;
-		history.add(historyPosition,new String [] {"0","root"});
-		if(starting != null) {
-			starting.cancel();
-			starting.setText("Ready....");
-			starting.setDuration(Toast.LENGTH_SHORT);
-			starting.show();
+		if((params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
+			Tracer.e("Activity_Main", "Direct start on Map requested...");
+			mapI = new Intent(Activity_Main.this,Activity_Map.class);
+			startActivity(mapI);
+		} else {
+			Tracer.force_Main = false;	//Reset flag 'called from Map view'
+			loadWigets(0,"root");
+			historyPosition=0;
+			history.add(historyPosition,new String [] {"0","root"});
 		}
 		init_done = true;
 		dont_kill = false;	//By default, the onDestroy activity will also kill engines
-		//starting = null;
+		
 	}
 	/*
 	 * Check the answer after the proposal to reload existing settings (fresh install)

@@ -20,6 +20,7 @@ import widgets.Entity_Feature;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -131,7 +132,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		listeMap = (ListView)findViewById(R.id.listeMap);
 		listItem=new ArrayList<HashMap<String,String>>();
 		list_usable_files = new Vector<String>();
-		for (int i=0;i<files.length;i++) {
+		int i = 0;
+		for ( i=0;i<files.length;i++) {
 			if(!files[i].startsWith(".")){
 				list_usable_files.add(files[i]);
 				map=new HashMap<String,String>();
@@ -141,7 +143,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 		}
 		mapView.setFiles(list_usable_files);
-
+		
+		map=new HashMap<String,String>();
+		map.put("name",getText(R.string.go_Main).toString());
+		map.put("position",String.valueOf(i));
+		listItem.add(map);
 
 		SimpleAdapter adapter_map=new SimpleAdapter(getBaseContext(),listItem,
 				R.layout.item_map,new String[] {"name"},new int[] {R.id.name});
@@ -149,9 +155,17 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		listeMap.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				//Tracer.d("Activity_Map.onclick","Map selected at Position = "+position);
-				if((position < listItem.size()) && (position > -1) ) {
+				if((position < listItem.size() -1) && (position > -1) ) {
 					mapView.setCurrentFile(position);
 					mapView.initMap();
+				} else {
+					if(position == listItem.size()-1) {
+						//Go to main screen...
+						Tracer.force_Main = true;	//Flag to allow widgets display, even if START_ON_MAP is set !
+						Intent mapI = new Intent(Activity_Map.this,Activity_Main.class);
+						Tracer.d("Activity_Map","Call to Main, run it now !");
+						startActivity(mapI);
+					}
 				}
 			}
 		});
@@ -267,9 +281,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 		}
 		if(list_usable_files != null) {
-			for (int i=0;i<list_usable_files.size();i++) {
+			for ( i=0;i<list_usable_files.size();i++) {
 				map=new HashMap<String,String>();
-				map.put("name","Switch to map ");
+				map.put("name",getText(R.string.go_to_Map).toString());
 				map.put("type", "");
 				map.put("state_key", list_usable_files.elementAt(i));
 				listItem1.add(map);
@@ -340,7 +354,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
 			widgetUpdate = WidgetUpdate.getInstance();
 			//Map is'nt the first caller, so init is'nt required (already done by View)
-			//widgetUpdate.init(Tracer, this,params);
 			widgetUpdate.set_handler(sbanim, 1);	//Put our main handler to cache engine (as Map)
 			widgetUpdate.wakeup();
 		}  
@@ -355,14 +368,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		panel.setOpen(false, false);
 		if(Tracer != null)
 			Tracer.e("Activity_Map", "onPause");
-		/*
-		if(widgetUpdate != null) {
-			widgetUpdate.Disconnect(1);	//That'll purge all connected widgets for Map
-			widgetUpdate.Disconnect(2);	//That'll purge all connected widgets for MapView
-		}
-		*/
-		
 	}
+	
 	public void onResume() {
 		super.onResume();
 		if(Tracer == null) {

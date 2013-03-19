@@ -392,6 +392,13 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				mapView.refreshMap();
 			}
 		}
+		if(! Tracer.Map_as_main) {
+			if(list_usable_files.size() < listItem.size()) {
+				//The call to Main activity must be removed from list
+				// because we are not the initial activity
+				listItem.remove(listItem.size()-1);
+			}
+		} 
 		
 		
 	}

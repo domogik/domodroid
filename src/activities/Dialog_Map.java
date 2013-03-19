@@ -99,8 +99,13 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
 			
 			prefEditor.commit();
-			// And force tracer to consider them
-			Tracer.set_profile(params);
+			
+			if(checkbox_start_on_map.isChecked()) {
+				Tracer.Map_as_main = true;
+			} else {
+				Tracer.Map_as_main = false;
+			}
+			
 			dismiss();
 		}
 	}

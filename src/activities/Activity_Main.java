@@ -876,6 +876,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				}
 				mapI = new Intent(Activity_Main.this,Activity_Map.class);
 				Tracer.d("Activity_Main","Call to Map, run it now !");
+				Tracer.Map_as_main = false;
 				startActivity(mapI);
 			}else{
 				if(notSyncAlert == null)

@@ -464,23 +464,24 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onClick(View v) {
 		if(v.getTag().equals("menu")){
 			//disable menu if set in option
-			if(params.getBoolean("map_menu_disable",false)==false){ 
-				if(!topPanel.isOpen()){
-					bottomPanel.setOpen(true, true);
-					panel_button.setVisibility(View.VISIBLE);
+			
+			if(!topPanel.isOpen()){
+				bottomPanel.setOpen(true, true);
+				panel_button.setVisibility(View.VISIBLE);
+				if(params.getBoolean("map_menu_disable",false)==false)
 					topPanel.setOpen(true, true);
-				}else if(topPanel.isOpen() && !bottomPanel.isOpen()){
-					panel_widget.setVisibility(View.GONE);
-					panel_button.setVisibility(View.VISIBLE);
-					bottomPanel.setOpen(true, true);
-				}else{
-					bottomPanel.setOpen(false, true);
-					topPanel.setOpen(false, true);
-				}			
+				
+			} else if(topPanel.isOpen() && !bottomPanel.isOpen()){
+				panel_widget.setVisibility(View.GONE);
+				panel_button.setVisibility(View.VISIBLE);
+				bottomPanel.setOpen(true, true);
+			} else {
+				bottomPanel.setOpen(false, true);
+				topPanel.setOpen(false, true);
+			}			
 
-			}
-		}
-		else if(v.getTag().equals("add")){
+		
+		} else if(v.getTag().equals("add")){
 			//Add a widget
 			panel.setOpen(false, true);
 			if(list_usable_files.isEmpty()){

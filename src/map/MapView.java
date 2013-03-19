@@ -362,7 +362,7 @@ public class MapView extends View {
 				
 				try {
 					// Draw symbol of feature
-				drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
+					drawable = BitmapFactory.decodeResource(getResources(), featureMap.getRessources());
 					if(drawable != null) {
 						canvasWidget.drawBitmap(drawable, 
 								(featureMap.getPosx()*currentScale)-drawable.getWidth()/2, 

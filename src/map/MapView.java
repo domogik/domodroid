@@ -1006,11 +1006,5 @@ public class MapView extends View {
 		
 	}
 
-//Next map
-	//if(currentFile +1 < files.size()) currentFile++;
-	//	else currentFile=0;
-//Previous map
-	//if(currentFile != 0) currentFile--;
-	//	else currentFile=files.size()-1;
 		
 }

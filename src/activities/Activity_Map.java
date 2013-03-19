@@ -442,10 +442,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		menu_green.startAnimation(animation2);
 		menu_green.setVisibility(View.GONE);
 		panel_widget.removeAllViews();
-		mapView.setRemoveMode(false);
-		mapView.setMoveMode(false);
-		remove.setTextColor(Color.parseColor("#cfD1D1"));
-		move.setTextColor(Color.parseColor("#cfD1D1"));
 	}
 
 
@@ -487,10 +483,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
+				topPanel.setOpen(false, true);
 				//show list of feature available
 				dialog_feature.show();
-				remove.setTextColor(Color.parseColor("#cfD1D1"));
-				move.setTextColor(Color.parseColor("#cfD1D1"));
 				mapView.setRemoveMode(false);
 				mapView.setMoveMode(false);
 			}
@@ -502,19 +497,17 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}else{
 				if(mapView.isRemoveMode()==false){
 					//if remove mode is select for the first time
-					//Turn menu text color to green
-					move.setTextColor(Color.parseColor("#cfD1D1"));
-					remove.setTextColor(Color.GREEN);
 					//say Mapview.java to turn on remove mode
 					mapView.setMoveMode(false);
 					mapView.setRemoveMode(true);
 				}else{
 					//Remove mode was active, return to normal mode
 					//Turn menu text color back
-					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					move.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);
 				}
+				panel.setOpen(false, true);
+				topPanel.setOpen(false, true);
+				
 			}
 			
 		}else if(v.getTag().equals("move")){
@@ -525,19 +518,17 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}else{
 				if(mapView.isMoveMode()==false){
 					//if remove mode is select for the first time
-					//Turn menu text color to green
-					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					move.setTextColor(Color.GREEN);
 					//say Mapview.java to turn on remove mode
 					mapView.setRemoveMode(false);
 					mapView.setMoveMode(true);
 				}else{
 					//Remove mode was active, return to normal mode
 					//Turn menu text color back
-					remove.setTextColor(Color.parseColor("#cfD1D1"));
-					move.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);
 				}
+				panel.setOpen(false, true);
+				topPanel.setOpen(false, true);
+				
 			}
 			
 		} else if(v.getTag().equals("remove_all")){
@@ -545,9 +536,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				if(list_usable_files.isEmpty()){
 					Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 				}else{
+					panel.setOpen(false, true);
+					topPanel.setOpen(false, true);
 					Tracer.e("Activity_Map","request to clear widgets");
 					mapView.clear_Widgets();
-					remove.setTextColor(Color.parseColor("#cfD1D1"));
 					mapView.setRemoveMode(false);					
 				}
 		}else if(v.getTag().equals("help")){
@@ -559,14 +551,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	}
 
 	@Override
+	//Physical button keycode 82 is menu button
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//disable menu if set in option
-		if(params.getBoolean("map_menu_disable",false)==false){ 
-			Tracer.d("Activity_Map","onKeyDown keyCode = "+keyCode);
+		Tracer.d("Activity_Map","onKeyDown keyCode = "+keyCode);
 			if(keyCode==82 && !topPanel.isOpen()){
 				bottomPanel.setOpen(true, true);
 				panel_button.setVisibility(View.VISIBLE);
-				topPanel.setOpen(true, true);
+				if(params.getBoolean("map_menu_disable",false)==false){ 
+					topPanel.setOpen(true, true);
+				}
 				return false;
 
 			}else if(keyCode==82 && topPanel.isOpen() && !bottomPanel.isOpen()){
@@ -580,7 +574,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				topPanel.setOpen(false, true);
 				return false;
 			}
-		}
 		return super.onKeyDown(keyCode, event);
 	}
 

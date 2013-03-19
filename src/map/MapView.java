@@ -272,10 +272,13 @@ public class MapView extends View {
 		}else if(formatMode==2){
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
-			map = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_4444);
+			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
-			canvasMap.drawBitmap(bitmap, 0, 0, paint_map);
-			widget = Bitmap.createBitmap((int)(bitmap.getWidth()+200), bitmap.getHeight()+200, Bitmap.Config.ARGB_8888);
+			Matrix matScale = new Matrix();
+			matScale.postScale(currentScale, currentScale);
+			canvasMap.setMatrix(matScale);
+			canvasMap.drawBitmap(bitmap, 0, 0, paint_map );
+			widget = Bitmap.createBitmap((int)((bitmap.getWidth()+200)*currentScale), (int)((bitmap.getHeight()+200)*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
 		}
 		drawWidgets();

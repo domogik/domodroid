@@ -806,6 +806,20 @@ public class MapView extends View {
 						initMap();
 					}
 				}
+				for (Entity_Map switchesMap : listMapSwitches) {
+					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+						//remove entry
+						Tracer.get_engine().removeFeatureMap(switchesMap.getId(),
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
+						removeMode=false;
+						//new UpdateThread().execute();
+						//refresh the map
+						initMap();
+					}
+				}
 			}else if(moveMode==true){
 				for (Entity_Map featureMap : listFeatureMap) {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
@@ -821,6 +835,23 @@ public class MapView extends View {
 						//refresh the map
 						initMap();
 						temp_id = featureMap.getId();
+						addMode=true;
+					}
+				}
+				for (Entity_Map switchesMap : listMapSwitches) {
+					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+						//remove entry
+						Tracer.get_engine().removeFeatureMap(switchesMap.getId(),
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
+						moveMode=false;
+						//new UpdateThread().execute();
+						//return to add mode on next click
+						//refresh the map
+						initMap();
+						temp_id = switchesMap.getId();
 						addMode=true;
 					}
 				}

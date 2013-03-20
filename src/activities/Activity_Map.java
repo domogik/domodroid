@@ -264,8 +264,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					} else {
 						//It's a map switch element
 						mapView.temp_id = -1;
-						mapView.map_id = position - listFeature.length;
-						Tracer.e("Activity_Main","map selected <"+list_usable_files.elementAt(mapView.map_id)+">");
+						mapView.map_id = (position - listFeature.length)+9999;
+						Tracer.e("Activity_Main","map_id = <"+mapView.map_id+"> , map selected <"+list_usable_files.elementAt(mapView.map_id -9999)+">");
 					}
 					mapView.setAddMode(true);
 					dialog_feature.dismiss();

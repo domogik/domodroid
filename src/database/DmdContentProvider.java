@@ -30,6 +30,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int REQUEST_ICON = 120;
 	public static final int REQUEST_FEATURE_ALL = 130;
 	public static final int REQUEST_FEATURE_MAP = 140;
+	public static final int REQUEST_MAP_SWITCHES = 141;
 	public static final int REQUEST_FEATURE_ID = 150;
 	public static final int REQUEST_FEATURE_STATE = 160;
 
@@ -59,6 +60,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_REQUEST_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_ICON");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_ALL = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ALL");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP");
+	public static final Uri CONTENT_URI_REQUEST_MAP_SWITCHES = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_MAP_SWITCHES");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_ID = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ID");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_STATE");
 
@@ -94,6 +96,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_ICON", REQUEST_ICON);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ALL", REQUEST_FEATURE_ALL);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP", REQUEST_FEATURE_MAP);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_MAP_SWITCHES", REQUEST_MAP_SWITCHES);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ID", REQUEST_FEATURE_ID);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_STATE", REQUEST_FEATURE_STATE);
 
@@ -308,6 +311,14 @@ public class DmdContentProvider extends ContentProvider {
 					"SELECT * FROM table_feature " +
 					"INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id" +
 					" WHERE table_feature_map.map = "+selectionArgs[0]
+							,null);
+			break;
+		case REQUEST_MAP_SWITCHES:
+			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id",null);
+			cursor=mDB.getReadableDatabase().rawQuery(
+					"SELECT * FROM table_feature_map " +
+					" WHERE table_feature_map.map = "+selectionArgs[0]+
+					" AND table_feature_map.id > 9998"
 							,null);
 			break;
 		case REQUEST_FEATURE_ID:

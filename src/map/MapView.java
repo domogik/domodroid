@@ -99,6 +99,7 @@ public class MapView extends View {
 	
 	private Vector<String> files;
 	private Entity_Map[] listFeatureMap;
+	private Entity_Map[] listMapSwitches;
 	private int mode;
 	private int formatMode;
 	private String svg_string;
@@ -204,16 +205,17 @@ public class MapView extends View {
 		
 		//listFeatureMap = domodb.requestFeatures(files.elementAt(currentFile));
 		listFeatureMap = Tracer.get_engine().getMapFeaturesList(files.elementAt(currentFile));
-
+		listMapSwitches = Tracer.get_engine().getMapSwitchesList(files.elementAt(currentFile));
+		
+		//Each real mini widget must be connected to cache engine, to receive notifications
 		for (Entity_Map featureMap : listFeatureMap) {
-			// Don't use anymore direct access to database : Use WidgetUpdate as relay, to subscribe each mini widget
-			//Instead, create and subscribe a session to WidgetUpdate, to receive value changed...
+			int map_id = featureMap.getDevId();
 			Entity_client cursession = new Entity_client(
-					featureMap.getDevId(),
-					featureMap.getState_key(), 
-					"mini widget",
-					handler,
-					mytype);
+						map_id,
+						featureMap.getState_key(), 
+						"mini widget",
+						handler,
+						mytype);
 			cursession.setType(true);	//It's a mini widget !
 			
 			if(Tracer.get_engine().subscribe(cursession) ) {
@@ -321,6 +323,47 @@ public class MapView extends View {
 			return;
 		}
 		locked=true;
+		int id = 0;
+		// first try to process map switches, if any
+		if(listMapSwitches != null) {
+			Tracer.e(mytag, "Processing map switches widgets");
+			
+			for (Entity_Map switchesMap : listMapSwitches) {
+				id=switchesMap.getId();
+				
+				//Its a map switch widget
+				id = id - 9999;
+				String mapname = files.elementAt(id);
+				Tracer.e(mytag, "Processing switch to map <"+mapname+">");
+				// Draw symbol of 'map_next'
+				try {
+					
+					drawable = BitmapFactory.decodeResource(getResources(), R.drawable.map_next);
+					if(drawable != null) {
+						canvasWidget.drawBitmap(drawable, 
+								(switchesMap.getPosx()*currentScale)-drawable.getWidth()/2, 
+								(switchesMap.getPosy()*currentScale)-drawable.getWidth()/2, 
+								paint_map);
+					} else {
+						Tracer.e("MapView","No drawable available for map switch");
+						return;
+					}
+				} catch (Exception e) {
+					Tracer.e("MapView","cannot draw map switch icon ! ! ! !");
+					return;
+				}
+				//Draw the map name
+				for(int j=1;j<5;j++){
+					paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+					paint_text.setTextSize(16);
+					canvasWidget.drawText(mapname, 
+							(switchesMap.getPosx()*currentScale)+text_Offset_X, 
+							(switchesMap.getPosy()*currentScale)+text_Offset_Y, 
+							paint_text);
+				}
+			}
+		}
+		// An now process real widgets
 		for (Entity_Map featureMap : listFeatureMap) {
 			String states = "";
 			JSONObject jparam;
@@ -331,6 +374,7 @@ public class MapView extends View {
 				Tracer.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
 				return;
 			}
+			
 			if(featureMap.isalive()) {
 				//set intstate to select correct icon color
 				int intstate = 0;
@@ -549,7 +593,8 @@ public class MapView extends View {
 			} else {
 				// This widget is'nt alive anymore...
 				canvasWidget = null; //?????
-			}
+				}
+			
 		}
 		locked=false;
 		
@@ -725,11 +770,24 @@ public class MapView extends View {
 			//Select what action to do
 			//Add a widget mode
 			if (addMode==true){
-				//insert in the database feature map the device id, his position and name map. 
-				Tracer.get_engine().insertFeatureMap(temp_id, 
-						(int)((event.getX()-value[2])/currentScale), 
-						(int)((event.getY()-value[5])/currentScale),
-						files.elementAt(currentFile));
+				int db_id = 0;
+				if(temp_id != -1) {
+					//insert in the database feature map the device id, its position and map name. 
+					db_id = temp_id;
+				} else {
+					if (map_id != -1) {
+						db_id = map_id;
+						// a map switch has been selected from list of widgets
+					}
+				}
+				if (db_id != 0) {
+					Tracer.get_engine().insertFeatureMap(db_id, 
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
+				}
+				map_id = -1;
+				temp_id = -1;
 				addMode=false;
 				//refresh the map
 				initMap();
@@ -781,8 +839,10 @@ public class MapView extends View {
 					pos_X1=0;
 				//Move to right
 				}else if(pos_X0 - pos_X1 > screen_width/2){
-					if(currentFile != 0) currentFile--;
-					else currentFile=files.size()-1;
+					if(currentFile != 0) 
+						currentFile--;
+					else 
+						currentFile=files.size()-1;
 					canvasMap=null;
 					canvasWidget=null;
 					System.gc();
@@ -793,14 +853,35 @@ public class MapView extends View {
 					pos_X1=0;
 				//Display widget
 				}else{
-					//show the normal widget on top
+					//show the normal widget on top , or switch map if a map switch clicked
 					boolean widgetActiv=false;
+					for (Entity_Map switchesMap : listMapSwitches) {
+						if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+								(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+							//That seems to be this switch map widget clicked !
+							int new_map = switchesMap.getId() - 9999;
+							if(new_map < files.size() && new_map >= 0) {
+								currentFile=new_map;
+							}
+							canvasMap=null;
+							canvasWidget=null;
+							System.gc();
+							initMap();
+									
+							panel_button.setVisibility(View.GONE);
+							panel_widget.setVisibility(View.VISIBLE);
+							widgetActiv=true;
+							postInvalidate();
+							return true;
+						}
+					}
+					widgetActiv=false;
 					for (Entity_Map featureMap : listFeatureMap) {
 						if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 								(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 							try {
 								showTopWidget(featureMap);	
-							} catch (JSONException e) {
+							} catch (Exception e) {
 								e.printStackTrace();
 							}
 							panel_button.setVisibility(View.GONE);
@@ -842,75 +923,7 @@ public class MapView extends View {
 		return true;
 	}
 
-	/*
-	public void updateTimer() {
-		TimerTask doAsynchronousTask;
-		final Handler handler = new Handler();
-		final Timer timer = new Timer();
-		doAsynchronousTask = new TimerTask() {
-
-			@Override
-			public void run() {
-				Runnable myTH = new Runnable() {
-					
-				//handler.post(new Runnable() {	//Doume change
-					public void run() {
-						if(activated){
-							//Tracer.i(mytag, "update Timer : Execute UpdateThread");
-							try {
-								new UpdateThread().execute();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							
-						}
-						
-					}}
-				//)
-				;
-				try {
-					handler.post(myTH);		//To avoid exception on ICS
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			}
-		};
-		//timer.schedule(doAsynchronousTask, 0, 3000);
-		Tracer.i(mytag, "updateTimer : Arming timer of "+update+" seconds");
-		timer.schedule(doAsynchronousTask, 0, update * 1000);
-	}
-
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... p) {
-			//Tracer.i(mytag, "UpdateThread call on timer !");
-			
-			// Added by Doume to correctly release resources when exiting
-			
-			if(! activated) {
-				
-				Tracer.i(mytag, "UpdateThread : timer frozen...");
-				
-			} else {
-			
-			//////////////
-				for (Entity_Map featureMap : listFeatureMap) {
-					String state = domodb.requestFeatureState(featureMap.getDevId(), featureMap.getState_key());
-					if(state != null) {
-						Tracer.i(mytag, "UpdateThread : Refreshing device :"+featureMap.getDevId());
-						featureMap.setCurrentState(state);
-					} else {
-						Tracer.i(mytag, "UpdateThread : device :"+featureMap.getDevId()+" seems to be a zombie !");
-						featureMap.setalive(false);
-					}
-				}
-				refreshMap();
-			}
-			return null;
-		}
-	}
-	*/
+	
 	public String getFileAsString(File file){ 
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;

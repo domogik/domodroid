@@ -877,6 +877,12 @@ public class WidgetUpdate  {
 	public Entity_Map[]  getMapFeaturesList(String currentmap) {
 		return domodb.requestFeatures(currentmap);
 	}
+	/*
+	 * Obtain the list of map switches located on a map
+	 */
+	public Entity_Map[]  getMapSwitchesList(String currentmap) {
+		return domodb.requestMapSwitches(currentmap);
+	}
 	public void insertFeatureMap(int id,int posx, int posy, String mapname) {
 		domodb.insertFeatureMap(id, posx, posy, mapname);
 				

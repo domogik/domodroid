@@ -195,7 +195,7 @@ public class DomodroidDB {
 		String Val = null;
 		Boolean exists = false;
 		
-		//Tracer.e(mytag+"("+owner+")", "Processing FeatureSate Array : <"+itemArray.toString()+">");
+		//Tracer.e(mytag+"("+owner+")", "Processing FeatureState Array : <"+itemArray.toString()+">");
 		// First, erase all old content
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
 		// Now, insert/update new rows
@@ -382,6 +382,37 @@ public class DomodroidDB {
 		return features;
 	}
 
+	public Entity_Map[] requestMapSwitches(String map){
+		Cursor curs=null;
+		String[] projection = {"value"};	
+		Entity_Map[] features=null;
+		try {
+			//Tracer.v(mytag+"("+owner+")","Getting database features for map : "+map);
+			//Getting database features for map current map
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_MAP_SWITCHES, projection, 
+					"table_feature_map = ?", 
+					new String[] {"\'"+map+"\' "},
+					null);
+			//Count the number of map switch widgets present in this map
+			features=new Entity_Map[curs.getCount()];
+			int count=curs.getCount();
+			Tracer.v(mytag+"("+owner+")",count+" Entities_Map returned for map switches : "+map);
+			
+			for(int i=0;i<count;i++) {
+			//create the pseudo Entity_Map with all parameters present in table_feature_map : id, posx, posy and map_name
+			
+				curs.moveToPosition(i);
+				features[i]=new Entity_Map("",curs.getInt(0),0,"","","",
+						"","","","","",
+						curs.getInt(1), curs.getInt(2),curs.getString(3));
+				}
+		} catch (Exception e) {
+			Tracer.e(mytag+"("+owner+")","request map_switches error");
+			e.printStackTrace();
+		}
+		curs.close();
+		return features;
+	}
 
 	public Entity_Feature[] requestFeatures(){
 		Cursor curs=null;

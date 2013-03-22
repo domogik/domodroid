@@ -411,6 +411,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				// This method will be followed by 'onResume()'
 				end_of_init_requested = true;
 			}
+			if(params.getBoolean("SPLASH", false)){
+				//A config exists
+				if(widgetUpdate == null) {
+					startCacheEngine();
+				}
+
+			}
 			
 			Tracer.e("Activity_Main","OnCreate() complete !");
 			// End of onCreate (UIThread)
@@ -448,12 +455,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			Tracer = Tracer.getInstance();
 		
 		Tracer.v("Activity_Main","end_of_init Main Screen..");
-		end_of_init_requested = false;
 		
 		if(! reload) {
 			//alertDialog not sync splash
 			if(notSyncAlert == null)
 				createAlert();
+			return;
 		}
 		//splash
 		if(!params.getBoolean("SPLASH", false)){
@@ -462,7 +469,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			prefEditor.clear();
 			prefEditor.putBoolean("SPLASH", true);
 			prefEditor.commit();
+			return;
 		}
+		end_of_init_requested = false;
 		
 		if(history != null)
 			history = null;		//Free resource
@@ -953,7 +962,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onResume() {
 		super.onResume();
 		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
-		
 		if(! init_done) {
 			cache_ready = false;
 			this.Create_message_box();

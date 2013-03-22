@@ -460,8 +460,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//alertDialog not sync splash
 			if(notSyncAlert == null)
 				createAlert();
-			return;
-		}
+			}
 		//splash
 		if(!params.getBoolean("SPLASH", false)){
 			Dialog_Splash dialog_splash = new Dialog_Splash(this);

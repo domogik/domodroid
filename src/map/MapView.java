@@ -325,46 +325,54 @@ public class MapView extends View {
 		locked=true;
 		int id = 0;
 		// first try to process map switches, if any
+		Tracer.e(mytag, "Processing map switches widgets list");
+		
 		if(listMapSwitches != null) {
-			Tracer.e(mytag, "Processing map switches widgets");
 			
 			for (Entity_Map switchesMap : listMapSwitches) {
 				id=switchesMap.getId();
 				
 				//Its a map switch widget
 				id = id - 9999;
-				String mapname = files.elementAt(id);
-				Tracer.e(mytag, "Processing switch to map <"+mapname+">");
-				// Draw symbol of 'map_next'
-				try {
+				if( (id >= 0 ) && (id < files.size()) ) {
+					String mapname = files.elementAt(id);
+					Tracer.e(mytag, "Processing switch to map <"+mapname+">");
+					// Draw symbol of 'map_next'
+					try {
+						
+						drawable = BitmapFactory.decodeResource(getResources(), R.drawable.map_next);
+						if(drawable != null) {
+							canvasWidget.drawBitmap(drawable, 
+									(switchesMap.getPosx()*currentScale)-drawable.getWidth()/2, 
+									(switchesMap.getPosy()*currentScale)-drawable.getWidth()/2, 
+									paint_map);
+						} else {
+							Tracer.e("MapView","No drawable available for map switch");
+							return;
+						}
 					
-					drawable = BitmapFactory.decodeResource(getResources(), R.drawable.map_next);
-					if(drawable != null) {
-						canvasWidget.drawBitmap(drawable, 
-								(switchesMap.getPosx()*currentScale)-drawable.getWidth()/2, 
-								(switchesMap.getPosy()*currentScale)-drawable.getWidth()/2, 
-								paint_map);
-					} else {
-						Tracer.e("MapView","No drawable available for map switch");
+					} catch (Exception e) {
+						Tracer.e("MapView","cannot draw map switch icon ! ! ! !");
 						return;
 					}
-				} catch (Exception e) {
-					Tracer.e("MapView","cannot draw map switch icon ! ! ! !");
-					return;
-				}
-				//Draw the map name
-				for(int j=1;j<5;j++){
-					paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-					paint_text.setTextSize(16);
-					canvasWidget.drawText(mapname, 
-							(switchesMap.getPosx()*currentScale)+text_Offset_X, 
-							(switchesMap.getPosy()*currentScale)+text_Offset_Y, 
-							paint_text);
+				
+					//Draw the map name text
+					for(int j=1;j<5;j++){
+						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
+						paint_text.setTextSize(16);
+						canvasWidget.drawText(mapname, 
+								(switchesMap.getPosx()*currentScale)+text_Offset_X, 
+								(switchesMap.getPosy()*currentScale)+text_Offset_Y, 
+								paint_text);
+					}
 				}
 			}
 		}
 		// An now process real widgets
+		Tracer.e(mytag, "Processing normal widgets list");
+		
 		for (Entity_Map featureMap : listFeatureMap) {
+			
 			String states = "";
 			JSONObject jparam;
 			

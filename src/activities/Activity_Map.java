@@ -317,6 +317,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			widgetUpdate = WidgetUpdate.getInstance();
 			//Map is'nt the first caller, so init is'nt required (already done by View)
 			widgetUpdate.set_handler(sbanim, 1);	//Put our main handler to cache engine (as Map)
+			
 			widgetUpdate.wakeup();
 		}  
 		Tracer.set_engine(widgetUpdate);

@@ -194,7 +194,7 @@ public class WidgetUpdate  {
 					if(eventsManager != null) {
 						callback_counts++;
 						Rinor_event event = eventsManager.get_event();
-						while(event != null) {
+						if(event != null) {
 							Tracer.d(mytag,"Event from Events_Manager found, ticket : "+event.ticket_id+" # "+event.item);
 						
 							if(last_ticket == -1) {
@@ -208,6 +208,7 @@ public class WidgetUpdate  {
 						
 						
 							mapView = null;
+							//mapView will be set by update_cache_device if at least one mini widget has to be notified
 							update_cache_device(event.device_id,event.key,event.Value);
 							if(mapView != null) {
 								//It was a mini widget, not yet notified : do it now..
@@ -216,8 +217,8 @@ public class WidgetUpdate  {
 									mapView.sendEmptyMessage(9997);	//notify the group of widgets a new value is there
 								} catch (Exception e) {}
 							}
-							event = eventsManager.get_event();		//Try to get the next...
-						} // While loop
+							//event = eventsManager.get_event();		//Try to get the next...
+						} // if event
 					} else {
 						Tracer.d(mytag,"No Events_Manager known ! ! ! ");
 					}
@@ -693,7 +694,16 @@ public class WidgetUpdate  {
 	public Boolean update_cache_device(int dev_id,String skey,String Val){
 		if(cache == null)
 			return false;
-		synchronized(this) {
+		
+		//synchronized(this) {
+			while(locked) {
+				//Somebody else is updating list...
+				//Tracer.i(mytag, "cache engine locked : wait !");
+				try{
+					Thread.sleep(100);		//Standby 10 milliseconds
+				} catch (Exception e) {};
+			}
+			locked=true;	//Take the lock
 			Boolean result = false;
 			int cache_position = -1;
 			
@@ -742,8 +752,9 @@ public class WidgetUpdate  {
 				cache.add(device);
 				result=true;
 			}
+			locked = false;
 			return result;		
-		} // End protected bloc
+		//} // End protected bloc
 	}
 	private int locate_device(int dev_id,String skey,int from) {
 		if(cache.size() == 0)

@@ -874,6 +874,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				notSyncAlert.show();
 			}	
 		} else if(v.getTag().equals("map")) {
+			if(panel.isOpen()){
+				// Ignore map call if panel is opened, to avoid confusion between objects
+				return;
+			}
 			if(params.getBoolean("SYNC", false)==true){
 				//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 				Tracer.w("Activity_Main","Before call to Map, Disconnect widgets from engine !");

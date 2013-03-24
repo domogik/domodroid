@@ -250,6 +250,7 @@ public class Graphics_Manager {
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_off;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_off;}
+			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}//need an of/off icon
 			else if(usage.equals("server")){return R.drawable.map_usage_server_off;}
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
 			else if(usage.equals("tv")){return R.drawable.map_usage_tv_off;}
@@ -262,6 +263,7 @@ public class Graphics_Manager {
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_on;}
+			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}//need an of/off icon
 			else if(usage.equals("server")){return R.drawable.map_usage_server_on;}
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
 			else if(usage.equals("tv")){return R.drawable.map_usage_tv_on;}

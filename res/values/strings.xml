@@ -158,7 +158,7 @@
     <string name="map_option_size">300 px</string>
     <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="map_option_hide_text">Hide text:</string>
-    <string name="map_option_menu_disable">Disallow access to menu in map mode</string>
+    <string name="map_option_menu_disable">Disallow editing map</string>
    
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>

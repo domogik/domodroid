@@ -157,7 +157,7 @@
     <string name="map_option_size">300 pixels</string>
     <string name="map_option_advert">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
     <string name="map_option_hide_text">Masquer texte:</string>
-    <string name="map_option_menu_disable">Interdire l\'accès au menu en mode map</string>
+    <string name="map_option_menu_disable">Interdire les modifications de map</string>
     
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>

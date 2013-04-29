@@ -234,7 +234,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						if(widgetUpdate != null) {
 							widgetUpdate.resync();
 						} else {
-							//startCacheEngine();
+							startCacheEngine();
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog

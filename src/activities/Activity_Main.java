@@ -234,7 +234,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						if(widgetUpdate != null) {
 							widgetUpdate.resync();
 						} else {
-							startCacheEngine();
+							//startCacheEngine();
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
@@ -966,22 +966,24 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		super.onResume();
 		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
 		if(! init_done) {
-			cache_ready = false;
-			this.Create_message_box();
-			dialog_message.setMessage(getText(R.string.loading_cache)); 
-			dialog_message.show();
-			startCacheEngine();
-			//end_of_init();		//Will be done when cache will be ready
-		} else {
-			end_of_init_requested=true;
-			if(widgetUpdate != null) {
-				widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
+			if(params.getBoolean("SPLASH", false)){
+				cache_ready = false;
+				this.Create_message_box();
+				dialog_message.setMessage(getText(R.string.loading_cache)); 
+				dialog_message.show();
+				startCacheEngine();
+				//end_of_init();		//Will be done when cache will be ready
 			}
-			//end_of_init();	//all client widgets will be re-created
 		}
+		else {
+				end_of_init_requested=true;
+				if(widgetUpdate != null) {
+					widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
+				}
+				//end_of_init();	//all client widgets will be re-created
+			}
 		
-		
-	}
+		}
 
 
 	@Override

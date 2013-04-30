@@ -234,7 +234,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						if(widgetUpdate != null) {
 							widgetUpdate.resync();
 						} else {
-							startCacheEngine();
+							onResume();
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
@@ -414,7 +414,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			if(params.getBoolean("SPLASH", false)){
 				//A config exists
 				if(widgetUpdate == null) {
-					startCacheEngine();
+					onResume();
 				}
 
 			}

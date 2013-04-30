@@ -234,7 +234,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						if(widgetUpdate != null) {
 							widgetUpdate.resync();
 						} else {
-							onResume();
+							startCacheEngine();
 						}
 						Bundle b = new Bundle();
 						//Notify sync complete to parent Dialog
@@ -414,7 +414,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			if(params.getBoolean("SPLASH", false)){
 				//A config exists
 				if(widgetUpdate == null) {
-					onResume();
+					startCacheEngine();
 				}
 
 			}
@@ -910,6 +910,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private Boolean startCacheEngine() {
 		if(widgetUpdate == null) {
+			this.Create_message_box();
+			dialog_message.setMessage(getText(R.string.loading_cache)); 
+			dialog_message.show();
 			Tracer.w("Activity_Main", "Starting WidgetUpdate cache engine !");
 			widgetUpdate = WidgetUpdate.getInstance();
 			widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)
@@ -968,9 +971,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		if(! init_done) {
 			if(params.getBoolean("SPLASH", false)){
 				cache_ready = false;
-				this.Create_message_box();
-				dialog_message.setMessage(getText(R.string.loading_cache)); 
-				dialog_message.show();
 				startCacheEngine();
 				//end_of_init();		//Will be done when cache will be ready
 			}

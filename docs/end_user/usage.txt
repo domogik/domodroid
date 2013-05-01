@@ -4,7 +4,7 @@ Usage
 
 There is 2 usage of domodroid depending what domogik version you are using.
 	
-	In case you're using domogik 0.2 the Main screen is organize by room.
+	In case you're using domogik 0.2 the Main screen is organize by Room.
 	
 	In domogik 0.3 (current dev version) Room are now include in Domoweb UI no more in Domogik the Main screen is organize by usage.
 	

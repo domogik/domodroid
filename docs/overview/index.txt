@@ -19,6 +19,10 @@ Overview
 
 - Binary 
 
+- Camera
+
+- Color Picker
+
 All text and font features.
 Raster images (bitmaps).
 Symbols, conditional processing.

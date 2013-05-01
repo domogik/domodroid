@@ -3,15 +3,16 @@ General
 
     Multi display compatibility (Smartphone and Tablet)
     Easy configuration: Set your RINOR IP/URL access and synchronize
-    Ability to set the widget's update timer from 10 to 300 secondes
+    Ability to set the widget's update timer from 10 to 300 seconds
+    A new feature register to Domogik event to update in real time
     Power Management control keeping your screen on during the use of Domodroid
     Full icon pack supported 
 
 
 Widgets
 
-    6 animated widgets
-    Auto-Updated with an asynchrone threading system
+    8 animated widgets
+    Auto-Updated with an asynchrone threading system and in real time with event
     Data widget with 2d chart engine 
 
 
@@ -23,14 +24,14 @@ Creation of the "Domodroid" directory at the root of the external storage direct
 * Change map: 3 fingers tap 
 
 
-    Multi-touch gesture (Zoom, Drag, Change Map, Hide text) can be activated from the "MAP Options" screen. 
+    Multi-touch gesture (Zoom, Drag, Change Map, Hide text, Block map edition) can be activated from the "MAP Options" screen. 
 
-Gesture activation must be activated only on powerfull devices otherwise Domodroid will certainly crashes. Bitmap rezising might cause OutOfMemory exception so domodroid will automatically reduce bitmaps exceeding 800*800px by √2.
+Gesture activation must be activated only on powerful devices otherwise Domodroid will certainly crashes. Bitmap rezising might cause OutOfMemory exception so domodroid will automatically reduce bitmaps exceeding 800*800px by √2.
 
     Png and SVG format supported: 
 
 To display SVG images, Domodroid use a modified version of the library svg-Android
-( http://code.google.com/p/svg-android/ (lien externe) ).
+( http://code.google.com/p/svg-android/ ).
 This library supports a subset of the SVG Basic 1.1 specification. Typically, you can just load your vector artwork in Illustrator and then save it as a SVG file (selecting the SVG Basic 1.1 option when asked) and it will work fine. Inkscape does not have direct support for SVG Basic, but many drawings will just work when saved as SVG from Inkscape. These are the features of SVG Basic not supported:
 
         All text and font features.

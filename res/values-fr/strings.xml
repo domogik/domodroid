@@ -58,6 +58,8 @@
 	<string name="map_nothing">Aucune carte chargée, Cliquez \"Aide\"</string>
 	<string name="map_button3">Aide</string>
 	<string name="map_help_text">Un répertoire nommé \"domodroid\" a été créé à la racine du stockage externe (ou interne suivant les équipements). Les images de cartes doivent y être installées, au format PNG ou SVG créé par votre outil \"Illustrator\" (les textures de base sont supportées). </string>
+	<string name="map_move_text">Sélectionnez votre widget, il va disparaitre. Puis appuyez à l\'endroid ou vous vouler le repositionner. </string>
+	<string name="map_moveTitle">Déplacer un widget</string>
 	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text1">--Adresse ou IP du serveur Rinor Domogik</string>

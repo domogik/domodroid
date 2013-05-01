@@ -58,6 +58,8 @@
 	<string name="map_nothing">No Map Loaded, press \"Help\"</string>
 	<string name="map_button3">Help</string>
 	<string name="map_help_text">A folder called \"domodroid\" has been created at the root of the external storage directory (or internal for some devices). Map must be put in that folder using the PNG format or SVG format created from Illustrator (basic shapes supported). </string>
+	<string name="map_move_text">Select your widget, it will diseappear. Then tap where you want to put it again. </string>
+	<string name="map_moveTitle">Move a widget</string>
 	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text1">--Domogik Rinor IP Address</string>

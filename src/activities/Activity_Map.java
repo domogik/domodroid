@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import database.WidgetUpdate;
 import map.Dialog_Help;
+import map.Dialog_Move;
 import map.MapView;
 import activities.Sliding_Drawer.OnPanelListener;
 import widgets.Entity_Feature;
@@ -517,6 +518,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
+				//TODO show a dialog box
+				Dialog_Move dialog_move = new Dialog_Move(this);
+				dialog_move.show();
 				if(mapView.isMoveMode()==false){
 					//if remove mode is select for the first time
 					//say Mapview.java to turn on remove mode

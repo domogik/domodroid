@@ -28,6 +28,7 @@
 	<string name="bt_month">1 mois</string>
 	<string name="bt_week">1 Sem.</string>
 	<string name="bt_day">1 jour</string>
+	<string name="Ok">OK</string>
 	
 	<string name="help_Title">Domodroid</string>
 	<string name="help_Text1">Domodroid : Application gratuite Android sous GNU GPLv3 Licence et développée par Pierre Lainé\n Modifiée par Dominique DAMBRAIN</string>
@@ -46,6 +47,7 @@
 	<string name="reloadNO">Non</string>
 	
 	<string name="not_sync">Domodroid n\'est pas synchronisé avec un serveur !</string>
+	<string name="syncing">Synchronization</string>
 	
 	<string name="home_button1">- Menu -</string>
 	<string name="home_button2">Options</string>
@@ -58,8 +60,13 @@
 	<string name="map_nothing">Aucune carte chargée, Cliquez \"Aide\"</string>
 	<string name="map_button3">Aide</string>
 	<string name="map_help_text">Un répertoire nommé \"domodroid\" a été créé à la racine du stockage externe (ou interne suivant les équipements). Les images de cartes doivent y être installées, au format PNG ou SVG créé par votre outil \"Illustrator\" (les textures de base sont supportées). </string>
-	<string name="map_move_text">Sélectionnez votre widget, il va disparaitre. Puis appuyez à l\'endroid ou vous vouler le repositionner. </string>
+	<string name="map_move_text1">Sélectionnez votre widget, il va disparaitre. Puis appuyez à l\'endroid ou vous vouler le repositionner. </string>
+	<string name="map_move_text2">Sélectionnez le widget puis replacez le.</string>
 	<string name="map_moveTitle">Déplacer un widget</string>
+	<string name="map_select">Sélectionnez un widget</string>
+	<string name="map_change">Changer de carte</string>
+	<string name="map_zoom">Zoomer sur la carte</string>
+	<string name="map_drag">Déplacer la carte</string>
 	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text1">--Adresse ou IP du serveur Rinor Domogik</string>

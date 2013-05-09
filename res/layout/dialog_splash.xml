@@ -16,7 +16,7 @@
 		android:layout_width="fill_parent">
 		<LinearLayout android:id="@+id/linearLayout1"
 			android:orientation="vertical" android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:gravity="center">
+			android:layout_height="wrap_content" android:gravity="center">
 
 			<TextView android:text="@string/home_splash" 
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -27,11 +27,12 @@
 				android:paddingTop="20dip" android:paddingLeft="5dip" android:paddingRight="5dip" android:textColor="#999999"
 				android:textSize="15sp" android:gravity="center" />
 
-			
-
-				<Button android:layout_width="100dip"
-					android:layout_height="wrap_content" android:text="OK" android:id="@+id/OkButton"
-					android:layout_marginTop="20dip" />
+				<Button
+				    android:id="@+id/OkButton"
+				    android:layout_width="100dip"
+				    android:layout_height="wrap_content"
+				    android:layout_marginTop="20dip"
+				    android:text="@string/Ok" />
 
 		</LinearLayout>
 	</ScrollView>

@@ -201,7 +201,7 @@
 	            <SeekBar
 	                android:id="@+id/SeekBar3"
 	                android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
+	                android:layout_height="0dip"
 	                android:max="1000"
 	                android:paddingLeft="20dip"
 	                android:paddingRight="20dip"

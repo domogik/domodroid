@@ -61,19 +61,21 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content">	   
 	    
-	    <Button android:id="@+id/cancel"
-    	    android:layout_width="fill_parent"
-    	    android:layout_weight="1"
-	        android:textSize="25px"
-	        android:layout_height="60dip"		        
-	        android:text="Cancel"/>
+	    <Button
+	        android:id="@+id/cancel"
+	        android:layout_width="fill_parent"
+	        android:layout_height="60dip"
+	        android:layout_weight="1"
+	        android:text="@string/debug_bt_cancel"
+	        android:textSize="25sp" />
 
-	    <Button android:id="@+id/ok"
-     		android:layout_width="fill_parent"
-     		android:layout_weight="1"
-			android:textSize="25px"
-			android:layout_height="60dip"		        
-			android:text="Ok"/>
+	    <Button
+	        android:id="@+id/ok"
+	        android:layout_width="fill_parent"
+	        android:layout_height="60dip"
+	        android:layout_weight="1"
+	        android:text="@string/debug_bt_apply"
+	        android:textSize="25sp" />
 
 	</LinearLayout>   
        

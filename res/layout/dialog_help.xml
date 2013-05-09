@@ -62,29 +62,32 @@
 				</TableRow>
 				
 				<TableRow 
-				    android:id="@+id/tableRow1" 
+				    android:id="@+id/tableRow2" 
 				    android:layout_width="fill_parent"
 					android:layout_height="wrap_content">
 					
-					<TextView android:text="Select Widget"
-						android:layout_width="fill_parent" 
-						android:layout_height="wrap_content"
-						android:textColor="#999999" 
-						android:textSize="15sp"
-						android:gravity="center" 
-						android:paddingRight="10dip" />
-					<TextView android:text="Change Map"
-						android:layout_width="fill_parent" 
-						android:layout_height="wrap_content"
-						android:textColor="#999999" 
-						android:textSize="15sp"
-						android:gravity="center" 
-						android:paddingLeft="10dip" />
+					<TextView
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:gravity="center"
+					    android:paddingRight="10dip"
+					    android:text="@string/map_select"
+					    android:textColor="#999999"
+					    android:textSize="15sp" />
+
+					<TextView
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:gravity="center"
+					    android:paddingLeft="10dip"
+					    android:text="@string/map_change"
+					    android:textColor="#999999"
+					    android:textSize="15sp" />
 					
 				</TableRow>
 
 				<TableRow 
-				    android:id="@+id/tableRow1" 
+				    android:id="@+id/tableRow3" 
 				    android:layout_width="fill_parent"
 					android:layout_height="wrap_content">
 					
@@ -106,20 +109,20 @@
 					
 				</TableRow>
 				
-				<TableRow android:id="@+id/tableRow1" android:layout_width="fill_parent"
+				<TableRow android:id="@+id/tableRow4" android:layout_width="fill_parent"
 					android:layout_height="wrap_content">
-					<TextView android:text="Zoom Map" android:id="@+id/textView1"
+					<TextView android:text="@string/map_zoom"
 						android:layout_width="fill_parent" android:layout_height="wrap_content"
 						android:textColor="#999999" android:textSize="15sp"
 						android:gravity="center" android:paddingRight="10dip" />
-					<TextView android:text="Drag Map"
+					<TextView android:text="@string/map_drag"
 						android:layout_width="fill_parent" android:layout_height="wrap_content"
 						android:textColor="#999999" android:textSize="15sp"
 						android:gravity="center" android:paddingLeft="10dip" />
 				</TableRow>
 
 				<Button android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:text="OK" android:id="@+id/OkButton"
+					android:layout_height="wrap_content" android:text="@string/Ok" android:id="@+id/OkButton"
 					android:layout_marginTop="20dip" />
 
 			</TableLayout>

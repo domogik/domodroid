@@ -4,7 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content" 
 	android:layout_gravity="center_vertical"
-	android:paddingLeft="10px" 
+	android:paddingLeft="10dp" 
 	android:layout_weight="1" 
 	android:paddingTop="4dip" 
 	android:paddingBottom="4dip">
@@ -13,7 +13,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center_vertical"
-		android:paddingLeft="10px" 
+		android:paddingLeft="10dp" 
 		android:paddingTop="4dip" 
 		android:paddingBottom="4dip"
 	    >

@@ -925,7 +925,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		return true;
 	}
 	
-
+	private Boolean restartdomodroid(){
+		Intent i = getBaseContext().getPackageManager()
+	            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(i);
+		return true;
+	}
+	
 	@Override
 	public void onPause(){
 		super.onPause();

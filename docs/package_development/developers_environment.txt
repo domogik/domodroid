@@ -7,5 +7,5 @@ ECLIPSE is only one of them, but you can use a simple text  editor if you want.
 
 Install Google SDK
 
-Install Mercurial plugin
-http://javaforge.com/project/HGE
+Configure it to use git at this adress:
+https://github.com/domogik/domodroid

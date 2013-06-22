@@ -17,17 +17,17 @@
      <echo>Creating backup of AndroidManifest.xml</echo>
      <copy file="AndroidManifest.xml" tofile="AndroidManifest.xml.antbak" preservelastmodified="true" />
 	
-	<exec executable="sh" outputproperty="git.commits">
-      	<arg value="-c" />
-      	<arg value="git log --pretty=format:'' | wc -l" />
-    	</exec>
-    	<echo>git.commits: ${git.commits}</echo>
-    	<exec executable="git" outputproperty="git.version">
-       	<arg value="describe" />
-       	<arg value="--tags" />
-       	<arg value="--long" />
-    	</exec>
-    	<echo>git.version: ${git.version}</echo>
+     <exec executable="sh" outputproperty="git.commits">
+      <arg value="-c" />
+      <arg value="git log --pretty=format:'' | wc -l" />
+    </exec>
+    <echo>git.commits: ${git.commits}</echo>
+    <exec executable="git" outputproperty="git.version">
+       <arg value="describe" />
+       <arg value="--tags" />
+       <arg value="--long" />
+    </exec>
+    <echo>git.version: ${git.version}</echo>
      
 		<!--
 		Write the revision number into the Manifest as the last
@@ -45,8 +45,8 @@
 
      <replaceregexp
         file="AndroidManifest.xml"
-    	match='android:versionName="(\d+\.\d+)\.\d+'
-    	replace='android:versionName="\1.${git.commits}"' />
+    match='android:versionName="(\d+\.\d+)\.\d+"'
+    replace='android:versionName="\1.${git.commits}"' />
      
 		<!-- 
 		Clean up

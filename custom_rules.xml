@@ -21,7 +21,7 @@
 			<arg line="rev-list --tags master --max-count=1"/>
 		</exec>
 		<property prefix="git" file="git-info.properties"/>
-		<echo>changeset: ${git.changeset}</echo>
+		<echo>${git.changeset}</echo>
      
 		<!--
 		Write the revision number into the Manifest as the last

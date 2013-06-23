@@ -24,7 +24,7 @@
     <echo>git.commits: ${git.commits}</echo>
     <exec executable="sh" outputproperty="git.version">
        <arg value="-c" />
-       <arg value="git symbolic-ref HEAD 2> /dev/null | cut -b 12-`-`git log --pretty=format:\"%h\" -1" />
+       <arg value="echo "`git symbolic-ref HEAD 2> /dev/null | cut -b 12-`-`git log --pretty=format:\"%h\" -1`"" />
     </exec>
     <echo>git.version: ${git.version}</echo>
      

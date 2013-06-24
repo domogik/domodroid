@@ -106,7 +106,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		//name of room
 		nameDevices=new TextView(context);
 		nameDevices.setText("Camera: "+name);
-		nameDevices.setTextSize(15);
+		nameDevices.setTextSize(14);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setOnLongClickListener(this);

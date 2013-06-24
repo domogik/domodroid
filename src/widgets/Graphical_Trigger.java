@@ -125,7 +125,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
-		nameDevices.setTextSize(16);
+		nameDevices.setTextSize(14);
 		nameDevices.setOnLongClickListener(this);
 		
 

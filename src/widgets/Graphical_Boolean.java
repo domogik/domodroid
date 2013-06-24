@@ -154,7 +154,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
-		nameDevices.setTextSize(16);
+		nameDevices.setTextSize(14);
 		nameDevices.setOnLongClickListener(this);
 		//state
 		state=new TextView(context);

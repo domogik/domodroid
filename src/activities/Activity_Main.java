@@ -108,6 +108,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private SeekBar mSeekBar1;
 	//private SeekBar mSeekBar2;
 	private CheckBox debugcheckbox; //Debug option
+	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
+	
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private ViewGroup parent;
@@ -195,6 +197,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
 		//Debug option
 		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
+		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
+		
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
 		sync.setTag("sync");
@@ -710,6 +714,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			//Debug option
 			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
+			prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -749,6 +754,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
 		//Debug option
 		debugcheckbox.setChecked(params.getBoolean("DEV",false));
+		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
 	}
 
 
@@ -932,7 +938,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		startActivity(i);
 		return true;
 	}
-	
+
 	@Override
 	public void onPause(){
 		super.onPause();

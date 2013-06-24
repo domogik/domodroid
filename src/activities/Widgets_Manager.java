@@ -13,6 +13,7 @@ import widgets.Entity_Feature;
 import widgets.Entity_Room;
 import widgets.Graphical_Area;
 import widgets.Graphical_Binary;
+import widgets.Graphical_Binary_New;
 import widgets.Graphical_Boolean;
 import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 public class Widgets_Manager {
 
 	private Graphical_Binary onoff;
+	private Graphical_Binary_New onoff_New;
 	private Graphical_Boolean bool;
 	private Graphical_Range variator;
 	private Graphical_Info info;
@@ -127,7 +129,8 @@ public class Widgets_Manager {
 				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 					//ignore it : it'll have another device for Color, displaying the switch !)
 				} else {
-					onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),label,
+					if (params.getBoolean("WIDGET_CHOICE",false)==false) {
+						onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),label,
 							feature.getId(),feature.getDevId(),
 							feature.getState_key(),
 							params.getString("URL","1.1.1.1"),
@@ -139,6 +142,21 @@ public class Widgets_Manager {
 					onoff.container=tmpPan;
 					tmpPan.addView(onoff);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
+					}
+					else {
+						onoff_New = new Graphical_Binary_New(Tracer, context,feature.getAddress(),label,
+								feature.getId(),feature.getDevId(),
+								feature.getState_key(),
+								params.getString("URL","1.1.1.1"),
+								feature.getDevice_usage_id(),
+								feature.getParameters(),
+								feature.getDevice_type_id(),
+								params.getInt("UPDATE_TIMER",300),
+								widgetSize, mytype);
+						onoff_New.container=tmpPan;
+						tmpPan.addView(onoff_New);
+						Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
+					}
 				}
 			} else if (feature.getValue_type().equals("boolean")) {
 				bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),label,
@@ -242,8 +260,8 @@ public class Widgets_Manager {
 					Tracer.i("Widgets_Manager","   ==> Graphical_Info + No graphic !!!");
 				}
 			//used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
-				
 			}
+		
 			if(columns){	
 				if(counter==0){
 					leftPan.addView(tmpPan);

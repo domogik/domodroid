@@ -21,6 +21,7 @@ import activities.Sliding_Drawer;
 import widgets.Entity_Map;
 import widgets.Entity_client;
 import widgets.Graphical_Binary;
+import widgets.Graphical_Binary_New;
 import widgets.Graphical_Boolean;
 import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
@@ -91,6 +92,7 @@ public class MapView extends View {
 	private Graphical_Trigger trigger;
 	private Graphical_Range variator;
 	private Graphical_Binary onoff;
+	private Graphical_Binary_New onoff_New;
 	private Graphical_Info info;
 	private Graphical_Boolean bool;
 	private Graphical_Color colorw;
@@ -644,12 +646,24 @@ public class MapView extends View {
 			if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 				//ignore it : it'll have another device for Color, displaying the switch !)
 			} else {
+				if (params.getBoolean("WIDGET_CHOICE",false)==false) {
 				onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
 				label,feature.getId(),feature.getDevId(),feature.getState_key(),
 				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
 				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
-			onoff.container=(FrameLayout) panel_widget;
-			panel_widget.addView(onoff);}
+				onoff.container=(FrameLayout) panel_widget;
+				panel_widget.addView(onoff);
+				}
+				else{
+				onoff_New = new Graphical_Binary_New(Tracer, context,feature.getAddress(),
+				label,feature.getId(),feature.getDevId(),feature.getState_key(),
+				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
+				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype);
+				onoff_New.container=(FrameLayout) panel_widget;
+				panel_widget.addView(onoff_New);
+				}
+					
+			}
 		}
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),

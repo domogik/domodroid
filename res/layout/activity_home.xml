@@ -164,6 +164,18 @@
                     android:id="@+id/debugcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:text="WIDGET_CHOICE"
+                    android:textColor="#FFFFFF" />
+
+                <CheckBox
+                    android:id="@+id/WIDGET_CHOICEcheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
              <LinearLayout

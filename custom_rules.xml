@@ -16,7 +16,7 @@
 <target name="-custom-manifest-version">
      <echo>Creating backup of AndroidManifest.xml</echo>
      <copy file="AndroidManifest.xml" tofile="AndroidManifest.xml.antbak" preservelastmodified="true" />
-	<!--	
+	
      <exec executable="sh" outputproperty="git.commits">
       <arg value="-c" />
       <arg value="git log --pretty=format:'' | wc -l" />
@@ -27,7 +27,7 @@
        <arg value="echo "`git symbolic-ref HEAD 2> /dev/null | cut -b 12-`-`git log --pretty=format:\"%h\" -1`"" />
     </exec>
     <echo>git.version: ${git.version}</echo>
-    	--> 
+  
 		<!--
 		Write the revision number into the Manifest as the last
 		segment of the VersionName property

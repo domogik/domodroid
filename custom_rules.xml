@@ -39,8 +39,8 @@
 
      <replaceregexp
         file="AndroidManifest.xml"
-    match='android:versionName="(\d+\.\d+)\.\d+"'
-    replace='android:versionName="\1.${git.commits}"' />
+     	match='android:versionName="([^".]+\.[^".]+)(\.[^"]*)?"'
+    	replace='android:versionName="\1.${git.commits}"' />
      
 		<!-- 
 		Clean up

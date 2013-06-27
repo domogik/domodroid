@@ -1,3 +1,7 @@
 /bin
 /gen
 /history.txt
+/script.sh
+/local.properties
+/build.xml
+/libs

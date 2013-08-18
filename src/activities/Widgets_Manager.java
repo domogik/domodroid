@@ -86,8 +86,11 @@ public class Widgets_Manager {
 		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		width= metrics.widthPixels;
 
-
-		if(width>maxSize){
+		//TODO read an option to know the user choice.
+		if(width>maxSize && params.getBoolean("twocol",false)==false){
+		Tracer.i("Widgets_Manager", "params.getBoolean twocol "+params.getBoolean("twocol",false));
+		
+			//if(width>maxSize){
 			columns=true;
 			mainPan.addView(leftPan);
 			mainPan.addView(rightPan);
@@ -302,7 +305,10 @@ public class Widgets_Manager {
 		width= metrics.widthPixels;
 
 
-		if(width>maxSize){
+		//TODO read an option to know the user choice.
+		if(width>maxSize && params.getBoolean("twocol",false)==false){
+			Tracer.i("Widgets_Manager", "params.getBoolean twocol "+params.getBoolean("twocol",false));
+			//if(width>maxSize){
 			columns=true;
 			mainPan.addView(leftPan);
 			mainPan.addView(rightPan);
@@ -363,7 +369,10 @@ public class Widgets_Manager {
 		width= metrics.widthPixels;
 
 
-		if(width>maxSize){
+		//TODO read an option to know the user choice.
+		if(width>maxSize && params.getBoolean("twocol",false)==false){
+			Tracer.i("Widgets_Manager", "params.getBoolean twocol "+params.getBoolean("twocol",false));
+			//if(width>maxSize){
 			columns=true;
 			mainPan.addView(leftPan);
 			mainPan.addView(rightPan);

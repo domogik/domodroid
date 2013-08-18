@@ -109,6 +109,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	//private SeekBar mSeekBar2;
 	private CheckBox debugcheckbox; //Debug option
 	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
+	private CheckBox twocolcheckbox; //if activate 2col will be forbid
 	
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
@@ -184,6 +185,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
 		prefEditor.putBoolean("SYSTEMLOG", true);		// For tests : with system logs....
 		
+		prefEditor.putBoolean("2col", false);
 		prefEditor.commit();
 		
 		Tracer.set_profile(params);
@@ -198,6 +200,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//Debug option
 		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
 		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
+		twocolcheckbox = (CheckBox)findViewById(R.id.twocolcheckbox);
 		
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(this);
@@ -715,6 +718,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			//Debug option
 			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
 			prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
+			prefEditor.putBoolean("twocol", twocolcheckbox.isChecked());
 			
 			urlAccess = localIP.getText().toString();
 			//add a '/' at the end of the IP address
@@ -755,6 +759,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//Debug option
 		debugcheckbox.setChecked(params.getBoolean("DEV",false));
 		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
+		//twocolcheckbox.setChecked(params.getBoolean("twocol",false));
 	}
 
 

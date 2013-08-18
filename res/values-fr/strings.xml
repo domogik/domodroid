@@ -77,6 +77,7 @@
 	<string name="network_Text11">1 Jour(s)</string>
 	<string name="network_Text11a"> Jour(s)</string>
 	<string name="network_Text18">Dev:</string>	
+	<string name="twocolcheckbox">Interdire 2 colonnes:</string>	
     <string name="from">Du  : </string>	
 	<string name="to">    au : </string>
 	<string name="Sync">Sync</string>

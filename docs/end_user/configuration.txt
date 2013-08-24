@@ -8,7 +8,9 @@ Set Auto-Update time with the sliding bar to adjust the frequency you want Domod
 
 Graphic period has been removed, and you can now switch graph period directly in the graph view.
 
-* Dev, add the device Id after his name to help debugging
+* Dev, add the device Id after his name to help debugging.
+* Forbid 2 columns will show widget on only one columns if your screen have more than 700px width (for example in landscape mode).
+  
 
 .. image:: new_menu.png
 
@@ -21,7 +23,7 @@ Map option:
 
 Max map size in px (be careful it could make memory error).
 
-.. image:: Map conf menu.png
+.. image:: Map_conf_menu.png
 
 Debug option:
 * Allow Debug message
@@ -34,4 +36,4 @@ Debug option:
 * In text file
 * You have to select the dirname and filename where you want it to be save.
 
-.. image:: Debug Conf menu.png
+.. image:: Debug_Conf_menu.png

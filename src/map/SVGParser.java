@@ -504,7 +504,7 @@ public class SVGParser {
         if (v == null) {
             return defaultValue;
         } else {
-            if (v.endsWith("px")) {
+            if ((v.endsWith("px"))||(v.endsWith("mm"))||(v.endsWith("in")) ){
                 v = v.substring(0, v.length() - 2);
             }
 //            Log.d(TAG, "Float parsing '" + name + "=" + v + "'");

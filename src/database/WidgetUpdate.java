@@ -598,6 +598,7 @@ public class WidgetUpdate  {
 						//stats request cannot be completed (broken link or terminal in standby ?)
 						//Will retry automatically in 2'05, if no events received
 						Tracer.e(mytag,"get stats : Rinor error <"+e.getMessage()+">");
+						//TODO make a Toast with error getMessage()
 						return null;
 					}
 					//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));

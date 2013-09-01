@@ -6,7 +6,10 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -23,11 +26,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import misc.CopyFile;
 import misc.tracerengine;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -87,6 +93,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private tracerengine Tracer = null;
 	private String owner = "Map";
 	private Boolean dont_freeze = false;
+
+	private static final int PICK_IMAGE = 1;
 	/*
 	 * WARNING : this class does'nt access anymore directly the database
 	 * 		It must use methods located into WidgetUpdate engine
@@ -358,7 +366,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			map.put("name",getText(R.string.go_Main).toString());
 			map.put("position",String.valueOf(i));
 			listItem.add(map);
+			i++;
 		}
+		//Add an element in map list to ADD a map
+		map=new HashMap<String,String>();
+		//TODO translate it
+		map.put("name","SELECT FILE");
+		map.put("position",String.valueOf(i));
+		listItem.add(map);
+		i++;
+		
 		SimpleAdapter adapter_map=new SimpleAdapter(getBaseContext(),listItem,
 				R.layout.item_map,new String[] {"name"},new int[] {R.id.name});
 		listeMap.setAdapter(adapter_map);
@@ -370,19 +387,61 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					mapView.setCurrentFile(position);
 					mapView.initMap();
 				} else {
-					if((position > last_map) && (Tracer.Map_as_main)) { 
+					//TODO look if we should not use position= last_map+1 to allow add other things in the list
+					//if((position > last_map) && (Tracer.Map_as_main)) {
+					if((position == last_map + 1) && (Tracer.Map_as_main)) {
 						//Go to main screen...
 						Tracer.force_Main = true;	//Flag to allow widgets display, even if START_ON_MAP is set !
 						Intent mapI = new Intent(Activity_Map.this,Activity_Main.class);
 						Tracer.d("Activity_Map","Call to Main, run it now !");
 						startActivity(mapI);
 					}
+					//open the "ADD map" 
+					if(((position == last_map + 1) && (!Tracer.Map_as_main)) || ((position == last_map + 2) && (Tracer.Map_as_main))){
+						Intent intent = new Intent();
+						intent.setType("image/*");
+						intent.setAction(Intent.ACTION_GET_CONTENT);
+						startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+					}
 				}
 			}
 		});
 
+		
 
 	}
+	//Wait result of pickup image
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		try {
+			if(requestCode == PICK_IMAGE && data != null && data.getData() != null) {
+	        Uri _uri = data.getData();
+
+	        //User had pick an image.
+	        Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
+	        cursor.moveToFirst();
+	        //TODO do something with map path
+		    File selectFile = new File (cursor.getString(0));
+		    String fileName = selectFile.getName();
+		    File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
+		    CopyFile.copyDirectory(selectFile,destFile);
+			cursor.close();
+	        //TODO translate this
+	        Toast.makeText(this,  "New File Add", Toast.LENGTH_LONG).show();
+	    }
+	    super.onActivityResult(requestCode, resultCode, data);
+	    //TODO close the menu
+	   //Restart the activity
+		//Not necessary if activity is restart
+	    build_maps_list();
+	  } catch (Exception e) {
+			//TODO translate this
+	        Toast.makeText(this,  "Error adding this file", Toast.LENGTH_LONG).show();
+	    	e.printStackTrace();
+		}
+
+	}
+	
 	@Override
 	public void onPause(){
 		super.onPause();

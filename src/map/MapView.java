@@ -234,7 +234,9 @@ public class MapView extends View {
 		
 		if(files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".svg")){
 			formatMode=1;
-		}else if(files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".png")){ 
+		//Try to allow PNG and png extension to solve #1707 on irc tracker.
+		//Could also try to put all in lowercase: files.elementAt(currentFile).substring(files.elementAt(currentFile).toLowerCase()......
+		}else if(files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".png")||files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".PNG")){ 
 			formatMode=2;
 		}else{
 			formatMode=0;
@@ -259,6 +261,8 @@ public class MapView extends View {
 
 		//Case using a svg file as map
 		if(formatMode==1){	
+			try{
+			
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
@@ -269,8 +273,15 @@ public class MapView extends View {
 			canvasMap.drawPicture(picture);
 			widget = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
+			
+			}catch (Exception e) {
+				Tracer.e("MapView initmap()","formatMode=1 "+e.getStackTrace().toString());
+				return;
+			}
 		//Case using a png file as map
 		}else if(formatMode==2){
+			try{
+		
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -281,6 +292,11 @@ public class MapView extends View {
 			canvasMap.drawBitmap(bitmap, 0, 0, paint_map );
 			widget = Bitmap.createBitmap((int)((bitmap.getWidth()+200)*currentScale), (int)((bitmap.getHeight()+200)*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
+		
+			}catch (Exception e) {
+			Tracer.e("MapView initmap()","formatMode=2 "+e.getStackTrace().toString());
+			return;
+		}
 		}
 		drawWidgets();
 
@@ -294,6 +310,11 @@ public class MapView extends View {
 		
 		//Case using a svg file as map
 		if(formatMode==1){
+			try{
+				
+			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
+			svg_string = getFileAsString(f);
+			svg = SVGParser.getSVGFromString(svg_string);
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
 			map = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -302,7 +323,14 @@ public class MapView extends View {
 			widget = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
 			//Case using a png file as map
+			
+			}catch (Exception e) {
+			Tracer.e("MapView refreshmap()","formatMode=1 "+e.getStackTrace().toString());
+			return;
+			}
 		}else if(formatMode==2){
+			try{
+			
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -314,6 +342,12 @@ public class MapView extends View {
 			Tracer.e(mytag, "Trying to create widget at scale : "+currentScale);
 			widget = Bitmap.createBitmap((int)((bitmap.getWidth()+200)*currentScale), (int)((bitmap.getHeight()+200)*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
+
+		}catch (Exception e) {
+		Tracer.e("MapView refreshmap()","formatMode=2 "+e.getStackTrace().toString());
+		return;
+		
+		}
 		}
 
 		drawWidgets();

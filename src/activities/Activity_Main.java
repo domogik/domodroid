@@ -202,25 +202,49 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
 		twocolcheckbox = (CheckBox)findViewById(R.id.twocolcheckbox);
 		
-		sync=(Button)findViewById(R.id.sync);
-		sync.setOnClickListener(this);
-		sync.setTag("sync");
-		
 		Exit=(Button)findViewById(R.id.Stop_all);
 		Exit.setOnClickListener(this);
 		Exit.setTag("Exit");
-		//
+		
 		mSeekBar1.setOnSeekBarChangeListener(this);
-		//mSeekBar2.setOnSeekBarChangeListener(this);
-		//mSeekBar3.setOnSeekBarChangeListener(this);
 
 		map_settings=(Button)findViewById(R.id.bt_map_settings);
-		map_settings.setOnClickListener(this);
-		map_settings.setTag("map_conf");
+		map_settings.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				//Disconnect all opened sessions....
+				Tracer.v("Activity_Main.onclick()","Call to Map settings screen");
+				if(map_set != null)
+					map_set.get_params();
+				else
+					map_set = new Dialog_Map(Tracer, params, myself);
+				map_set.show();
+				return;
+			}
+		});
 		
 		debug_settings=(Button)findViewById(R.id.bt_debug_settings);
-		debug_settings.setOnClickListener(this);
-		debug_settings.setTag("debug_conf");
+		debug_settings.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				//Disconnect all opened sessions....
+				Tracer.v("Activity_Main.onclick()","Call to Debug settings screen");
+				if(debug_set != null)
+					debug_set.get_params();
+				else
+					debug_set = new Dialog_Debug(Tracer, params, myself);
+				debug_set.show();
+				return;
+			}
+		});
+		
+		sync=(Button)findViewById(R.id.sync);
+		sync.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				// click on 'sync' button into Sliding_Drawer View
+				panel.setOpen(false, false);	// Hide the View
+				run_sync_dialog();		// And run a resync with Rinor server
+			}
+			
+		});
 		
 		LoadSelections();
 		
@@ -241,6 +265,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						if(widgetUpdate != null) {
 							widgetUpdate.resync();
 						} else {
+							Tracer.i("Activity_Main.onCreate","WidgetUpdate is null startCacheengine!");
 							startCacheEngine();
 						}
 						Bundle b = new Bundle();
@@ -312,13 +337,27 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		menu_green.setVisibility(View.GONE);
 		
 		menu_white = (TextView) findViewById(R.id.menu_button1);
-		menu_white.setOnClickListener(this);
+		menu_white.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				// A clic on menu will activate/deactivate panel allowing settings configuration and giving
+				//  access to 'sync' button
+				if(!panel.isOpen()){
+					panel.setOpen(true, true);	//open with animation
+				}else{
+					panel.setOpen(false, true);	//hide with animation
+				}
+			}
+		});
 		menu_white.setVisibility(View.VISIBLE);
-		menu_white.setTag("menu");
 		
 		menu_about = (TextView) findViewById(R.id.About_button);
-		menu_about.setOnClickListener(this);
-		menu_about.setTag("about");
+		menu_about.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
+				Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
+				startActivity(helpI);				
+			}
+		});
 		
 		animation1 = new AlphaAnimation(0.0f, 1.0f);
 		animation1.setDuration(500);
@@ -360,16 +399,61 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 		
 		house.setLayoutParams(param);
-		house.setOnClickListener(this);
-		house.setTag("house");
-
+		house.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				if(params.getBoolean("SYNC", false)==true){
+					loadWigets(0, "house");
+					historyPosition++;
+					history.add(historyPosition,new String [] {"0","house"});
+				}else{
+					if(notSyncAlert == null)
+						createAlert();
+					notSyncAlert.show();
+				}		
+			}
+		});
+		
 		map.setLayoutParams(param);
-		map.setOnClickListener(this);
-		map.setTag("map");
+		map.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				if(panel.isOpen()){
+					// Ignore map call if panel is opened, to avoid confusion between objects
+					return;
+				}
+				if(params.getBoolean("SYNC", false)==true){
+					//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
+					Tracer.w("Activity_Main","Before call to Map, Disconnect widgets from engine !");
+					if(widgetUpdate != null) {
+						widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
+						//widgetUpdate.dump_cache();	//For debug
+						dont_kill = true;	// to avoid engines kill when onDestroy()
+					}
+					mapI = new Intent(Activity_Main.this,Activity_Map.class);
+					Tracer.d("Activity_Main","Call to Map, run it now !");
+					Tracer.Map_as_main = false;
+					startActivity(mapI);
+				}else{
+					if(notSyncAlert == null)
+						createAlert();
+					notSyncAlert.show();
+				}
+			}
+		});
 		
 		stats.setLayoutParams(param);
-		stats.setOnClickListener(this);
-		stats.setTag("stats");
+		stats.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				if(params.getBoolean("SYNC", false)==true){
+					loadWigets(0, "statistics");
+					historyPosition++;
+					history.add(historyPosition,new String [] {"0","statistics"});
+				}else{
+					if(notSyncAlert == null)
+						createAlert();
+					notSyncAlert.show();
+				}
+			}
+		});
 
 		if(! by_usage)
 			house_map.addView(house);
@@ -419,8 +503,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				end_of_init_requested = true;
 			}
 			if(params.getBoolean("SPLASH", false)){
+				//TODO sould be replace by a sync done OK.
 				//A config exists
 				if(widgetUpdate == null) {
+					Tracer.i("Activity_Main.onCreate","Params splach is false and WidgetUpdate is null startCacheengine!");
 					startCacheEngine();
 				}
 
@@ -809,32 +895,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 	public void onClick(View v) {
 		dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
-		if(v.getTag().equals("sync")) {
-			// click on 'sync' button into Sliding_Drawer View
-			panel.setOpen(false, false);	// Hide the View
-			run_sync_dialog();		// And run a resync with Rinor server
-			
-		} else if(v.getTag().equals("debug_conf")) {
-			//Disconnect all opened sessions....
-			Tracer.v("Activity_Main.onclick()","Call to Debug settings screen");
-			if(debug_set != null)
-				debug_set.get_params();
-			else
-				debug_set = new Dialog_Debug(Tracer, params, this);
-			
-			debug_set.show();
-			return;
-		} else if(v.getTag().equals("map_conf")) {
-			//Disconnect all opened sessions....
-			Tracer.v("Activity_Main.onclick()","Call to Map settings screen");
-			if(map_set != null)
-				map_set.get_params();
-			else
-				map_set = new Dialog_Map(Tracer, params, this);
-			
-			map_set.show();
-			return;
-		} else if(v.getTag().equals("Exit")) {
+		//ALL other that are not explicitly used
+		if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....
 			Tracer.v("Activity_Main Exit","Stopping WidgetUpdate thread !");
 			this.wAgent=null;
@@ -858,64 +920,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
 	        }
-		} else if(v.getTag().equals("about")) {
-			dont_freeze=true;		//To avoid WidgetUpdate engine freeze
-			Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
-			startActivity(helpI);
-		}
-		if(v.getTag().equals("house")) {
-
-			if(params.getBoolean("SYNC", false)==true){
-				loadWigets(0, "house");
-				historyPosition++;
-				history.add(historyPosition,new String [] {"0","house"});
-			}else{
-				if(notSyncAlert == null)
-					createAlert();
-				notSyncAlert.show();
-			}
-		} else if(v.getTag().equals("stats")) {
-			if(params.getBoolean("SYNC", false)==true){
-				loadWigets(0, "statistics");
-				historyPosition++;
-				history.add(historyPosition,new String [] {"0","statistics"});
-			}else{
-				if(notSyncAlert == null)
-					createAlert();
-				notSyncAlert.show();
-			}	
-		} else if(v.getTag().equals("map")) {
-			if(panel.isOpen()){
-				// Ignore map call if panel is opened, to avoid confusion between objects
-				return;
-			}
-			if(params.getBoolean("SYNC", false)==true){
-				//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
-				Tracer.w("Activity_Main","Before call to Map, Disconnect widgets from engine !");
-				if(widgetUpdate != null) {
-					widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
-					//widgetUpdate.dump_cache();	//For debug
-					dont_kill = true;	// to avoid engines kill when onDestroy()
-				}
-				mapI = new Intent(Activity_Main.this,Activity_Map.class);
-				Tracer.d("Activity_Main","Call to Map, run it now !");
-				Tracer.Map_as_main = false;
-				startActivity(mapI);
-			}else{
-				if(notSyncAlert == null)
-					createAlert();
-				notSyncAlert.show();
-			}	
-			
-			
-		} else if(v.getTag().equals("menu")) {
-			// A clic on menu will activate/deactivate panel allowing settings configuration and giving
-			//  access to 'sync' button
-			if(!panel.isOpen()){
-				panel.setOpen(true, true);	//open with animation
-			}else{
-				panel.setOpen(false, true);	//hide with animation
-			}
 		}
 	}
 	
@@ -987,15 +991,21 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		super.onResume();
 		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
 		if(! init_done) {
+			Tracer.i("Activity_Main.onResume","Init not done!");
 			if(params.getBoolean("SPLASH", false)){
+				Tracer.i("Activity_Main.onResume","params Splash is false !");
 				cache_ready = false;
-				startCacheEngine();
+				//try to solve 1rst launch and orientation problem
+				Tracer.i("Activity_Main.onresume","Init not done! and params Splash is false startCacheengine!");
+				//startCacheEngine();
 				//end_of_init();		//Will be done when cache will be ready
 			}
 		}
 		else {
+			Tracer.i("Activity_Main.onResume","Init done!");
 				end_of_init_requested=true;
 				if(widgetUpdate != null) {
+					Tracer.i("Activity_Main.onResume","Widget update is not null so wakeup widget engine!");
 					widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
 				}
 				//end_of_init();	//all client widgets will be re-created

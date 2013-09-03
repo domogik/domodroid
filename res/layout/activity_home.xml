@@ -37,6 +37,10 @@
 
     <!-- Panel to configure IP, refresh period, and so on... -->
 
+    <ScrollView
+  	android:layout_width="fill_parent"
+ 	android:layout_height="fill_parent">
+    
     <activities.Sliding_Drawer
         android:id="@+id/topPanel"
         android:layout_width="fill_parent"
@@ -224,6 +228,8 @@
         </LinearLayout>
         <!-- End of general config/sync  menu slider -->
     </activities.Sliding_Drawer>
+    
+</ScrollView>
 
     <!-- Set center image + background -->
 	<!-- Title Bar with 2 menus, About, and logo -->

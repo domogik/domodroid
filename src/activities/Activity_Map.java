@@ -424,13 +424,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	        //Copy the select picture to Domodroid directory
 		    File selectFile = new File (cursor.getString(0));
 		    String fileName = selectFile.getName();
-		    Tracer.e("Activity_Map.onActivityResult","Name of the file " + fileName);
-			//filter for extension if not png or svg say it to user
+		    //filter for extension if not png or svg say it to user
 		    String filenameArray[] = fileName.split("\\.");
-		    Tracer.e("Activity_Map.onActivityResult","split of the filename " + filenameArray);
 		    //TODO put it in lowercase
 		    String extension = filenameArray[filenameArray.length-1];
-		    Tracer.e("Activity_Map.onActivityResult","extensions of the file " + extension);
 		    //if((extension == "png") || (extension == "PNG") || (extension == "svg" )) {
 		    if(extension.equals("png")||extension.equals("PNG")||extension.equals("svg")) {
 	        	File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
@@ -447,7 +444,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);
 	    //Restart this activity to save change 
-	    //TODO don't restart if not good format.
 	    Intent intent = getIntent();
 	    finish();
 	    startActivity(intent);

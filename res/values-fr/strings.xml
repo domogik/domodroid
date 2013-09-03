@@ -67,6 +67,10 @@
 	<string name="map_change">Changer de carte</string>
 	<string name="map_zoom">Zoomer sur la carte</string>
 	<string name="map_drag">Déplacer la carte</string>
+	<string name="map_select_file">Choisir un fichier</string>
+	<string name="map_add_file_ok">Nouveau fichier ajouté</string>
+	<string name="map_add_file_nok">Erreur lors de l\'ajout du fichier</string>
+	<string name="map_add_file_type_nok">Type de fichier non pris en charge</string>
 	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text1">--Adresse ou IP du serveur Rinor Domogik</string>

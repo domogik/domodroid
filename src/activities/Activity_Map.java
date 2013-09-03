@@ -370,8 +370,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		}
 		//Add an element in map list to ADD a map
 		map=new HashMap<String,String>();
-		//TODO translate it
-		map.put("name","SELECT FILE");
+		map.put("name",getText(R.string.map_select_file).toString());
 		map.put("position",String.valueOf(i));
 		listItem.add(map);
 		i++;
@@ -387,8 +386,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					mapView.setCurrentFile(position);
 					mapView.initMap();
 				} else {
-					//TODO look if we should not use position= last_map+1 to allow add other things in the list
-					//if((position > last_map) && (Tracer.Map_as_main)) {
+					//add the return to main screen menu entry if map start mode
 					if((position == last_map + 1) && (Tracer.Map_as_main)) {
 						//Go to main screen...
 						Tracer.force_Main = true;	//Flag to allow widgets display, even if START_ON_MAP is set !
@@ -410,33 +408,52 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		
 
 	}
+	
 	//Wait result of pickup image
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			if(requestCode == PICK_IMAGE && data != null && data.getData() != null) {
 	        Uri _uri = data.getData();
-
 	        //User had pick an image.
 	        Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
 	        cursor.moveToFirst();
-	        //TODO do something with map path
+	        //Copy the select picture to Domodroid directory
 		    File selectFile = new File (cursor.getString(0));
 		    String fileName = selectFile.getName();
-		    File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
-		    CopyFile.copyDirectory(selectFile,destFile);
-			cursor.close();
-	        //TODO translate this
-	        Toast.makeText(this,  "New File Add", Toast.LENGTH_LONG).show();
+		    Tracer.e("Activity_Map.onActivityResult","Name of the file " + fileName);
+			//filter for extension if not png or svg say it to user
+		    String filenameArray[] = fileName.split("\\.");
+		    Tracer.e("Activity_Map.onActivityResult","split of the filename " + filenameArray);
+		    //TODO put it in lowercase
+		    String extension = filenameArray[filenameArray.length-1];
+		    Tracer.e("Activity_Map.onActivityResult","extensions of the file " + extension);
+		    //if((extension == "png") || (extension == "PNG") || (extension == "svg" )) {
+		    if(extension.equals("png")||extension.equals("PNG")||extension.equals("svg")) {
+	        	File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
+	        	CopyFile.copyDirectory(selectFile,destFile);
+	        	cursor.close();
+	        	Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_LONG).show();
+	        	Tracer.e("Activity_Map.onActivityResult","No error adding new file in map !");
+	        }
+	        else {
+	        	Toast.makeText(this,  R.string.map_add_file_type_nok, Toast.LENGTH_LONG).show();
+	        	Tracer.e("Activity_Map.onActivityResult","File type is not supported !");
+	        	return;
+	        }
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);
-	    //TODO close the menu
-	   //Restart the activity
-		//Not necessary if activity is restart
-	    build_maps_list();
+	    //Restart this activity to save change 
+	    //TODO don't restart if not good format.
+	    Intent intent = getIntent();
+	    finish();
+	    startActivity(intent);
 	  } catch (Exception e) {
-			//TODO translate this
-	        Toast.makeText(this,  "Error adding this file", Toast.LENGTH_LONG).show();
+			Tracer.e("Activity_Map.onActivityResult","Error adding file in map !");
+			Toast.makeText(this,  R.string.map_add_file_nok, Toast.LENGTH_LONG).show();
 	    	e.printStackTrace();
 		}
 

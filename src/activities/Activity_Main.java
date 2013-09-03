@@ -945,8 +945,19 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
+//OR use this one to restart only this activity
+		//Intent intent = getIntent();
+	    //finish();
+	    //startActivity(intent);
 		return true;
 	}
+	private Boolean restartactivity(){
+		Intent intent = getIntent();
+	    finish();
+	    startActivity(intent);
+		return true;
+	}
+    
 
 	@Override
 	public void onPause(){

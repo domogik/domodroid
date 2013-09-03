@@ -67,6 +67,10 @@
 	<string name="map_change">Change Map</string>
 	<string name="map_zoom">Zoom Map</string>
 	<string name="map_drag">Drag Map</string>
+	<string name="map_select_file">Select File</string>
+	<string name="map_add_file_ok">New File Add</string>
+	<string name="map_add_file_nok">Error adding this file</string>
+	<string name="map_add_file_type_nok">File type not supported</string>
 	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text1">--Domogik Rinor IP Address</string>

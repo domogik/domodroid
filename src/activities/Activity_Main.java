@@ -924,6 +924,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private Boolean startCacheEngine() {
+		//TODO don't do it if we are not sure that last sync work. 
 		if(widgetUpdate == null) {
 			this.Create_message_box();
 			dialog_message.setMessage(getText(R.string.loading_cache)); 
@@ -945,10 +946,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(i);
-//OR use this one to restart only this activity
-		//Intent intent = getIntent();
-	    //finish();
-	    //startActivity(intent);
 		return true;
 	}
 	private Boolean restartactivity(){

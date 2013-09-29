@@ -45,7 +45,7 @@
         panel:animationDuration="800"
         panel:linearFlying="true"
         panel:position="top" >
-
+     
         <Button
             android:id="@id/panelHandle"
             android:layout_width="fill_parent"
@@ -53,9 +53,13 @@
             android:background="#00000000"
             android:paddingLeft="5dip"
             android:paddingRight="10dip" />
+		
+<ScrollView
+  			android:id="@id/panelContent"
+            android:layout_width="fill_parent"
+ 			android:layout_height="fill_parent">
 
-        <LinearLayout
-            android:id="@id/panelContent"
+    <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/drawer_button"
@@ -170,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dip"
-                    android:text="WIDGET_CHOICE"
+                    android:text="@string/widget_choice"
                     android:textColor="#FFFFFF" />
 
                 <CheckBox
@@ -223,6 +227,7 @@
 	    	</LinearLayout>
 
         </LinearLayout>
+        </ScrollView>
         <!-- End of general config/sync  menu slider -->
     </activities.Sliding_Drawer>
     

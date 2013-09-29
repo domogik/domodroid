@@ -89,7 +89,8 @@
 	<string name="Rename_title">Rename</string>
 	<string name="Rename_message">Set the text to be displayed. This information will be lost if you make a new sync.</string>
 	<string name="Add_widget_title">Select a widget</string>
-				
+	<string name="widget_choice">Widget choice</string>
+	    								
 	<string name="info0">Tornado</string>
 	<string name="info1">Tropical storm</string>
 	<string name="info2">Hurricane</string>

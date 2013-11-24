@@ -280,7 +280,39 @@
 		            android:gravity="right"
 		            android:checked="true"
 		            android:paddingLeft="20dp" />
-		        
+		    </LinearLayout>    
+		    
+		        <LinearLayout
+			    android:id="@+id/layout_choice_4"
+		        android:layout_width="fill_parent"
+		        android:layout_height="40dp"
+		        android:orientation="horizontal"
+		         >
+		        <TextView
+		            android:id="@+id/dev"
+		            android:layout_width="170dp"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center"
+		            android:gravity="left|clip_horizontal"
+		            android:paddingRight="10dip"
+                    android:text="@string/network_Text18"
+		            android:textColor="#999999"
+		            android:textSize="15sp" />
+		        <LinearLayout
+ 				    android:id="@+id/layout_filler4"
+ 				    android:layout_width="100dp"
+ 				    android:layout_height="fill_parent"
+ 				    android:orientation="horizontal" />
+				<CheckBox
+		            android:id="@+id/debugcheckbox"
+		            style="@style/AppBaseTheme"
+		            android:layout_width="match_parent"
+		            android:layout_height="fill_parent"
+		            android:layout_gravity="center"
+		            android:gravity="right"
+		            android:checked="true"
+		            android:paddingLeft="20dp" />
+                
 			</LinearLayout>
 			
 			<!--  Layout for location of text log file -->

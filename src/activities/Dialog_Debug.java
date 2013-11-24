@@ -37,6 +37,7 @@ public class Dialog_Debug extends Dialog implements OnClickListener {
 	private CheckBox CB_Txtfile = null;
 	private TextView db_logpath = null;
 	private TextView db_logname = null;
+	private CheckBox debugcheckbox; //Debug option
 	
 	
 	private SharedPreferences.Editor prefEditor;
@@ -68,7 +69,9 @@ public class Dialog_Debug extends Dialog implements OnClickListener {
 		CB_Txtfile = (CheckBox) findViewById(R.id.checkBox_file);
 		db_logpath =  (TextView) findViewById(R.id.dirpath);
 		db_logname =  (TextView) findViewById(R.id.filename);
-		
+		//Debug option
+		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
+				
 		get_params();	//retrieve actual settings and prepare to display them
 		
 	}
@@ -86,7 +89,9 @@ public class Dialog_Debug extends Dialog implements OnClickListener {
 		
 		db_logpath.setText(params.getString("LOGPATH", ""));
 		db_logname.setText(params.getString("LOGNAME", ""));
-		
+		//Debug option
+		debugcheckbox.setChecked(params.getBoolean("DEV",false));
+				
 	}
 	
 	public void onClick(View v) {
@@ -111,6 +116,8 @@ public class Dialog_Debug extends Dialog implements OnClickListener {
 			
 			prefEditor.putBoolean("LOGCHANGED", true);
 			prefEditor.putBoolean("LOGAPPEND", false);
+			//Debug option
+			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
 			prefEditor.commit();
 			// And force tracer to consider them
 			Tracer.set_profile(params);

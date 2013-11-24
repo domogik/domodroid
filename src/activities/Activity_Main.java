@@ -107,7 +107,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	//private TextView mProgressText2;
 	private SeekBar mSeekBar1;
 	//private SeekBar mSeekBar2;
-	private CheckBox debugcheckbox; //Debug option
 	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
 	private CheckBox twocolcheckbox; //if activate 2col will be forbid
 	
@@ -197,8 +196,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//mProgressText2 = (TextView)findViewById(R.id.progress2);
 		mSeekBar1=(SeekBar)findViewById(R.id.SeekBar1);
 		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
-		//Debug option
-		debugcheckbox = (CheckBox)findViewById(R.id.debugcheckbox);
 		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
 		twocolcheckbox = (CheckBox)findViewById(R.id.twocolcheckbox);
 		
@@ -801,8 +798,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				period = secondeOffset;
 			prefEditor.putInt("UPDATE_TIMER", period);
 			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
-			//Debug option
-			prefEditor.putBoolean("DEV", debugcheckbox.isChecked());
 			prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
 			prefEditor.putBoolean("twocol", twocolcheckbox.isChecked());
 			
@@ -842,8 +837,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		by_usage = params.getBoolean("BY_USAGE", false);
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
 		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
-		//Debug option
-		debugcheckbox.setChecked(params.getBoolean("DEV",false));
 		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
 		twocolcheckbox.setChecked(params.getBoolean("twocol",false));
 	}

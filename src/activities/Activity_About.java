@@ -25,7 +25,6 @@ package activities;
 import org.domogik.domodroid.R;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -43,12 +42,7 @@ public class Activity_About extends Activity{
 		super.onCreate(savedInstanceState);
 		pn = getPackageName();
 		
-		setContentView(R.layout.activity_help);
-		//display domogik version
-		TextView domogikversionText = (TextView) findViewById(R.id.domogikversionText);
-		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		domogikversionText.setText("Domogik version: "+params.getString("DOMOGIK-VERSION", ""));
-		//display domodroid version
+		setContentView(R.layout.activity_help);	
 		TextView versionText = (TextView) findViewById(R.id.versionText);
 		if (versionText != null) {
 			//set text in the activity_help versiontText textview

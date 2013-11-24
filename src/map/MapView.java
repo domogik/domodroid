@@ -46,6 +46,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import misc.tracerengine;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -67,6 +68,10 @@ public class MapView extends View {
 	private Matrix origin;
 	private SVG svg;
 	float currentScale = 1;
+	float currentScalewidth =1;
+	float currentScaleheight =1;
+	private int screenwidth;
+	private int screenheight;
 	private boolean addMode=false;
 	private boolean removeMode=false;
 	private boolean moveMode=false;
@@ -169,6 +174,7 @@ public class MapView extends View {
 		//End of create method ///////////////////////
 		
 	}
+	
 	private void startCacheEngine() {
 		
 		if(cache_engine == null) {
@@ -185,6 +191,7 @@ public class MapView extends View {
 	public void purge() {
 		// TODO We've to unsubscribe all connected mini widgets from cache engine
 	}
+	
 	public void  onWindowVisibilityChanged (int visibility) {
 		Tracer.i(mytag,"Visibility changed to : "+visibility);
 		/*
@@ -202,6 +209,7 @@ public class MapView extends View {
 		initMap();
 		
 	}
+	
 	public void initMap(){
 		Toast.makeText(context, files.elementAt(currentFile).substring(0,files.elementAt(currentFile).lastIndexOf('.')), Toast.LENGTH_SHORT).show();
 		
@@ -242,7 +250,6 @@ public class MapView extends View {
 			formatMode=0;
 		}
 		
-		currentScale = 1;
 		//Load current scale if it exists.
 		if(params.getFloat("Mapscale", 1)!=1){
 			currentScale=params.getFloat("Mapscale", 1);
@@ -258,7 +265,13 @@ public class MapView extends View {
 		paint_text.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint_text.setColor(Color.WHITE);
 		paint_text.setShadowLayer(1, 0, 0, Color.BLACK);
-
+		
+		//Get screen size
+		DisplayMetrics metrics = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		screenwidth= metrics.widthPixels;
+		screenheight= metrics.heightPixels;
+		
 		//Case using a svg file as map
 		if(formatMode==1){	
 			try{
@@ -266,6 +279,8 @@ public class MapView extends View {
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
+			//adjust to scale
+			currentScale=autoscalesvg(svg);
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
 			map = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -284,6 +299,8 @@ public class MapView extends View {
 		
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
+			//adjust to scale
+			currentScale=autoscalebitmap(bitmap);
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
 			Matrix matScale = new Matrix();
@@ -315,6 +332,8 @@ public class MapView extends View {
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
+			//adjust to scale
+			currentScale=autoscalesvg(svg);
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
 			map = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -333,6 +352,8 @@ public class MapView extends View {
 			
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
+			//adjust to scale
+			currentScale=autoscalebitmap(bitmap);
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
 			Matrix matScale = new Matrix();
@@ -815,8 +836,6 @@ public class MapView extends View {
 		return b;
 	}
 
-	
-	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		int nbPointers = event.getPointerCount();
 		float[] value = new float[9];
@@ -1024,7 +1043,6 @@ public class MapView extends View {
 		postInvalidate();
 		return true;
 	}
-
 	
 	public String getFileAsString(File file){ 
 		FileInputStream fis = null;
@@ -1113,13 +1131,50 @@ public class MapView extends View {
 	public void setCurrentFile(int currentFile) {
 		this.currentFile = currentFile;
 	}
+	
 	public boolean isMoveMode() {
 		return moveMode;
 	}
+	
 	public void setMoveMode(boolean moveMode) {
 		this.moveMode = moveMode;
 		
 	}
-
-		
+	
+	public float autoscalebitmap(Bitmap bitmap) {
+		if (bitmap.getWidth()>screenwidth){
+			currentScalewidth=(bitmap.getWidth()/screenwidth);
+		}
+		if (bitmap.getHeight()>screenheight){
+			currentScaleheight=(bitmap.getHeight()/screenheight);	
+		}
+		//select witch scale is the best
+		currentScale=bestscale(currentScalewidth, currentScaleheight);
+		return currentScale;
+	}
+	
+	public float autoscalesvg(SVG svg) {
+		if (svg.getSurfaceWidth()>screenwidth){
+			currentScalewidth=(svg.getSurfaceWidth()/screenwidth);
+		}
+		if (svg.getSurfaceHeight()>screenheight){
+			currentScaleheight=(svg.getSurfaceHeight()/screenheight);	
+		}
+		//select witch scale is the best
+		currentScale=bestscale(currentScalewidth, currentScaleheight);
+		return currentScale;
+	}
+	
+	public float bestscale(float currentScalewidth,float currentScaleheight){
+		if (currentScaleheight<currentScalewidth){
+			currentScale=currentScaleheight;	
+		} else{
+			currentScale=currentScalewidth;	
+		}
+		//Save current zoom scale
+		prefEditor=params.edit();
+		prefEditor.putFloat("Mapscale", currentScale);
+		prefEditor.commit();	//To save it really !
+		return currentScale;
+	}
 }

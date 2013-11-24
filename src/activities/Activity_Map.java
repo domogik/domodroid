@@ -407,7 +407,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		});
 		listeMap.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Ask if e want to remove this map we just selected
+				// TODO Ask if we want to remove this map we just selected
 				Tracer.d("Activity_Map"," setOnItemLongClickListener !");
 				return false;
 			}

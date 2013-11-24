@@ -845,7 +845,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//Debug option
 		debugcheckbox.setChecked(params.getBoolean("DEV",false));
 		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
-		//twocolcheckbox.setChecked(params.getBoolean("twocol",false));
+		twocolcheckbox.setChecked(params.getBoolean("twocol",false));
 	}
 
 

@@ -137,8 +137,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				}
 				String Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
-				String domogik_Version = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("Domogik_version");
-				
 				
 				JSONObject json_AreaList = null;
 				JSONObject json_RoomList = null;
@@ -197,7 +195,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
 					prefEditor.putBoolean("BY_USAGE", false);
-					prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
 					
 					
 				}else{
@@ -300,10 +297,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putString("ROOM_LIST",json_RoomList.toString());
 					prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());
 					prefEditor.putString("ASSOCIATION_LIST",json_FeatureAssociationList.toString());
-					//prefEditor.putString("ICON_LIST",json_IconList.toString());
+//					prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
 					prefEditor.putBoolean("BY_USAGE", true);
-					prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
+					
 				}
 				// Common sequence for both versions sync
 				

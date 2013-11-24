@@ -45,6 +45,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
@@ -404,10 +405,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				}
 			}
 		});
-
+		listeMap.setOnItemLongClickListener(new OnItemLongClickListener() {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Ask if e want to remove this map we just selected
+				Tracer.d("Activity_Map"," setOnItemLongClickListener !");
+				return false;
+			}
+		});
 		
-
-	}
+		}
+		
 	
 	//Wait result of pickup image
 	/* (non-Javadoc)

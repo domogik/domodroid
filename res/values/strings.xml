@@ -81,7 +81,8 @@
 	<string name="network_Text11">1 Day(s)</string>
 	<string name="network_Text11a"> Day(s)</string>
 	<string name="network_Text18">Dev:</string>
-	<string name="twocolcheckbox">Forbid 2 columns:</string>	
+	<string name="twocolcheckbox">Forbid 2 columns:</string>
+	<string name="mapautozoom">Zoom auto in map mode:</string>	
     <string name="from">From : </string>	
 	<string name="to">    to : </string>
 	<string name="Sync">Sync</string>

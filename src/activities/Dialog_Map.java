@@ -34,6 +34,7 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 	private CheckBox checkbox_hide; //Custom name option
 	private CheckBox checkbox_menu_disable; //Custom name option
 	private CheckBox checkbox_start_on_map; //option to start immediately on Map View
+	private CheckBox mapautozoom; //if activate zoom will be auto
 	private TextView mProgressText3;
 	private SeekBar mSeekBar3;
 	private int sizeOffset = 300;
@@ -67,6 +68,7 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 		mSeekBar3=(SeekBar)findViewById(R.id.SeekBar3);
 		mSeekBar3.setTag("seekbar3");
 		mSeekBar3.setOnSeekBarChangeListener(this);
+		mapautozoom = (CheckBox)findViewById(R.id.mapautozoom);
 				
 		get_params();	//retrieve actual settings and prepare to display them
 		
@@ -79,6 +81,7 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 		checkbox_menu_disable.setChecked(params.getBoolean("map_menu_disable", false));
 		checkbox_start_on_map.setChecked(params.getBoolean("START_ON_MAP", false));
 		mSeekBar3.setProgress(params.getInt("SIZE", 800)-sizeOffset);
+		mapautozoom.setChecked(params.getBoolean("mapautozoom",false));
 		
 		
 	}
@@ -97,6 +100,7 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 			prefEditor.putBoolean("map_menu_disable", checkbox_menu_disable.isChecked());
 			prefEditor.putBoolean("START_ON_MAP", checkbox_start_on_map.isChecked());
 			prefEditor.putInt("SIZE", mSeekBar3.getProgress()+sizeOffset);
+			prefEditor.putBoolean("mapautozoom", mapautozoom.isChecked());
 			
 			prefEditor.commit();
 			

@@ -68,8 +68,8 @@ public class MapView extends View {
 	private Matrix origin;
 	private SVG svg;
 	float currentScale = 1;
-	float currentScalewidth =1;
-	float currentScaleheight =1;
+	float currentScalewidth = 1;
+	float currentScaleheight = 1;
 	private int screenwidth;
 	private int screenheight;
 	private boolean addMode=false;
@@ -80,7 +80,7 @@ public class MapView extends View {
 	private static int text_Offset_Y = 0;
 	private int moves;
 	private SharedPreferences.Editor prefEditor;
-	
+	private boolean mapautozoom=false;
 	public int temp_id;
 	public int map_id;
 	public String map_name = "";
@@ -254,6 +254,10 @@ public class MapView extends View {
 		if(params.getFloat("Mapscale", 1)!=1){
 			currentScale=params.getFloat("Mapscale", 1);
 		}
+		//Load option for autoscale if it exists.
+		if(params.getBoolean("mapautozoom", false)!=false){
+			mapautozoom=params.getBoolean("mapautozoom", false);
+		}
 		origin = new Matrix();
 		mat = new TransformManager();
 		mat.setZoom(params.getBoolean("ZOOM", false));
@@ -280,7 +284,9 @@ public class MapView extends View {
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
 			//adjust to scale
-			currentScale=autoscalesvg(svg);
+			if (mapautozoom=true){
+				currentScale=autoscalesvg(svg);
+			}
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
 			map = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -300,7 +306,9 @@ public class MapView extends View {
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
 			//adjust to scale
-			currentScale=autoscalebitmap(bitmap);
+			if (mapautozoom=true){
+				currentScale=autoscalebitmap(bitmap);
+			}
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
 			Matrix matScale = new Matrix();
@@ -333,7 +341,9 @@ public class MapView extends View {
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
 			//adjust to scale
-			currentScale=autoscalesvg(svg);
+			if (mapautozoom=true){
+				currentScale=autoscalesvg(svg);
+			}
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
 			map = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -353,7 +363,9 @@ public class MapView extends View {
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
 			//adjust to scale
-			currentScale=autoscalebitmap(bitmap);
+			if (mapautozoom=true){
+				currentScale=autoscalebitmap(bitmap);
+			}
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
 			Matrix matScale = new Matrix();
@@ -1146,10 +1158,14 @@ public class MapView extends View {
 			currentScalewidth=(bitmap.getWidth()/screenwidth);
 		}
 		if (bitmap.getHeight()>screenheight){
-			currentScaleheight=(bitmap.getHeight()/screenheight);	
+			currentScaleheight=(bitmap.getHeight()/screenheight);
 		}
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
+		if (params.getBoolean("DEV",false)==true){
+			Toast.makeText(context, "bitmap.getWidth(): "+bitmap.getWidth(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "bitmap.getHeight(): "+bitmap.getHeight(), Toast.LENGTH_LONG).show();
+		}
 		return currentScale;
 	}
 	
@@ -1162,6 +1178,10 @@ public class MapView extends View {
 		}
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
+		if (params.getBoolean("DEV",false)==true){
+			Toast.makeText(context, "svg.getSurfaceWidth(): "+svg.getSurfaceWidth(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "svg.getSurfaceHeight(): "+svg.getSurfaceHeight(), Toast.LENGTH_SHORT).show();
+		}
 		return currentScale;
 	}
 	
@@ -1175,6 +1195,13 @@ public class MapView extends View {
 		prefEditor=params.edit();
 		prefEditor.putFloat("Mapscale", currentScale);
 		prefEditor.commit();	//To save it really !
+		if (params.getBoolean("DEV",false)==true){
+			Toast.makeText(context, "Current scale: "+currentScale, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "screenwidth: "+screenwidth, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "screenheight: "+screenheight, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "currentScalewidth: "+currentScalewidth, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "currentScaleheight: "+currentScaleheight, Toast.LENGTH_SHORT).show();
+		}
 		return currentScale;
 	}
 }

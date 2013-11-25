@@ -78,12 +78,14 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 					period = secondeOffset;
 				prefEditor.putInt("UPDATE_TIMER", period);
 				urlAccess = localIP.getText().toString()+":"+localPORT.getText().toString();
+				urlAccess = urlAccess.replaceAll("[\r\n]+", "");
+				//Try to solve #1623
+				urlAccess = urlAccess.replaceAll(" ", "%20");
 				//add a '/' at the end of the IP address
 				if(urlAccess.lastIndexOf("/")==localIP.getText().toString().length()-1) 
 					format_urlAccess = urlAccess;
 				else 
 					format_urlAccess = urlAccess.concat("/");
-
 				prefEditor.putString("URL",format_urlAccess);
 				prefEditor.commit();
 				

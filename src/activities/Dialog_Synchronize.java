@@ -90,9 +90,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 			super();
 			prefEditor=params.edit();
 			urlAccess = params.getString("URL","1.1.1.1");
-			urlAccess = urlAccess.replaceAll("[\r\n]+", "");
-			//Try to solve #1623
-			urlAccess = urlAccess.replaceAll(" ", "%20");
 			if(db == null)
 				db = new DomodroidDB(Tracer, context);
 		}

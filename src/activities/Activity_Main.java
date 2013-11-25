@@ -499,9 +499,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				// This method will be followed by 'onResume()'
 				end_of_init_requested = true;
 			}
-			if(params.getBoolean("SPLASH", false)){
-				//TODO sould be replace by a sync done OK.
-				//A config exists
+			if(params.getBoolean("SYNC", false)){
+				//A config exists and a sync as been done by past.
 				if(widgetUpdate == null) {
 					Tracer.i("Activity_Main.onCreate","Params splach is false and WidgetUpdate is null startCacheengine!");
 					startCacheEngine();
@@ -512,6 +511,35 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			Tracer.e("Activity_Main","OnCreate() complete !");
 			// End of onCreate (UIThread)
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
+		if(! init_done) {
+			Tracer.i("Activity_Main.onResume","Init not done!");
+			if(params.getBoolean("SPLASH", false)){
+				Tracer.i("Activity_Main.onResume","params Splash is false !");
+				cache_ready = false;
+				//try to solve 1rst launch and orientation problem
+				Tracer.i("Activity_Main.onresume","Init not done! and params Splash is false startCacheengine!");
+				//startCacheEngine();
+				//end_of_init();		//Will be done when cache will be ready
+			}
+		}
+		else {
+			Tracer.i("Activity_Main.onResume","Init done!");
+				end_of_init_requested=true;
+				if(widgetUpdate != null) {
+					Tracer.i("Activity_Main.onResume","Widget update is not null so wakeup widget engine!");
+					widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
+				}
+				//end_of_init();	//all client widgets will be re-created
+			}
+		if(end_of_init_requested)
+			end_of_init();
+		}
+	
 	private void Create_message_box() {
 		if(dialog_message != null)
 			return;
@@ -522,17 +550,19 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//dialog_reload.setPositiveButton("OK", message_listener);
 		dialog_message.setTitle(getText(R.string.please_wait));
 	}
+	
 	public void force_DB_update() {
 		if(widgetUpdate != null) {
 			widgetUpdate.refreshNow();
 		}
 	}
+	
 	private void createAlert() {
 		notSyncAlert = new AlertDialog.Builder(this);
 		notSyncAlert.setMessage(getText(R.string.not_sync)).setTitle("Warning!");
 		notSyncAlert.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
-			public void onClick(DialogInterface dialog, int which) {
+	public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();						
 			}
 		});
@@ -614,6 +644,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		dont_kill = false;	//By default, the onDestroy activity will also kill engines
 		
 	}
+	
 	/*
 	 * Check the answer after the proposal to reload existing settings (fresh install)
 	 */
@@ -786,7 +817,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		
 	}
-
 	
 	private void SaveSelections(Boolean mode) {
 		try{
@@ -841,8 +871,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		twocolcheckbox.setChecked(params.getBoolean("twocol",false));
 	}
 
-
-
 	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
 		if(seekBar.getId()==R.id.SeekBar1) {
 			int	value = progress;
@@ -859,14 +887,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 	}
 
-
 	public void onStartTrackingTouch(SeekBar seekBar) {
 	}
 
-
 	public void onStopTrackingTouch(SeekBar seekBar) {
 	}
-
 
 	public void onPanelClosed(Sliding_Drawer panel) {
 		Tracer.w("Activity_Main","onPanelClosed");
@@ -879,6 +904,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		*/
 	}
+	
 	public void onPanelOpened(Sliding_Drawer panel) {
 		Tracer.v("Activity_Main","onPanelOpened");
 		menu_green.setVisibility(View.VISIBLE);
@@ -895,7 +921,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.wAgent=null;
 			widgetHandler=null;
 			Tracer.set_engine(null);
-			widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
+			if (!(widgetUpdate == null)) {
+				widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
+			}
 			dont_kill = false;		//To force OnDestroy() to also kill engines
 			//And stop main program
 			this.finish();
@@ -941,6 +969,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		startActivity(i);
 		return true;
 	}
+	
 	private Boolean restartactivity(){
 		Intent intent = getIntent();
 	    finish();
@@ -948,7 +977,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		return true;
 	}
     
-
 	@Override
 	public void onPause(){
 		super.onPause();
@@ -987,33 +1015,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		*/
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
-		if(! init_done) {
-			Tracer.i("Activity_Main.onResume","Init not done!");
-			if(params.getBoolean("SPLASH", false)){
-				Tracer.i("Activity_Main.onResume","params Splash is false !");
-				cache_ready = false;
-				//try to solve 1rst launch and orientation problem
-				Tracer.i("Activity_Main.onresume","Init not done! and params Splash is false startCacheengine!");
-				//startCacheEngine();
-				//end_of_init();		//Will be done when cache will be ready
-			}
-		}
-		else {
-			Tracer.i("Activity_Main.onResume","Init done!");
-				end_of_init_requested=true;
-				if(widgetUpdate != null) {
-					Tracer.i("Activity_Main.onResume","Widget update is not null so wakeup widget engine!");
-					widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
-				}
-				//end_of_init();	//all client widgets will be re-created
-			}
-		
-		}
-
+	
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

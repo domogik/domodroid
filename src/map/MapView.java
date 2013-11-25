@@ -80,7 +80,7 @@ public class MapView extends View {
 	private static int text_Offset_Y = 0;
 	private int moves;
 	private SharedPreferences.Editor prefEditor;
-	private boolean mapautozoom=false;
+	private boolean map_autozoom=false;
 	public int temp_id;
 	public int map_id;
 	public String map_name = "";
@@ -254,10 +254,7 @@ public class MapView extends View {
 		if(params.getFloat("Mapscale", 1)!=1){
 			currentScale=params.getFloat("Mapscale", 1);
 		}
-		//Load option for autoscale if it exists.
-		if(params.getBoolean("mapautozoom", false)!=false){
-			mapautozoom=params.getBoolean("mapautozoom", false);
-		}
+			map_autozoom=params.getBoolean("map_autozoom", false);
 		origin = new Matrix();
 		mat = new TransformManager();
 		mat.setZoom(params.getBoolean("ZOOM", false));
@@ -284,7 +281,7 @@ public class MapView extends View {
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
 			//adjust to scale
-			if (mapautozoom=true){
+			if (map_autozoom==true){
 				currentScale=autoscalesvg(svg);
 			}
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
@@ -306,7 +303,7 @@ public class MapView extends View {
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
 			//adjust to scale
-			if (mapautozoom=true){
+			if (map_autozoom==true){
 				currentScale=autoscalebitmap(bitmap);
 			}
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -341,7 +338,7 @@ public class MapView extends View {
 			svg_string = getFileAsString(f);
 			svg = SVGParser.getSVGFromString(svg_string);
 			//adjust to scale
-			if (mapautozoom=true){
+			if (map_autozoom==true){
 				currentScale=autoscalesvg(svg);
 			}
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
@@ -363,7 +360,7 @@ public class MapView extends View {
 			File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile)); 
 			Bitmap bitmap = decodeFile(f);
 			//adjust to scale
-			if (mapautozoom=true){
+			if (map_autozoom==true){
 				currentScale=autoscalebitmap(bitmap);
 			}
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
@@ -1155,10 +1152,10 @@ public class MapView extends View {
 	
 	public float autoscalebitmap(Bitmap bitmap) {
 		if (bitmap.getWidth()>screenwidth){
-			currentScalewidth=(bitmap.getWidth()/screenwidth);
+			currentScalewidth=(screenwidth/bitmap.getWidth());
 		}
 		if (bitmap.getHeight()>screenheight){
-			currentScaleheight=(bitmap.getHeight()/screenheight);
+			currentScaleheight=(screenheight/bitmap.getHeight());
 		}
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
@@ -1171,10 +1168,10 @@ public class MapView extends View {
 	
 	public float autoscalesvg(SVG svg) {
 		if (svg.getSurfaceWidth()>screenwidth){
-			currentScalewidth=(svg.getSurfaceWidth()/screenwidth);
+			currentScalewidth=(screenwidth)/svg.getSurfaceWidth();
 		}
 		if (svg.getSurfaceHeight()>screenheight){
-			currentScaleheight=(svg.getSurfaceHeight()/screenheight);	
+			currentScaleheight=(screenheight)/svg.getSurfaceHeight();	
 		}
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
@@ -1186,7 +1183,7 @@ public class MapView extends View {
 	}
 	
 	public float bestscale(float currentScalewidth,float currentScaleheight){
-		if (currentScaleheight<currentScalewidth){
+		if (currentScaleheight>currentScalewidth){
 			currentScale=currentScaleheight;	
 		} else{
 			currentScale=currentScalewidth;	
@@ -1197,8 +1194,6 @@ public class MapView extends View {
 		prefEditor.commit();	//To save it really !
 		if (params.getBoolean("DEV",false)==true){
 			Toast.makeText(context, "Current scale: "+currentScale, Toast.LENGTH_SHORT).show();
-			Toast.makeText(context, "screenwidth: "+screenwidth, Toast.LENGTH_SHORT).show();
-			Toast.makeText(context, "screenheight: "+screenheight, Toast.LENGTH_SHORT).show();
 			Toast.makeText(context, "currentScalewidth: "+currentScalewidth, Toast.LENGTH_SHORT).show();
 			Toast.makeText(context, "currentScaleheight: "+currentScaleheight, Toast.LENGTH_SHORT).show();
 		}

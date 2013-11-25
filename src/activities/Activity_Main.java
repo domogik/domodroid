@@ -60,7 +60,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
@@ -93,16 +92,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Intent mapI = null;
 	private Button sync;
 	private Button Exit;	//Added by Doume
+	private Button usage_settings;	//Added by Tikismoke
 	private Button server_settings;	//Added by Tikismoke
 	private Button map_settings;	//Added by Tikismoke
 	private Button debug_settings;	//Added by Doume
+	private Dialog_Usage usage_set = null;
 	private Dialog_Server server_set = null;
 	private Dialog_Map map_set = null;
 	private Dialog_Debug debug_set = null;
 	private ImageView appname;
-	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
-	private CheckBox twocollandscapecheckbox; //if activate 2col will be forbid
-	private CheckBox twocolportraitcheckbox; //if activate 2col will be forbid
 	
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
@@ -184,15 +182,24 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		//option
 		appname = (ImageView)findViewById(R.id.app_name);
-		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
-		twocollandscapecheckbox = (CheckBox)findViewById(R.id.twocollandscapecheckbox);
-		twocolportraitcheckbox = (CheckBox)findViewById(R.id.twocolportraitcheckbox);
 		
 		Exit=(Button)findViewById(R.id.Stop_all);
 		Exit.setOnClickListener(this);
 		Exit.setTag("Exit");
 		
-		
+		usage_settings=(Button)findViewById(R.id.bt_usage_settings);
+		usage_settings.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				//Disconnect all opened sessions....
+				Tracer.v("Activity_Main.onclick()","Call to usage settings screen");
+				if(usage_set != null)
+					usage_set.get_params();
+				else
+					usage_set = new Dialog_Usage(Tracer, params, myself);
+				usage_set.show();
+				return;
+			}
+		});
 		server_settings=(Button)findViewById(R.id.bt_server_settings);
 		server_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -862,9 +869,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		try{
 			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 			SharedPreferences.Editor prefEditor=params.edit();
-			prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
-			prefEditor.putBoolean("twocol_lanscape", twocollandscapecheckbox.isChecked());
-			prefEditor.putBoolean("twocol_portrait", twocolportraitcheckbox.isChecked());
 			
 			
 			prefEditor.commit();
@@ -881,9 +885,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		tempUrl=params.getString("IP1",null);
 		by_usage = params.getBoolean("BY_USAGE", false);
-		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
-		twocollandscapecheckbox.setChecked(params.getBoolean("twocol_lanscape",false));
-		twocolportraitcheckbox.setChecked(params.getBoolean("twocol_portrait",false));
 	}
 	
 	private void run_sync_dialog() {

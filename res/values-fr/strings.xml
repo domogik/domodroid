@@ -76,17 +76,13 @@
 	<string name="network_Text10">-- Période des graphiques:</string>
 	<string name="network_Text11">1 Jour(s)</string>
 	<string name="network_Text11a"> Jour(s)</string>
-	<string name="network_Text18">Dev:</string>	
-	<string name="twocollandscapecheckbox">Interdire 2 colonnes en paysage:</string>	
-   	<string name="twocolportraitcheckbox">Interdire 2 colonnes en portrait:</string>	
-    <string name="from">Du  : </string>	
+	<string name="from">Du  : </string>	
 	<string name="to">    au : </string>
 	<string name="Sync">Sync</string>
 	<string name="Exit_Program">Quitter</string>
 	<string name="Rename_title">Renommer</string>
 	<string name="Rename_message">Choisir le texte à afficher. Cette valeur sera perdue si vous faites une synchronisation.</string>
 	<string name="Add_widget_title">Selectionner un widget</string>
-	<string name="widget_choice">Choix de widget</string>
 	    				
 	<string name="info0">Tornade</string>
 	<string name="info1">Tempête tropicale</string>
@@ -157,11 +153,12 @@
 	<string name="debug_filename">Nom du fichier log</string>
 	<string name="debug_bt_apply">Appliquer</string>
 	<string name="debug_bt_cancel">Annuler</string>
+	<string name="network_Text18">Dev:</string>	
 	
 	<string name="map_settings">Configurer Map</string>
 	<string name="map_explain">Cet écran permet la configuration du mode map</string>
-	<string name="map_bt_apply">Apply changes</string>
-	<string name="map_bt_cancel">Cancel</string>
+	<string name="map_bt_apply">Appliquer</string>
+	<string name="map_bt_cancel">Annuler</string>
 	<string name="map_menu_explain">--Fonctions multi touches sur Cartes:</string>
 	<string name="map_option_drag">Drag:</string>
     <string name="map_option_zoom">Zoom:</string>
@@ -183,6 +180,14 @@
 	<string name="server_Text2">-- Tempo. de mise à jour données:</string>
 	<string name="server_Text3">2 Secondes</string>
 	
+	<string name="usage_settings">Configurer widget</string>
+	<string name="usage_bt_apply">Appliquer</string>
+	<string name="usage_bt_cancel">Annuler</string>
+	<string name="usage_explain">Cet écran permet la configuration du mode widget</string>
+	<string name="widget_choice">Widget alternatif:</string>
+	<string name="twocollandscapecheckbox">Interdire 2 colonnes en paysage:</string>	
+   	<string name="twocolportraitcheckbox">Interdire 2 colonnes en portrait:</string>	
+    
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>
 	<string name="light_stat_1">Allumé</string>

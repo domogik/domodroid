@@ -81,7 +81,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Sync" />
-                    <!-- Added by Doume to allow a full stop of Domodroid -->
+               </LinearLayout>
+               <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dip"
+                android:paddingRight="20dip" >
+				     <!-- Added by Doume to allow a full stop of Domodroid -->
 
                     <Button
                         android:id="@+id/Stop_all"
@@ -91,66 +98,21 @@
                         android:text="@string/Exit_Program"/>
 
             </LinearLayout>
-
-            
-			
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-                              
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/widget_choice"
-                    android:textColor="#FFFFFF" />
-
-                <CheckBox
-                    android:id="@+id/WIDGET_CHOICEcheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-			
 			<LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-                                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/twocollandscapecheckbox"
-                    android:textColor="#FFFFFF" />
-
-                <CheckBox
-                    android:id="@+id/twocollandscapecheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-              
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-                                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dip"
-                    android:text="@string/twocolportraitcheckbox"
-                    android:textColor="#FFFFFF" />
-
-                <CheckBox
-                    android:id="@+id/twocolportraitcheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-              
-            </LinearLayout>
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="10dip" >
+                
+	            <!--  Add a button to allow normal usage configuration -->
+            	<Button
+				    android:id="@+id/bt_usage_settings"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="0.30"
+				    android:text="@string/usage_settings"
+	     		/>
+	    	</LinearLayout>
              <LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"

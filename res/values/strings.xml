@@ -76,9 +76,6 @@
 	<string name="network_Text10">--Graphic Period:</string>
 	<string name="network_Text11">1 Day(s)</string>
 	<string name="network_Text11a"> Day(s)</string>
-	<string name="network_Text18">Dev:</string>
-	<string name="twocollandscapecheckbox">Forbid 2 columns in landcape:</string>
-	<string name="twocolportraitcheckbox">Forbid 2 columns in portrait:</string>
 	<string name="from">From : </string>	
 	<string name="to">    to : </string>
 	<string name="Sync">Sync</string>
@@ -86,7 +83,6 @@
 	<string name="Rename_title">Rename</string>
 	<string name="Rename_message">Set the text to be displayed. This information will be lost if you make a new sync.</string>
 	<string name="Add_widget_title">Select a widget</string>
-	<string name="widget_choice">Widget choice</string>
 	    								
 	<string name="info0">Tornado</string>
 	<string name="info1">Tropical storm</string>
@@ -158,6 +154,7 @@
 	<string name="debug_filename">Log text filename</string>
 	<string name="debug_bt_apply">Apply changes</string>
 	<string name="debug_bt_cancel">Cancel</string>
+	<string name="network_Text18">Dev:</string>
 	
 	<string name="map_settings">Map configuration</string>
 	<string name="map_explain">This screen allow map view configuration</string>
@@ -183,6 +180,14 @@
 	<string name="server_portHint">40405</string>
 	<string name="server_Text2">--Auto-Update Timer:</string>
 	<string name="server_Text3">2 Secondes</string>
+	
+	<string name="usage_settings">Widget configuration</string>
+	<string name="usage_bt_apply">Apply changes</string>
+	<string name="usage_bt_cancel">Cancel</string>
+	<string name="usage_explain">This screen allow widget configuration</string>
+	<string name="widget_choice">Alternative Widget:</string>
+	<string name="twocollandscapecheckbox">Forbid 2 columns in landcape:</string>
+	<string name="twocolportraitcheckbox">Forbid 2 columns in portrait:</string>
 	
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>

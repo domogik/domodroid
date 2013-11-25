@@ -79,9 +79,6 @@ public class Events_manager {
 		//setOwner(owner, state_engine_handler);
 		mytag="Events";
 		urlAccess = params.getString("URL","1.1.1.1");
-		urlAccess = urlAccess.replaceAll("[\r\n]+", "");
-		//Try to solve #1623
-		urlAccess = urlAccess.replaceAll(" ", "%20");
 		//The father's cache should already contain a list of devices features
 		this.state_engine_handler = state_engine_handler;
 		Tracer.w(mytag,"Events Manager initialized");

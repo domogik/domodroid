@@ -45,6 +45,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,18 +61,15 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-@SuppressWarnings({ "static-access", "static-access" })
-public class Activity_Main extends Activity implements OnPanelListener,OnClickListener,OnSeekBarChangeListener{
+@SuppressWarnings({ "static-access" })
+public class Activity_Main extends Activity implements OnPanelListener,OnClickListener{
 
 	
 	@SuppressWarnings("unused")
@@ -95,20 +93,16 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Intent mapI = null;
 	private Button sync;
 	private Button Exit;	//Added by Doume
-	private Button debug_settings;	//Added by Doume
+	private Button server_settings;	//Added by Tikismoke
 	private Button map_settings;	//Added by Tikismoke
-	private Dialog_Debug debug_set = null;
+	private Button debug_settings;	//Added by Doume
+	private Dialog_Server server_set = null;
 	private Dialog_Map map_set = null;
-	private EditText localIP;
+	private Dialog_Debug debug_set = null;
 	private ImageView appname;
-	private String format_urlAccess;
-	public static String urlAccess;
-	private TextView mProgressText1;
-	//private TextView mProgressText2;
-	private SeekBar mSeekBar1;
-	//private SeekBar mSeekBar2;
 	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
-	private CheckBox twocolcheckbox; //if activate 2col will be forbid
+	private CheckBox twocollandscapecheckbox; //if activate 2col will be forbid
+	private CheckBox twocolportraitcheckbox; //if activate 2col will be forbid
 	
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
@@ -183,28 +177,36 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		//prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
 		prefEditor.putBoolean("SYSTEMLOG", true);		// For tests : with system logs....
-		
-		prefEditor.putBoolean("2col", false);
+
 		prefEditor.commit();
 		
 		Tracer.set_profile(params);
 		
 		//option
-		localIP = (EditText)findViewById(R.id.localIP);	
 		appname = (ImageView)findViewById(R.id.app_name);
-		mProgressText1 = (TextView)findViewById(R.id.progress1);
-		//mProgressText2 = (TextView)findViewById(R.id.progress2);
-		mSeekBar1=(SeekBar)findViewById(R.id.SeekBar1);
-		//mSeekBar2=(SeekBar)findViewById(R.id.SeekBar2);
 		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
-		twocolcheckbox = (CheckBox)findViewById(R.id.twocolcheckbox);
+		twocollandscapecheckbox = (CheckBox)findViewById(R.id.twocollandscapecheckbox);
+		twocolportraitcheckbox = (CheckBox)findViewById(R.id.twocolportraitcheckbox);
 		
 		Exit=(Button)findViewById(R.id.Stop_all);
 		Exit.setOnClickListener(this);
 		Exit.setTag("Exit");
 		
-		mSeekBar1.setOnSeekBarChangeListener(this);
-
+		
+		server_settings=(Button)findViewById(R.id.bt_server_settings);
+		server_settings.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				//Disconnect all opened sessions....
+				Tracer.v("Activity_Main.onclick()","Call to server settings screen");
+				if(server_set != null)
+					server_set.get_params();
+				else
+					server_set = new Dialog_Server(Tracer, params, myself);
+				server_set.show();
+				return;
+			}
+		});
+		
 		map_settings=(Button)findViewById(R.id.bt_map_settings);
 		map_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -540,6 +542,44 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			end_of_init();
 		}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		panel.setOpen(false, false);
+		Tracer.w("Activity_Main.onPause","Going to background !");
+		if(widgetUpdate != null)  {
+			if(! Tracer.Map_as_main) {
+				// We're the main initial activity
+				widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
+			}
+		}
+			
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		this.wAgent=null;
+		widgetHandler=null;
+		if(widgetUpdate != null) {
+			widgetUpdate.Disconnect(0);	//remove all pending subscribings
+			if(! Tracer.Map_as_main) {
+				// We're the main initial activity
+				Tracer.w("Activity_Main.onDestroy","cache engine set to sleeping !");
+				this.mWakeLock.release();	// We allow screen shut, now...
+				widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
+												// only if we are the main initial activity
+			}
+			
+		}
+		/*
+		if(Tracer != null) {
+			Tracer.close();		//To flush text file, eventually
+			Tracer = null;
+		}
+		*/
+	}
+	
 	private void Create_message_box() {
 		if(dialog_message != null)
 			return;
@@ -822,23 +862,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		try{
 			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 			SharedPreferences.Editor prefEditor=params.edit();
-			prefEditor.putString("IP1",localIP.getText().toString());
-			int period = mSeekBar1.getProgress();
-			if(period < secondeOffset)
-				period = secondeOffset;
-			prefEditor.putInt("UPDATE_TIMER", period);
-			//prefEditor.putInt("GRAPH", mSeekBar2.getProgress()+dayOffset);
 			prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
-			prefEditor.putBoolean("twocol", twocolcheckbox.isChecked());
+			prefEditor.putBoolean("twocol_lanscape", twocollandscapecheckbox.isChecked());
+			prefEditor.putBoolean("twocol_portrait", twocolportraitcheckbox.isChecked());
 			
-			urlAccess = localIP.getText().toString();
-			//add a '/' at the end of the IP address
-			if(urlAccess.lastIndexOf("/")==localIP.getText().toString().length()-1) 
-				format_urlAccess = urlAccess;
-			else 
-				format_urlAccess = urlAccess.concat("/");
-
-			prefEditor.putString("URL",format_urlAccess);
+			
 			prefEditor.commit();
 			if(backupprefs != null)
 				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
@@ -847,6 +875,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				run_sync_dialog();	// force a resync with server if just after a reload
 			*/
 		} catch(Exception e){}
+	}
+	
+	private void LoadSelections() {
+		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		tempUrl=params.getString("IP1",null);
+		by_usage = params.getBoolean("BY_USAGE", false);
+		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
+		twocollandscapecheckbox.setChecked(params.getBoolean("twocol_lanscape",false));
+		twocolportraitcheckbox.setChecked(params.getBoolean("twocol_portrait",false));
 	}
 	
 	private void run_sync_dialog() {
@@ -860,39 +897,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		dialog_sync.startSync();
 	}
 	
-	private void LoadSelections() {
-		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		localIP.setText(params.getString("IP1",null));
-		tempUrl=params.getString("IP1",null);
-		by_usage = params.getBoolean("BY_USAGE", false);
-		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
-		//mSeekBar2.setProgress(params.getInt("GRAPH", 3)-dayOffset);
-		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
-		twocolcheckbox.setChecked(params.getBoolean("twocol",false));
-	}
-
-	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-		if(seekBar.getId()==R.id.SeekBar1) {
-			int	value = progress;
-			if(value < secondeOffset) {
-				value = secondeOffset;
-				seekBar.setProgress(value);
-			}
-			mProgressText1.setText((value)+" "+getString(R.string.seconds));
-		}
-		/* else if(seekBar.getId()==R.id.SeekBar2) {
-			mProgressText2.setText( (Integer.toString(progress+dayOffset))+ getText(R.string.network_Text11a));
-		}*/else{
-			
-		}
-	}
-
-	public void onStartTrackingTouch(SeekBar seekBar) {
-	}
-
-	public void onStopTrackingTouch(SeekBar seekBar) {
-	}
-
 	public void onPanelClosed(Sliding_Drawer panel) {
 		Tracer.w("Activity_Main","onPanelClosed");
 		menu_green.startAnimation(animation2);
@@ -945,7 +949,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private Boolean startCacheEngine() {
-		//TODO don't do it if we are not sure that last sync work. 
 		if(widgetUpdate == null) {
 			this.Create_message_box();
 			dialog_message.setMessage(getText(R.string.loading_cache)); 
@@ -977,46 +980,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		return true;
 	}
     
-	@Override
-	public void onPause(){
-		super.onPause();
-		panel.setOpen(false, false);
-		Tracer.w("Activity_Main.onPause","Going to background !");
-		if(widgetUpdate != null)  {
-			if(! Tracer.Map_as_main) {
-				// We're the main initial activity
-				widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
-			}
-		}
-			
-	}
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		this.wAgent=null;
-		widgetHandler=null;
-		if(widgetUpdate != null) {
-			widgetUpdate.Disconnect(0);	//remove all pending subscribings
-			if(! Tracer.Map_as_main) {
-				// We're the main initial activity
-				Tracer.w("Activity_Main.onDestroy","cache engine set to sleeping !");
-				this.mWakeLock.release();	// We allow screen shut, now...
-				widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
-												// only if we are the main initial activity
-			}
-			
-		}
-		/*
-		if(Tracer != null) {
-			Tracer.close();		//To flush text file, eventually
-			Tracer = null;
-		}
-		*/
-	}
-	
-	
-
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(keyCode==82 && !panel.isOpen()){
@@ -1053,6 +1016,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			return null;
 		}
 	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	//this is called when the screen rotates.
+	// (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
+	{
+	    super.onConfigurationChanged(newConfig);
+	    //setContentView(R.layout.activity_home);
 
+	}
 }
 

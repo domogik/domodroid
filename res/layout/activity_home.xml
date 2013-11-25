@@ -68,15 +68,6 @@
             android:paddingRight="5dip"
             android:paddingTop="30dip" >
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dip"
-                android:paddingRight="5dip"
-                android:paddingTop="10dip"
-                android:text="@string/network_Text1"
-                android:textColor="#FFFFFF" />
-
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -84,25 +75,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="20dip" >
 
-                <EditText
-                    android:id="@+id/localIP"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_background"
-                    android:hint="@string/network_TextHint1"
-                    android:singleLine="true"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="350dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dip"
-                    android:paddingTop="2dip" >
-
-                    <Button
+					<Button
                         android:id="@+id/sync"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
@@ -116,41 +89,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Exit_Program"/>
-                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="5dip"
-                    android:paddingTop="10dip"
-                    android:text="@string/network_Text8"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
-                    android:id="@+id/progress1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dip"
-                    android:text="@string/network_Text9"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-
-            <!-- Refresh period -->
-
-            <SeekBar
-                android:id="@+id/SeekBar1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:max="300"
-                android:paddingLeft="20dip"
-                android:paddingRight="20dip"
-                android:paddingTop="10dip" />
+            
 			
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -181,16 +123,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dip"
-                    android:text="@string/twocolcheckbox"
+                    android:text="@string/twocollandscapecheckbox"
                     android:textColor="#FFFFFF" />
 
                 <CheckBox
-                    android:id="@+id/twocolcheckbox"
+                    android:id="@+id/twocollandscapecheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+              
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+                                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:text="@string/twocolportraitcheckbox"
+                    android:textColor="#FFFFFF" />
+
+                <CheckBox
+                    android:id="@+id/twocolportraitcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
               
             </LinearLayout>
              <LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="10dip" >
+                
+	            <!--  Add a button to allow server configuration -->
+            	<Button
+				    android:id="@+id/bt_server_settings"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="0.30"
+				    android:text="@string/server_settings"
+	     		/>
+	    	</LinearLayout>
+	    	<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="10dip" >
+                
+	            
+	            <!--  Add a button to allow map configuration -->
+            	<Button
+				    android:id="@+id/bt_map_settings"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="0.30"
+				    android:text="@string/map_settings"
+	     		/>
+	    	</LinearLayout>
+	    	<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
@@ -203,14 +195,6 @@
 				    android:layout_height="wrap_content"
 				    android:layout_weight="0.30"
 				    android:text="@string/debug_settings"
-	     		/>
-	            <!--  Add a button to allow debug configuration -->
-            	<Button
-				    android:id="@+id/bt_map_settings"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="0.30"
-				    android:text="@string/map_settings"
 	     		/>
 	    	</LinearLayout>
 

@@ -49,6 +49,8 @@ public class Widgets_Manager {
 	private int widgetSize;
 	private int maxSize=700;
 	private int width;
+	private int height;
+	private boolean landscape;
 	private boolean columns=false;
 	private Handler widgetHandler;
 	public WidgetUpdate widgetupdate = null;
@@ -82,19 +84,9 @@ public class Widgets_Manager {
 
 		int counter=0;
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		width= metrics.widthPixels;
-
-		if(width>maxSize && params.getBoolean("twocol",false)==false){
-		Tracer.i("Widgets_Manager", "params.getBoolean twocol "+params.getBoolean("twocol",false));
+		//check option and adapt columns in function
+		colonnes(context, ll, mainPan, leftPan, rightPan, params);
 		
-			//if(width>maxSize){
-			columns=true;
-			mainPan.addView(leftPan);
-			mainPan.addView(rightPan);
-			ll.addView(mainPan);
-		}
 		if(id == -1) {
 			//We've to display statistics widget
 			Tracer.i("Widgets_Manager", "Call to process statistics widget");
@@ -278,7 +270,6 @@ public class Widgets_Manager {
 		return ll;
 	}
 
-
 	public LinearLayout loadAreaWidgets(Activity context, LinearLayout ll, SharedPreferences params) throws JSONException {
 
 		DomodroidDB domodb = new DomodroidDB(Tracer, context);
@@ -298,22 +289,10 @@ public class Widgets_Manager {
 		FrameLayout tmpPan = new FrameLayout(context);
 
 		int counter=0;
-
-		DisplayMetrics metrics = new DisplayMetrics();
-		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		width= metrics.widthPixels;
-
-
-		if(width>maxSize && params.getBoolean("twocol",false)==false){
-			Tracer.i("Widgets_Manager", "params.getBoolean twocol "+params.getBoolean("twocol",false));
-			//if(width>maxSize){
-			columns=true;
-			mainPan.addView(leftPan);
-			mainPan.addView(rightPan);
-			ll.addView(mainPan);
-		}
-
-
+		
+		//check option and adapt columns in function
+		colonnes(context, ll, mainPan, leftPan, rightPan, params);
+		
 		for (Entity_Area area : listArea) {
 			String iconId = "unknown";
 			try {
@@ -362,21 +341,9 @@ public class Widgets_Manager {
 		FrameLayout tmpPan = new FrameLayout(context);
 		int counter=0;
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		width= metrics.widthPixels;
-
-
-		if(width>maxSize && params.getBoolean("twocol",false)==false){
-			Tracer.i("Widgets_Manager", "params.getBoolean twocol "+params.getBoolean("twocol",false));
-			//if(width>maxSize){
-			columns=true;
-			mainPan.addView(leftPan);
-			mainPan.addView(rightPan);
-			ll.addView(mainPan);
-		}
-
-
+		//check option and adapt columns in function
+		colonnes(context, ll, mainPan, leftPan, rightPan, params);
+		
 		for (Entity_Room room : listRoom) {
 
 			String iconId = "unknown";
@@ -414,7 +381,36 @@ public class Widgets_Manager {
 		}
 		return ll;
 	}
+	
+	public void colonnes(Activity context, LinearLayout ll,LinearLayout mainPan, LinearLayout leftPan,LinearLayout rightPan, SharedPreferences params){
+		DisplayMetrics metrics = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		width= metrics.widthPixels;
+		height= metrics.heightPixels;
 
+		if(width>height){
+			landscape=true;
+		}else{
+			landscape=false;
+		}
+		
+		if(width>maxSize && landscape && params.getBoolean("twocol_lanscape",false)==false){
+		Tracer.i("Widgets_Manager", "params.getBoolean twocol_lanscape "+params.getBoolean("twocol_lanscape",false));
+		
+			columns=true;
+			mainPan.addView(leftPan);
+			mainPan.addView(rightPan);
+			ll.addView(mainPan);
+		}
+		if(width>maxSize && !landscape && params.getBoolean("twocol_portrait",false)==false){
+		Tracer.i("Widgets_Manager", "params.getBoolean twocol_portrait "+params.getBoolean("twocol_portrait",false));
+
+			columns=true;
+			mainPan.addView(leftPan);
+			mainPan.addView(rightPan);
+			ll.addView(mainPan);
+		}
+	}
 }
 
 

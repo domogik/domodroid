@@ -57,7 +57,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 
 	public void get_params() {
 		localIP.setText(params.getString("rinorIP",null));
-		localPORT.setText(params.getString("rinorPort",null));
+		localPORT.setText(params.getString("rinorPort","40405"));
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
 		
 	}

@@ -73,17 +73,13 @@
 	<string name="map_add_file_type_nok">File type not supported</string>
 	
 	<string name="network_Title">- Options -</string>
-	<string name="network_Text1">--Domogik Rinor IP Address</string>
-	<string name="network_TextHint1">http://address-rinor:40405/</string>
-	<string name="network_Text8">--Auto-Update Timer:</string>
-	<string name="network_Text9">2 Secondes</string>
 	<string name="network_Text10">--Graphic Period:</string>
 	<string name="network_Text11">1 Day(s)</string>
 	<string name="network_Text11a"> Day(s)</string>
 	<string name="network_Text18">Dev:</string>
-	<string name="twocolcheckbox">Forbid 2 columns:</string>
-	<string name="mapautozoom">Zoom auto in map mode:</string>	
-    <string name="from">From : </string>	
+	<string name="twocollandscapecheckbox">Forbid 2 columns in landcape:</string>
+	<string name="twocolportraitcheckbox">Forbid 2 columns in portrait:</string>
+	<string name="from">From : </string>	
 	<string name="to">    to : </string>
 	<string name="Sync">Sync</string>
 	<string name="Exit_Program">Exit Program</string>
@@ -175,7 +171,19 @@
     <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="map_option_hide_text">Hide text:</string>
     <string name="map_option_menu_disable">Disallow editing map</string>
-   
+   	<string name="map_autozoom">Zoom auto in map mode:</string>	
+    
+    <string name="server_settings">Server configuration</string>
+	<string name="server_bt_apply">Apply changes</string>
+	<string name="server_bt_cancel">Cancel</string>
+	<string name="server_explain">This screen allow server configuration</string>
+	<string name="server_IP">--Domogik Rinor IP Address</string>
+	<string name="server_ipHint">http://address-rinor</string>
+	<string name="server_PORT">--Domogik Rinor Port</string>
+	<string name="server_portHint">40405</string>
+	<string name="server_Text2">--Auto-Update Timer:</string>
+	<string name="server_Text3">2 Secondes</string>
+	
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>
 	<string name="light_stat_1">On</string>

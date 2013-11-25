@@ -90,13 +90,14 @@
                 android:paddingTop="10dip" >
 
                 <CheckBox
-                    android:id="@+id/checkbox_drag"
+                    android:id="@+id/map_checkbox_drag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 				
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
                     android:text="@string/map_option_drag"
                     android:textColor="#FFFFFF" />
                </LinearLayout>
@@ -108,7 +109,7 @@
                  >
 
                 <CheckBox
-                    android:id="@+id/checkbox_zoom"
+                    android:id="@+id/map_checkbox_zoom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -127,7 +128,7 @@
                  >
 
                    <CheckBox
-                       android:id="@+id/checkbox_hide"
+                       android:id="@+id/map_checkbox_hide"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content" />
 
@@ -147,7 +148,7 @@
                     >
 
                    <CheckBox
-                       android:id="@+id/checkbox_menu_disable"
+                       android:id="@+id/map_checkbox_menu_disable"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content" />
 
@@ -162,11 +163,10 @@
 				<LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
+                android:orientation="horizontal">
                 
                 <CheckBox
-                    android:id="@+id/mapautozoom"
+                    android:id="@+id/map_autozoom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                              
@@ -174,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dip"
-                    android:text="@string/mapautozoom"
+                    android:text="@string/map_autozoom"
                     android:textColor="#FFFFFF" />
                
             	</LinearLayout>
@@ -185,7 +185,7 @@
                     >
 
                    <CheckBox
-                       android:id="@+id/checkbox_start_on_map"
+                       android:id="@+id/map_checkbox_start_on_map"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content" />
 
@@ -210,7 +210,7 @@
                     android:textColor="#FFFFFF" />
 				<!--  Max map size value -->
                 <TextView
-                    android:id="@+id/progress3"
+                    android:id="@+id/map_progress3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/map_option_size"
@@ -218,7 +218,7 @@
             </LinearLayout>
 			 <!--  Choix de la taille des images MAP -->
 	            <SeekBar
-	                android:id="@+id/SeekBar3"
+	                android:id="@+id/map_SeekBar3"
 	                android:layout_width="fill_parent"
 	                android:layout_height="0dip"
 	                android:max="1000"
@@ -238,7 +238,7 @@
             
             <!--  Layout for bottom buttons -->
 			<LinearLayout
-					    android:id="@+id/layout_buttons"
+					    android:id="@+id/map_layout_buttons"
 				        android:layout_width="fill_parent"
 				        android:layout_height="40dp"
 				        android:layout_gravity="bottom"
@@ -250,7 +250,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_weight="50"
-				    android:text="@string/debug_bt_apply"
+				    android:text="@string/map_bt_apply"
 				     />
 		
 				<Button
@@ -258,7 +258,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_weight="50"
-				    android:text="@string/debug_bt_cancel"
+				    android:text="@string/map_bt_cancel"
 				     />
 		
 			 </LinearLayout>

@@ -73,17 +73,13 @@
 	<string name="map_add_file_type_nok">Type de fichier non pris en charge</string>
 	
 	<string name="network_Title">- Options -</string>
-	<string name="network_Text1">--Adresse ou IP du serveur Rinor Domogik</string>
-	<string name="network_TextHint1">http://addresse-rinor:40405/</string>
-	<string name="network_Text8">-- Tempo. de mise à jour données:</string>
-	<string name="network_Text9">2 Secondes</string>
 	<string name="network_Text10">-- Période des graphiques:</string>
 	<string name="network_Text11">1 Jour(s)</string>
 	<string name="network_Text11a"> Jour(s)</string>
 	<string name="network_Text18">Dev:</string>	
-	<string name="twocolcheckbox">Interdire 2 colonnes:</string>	
-    <string name="mapautozoom">Zoom automatique en map:</string>	
-   <string name="from">Du  : </string>	
+	<string name="twocollandscapecheckbox">Interdire 2 colonnes en paysage:</string>	
+   	<string name="twocolportraitcheckbox">Interdire 2 colonnes en portrait:</string>	
+    <string name="from">Du  : </string>	
 	<string name="to">    au : </string>
 	<string name="Sync">Sync</string>
 	<string name="Exit_Program">Quitter</string>
@@ -174,7 +170,19 @@
     <string name="map_option_advert">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
     <string name="map_option_hide_text">Masquer texte:</string>
     <string name="map_option_menu_disable">Interdire les modifications de map</string>
-    
+    <string name="map_autozoom">Zoom automatique en map:</string>	
+   	
+    <string name="server_settings">Configurer Serveur</string>
+	<string name="server_bt_apply">Appliquer</string>
+	<string name="server_bt_cancel">Annuler</string>
+	<string name="server_explain">Cet écran permet la configuration du serveur</string>
+	<string name="server_IP">--Adresse ou IP du serveur Rinor Domogik</string>
+	<string name="server_ipHint">http://addresse-rinor</string>
+	<string name="server_PORT">--Port du serveur Rinor Domogik</string>
+	<string name="server_portHint">40405</string>
+	<string name="server_Text2">-- Tempo. de mise à jour données:</string>
+	<string name="server_Text3">2 Secondes</string>
+	
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>
 	<string name="light_stat_1">Allumé</string>

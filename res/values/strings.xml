@@ -236,10 +236,10 @@
 	<string name="bathroom">Bathroom</string>
 	<string name="kidsroom">Kids room</string>
 	<string name="bedroom">Bedroom</string>
-	<string name="garage">Kitchen</string>
-	<string name="office">Bathroom</string>
-	<string name="tvlounge">Kids room</string>
-	<string name="usage">Bedroom</string>
+	<string name="garage">Garage</string>
+	<string name="office">Office</string>
+	<string name="tvlounge">Tv Lounge</string>
+	<string name="usage">Usage</string>
 	
 	<string name="Map">Map</string>
 	<string name="House">House</string>

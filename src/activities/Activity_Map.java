@@ -439,6 +439,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		    //put extension in lowercase
 		    extension=extension.toLowerCase();
 		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
+		    	//TODO if jpg convert it
+		    	//TODO ask user if he want to rename the file before copy
+		    	//just need to store the ne name with his extension to "fileName"
 		    	File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
 	        	CopyFile.copyDirectory(selectFile,destFile);
 	        	cursor.close();

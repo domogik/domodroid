@@ -117,6 +117,26 @@
                     android:layout_height="wrap_content" />
               
             </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+                                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:text="@string/usage_byusagecheckbox"
+                    android:textColor="#FFFFFF" />
+
+                <CheckBox
+                    android:id="@+id/usage_byusagecheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+              
+            </LinearLayout>
             <!--  Layout for bottom buttons -->
 			<LinearLayout
 					    android:id="@+id/layout_buttons"

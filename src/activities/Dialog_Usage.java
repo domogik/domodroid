@@ -21,7 +21,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
 	private CheckBox twocollandscapecheckbox; //if activate 2col will be forbid
 	private CheckBox twocolportraitcheckbox; //if activate 2col will be forbid
-	
+	private CheckBox byusagecheckbox;
 	private SharedPreferences.Editor prefEditor;
 	private SharedPreferences params;
 	private Activity context;
@@ -44,7 +44,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
 		twocollandscapecheckbox = (CheckBox)findViewById(R.id.twocollandscapecheckbox);
 		twocolportraitcheckbox = (CheckBox)findViewById(R.id.twocolportraitcheckbox);
-		
+		byusagecheckbox =(CheckBox)findViewById(R.id.usage_byusagecheckbox);
 				
 		get_params();	//retrieve actual settings and prepare to display them
 		
@@ -54,7 +54,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
 		twocollandscapecheckbox.setChecked(params.getBoolean("twocol_lanscape",false));
 		twocolportraitcheckbox.setChecked(params.getBoolean("twocol_portrait",false));
-	
+		byusagecheckbox.setChecked(params.getBoolean("BY_USAGE",false));
 	}
 	
 	public void onClick(View v) {
@@ -69,6 +69,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 				prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
 				prefEditor.putBoolean("twocol_lanscape", twocollandscapecheckbox.isChecked());
 				prefEditor.putBoolean("twocol_portrait", twocolportraitcheckbox.isChecked());
+				prefEditor.putBoolean("BY_USAGE", byusagecheckbox.isChecked());
 				prefEditor.commit();
 				
 			} catch(Exception e){}

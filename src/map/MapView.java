@@ -239,12 +239,16 @@ public class MapView extends View {
 			}
 			
 		}
-		
-		if(files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".svg")){
+	    //get file extension
+		String extension = files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.'));
+	    //put extension in lowercase
+		extension=extension.toLowerCase();
+		   
+		if(extension.equals(".svg")){
 			formatMode=1;
 		//Try to allow PNG and png extension to solve #1707 on irc tracker.
 		//Could also try to put all in lowercase: files.elementAt(currentFile).substring(files.elementAt(currentFile).toLowerCase()......
-		}else if(files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".png")||files.elementAt(currentFile).substring(files.elementAt(currentFile).lastIndexOf('.')).equals(".PNG")){ 
+		}else if(extension.equals(".png")||extension.equals(".jpg")||extension.equals(".jepg")){ 
 			formatMode=2;
 		}else{
 			formatMode=0;
@@ -1160,8 +1164,8 @@ public class MapView extends View {
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
 		if (params.getBoolean("DEV",false)==true){
-			Toast.makeText(context, "bitmap.getWidth(): "+bitmap.getWidth(), Toast.LENGTH_LONG).show();
-			Toast.makeText(context, "bitmap.getHeight(): "+bitmap.getHeight(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "bitmap.getWidth(): "+bitmap.getWidth(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "bitmap.getHeight(): "+bitmap.getHeight(), Toast.LENGTH_SHORT).show();
 		}
 		return currentScale;
 	}

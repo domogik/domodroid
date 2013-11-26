@@ -200,6 +200,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				return;
 			}
 		});
+		
 		server_settings=(Button)findViewById(R.id.bt_server_settings);
 		server_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -590,8 +591,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private void Create_message_box() {
 		if(dialog_message != null)
 			return;
-		
-		
 		dialog_message = new ProgressDialog(this);
 		dialog_message.setMessage(getText(R.string.init_in_process));
 		//dialog_reload.setPositiveButton("OK", message_listener);
@@ -891,7 +890,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//change sync parameter in case it fail.
 		prefEditor.putBoolean("SYNC", false);
 		prefEditor.commit();
-		
 		if (!(widgetUpdate == null)) {
 			widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
 		}

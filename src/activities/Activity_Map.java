@@ -320,6 +320,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
+	
 	private void startCacheEngine() {
 		
 		if(widgetUpdate == null) {
@@ -433,11 +434,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		    String fileName = selectFile.getName();
 		    //filter for extension if not png or svg say it to user
 		    String filenameArray[] = fileName.split("\\.");
-		    //TODO put it in lowercase
-		    String extension = filenameArray[filenameArray.length-1];
-		    //if((extension == "png") || (extension == "PNG") || (extension == "svg" )) {
-		    if(extension.equals("png")||extension.equals("PNG")||extension.equals("svg")) {
-	        	File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
+		    //get file extension
+			String extension = filenameArray[filenameArray.length-1];
+		    //put extension in lowercase
+		    extension=extension.toLowerCase();
+		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
+		    	File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
 	        	CopyFile.copyDirectory(selectFile,destFile);
 	        	cursor.close();
 	        	Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_LONG).show();

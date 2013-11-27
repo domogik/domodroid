@@ -294,7 +294,7 @@ public class MapView extends View {
 			svg = SVGParser.getSVGFromString(svg_string);
 			//adjust to scale
 			if (map_autozoom==true){
-				currentScale=autoscalesvg(svg);
+				currentScale=autoscale((int)svg.getSurfaceWidth(),(int)svg.getSurfaceHeight());
 			}
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
@@ -316,7 +316,7 @@ public class MapView extends View {
 			Bitmap bitmap = decodeFile(f);
 			//adjust to scale
 			if (map_autozoom==true){
-				currentScale=autoscalebitmap(bitmap);
+				currentScale=autoscale(bitmap.getWidth(),bitmap.getHeight());
 			}
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
@@ -351,7 +351,7 @@ public class MapView extends View {
 			svg = SVGParser.getSVGFromString(svg_string);
 			//adjust to scale
 			if (map_autozoom==true){
-				currentScale=autoscalesvg(svg);
+				currentScale=autoscale((int)svg.getSurfaceWidth(),(int)svg.getSurfaceHeight());
 			}
 			svg = SVGParser.getScaleSVGFromString(svg_string, (int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale));
 			Picture picture = svg.getPicture();
@@ -373,7 +373,7 @@ public class MapView extends View {
 			Bitmap bitmap = decodeFile(f);
 			//adjust to scale
 			if (map_autozoom==true){
-				currentScale=autoscalebitmap(bitmap);
+				currentScale=autoscale(bitmap.getWidth(),bitmap.getHeight());
 			}
 			map = Bitmap.createBitmap((int)(bitmap.getWidth()*currentScale), (int)(bitmap.getHeight()*currentScale), Bitmap.Config.ARGB_4444);
 			canvasMap = new Canvas(map);
@@ -1088,7 +1088,23 @@ public class MapView extends View {
 		}
 		return sb.toString();
 	}
-
+	
+	public float autoscale(int image_width,int image_height) {
+		currentScalewidth=(float)screenwidth/(float)image_width;
+		currentScaleheight=(float)screenheight/(float)image_height;
+		//select witch scale is the best
+		if (currentScaleheight<currentScalewidth){
+			currentScale=currentScaleheight;	
+		} else{
+			currentScale=currentScalewidth;	
+		}
+		//Save current zoom scale
+		prefEditor=params.edit();
+		prefEditor.putFloat("Mapscale", currentScale);
+		prefEditor.commit();	//To save it really !
+		return currentScale;
+	}
+	
 	public boolean isAddMode() {
 		return addMode;
 	}
@@ -1158,36 +1174,7 @@ public class MapView extends View {
 	}
 	
 	public void setMoveMode(boolean moveMode) {
-		this.moveMode = moveMode;
-		
+		this.moveMode = moveMode;	
 	}
 	
-	public float autoscalebitmap(Bitmap bitmap) {
-		currentScalewidth=(float)screenwidth/(float)bitmap.getWidth();
-		currentScaleheight=(float)screenheight/(float)bitmap.getHeight();
-		//select witch scale is the best
-		currentScale=bestscale(currentScalewidth, currentScaleheight);
-		return currentScale;
-	}
-	
-	public float autoscalesvg(SVG svg) {
-		currentScalewidth=(float)screenwidth/(float)svg.getSurfaceWidth();
-		currentScaleheight=(float)screenheight/(float)svg.getSurfaceHeight();
-		//select witch scale is the best
-		currentScale=bestscale(currentScalewidth, currentScaleheight);
-		return currentScale;
-	}
-	
-	public float bestscale(float currentScalewidth,float currentScaleheight){
-		if (currentScaleheight<currentScalewidth){
-			currentScale=currentScaleheight;	
-		} else{
-			currentScale=currentScalewidth;	
-		}
-		//Save current zoom scale
-		prefEditor=params.edit();
-		prefEditor.putFloat("Mapscale", currentScale);
-		prefEditor.commit();	//To save it really !
-		return currentScale;
-	}
 }

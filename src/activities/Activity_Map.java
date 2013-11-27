@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -474,14 +476,52 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		    //put extension in lower case
 		    extension=extension.toLowerCase();
 		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
-		    	//TODO if jpg convert it
-		    	//TODO ask user if he want to rename the file before copy
-		    	//just need to store the ne name with his extension to "fileName"
-		    	File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
-	        	CopyFile.copyDirectory(selectFile,destFile);
+		    	/*
+				//ask user if he want to rename the file before copy
+		    	final AlertDialog.Builder rename = new AlertDialog.Builder(Activity_Map.this);
+		    		rename.setTitle(R.string.Rename_file_title);
+		    		rename.setMessage(R.string.Rename_file_message);
+				// Set an EditText view to get user input 
+				final EditText input = new EditText(Activity_Map.this);
+				//TODO set default value to current filename;
+					rename.setView(input);
+					rename.setPositiveButton(R.string.Rename_file_OK, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog_customname, int whichButton) {
+							String renamefileName= input.getText().toString(); 
+							Tracer.e("Activity_Map", "new fileName: "+renamefileName);
+							//TODO do something with renamefileName
+						}
+					});
+					rename.setNegativeButton(R.string.Rename_file_NO, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog_customname, int whichButton) {
+							Tracer.e("Activity_Map", "renamefile Canceled.");
+						}
+					});
+					rename.create();
+					rename.show();
+				
+		    	//just need to store the new name with his extension to "fileName"
+				*/
+		    	// if jpg convert and save it
+		    	if (extension.equals("jpeg")||extension.equals("jpg")) {
+		    		try {
+		    			//FileOutputStream out = new FileOutputStream(fileName);
+			    		FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/domodroid/"+fileName+".png");
+		    			Bitmap bmp= mapView.decodeFile (selectFile);
+						bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
+		    			out.close();
+		    			Tracer.e("Activity_Map.onActivityResult","convert image to png !");
+		    			} catch (Exception e) {
+		    				e.printStackTrace();
+		    		}
+		    	}else {
+		    		File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
+			    	CopyFile.copyDirectory(selectFile,destFile);
+		    	}
 	        	cursor.close();
-	        	Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_LONG).show();
+	        	Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_SHORT).show();
 	        	Tracer.e("Activity_Map.onActivityResult","No error adding new file in map !");
+	        	
 	        }
 	        else {
 	        	Toast.makeText(this,  R.string.map_add_file_type_nok, Toast.LENGTH_LONG).show();

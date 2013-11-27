@@ -72,6 +72,11 @@
 	<string name="map_add_file_nok">Error adding this file</string>
 	<string name="map_add_file_type_nok">File type not supported</string>
 	
+	<string name="Rename_file_title">Rename you file</string>
+	<string name="Rename_file_message">Choose a new name for this file.\n Not required.</string>
+	<string name="Rename_file_OK">Yes</string>
+	<string name="Rename_file_NO">No</string>
+	
 	<string name="delete_map_title">Delete a map !</string>
 	<string name="delete_map__message">Click \"Yes\" if you wish to delete this map,\nor    \"No\" \n        WARNING : all her mini-widgets will be lost  !</string>
 	<string name="delete_map__OK">Yes</string>

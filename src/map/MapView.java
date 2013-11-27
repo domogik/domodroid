@@ -831,7 +831,7 @@ public class MapView extends View {
 		canvas.drawBitmap(widget, 0, 0, paint_map);
 	}
 
-	private Bitmap decodeFile(File f){
+	public Bitmap decodeFile(File f){
 		Bitmap b = null;
 		try {
 			BitmapFactory.Options o = new BitmapFactory.Options();

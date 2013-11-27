@@ -24,6 +24,8 @@ import widgets.Entity_Feature;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -408,8 +410,29 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		});
 		listeMap.setOnItemLongClickListener(new OnItemLongClickListener() {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Ask if we want to remove this map we just selected
-				Tracer.d("Activity_Map"," setOnItemLongClickListener !");
+				/*
+				// On long click on a map ask if we want to remove this map we just selected
+				
+				// prepare an AlertDialog and display it
+				AlertDialog.Builder alert = new AlertDialog.Builder(getBaseContext());
+				alert.setTitle(R.string.delete_map_title);
+				alert.setMessage(R.string.delete_map__message);
+				alert.setPositiveButton(R.string.delete_map__OK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						// Don't forget to remove all widget before on this map.
+						mapView.clear_Widgets();
+						// Then remove the file
+						mapView.removefile();
+						Tracer.e("Activity_Map", " User remove a map");
+					}
+				});
+				alert.setNegativeButton(R.string.delete_map__NO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.d("Activity_Map"," User cancel remove a map");
+						}
+				});
+				alert.show();
+				*/
 				return false;
 			}
 		});
@@ -436,7 +459,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		    String filenameArray[] = fileName.split("\\.");
 		    //get file extension
 			String extension = filenameArray[filenameArray.length-1];
-		    //put extension in lowercase
+		    //put extension in lower case
 		    extension=extension.toLowerCase();
 		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
 		    	//TODO if jpg convert it

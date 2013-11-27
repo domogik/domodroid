@@ -72,6 +72,11 @@
 	<string name="map_add_file_nok">Erreur lors de l\'ajout du fichier</string>
 	<string name="map_add_file_type_nok">Type de fichier non pris en charge</string>
 	
+	<string name="delete_map_title">Supprimer cette carte !</string>
+	<string name="delete_map__message">cliquez \"Oui\" si vous souhaitez la supprimer,\nou      \"Non\" \n           ATTENTION : les mini-widgets seront aussi perdues !</string>
+	<string name="delete_map__OK">Oui</string>
+	<string name="delete_map__NO">Non</string>
+	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text10">-- Période des graphiques:</string>
 	<string name="network_Text11">1 Jour(s)</string>

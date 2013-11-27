@@ -210,6 +210,14 @@ public class MapView extends View {
 		
 	}
 	
+	public void removefile(){
+		//TODO remove the current file
+		File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile));
+		Tracer.i(mytag,"Request to remove "+currentFile);
+		f.delete();
+		initMap();		
+	}
+	
 	public void initMap(){
 		Toast.makeText(context, files.elementAt(currentFile).substring(0,files.elementAt(currentFile).lastIndexOf('.')), Toast.LENGTH_SHORT).show();
 		
@@ -1155,39 +1163,23 @@ public class MapView extends View {
 	}
 	
 	public float autoscalebitmap(Bitmap bitmap) {
-		if (bitmap.getWidth()>screenwidth){
-			currentScalewidth=(screenwidth/bitmap.getWidth());
-		}
-		if (bitmap.getHeight()>screenheight){
-			currentScaleheight=(screenheight/bitmap.getHeight());
-		}
+		currentScalewidth=(float)screenwidth/(float)bitmap.getWidth();
+		currentScaleheight=(float)screenheight/(float)bitmap.getHeight();
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
-		if (params.getBoolean("DEV",false)==true){
-			Toast.makeText(context, "bitmap.getWidth(): "+bitmap.getWidth(), Toast.LENGTH_SHORT).show();
-			Toast.makeText(context, "bitmap.getHeight(): "+bitmap.getHeight(), Toast.LENGTH_SHORT).show();
-		}
 		return currentScale;
 	}
 	
 	public float autoscalesvg(SVG svg) {
-		if (svg.getSurfaceWidth()>screenwidth){
-			currentScalewidth=(screenwidth)/svg.getSurfaceWidth();
-		}
-		if (svg.getSurfaceHeight()>screenheight){
-			currentScaleheight=(screenheight)/svg.getSurfaceHeight();	
-		}
+		currentScalewidth=(float)screenwidth/(float)svg.getSurfaceWidth();
+		currentScaleheight=(float)screenheight/(float)svg.getSurfaceHeight();
 		//select witch scale is the best
 		currentScale=bestscale(currentScalewidth, currentScaleheight);
-		if (params.getBoolean("DEV",false)==true){
-			Toast.makeText(context, "svg.getSurfaceWidth(): "+svg.getSurfaceWidth(), Toast.LENGTH_SHORT).show();
-			Toast.makeText(context, "svg.getSurfaceHeight(): "+svg.getSurfaceHeight(), Toast.LENGTH_SHORT).show();
-		}
 		return currentScale;
 	}
 	
 	public float bestscale(float currentScalewidth,float currentScaleheight){
-		if (currentScaleheight>currentScalewidth){
+		if (currentScaleheight<currentScalewidth){
 			currentScale=currentScaleheight;	
 		} else{
 			currentScale=currentScalewidth;	
@@ -1196,11 +1188,6 @@ public class MapView extends View {
 		prefEditor=params.edit();
 		prefEditor.putFloat("Mapscale", currentScale);
 		prefEditor.commit();	//To save it really !
-		if (params.getBoolean("DEV",false)==true){
-			Toast.makeText(context, "Current scale: "+currentScale, Toast.LENGTH_SHORT).show();
-			Toast.makeText(context, "currentScalewidth: "+currentScalewidth, Toast.LENGTH_SHORT).show();
-			Toast.makeText(context, "currentScaleheight: "+currentScaleheight, Toast.LENGTH_SHORT).show();
-		}
 		return currentScale;
 	}
 }

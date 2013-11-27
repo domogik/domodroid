@@ -72,6 +72,11 @@
 	<string name="map_add_file_nok">Error adding this file</string>
 	<string name="map_add_file_type_nok">File type not supported</string>
 	
+	<string name="delete_map_title">Delete a map !</string>
+	<string name="delete_map__message">Click \"Yes\" if you wish to delete this map,\nor    \"No\" \n        WARNING : all her mini-widgets will be lost  !</string>
+	<string name="delete_map__OK">Yes</string>
+	<string name="delete_map__NO">No</string>
+	
 	<string name="network_Title">- Options -</string>
 	<string name="network_Text10">--Graphic Period:</string>
 	<string name="network_Text11">1 Day(s)</string>

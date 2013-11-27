@@ -267,6 +267,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					if(((Dialog_Synchronize)dialog).need_refresh) {
 						// Sync has been successful : Force to refresh current main view
 						Tracer.d("Activity_Main","sync dialog requires a refresh !");
+						/*
 						reload = true;	// Sync being done, consider shared prefs are OK
 						parent.removeAllViews();
 						if(widgetUpdate != null) {
@@ -283,7 +284,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					    msg.setData(b);
 					    if(widgetHandler != null)
 							widgetHandler.sendMessage(msg); 	// That should force to refresh Views
-						
+						*/
+						if(widgetUpdate != null) {
+							widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
+							//widgetUpdate.dump_cache();	//For debug
+							dont_kill = true;	// to avoid engines kill when onDestroy()
+						}
+						onResume();
 					} else {
 						Tracer.d("Activity_Main","sync dialog end with no refresh !");
 						
@@ -619,9 +626,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		// Finalize screen appearence
 		if(Tracer == null)
 			Tracer = Tracer.getInstance();
-		
 		Tracer.v("Activity_Main","end_of_init Main Screen..");
-		
 		if(! reload) {
 			//alertDialog not sync splash
 			if(notSyncAlert == null)
@@ -688,7 +693,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		init_done = true;
 		dont_kill = false;	//By default, the onDestroy activity will also kill engines
-		
 	}
 	
 	/*
@@ -808,7 +812,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			house_map.addView(map);
 		}
 		try {
-			
 			if(type.equals("root")){
 				ll_area.removeAllViews();
 				if(! by_usage) {
@@ -818,12 +821,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					parent.addView(ll_area);	//and areas
 				} else {
 					// by_usage
-					
 					parent.addView(house_map);	// With only map
 					ll_room = wAgent.loadRoomWidgets(this, 1, ll_room, params);	//List of known usages 'as rooms'
 					parent.addView(ll_room);
-					
 				}
+				
 			} else if(type.equals("house")) {
 				//Only possible if version 0.2 (the 'house' is never proposed to be clicked)
 				ll_area.removeAllViews();
@@ -850,26 +852,22 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				ll_activ.removeAllViews();
 				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params, mytype);
 				parent.addView(ll_activ);
+				
 			} else 	if(type.equals("room")) {
 				ll_activ.removeAllViews();
 				ll_activ = wAgent.loadActivWidgets(this, id, type, ll_activ,params, mytype);
 				parent.addView(ll_activ);
-			} 
-				
+			}
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
 	private void SaveSelections(Boolean mode) {
 		try{
 			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
 			SharedPreferences.Editor prefEditor=params.edit();
-			
-			
 			prefEditor.commit();
 			if(backupprefs != null)
 				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
@@ -918,7 +916,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		Tracer.v("Activity_Main","onPanelOpened");
 		menu_green.setVisibility(View.VISIBLE);
 		menu_green.startAnimation(animation1);
-		
 	}
 
 	public void onClick(View v) {

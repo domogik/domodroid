@@ -211,7 +211,7 @@ public class MapView extends View {
 	}
 	
 	public void removefile(){
-		//TODO remove the current file
+		//remove the current file
 		File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile));
 		Tracer.i(mytag,"Request to remove "+currentFile);
 		f.delete();

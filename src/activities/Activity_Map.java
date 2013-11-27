@@ -410,10 +410,17 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 		});
 		listeMap.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			 public boolean onItemLongClick(AdapterView<?> av, View v, int pos, final long id) {
+			 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				 Tracer.e("Activity_Map", " longclic on a map");
+				//switch to select maps
+				 int last_map = list_usable_files.size() - 1;
+					if((position <= last_map) && (position > -1) ) {
+						mapView.setCurrentFile(position);
+					}
+					else{
+						return false;
+					}
 				// On long click on a map ask if we want to remove this map we just selected
-				
 				// prepare an AlertDialog and display it
 				final AlertDialog.Builder alert = new AlertDialog.Builder(Activity_Map.this);
 				alert.setTitle(R.string.delete_map_title);
@@ -425,7 +432,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 						// Then remove the file
 						mapView.removefile();
 						Tracer.e("Activity_Map", " User remove a map");
-						mapView.initMap();
+						//Restart the activity to save change 
+					    Intent intent = getIntent();
+					    finish();
+					    startActivity(intent);
 					}
 				});
 				alert.setNegativeButton(R.string.delete_map__NO, new DialogInterface.OnClickListener() {

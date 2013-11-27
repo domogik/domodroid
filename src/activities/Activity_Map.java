@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -724,5 +725,14 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 		}
 		return ret;
+	}
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	//this is called when the screen rotates.
+	// (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
+	{
+	    super.onConfigurationChanged(newConfig);
+	    mapView.initMap();
+
 	}
 }

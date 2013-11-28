@@ -502,11 +502,13 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				
 		    	//just need to store the new name with his extension to "fileName"
 				*/
-		    	// if jpg convert and save it
+		    	// if jpg convert and save it to domodroid dir
 		    	if (extension.equals("jpeg")||extension.equals("jpg")) {
 		    		try {
 		    			//FileOutputStream out = new FileOutputStream(fileName);
-			    		FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/domodroid/"+fileName+".png");
+		    			fileName=fileName.substring(0, fileName.length()-extension.length()-1)+".png";
+		    			extension="png";
+		    			FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
 		    			Bitmap bmp= mapView.decodeFile (selectFile);
 						bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
 		    			out.close();
@@ -514,6 +516,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		    			} catch (Exception e) {
 		    				e.printStackTrace();
 		    		}
+		    		//else just copy svg or png to domodroid dir
 		    	}else {
 		    		File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
 			    	CopyFile.copyDirectory(selectFile,destFile);

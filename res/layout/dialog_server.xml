@@ -82,10 +82,11 @@
                     android:background="@android:drawable/editbox_background"
                     android:hint="@string/server_ipHint"
                     android:singleLine="true"
+                    android:inputType="textUri"
                     android:textSize="14sp" />
 			</LinearLayout>
 
-			<LinearLayout android:id="@+id/layout_title_gen_prof"
+			<LinearLayout
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical">	
@@ -107,6 +108,7 @@
                     android:background="@android:drawable/editbox_background"
                     android:hint="@string/server_portHint"
                     android:singleLine="true"
+                    android:inputType="number"
                     android:textSize="14sp" />
 			
 			<LinearLayout

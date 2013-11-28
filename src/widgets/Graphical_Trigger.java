@@ -54,6 +54,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private LinearLayout infoPan;
 	private ImageView img;
 	private TextView nameDevices;
+	private TextView unusable;
 	private Graphical_Trigger_Button trigger;
 	private String address;
 	private String url;
@@ -67,7 +68,8 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private int id;
 	private tracerengine Tracer = null;
 	private int session_type;
-
+	private boolean usable=false;
+	
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
@@ -86,8 +88,14 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
         
         if(jparam != null) {
+        	try{
         	command = jparam.getString("command");
-        } 
+        	usable=true;
+        	} catch (Exception e) {
+        		usable=false;
+            	e.printStackTrace();
+        	}
+        }
 
         String[] model = model_id.split("\\.");
         type = model[0];
@@ -140,7 +148,19 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		trigger.setLayoutParams(new LinearLayout.LayoutParams(100,100));
 		trigger.setOnClickListener(this);
 
-		featurePan.addView(trigger);
+		//unusable
+		unusable=new TextView(context);
+		unusable.setText(R.string.unusable);
+		unusable.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+		unusable.setTextColor(Color.BLACK);
+		unusable.setTextSize(14);
+		unusable.setPadding(0, 0, 15, 0);
+
+		if (usable==true){
+			featurePan.addView(trigger);
+		}else{
+			featurePan.addView(unusable);
+		}
 		infoPan.addView(nameDevices);
 		imgPan.addView(img);
 		background.addView(imgPan);

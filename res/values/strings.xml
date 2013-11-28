@@ -199,6 +199,7 @@
 	<string name="twocollandscapecheckbox">Forbid 2 columns in landcape:</string>
 	<string name="twocolportraitcheckbox">Forbid 2 columns in portrait:</string>
 	<string name="usage_byusagecheckbox">Force by usage for 0.3:</string>
+	<string name="unusable">Not available</string>
 	
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>

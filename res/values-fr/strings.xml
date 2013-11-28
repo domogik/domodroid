@@ -198,6 +198,7 @@
 	<string name="twocollandscapecheckbox">Interdire 2 colonnes en paysage:</string>	
    	<string name="twocolportraitcheckbox">Interdire 2 colonnes en portrait:</string>	
     <string name="usage_byusagecheckbox">Forcer par usage pour 0.3:</string>
+	<string name="unusable">Non disponible</string>
 	
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>

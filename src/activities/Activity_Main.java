@@ -510,6 +510,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					//No settings backup found
 					Tracer.v("Activity_Main","no settings backup found after fresh install...");
 					end_of_init_requested = true;
+					// open server config view
+					server_settings.performClick();
 				}
 			} else {
 				// It's not the 1st use after fresh install
@@ -713,6 +715,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			if(database.exists()) {
 				database.delete();
 			}
+			// open server config view
+			server_settings.performClick();
 		}
 
 		if(! init_done) {

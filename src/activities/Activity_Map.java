@@ -95,6 +95,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Handler sbanim;
 	private File f = null;
 	String files[] = null;
+	private File selectFile = null;
+	private File destFile = null;
+	private String extension ;
+	private String fileName;
 	private tracerengine Tracer = null;
 	private String owner = "Map";
 	private Boolean dont_freeze = false;
@@ -434,9 +438,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 						mapView.removefile();
 						Tracer.e("Activity_Map", " User remove a map");
 						//Restart the activity to save change 
-					    Intent intent = getIntent();
-					    finish();
-					    startActivity(intent);
+						restartactivity();
 					}
 				});
 				alert.setNegativeButton(R.string.delete_map__NO, new DialogInterface.OnClickListener() {
@@ -466,12 +468,12 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	        Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
 	        cursor.moveToFirst();
 	        //Copy the select picture to Domodroid directory
-		    File selectFile = new File (cursor.getString(0));
-		    String fileName = selectFile.getName();
+		    selectFile = new File (cursor.getString(0));
+		    fileName = selectFile.getName();
 		    //filter for extension if not png or svg say it to user
 		    String filenameArray[] = fileName.split("\\.");
 		    //get file extension
-			String extension = filenameArray[filenameArray.length-1];
+			extension = filenameArray[filenameArray.length-1];
 		    //put extension in lower case
 		    extension=extension.toLowerCase();
 		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
@@ -506,24 +508,25 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					input.setText(fileName.substring(0, fileName.length()-extension.length()-1));
 					rename.setView(input);
 					rename.setPositiveButton(R.string.Rename_file_OK, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog_customname, int whichButton) {
-							String renamefileName= input.getText().toString(); 
-							Tracer.e("Activity_Map", "new fileName: "+renamefileName);
-							//TODO do something with renamefileName
-							
-							//Restart this activity to save change 
-						    Intent intent = getIntent();
-						    finish();
-						    startActivity(intent);
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String renamefileName= input.getText().toString(); 
+						Tracer.e("Activity_Map", "new fileName: "+renamefileName);
+						destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension);
+						if(destFile.exists()) {
+							//TODO need improvement if the new "file+1" also exists!
+							new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"1."+extension));
+						}else{
+							new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension));
+						}
+						//Restart the activity to save change 
+						restartactivity();
 						}
 					});
 					rename.setNegativeButton(R.string.Rename_file_NO, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog_customname, int whichButton) {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
 							Tracer.e("Activity_Map", "renamefile Canceled.");
-							//Restart this activity to save change 
-						    Intent intent = getIntent();
-						    finish();
-						    startActivity(intent);
+							//Restart the activity to save change 
+							restartactivity();
 						}
 					});
 					rename.show();
@@ -789,5 +792,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	    super.onConfigurationChanged(newConfig);
 	    mapView.initMap();
 
+	}
+	private Boolean restartactivity(){
+		Intent intent = getIntent();
+	    finish();
+	    startActivity(intent);
+		return true;
 	}
 }

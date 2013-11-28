@@ -73,7 +73,7 @@
 	<string name="map_add_file_type_nok">Type de fichier non pris en charge</string>
 	
 	<string name="Rename_file_title">Renommer le fichier</string>
-	<string name="Rename_file_message">Choisisr un nouveau nom pour ce fichier.\n Pas obligatoire.</string>
+	<string name="Rename_file_message">Choisisr un nouveau nom pour ce fichier.\nPas obligatoire.</string>
 	<string name="Rename_file_OK">Oui</string>
 	<string name="Rename_file_NO">Non</string>
 	
@@ -91,7 +91,7 @@
 	<string name="Sync">Sync</string>
 	<string name="Exit_Program">Quitter</string>
 	<string name="Rename_title">Renommer</string>
-	<string name="Rename_message">Choisir le texte à afficher. Cette valeur sera perdue si vous faites une synchronisation.</string>
+	<string name="Rename_message">Choisir le texte à afficher.\nCette valeur sera perdue si vous faites une synchronisation.</string>
 	<string name="Add_widget_title">Selectionner un widget</string>
 	    				
 	<string name="info0">Tornade</string>

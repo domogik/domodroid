@@ -74,7 +74,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Button move;
 	private Button remove_all;
 	private Dialog dialog_feature;
-
 	private Entity_Feature[] listFeature;
 	private HashMap<String,String> map;
 
@@ -459,7 +458,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			if(requestCode == PICK_IMAGE && data != null && data.getData() != null) {
 	        Uri _uri = data.getData();
@@ -476,32 +475,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		    //put extension in lower case
 		    extension=extension.toLowerCase();
 		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
-		    	/*
-				//ask user if he want to rename the file before copy
-		    	final AlertDialog.Builder rename = new AlertDialog.Builder(Activity_Map.this);
-		    		rename.setTitle(R.string.Rename_file_title);
-		    		rename.setMessage(R.string.Rename_file_message);
-				// Set an EditText view to get user input 
-				final EditText input = new EditText(Activity_Map.this);
-				//TODO set default value to current filename;
-					rename.setView(input);
-					rename.setPositiveButton(R.string.Rename_file_OK, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog_customname, int whichButton) {
-							String renamefileName= input.getText().toString(); 
-							Tracer.e("Activity_Map", "new fileName: "+renamefileName);
-							//TODO do something with renamefileName
-						}
-					});
-					rename.setNegativeButton(R.string.Rename_file_NO, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog_customname, int whichButton) {
-							Tracer.e("Activity_Map", "renamefile Canceled.");
-						}
-					});
-					rename.create();
-					rename.show();
-				
-		    	//just need to store the new name with his extension to "fileName"
-				*/
 		    	// if jpg convert and save it to domodroid dir
 		    	if (extension.equals("jpeg")||extension.equals("jpg")) {
 		    		try {
@@ -524,7 +497,38 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	        	cursor.close();
 	        	Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_SHORT).show();
 	        	Tracer.e("Activity_Map.onActivityResult","No error adding new file in map !");
-	        	
+	        	//ask user if he want to rename the file before copy
+		    	AlertDialog.Builder rename = new AlertDialog.Builder(this);
+		    		rename.setTitle(R.string.Rename_file_title);
+		    		rename.setMessage(R.string.Rename_file_message);
+				// Set an EditText view to get user input 
+				final EditText input = new EditText(Activity_Map.this);
+					input.setText(fileName.substring(0, fileName.length()-extension.length()-1));
+					rename.setView(input);
+					rename.setPositiveButton(R.string.Rename_file_OK, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog_customname, int whichButton) {
+							String renamefileName= input.getText().toString(); 
+							Tracer.e("Activity_Map", "new fileName: "+renamefileName);
+							//TODO do something with renamefileName
+							
+							//Restart this activity to save change 
+						    Intent intent = getIntent();
+						    finish();
+						    startActivity(intent);
+						}
+					});
+					rename.setNegativeButton(R.string.Rename_file_NO, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog_customname, int whichButton) {
+							Tracer.e("Activity_Map", "renamefile Canceled.");
+							//Restart this activity to save change 
+						    Intent intent = getIntent();
+						    finish();
+						    startActivity(intent);
+						}
+					});
+					rename.show();
+					//just need to store the new name with his extension to "fileName"
+				
 	        }
 	        else {
 	        	Toast.makeText(this,  R.string.map_add_file_type_nok, Toast.LENGTH_LONG).show();
@@ -533,10 +537,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	        }
 	    }
 	    super.onActivityResult(requestCode, resultCode, data);
-	    //Restart this activity to save change 
-	    Intent intent = getIntent();
-	    finish();
-	    startActivity(intent);
+	    
 	  } catch (Exception e) {
 			Tracer.e("Activity_Map.onActivityResult","Error adding file in map !");
 			Toast.makeText(this,  R.string.map_add_file_nok, Toast.LENGTH_LONG).show();

@@ -190,7 +190,9 @@
 	<string name="server_portHint">40405</string>
 	<string name="server_Text2">--Auto-Update Timer:</string>
 	<string name="server_Text3">2 Secondes</string>
-	
+	<string name="server_http_password">--Http auth password</string>
+	<string name="server_http_user">--Username</string>
+	   
 	<string name="usage_settings">Widget configuration</string>
 	<string name="usage_bt_apply">Apply changes</string>
 	<string name="usage_bt_cancel">Cancel</string>

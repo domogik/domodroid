@@ -23,6 +23,8 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 	public static String urlAccess;
 	private TextView mProgressText1;
 	private SeekBar mSeekBar1;
+	private EditText http_auth_username;
+	private EditText http_auth_password;
 	
 	private SharedPreferences.Editor prefEditor;
 	private SharedPreferences params;
@@ -46,6 +48,8 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 		OKButton.setOnClickListener(this);
 		localIP = (EditText)findViewById(R.id.server_localIP);
 		localPORT = (EditText)findViewById(R.id.server_localPORT);
+		http_auth_username = (EditText)findViewById(R.id.server_http_user);
+		http_auth_password = (EditText)findViewById(R.id.server_http_password);
 		mProgressText1 = (TextView)findViewById(R.id.server_progress1);
 		mSeekBar1=(SeekBar)findViewById(R.id.server_SeekBar1);
 		mSeekBar1.setOnSeekBarChangeListener(this);
@@ -59,6 +63,8 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 		localIP.setText(params.getString("rinorIP",null));
 		localPORT.setText(params.getString("rinorPort","40405"));
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
+		http_auth_username.setText(params.getString("http_auth_username",null));
+		http_auth_password.setText(params.getString("http_auth_password",null));
 		
 	}
 	
@@ -73,6 +79,8 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 				prefEditor=params.edit();
 				prefEditor.putString("rinorIP",localIP.getText().toString());
 				prefEditor.putString("rinorPort",localPORT.getText().toString());
+				prefEditor.putString("http_auth_username",http_auth_username.getText().toString());
+				prefEditor.putString("http_auth_password",http_auth_password.getText().toString());
 				int period = mSeekBar1.getProgress();
 				if(period < secondeOffset)
 					period = secondeOffset;

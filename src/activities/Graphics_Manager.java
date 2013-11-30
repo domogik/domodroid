@@ -247,6 +247,20 @@ public class Graphics_Manager {
 		switch(state){
 		case 0:
 			//reorder by usage name for easy update
+			/*
+			 * TODO add missing usage
+			 * air conditioning
+			 * heating
+			 * mirror
+			 * music
+			 * nanoztag
+			 * portal
+			 * scene
+			 * socket
+			 * shutter
+			 * water
+			 * window
+			*/
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}

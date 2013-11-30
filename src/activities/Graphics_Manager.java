@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package activities;
 
 import org.domogik.domodroid.*;
@@ -263,7 +264,7 @@ public class Graphics_Manager {
 		case 1:
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
-			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}//TODO need an on/off icon
+			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}
 			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_on;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}

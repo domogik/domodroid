@@ -248,12 +248,12 @@ public class Graphics_Manager {
 		case 0:
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
-			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}//TODO need an on/off icon
+			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
 			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_off;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_off;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_off;}
-			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}//TODO need an on/off icon
+			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}
 			else if(usage.equals("server")){return R.drawable.map_usage_server_off;}
 			else if(usage.equals("telephony")){return R.drawable.map_usage_telephony_off;}//TODO need an on/off icon
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
@@ -269,7 +269,7 @@ public class Graphics_Manager {
 			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_on;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_on;}
-			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}//TODO need an on/off icon
+			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_on;}
 			else if(usage.equals("server")){return R.drawable.map_usage_server_on;}
 			else if(usage.equals("telephony")){return R.drawable.map_usage_telephony_off;}//TODO need an on/off icon
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}

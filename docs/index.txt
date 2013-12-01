@@ -13,10 +13,10 @@ End User Documentation
 
 * :doc:`Installation </end_user/installation>`
 * :doc:`Configuration </end_user/configuration/>`
-* :doc:`Configuration Widget </end_user/configuration/Config_widget>`
-* :doc:`Configuration Server </end_user/configuration/Config_server>`
-* :doc:`Configuration Map </end_user/configuration/Config_map>`
-* :doc:`Configuration Debug </end_user/configuration/Config_debug>`
+	* :doc:`Configuration Widget </end_user/Config_widget>`
+	* :doc:`Configuration Server </end_user/Config_server>`
+	* :doc:`Configuration Map </end_user/Config_map>`
+	* :doc:`Configuration Debug </end_user/Config_debug>`
 * :doc:`Usage </end_user/usage>`
 * :doc:`Nightly builds </end_user/nightly_builds>`
 

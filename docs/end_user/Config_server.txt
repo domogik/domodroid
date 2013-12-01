@@ -1,0 +1,8 @@
+=============
+Server option
+=============
+
+In server menu, set the IP and PORT of the Rinor server, for example http://192.168.0.1 40405. You can also set a user and password for http auth method.
+For the moment it doesn't work.
+
+.. image:: Config_server.png

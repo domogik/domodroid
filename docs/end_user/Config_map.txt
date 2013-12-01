@@ -1,0 +1,13 @@
+==========
+Map option
+==========
+
+* Allow drag in map view
+* Allow zoom in map view
+* Hide text, will hide the text of all widget on map
+* Lock menu will lock access to the top menu in map mode to avoid someone add/remove widget
+* Start options allow user to start in map mode directly instead of Room/Usage when launching Domodroid
+
+Max map size in px (be careful it could make memory error).
+
+.. image:: Config_map.png

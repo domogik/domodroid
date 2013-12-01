@@ -1,0 +1,9 @@
+=============
+Widget option
+=============
+
+* Alternative widget allow the use of a new ON/OFF widget. In chartengine branch it also change the graph motor.
+* Forbid 2 columns in each mode Landscape or portrait will show widget on only one columns if your screen have more than 700px in height or width.
+* Force 0.3 by usage allow to un-force the by usage mode and restore by house view. For the moment you have to create your house in the db directly.
+
+.. image:: Config_widget.png

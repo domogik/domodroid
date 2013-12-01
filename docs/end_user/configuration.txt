@@ -2,44 +2,13 @@
 Configuration
 =============
 
+In the menu view you have choice of:
+
 Sync
 
 Exit
 
-Widget option: 
-* Alternative widget allow the use of a new ON/OFF widget. In chartengine branch it also change the graph motor.
-* Forbid 2 columns in each mode Landscape or portrait will show widget on only one columns if your screen have more than 700px in height or width.
-* Force 0.3 by usage allow to un-force the by usage mode and restore by house view. For the moment you have to create your house in the db directly.
-
-.. image:: Config_widget.png
-
-Server option: 
-In server menu, set the IP and PORT of the Rinor server, for example http://192.168.0.1 40405. You can also set a user and password for http auth method.
-For the moment it doesn't work.
-
-.. image:: Config_server.png
-
-Map option:
-* Allow drag in map view
-* Allow zoom in map view
-* Hide text, will hide the text of all widget on map
-* Lock menu will lock access to the top menu in map mode to avoid someone add/remove widget
-* Start options allow user to start in map mode directly instead of Room/Usage when launching Domodroid
-
-Max map size in px (be careful it could make memory error).
-
-.. image:: Config_map.png
-
-Debug option:
-* Allow Debug message
-* Allow Error message
-* Allow Info message
-* Allow Verbose message
-* Allow Warning message
-* In Catlog
-* In Screen view
-* In text file
-* Dev, add the device Id after his name to help debugging.
-* You have to select the dirname and filename where you want it to be save.
-
-.. image:: Config_debug.png
+* :doc:`Configuration Widget </end_user/configuration/Config_widget>`
+* :doc:`Configuration Server </end_user/configuration/Config_server>`
+* :doc:`Configuration Map </end_user/configuration/Config_map>`
+* :doc:`Configuration Debug </end_user/configuration/Config_debug>`

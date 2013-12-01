@@ -11,6 +11,10 @@ Table Of Content
     /overview/detailed
     /end_user/installation
     /end_user/configuration
+    /end_user/configuration/Config_widget
+    /end_user/configuration/Config_server
+    /end_user/configuration/Config_map
+    /end_user/configuration/Config_debug
     /end_user/usage
     /end_user/nightly_builds
     /package_development/index

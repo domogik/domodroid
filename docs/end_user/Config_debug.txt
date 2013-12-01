@@ -1,0 +1,16 @@
+============
+Debug option
+============
+
+* Allow Debug message
+* Allow Error message
+* Allow Info message
+* Allow Verbose message
+* Allow Warning message
+* In Catlog
+* In Screen view
+* In text file
+* Dev, add the device Id after his name to help debugging.
+* You have to select the dirname and filename where you want it to be save.
+
+.. image:: Config_debug.png

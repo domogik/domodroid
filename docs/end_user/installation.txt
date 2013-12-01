@@ -9,5 +9,6 @@ Just copy/paste the apk you've just download
 
 Open it from your device and install it.
 
-If you want to use map view, you need to put your map image (png or svg format) in Domodroid directory.
+If you want to use map view, you need to put your map image (jpg , jpeg, png or svg format) in Domodroid directory.
+You can also add one directly from map view
 If this directory doesn't exist Domodroid will create it at first launch so that you will find it easily next time.

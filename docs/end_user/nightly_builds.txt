@@ -12,7 +12,9 @@ You should use the last one to be sure having last update.
 
 To know witch version you're using, you could use the "About" menu it's write behind the rev number.
 
-For example in this view the Dev version is 336 :
+There is also the Domogik version in the exmple above 0.3
+
+For example in this view the Dev version is 2 but it should look more like 336:9c0ad72e15 :
 
 .. image:: About.png
 

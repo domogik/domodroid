@@ -22,13 +22,13 @@ Creation of the "Domodroid" directory at the root of the external storage direct
 * Zoom: 2 fingers pinch
 * Drag: 2 fingers move
 * Change map: 3 fingers tap 
-
+* Add a map directly from the map view with the android internal image picker.
 
     Multi-touch gesture (Zoom, Drag, Change Map, Hide text, Block map edition) can be activated from the "MAP Options" screen. 
 
 Gesture activation must be activated only on powerful devices otherwise Domodroid will certainly crashes. Bitmap rezising might cause OutOfMemory exception so domodroid will automatically reduce bitmaps exceeding 800*800px by √2.
 
-    Png and SVG format supported: 
+    Jpeg jpg Png and SVG format supported: 
 
 To display SVG images, Domodroid use a modified version of the library svg-Android
 ( http://code.google.com/p/svg-android/ ).

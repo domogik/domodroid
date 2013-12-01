@@ -2,17 +2,22 @@
 Configuration
 =============
 
-In sync menu, set the IP and PORT of the Rinor server, for example http://192.168.0.1:40405/.
+Sync
 
-Set Auto-Update time with the sliding bar to adjust the frequency you want Domodroid to get data from Rinor.
+Exit
 
-Graphic period has been removed, and you can now switch graph period directly in the graph view.
+Widget option: 
+* Alternative widget allow the use of a new ON/OFF widget. In chartengine branch it also change the graph motor.
+* Forbid 2 columns in each mode Landscape or portrait will show widget on only one columns if your screen have more than 700px in height or width.
+* Force 0.3 by usage allow to un-force the by usage mode and restore by house view. For the moment you have to create your house in the db directly.
 
-* Dev, add the device Id after his name to help debugging.
-* Forbid 2 columns will show widget on only one columns if your screen have more than 700px width (for example in landscape mode).
-  
+.. image:: Config_widget.png
 
-.. image:: new_menu.png
+Server option: 
+In server menu, set the IP and PORT of the Rinor server, for example http://192.168.0.1 40405. You can also set a user and password for http auth method.
+For the moment it doesn't work.
+
+.. image:: Config_server.png
 
 Map option:
 * Allow drag in map view
@@ -23,7 +28,7 @@ Map option:
 
 Max map size in px (be careful it could make memory error).
 
-.. image:: Map_conf_menu.png
+.. image:: Config_map.png
 
 Debug option:
 * Allow Debug message
@@ -34,6 +39,7 @@ Debug option:
 * In Catlog
 * In Screen view
 * In text file
+* Dev, add the device Id after his name to help debugging.
 * You have to select the dirname and filename where you want it to be save.
 
-.. image:: Debug_Conf_menu.png
+.. image:: Config_debug.png

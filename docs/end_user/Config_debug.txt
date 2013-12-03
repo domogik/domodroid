@@ -11,6 +11,7 @@ Debug option
 * In Screen view
 * In text file
 * Dev, add the device Id after his name to help debugging.
-* You have to select the dirname and filename where you want it to be save.
+* You have to select the directory name and file name where you want it to be save.
+	Get attention that by default it's in a hidden directory.
 
 .. image:: Config_debug.png

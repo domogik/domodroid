@@ -4,7 +4,11 @@ Configuration
 
 In the menu view you have choice of:
 
-Sync
+*Sync
+
+Just run a mechanism to sync your domogik configuration with domodroid.
+
+Be careful, it will destroy all your cutom_name and delete map widget link. It means you have to re-create you map design with your widget.
 
 Exit
 

@@ -42,9 +42,13 @@ public class Color_Progress extends SeekBar{
 		DisplayMetrics dm = new DisplayMetrics();
 		((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
 		dpiClassification = dm.densityDpi;
-		if(dpiClassification==240)setLayoutParams(new LayoutParams(278,60,Gravity.CENTER_HORIZONTAL));
-		if(dpiClassification==160)setLayoutParams(new LayoutParams(272,40,Gravity.CENTER_HORIZONTAL));
-
+		if(dpiClassification==240){
+			setLayoutParams(new LayoutParams(278,60,Gravity.CENTER_HORIZONTAL));
+		}else if(dpiClassification==160){
+			setLayoutParams(new LayoutParams(272,40,Gravity.CENTER_HORIZONTAL));
+		}else{
+			setLayoutParams(new LayoutParams(272,40,Gravity.CENTER_HORIZONTAL));
+		}
 		
 
 		float[] hsv = new float[3];
@@ -108,8 +112,14 @@ public class Color_Progress extends SeekBar{
 					mPaint.setColor(mHueBarColors[x]);
 					mPaint.setStrokeWidth(1);
 				}
-				if(dpiClassification==240)canvas.drawLine(x+12, 10, x+12, 36, mPaint);
-				if(dpiClassification==160)canvas.drawLine(x+6, 6, x+6, 24, mPaint);
+				if(dpiClassification==240){
+					canvas.drawLine(x+12, 10, x+12, 36, mPaint);
+				}else if(dpiClassification==160){
+					canvas.drawLine(x+6, 6, x+6, 24, mPaint);
+				}else{
+					canvas.drawLine(x+12, 10, x+12, 36, mPaint);
+				}
+				
 			}
 		}else if(mode == 1){
 			int[] colors = new int[2];
@@ -120,8 +130,11 @@ public class Color_Progress extends SeekBar{
 				Shader shader = new LinearGradient(12, 0, 268, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
 				canvas.drawRect(12, 10, 268, 36, mPaint);
-			}
-			if(dpiClassification==160){
+			}else if(dpiClassification==160){
+				Shader shader = new LinearGradient(6, 0, 262, 0, colors, null, Shader.TileMode.REPEAT);
+				mPaint.setShader(shader);
+				canvas.drawRect(6, 6, 262, 24, mPaint);
+			}else{
 				Shader shader = new LinearGradient(6, 0, 262, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
 				canvas.drawRect(6, 6, 262, 24, mPaint);
@@ -135,8 +148,11 @@ public class Color_Progress extends SeekBar{
 				Shader shader = new LinearGradient(12, 0, 268, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
 				canvas.drawRect(12, 10, 268, 36, mPaint);
-			}
-			if(dpiClassification==160){
+			}else if(dpiClassification==160){
+				Shader shader = new LinearGradient(6, 0, 262, 0, colors, null, Shader.TileMode.REPEAT);
+				mPaint.setShader(shader);
+				canvas.drawRect(6, 6, 262, 24, mPaint);
+			}else{
 				Shader shader = new LinearGradient(6, 0, 262, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
 				canvas.drawRect(6, 6, 262, 24, mPaint);
@@ -150,8 +166,11 @@ public class Color_Progress extends SeekBar{
 				Shader shader = new LinearGradient(12, 0, 268, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
 				canvas.drawRect(12, 10, 268, 36, mPaint);
-			}
-			if(dpiClassification==160){
+			}else if(dpiClassification==160){
+				Shader shader = new LinearGradient(6, 0, 262, 0, colors, null, Shader.TileMode.REPEAT);
+				mPaint.setShader(shader);
+				canvas.drawRect(6, 6, 262, 24, mPaint);
+			}else{
 				Shader shader = new LinearGradient(6, 0, 262, 0, colors, null, Shader.TileMode.REPEAT);
 				mPaint.setShader(shader);
 				canvas.drawRect(6, 6, 262, 24, mPaint);

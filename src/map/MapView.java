@@ -136,8 +136,8 @@ public class MapView extends View {
 		this.Tracer = Trac;
 		this.context=context;
 		//activated=true;
-		Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		screen_width = display.getWidth();
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		screen_width = metrics.widthPixels;
 		startCacheEngine();
 		/*
 		 * This view has only one handler for all mini widgets displayed on map
@@ -498,6 +498,7 @@ public class MapView extends View {
 								(featureMap.getPosx()*currentScale)-drawable.getWidth()/2, 
 								(featureMap.getPosy()*currentScale)-drawable.getWidth()/2, 
 								paint_map);
+						Tracer.e("MapView","Draw symbol of feature X="+((featureMap.getPosx()*currentScale)-drawable.getWidth()/2)+" Y="+((featureMap.getPosy()*currentScale)-drawable.getWidth()/2)+" MAP "+paint_map);
 					} else {
 						Tracer.e("MapView","No drawable available for object");
 						return;

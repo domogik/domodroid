@@ -84,6 +84,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 				if (!localIP.getText().toString().startsWith("http://")){
 					localIP.setText("http://"+localIP.getText().toString());
 				}
+				prefEditor.putString("rinorIP",localIP.getText().toString());
 				prefEditor.putString("rinorPort",localPORT.getText().toString());
 				prefEditor.putString("http_auth_username",http_auth_username.getText().toString());
 				prefEditor.putString("http_auth_password",http_auth_password.getText().toString());

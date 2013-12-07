@@ -15,8 +15,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import misc.tracerengine;
 
-
-
 public class DomodroidDB {
 
 	private Activity context;
@@ -46,6 +44,8 @@ public class DomodroidDB {
 		} catch ( Exception e) {}
 	}
 
+	////////////////// INSERT
+	
 	public void insertArea(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("area");
@@ -113,17 +113,6 @@ public class DomodroidDB {
 		}
 	}
 
-	//Send custom name to DmdContentProvder so that it could be write in DB
-	public void updateFeaturename(int id,String name){
-		ContentValues values = new ContentValues();
-		values.put("id", id);
-		values.put("newname", name);
-		Tracer.e("DomodrdoidDB", "Description set to: "+name+" for device: "+id);
-		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
-	}
-	
-
-
 	public void insertFeatureAssociation(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("feature_association");
@@ -138,6 +127,7 @@ public class DomodroidDB {
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
 		}
 	}
+	
 	public void insertFeatureState(JSONObject json) throws JSONException{
 		String skey = null;
 		String Val = null;
@@ -243,8 +233,41 @@ public class DomodroidDB {
 		values.put("map", map);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_MAP, values);
 	}
-	//add a public void to remove one widget
-	public void removeFeatureMap(int id, int posx, int posy, String map){
+	
+	////////////////// REMOVE ONE
+	
+	public void remove_one_area(int id){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_AREA, values);
+	}
+	
+	public void remove_one_room(int id){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_ROOM, values);
+	}
+	
+	public void remove_one_icon(int id){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_ICON, values);
+	}
+	
+	public void remove_one_feature(int id){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE, values);
+	}
+		
+	public void remove_one_feature_association(int id){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION, values);
+	}
+	
+	//add a public void to remove one widget in map
+	public void remove_one_FeatureMap(int id, int posx, int posy, String map){
 		ContentValues values = new ContentValues();
 		values.put("id", id);
 		values.put("posx", posx);
@@ -252,6 +275,11 @@ public class DomodroidDB {
 		values.put("map", map);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_MAP, values);
 	}
+	
+	
+	
+	////////////////// REMOVE ALL
+	
 	public void cleanFeatureMap(String map){
 		//send map_name to DmdContentProvider to remove all widget on this map in database
 		ContentValues values = new ContentValues();
@@ -259,10 +287,18 @@ public class DomodroidDB {
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_MAP,values);
 	}
 
-
+	////////////////// UPDATE
+	
+	//Send custom name to DmdContentProvder so that it could be write in DB
+	public void updateFeaturename(int id,String name){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		values.put("newname", name);
+		Tracer.e("DomodrdoidDB", "Description set to: "+name+" for device: "+id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
+	}
 
 	////////////////// REQUEST
-
 
 
 	public Entity_Area[] requestArea() {
@@ -285,7 +321,6 @@ public class DomodroidDB {
 			curs.close();
 		return areas;
 	}
-
 
 	public Entity_Room[] requestRoom(int area_id) {
 		Entity_Room[] rooms=null;
@@ -329,7 +364,6 @@ public class DomodroidDB {
 		return icon;
 	}
 
-
 	public Entity_Feature[] requestFeatures(int id, String zone) {
 		Cursor curs=null;
 		Entity_Feature[] features=null;
@@ -349,7 +383,6 @@ public class DomodroidDB {
 		curs.close();
 		return features;
 	}
-
 
 	public Entity_Map[] requestFeatures(String map){
 		Cursor curs=null;
@@ -436,7 +469,6 @@ public class DomodroidDB {
 		curs.close();
 		return features;
 	}
-
 
 	public String requestFeatureState(int device_id, String key){
 		String state = " ";

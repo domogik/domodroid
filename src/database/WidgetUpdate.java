@@ -899,8 +899,8 @@ public class WidgetUpdate  {
 		domodb.insertFeatureMap(id, posx, posy, mapname);
 				
 	}
-	public void removeFeatureMap(int id,int posx, int posy, String mapname) {
-		domodb.removeFeatureMap(id, posx, posy, mapname);
+	public void remove_one_FeatureMap(int id,int posx, int posy, String mapname) {
+		domodb.remove_one_FeatureMap(id, posx, posy, mapname);
 	}
 	public Entity_Feature[] requestFeatures(){
 		return domodb.requestFeatures();		

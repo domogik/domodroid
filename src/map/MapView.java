@@ -908,7 +908,7 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 						//remove entry
-						Tracer.get_engine().removeFeatureMap(featureMap.getId(),
+						Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
 							(int)((event.getX()-value[2])/currentScale), 
 							(int)((event.getY()-value[5])/currentScale),
 							files.elementAt(currentFile));
@@ -922,7 +922,7 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
 						//remove entry
-						Tracer.get_engine().removeFeatureMap(switchesMap.getId(),
+						Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
 							(int)((event.getX()-value[2])/currentScale), 
 							(int)((event.getY()-value[5])/currentScale),
 							files.elementAt(currentFile));
@@ -937,7 +937,7 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 						//remove entry
-						Tracer.get_engine().removeFeatureMap(featureMap.getId(),
+						Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
 							(int)((event.getX()-value[2])/currentScale), 
 							(int)((event.getY()-value[5])/currentScale),
 							files.elementAt(currentFile));
@@ -954,7 +954,7 @@ public class MapView extends View {
 					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
 						//remove entry
-						Tracer.get_engine().removeFeatureMap(switchesMap.getId(),
+						Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
 							(int)((event.getX()-value[2])/currentScale), 
 							(int)((event.getY()-value[5])/currentScale),
 							files.elementAt(currentFile));

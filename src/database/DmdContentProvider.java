@@ -279,6 +279,12 @@ public class DmdContentProvider extends ContentProvider {
 		case CLEAR_one_ICON:
 			break;
 		case CLEAR_one_FEATURE:
+			try{
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_room WHERE id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error deleting room: "+e.toString());
+				}
 			break;
 		case CLEAR_one_FEATURE_ASSOCIATION:
 			break;

@@ -234,7 +234,7 @@ public class DomodroidDB {
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_MAP, values);
 	}
 	
-	////////////////// REMOVE ONE
+	////////////////// REMOVE ONE but be careful it's by id and can delete more that just one
 	
 	public void remove_one_area(int id){
 		ContentValues values = new ContentValues();

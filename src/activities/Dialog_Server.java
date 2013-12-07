@@ -77,19 +77,13 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 			try{
 				//Something has been changed : store values in params
 				prefEditor=params.edit();
-				//TODO do something if it's null
 				if (localIP.getText().toString().equals("")){
-									
+					//TODO do something if it's null			
 				}
 				//Change rinor ip to add http:// if not 
 				if (!localIP.getText().toString().startsWith("http://")){
 					localIP.setText("http://"+localIP.getText().toString());
-					//prefEditor.putString("rinorIP","http://"+localIP.getText().toString());
 				}
-				//else{
-					//localIP.setText(params.getString("rinorIP",null));
-					//prefEditor.putString("rinorIP",localIP.getText().toString());
-				//}
 				prefEditor.putString("rinorPort",localPORT.getText().toString());
 				prefEditor.putString("http_auth_username",http_auth_username.getText().toString());
 				prefEditor.putString("http_auth_password",http_auth_password.getText().toString());

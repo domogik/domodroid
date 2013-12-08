@@ -84,10 +84,13 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private boolean touching;
 	private int updating=0;
 	private final String wname;
+	private String place_type;
+	private int place_id;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private String mytag;
 	private tracerengine Tracer = null;
+	private Message msg;
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
@@ -97,7 +100,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,
 			String state_key, String url, String usage, 
 			String parameters, String model_id, int update, 
-			int widgetSize, int session_type) throws JSONException {
+			int widgetSize, int session_type,int place_id,String place_type) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.address = address;
@@ -110,6 +113,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.wname = name;
 		this.myself=this;
 		this.session_type = session_type;
+		this.place_id= place_id;
+		this.place_type= place_type;
 		stateThread = 1;
 		this.stateS = getResources().getText(R.string.State).toString();
 		mytag="Graphical_Range("+dev_id+")";
@@ -400,9 +405,11 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

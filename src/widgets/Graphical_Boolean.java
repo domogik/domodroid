@@ -82,7 +82,9 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
-
+	private String place_type;
+	private int place_id;
+	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Boolean(tracerengine Trac, Activity context, 
 			String address, String name, 
@@ -91,7 +93,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			String parameters, 
 			String model_id, int update, 
 			int widgetSize,
-			int session_type) throws JSONException {
+			int session_type,int place_id,String place_type) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.state_key = state_key;
@@ -103,7 +105,9 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
-
+		this.place_id= place_id;
+		this.place_type= place_type;
+		
 		try {
 			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 			value0 = jparam.getString("value0");
@@ -284,9 +288,12 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);}
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {

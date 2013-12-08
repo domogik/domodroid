@@ -49,6 +49,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int INSERT_FEATURE_ASSOCIATION = 240;
 	public static final int CLEAR_FEATURE_ASSOCIATION = 241;
 	public static final int CLEAR_one_FEATURE_ASSOCIATION = 242;
+	public static final int CLEAR_one_unique_FEATURE_ASSOCIATION = 243;
 	public static final int INSERT_FEATURE_MAP = 250;
 	public static final int CLEAR_FEATURE_MAP = 251;
 	public static final int CLEAR_one_FEATURE_MAP = 252;
@@ -92,6 +93,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_CLEAR_one_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_ICON");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_ASSOCIATION");
+	public static final Uri CONTENT_URI_CLEAR_one_unique_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_unique_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_one_feature_in_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE");
@@ -137,6 +139,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_ICON", CLEAR_one_ICON);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE", CLEAR_one_FEATURE);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_ASSOCIATION", CLEAR_one_FEATURE_ASSOCIATION);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_unique_FEATURE_ASSOCIATION", CLEAR_one_unique_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP", CLEAR_one_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP", CLEAR_one_feature_in_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE", CLEAR_one_FEATURE_STATE);
@@ -291,7 +294,15 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		case CLEAR_one_FEATURE_ASSOCIATION:
 			try{
-				mDB.getWritableDatabase().execSQL("DELETE FROM table_room WHERE device_feature_id="+values.getAsString("id"));
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error deleting feature_association: "+e.toString());
+				}
+			break;
+		case CLEAR_one_unique_FEATURE_ASSOCIATION:
+			try{
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id="+values.getAsString("id")+" AND place_id="+values.getAsString("place_id")+" AND place_type='"+values.getAsString("place_type")+"'" );
 				}
 			catch (SQLException e) {
 				Log.e("DmdContentProvider", "Error deleting feature_association: "+e.toString());

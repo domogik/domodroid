@@ -33,6 +33,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.os.Message;
 import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
@@ -66,15 +67,18 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	public FrameLayout myself = null;
 	private int dev_id;
 	private int id;
+	private String place_type;
+	private int place_id;
 	private tracerengine Tracer = null;
 	private int session_type;
 	private boolean usable=false;
 	private String mytag;
+	private Message msg;
 	
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
-			String model_id, int widgetSize,int session_type) throws JSONException {
+			String model_id, int widgetSize,int session_type,int place_id,String place_type) throws JSONException {
 		
 		super(context);
 		this.address = address;
@@ -84,6 +88,8 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		this.myself=this;
 		this.session_type = session_type;
 		this.dev_id = dev_id;
+		this.place_id= place_id;
+		this.place_type= place_type;
 		mytag="Graphical_Trigger("+dev_id+")";
 		
 		//get parameters
@@ -173,6 +179,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		background.addView(featurePan);
 
 		this.addView(background);
+		
 	}
 
 
@@ -226,9 +233,11 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

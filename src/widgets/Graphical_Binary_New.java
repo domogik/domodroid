@@ -96,6 +96,8 @@ public class Graphical_Binary_New extends FrameLayout implements OnLongClickList
 	private String stateS = "";
 	private String Value_0 = "0";
 	private String Value_1 = "1";
+	private String place_type;
+	private int place_id;
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
@@ -104,7 +106,7 @@ public class Graphical_Binary_New extends FrameLayout implements OnLongClickList
 	
 	public Graphical_Binary_New(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, final String usage, 
-			String parameters, String model_id, int update, int widgetSize, int session_type) throws JSONException {
+			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -121,6 +123,8 @@ public class Graphical_Binary_New extends FrameLayout implements OnLongClickList
 		this.myself = this;
 		this.session_type = session_type;
 		this.stateS = getResources().getText(R.string.State).toString();
+		this.place_id= place_id;
+		this.place_type= place_type;
 
 		mytag = "Graphical_Binary_New("+dev_id+")";
 		//get parameters		
@@ -395,9 +399,11 @@ public class Graphical_Binary_New extends FrameLayout implements OnLongClickList
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

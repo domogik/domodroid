@@ -87,6 +87,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Message msg;
 	private String wname;
 	private String mytag;
+	private String place_type;
+	private int place_id;
 	private String url = null;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
@@ -100,7 +102,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int period, int update, 
-			int widgetSize, int session_type, final String parameters) {
+			int widgetSize, int session_type, final String parameters,int place_id,String place_type) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -113,6 +115,8 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		this.myself = this;
 		this.session_type = session_type;
 		this.parameters = parameters;
+		this.place_id= place_id;
+		this.place_type= place_type;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
@@ -382,9 +386,11 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -114,13 +114,15 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private String address;
 	private String type;
 	private String packageName ;
-    
+	private String place_type;
+	private int place_id;
+	
 		
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			String type, String address,
 			final String state_key, String url,String usage, int period, int update, 
-			int widgetSize, int session_type, final String parameters,String model_id) {
+			int widgetSize, int session_type, final String parameters,String model_id,int place_id,String place_type) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -134,6 +136,8 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		this.url = url;
 		String[] model = model_id.split("\\.");
 		this.type = model[0];
+		this.place_id= place_id;
+		this.place_type= place_type;
 		
 		packageName = context.getPackageName();
 		Graphical_List.myself = this;
@@ -456,9 +460,11 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

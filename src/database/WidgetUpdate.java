@@ -910,8 +910,8 @@ public class WidgetUpdate  {
 	public void remove_one_feature(int id) {
 		domodb.remove_one_feature(id);
 	}
-	public void remove_one_feature_association(int id) {
-		domodb.remove_one_feature_association(id);
+	public void remove_one_feature_association(int id, int place_id, String place_type) {
+		domodb.remove_one_feature_association(id, place_id, place_type);
 	}
 	public void remove_one_FeatureMap(int id,int posx, int posy, String mapname) {
 		domodb.remove_one_FeatureMap(id, posx, posy, mapname);

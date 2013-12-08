@@ -132,7 +132,7 @@ public class Widgets_Manager {
 							feature.getParameters(),
 							feature.getDevice_type_id(),
 							params.getInt("UPDATE_TIMER",300),
-							widgetSize, mytype);
+							widgetSize, mytype,id,zone);
 					onoff.container=tmpPan;
 					tmpPan.addView(onoff);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
@@ -146,7 +146,7 @@ public class Widgets_Manager {
 								feature.getParameters(),
 								feature.getDevice_type_id(),
 								params.getInt("UPDATE_TIMER",300),
-								widgetSize, mytype);
+								widgetSize, mytype,id,zone);
 						onoff_New.container=tmpPan;
 						tmpPan.addView(onoff_New);
 						Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
@@ -160,7 +160,7 @@ public class Widgets_Manager {
 						feature.getParameters(),
 						feature.getDevice_type_id(),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype);
+						widgetSize, mytype,id,zone);
 				bool.container=tmpPan;
 				tmpPan.addView(bool);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Boolean");
@@ -173,7 +173,7 @@ public class Widgets_Manager {
 						feature.getParameters(),
 						feature.getDevice_type_id(),
 						params.getInt("UPDATE_TIMER",300), 
-						widgetSize, mytype);
+						widgetSize, mytype,id,zone);
 				variator.container=tmpPan;
 				tmpPan.addView(variator);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Range");
@@ -185,7 +185,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						feature.getParameters(),
 						feature.getDevice_type_id(),
-						widgetSize, mytype);
+						widgetSize, mytype,id,zone);
 				trigger.container=tmpPan;
 				tmpPan.addView(trigger);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Trigger");
@@ -202,7 +202,7 @@ public class Widgets_Manager {
 						params.getString("URL","1.1.1.1"),
 						feature.getDevice_usage_id(),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype);
+						widgetSize, mytype,id,zone);
 				tmpPan.addView(color);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Color");
 			} else if (feature.getValue_type().equals("number")) {
@@ -213,7 +213,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters());
+						widgetSize, mytype, feature.getParameters(),id,zone);
 				info.setLayoutParams(layout_param);
 				info.container=tmpPan;
 				tmpPan.addView(info);
@@ -228,7 +228,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id());
+						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id(),id,zone);
 				list.setLayoutParams(layout_param);
 				list.container=tmpPan;
 				tmpPan.addView(list);
@@ -237,7 +237,7 @@ public class Widgets_Manager {
 				if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,feature.getId(),feature.getDevId(),label,
 							feature.getAddress(),
-							widgetSize, mytype);
+							widgetSize, mytype,id,zone);
 					tmpPan.addView(cam);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Cam");
 				} else {
@@ -247,7 +247,7 @@ public class Widgets_Manager {
 							feature.getDevice_usage_id(),
 							0,
 							params.getInt("UPDATE_TIMER",300),
-							0, mytype, feature.getParameters());
+							0, mytype, feature.getParameters(),id,zone);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					tmpPan.addView(info);

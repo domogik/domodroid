@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Message;
 import misc.tracerengine;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -58,9 +59,12 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 	private String mytag;
 	private tracerengine Tracer = null;
 	private int session_type;
+	private Message msg;
+	private String place_type;
+	private int place_id;
 	
 
-	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,int widgetSize, int session_type) {
+	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,int widgetSize, int session_type,int place_id,String place_type) {
 		super(context);
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
@@ -69,6 +73,8 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		this.url = url;
 		this.context = context;
 		this.session_type = session_type;
+		this.place_id= place_id;
+		this.place_type= place_type;
 		setOnTouchListener(this);
 		mytag="Graphical_Boolean("+dev_id+")";
 		
@@ -123,6 +129,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		background.addView(mainPan);
 
 		this.addView(background);
+		
 	}
 
 	public int getId() {
@@ -175,9 +182,11 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

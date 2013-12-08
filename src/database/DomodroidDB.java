@@ -265,7 +265,13 @@ public class DomodroidDB {
 		values.put("id", id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION, values);
 	}
-	
+	public void remove_one_feature_association(int id, int place_id, String place_type) {
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		values.put("place_id", place_id);
+		values.put("place_type", place_type);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_unique_FEATURE_ASSOCIATION, values);
+	}
 	public void remove_one_feature_in_FeatureMap(int id){
 		ContentValues values = new ContentValues();
 		values.put("id", id);
@@ -566,4 +572,5 @@ public class DomodroidDB {
 
 		return state;
 	}
+
 }

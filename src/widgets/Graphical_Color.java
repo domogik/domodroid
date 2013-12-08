@@ -116,7 +116,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private Boolean realtime = false;
 	public View container = null;
 	private int session_type;
-
+	private String place_type;
+	private int place_id;
+	
 
 	@SuppressLint("HandlerLeak")
 	public Graphical_Color(tracerengine Trac, Context context, 
@@ -130,7 +132,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			String usage, 
 			int update, 
 			int widgetSize,
-			int session_type) {
+			int session_type,int place_id,String place_type) {
 		
 		super(context);
 		this.Tracer = Trac;
@@ -148,6 +150,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.params = params;
 		this.myself = this;
 		this.session_type = session_type;
+		this.place_id= place_id;
+		this.place_type= place_type;
 		mytag="Graphical_Color("+dev_id+")";
 		
 		String[] model = model_id.split("\\.");
@@ -682,9 +686,11 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature(id);
-					Tracer.get_engine().remove_one_feature_association(id);
-					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO do this in a menu
+					//Tracer.get_engine().remove_one_feature_association(id);
+					//Tracer.get_engine().remove_one_feature(id);
+					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

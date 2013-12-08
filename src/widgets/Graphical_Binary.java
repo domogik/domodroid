@@ -156,23 +156,27 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		imgPan.setPadding(5, 10, 5, 10);
+		
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-
+		img.setTag("img");
+		img.setOnLongClickListener(this);
 
 		// info panel
 		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
+		
 		//name of devices
 		nameDevices=new TextView(context);
 		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
+		nameDevices.setTag("namedevices");
 		nameDevices.setOnLongClickListener(this);
 
 		//state
@@ -180,7 +184,6 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		state.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
-
 
 		//feature panel
 		featurePan=new LinearLayout(context);
@@ -402,27 +405,45 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			//activate=true;
 		}
 	}
-	public boolean onLongClick(View arg0) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle(R.string.Rename_title);
-		alert.setMessage(R.string.Rename_message);
-		// Set an EditText view to get user input 
-		final EditText input = new EditText(getContext());
-			alert.setView(input);
+	public boolean onLongClick(View v) {
+		if(v.getTag().equals("namedevices")) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id,result);
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+					}
+				});
+				alert.show();
+		}else if (v.getTag().equals("img")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					String result= input.getText().toString(); 
-					
-					Tracer.get_engine().descUpdate(id,result);
+					Tracer.get_engine().remove_one_feature(id);
+					Tracer.get_engine().remove_one_feature_association(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Binary", "Customname Canceled.");
+					Tracer.e("Graphical_Binary_New", "delete Canceled.");
 				}
 			});
 			alert.show();
-			return false;
+		}
+		return false;
+		
 	}
 }
 

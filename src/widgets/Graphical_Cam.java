@@ -96,6 +96,8 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(R.drawable.camera);
+		img.setTag("img");
+		img.setOnLongClickListener(this);
 
 		// info panel
 		infoPan = new LinearLayout(context);
@@ -109,6 +111,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		nameDevices.setTextSize(14);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
+		nameDevices.setTag("namedevices");
 		nameDevices.setOnLongClickListener(this);
 
 		imgPan.addView(img);
@@ -146,25 +149,44 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		}
 		return true;
 	}
-	public boolean onLongClick(View arg0) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle(R.string.Rename_title);
-		alert.setMessage(R.string.Rename_message);
-		// Set an EditText view to get user input 
-		final EditText input = new EditText(getContext());
-			alert.setView(input);
+	public boolean onLongClick(View v) {
+		if(v.getTag().equals("namedevices")) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id,result);
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+					}
+				});
+				alert.show();
+		}else if (v.getTag().equals("img")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Cam", "Description set to: "+result);
-					Tracer.get_engine().descUpdate(id,result);
+					Tracer.get_engine().remove_one_feature(id);
+					Tracer.get_engine().remove_one_feature_association(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Cam", "Customname Canceled.");
+					Tracer.e("Graphical_Binary_New", "delete Canceled.");
 				}
 			});
 			alert.show();
-			return false;
-	}}
+		}
+		return false;
+		
+	}
+}

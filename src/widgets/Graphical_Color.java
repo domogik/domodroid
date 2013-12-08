@@ -36,6 +36,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -47,7 +48,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListener,  OnTouchListener, OnLongClickListener{
+public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListener,  OnTouchListener, OnLongClickListener, OnClickListener{
 
 
 	private int mInitialColor, mDefaultColor;
@@ -169,23 +170,29 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		imgPan.setPadding(5, 10, 5, 10);
+		
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+		img.setTag("img");
+		img.setOnLongClickListener(this);
 		img.setOnTouchListener(this);
+		img.setOnClickListener(this);
 		
 		// info panel
 		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
+		
 		//name of devices
 		nameDevices=new TextView(context);
 		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
+		nameDevices.setTag("namedevices");
 		nameDevices.setOnLongClickListener(this);
 		//nameDevices.setLines(1);
 
@@ -634,7 +641,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		Tracer.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
 		*/
 	}
-	public boolean onTouch(View arg0, MotionEvent arg1) {
+	public void onClick(View arg0) {
 		Tracer.i("Graphical_Color", "Touch....");
 		if(featurePan2.getVisibility()== INVISIBLE){
 			background.addView(featurePan2);
@@ -646,29 +653,55 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			featurePan2.setVisibility(INVISIBLE);
 			Tracer.i("Graphical_Color", "FeaturePan2 set to INVISIBLE");
 		}
-		return false;
+		return;
 	}
 	
-	public boolean onLongClick(View arg0) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle(R.string.Rename_title);
-		alert.setMessage(R.string.Rename_message);
-		// Set an EditText view to get user input 
-		final EditText input = new EditText(getContext());
-			alert.setView(input);
+	public boolean onLongClick(View v) {
+		if(v.getTag().equals("namedevices")) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id,result);
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+					}
+				});
+				alert.show();
+		}else if (v.getTag().equals("img")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Color", "Description set to: "+result);
-					Tracer.get_engine().descUpdate(id,result);
+					Tracer.get_engine().remove_one_feature(id);
+					Tracer.get_engine().remove_one_feature_association(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Color", "Customname Canceled.");
+					Tracer.e("Graphical_Binary_New", "delete Canceled.");
 				}
 			});
 			alert.show();
-			return false;
+		}
+		return false;
+		
 	}
+
+
+
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

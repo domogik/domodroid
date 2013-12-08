@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import misc.tracerengine;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -101,6 +102,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		this.myself=this;
 		period_type = 1;	//by default, display 24 hours
 		compute_period();	//To initialize time_start & time_end
+
+		//TODO correct kitkat problem
+		//DisplayMetrics metrics = getResources().getDisplayMetrics();
+		//width= metrics.widthPixels;
+		//height= metrics.heightPixels;
 		
 		handler = new Handler() {
 			@Override
@@ -195,7 +201,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	@Override 
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		
+		//TODO correct kitkat view
 		width = getMeasuredWidth();
 		height = getMeasuredHeight();
 		gridStartY = height-15;

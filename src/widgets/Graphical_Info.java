@@ -62,7 +62,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLongClickListener {
+public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLongClickListener, OnClickListener {
 
 
 	private FrameLayout imgPan;
@@ -140,20 +140,24 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		Tracer.e("Graphical_Info Frame", "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+		img.setTag("img");
+		img.setOnLongClickListener(this);
 		img.setOnTouchListener(this);
-
-
+		img.setOnClickListener(this);
+		
 		// info panel
 		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		infoPan.setOrientation(LinearLayout.VERTICAL);
 		infoPan.setGravity(Gravity.CENTER_VERTICAL);
+		
 		//name of devices
 		nameDevices=new TextView(context);
 		nameDevices.setText(name);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
+		nameDevices.setTag("namedevices");
 		nameDevices.setOnLongClickListener(this);
 		//nameDevices.setLines(1);
 
@@ -314,7 +318,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 
 	}
 
-	public boolean onTouch(View arg0, MotionEvent arg1) {
+	public void onClick(View arg0) {
 		if(with_graph) {
 			if(background.getHeight() != 350){
 				try {
@@ -336,7 +340,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer
 			}
 		}
-		return false;
+		return ;
 	}
 	
 	@Override
@@ -352,28 +356,50 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
-	public boolean onLongClick(View arg0) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle(R.string.Rename_title);
-		alert.setMessage(R.string.Rename_message);
-		// Set an EditText view to get user input 
-		final EditText input = new EditText(getContext());
-			alert.setView(input);
+	public boolean onLongClick(View v) {
+		if(v.getTag().equals("namedevices")) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id,result);
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+					}
+				});
+				alert.show();
+		}else if (v.getTag().equals("img")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					String result= input.getText().toString(); 
-					Tracer.e("Graphical_info", "Description set to: "+result);
-					
-					Tracer.get_engine().descUpdate(id, result);
+					Tracer.get_engine().remove_one_feature(id);
+					Tracer.get_engine().remove_one_feature_association(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_info", "Customname Canceled.");
+					Tracer.e("Graphical_Binary_New", "delete Canceled.");
 				}
 			});
 			alert.show();
-			return false;
+		}
+		return false;
+		
+	}
+
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
 

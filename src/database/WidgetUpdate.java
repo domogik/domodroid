@@ -897,7 +897,21 @@ public class WidgetUpdate  {
 	}
 	public void insertFeatureMap(int id,int posx, int posy, String mapname) {
 		domodb.insertFeatureMap(id, posx, posy, mapname);
-				
+	}
+	public void remove_one_area(int id) {
+		domodb.remove_one_area(id);
+	}
+	public void remove_one_room(int id) {
+		domodb.remove_one_room(id);
+	}
+	public void remove_one_icon(int id) {
+		domodb.remove_one_icon(id);
+	}
+	public void remove_one_feature(int id) {
+		domodb.remove_one_feature(id);
+	}
+	public void remove_one_feature_association(int id) {
+		domodb.remove_one_feature_association(id);
 	}
 	public void remove_one_FeatureMap(int id,int posx, int posy, String mapname) {
 		domodb.remove_one_FeatureMap(id, posx, posy, mapname);

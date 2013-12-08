@@ -90,7 +90,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_CLEAR_one_ROOM = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_ROOM");
 	public static final Uri CONTENT_URI_CLEAR_one_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_ICON");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE");
-	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_one_ASSOCIATION");
+	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE");
 	
@@ -280,13 +280,19 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		case CLEAR_one_FEATURE:
 			try{
-				mDB.getWritableDatabase().execSQL("DELETE FROM table_room WHERE id="+values.getAsString("id"));
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting room: "+e.toString());
+				Log.e("DmdContentProvider", "Error deleting feature: "+e.toString());
 				}
 			break;
 		case CLEAR_one_FEATURE_ASSOCIATION:
+			try{
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_room WHERE device_feature_id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error deleting feature_association: "+e.toString());
+				}
 			break;
 		//Add a new select case to remove only one widget on map
 		//careful to avoid problem it must be call with id, posx, posy and map

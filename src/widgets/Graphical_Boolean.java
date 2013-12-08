@@ -131,17 +131,18 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
 
-
 		//panel to set img with padding left
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		imgPan.setPadding(5, 10, 5, 10);
+		
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		//set default color to (usage,0) off.png
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-
+		img.setTag("img");
+		img.setOnLongClickListener(this);
 
 		// info panel
 		infoPan = new LinearLayout(context);
@@ -155,7 +156,9 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
+		nameDevices.setTag("namedevices");
 		nameDevices.setOnLongClickListener(this);
+		
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
@@ -255,28 +258,46 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 		
 	}
 	
-	public boolean onLongClick(View arg0) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-		alert.setTitle(R.string.Rename_title);
-		alert.setMessage(R.string.Rename_message);
-		// Set an EditText view to get user input 
-		final EditText input = new EditText(getContext());
-			alert.setView(input);
+	public boolean onLongClick(View v) {
+		if(v.getTag().equals("namedevices")) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id,result);
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+					}
+				});
+				alert.show();
+		}else if (v.getTag().equals("img")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					String result= input.getText().toString(); 
-					Tracer.e("Graphical_Boolean", "Description set to: "+result);
-					Tracer.get_engine().descUpdate(id,result);
+					Tracer.get_engine().remove_one_feature(id);
+					Tracer.get_engine().remove_one_feature_association(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Boolean", "Customname Canceled.");
+					Tracer.e("Graphical_Binary_New", "delete Canceled.");
 				}
 			});
 			alert.show();
-			return false;
-	}	
+		}
+		return false;
+		
+	}
 }
 
 

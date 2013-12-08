@@ -72,9 +72,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="20dip" >
-
+                android:paddingTop="10dip" >
 					<Button
                         android:id="@+id/sync"
                         style="?android:attr/buttonStyleSmall"
@@ -82,12 +80,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/Sync" />
                </LinearLayout>
-               <LinearLayout
+               
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="20dip" >
+                android:paddingTop="10dip" >
 				     <!-- Added by Doume to allow a full stop of Domodroid -->
 
                     <Button
@@ -107,9 +105,9 @@
 	            <!--  Add a button to allow normal usage configuration -->
             	<Button
 				    android:id="@+id/bt_usage_settings"
+				    style="?android:attr/buttonStyleSmall"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="0.30"
 				    android:text="@string/usage_settings"
 	     		/>
 	    	</LinearLayout>
@@ -122,9 +120,9 @@
 	            <!--  Add a button to allow server configuration -->
             	<Button
 				    android:id="@+id/bt_server_settings"
+				    style="?android:attr/buttonStyleSmall"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="0.30"
 				    android:text="@string/server_settings"
 	     		/>
 	    	</LinearLayout>
@@ -133,14 +131,12 @@
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="10dip" >
-                
-	            
 	            <!--  Add a button to allow map configuration -->
             	<Button
 				    android:id="@+id/bt_map_settings"
+				    style="?android:attr/buttonStyleSmall"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="0.30"
 				    android:text="@string/map_settings"
 	     		/>
 	    	</LinearLayout>
@@ -153,9 +149,9 @@
 	            <!--  Add a button to allow debug configuration -->
             	<Button
 				    android:id="@+id/bt_debug_settings"
+				    style="?android:attr/buttonStyleSmall"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="0.30"
 				    android:text="@string/debug_settings"
 	     		/>
 	    	</LinearLayout>

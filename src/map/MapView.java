@@ -130,6 +130,7 @@ public class MapView extends View {
 	private tracerengine Tracer = null;
 	private int mytype = 2;
 	private WidgetUpdate cache_engine = null;
+	private float texsize = 16;
 	
 	public MapView(tracerengine Trac, Activity context) {
 		super(context);
@@ -215,6 +216,8 @@ public class MapView extends View {
 		File f = new File(Environment.getExternalStorageDirectory()+"/domodroid/"+files.elementAt(currentFile));
 		Tracer.i(mytag,"Request to remove "+currentFile);
 		f.delete();
+		//remove feature of this map in table_feature_map
+		Tracer.get_engine().cleanFeatureMap(map_name);
 		initMap();		
 	}
 	
@@ -437,7 +440,7 @@ public class MapView extends View {
 					//Draw the map name text
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-						paint_text.setTextSize(16);
+						paint_text.setTextSize(texsize);
 						canvasWidget.drawText(mapname, 
 								(switchesMap.getPosx()*currentScale)+text_Offset_X, 
 								(switchesMap.getPosy()*currentScale)+text_Offset_Y, 
@@ -514,7 +517,7 @@ public class MapView extends View {
 					if(! featureMap.getDevice_feature_model_id().contains("camera")) {
 						for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-							paint_text.setTextSize(16);
+							paint_text.setTextSize(texsize);
 							canvasWidget.drawText(featureMap.getCurrentState(), 
 									(featureMap.getPosx()*currentScale)+text_Offset_X, 
 									(featureMap.getPosy()*currentScale)+text_Offset_Y, 
@@ -524,7 +527,7 @@ public class MapView extends View {
 					else if(featureMap.getDevice_feature_model_id().contains("camera")) {
 						for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-							paint_text.setTextSize(16);
+							paint_text.setTextSize(texsize);
 							String label = featureMap.getDescription();
 							if(label.length() < 1)
 								label = featureMap.getDevice_usage_id();
@@ -539,9 +542,9 @@ public class MapView extends View {
 				} else if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-						paint_text.setTextSize(16);
+						paint_text.setTextSize(texsize);
 						//canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
-						paint_text.setTextSize(14);
+						paint_text.setTextSize(texsize-2);
 						if (params.getBoolean("HIDE",false)==false){ 
 							String label = featureMap.getDescription();
 							if(label.length() < 1)
@@ -578,7 +581,7 @@ public class MapView extends View {
 					
 						for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-							paint_text.setTextSize(20);
+							paint_text.setTextSize(texsize+4);
 							if(featureMap != null) {
 								String label = featureMap.getDescription();
 								if(label.length() < 1)
@@ -590,7 +593,7 @@ public class MapView extends View {
 								canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y-10, 
 										paint_text);
-								paint_text.setTextSize(15);
+								paint_text.setTextSize(texsize-1);
 								//Tracer.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 								if (params.getBoolean("HIDE",false)==false){ 
 									canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
@@ -602,9 +605,9 @@ public class MapView extends View {
 				} else if(featureMap.getValue_type().equals("range")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-						paint_text.setTextSize(16);
+						paint_text.setTextSize(texsize);
 						//canvasWidget.drawText(featureMap.getCurrentState(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
-						paint_text.setTextSize(14);
+						paint_text.setTextSize(texsize-2);
 						if (params.getBoolean("HIDE",false)==false){ 
 							//TODO see if we should not use label instead of featureMap.getDevice_usage_id()
 							//It is not the same text displayed for this type of device
@@ -631,7 +634,7 @@ public class MapView extends View {
 				}else if(featureMap.getValue_type().equals("trigger")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-						paint_text.setTextSize(16);
+						paint_text.setTextSize(texsize);
 						//TODO see if we should not use label instead of featureMap.getName()
 						//It is not the same text displayed for this type of device
 						canvasWidget.drawText(featureMap.getName(), 
@@ -684,7 +687,7 @@ public class MapView extends View {
 					*/	
 					for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
-							paint_text.setTextSize(16);
+							paint_text.setTextSize(texsize);
 							
 						canvasWidget.drawText(featureMap.getDescription(), 
 							(featureMap.getPosx()*currentScale)+text_Offset_X, 

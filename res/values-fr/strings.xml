@@ -92,8 +92,12 @@
 	<string name="Exit_Program">Quitter</string>
 	<string name="Rename_title">Renommer</string>
 	<string name="Rename_message">Choisir le texte à afficher.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+	<string name="Delete_feature_title">Supprimer</string>
+	<string name="Delete_feature_message">Supprimer cette fonctionnalitée.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+	
 	<string name="Add_widget_title">Selectionner un widget</string>
-	    				
+
+		    				
 	<string name="info0">Tornade</string>
 	<string name="info1">Tempête tropicale</string>
 	<string name="info2">Ouragan</string>
@@ -233,6 +237,7 @@
 	<string name="portal">Portail</string>
 	<string name="scene">Scénario</string>
 	<string name="camera">Camera de sécurité</string>
+	<string name="security_camera">Camera de sécurité</string>
 	<string name="server">Serveur</string>
 	<string name="socket">Socket</string>
 	<string name="shutter">Volets</string>

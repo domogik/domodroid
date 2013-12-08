@@ -92,6 +92,9 @@
 	<string name="Exit_Program">Exit Program</string>
 	<string name="Rename_title">Rename</string>
 	<string name="Rename_message">Set the text to be displayed.\nThis information will be lost if you make a new sync.</string>
+	<string name="Delete_feature_title">Delete</string>
+	<string name="Delete_feature_message">Delete this feature.\nThis information will be lost if you make a new sync.</string>
+	
 	<string name="Add_widget_title">Select a widget</string>
 	    								
 	<string name="info0">Tornado</string>
@@ -231,10 +234,10 @@
 	<string name="mirror">Mirror</string>
 	<string name="music">Music</string>
 	<string name="nanoztag">Nanoztag</string>
-	
 	<string name="portal">Portal</string>
 	<string name="scene">Scenes</string>
 	<string name="camera">Camera</string>
+	<string name="security_camera">Secutity Camera</string>
 	<string name="server">Server</string>
 	<string name="socket">Socket</string>
 	<string name="shutter">Shutter</string>

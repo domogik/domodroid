@@ -266,6 +266,11 @@ public class DomodroidDB {
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION, values);
 	}
 	
+	public void remove_one_feature_in_FeatureMap(int id){
+		ContentValues values = new ContentValues();
+		values.put("id", id);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_feature_in_FEATURE_MAP, values);
+	}
 	//add a public void to remove one widget in map
 	public void remove_one_FeatureMap(int id, int posx, int posy, String map){
 		ContentValues values = new ContentValues();

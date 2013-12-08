@@ -52,6 +52,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int INSERT_FEATURE_MAP = 250;
 	public static final int CLEAR_FEATURE_MAP = 251;
 	public static final int CLEAR_one_FEATURE_MAP = 252;
+	public static final int CLEAR_one_feature_in_FEATURE_MAP = 253;
 	public static final int INSERT_FEATURE_STATE = 260;
 	public static final int CLEAR_FEATURE_STATE = 261;
 	public static final int CLEAR_one_FEATURE_STATE = 262;
@@ -92,6 +93,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP");
+	public static final Uri CONTENT_URI_CLEAR_one_feature_in_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE");
 	
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
@@ -136,6 +138,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE", CLEAR_one_FEATURE);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_ASSOCIATION", CLEAR_one_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP", CLEAR_one_FEATURE_MAP);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP", CLEAR_one_feature_in_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE", CLEAR_one_FEATURE_STATE);
 		
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
@@ -309,6 +312,14 @@ public class DmdContentProvider extends ContentProvider {
 				}
 			catch (SQLException e) {
 				Log.e("DmdContentProvider", "Error deleting widget: "+e.toString());
+				}
+			break;
+		case CLEAR_one_feature_in_FEATURE_MAP:
+			try{
+				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error deleting feature_map: "+e.toString());
 				}
 			break;
 		case CLEAR_one_FEATURE_STATE:

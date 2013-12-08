@@ -458,6 +458,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature(id);
 					Tracer.get_engine().remove_one_feature_association(id);
+					Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

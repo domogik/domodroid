@@ -96,10 +96,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Button server_settings;	//Added by Tikismoke
 	private Button map_settings;	//Added by Tikismoke
 	private Button debug_settings;	//Added by Doume
+	private Button house_settings;	//Added by Doume
 	private Dialog_Usage usage_set = null;
 	private Dialog_Server server_set = null;
 	private Dialog_Map map_set = null;
 	private Dialog_Debug debug_set = null;
+	private Dialog_House house_set = null;
 	private ImageView appname;
 	
 	private int dayOffset = 1;
@@ -243,6 +245,16 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			}
 		});
 		
+		house_settings=(Button)findViewById(R.id.bt_house_settings);
+		house_settings.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				//Disconnect all opened sessions....
+				Tracer.v("Activity_Main.onclick()","Call to House settings screen");
+				house_set = new Dialog_House(Tracer, params, myself);
+				house_set.show();
+				return;
+			}
+		});
 		sync=(Button)findViewById(R.id.sync);
 		sync.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {

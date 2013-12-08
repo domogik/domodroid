@@ -20,8 +20,10 @@ package widgets;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
-import android.R;
+import org.domogik.domodroid.R;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,7 +38,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Graphical_Room extends FrameLayout implements OnTouchListener{
+import android.view.View.OnLongClickListener;
+import android.view.View.OnClickListener;
+
+public class Graphical_Room extends FrameLayout implements OnClickListener, OnLongClickListener{
 
 	private FrameLayout imgPan;
 	private LinearLayout background;
@@ -59,7 +64,7 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 		this.context = context;
 		this.widgetHandler=handler;
 		this.setPadding(5, 5, 5, 5);
-		setOnTouchListener(this);
+		setOnClickListener(this);
 		mytag="Graphical_Room("+id_room+")";
 		
 		//panel with border
@@ -68,16 +73,18 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("ltblack",background.getHeight()));
 
-
 		//panel to set img with padding left
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		imgPan.setPadding(20, 8, 20, 10);
+		
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
-
+		img.setOnLongClickListener(this);
+		img.setOnClickListener(this);
+		
 		//info panel
 		infoPan=new LinearLayout(context);
 		infoPan.setOrientation(LinearLayout.VERTICAL);
@@ -115,8 +122,7 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 	}
 	
 	
-	public boolean onTouch(View v, MotionEvent event) {
-		if((event.getAction() & MotionEvent.ACTION_MASK)==MotionEvent.ACTION_UP){
+	public void onClick(View v) {
 			Bundle b = new Bundle();
 			b.putInt("id", id_room);
 			b.putString("name",name_room);
@@ -124,7 +130,27 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 			Message msg = new Message();
 			msg.setData(b);
 			widgetHandler.sendMessage(msg);
-		}
-		return true;
+		return;
 	}
+	
+	public boolean onLongClick(View v) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+		alert.setTitle(R.string.Delete_feature_title);
+		alert.setMessage(R.string.Delete_feature_message);
+		alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog_customname, int whichButton) {
+				Tracer.get_engine().remove_one_room(id_room);
+				//TODO remove all feature in this are and his child room
+			}
+		});
+		alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog_customname, int whichButton) {
+				Tracer.e(mytag, "delete Canceled.");
+			}
+		});
+		alert.show();
+	return false;
+	
+}
+
 }

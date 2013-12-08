@@ -206,6 +206,13 @@
     <string name="usage_byusagecheckbox">Forcer par usage pour 0.3:</string>
 	<string name="unusable">Non disponible</string>
 	
+	<string name="house_settings">Configurer Maison</string>
+	<string name="house_bt_apply">Appliquer</string>
+	<string name="house_bt_cancel">Annuler</string>
+	<string name="house_explain">Cet écran permet la configuration de votre maison</string>
+	<string name="house_add_area">Ajouter une zone</string>
+	<string name="house_add_room">Ajouter une piece</string>
+	
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>
 	<string name="light_stat_1">Allumé</string>

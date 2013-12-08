@@ -155,7 +155,22 @@
 				    android:text="@string/debug_settings"
 	     		/>
 	    	</LinearLayout>
-
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="10dip" >
+                
+	            <!--  Add a button to allow house configuration -->
+            	<Button
+				    android:id="@+id/bt_house_settings"
+				    style="?android:attr/buttonStyleSmall"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/house_settings"
+	     		/>
+	    	</LinearLayout>
+	    	
         </LinearLayout>
         </ScrollView>
         <!-- End of general config/sync  menu slider -->

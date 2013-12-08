@@ -17,25 +17,29 @@
  */
 package widgets;
 
+import org.domogik.domodroid.R;
+
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import misc.tracerengine;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnClickListener;
 
-public class Graphical_Area extends FrameLayout implements OnTouchListener{
+public class Graphical_Area extends FrameLayout implements OnClickListener, OnLongClickListener{
 
 	private FrameLayout imgPan;
 	private LinearLayout background;
@@ -48,7 +52,8 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 	private int id_area;
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
-
+	private String mytag="";
+	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);
 		this.Tracer = Trac;
@@ -57,7 +62,9 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 		this.context = context;
 		this.widgetHandler=handler;
 		this.setPadding(5, 5, 5, 5);
-		setOnTouchListener(this);
+		setOnClickListener(this);
+		
+		mytag="Graphical_Area("+id_area+")";
 		//Log.d("Graphical_Area("+id+")","creating view for "+name_area+" "+description_area);
 		//panel with border	
 		background = new LinearLayout(context);
@@ -69,11 +76,14 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		imgPan.setPadding(5, 8, 10, 10);
+		
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
-
+		img.setOnLongClickListener(this);
+		img.setOnClickListener(this);
+		
 		//info panel
 		infoPan=new LinearLayout(context);
 		infoPan.setOrientation(LinearLayout.VERTICAL);
@@ -106,8 +116,7 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 	}
 
 	
-	public boolean onTouch(View v, MotionEvent event) {
-		if((event.getAction() & MotionEvent.ACTION_MASK)==MotionEvent.ACTION_UP){
+	public void onClick(View v) {
 			Bundle b = new Bundle();
 			b.putInt("id", id_area);
 			b.putString("name",name_area);
@@ -115,9 +124,30 @@ public class Graphical_Area extends FrameLayout implements OnTouchListener{
 			Message msg = new Message();
 			msg.setData(b);
 			widgetHandler.sendMessage(msg);
-		}
-		return true;
-	}	
+		return;
+	}
+
+
+	public boolean onLongClick(View v) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
+			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.get_engine().remove_one_area(id_area);
+					//TODO remove all room in this area
+					//TODO remove all feature in this are and his child room
+				}
+			});
+			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.e(mytag, "delete Canceled.");
+				}
+			});
+			alert.show();
+		return false;
+		
+	}
 
 
 }

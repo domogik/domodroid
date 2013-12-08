@@ -326,7 +326,70 @@ public class DomodroidDB {
 			curs.close();
 		return areas;
 	}
-
+	
+	public int requestlastidArea() {
+		String[] projection = {"description", "id", "name"};
+		Cursor curs=null;
+		int lastid = 0;
+		try {
+			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
+			curs.moveToLast();
+			lastid=curs.getInt(1);
+		} catch (Exception e) {
+			Tracer.e(mytag+"("+owner+")", "request last area error");
+			e.printStackTrace();
+		}
+		if(curs != null)
+			curs.close();
+		return lastid;
+	}
+	
+	public Entity_Room[] requestallRoom() {
+		Entity_Room[] rooms=null;
+		String[] projection = { "area_id", "description", "id", "name"};
+		Cursor curs=null;	
+		try {
+			//curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, "area_id = \'"+area_id+"\'", null, null);
+			curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM,
+					projection, 
+					null,
+					null,
+					null);
+			rooms=new Entity_Room[curs.getCount()];
+			int count=curs.getCount();
+			for(int i=0;i<count;i++) {
+				curs.moveToPosition(i);
+				rooms[i]=new Entity_Room(curs.getInt(0),curs.getString(1),
+						curs.getInt(2),curs.getString(3));
+			}
+		} catch (Exception e) {
+			Tracer.v(mytag+"("+owner+")","Exception requesting all rooms ");
+			e.printStackTrace();
+		}
+		curs.close();
+		return rooms;
+	}
+	public int requestidlastRoom() {
+		String[] projection = { "area_id", "description", "id", "name"};
+		Cursor curs=null;
+		int lastid = 0;
+		try {
+			//curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, "area_id = \'"+area_id+"\'", null, null);
+			curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM,
+					projection, 
+					null,
+					null,
+					null);
+			curs.moveToLast();
+			lastid=curs.getInt(2);
+			
+		} catch (Exception e) {
+			Tracer.v(mytag+"("+owner+")","request last room error");
+			e.printStackTrace();
+		}
+		curs.close();
+		return lastid;
+	}
 	public Entity_Room[] requestRoom(int area_id) {
 		Entity_Room[] rooms=null;
 		String[] projection = { "area_id", "description", "id", "name"};

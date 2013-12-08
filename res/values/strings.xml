@@ -206,6 +206,13 @@
 	<string name="usage_byusagecheckbox">Force by usage for 0.3:</string>
 	<string name="unusable">Not available</string>
 	
+	<string name="house_settings">House configuration</string>
+	<string name="house_bt_apply">Apply changes</string>
+	<string name="house_bt_cancel">Cancel</string>
+	<string name="house_explain">This screen allow house configuration</string>
+	<string name="house_add_area">Add an area</string>
+	<string name="house_add_room">Add a room</string>
+	
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>
 	<string name="light_stat_1">On</string>
@@ -237,7 +244,7 @@
 	<string name="portal">Portal</string>
 	<string name="scene">Scenes</string>
 	<string name="camera">Camera</string>
-	<string name="security_camera">Secutity Camera</string>
+	<string name="security_camera">Security Camera</string>
 	<string name="server">Server</string>
 	<string name="socket">Socket</string>
 	<string name="shutter">Shutter</string>

@@ -49,7 +49,8 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 	private int id_room;
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
-
+	private String mytag="";
+	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);
 		this.Tracer = Trac;
@@ -59,7 +60,8 @@ public class Graphical_Room extends FrameLayout implements OnTouchListener{
 		this.widgetHandler=handler;
 		this.setPadding(5, 5, 5, 5);
 		setOnTouchListener(this);
-
+		mytag="Graphical_Room("+id_room+")";
+		
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));

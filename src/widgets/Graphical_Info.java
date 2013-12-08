@@ -86,7 +86,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Activity context;
 	private Message msg;
 	private String wname;
-	private String mytag="";
+	private String mytag;
 	private String url = null;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
@@ -138,7 +138,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		Tracer.e("Graphical_Info Frame", "Get icone for usage : "+usage);
+		Tracer.e(mytag+" Frame", "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setTag("img");
 		img.setOnLongClickListener(this);
@@ -372,7 +372,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+						Tracer.e(mytag, "Customname Canceled.");
 					}
 				});
 				alert.show();
@@ -389,7 +389,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Binary_New", "delete Canceled.");
+					Tracer.e(mytag, "delete Canceled.");
 				}
 			});
 			alert.show();

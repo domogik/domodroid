@@ -86,7 +86,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private int argb = 0;
 	private String argbS = "";
 	private Message msg;
-	private String mytag = "";
+	private String mytag;
 	private String name;
 	private String wname;
 	private String type;
@@ -672,7 +672,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+						Tracer.e(mytag, "Customname Canceled.");
 					}
 				});
 				alert.show();
@@ -689,7 +689,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Binary_New", "delete Canceled.");
+					Tracer.e(mytag, "delete Canceled.");
 				}
 			});
 			alert.show();

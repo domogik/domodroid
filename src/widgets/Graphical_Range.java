@@ -390,7 +390,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+						Tracer.e(mytag, "Customname Canceled.");
 					}
 				});
 				alert.show();
@@ -407,7 +407,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e("Graphical_Binary_New", "delete Canceled.");
+					Tracer.e(mytag, "delete Canceled.");
 				}
 			});
 			alert.show();

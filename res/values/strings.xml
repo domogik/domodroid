@@ -191,6 +191,8 @@
 	<string name="server_ipHint">http://address-rinor</string>
 	<string name="server_PORT">--Domogik Rinor Port</string>
 	<string name="server_portHint">40405</string>
+	<string name="server_Path">--Access path</string>
+	<string name="server_PathHint">/</string>
 	<string name="server_Text2">--Auto-Update Timer:</string>
 	<string name="server_Text3">2 Secondes</string>
 	<string name="server_http_password">--Http auth password</string>

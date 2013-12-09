@@ -19,7 +19,7 @@ Widgets
     Auto-Updated with an asynchrone threading system and in real time with event
     Data widget with 2d chart engine
     A longClick on his name allow you to rename the widget.
-    A longClick on his icon allow you to remove the feature from every area/room.
+    A longClick on his icon allow you to remove the feature from this area/room.
 
 
 Map system

@@ -19,6 +19,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 	private Button OKButton;
 	private EditText localIP;
 	private EditText localPORT;
+	private EditText localPath;
 	private String format_urlAccess;
 	public static String urlAccess;
 	private TextView mProgressText1;
@@ -48,6 +49,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 		OKButton.setOnClickListener(this);
 		localIP = (EditText)findViewById(R.id.server_localIP);
 		localPORT = (EditText)findViewById(R.id.server_localPORT);
+		localPath = (EditText)findViewById(R.id.server_Path);
 		http_auth_username = (EditText)findViewById(R.id.server_http_user);
 		http_auth_password = (EditText)findViewById(R.id.server_http_password);
 		mProgressText1 = (TextView)findViewById(R.id.server_progress1);
@@ -62,6 +64,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 	public void get_params() {
 		localIP.setText(params.getString("rinorIP",null));
 		localPORT.setText(params.getString("rinorPort","40405"));
+		localPath.setText(params.getString("rinorPath",""));
 		mSeekBar1.setProgress(params.getInt("UPDATE_TIMER", 300)-secondeOffset);
 		http_auth_username.setText(params.getString("http_auth_username",null));
 		http_auth_password.setText(params.getString("http_auth_password",null));
@@ -77,7 +80,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 			try{
 				//Something has been changed : store values in params
 				prefEditor=params.edit();
-				if (localIP.getText().toString().equals("")){
+				if (localIP.getText().toString().equals("/")){
 					//TODO do something if it's null			
 				}
 				//Change rinor ip to add http:// if not 
@@ -86,18 +89,19 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 				}
 				prefEditor.putString("rinorIP",localIP.getText().toString());
 				prefEditor.putString("rinorPort",localPORT.getText().toString());
+				prefEditor.putString("rinorPath",localPath.getText().toString());
 				prefEditor.putString("http_auth_username",http_auth_username.getText().toString());
 				prefEditor.putString("http_auth_password",http_auth_password.getText().toString());
 				int period = mSeekBar1.getProgress();
 				if(period < secondeOffset)
 					period = secondeOffset;
 				prefEditor.putInt("UPDATE_TIMER", period);
-				urlAccess = localIP.getText().toString()+":"+localPORT.getText().toString();
+				urlAccess = localIP.getText().toString()+":"+localPORT.getText().toString()+localPath.getText().toString();
 				urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 				//Try to solve #1623
 				urlAccess = urlAccess.replaceAll(" ", "%20");
 				//add a '/' at the end of the IP address
-				if(urlAccess.lastIndexOf("/")==localIP.getText().toString().length()-1) 
+				if(urlAccess.lastIndexOf("/")==urlAccess.toString().length()-1) 
 					format_urlAccess = urlAccess;
 				else 
 					format_urlAccess = urlAccess.concat("/");

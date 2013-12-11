@@ -215,6 +215,7 @@
 	<string name="house_explain">Cet écran permet la configuration de votre maison</string>
 	<string name="house_add_area">Ajouter une zone</string>
 	<string name="house_add_room">Ajouter une piece</string>
+	<string name="house_add_widget">Ajouter un widget</string>
 	
 	<string name="State">Etat : </string>
 	<string name="light_stat_0">Eteint</string>

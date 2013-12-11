@@ -214,6 +214,7 @@
 	<string name="house_explain">This screen allow house configuration</string>
 	<string name="house_add_area">Add an area</string>
 	<string name="house_add_room">Add a room</string>
+	<string name="house_add_widget">Add a widget</string>
 	
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>

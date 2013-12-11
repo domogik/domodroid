@@ -95,7 +95,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private final Context context;
 	private Message msg;
 	private String wname;
-	private String mytag="";
+	private String mytag="Graphical_List";
 	private String url = null;
 	public FrameLayout container = null;
 	public static FrameLayout myself = null;

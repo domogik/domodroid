@@ -54,7 +54,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	private int id_room;
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
-	private String mytag="";
+	private String mytag="Graphical_Room";
 	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);

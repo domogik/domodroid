@@ -16,6 +16,7 @@ import widgets.Entity_Feature;
 import widgets.Entity_Map;
 import widgets.Entity_client;
 
+import org.domogik.domodroid.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 import misc.tracerengine;
 
 public class WidgetUpdate  {
@@ -598,8 +600,8 @@ public class WidgetUpdate  {
 						//stats request cannot be completed (broken link or terminal in standby ?)
 						//Will retry automatically in 2'05, if no events received
 						Tracer.e(mytag,"get stats : Rinor error <"+e.getMessage()+">");
-						//TODO make a Toast with error getMessage()
-						return null;
+						Toast.makeText(context,  "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+			        	return null;
 					}
 					//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));
 					//Tracer.d(mytag,"result : "+ json_widget_state.toString());

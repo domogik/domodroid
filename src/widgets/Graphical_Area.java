@@ -52,7 +52,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	private int id_area;
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
-	private String mytag="";
+	private String mytag="Graphical_Area";
 	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);

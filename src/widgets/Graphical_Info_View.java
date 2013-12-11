@@ -62,7 +62,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private Handler handler;
 	public boolean activate=false;
 	public boolean loaded=false;
-	private String mytag="";
+	private String mytag="Graphical_Info_View";
 	public FrameLayout container = null;
 	public View myself = null;
 	@SuppressLint("SimpleDateFormat")

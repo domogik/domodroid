@@ -286,7 +286,12 @@ public class DomodroidDB {
 		values.put("map", map);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_MAP, values);
 	}
-	
+	public void remove_one_place_type_in_Featureassociation(int id_room,String place_type) {
+		ContentValues values = new ContentValues();
+		values.put("place_id", id_room);
+		values.put("place_type", place_type);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_place_type_in_FEATURE_ASSOCIATION, values);
+	}
 	
 	
 	////////////////// REMOVE ALL
@@ -572,5 +577,7 @@ public class DomodroidDB {
 
 		return state;
 	}
+
+	
 
 }

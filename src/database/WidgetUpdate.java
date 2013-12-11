@@ -921,9 +921,13 @@ public class WidgetUpdate  {
 	public void remove_one_feature_in_FeatureMap(int id) {
 		domodb.remove_one_feature_in_FeatureMap(id);
 	}
+	public void remove_one_place_type_in_Featureassociation(int id_room, String place_type) {
+		domodb.remove_one_place_type_in_Featureassociation(id_room,place_type);
+	}
 	public Entity_Feature[] requestFeatures(){
 		return domodb.requestFeatures();		
 	}
+	
 	
 }
 

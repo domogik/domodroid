@@ -84,7 +84,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/house_add_area" />
+
+					<Spinner
+					    android:id="@+id/spin_list_area"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_weight="1" />
+
                </LinearLayout>
+               
+            	
+               
                <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -96,6 +106,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/house_add_room" />
+					<Spinner
+					    android:id="@+id/spin_list_room"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_weight="1" />
                </LinearLayout>
                <LinearLayout
                 android:layout_width="fill_parent"
@@ -108,6 +123,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/house_add_widget" />
+					<Spinner
+					    android:id="@+id/spin_list_feature"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_weight="1" />
                </LinearLayout>
                
            </LinearLayout> 

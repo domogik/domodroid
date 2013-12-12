@@ -154,6 +154,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		alertRoom.setView(name);
 		alertRoom.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
+				DomodroidDB domodb = new DomodroidDB(Tracer, context);
 				lastid = domodb.requestidlastRoom();
 				ContentValues values = new ContentValues();
 				values.put("area_id", (area_id+1));

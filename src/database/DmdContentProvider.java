@@ -392,7 +392,10 @@ public class DmdContentProvider extends ContentProvider {
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
 			break;
 		case REQUEST_FEATURE_ALL:
-			cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
+			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
+			cursor=mDB.getReadableDatabase().rawQuery(
+					"SELECT * FROM table_feature "
+					,null);
 			break;
 		case REQUEST_FEATURE_MAP:
 			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id",null);

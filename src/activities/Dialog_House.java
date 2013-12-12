@@ -86,7 +86,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		spinner_area = (Spinner) findViewById(R.id.spin_list_area);
 		spinner_room = (Spinner) findViewById(R.id.spin_list_room);
 		spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
-		DomodroidDB domodb = new DomodroidDB(Tracer, context);
+		domodb = new DomodroidDB(Tracer, context);
 		listArea = domodb.requestArea();
 		listRoom = domodb.requestallRoom();
 		listFeature = domodb.requestFeatures();
@@ -154,7 +154,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		alertRoom.setView(name);
 		alertRoom.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
-				DomodroidDB domodb = new DomodroidDB(Tracer, context);
 				lastid = domodb.requestidlastRoom();
 				ContentValues values = new ContentValues();
 				values.put("area_id", (area_id+1));
@@ -187,7 +186,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				values.put("name", name1.getText().toString());
 				//values.put("description", itemArray.getJSONObject(i).getString("description").toString());
 				//put the next available id from db here
-				DomodroidDB domodb = new DomodroidDB(Tracer, context);
 				int lastid = domodb.requestlastidArea();
 				values.put("id", lastid+1);
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);

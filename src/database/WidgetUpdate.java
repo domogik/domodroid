@@ -64,6 +64,8 @@ public class WidgetUpdate  {
 	
 	private Boolean sleeping = false;
 	private static Stats_Com stats_com = null; 
+	private String login;
+	private String password;
 	
 	//
 	// Table of handlers to notify
@@ -121,6 +123,9 @@ public class WidgetUpdate  {
 		this.Tracer = Trac;
 		this.context = context;
 		activated = true;
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		/*
 		if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -595,7 +600,7 @@ public class WidgetUpdate  {
 					JSONObject json_widget_state = null;
 					stats_com.add(Stats_Com.STATS_SEND, request.length());
 					try{
-						json_widget_state = Rest_com.connect(request);
+						json_widget_state = Rest_com.connect(request,login,password);
 					} catch (Exception e) {
 						//stats request cannot be completed (broken link or terminal in standby ?)
 						//Will retry automatically in 2'05, if no events received

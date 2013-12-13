@@ -35,6 +35,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -98,11 +99,14 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
-		
+	private String login;
+	private String password;
+	private SharedPreferences params;
+	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int period, int update, 
-			int widgetSize, int session_type, final String parameters,int place_id,String place_type) {
+			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -117,9 +121,13 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		this.parameters = parameters;
 		this.place_id= place_id;
 		this.place_type= place_type;
+		this.params=params;
 		mytag="Graphical_Info ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -190,7 +198,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
 			featurePan2.setPadding(5, 10, 5, 10);
 			//canvas
-			canvas = new Graphical_Info_View(Tracer,context);
+			canvas = new Graphical_Info_View(Tracer,context,params);
 			canvas.dev_id = dev_id;
 			canvas.state_key = state_key;
 			canvas.url = url;

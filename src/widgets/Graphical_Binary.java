@@ -30,6 +30,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -94,6 +95,9 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private String Value_1 = "1";
 	private String place_type;
 	private int place_id;
+	private SharedPreferences params;
+	private String login;
+	private String password;
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
@@ -102,7 +106,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, String usage, 
-			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type) throws JSONException {
+			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -121,6 +125,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		this.stateS = getResources().getText(R.string.State).toString();
 		this.place_id= place_id;
 		this.place_type= place_type;
+		this.params = params;
 		
 		mytag = "Graphical_Binary("+dev_id+")";
 		//get parameters		
@@ -216,7 +221,9 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		background.addView(featurePan);
 
 		this.addView(background);
-
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -355,7 +362,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			Tracer.i("Graphical_Binary","Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {
-				json_Ack = Rest_com.connect(Url2send);
+				json_Ack = Rest_com.connect(Url2send,login,password);
 			} catch (Exception e) {
 				Tracer.e("Graphical_Binary", "Rinor exception sending command <"+e.getMessage()+">");
 			}

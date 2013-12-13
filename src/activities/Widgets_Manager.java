@@ -132,7 +132,7 @@ public class Widgets_Manager {
 							feature.getParameters(),
 							feature.getDevice_type_id(),
 							params.getInt("UPDATE_TIMER",300),
-							widgetSize, mytype,id,zone);
+							widgetSize, mytype,id,zone,params);
 					onoff.container=tmpPan;
 					tmpPan.addView(onoff);
 					Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
@@ -146,7 +146,7 @@ public class Widgets_Manager {
 								feature.getParameters(),
 								feature.getDevice_type_id(),
 								params.getInt("UPDATE_TIMER",300),
-								widgetSize, mytype,id,zone);
+								widgetSize, mytype,id,zone,params);
 						onoff_New.container=tmpPan;
 						tmpPan.addView(onoff_New);
 						Tracer.i("Widgets_Manager","   ==> Graphical_Binary");
@@ -173,7 +173,7 @@ public class Widgets_Manager {
 						feature.getParameters(),
 						feature.getDevice_type_id(),
 						params.getInt("UPDATE_TIMER",300), 
-						widgetSize, mytype,id,zone);
+						widgetSize, mytype,id,zone,params);
 				variator.container=tmpPan;
 				tmpPan.addView(variator);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Range");
@@ -185,7 +185,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						feature.getParameters(),
 						feature.getDevice_type_id(),
-						widgetSize, mytype,id,zone);
+						widgetSize, mytype,id,zone,params);
 				trigger.container=tmpPan;
 				tmpPan.addView(trigger);
 				Tracer.i("Widgets_Manager","   ==> Graphical_Trigger");
@@ -213,7 +213,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters(),id,zone);
+						widgetSize, mytype, feature.getParameters(),id,zone,params);
 				info.setLayoutParams(layout_param);
 				info.container=tmpPan;
 				tmpPan.addView(info);
@@ -228,7 +228,7 @@ public class Widgets_Manager {
 						feature.getDevice_usage_id(),
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id(),id,zone);
+						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id(),id,zone,params);
 				list.setLayoutParams(layout_param);
 				list.container=tmpPan;
 				tmpPan.addView(list);
@@ -247,7 +247,7 @@ public class Widgets_Manager {
 							feature.getDevice_usage_id(),
 							0,
 							params.getInt("UPDATE_TIMER",300),
-							0, mytype, feature.getParameters(),id,zone);
+							0, mytype, feature.getParameters(),id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					tmpPan.addView(info);

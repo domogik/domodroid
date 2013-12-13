@@ -42,6 +42,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -116,13 +117,16 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	private String packageName ;
 	private String place_type;
 	private int place_id;
+	private String login;
+	private String password;
+	private SharedPreferences params;
 	
 		
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			String type, String address,
 			final String state_key, String url,String usage, int period, int update, 
-			int widgetSize, int session_type, final String parameters,String model_id,int place_id,String place_type) {
+			int widgetSize, int session_type, final String parameters,String model_id,int place_id,String place_type, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
@@ -138,14 +142,16 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		this.type = model[0];
 		this.place_id= place_id;
 		this.place_type= place_type;
-		
+		this.params=params;
 		packageName = context.getPackageName();
 		Graphical_List.myself = this;
 		this.session_type = session_type;
 		this.parameters = parameters;
 		mytag="Graphical_List ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
-		
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -365,7 +371,7 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 				Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 				JSONObject json_Ack = null;
 				try {
-					json_Ack = Rest_com.connect(Url2send);
+					json_Ack = Rest_com.connect(Url2send,login,password);
 				} catch (Exception e) {
 					Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
 				}

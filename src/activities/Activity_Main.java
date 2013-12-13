@@ -908,7 +908,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
 		}
 		if(dialog_sync == null)
-			dialog_sync = new Dialog_Synchronize(Tracer, this);
+			dialog_sync = new Dialog_Synchronize(Tracer, this,params);
 		dialog_sync.reload = reload;
 		dialog_sync.setOnDismissListener(sync_listener);
 		dialog_sync.setParams(params);

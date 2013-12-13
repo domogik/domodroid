@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.domogik.domodroid.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -90,12 +91,19 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private long startTimestamp = 0; 
 	private   OnClickListener listener = null;
 	private tracerengine Tracer = null;
+	private String login;
+	private String password;
+	private SharedPreferences params;
 	
 	@SuppressLint("HandlerLeak")
-	public Graphical_Info_View(tracerengine Trac, Context context){
+	public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params){
 		super(context);
 		invalidate();
 		this.Tracer=Trac;
+		this.params = params;
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		values = new Vector<Vector<Float>>();
 		activate=true;
 		mytag = "Graphical_Info_View";
@@ -554,7 +562,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 						startTimestamp+
 						"/to/"+
 						currentTimestamp+
-						"/interval/"+step+"/selector/avg");
+						"/interval/"+step+"/selector/avg",login,password);
 				} catch (Exception e) {
 					return null;
 				}

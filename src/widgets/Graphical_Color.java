@@ -118,6 +118,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private int session_type;
 	private String place_type;
 	private int place_id;
+	private String login;
+	private String password;
 	
 
 	@SuppressLint("HandlerLeak")
@@ -153,7 +155,9 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.place_id= place_id;
 		this.place_type= place_type;
 		mytag="Graphical_Color("+dev_id+")";
-		
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
@@ -593,7 +597,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			Tracer.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {
-				json_Ack = Rest_com.connect(Url2send);
+				json_Ack = Rest_com.connect(Url2send,login,password);
 			} catch (Exception e) {
 				Tracer.e(mytag, "Rest exception sending command : <"+e.getMessage()+">");
 			}

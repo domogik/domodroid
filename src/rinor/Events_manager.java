@@ -41,6 +41,8 @@ public class Events_manager {
 	private Boolean init_done = false;
 	private Boolean com_broken = false;
 	private Boolean sleeping = false;
+	private String login;
+	private String password;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
@@ -79,6 +81,9 @@ public class Events_manager {
 		//setOwner(owner, state_engine_handler);
 		mytag="Events";
 		urlAccess = params.getString("URL","1.1.1.1");
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		//The father's cache should already contain a list of devices features
 		this.state_engine_handler = state_engine_handler;
 		Tracer.w(mytag,"Events Manager initialized");
@@ -233,7 +238,7 @@ public class Events_manager {
 				stats_com.add(Stats_Com.EVENTS_SEND, request.length());
 				Tracer.w(mytag,"Requesting server <"+request+">");
 				try {
-					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
+					event = Rest_com.connect(request,login,password);		//Blocking request : we must have an answer to continue...
 					error=0;
 				} catch (Exception e) {
 					error = 1;
@@ -345,7 +350,7 @@ public class Events_manager {
 				try {
 					Tracer.w(mytag,"Freeing ticket <"+request+">");
 					stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-					event = Rest_com.connect(request);		//Blocking request : we must have an answer to continue...
+					event = Rest_com.connect(request,login,password);		//Blocking request : we must have an answer to continue...
 					stats_com.add(Stats_Com.EVENTS_RCV, event.length());
 					Tracer.w(mytag,"Received on free ticket = <"+event.toString()+">");
 				} catch (Exception e) {

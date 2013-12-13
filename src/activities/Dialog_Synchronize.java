@@ -36,17 +36,22 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	public Boolean reload = false;
 	private DomodroidDB db = null;
 	private tracerengine Tracer = null;
-
-	public Dialog_Synchronize(tracerengine Trac, Activity context) {
+	private String login;
+	private String password;
+	
+	public Dialog_Synchronize(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
 		this.context = context;
 		this.Tracer = Trac;
+		this.params = params;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_synchronize);
 		message = (TextView) findViewById(R.id.message);
 		cancelButton = (Button) findViewById(R.id.CancelButton);
 		cancelButton.setOnClickListener(this);
-		
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		handler = new  Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -118,12 +123,13 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		@Override
 		protected Void doInBackground(Void... params) {
 			//Requests
+			
 			try{
 				
 				// if API rinor >0.5 génération auto sinon classic
 				JSONObject json_rinor = null;
 				try {
-					json_rinor = Rest_com.connect(urlAccess);
+					json_rinor = Rest_com.connect(urlAccess,login,password);
 				} catch (Exception e) {
 					json_rinor = null;
 				}
@@ -145,7 +151,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				Tracer.d("Dialog_Synchronize", "urlAccess = <"+urlAccess+">");
 				
 				if(Rinor_Api_Version <=0.5){
-					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/");
+					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/",login,password);
 					if(json_AreaList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -154,7 +160,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					Tracer.d("Dialog_Synchronize", "AreaList = <"+json_AreaList.toString()+">");
 					
 					publishProgress(20);
-					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/");
+					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/",login,password);
 					if(json_RoomList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -163,7 +169,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					//Tracer.d("Dialog_Synchronize", "RoomList = <"+json_RoomList.toString()+">");
 					
 					publishProgress(40);
-					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
+					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list",login,password);
 					if(json_FeatureList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -171,14 +177,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					}
 					
 					publishProgress(60);
-					json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/");
+					json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/",login,password);
 					if(json_FeatureAssociationList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
 						return null;
 					}
 					publishProgress(80);
-					json_IconList = Rest_com.connect(urlAccess+"base/ui_config/list/");
+					json_IconList = Rest_com.connect(urlAccess+"base/ui_config/list/",login,password);
 					if(json_IconList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -199,7 +205,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					
 				}else{
 					// Fonction special Basilic domogik 0.3
-					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
+					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list",login,password);
 					if(json_FeatureList == null) {
 						// Cannot connect to Rinor server.....
 						handler.sendEmptyMessage(0);

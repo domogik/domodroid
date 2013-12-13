@@ -730,7 +730,7 @@ public class MapView extends View {
 				onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
 				label,feature.getId(),feature.getDevId(),feature.getState_key(),
 				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"");
+				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"",params);
 				onoff.container=(FrameLayout) panel_widget;
 				panel_widget.addView(onoff);
 				}
@@ -738,7 +738,7 @@ public class MapView extends View {
 				onoff_New = new Graphical_Binary_New(Tracer, context,feature.getAddress(),
 				label,feature.getId(),feature.getDevId(),feature.getState_key(),
 				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"");
+				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"",params);
 				onoff_New.container=(FrameLayout) panel_widget;
 				panel_widget.addView(onoff_New);
 				}
@@ -756,14 +756,14 @@ public class MapView extends View {
 			variator = new Graphical_Range(Tracer, context,feature.getAddress(),
 					label,feature.getId(),feature.getDevId(),feature.getState_key(),
 					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-					feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"");
+					feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"",params);
 			variator.container=(FrameLayout) panel_widget;
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
 			trigger = new Graphical_Trigger(Tracer, context,feature.getAddress(),
 					label,feature.getId(),feature.getDevId(),feature.getState_key(),
 					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-					feature.getParameters(),feature.getDevice_type_id(),0, mytype,0,"");
+					feature.getParameters(),feature.getDevice_type_id(),0, mytype,0,"",params);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
@@ -772,7 +772,7 @@ public class MapView extends View {
 					feature.getState_key(),params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),
-					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),0,"");
+					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),0,"",params);
 			info.container=(FrameLayout) panel_widget;
 			panel_widget.addView(info);}
 		 else if (feature.getValue_type().equals("list")) {
@@ -783,7 +783,7 @@ public class MapView extends View {
 					params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),
-					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),feature.getDevice_type_id(),0,"");
+					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),feature.getDevice_type_id(),0,"",params);
 			list.container=(FrameLayout) panel_widget;
 			panel_widget.addView(list);}
 		else if (feature.getState_key().equals("color")) {
@@ -816,7 +816,7 @@ public class MapView extends View {
 						feature.getDevice_usage_id(),
 						0,
 						params.getInt("UPDATE_TIMER",300),
-						0, mytype, feature.getParameters(),0,"");
+						0, mytype, feature.getParameters(),0,"",params);
 				info.container=(FrameLayout) panel_widget;
 				info.with_graph=false;
 				panel_widget.addView(info);}

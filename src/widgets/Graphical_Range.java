@@ -30,6 +30,7 @@ import org.domogik.domodroid.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -96,11 +97,14 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private Boolean realtime = false;
 	private int session_type;
 	private String stateS = "";
+	private String login;
+	private String password;
+	private SharedPreferences params;
 	
 	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,
 			String state_key, String url, String usage, 
 			String parameters, String model_id, int update, 
-			int widgetSize, int session_type,int place_id,String place_type) throws JSONException {
+			int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
 		this.address = address;
@@ -118,7 +122,10 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		stateThread = 1;
 		this.stateS = getResources().getText(R.string.State).toString();
 		mytag="Graphical_Range("+dev_id+")";
-		
+		this.params=params;
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 		command = jparam.getString("command");
@@ -326,7 +333,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			updating=3;
 			JSONObject json_Ack = null;
 			try {
-				json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress);
+				json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress,login,password);
 			} catch (Exception e) {
 				Tracer.e(mytag, "Rest exception getting state : <"+e.getMessage()+">");
 			}

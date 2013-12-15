@@ -106,8 +106,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		listareachoice.setSingleChoiceItems(char_list_zone, -1,
 		 new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int item) {
-		  //TODO item must be replace by the area Id of this id because Db could be altered
-			  area_id=item;
+		  //item is replaces by the area Id because Db could be altered by removing an area for example
+			  area_id=listArea[item].getId();
 		  dialog.cancel();
 		  }
 		 });
@@ -122,7 +122,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
 				lastid = domodb.requestidlastRoom();
 				ContentValues values = new ContentValues();
-				values.put("area_id", (area_id+1));
+				values.put("area_id", (area_id));
 				values.put("name", name.getText().toString());
 				values.put("description", "");
 				values.put("id", (lastid+1));
@@ -224,7 +224,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		spinner_room.setAdapter(room_adapter);
 
 		//3rd list feature to put somewhere
-		//TODO finish this part
 		ArrayList<String> list_Feature= new ArrayList<String>();
 		for (Entity_Feature feature : listFeature) {
 			list_Feature.add(feature.getName()+"-"+feature.getValue_type());

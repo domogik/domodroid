@@ -42,6 +42,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private Spinner spinner_area;
 	private Spinner spinner_room;
 	private Spinner spinner_feature;
+	private Spinner spinner_icon;
 	private SharedPreferences.Editor prefEditor;
 	private SharedPreferences params;
 	private Activity context;
@@ -86,6 +87,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		spinner_area = (Spinner) findViewById(R.id.spin_list_area);
 		spinner_room = (Spinner) findViewById(R.id.spin_list_room);
 		spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
+		//spinner_icon = (Spinner) findViewById(R.id.spin_list_icon);
 		// Loading spinner data from database
         loadSpinnerData();
         
@@ -145,8 +147,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		// Set an EditText view to get user input 
 		final EditText name1 = new EditText(getContext());
 		alertArea.setView(name1);
-		//final EditText description = new EditText(getContext());
-		//alert.add(description);
 		alertArea.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
 				ContentValues values = new ContentValues();
@@ -232,7 +232,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Feature);
 		feature_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_feature.setAdapter(feature_adapter);
-
+		
+		//4th list icon to associate with area or room
+		ArrayList<String> list_icon= new ArrayList<String>();
+		ArrayAdapter<String> icon_adapter =
+				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_icon);
+		icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		//spinner_icon.setAdapter(icon_adapter);
+		
 	}
 }
 

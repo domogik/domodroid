@@ -163,6 +163,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 
 		//first seekbar on/off
 		trigger = new Graphical_Trigger_Button(context);
+		//TODO change 100 because it' the source of http://tracker.domogik.org/issues/1822
 		trigger.setLayoutParams(new LinearLayout.LayoutParams(100,100));
 		trigger.setOnClickListener(this);
 

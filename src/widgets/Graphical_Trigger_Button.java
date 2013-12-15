@@ -24,6 +24,7 @@ public class Graphical_Trigger_Button extends LinearLayout{
 
 		sign = new ImageView(context);
 		sign.setImageResource(R.drawable.button_trigger_anim1);
+		//TODO change 40 because it' the source of http://tracker.domogik.org/issues/1822
 		sign.setLayoutParams(new LinearLayout.LayoutParams(40,40,Gravity.CENTER));
 		animation = new RotateAnimation(0,360,20,20);
 		animation.setDuration(2000);

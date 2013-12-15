@@ -831,7 +831,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			if(type.equals("root")){
 				ll_area.removeAllViews();
 				if(! by_usage) {
-					// Version 0.2 : display house, map and areas
+					// Version 0.2 or un-force by_usage : display house, map and areas
 					parent.addView(house_map);	// House & map
 					ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
 					parent.addView(ll_area);	//and areas
@@ -843,7 +843,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				}
 				
 			} else if(type.equals("house")) {
-				//Only possible if version 0.2 (the 'house' is never proposed to be clicked)
+				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				ll_area.removeAllViews();
 				parent.addView(house_map);	// House & map
 				ll_area = wAgent.loadAreaWidgets(this, ll_area, params);
@@ -853,15 +853,17 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				parent.addView(ll_activ);
 				
 			}else if(type.equals("statistics")) {
-				//Only possible if by_usage (the 'stats' is never proposed with version 0.2)
+				//Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
 				ll_area.removeAllViews();
 				ll_activ.removeAllViews();
 				ll_activ = wAgent.loadActivWidgets(this, -1, type, ll_activ ,params, mytype);
 				parent.addView(ll_activ);
 				
 			} else 	if(type.equals("area")) {
-				//Only possible if version 0.2 (the area 'usage' is never proposed to be clicked)
-				//parent.addView(house_map);	// House & map
+				//Only possible if Version 0.2 or un-force by_usage (the area 'usage' is never proposed to be clicked)
+				if(! by_usage){
+					parent.addView(house_map);	// House & map
+				}
 				ll_room.removeAllViews();
 				ll_room = wAgent.loadRoomWidgets(this, id, ll_room, params);
 				parent.addView(ll_room);

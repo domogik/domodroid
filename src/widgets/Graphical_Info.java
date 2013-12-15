@@ -332,6 +332,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 
 	public void onClick(View arg0) {
 		if(with_graph) {
+			//TODO correct 350px because it's the source of http://tracker.domogik.org/issues/1797
 			if(background.getHeight() != 350){
 				try {
 					background.removeView(featurePan2_buttons);

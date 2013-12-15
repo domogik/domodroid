@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Trigger_Button extends LinearLayout{
 	private boolean touching;
@@ -24,9 +25,9 @@ public class Graphical_Trigger_Button extends LinearLayout{
 
 		sign = new ImageView(context);
 		sign.setImageResource(R.drawable.button_trigger_anim1);
-		//TODO change 40 because it' the source of http://tracker.domogik.org/issues/1822
-		sign.setLayoutParams(new LinearLayout.LayoutParams(40,40,Gravity.CENTER));
-		animation = new RotateAnimation(0,360,20,20);
+		sign.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,Gravity.CENTER));
+		//TODO Correct the animation to solve http://tracker.domogik.org/issues/1822
+		animation = new RotateAnimation(0,360,sign.getHeight()/2,sign.getWidth()/2);
 		animation.setDuration(2000);
 		this.addView(sign);
 		

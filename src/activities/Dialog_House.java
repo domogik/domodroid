@@ -86,43 +86,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		spinner_area = (Spinner) findViewById(R.id.spin_list_area);
 		spinner_room = (Spinner) findViewById(R.id.spin_list_room);
 		spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
-		domodb = new DomodroidDB(Tracer, context);
-		listArea = domodb.requestArea();
-		listRoom = domodb.requestallRoom();
-		listFeature = domodb.requestFeatures();
-		
-		//1st list area where to put room
-		ArrayList<String> list_Area = new ArrayList<String>();
-		for (Entity_Area area : listArea) {
-			list_Area.add(area.getName());
-			}
-		ArrayAdapter<String> area_adapter =
-				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Area);
-		area_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_area.setAdapter(area_adapter);
-		
-		//2nd list room where to put widget but contain also the area
-		//widget could be place in an area or a room.
-		ArrayList<String> list_Room = new ArrayList<String>();
-		for (Entity_Room room : listRoom) {
-			list_Room.add(room.getName());
-			}
-		ArrayAdapter<String> room_adapter =
-				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Room);
-		room_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_room.setAdapter(room_adapter);
-
-		//3rd list feature to put somewhere
-		//TODO finish this part
-		ArrayList<String> list_Feature= new ArrayList<String>();
-		for (Entity_Feature feature : listFeature) {
-			list_Feature.add(feature.getName()+"-"+feature.getValue_type());
-			}
-		ArrayAdapter<String> feature_adapter =
-				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Feature);
-		feature_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_feature.setAdapter(feature_adapter);
-
+		// Loading spinner data from database
+        loadSpinnerData();
+        
 	}
 	
 	public void onClick(View v) {
@@ -161,6 +127,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				values.put("description", "");
 				values.put("id", (lastid+1));
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
+				loadSpinnerData();
 			}
 		});
 		alertRoom.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -189,6 +156,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				int lastid = domodb.requestlastidArea();
 				values.put("id", lastid+1);
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
+				loadSpinnerData();
 			}
 		});
 		alertArea.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -224,7 +192,48 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			alertRoom.show();
 			
 		}
+	
 	}
 	
+	private void loadSpinnerData() {
+		domodb = new DomodroidDB(Tracer, context);
+		
+		listArea = domodb.requestArea();
+		listRoom = domodb.requestallRoom();
+		listFeature = domodb.requestFeatures();
+		
+		//1st list area where to put room
+		ArrayList<String> list_Area = new ArrayList<String>();
+		for (Entity_Area area : listArea) {
+			list_Area.add(area.getName());
+			}
+		ArrayAdapter<String> area_adapter =
+				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Area);
+		area_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner_area.setAdapter(area_adapter);
+		
+		//2nd list room where to put widget but contain also the area
+		//widget could be place in an area or a room.
+		ArrayList<String> list_Room = new ArrayList<String>();
+		for (Entity_Room room : listRoom) {
+			list_Room.add(room.getName());
+			}
+		ArrayAdapter<String> room_adapter =
+				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Room);
+		room_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner_room.setAdapter(room_adapter);
+
+		//3rd list feature to put somewhere
+		//TODO finish this part
+		ArrayList<String> list_Feature= new ArrayList<String>();
+		for (Entity_Feature feature : listFeature) {
+			list_Feature.add(feature.getName()+"-"+feature.getValue_type());
+			}
+		ArrayAdapter<String> feature_adapter =
+				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Feature);
+		feature_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner_feature.setAdapter(feature_adapter);
+
+	}
 }
 

@@ -66,10 +66,6 @@ public class Rest_com {
     @SuppressWarnings("null")
 	public static JSONObject connect(String url,String login, String password)
     {
-    	//String login = params.getString("http_auth_username",null);
-    	//String password = params.getString("http_auth_password",null);
-    	//String login ="coin";
-    	//String password ="pan";
     	
     	tracerengine Tracer = null;
     	JSONObject json = null;

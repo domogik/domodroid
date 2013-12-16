@@ -44,10 +44,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 import misc.tracerengine;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -102,6 +104,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	private String login;
 	private String password;
 	private SharedPreferences params;
+	private int dpiClassification;
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -332,15 +335,17 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 
 	public void onClick(View arg0) {
 		if(with_graph) {
-			//TODO correct 350px because it's the source of http://tracker.domogik.org/issues/1797
-			if(background.getHeight() != 350){
+			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+			int sizeint=(int)size;
+			if(background.getHeight() != sizeint){
 				try {
 					background.removeView(featurePan2_buttons);
 					background.removeView(featurePan2);
 					
 				} catch (Exception e) {}
 				
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 				background.addView(featurePan2_buttons);
 				background.addView(featurePan2);
 				canvas.activate = true;
@@ -417,6 +422,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
 }
 
 

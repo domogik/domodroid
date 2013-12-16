@@ -135,7 +135,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_area(id_area);
-					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"ara");
+					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
 					//TODO remove all room in this area
 					//need to list them first and then delete also all feature in those rooms
 					}

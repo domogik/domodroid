@@ -17,4 +17,24 @@
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  -->
 <resources>
+<string-array name="icon_area_array">
+    <item>Area</item>
+    <item>Basement</item>
+ 	<item>Firstfloor</item>
+    <item>Garage</item>
+    <item>Garden</item>
+    <item>Groundfloor</item>
+    <item>Secondfloor</item>
+</string-array>
+
+<string-array name="icon_room_array">
+    <item>bathroom</item>
+    <item>bedroom</item>
+ 	<item>garage</item>
+    <item>office</item>
+    <item>kitchen</item>
+    <item>kidsroom</item>
+    <item>tvlounge</item>
+</string-array>
+
 </resources>

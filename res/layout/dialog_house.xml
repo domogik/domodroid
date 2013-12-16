@@ -73,22 +73,24 @@
 	        android:orientation="vertical">
 	        
             <!--  Layout for configuration -->
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dip" >
+
 					<Button
                         android:id="@+id/house_add_area"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
                         android:text="@string/house_add_area" />
 
 					<Spinner
 					    android:id="@+id/spin_list_area"
 					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
+					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
 
                </LinearLayout>
@@ -104,12 +106,12 @@
                         android:id="@+id/house_add_room"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
                         android:text="@string/house_add_room" />
 					<Spinner
 					    android:id="@+id/spin_list_room"
 					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
+					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>
                <LinearLayout
@@ -121,12 +123,12 @@
                         android:id="@+id/house_add_widget"
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
                         android:text="@string/house_add_widget" />
 					<Spinner
 					    android:id="@+id/spin_list_feature"
 					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
+					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>
                
@@ -135,10 +137,10 @@
 			<LinearLayout
 					    android:id="@+id/layout_buttons"
 				        android:layout_width="fill_parent"
-				        android:layout_height="40dp"
+				        android:layout_height="wrap_content"
 				        android:layout_gravity="bottom"
 				        android:orientation="horizontal"
-				         >
+				        android:paddingTop="10dip"  >
 		
 				<Button
 				    android:id="@+id/house_OK"

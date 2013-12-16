@@ -56,11 +56,11 @@ public class Graphics_Manager {
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_off;}
 			else if(usage.equals("window")){return R.drawable.usage_window_off;}
 			//room
-			else if(usage.equals("kitchen")){return R.drawable.room_kitchen;}
 			else if(usage.equals("bathroom")){return R.drawable.room_bathroom;}
-			else if(usage.equals("kidsroom")){return R.drawable.room_kidsroom;}
 			else if(usage.equals("bedroom")){return R.drawable.room_bedroom;}
 			else if(usage.equals("garage")){return R.drawable.room_garage;}
+			else if(usage.equals("kidsroom")){return R.drawable.room_kidsroom;}
+			else if(usage.equals("kitchen")){return R.drawable.room_kitchen;}
 			else if(usage.equals("office")){return R.drawable.room_office;}
 			else if(usage.equals("tvlounge")){return R.drawable.room_tvlounge;}
 			else if(usage.equals("usage")){return R.drawable.logo;}

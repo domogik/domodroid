@@ -26,8 +26,7 @@ public class Graphical_Trigger_Button extends LinearLayout{
 		sign = new ImageView(context);
 		sign.setImageResource(R.drawable.button_trigger_anim1);
 		sign.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,Gravity.CENTER));
-		//TODO Correct the animation to solve http://tracker.domogik.org/issues/1822
-		animation = new RotateAnimation(0,360,sign.getHeight()/2,sign.getWidth()/2);
+		animation = new RotateAnimation(0.0f, 360.0f,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,0.5f);
 		animation.setDuration(2000);
 		this.addView(sign);
 		

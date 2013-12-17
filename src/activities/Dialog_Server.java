@@ -84,7 +84,7 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 					//TODO do something if it's null			
 				}
 				//Change rinor ip to add http:// if not 
-				if (!localIP.getText().toString().startsWith("http://")){
+				if (!localIP.getText().toString().toUpperCase().startsWith("HTTP://")){
 					localIP.setText("http://"+localIP.getText().toString());
 				}
 				prefEditor.putString("rinorIP",localIP.getText().toString());

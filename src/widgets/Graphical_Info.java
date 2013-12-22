@@ -282,6 +282,7 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
 						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
+						//TODO solve #1821 http://tracker.domogik.org/issues/1821formatedValue
 						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(Graphics_Manager.Names_conditioncodes(Integer.parseInt(msg.getData().getString("message"))));
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");

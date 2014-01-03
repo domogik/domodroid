@@ -181,7 +181,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		prefEditor.commit();
 		
 		Tracer.set_profile(params);
-		
+		// Create .nomedia file, that will prevent Android image gallery from showing domodroid file
+		String nomedia = Environment.getExternalStorageDirectory()+"/domodroid/.nomedia";
+			try {
+				if (! (new File(nomedia).exists())) {
+					new FileOutputStream(nomedia).close();
+				}
+			}
+				catch(Exception e) {
+			}
 		//option
 		appname = (ImageView)findViewById(R.id.app_name);
 		

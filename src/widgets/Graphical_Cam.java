@@ -32,9 +32,8 @@ import android.os.Bundle;
 import android.os.Message;
 import misc.tracerengine;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -43,7 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLongClickListener{
+public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLongClickListener{
 
 	private FrameLayout imgPan;
 	private LinearLayout background;
@@ -75,7 +74,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		this.session_type = session_type;
 		this.place_id= place_id;
 		this.place_type= place_type;
-		setOnTouchListener(this);
+		setOnClickListener(this);
 		mytag="Graphical_Boolean("+dev_id+")";
 		
 		this.setPadding(5, 5, 5, 5);
@@ -103,6 +102,7 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(R.drawable.camera);
 		img.setTag("img");
+		img.setOnClickListener(this);
 		img.setOnLongClickListener(this);
 
 		// info panel
@@ -142,19 +142,17 @@ public class Graphical_Cam extends FrameLayout implements OnTouchListener, OnLon
 
 
 
-	public boolean onTouch(View v, MotionEvent event) {
+	public void onClick(View v) {
 		if(!url.equals(null)){
-			if((event.getAction() & MotionEvent.ACTION_MASK)==MotionEvent.ACTION_UP){
-				Intent intent = new Intent(context,Activity_Cam.class);
-				Bundle b = new Bundle();
-				b.putString("url", url);
-				Tracer.e("tag",""+url);
-				b.putString("name",name_cam);
-				intent.putExtras(b);
-				context.startActivity(intent);
+			Intent intent = new Intent(context,Activity_Cam.class);
+			Bundle b = new Bundle();
+			b.putString("url", url);
+			Tracer.e("tag",""+url);
+			b.putString("name",name_cam);
+			intent.putExtras(b);
+			context.startActivity(intent);
 			}
-		}
-		return true;
+		return;
 	}
 	public boolean onLongClick(View v) {
 		if(v.getTag().equals("namedevices")) {

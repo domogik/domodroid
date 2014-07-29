@@ -711,7 +711,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 
 
 	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -486,13 +486,10 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 
 
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		
 	}
 
 
 	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

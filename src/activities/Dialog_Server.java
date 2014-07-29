@@ -1,10 +1,14 @@
 package activities;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.domogik.domodroid.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import misc.tracerengine;
+import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -91,6 +95,17 @@ public class Dialog_Server extends Dialog implements OnClickListener,OnSeekBarCh
 				prefEditor.putString("rinorPort",localPORT.getText().toString());
 				prefEditor.putString("rinorPath",localPath.getText().toString());
 				prefEditor.putString("http_auth_username",http_auth_username.getText().toString());
+				//TODO try to solve #1835
+				//String encrypted = null;
+				//try {
+					//MessageDigest digest = MessageDigest.getInstance("SHA-256");
+					//digest.reset();
+					//digest.update(http_auth_password.getText().toString().getBytes());
+					//encrypted = Base64.encodeToString(digest.digest(), Base64.DEFAULT);
+				//} catch (NoSuchAlgorithmException e) {
+					//e.printStackTrace();
+				//}
+				//prefEditor.putString("http_auth_password",encrypted);
 				prefEditor.putString("http_auth_password",http_auth_password.getText().toString());
 				int period = mSeekBar1.getProgress();
 				if(period < secondeOffset)

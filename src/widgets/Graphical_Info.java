@@ -420,7 +420,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

@@ -515,10 +515,18 @@ public class MapView extends View {
 				
 				if(featureMap.getValue_type().equals("string") && (! featureMap.getState_key().equals("color"))){
 					if(! featureMap.getDevice_feature_model_id().contains("camera")) {
+						String value;
 						for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 							paint_text.setTextSize(texsize);
-							canvasWidget.drawText(featureMap.getCurrentState(), 
+							try {
+								Tracer.d(mytag,"Try to get value translate from R.STRING" );
+								value=context.getString((Graphics_Manager.getStringIdentifier(getContext(), featureMap.getCurrentState().toLowerCase())));
+							}catch (Exception e1) {
+								Tracer.d(mytag,"Nothing in R.STRING for "+featureMap.getCurrentState() );
+							value=(featureMap.getCurrentState());
+							}
+							canvasWidget.drawText(value, 
 									(featureMap.getPosx()*currentScale)+text_Offset_X, 
 									(featureMap.getPosy()*currentScale)+text_Offset_Y, 
 									paint_text);
@@ -575,7 +583,7 @@ public class MapView extends View {
 						else if( (featureMap.getState_key().equals("condition-code")))
 							//Add try catch to avoid other case that make #1794
 							try {
-								value=context.getString(Graphics_Manager.Names_conditioncodes(Integer.parseInt(featureMap.getCurrentState())));
+								value=context.getString(Graphics_Manager.Names_conditioncodes(getContext(),Integer.parseInt(featureMap.getCurrentState())));
 							}catch (Exception e1) {
 								value=featureMap.getCurrentState();
 							}

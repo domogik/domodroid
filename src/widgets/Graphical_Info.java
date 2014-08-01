@@ -278,21 +278,32 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
 						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
 						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
 						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
 						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("condition-code") == true) value.setText(Graphics_Manager.Names_conditioncodes((int)formatedValue));
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
+						else if(state_key.equalsIgnoreCase("condition-code") == true)
+							//Add try catch to avoid other case that make #1794
+							try {
+								value.setText(Graphics_Manager.Names_conditioncodes(getContext(),(int)formatedValue));
+							}catch (Exception e1) {
+								value.setText(loc_Value);
+							}
 						else value.setText(loc_Value);
 						}
 						value.setAnimation(animation);
 					} catch (Exception e) {
 						// It's probably a String that could'nt be converted to a float
 						Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
-						//TODO try to translate value if state_key.equalsIgnoreCase("condition-text")
+						try {
+							Tracer.d(mytag,"Try to get value translate from R.STRING" );
+							value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
+						}catch (Exception e1) {
+							Tracer.d(mytag,"Nothing in R.STRING for "+loc_Value );
 						value.setText(loc_Value);
+						}
+						
 						
 					}
 				} else if(msg.what == 9998) {

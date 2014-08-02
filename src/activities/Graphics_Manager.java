@@ -208,7 +208,6 @@ public class Graphics_Manager {
 			 * nanoztag
 			 * portal
 			 * scene
-			 * socket
 			 * shutter
 			 * water
 			 * window
@@ -221,6 +220,7 @@ public class Graphics_Manager {
 			else if(usage.equals("light")){return R.drawable.map_usage_light_off;}
 			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}
 			else if(usage.equals("server")){return R.drawable.map_usage_server_off;}
+			else if(usage.equals("socket")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("telephony")){return R.drawable.map_usage_telephony_off;}//TODO need an on/off icon
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
 			else if(usage.equals("tv")){return R.drawable.map_usage_tv_off;}
@@ -237,6 +237,7 @@ public class Graphics_Manager {
 			else if(usage.equals("light")){return R.drawable.map_usage_light_on;}
 			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_on;}
 			else if(usage.equals("server")){return R.drawable.map_usage_server_on;}
+			else if(usage.equals("socket")){return R.drawable.map_usage_appliance_on;}
 			else if(usage.equals("telephony")){return R.drawable.map_usage_telephony_off;}//TODO need an on/off icon
 			else if(usage.equals("temperature")){return R.drawable.map_usage_temperature;}
 			else if(usage.equals("tv")){return R.drawable.map_usage_tv_on;}
@@ -250,6 +251,7 @@ public class Graphics_Manager {
 	public static int getStringIdentifier(Context context, String name) {
 		//To avoid space in name in strings.xml
 		name=name.replace(" ", "_");
+		context.getResources().getIdentifier(name, "drawable", context.getPackageName());
 		return context.getResources().getIdentifier(name, "string", context.getPackageName());
 	}
 

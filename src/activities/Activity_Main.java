@@ -287,8 +287,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					if(((Dialog_Synchronize)dialog).need_refresh) {
 						// Sync has been successful : Force to refresh current main view
 						Tracer.d("Activity_Main","sync dialog requires a refresh !");
-						//TODO looks like it his here that we have #1548 http://tracker.domogik.org/issues/1548
-						/* */
 						reload = true;	// Sync being done, consider shared prefs are OK
 						parent.removeAllViews();
 						if(widgetUpdate != null) {

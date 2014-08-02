@@ -840,6 +840,7 @@ public class MapView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		//TODO correct #1594 somewhere around here 
 		super.onDraw(canvas);
 		origin = canvas.getMatrix();
 		origin.postConcat(mat.matrix);

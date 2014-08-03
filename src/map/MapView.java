@@ -674,8 +674,10 @@ public class MapView extends View {
 						argbS="#000000";
 					} else if(argbS.equals("on")) {
 						argbS=params.getString("COLORRGB", "#FFFFFF");	//Restore last known color, White by default
-						
-					} 
+					} else{
+						//To avoid http://tracker.domogik.org/issues/1972 here
+						argbS="#FFFFFF";
+					}
 					//Tracer.e("MapView","Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
 					//Draw first a black background...
 					paint_color.setColor(Color.BLACK);
@@ -688,7 +690,7 @@ public class MapView extends View {
 					canvasWidget.drawRect(r, paint_color);
 					
 					//And draw real color inside the 1st one
-					//TODO find #1972 here
+					
 					paint_color.setColor(Color.parseColor(argbS));
 					left+=3;
 					top+=3;

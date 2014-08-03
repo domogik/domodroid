@@ -21,17 +21,17 @@ import android.widget.TextView;
 
 public class Activity_Cam extends Activity{
 	private MjpegViewAsync mv;
-	private LinearLayout activity;
-	private FrameLayout title;
-	private LinearLayout infoPan;
-	private FrameLayout viewPan;
-	private TextView name;
-	private TextView frameRate;
+	private LinearLayout LL_activity;
+	private FrameLayout FL_title;
+	private LinearLayout LL_infoPan;
+	private FrameLayout FL_viewPan;
+	private TextView TV_name;
+	private TextView TV_frameRate;
 	private Handler handler;
 	private String name_cam;
 	private String url;
-	private ImageView img;
-	private FrameLayout imgPan;
+	private ImageView IV_img;
+	private FrameLayout FL_imgPan;
     
 	
 	public void onCreate(Bundle icicle) {
@@ -43,49 +43,49 @@ public class Activity_Cam extends Activity{
 		float scale = getResources().getDisplayMetrics().density; 
 
 		//activity
-		activity = new LinearLayout(this);
-		activity.setOrientation(LinearLayout.VERTICAL);
+		LL_activity = new LinearLayout(this);
+		LL_activity.setOrientation(LinearLayout.VERTICAL);
 
 		//create title layout
-		title = new FrameLayout(this);
-		title.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int) (40*scale)));
-		title.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",(int) (40*scale)));
-		activity.addView(title);
+		FL_title = new FrameLayout(this);
+		FL_title.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int) (40*scale)));
+		FL_title.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",(int) (40*scale)));
+		LL_activity.addView(FL_title);
 		
 		//panel to set img with padding left
-		imgPan = new FrameLayout(this);
-		imgPan.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,Gravity.RIGHT));
-		imgPan.setPadding(0, 8, 8, 0);
+		FL_imgPan = new FrameLayout(this);
+		FL_imgPan.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,Gravity.RIGHT));
+		FL_imgPan.setPadding(0, 8, 8, 0);
 		//img
-		img = new ImageView(this);
-		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-		img.setBackgroundResource(R.drawable.app_name);
-		imgPan.addView(img);
-		title.addView(imgPan);
+		IV_img = new ImageView(this);
+		IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+		IV_img.setBackgroundResource(R.drawable.app_name);
+		FL_imgPan.addView(IV_img);
+		FL_title.addView(FL_imgPan);
 		
 		//video panel
-		viewPan = new FrameLayout(this);
-		viewPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		FL_viewPan = new FrameLayout(this);
+		FL_viewPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 
 		//info panel
-		infoPan=new LinearLayout(this);
-		infoPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		infoPan.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-		infoPan.setPadding(0, 0, 0, 20);
+		LL_infoPan=new LinearLayout(this);
+		LL_infoPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		LL_infoPan.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+		LL_infoPan.setPadding(0, 0, 0, 20);
 
 
 		//name of room
-		name=new TextView(this);
-		name.setText("Camera: "+name_cam);
-		name.setTextSize(15);
-		name.setTextColor(Color.WHITE);
-		name.setPadding(0, 0, 15, 0);
+		TV_name=new TextView(this);
+		TV_name.setText("Camera: "+name_cam);
+		TV_name.setTextSize(15);
+		TV_name.setTextColor(Color.WHITE);
+		TV_name.setPadding(0, 0, 15, 0);
 
 
 		//description
-		frameRate=new TextView(this);
-		frameRate.setPadding(15, 0, 0, 0);
-		frameRate.setText("Frame Rate: 0 Fps");
+		TV_frameRate=new TextView(this);
+		TV_frameRate.setPadding(15, 0, 0, 0);
+		TV_frameRate.setText("Frame Rate: 0 Fps");
 
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -93,13 +93,13 @@ public class Activity_Cam extends Activity{
 		mv = new MjpegViewAsync(this);
 		mv.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		
-		infoPan.addView(name);
-		infoPan.addView(frameRate);
-		viewPan.addView(mv);
-		viewPan.addView(infoPan);
-		activity.addView(viewPan);
+		LL_infoPan.addView(TV_name);
+		LL_infoPan.addView(TV_frameRate);
+		FL_viewPan.addView(mv);
+		FL_viewPan.addView(LL_infoPan);
+		LL_activity.addView(FL_viewPan);
 		
-		setContentView(activity);        
+		setContentView(LL_activity);        
 		try {
 			mv.setSource(MjpegInputStream.read(url));
 		} catch (Exception e) {
@@ -112,7 +112,7 @@ public class Activity_Cam extends Activity{
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				frameRate.setText("Frame Rate: "+msg.what+" Fps");
+				TV_frameRate.setText("Frame Rate: "+msg.what+" Fps");
 			}	
 		};
 		mv.setHandler(handler);

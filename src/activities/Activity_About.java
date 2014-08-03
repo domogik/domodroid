@@ -45,12 +45,12 @@ public class Activity_About extends Activity{
 		
 		setContentView(R.layout.activity_help);
 		//display domogik version
-		TextView domogikversionText = (TextView) findViewById(R.id.domogikversionText);
-		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		domogikversionText.setText("Domogik version: "+params.getString("DOMOGIK-VERSION", ""));
+		TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
+		SharedPreferences SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		TV_domogikversionText.setText("Domogik version: "+SP_params.getString("DOMOGIK-VERSION", ""));
 		//display domodroid version
-		TextView versionText = (TextView) findViewById(R.id.versionText);
-		if (versionText != null) {
+		TextView TV_versionText = (TextView) findViewById(R.id.versionText);
+		if (TV_versionText != null) {
 			//set text in the activity_help versiontText textview
 			//it's a concatenation of version from string.xml, the versionCode and versionName from AndroidManifest.xml
 			String vcs = "??";
@@ -58,12 +58,12 @@ public class Activity_About extends Activity{
 			int vc = getVersionCode();
 			if(vc != -1)
 				vcs=Integer.toString(vc);
-			versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
+			TV_versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
 		}
 		
 		//titlebar
-		final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
-		titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
+		final FrameLayout FL_titlebar = (FrameLayout) findViewById(R.id.TitleBar);
+		FL_titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
 		
 		//power management
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);

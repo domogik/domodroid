@@ -198,10 +198,9 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		Tracer.e("Graphical_Info Frame", "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-
-
+		img.setTag("img");
+		img.setOnLongClickListener(this);
 		img.setOnClickListener(this);
-
 
 
 		// info panel
@@ -216,7 +215,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
-
+		nameDevices.setTag("namedevices");
 		nameDevices.setOnLongClickListener(this);
 		//nameDevices.setLines(1);
 

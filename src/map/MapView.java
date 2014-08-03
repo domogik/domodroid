@@ -26,6 +26,7 @@ import widgets.Graphical_Boolean;
 import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
 import widgets.Graphical_Info;
+import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
@@ -99,6 +100,7 @@ public class MapView extends View {
 	private Graphical_Binary onoff;
 	private Graphical_Binary_New onoff_New;
 	private Graphical_Info info;
+	private Graphical_Info_with_achartengine info1;
 	private Graphical_Boolean bool;
 	private Graphical_Color colorw;
 	private Graphical_List list;
@@ -780,14 +782,26 @@ public class MapView extends View {
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
-			info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),
+			if (params.getBoolean("Graph_CHOICE",false)==true) {
+				info1= new Graphical_Info_with_achartengine(Tracer, context,feature.getId(),feature.getDevId(),
 					label,
 					feature.getState_key(),params.getString("URL","1.1.1.1"),
 					feature.getDevice_usage_id(),
 					params.getInt("GRAPH",3),
 					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),0,"",params);
-			info.container=(FrameLayout) panel_widget;
-			panel_widget.addView(info);}
+				info1.container=(FrameLayout) panel_widget;
+				panel_widget.addView(info1);
+				}else{
+				info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),
+						label,
+						feature.getState_key(),params.getString("URL","1.1.1.1"),
+						feature.getDevice_usage_id(),
+						params.getInt("GRAPH",3),
+						params.getInt("UPDATE",300),0, mytype, feature.getParameters(),0,"",params);
+				info.container=(FrameLayout) panel_widget;
+				panel_widget.addView(info);
+				}
+			}
 		 else if (feature.getValue_type().equals("list")) {
 			list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
 					feature.getDevice_type_id(),	//Added by Doume to know the 'techno'

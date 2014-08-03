@@ -19,6 +19,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 	private Button cancelButton;
 	private Button OKButton;
 	private CheckBox WIDGET_CHOICEcheckbox; //Debug option
+	private CheckBox Graph_CHOICEcheckbox; //Debug option
 	private CheckBox twocollandscapecheckbox; //if activate 2col will be forbid
 	private CheckBox twocolportraitcheckbox; //if activate 2col will be forbid
 	private CheckBox byusagecheckbox;
@@ -42,6 +43,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 		OKButton.setTag("usage_ok");
 		OKButton.setOnClickListener(this);
 		WIDGET_CHOICEcheckbox = (CheckBox)findViewById(R.id.WIDGET_CHOICEcheckbox);
+		Graph_CHOICEcheckbox = (CheckBox)findViewById(R.id.Graph_CHOICEcheckbox);
 		twocollandscapecheckbox = (CheckBox)findViewById(R.id.twocollandscapecheckbox);
 		twocolportraitcheckbox = (CheckBox)findViewById(R.id.twocolportraitcheckbox);
 		byusagecheckbox =(CheckBox)findViewById(R.id.usage_byusagecheckbox);
@@ -52,6 +54,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 
 	public void get_params() {
 		WIDGET_CHOICEcheckbox.setChecked(params.getBoolean("WIDGET_CHOICE",false));
+		Graph_CHOICEcheckbox.setChecked(params.getBoolean("Graph_CHOICE",false));
 		twocollandscapecheckbox.setChecked(params.getBoolean("twocol_lanscape",false));
 		twocolportraitcheckbox.setChecked(params.getBoolean("twocol_portrait",false));
 		byusagecheckbox.setChecked(params.getBoolean("BY_USAGE",false));
@@ -67,6 +70,7 @@ public class Dialog_Usage extends Dialog implements OnClickListener {
 				//Something has been changed : store values in params
 				prefEditor=params.edit();
 				prefEditor.putBoolean("WIDGET_CHOICE", WIDGET_CHOICEcheckbox.isChecked());
+				prefEditor.putBoolean("Graph_CHOICE", Graph_CHOICEcheckbox.isChecked());
 				prefEditor.putBoolean("twocol_lanscape", twocollandscapecheckbox.isChecked());
 				prefEditor.putBoolean("twocol_portrait", twocolportraitcheckbox.isChecked());
 				prefEditor.putBoolean("BY_USAGE", byusagecheckbox.isChecked());

@@ -152,6 +152,7 @@
 	<string name="usage_bt_cancel">Annuler</string>
 	<string name="usage_explain">Cet écran permet la configuration du mode widget</string>
 	<string name="widget_choice">Widget alternatif:</string>
+	<string name="graph_choice">Graph alternatif:</string>
 	<string name="twocollandscapecheckbox">Interdire 2 colonnes en paysage:</string>	
    	<string name="twocolportraitcheckbox">Interdire 2 colonnes en portrait:</string>	
     <string name="usage_byusagecheckbox">Forcer par usage pour 0.3:</string>

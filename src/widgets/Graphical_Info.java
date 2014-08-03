@@ -50,7 +50,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnTouchListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -65,7 +64,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLongClickListener, OnClickListener {
+public class Graphical_Info extends FrameLayout implements OnLongClickListener, OnClickListener {
 
 
 	private FrameLayout imgPan;
@@ -157,7 +156,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setTag("img");
 		img.setOnLongClickListener(this);
-		img.setOnTouchListener(this);
 		img.setOnClickListener(this);
 		
 		// info panel
@@ -428,10 +426,6 @@ public class Graphical_Info extends FrameLayout implements OnTouchListener, OnLo
 		}
 		return false;
 		
-	}
-
-	public boolean onTouch(View v, MotionEvent event) {
-		return false;
 	}
 	
 }

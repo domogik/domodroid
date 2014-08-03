@@ -411,6 +411,8 @@ public class Graphical_Binary_New extends FrameLayout implements OnLongClickList
 					//Tracer.get_engine().remove_one_feature_association(id);
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					removeAllViewsInLayout ();	
+					postInvalidate();
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

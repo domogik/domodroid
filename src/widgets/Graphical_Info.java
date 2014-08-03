@@ -416,6 +416,7 @@ public class Graphical_Info extends FrameLayout implements OnLongClickListener, 
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 					 removeAllViewsInLayout ();
+					 postInvalidate();
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

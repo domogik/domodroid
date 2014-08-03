@@ -607,6 +607,29 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		
 	}
 
+	public void onClick(View arg0) {
+		if(with_graph) {
+			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+			int sizeint=(int)size;
+			if(background.getHeight() != sizeint){
+				try {
+					background.removeView(chartContainer);
+					
+				} catch (Exception e) {}
+				
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
+				background.addView(chartContainer);
+
+			}
+			else{
+				background.removeView(chartContainer);
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+			}
+		}
+		return;
+	}
+	
 	public boolean onLongClick(View v) {
 		if(v.getTag().equals("namedevices")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -638,6 +661,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 					//Tracer.get_engine().remove_one_feature_association(id);
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					removeAllViewsInLayout ();	
+					postInvalidate();
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -650,31 +675,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		return false;
 		
 	}
-
-	public void onClick(View arg0) {
-		if(with_graph) {
-			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
-			int sizeint=(int)size;
-			if(background.getHeight() != sizeint){
-				try {
-					background.removeView(chartContainer);
-					
-				} catch (Exception e) {}
-				
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-				background.addView(chartContainer);
-
-			}
-			else{
-				background.removeView(chartContainer);
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-			}
-		}
-		return;
-	}
-	
-
 }
 
 

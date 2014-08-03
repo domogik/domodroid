@@ -440,6 +440,10 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		return (float)tmp/p;
 	}
 
+
+	public void onClick(View v) {
+	}
+	
 	public boolean onLongClick(View v) {
 		if(v.getTag().equals("namedevices")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -471,6 +475,8 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 					//Tracer.get_engine().remove_one_feature_association(id);
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
+					removeAllViewsInLayout ();	
+					postInvalidate();
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -484,14 +490,10 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		
 	}
 
-
-	public void onClick(View v) {
-	}
-
-
 	public boolean onTouch(View v, MotionEvent event) {
 		return false;
 	}
+
 }
 
 

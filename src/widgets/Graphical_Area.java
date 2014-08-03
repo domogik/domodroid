@@ -138,7 +138,9 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
 					//TODO remove all room in this area
 					//need to list them first and then delete also all feature in those rooms
-					}
+					removeAllViewsInLayout ();	
+					postInvalidate();
+				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {

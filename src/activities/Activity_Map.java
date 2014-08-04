@@ -146,10 +146,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			files= f.list(); 
 		}
 
-
 		build_maps_list();
-		
-		
+				
 		//sliding drawer
 		topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
 		panel.setOnPanelListener(this);
@@ -359,6 +357,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		list_usable_files = new Vector<String>();
 		int i = 0;
 		for ( i=0;i<files.length;i++) {
+			//TODO #1968 remove file without extension
+			//Need also to list only drawable file
 			if(!files[i].startsWith(".")){
 				list_usable_files.add(files[i]);
 				map=new HashMap<String,String>();

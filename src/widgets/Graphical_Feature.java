@@ -30,12 +30,12 @@ import android.widget.TextView;
 
 public class Graphical_Feature extends FrameLayout{
 
-	private FrameLayout imgPan;
-	private LinearLayout background;
-	private LinearLayout infoPan;
-	private ImageView img;
-	private TextView name;
-	private TextView description;
+	private FrameLayout FL_imgPan;
+	private LinearLayout LL_background;
+	private LinearLayout LL_infoPan;
+	private ImageView IV_img;
+	private TextView TV_name;
+	private TextView TV_description;
 	private int id;
 	private int session_type;
 
@@ -46,52 +46,52 @@ public class Graphical_Feature extends FrameLayout{
 		this.setPadding(5, 5, 5, 5);
 
 		//panel with border	
-		background = new LinearLayout(context);
+		LL_background = new LinearLayout(context);
 		if(widgetSize==0)
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		else 
-			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+			LL_background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("black",background.getHeight()));
+		LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("black",LL_background.getHeight()));
 
 		//panel to set img with padding left
-		imgPan = new FrameLayout(context);
-		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding(5, 8, 10, 10);
+		FL_imgPan = new FrameLayout(context);
+		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
+		FL_imgPan.setPadding(5, 8, 10, 10);
 		//img
-		img = new ImageView(context);
-		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+		IV_img = new ImageView(context);
+		IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
+		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
 
 		//info panel
-		infoPan=new LinearLayout(context);
-		infoPan.setOrientation(LinearLayout.VERTICAL);
-		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		infoPan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		infoPan.setPadding(0, 0, 10, 0);
+		LL_infoPan=new LinearLayout(context);
+		LL_infoPan.setOrientation(LinearLayout.VERTICAL);
+		LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		LL_infoPan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+		LL_infoPan.setPadding(0, 0, 10, 0);
 
 
 		//name of room
-		name=new TextView(context);
-		name.setText(name_room);
-		name.setTextSize(18);
-		name.setTextColor(Color.WHITE);
-		name.setGravity(Gravity.RIGHT);
+		TV_name=new TextView(context);
+		TV_name.setText(name_room);
+		TV_name.setTextSize(18);
+		TV_name.setTextColor(Color.WHITE);
+		TV_name.setGravity(Gravity.RIGHT);
 
 		//description
-		description=new TextView(context);
-		description.setText(description_room);
-		name.setTextSize(17);
-		description.setGravity(Gravity.RIGHT);
+		TV_description=new TextView(context);
+		TV_description.setText(description_room);
+		TV_name.setTextSize(17);
+		TV_description.setGravity(Gravity.RIGHT);
 
-		infoPan.addView(name);
-		infoPan.addView(description);
-		imgPan.addView(img);
+		LL_infoPan.addView(TV_name);
+		LL_infoPan.addView(TV_description);
+		FL_imgPan.addView(IV_img);
 
-		background.addView(imgPan);
-		background.addView(infoPan);
+		LL_background.addView(FL_imgPan);
+		LL_background.addView(LL_infoPan);
 
-		this.addView(background);
+		this.addView(LL_background);
 	}
 
 	public int getId() {

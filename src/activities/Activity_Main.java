@@ -132,7 +132,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private String tracer_state = "false";
 	private Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
 	private int mytype = 0;		// All objects will be 'Main" type
-	private AlertDialog.Builder AD_dialog_message;
+	//private AlertDialog.Builder AD_dialog_message;
 	protected ProgressDialog PG_dialog_message;
 	private Boolean cache_ready = false;
 	private Boolean end_of_init_requested = true;
@@ -978,8 +978,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Boolean startCacheEngine() {
 		if(WU_widgetUpdate == null) {
 			this.Create_message_box();
-			AD_dialog_message.setMessage(getText(R.string.loading_cache)); 
-			AD_dialog_message.show();
+			PG_dialog_message.setMessage(getText(R.string.loading_cache)); 
+			PG_dialog_message.show();
 			Tracer.w("Activity_Main", "Starting WidgetUpdate cache engine !");
 			WU_widgetUpdate = WidgetUpdate.getInstance();
 			WU_widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)

@@ -248,6 +248,10 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						} catch (Exception e) {
 							new_val = 0;
 						}
+						//TODO #1649
+						//Two problem:
+						//Missing unit
+						//Value min and max should be the limit of the widget
 						if(new_val==valueMin) {
 							state.setText(stateS+"0 %");
 						}else if(new_val>valueMin && new_val<valueMax){
@@ -299,6 +303,10 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 
 	public void onProgressChanged(SeekBar seekBar,int progress,boolean fromTouch) {
+		//TODO #1649
+		//Two problem:
+		//Missing unit
+		//Value min and max should be the limit of the widget
 		if(progress==valueMin){
 			state.setText("State : "+0+"%");
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));

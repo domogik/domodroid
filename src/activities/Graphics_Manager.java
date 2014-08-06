@@ -31,7 +31,7 @@ public class Graphics_Manager {
 		switch(state){
 		case 0: //Called for Off or Room
 			//reorder by usage name for easy update
-			if(usage.equals("air conditioning")){return R.drawable.usage_heating_off;}
+			if(usage.equals("air_conditionning")){return R.drawable.usage_air_off;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
@@ -83,7 +83,7 @@ public class Graphics_Manager {
 
 		case 1: //For median value (50%)
 			//reorder by usage name for easy update
-			if(usage.equals("air conditioning")){return R.drawable.usage_air_50;}
+			if(usage.equals("air_conditionning")){return R.drawable.usage_air_50;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_50;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_50;}
@@ -111,7 +111,7 @@ public class Graphics_Manager {
 
 		case 2: //For on
 			//reorder by usage name for easy update
-			if(usage.equals("air conditioning")){return R.drawable.usage_air_on;}
+			if(usage.equals("air_conditionning")){return R.drawable.usage_air_on;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_on;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
@@ -139,7 +139,7 @@ public class Graphics_Manager {
 		
 		case 3: //For undefined
 			//reorder by usage name for easy update
-			if(usage.equals("air conditioning")){return R.drawable.usage_air_undefined;}
+			if(usage.equals("air_conditionning")){return R.drawable.usage_air_undefined;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_undefined;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_undefined;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_undefined;}
@@ -201,7 +201,7 @@ public class Graphics_Manager {
 			//reorder by usage name for easy update
 			/*
 			 * TODO add missing usage
-			 * air conditioning
+			 * air_conditionning
 			 * heating
 			 * mirror
 			 * music

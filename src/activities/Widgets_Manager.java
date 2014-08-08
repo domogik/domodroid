@@ -99,7 +99,15 @@ public class Widgets_Manager {
 			return ll;
 		}
 		for (Entity_Feature feature : listFeature) {
-
+			String iconName = "unknown";
+			try {
+				iconName = domodb.requestIcons(feature.getId(), "feature").getValue().toString();
+			} catch (Exception e) {
+				//e.printStackTrace();
+			}
+			if (iconName=="unknow")
+				iconName=feature.getDevice_usage_id();
+					
 			//-----add component-------
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
@@ -130,7 +138,7 @@ public class Widgets_Manager {
 							feature.getId(),feature.getDevId(),
 							feature.getState_key(),
 							params.getString("URL","1.1.1.1"),
-							feature.getDevice_usage_id(),
+							iconName,
 							feature.getParameters(),
 							feature.getDevice_type_id(),
 							params.getInt("UPDATE_TIMER",300),
@@ -144,7 +152,7 @@ public class Widgets_Manager {
 								feature.getId(),feature.getDevId(),
 								feature.getState_key(),
 								params.getString("URL","1.1.1.1"),
-								feature.getDevice_usage_id(),
+								iconName,
 								feature.getParameters(),
 								feature.getDevice_type_id(),
 								params.getInt("UPDATE_TIMER",300),
@@ -158,7 +166,7 @@ public class Widgets_Manager {
 				bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),label,
 						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
-						feature.getDevice_usage_id(), 
+						iconName, 
 						feature.getParameters(),
 						feature.getDevice_type_id(),
 						params.getInt("UPDATE_TIMER",300),
@@ -171,7 +179,7 @@ public class Widgets_Manager {
 						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
+						iconName,
 						feature.getParameters(),
 						feature.getDevice_type_id(),
 						params.getInt("UPDATE_TIMER",300), 
@@ -184,7 +192,7 @@ public class Widgets_Manager {
 						feature.getId(),feature.getDevId(),
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
+						iconName,
 						feature.getParameters(),
 						feature.getDevice_type_id(),
 						widgetSize, mytype,id,zone,params);
@@ -202,7 +210,7 @@ public class Widgets_Manager {
 						feature.getAddress(),			//  idem to know the address
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
+						iconName,
 						params.getInt("UPDATE_TIMER",300),
 						widgetSize, mytype,id,zone);
 				tmpPan.addView(color);
@@ -213,7 +221,7 @@ public class Widgets_Manager {
 					info1 = new Graphical_Info_with_achartengine(Tracer, context,feature.getId(),feature.getDevId(), label,
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
+						iconName,
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
 						widgetSize, mytype, feature.getParameters(),id,zone,params);
@@ -227,7 +235,7 @@ public class Widgets_Manager {
 					info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(), label,
 							feature.getState_key(),
 							params.getString("URL","1.1.1.1"),
-							feature.getDevice_usage_id(),
+							iconName,
 							params.getInt("GRAPH",3),
 							params.getInt("UPDATE_TIMER",300),
 							widgetSize, mytype, feature.getParameters(),id,zone,params);
@@ -243,7 +251,7 @@ public class Widgets_Manager {
 						feature.getAddress(),			//  idem to know the address
 						feature.getState_key(),
 						params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
+						iconName,
 						params.getInt("GRAPH",3),
 						params.getInt("UPDATE_TIMER",300),
 						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id(),id,zone,params);
@@ -262,7 +270,7 @@ public class Widgets_Manager {
 					info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),label,
 							feature.getState_key(),
 							"",
-							feature.getDevice_usage_id(),
+							iconName,
 							0,
 							params.getInt("UPDATE_TIMER",300),
 							0, mytype, feature.getParameters(),id,zone,params);

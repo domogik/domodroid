@@ -57,6 +57,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	private tracerengine Tracer = null;
 	private String mytag="Graphical_Area";
 	private Activity Activity;
+	private Entity_Room[] listRoom;
 	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);
@@ -139,19 +140,18 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					/*
-					//TODO remove all room in this area
+					//remove all room in this area
 					//need to list them first and then delete also all feature in those rooms
 					DomodroidDB domodb = new DomodroidDB(Tracer,Activity);
 					domodb.owner="Widgets_Manager.loadRoomWidgets";
 					Tracer.e(mytag, "load widgets for area "+id_area);
 					Entity_Room[] listRoom = domodb.requestRoom(id_area);
 					
-					//Didn't work
 					for (Entity_Room room : listRoom) {
+						Tracer.get_engine().remove_one_room(room.getId());
 						Tracer.get_engine().remove_one_place_type_in_Featureassociation(room.getId(),"room");
 						}
-					*/
+					
 					Tracer.get_engine().remove_one_area(id_area);
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
 					removeAllViewsInLayout ();	

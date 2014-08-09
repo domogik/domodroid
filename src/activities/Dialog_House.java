@@ -48,6 +48,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private Activity context;
 	private tracerengine Tracer = null;
 	private int area_id = 0;
+	private int room_id = 0;
 	private int lastid = 0;
 	private WidgetUpdate widgetUpdate;
 	private HashMap<String,String> map;
@@ -56,6 +57,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private Entity_Area[] listArea;
 	private Entity_Room[] listRoom;
 	private Entity_Feature[] listFeature;
+	private String mytag;
 	
 	public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
 		super(context);
@@ -64,7 +66,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		this.Tracer = Trac;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_house);
-		
+		mytag="Dialog_House";
 		cancelButton = (Button) findViewById(R.id.house_Cancel);
 		cancelButton.setTag("house_cancel");
 		cancelButton.setOnClickListener(this);
@@ -84,6 +86,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		add_widget_Button = (Button) findViewById(R.id.house_add_widget);
 		add_widget_Button.setTag("add_widget");
 		add_widget_Button.setOnClickListener(this);
+		
 		spinner_area = (Spinner) findViewById(R.id.spin_list_area);
 		spinner_room = (Spinner) findViewById(R.id.spin_list_room);
 		spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
@@ -97,13 +100,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		String tag = v.getTag().toString();
 		dialog_feature = new Dialog(getContext());
 
-		//1st list area where to put room
+		//list area where to put room
 		final AlertDialog.Builder listareachoice = new AlertDialog.Builder(getContext());
 		List<String> list_area = new ArrayList<String>();
 		for (Entity_Area area : listArea) {
 			list_area.add(area.getName());
 			}
 		final CharSequence[] char_list_zone =list_area.toArray(new String[list_area.size()]);
+		//TODO to be translate
 		listareachoice.setTitle("Dans quelle zone?");
 		listareachoice.setSingleChoiceItems(char_list_zone, -1,
 		 new DialogInterface.OnClickListener() {
@@ -114,10 +118,31 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		  }
 		 });
 		
+		//list room where to put widget
+				final AlertDialog.Builder listroomchoice = new AlertDialog.Builder(getContext());
+				List<String> list_room = new ArrayList<String>();
+				for (Entity_Room room : listRoom) {
+					list_room.add(room.getName());
+					}
+				final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
+				//TODO to be translate
+				listroomchoice.setTitle("Dans quelle piece?");
+				listroomchoice.setSingleChoiceItems(char_list_zone, -1,
+				 new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog, int item) {
+				  //item is replaces by the area Id because Db could be altered by removing an area for example
+					  room_id=listRoom[item].getId();
+				  dialog.cancel();
+				  }
+				 });
 		//ADD a room
 		AlertDialog.Builder alertRoom = new AlertDialog.Builder(getContext());
+		//set a title
+		//TODO Not the good text
 		alertRoom.setTitle(R.string.Rename_title);
+		//set a message
 		alertRoom.setMessage(R.string.Rename_message);
+		// Set an EditText view to get user input 
 		final EditText name = new EditText(getContext());
 		alertRoom.setView(name);
 		alertRoom.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
@@ -134,13 +159,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		});
 		alertRoom.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
-				Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+				
 			}
 		});
 		
 		//ADD an area
 		AlertDialog.Builder alertArea = new AlertDialog.Builder(getContext());
 		//set a title
+		//TODO Not the good text
 		alertArea.setTitle(R.string.Rename_title);
 		//set a message
 		alertArea.setMessage(R.string.Rename_message);
@@ -161,11 +187,38 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		});
 		alertArea.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
-				Tracer.e("Graphical_Binary_New", "Customname Canceled.");
+				
 			}
 		});
 		
-		
+		//ADD a feature
+				AlertDialog.Builder alertFeature = new AlertDialog.Builder(getContext());
+				//set a title
+				//TODO Not the good text
+				alertFeature.setTitle(R.string.Rename_title);
+				//set a message
+				alertFeature.setMessage(R.string.Rename_message);
+				// Set an EditText view to get user input 
+				final EditText name2 = new EditText(getContext());
+				alertFeature.setView(name2);
+				alertFeature.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						lastid = domodb.requestidlastFeature_association();
+						ContentValues values = new ContentValues();
+						values.put("area_id", (area_id));
+						values.put("name", name2.getText().toString());
+						values.put("description", "");
+						values.put("id", (lastid+1));
+						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
+						loadSpinnerData();
+					}
+				});
+				alertFeature.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						
+					}
+				});
+				
 		if (tag.equals("house_cancel"))
 			dismiss();
 		else if (tag.equals("house_ok")) {
@@ -189,8 +242,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			alert_listarea.show();
 			
 		}else if (tag.equals("add_widget")) {
-			alertRoom.show();
-			
+			AlertDialog alert_listroom = listroomchoice.create();
+			alertFeature.show();
+			alert_listroom.show();
 		}
 	
 	}

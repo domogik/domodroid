@@ -401,6 +401,26 @@ public class DomodroidDB {
 		curs.close();
 		return lastid;
 	}
+	public int requestidlastFeature_association() {
+		String[] projection = { "place_id", "place_type", "device_feature_id", "id", "device_feature"};
+		Cursor curs=null;
+		int lastid = 0;
+		try {
+			curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION,
+					projection, 
+					null,
+					null,
+					null);
+			curs.moveToLast();
+			lastid=curs.getInt(2);
+			
+		} catch (Exception e) {
+			Tracer.v(mytag+"("+owner+")","request last room error");
+			e.printStackTrace();
+		}
+		curs.close();
+		return lastid;
+	}
 	public Entity_Room[] requestRoom(int area_id) {
 		Entity_Room[] rooms=null;
 		String[] projection = { "area_id", "description", "id", "name"};

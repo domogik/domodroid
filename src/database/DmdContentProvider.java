@@ -33,6 +33,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int REQUEST_MAP_SWITCHES = 141;
 	public static final int REQUEST_FEATURE_ID = 150;
 	public static final int REQUEST_FEATURE_STATE = 160;
+	public static final int REQUEST_FEATURE_ASSOCIATION = 161;
 
 	public static final int INSERT_AREA = 200;
 	public static final int CLEAR_AREA = 201;
@@ -72,6 +73,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_REQUEST_MAP_SWITCHES = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_MAP_SWITCHES");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_ID = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ID");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_STATE");
+	public static final Uri CONTENT_URI_REQUEST_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION");
 
 	public static final Uri CONTENT_URI_INSERT_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_AREA");
 	public static final Uri CONTENT_URI_INSERT_ROOM = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_ROOM");
@@ -119,6 +121,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_MAP_SWITCHES", REQUEST_MAP_SWITCHES);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ID", REQUEST_FEATURE_ID);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_STATE", REQUEST_FEATURE_STATE);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION", REQUEST_FEATURE_ASSOCIATION);
 
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_AREA", INSERT_AREA);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_ROOM", INSERT_ROOM);
@@ -389,6 +392,10 @@ public class DmdContentProvider extends ContentProvider {
 			break;
 		case REQUEST_ICON:
 			queryBuilder.setTables("table_icon");
+			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
+			break;
+		case REQUEST_FEATURE_ASSOCIATION:
+			queryBuilder.setTables("table_feature_association");
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
 			break;
 		case REQUEST_FEATURE_ALL:

@@ -99,7 +99,7 @@ public class Widgets_Manager {
 			return ll;
 		}
 		for (Entity_Feature feature : listFeature) {
-			String iconName = "unknown";
+			String iconName = "unknow";
 			try {
 				iconName = domodb.requestIcons(feature.getId(), "feature").getValue().toString();
 			} catch (Exception e) {

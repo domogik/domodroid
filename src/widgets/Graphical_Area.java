@@ -148,11 +148,11 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					Entity_Room[] listRoom = domodb.requestRoom(id_area);
 					
 					for (Entity_Room room : listRoom) {
-						Tracer.get_engine().remove_one_room(room.getId());
+						Tracer.get_engine().remove_one_things(room.getId(),"room");
 						Tracer.get_engine().remove_one_place_type_in_Featureassociation(room.getId(),"room");
 						}
 					
-					Tracer.get_engine().remove_one_area(id_area);
+					Tracer.get_engine().remove_one_things(id_area,"area");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
 					removeAllViewsInLayout ();	
 					postInvalidate();

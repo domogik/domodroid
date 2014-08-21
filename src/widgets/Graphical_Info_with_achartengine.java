@@ -641,7 +641,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						String result= input.getText().toString(); 
-						Tracer.get_engine().descUpdate(id,result);
+						Tracer.get_engine().descUpdate(id,result,"feature");
 					}
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -881,8 +881,8 @@ public class WidgetUpdate  {
 	 * Some methods to help widgets for database access (they don't have anymore to connect to DomodroidDB !
 	 * 
 	 */
-	public void descUpdate(int id,String new_desc) {
-		domodb.updateFeaturename(id,new_desc);
+	public void descUpdate(int id,String new_desc,String type) {
+		domodb.update_name(id,new_desc,type);
 	}
 	/*
 	 * This one allow MapView to clean all widgets from a map
@@ -905,17 +905,11 @@ public class WidgetUpdate  {
 	public void insertFeatureMap(int id,int posx, int posy, String mapname) {
 		domodb.insertFeatureMap(id, posx, posy, mapname);
 	}
-	public void remove_one_area(int id) {
-		domodb.remove_one_area(id);
-	}
-	public void remove_one_room(int id) {
-		domodb.remove_one_room(id);
-	}
-	public void remove_one_icon(int id) {
-		domodb.remove_one_icon(id);
-	}
-	public void remove_one_feature(int id) {
-		domodb.remove_one_feature(id);
+	public void remove_one_things(int id,String type) {
+		if (type.equals("area")){ domodb.remove_one_area(id);}
+		else if (type.equals("room")){ domodb.remove_one_room(id);}
+		else if (type.equals("icon")){ domodb.remove_one_icon(id);}
+		else if (type.equals("feature")){ domodb.remove_one_feature(id);}
 	}
 	public void remove_one_feature_association(int id, int place_id, String place_type) {
 		domodb.remove_one_feature_association(id, place_id, place_type);

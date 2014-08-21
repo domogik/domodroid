@@ -139,7 +139,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 		alert.setMessage(R.string.Delete_feature_message);
 		alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
-				Tracer.get_engine().remove_one_room(id_room);
+				Tracer.get_engine().remove_one_things(id_room,"room");
 				Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room,"room");
 				removeAllViewsInLayout ();	
 				postInvalidate();

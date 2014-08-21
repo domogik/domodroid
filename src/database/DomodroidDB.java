@@ -306,12 +306,35 @@ public class DomodroidDB {
 	////////////////// UPDATE
 	
 	//Send custom name to DmdContentProvder so that it could be write in DB
-	public void updateFeaturename(int id,String name){
-		ContentValues values = new ContentValues();
-		values.put("id", id);
-		values.put("newname", name);
-		Tracer.e("DomodrdoidDB", "Description set to: "+name+" for device: "+id);
-		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
+	public void update_name(int id,String name, String type){
+		if (type.equals("feature")){
+			ContentValues values = new ContentValues();
+			values.put("id", id);
+			values.put("newname", name);
+			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for device: "+id);
+			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
+		}
+		else if (type.equals("area")){
+			ContentValues values = new ContentValues();
+			values.put("id", id);
+			values.put("newname", name);
+			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for area: "+id);
+			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_AREA_NAME, values);
+		}
+		else if (type.equals("room")){
+			ContentValues values = new ContentValues();
+			values.put("id", id);
+			values.put("newname", name);
+			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for room: "+id);
+			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ROOM_NAME, values);
+		}
+		else if (type.equals("icon")){
+			ContentValues values = new ContentValues();
+			values.put("id", id);
+			values.put("newname", name);
+			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for icon: "+id);
+			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+		}
 	}
 
 	////////////////// REQUEST

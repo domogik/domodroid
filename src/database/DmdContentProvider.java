@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
-/*
+/*CONTENT_URI_UPDATE_FEATURE_NAME
  * WARNING ===================================================
  * This class cannot use the 'Tracer' mechanism, because 
  *     Tracer instance is unknown in this context
@@ -61,6 +61,10 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int CLEAR_one_FEATURE_STATE = 262;
 	public static final int UPDATE_FEATURE_STATE = 300;
 	public static final int UPDATE_FEATURE_NAME=301;
+	public static final int UPDATE_AREA_NAME=302;
+	public static final int UPDATE_ROOM_NAME=303;
+	public static final int UPDATE_ICON_NAME=304;
+	
 	public static final int UPGRADE_FEATURE_STATE = 400;
 	
 	private static final String DOMODROID_BASE_PATH = "domodroid";
@@ -104,6 +108,9 @@ public class DmdContentProvider extends ContentProvider {
 	
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_NAME = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME");
+	public static final Uri CONTENT_URI_UPDATE_AREA_NAME = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME");
+	public static final Uri CONTENT_URI_UPDATE_ROOM_NAME = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME");
+	public static final Uri CONTENT_URI_UPDATE_ICON_NAME = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME");
 	public static final Uri CONTENT_URI_UPGRADE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPGRADE_FEATURE_STATE");
 
 
@@ -152,6 +159,9 @@ public class DmdContentProvider extends ContentProvider {
 		
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME", UPDATE_FEATURE_NAME);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME", UPDATE_AREA_NAME);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME", UPDATE_ROOM_NAME);
+		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME", UPDATE_ICON_NAME);
 		
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPGRADE_FEATURE_STATE", UPGRADE_FEATURE_STATE);
 		
@@ -360,7 +370,36 @@ public class DmdContentProvider extends ContentProvider {
 				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
 				}
 			break;
-		
+		case UPDATE_AREA_NAME:
+			//Rename the description of a device because it's what is first display if exist in a widget
+			try{
+				mDB.getWritableDatabase().execSQL("UPDATE table_area SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				}
+			break;
+		case UPDATE_ROOM_NAME:
+			//Rename the description of a device because it's what is first display if exist in a widget
+			try{
+				mDB.getWritableDatabase().execSQL("UPDATE table_room SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				}
+			break;
+		case UPDATE_ICON_NAME:
+			//Rename the description of a device because it's what is first display if exist in a widget
+			try{
+				mDB.getWritableDatabase().execSQL("UPDATE table_icon SET value='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				}
+			catch (SQLException e) {
+				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				}
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI= "+uri);
 		}

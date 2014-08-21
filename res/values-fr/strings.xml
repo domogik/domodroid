@@ -90,10 +90,20 @@
 	<string name="to">    au : </string>
 	<string name="Sync">Sync</string>
 	<string name="Exit_Program">Quitter</string>
+	
 	<string name="Rename_title">Renommer</string>
 	<string name="Rename_message">Choisir le texte à afficher.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+	
 	<string name="Delete_feature_title">Supprimer</string>
 	<string name="Delete_feature_message">Supprimer cette fonctionnalitée.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+		
+	<string name="New_ROOM_title">Créer une Pièce</string>
+	<string name="New_ROOM_message">Choisir le nom de la pièce.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+	<string name="Wich_ROOM_message">Selectionner une Pièce</string>
+	
+	<string name="New_AREA_title">Créer une Zone</string>
+	<string name="New_AREA_message">Choisir le nom de la zone.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+	<string name="Wich_AREA_message">Selectionner une Zone</string>
 	
 	<string name="Add_widget_title">Selectionner un widget</string>
 	

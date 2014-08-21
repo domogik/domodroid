@@ -107,8 +107,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			list_area.add(area.getName());
 			}
 		final CharSequence[] char_list_zone =list_area.toArray(new String[list_area.size()]);
-		//TODO to be translate
-		listareachoice.setTitle("Dans quelle zone?");
+		listareachoice.setTitle(R.string.Wich_AREA_message);
 		listareachoice.setSingleChoiceItems(char_list_zone, -1,
 		 new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int item) {
@@ -125,8 +124,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					list_room.add(room.getName());
 					}
 				final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
-				//TODO to be translate
-				listroomchoice.setTitle("Dans quelle piece?");
+				listroomchoice.setTitle(R.string.Wich_ROOM_message);
 				listroomchoice.setSingleChoiceItems(char_list_zone, -1,
 				 new DialogInterface.OnClickListener() {
 				  public void onClick(DialogInterface dialog, int item) {
@@ -138,10 +136,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		//ADD a room
 		AlertDialog.Builder alertRoom = new AlertDialog.Builder(getContext());
 		//set a title
-		//TODO Not the good text
-		alertRoom.setTitle(R.string.Rename_title);
+		alertRoom.setTitle(R.string.New_ROOM_title);
 		//set a message
-		alertRoom.setMessage(R.string.Rename_message);
+		alertRoom.setMessage(R.string.New_ROOM_message);
 		// Set an EditText view to get user input 
 		final EditText name = new EditText(getContext());
 		alertRoom.setView(name);
@@ -166,10 +163,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		//ADD an area
 		AlertDialog.Builder alertArea = new AlertDialog.Builder(getContext());
 		//set a title
-		//TODO Not the good text
-		alertArea.setTitle(R.string.Rename_title);
+		alertArea.setTitle(R.string.New_AREA_title);
 		//set a message
-		alertArea.setMessage(R.string.Rename_message);
+		alertArea.setMessage(R.string.New_AREA_message);
 		// Set an EditText view to get user input 
 		final EditText name1 = new EditText(getContext());
 		alertArea.setView(name1);

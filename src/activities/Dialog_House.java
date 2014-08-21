@@ -125,7 +125,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					}
 				final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
 				listroomchoice.setTitle(R.string.Wich_ROOM_message);
-				listroomchoice.setSingleChoiceItems(char_list_zone, -1,
+				listroomchoice.setSingleChoiceItems(char_list_room, -1,
 				 new DialogInterface.OnClickListener() {
 				  public void onClick(DialogInterface dialog, int item) {
 				  //item is replaces by the area Id because Db could be altered by removing an area for example

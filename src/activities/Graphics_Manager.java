@@ -267,6 +267,7 @@ public class Graphics_Manager {
 		}
 	}
 	
+	//public static int Map_Agent(Context context,String usage, int state){
 	public static int Map_Agent(String usage, int state){
 		switch(state){
 		case 0:
@@ -284,6 +285,13 @@ public class Graphics_Manager {
 			 * water
 			 * window
 			*/
+			/*
+			try{
+				return context.getResources().getIdentifier("map_usage_"+usage+"_off", "drawable", context.getPackageName());
+			} catch (Exception e){
+				return R.drawable.map_led_off;
+			}
+			*/
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
@@ -299,6 +307,7 @@ public class Graphics_Manager {
 			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_off;}
 			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_off;
+			
 		case 1:
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
@@ -323,7 +332,9 @@ public class Graphics_Manager {
 	public static int getStringIdentifier(Context context, String name) {
 		//To avoid space in name in strings.xml
 		name=name.replace(" ", "_");
-		context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+		//To get a drawable R.Drawable
+		//context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+		//To et a string from R.String
 		return context.getResources().getIdentifier(name, "string", context.getPackageName());
 	}
 

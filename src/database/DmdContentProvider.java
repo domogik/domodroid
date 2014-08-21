@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
 
-/*CONTENT_URI_UPDATE_FEATURE_NAME
+/*
  * WARNING ===================================================
  * This class cannot use the 'Tracer' mechanism, because 
  *     Tracer instance is unknown in this context

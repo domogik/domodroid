@@ -101,14 +101,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		dialog_feature = new Dialog(getContext());
 
 		//list area where to put room
-		final AlertDialog.Builder listareachoice = new AlertDialog.Builder(getContext());
+		final AlertDialog.Builder list_area_choice = new AlertDialog.Builder(getContext());
 		List<String> list_area = new ArrayList<String>();
 		for (Entity_Area area : listArea) {
 			list_area.add(area.getName());
 			}
 		final CharSequence[] char_list_zone =list_area.toArray(new String[list_area.size()]);
-		listareachoice.setTitle(R.string.Wich_AREA_message);
-		listareachoice.setSingleChoiceItems(char_list_zone, -1,
+		list_area_choice.setTitle(R.string.Wich_AREA_message);
+		list_area_choice.setSingleChoiceItems(char_list_zone, -1,
 		 new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int item) {
 		  //item is replaces by the area Id because Db could be altered by removing an area for example
@@ -118,14 +118,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		 });
 		
 		//list room where to put widget
-				final AlertDialog.Builder listroomchoice = new AlertDialog.Builder(getContext());
+				final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
 				List<String> list_room = new ArrayList<String>();
 				for (Entity_Room room : listRoom) {
 					list_room.add(room.getName());
 					}
 				final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
-				listroomchoice.setTitle(R.string.Wich_ROOM_message);
-				listroomchoice.setSingleChoiceItems(char_list_room, -1,
+				list_room_choice.setTitle(R.string.Wich_ROOM_message);
+				list_room_choice.setSingleChoiceItems(char_list_room, -1,
 				 new DialogInterface.OnClickListener() {
 				  public void onClick(DialogInterface dialog, int item) {
 				  //item is replaces by the area Id because Db could be altered by removing an area for example
@@ -134,15 +134,15 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				  }
 				 });
 		//ADD a room
-		AlertDialog.Builder alertRoom = new AlertDialog.Builder(getContext());
+		AlertDialog.Builder alert_Room = new AlertDialog.Builder(getContext());
 		//set a title
-		alertRoom.setTitle(R.string.New_ROOM_title);
+		alert_Room.setTitle(R.string.New_ROOM_title);
 		//set a message
-		alertRoom.setMessage(R.string.New_ROOM_message);
+		alert_Room.setMessage(R.string.New_ROOM_message);
 		// Set an EditText view to get user input 
 		final EditText name = new EditText(getContext());
-		alertRoom.setView(name);
-		alertRoom.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+		alert_Room.setView(name);
+		alert_Room.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
 				lastid = domodb.requestidlastRoom();
 				ContentValues values = new ContentValues();
@@ -154,22 +154,22 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				loadSpinnerData();
 			}
 		});
-		alertRoom.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+		alert_Room.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
 				
 			}
 		});
 		
 		//ADD an area
-		AlertDialog.Builder alertArea = new AlertDialog.Builder(getContext());
+		AlertDialog.Builder alert_Area = new AlertDialog.Builder(getContext());
 		//set a title
-		alertArea.setTitle(R.string.New_AREA_title);
+		alert_Area.setTitle(R.string.New_AREA_title);
 		//set a message
-		alertArea.setMessage(R.string.New_AREA_message);
+		alert_Area.setMessage(R.string.New_AREA_message);
 		// Set an EditText view to get user input 
 		final EditText name1 = new EditText(getContext());
-		alertArea.setView(name1);
-		alertArea.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+		alert_Area.setView(name1);
+		alert_Area.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
 				ContentValues values = new ContentValues();
 				values.put("name", name1.getText().toString());
@@ -181,35 +181,38 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				loadSpinnerData();
 			}
 		});
-		alertArea.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+		alert_Area.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog_customname, int whichButton) {
 				
 			}
 		});
 		
 		//ADD a feature
-				AlertDialog.Builder alertFeature = new AlertDialog.Builder(getContext());
+				AlertDialog.Builder alert_Feature = new AlertDialog.Builder(getContext());
 				//set a title
 				//TODO Not the good text
-				alertFeature.setTitle(R.string.Rename_title);
+				alert_Feature.setTitle(R.string.Rename_title);
 				//set a message
-				alertFeature.setMessage(R.string.Rename_message);
+				alert_Feature.setMessage(R.string.Rename_message);
 				// Set an EditText view to get user input 
 				final EditText name2 = new EditText(getContext());
-				alertFeature.setView(name2);
-				alertFeature.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+				alert_Feature.setView(name2);
+				alert_Feature.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						lastid = domodb.requestidlastFeature_association();
 						ContentValues values = new ContentValues();
-						values.put("area_id", (area_id));
-						values.put("name", name2.getText().toString());
-						values.put("description", "");
+						//roomid must come from the selected in list
+						//values.put("place_id", (roomid));
+						values.put("place_type", ("room"));
+						//device_feature_id must come from the selected  one in list
+						//values.put("device_feature_id",(device_feature_id));
 						values.put("id", (lastid+1));
+						//values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
 						loadSpinnerData();
 					}
 				});
-				alertFeature.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+				alert_Feature.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						
 					}
@@ -231,16 +234,17 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			
 			dismiss();
 		}else if (tag.equals("add_area")) {
-			alertArea.show();
+			alert_Area.show();
 		}else if (tag.equals("add_room")) {
-			AlertDialog alert_listarea = listareachoice.create();
-			alertRoom.show();
-			alert_listarea.show();
+			AlertDialog alert_list_area = list_area_choice.create();
+			alert_Room.show();
+			alert_list_area.show();
 			
 		}else if (tag.equals("add_widget")) {
-			AlertDialog alert_listroom = listroomchoice.create();
-			alertFeature.show();
-			alert_listroom.show();
+			AlertDialog alert_list_room = list_room_choice.create();
+			//alert_list_feature.show();
+			alert_Feature.show();
+			alert_list_room.show();
 		}
 	
 	}

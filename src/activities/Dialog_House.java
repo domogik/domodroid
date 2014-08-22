@@ -49,6 +49,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private tracerengine Tracer = null;
 	private int area_id = 0;
 	private int room_id = 0;
+	private int feature_id = 0;
 	private int lastid = 0;
 	private WidgetUpdate widgetUpdate;
 	private HashMap<String,String> map;
@@ -118,21 +119,39 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		 });
 		
 		//list room where to put widget
-				final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
-				List<String> list_room = new ArrayList<String>();
-				for (Entity_Room room : listRoom) {
-					list_room.add(room.getName());
-					}
-				final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
-				list_room_choice.setTitle(R.string.Wich_ROOM_message);
-				list_room_choice.setSingleChoiceItems(char_list_room, -1,
-				 new DialogInterface.OnClickListener() {
-				  public void onClick(DialogInterface dialog, int item) {
-				  //item is replaces by the area Id because Db could be altered by removing an area for example
-					  room_id=listRoom[item].getId();
-				  dialog.cancel();
-				  }
-				 });
+		final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
+		List<String> list_room = new ArrayList<String>();
+		for (Entity_Room room : listRoom) {
+			list_room.add(room.getName());
+			}
+		final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
+		list_room_choice.setTitle(R.string.Wich_ROOM_message);
+		list_room_choice.setSingleChoiceItems(char_list_room, -1,
+		 new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int item) {
+		  //item is replaces by the area Id because Db could be altered by removing an area for example
+			  room_id=listRoom[item].getId();
+		  dialog.cancel();
+		  }
+		});
+			
+		//list widget to put in room
+			final AlertDialog.Builder list_feature_choice = new AlertDialog.Builder(getContext());
+			List<String> list_feature = new ArrayList<String>();
+			for (Entity_Feature feature : listFeature) {
+				list_feature.add(feature.getName());
+				}
+			final CharSequence[] char_list_feature =list_feature.toArray(new String[list_feature.size()]);
+			list_feature_choice.setTitle(R.string.Wich_ROOM_message);
+			list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
+			new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+			//item is replaces by the area Id because Db could be altered by removing an area for example
+			 feature_id=listFeature[item].getId();
+			dialog.cancel();
+			}
+		});
+					
 		//ADD a room
 		AlertDialog.Builder alert_Room = new AlertDialog.Builder(getContext());
 		//set a title
@@ -191,21 +210,21 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				AlertDialog.Builder alert_Feature = new AlertDialog.Builder(getContext());
 				//set a title
 				//TODO Not the good text
-				alert_Feature.setTitle(R.string.Rename_title);
+				//alert_Feature.setTitle(R.string.Rename_title);
 				//set a message
-				alert_Feature.setMessage(R.string.Rename_message);
+				//alert_Feature.setMessage(R.string.Rename_message);
 				// Set an EditText view to get user input 
-				final EditText name2 = new EditText(getContext());
-				alert_Feature.setView(name2);
+				//final EditText name2 = new EditText(getContext());
+				//alert_Feature.setView(name2);
 				alert_Feature.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						lastid = domodb.requestidlastFeature_association();
 						ContentValues values = new ContentValues();
 						//roomid must come from the selected in list
-						//values.put("place_id", (roomid));
+						values.put("place_id", (room_id));
 						values.put("place_type", ("room"));
 						//device_feature_id must come from the selected  one in list
-						//values.put("device_feature_id",(device_feature_id));
+						values.put("device_feature_id",(feature_id));
 						values.put("id", (lastid+1));
 						//values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
@@ -242,10 +261,11 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			
 		}else if (tag.equals("add_widget")) {
 			AlertDialog alert_list_room = list_room_choice.create();
-			//alert_list_feature.show();
+			AlertDialog alert_list_feature = list_feature_choice.create();
 			alert_Feature.show();
 			alert_list_room.show();
-		}
+			alert_list_feature.show();
+			}
 	
 	}
 	

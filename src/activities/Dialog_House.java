@@ -142,7 +142,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				list_feature.add(feature.getName()+"-"+feature.getState_key());
 				}
 			final CharSequence[] char_list_feature =list_feature.toArray(new String[list_feature.size()]);
-			list_feature_choice.setTitle(R.string.Wich_ROOM_message);
+			list_feature_choice.setTitle(R.string.Wich_feature_message);
 			list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
 			new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {

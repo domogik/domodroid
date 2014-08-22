@@ -106,6 +106,7 @@
 	<string name="Wich_AREA_message">Selectionner une Zone</string>
 	
 	<string name="Add_widget_title">Selectionner un widget</string>
+	<string name="Wich_feature_message">Selectionner un widgett</string>
 	
 	<string name="version">Rev</string>
 	<string name="Hue">Teinte</string>

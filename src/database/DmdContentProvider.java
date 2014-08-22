@@ -371,9 +371,8 @@ public class DmdContentProvider extends ContentProvider {
 				}
 			break;
 		case UPDATE_AREA_NAME:
-			//Rename the description of a device because it's what is first display if exist in a widget
 			try{
-				mDB.getWritableDatabase().execSQL("UPDATE table_area SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				mDB.getWritableDatabase().execSQL("UPDATE table_area SET name='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
@@ -381,9 +380,8 @@ public class DmdContentProvider extends ContentProvider {
 				}
 			break;
 		case UPDATE_ROOM_NAME:
-			//Rename the description of a device because it's what is first display if exist in a widget
 			try{
-				mDB.getWritableDatabase().execSQL("UPDATE table_room SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				mDB.getWritableDatabase().execSQL("UPDATE table_room SET name='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
@@ -391,7 +389,6 @@ public class DmdContentProvider extends ContentProvider {
 				}
 			break;
 		case UPDATE_ICON_NAME:
-			//Rename the description of a device because it's what is first display if exist in a widget
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_icon SET value='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));

@@ -35,6 +35,7 @@ import android.os.Message;
 import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -87,6 +88,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+		img.setTag("img");
 		img.setOnLongClickListener(this);
 		img.setOnClickListener(this);
 		
@@ -104,7 +106,9 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 		name.setTextSize(18);
 		name.setTextColor(Color.WHITE);
 		name.setGravity(Gravity.RIGHT);
-
+		name.setTag("name");
+		name.setOnLongClickListener(this);
+		
 		//description
 		description=new TextView(context);
 		description.setText(description_area);
@@ -135,6 +139,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 
 
 	public boolean onLongClick(View v) {
+		if(v.getTag().equals("img")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
@@ -164,9 +169,28 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 				}
 			});
 			alert.show();
+		}else if (v.getTag().equals("name")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id_area,result,"area");
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e(mytag, "Customname Canceled.");
+					}
+				});
+				alert.show();
+			}
 		return false;
-		
+		}
 	}
 
 
-}

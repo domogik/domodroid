@@ -139,7 +139,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			final AlertDialog.Builder list_feature_choice = new AlertDialog.Builder(getContext());
 			List<String> list_feature = new ArrayList<String>();
 			for (Entity_Feature feature : listFeature) {
-				list_feature.add(feature.getName());
+				list_feature.add(feature.getName()+"-"+feature.getState_key());
 				}
 			final CharSequence[] char_list_feature =list_feature.toArray(new String[list_feature.size()]);
 			list_feature_choice.setTitle(R.string.Wich_ROOM_message);

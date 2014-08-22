@@ -321,9 +321,10 @@ public class Widgets_Manager {
 		colonnes(context, ll, mainPan, leftPan, rightPan, params);
 		
 		for (Entity_Area area : listArea) {
+			int Id = area.getId();
 			String iconId = "unknown";
 			try {
-				iconId = domodb.requestIcons(area.getId(), "area").getValue().toString();
+				iconId = domodb.requestIcons(Id, "area").getValue().toString();
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
@@ -333,7 +334,7 @@ public class Widgets_Manager {
 			String name = area.getName();
 			name = Graphics_Manager.Names_Agent(context, name);
 			
-			graph_area = new Graphical_Area(Tracer, context,area.getId(),name,area.getDescription(),iconId,widgetSize,widgetHandler);
+			graph_area = new Graphical_Area(Tracer, context,Id,name,area.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_area);
 			if(columns){	
 				if(counter==0){
@@ -372,10 +373,11 @@ public class Widgets_Manager {
 		colonnes(context, ll, mainPan, leftPan, rightPan, params);
 		
 		for (Entity_Room room : listRoom) {
-
+			int Id = room.getId();
+			
 			String iconId = "unknown";
 			try{
-				iconId = domodb.requestIcons(room.getId(),"room").getValue().toString();
+				iconId = domodb.requestIcons(Id,"room").getValue().toString();
 			}catch(Exception e){};
 			
 			if(iconId.equals("unknown")) {
@@ -390,7 +392,7 @@ public class Widgets_Manager {
 			Tracer.d(mytag+" loadRoomWidgets","Adding room : "+ref);
 			String name = room.getName();
 			name = Graphics_Manager.Names_Agent(context, name);
-			graph_room = new Graphical_Room(Tracer, context,room.getId(),name,room.getDescription(),iconId,widgetSize,widgetHandler);
+			graph_room = new Graphical_Room(Tracer, context,Id,name,room.getDescription(),iconId,widgetSize,widgetHandler);
 			tmpPan.addView(graph_room);
 
 			if(columns){	

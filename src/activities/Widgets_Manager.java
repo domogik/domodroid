@@ -100,14 +100,6 @@ public class Widgets_Manager {
 			return ll;
 		}
 		for (Entity_Feature feature : listFeature) {
-			String iconName = "unknow";
-			try {
-				iconName = domodb.requestIcons(feature.getId(), "feature").getValue().toString();
-			} catch (Exception e) {
-				//e.printStackTrace();
-			}
-			if (iconName=="unknow")
-				iconName=feature.getDevice_usage_id();
 					
 			//-----add component-------
 			tmpPan=null;
@@ -120,6 +112,14 @@ public class Widgets_Manager {
 			String Address = feature.getAddress();
 			int DevId = feature.getDevId();
 			int Id = feature.getId();
+			String iconName = "unknow";
+			try {
+				iconName = domodb.requestIcons(Id, "feature").getValue().toString();
+			} catch (Exception e) {
+				//e.printStackTrace();
+			}
+			if (iconName=="unknow")
+				iconName=feature.getDevice_usage_id();
 			String State_key = feature.getState_key();
 			
 			//add debug option to change label adding its Id

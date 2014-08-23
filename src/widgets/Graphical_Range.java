@@ -104,7 +104,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	
 	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,
 			String state_key, String url, String usage, 
-			final String parameters, String model_id, int update, 
+			String parameters, String model_id, int update, 
 			int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
 		super(context);
 		this.Tracer = Trac;
@@ -257,8 +257,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 							test_unite="%";
 						}
 						//TODO #1649
-						//Two problem:
-						//Missing unit
 						//Value min and max should be the limit of the widget
 						if(new_val<=valueMin) {
 							state.setText(stateS+"0 "+test_unite);
@@ -314,8 +312,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 	public void onProgressChanged(SeekBar seekBar,int progress,boolean fromTouch) {
 		//TODO #1649
-		//Two problem:
-		//Missing unit
 		//Value min and max should be the limit of the widget
 		if(progress<=valueMin){
 			state.setText("State : "+0+test_unite);

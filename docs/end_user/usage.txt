@@ -15,3 +15,5 @@ In both case the map view is the same.
 If device description is not empty it will replace the device name displayed
 
 If you do a long click on the name of a device, it will allow you to change is description displayed. It will be lost if you sync again.
+
+Longclick on an icon (area,room,widget) allow you to remove it.  

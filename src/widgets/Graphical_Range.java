@@ -76,6 +76,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private int scale;
 	private int valueMin;
 	private int valueMax;
+	private int CustomMax;
 	private String type; 
 	private String command;
 	public static int stateThread; 
@@ -138,6 +139,9 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			test_unite = jparam.getString("unit");
 		} catch (JSONException e) {	
 			test_unite ="%";
+		}
+		if (test_unite == null || test_unite.length()==0){
+			test_unite="%";
 		}
 		String[] model = model_id.split("\\.");
 		type = model[0];
@@ -203,8 +207,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 		//first seekbar variator
 		seekBarVaria=new SeekBar(context);
-		seekBarVaria.setProgress(valueMin);
-		seekBarVaria.setMax(range);
+		seekBarVaria.setProgress(0);
+		seekBarVaria.setMax(valueMax-valueMin);
 		seekBarVaria.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER_HORIZONTAL));
 		seekBarVaria.setProgressDrawable(getResources().getDrawable(R.drawable.bgseekbarvaria));
 		seekBarVaria.setThumb(getResources().getDrawable(R.drawable.buttonseekbar));
@@ -253,22 +257,17 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						} catch (Exception e) {
 							new_val = 0;
 						}
-						if (test_unite == null || test_unite.length()==0){
-							test_unite="%";
-						}
-						//TODO #1649
+						//#1649
 						//Value min and max should be the limit of the widget
 						if(new_val<=valueMin) {
-							state.setText(stateS+"0 "+test_unite);
-							new_val=valueMin;
+							state.setText(stateS+valueMin+" "+test_unite);
 						}else if(new_val>valueMin && new_val<valueMax){
-							state.setText(stateS+(int)(new_val*(100f/(float)valueMax))+" "+test_unite);
+							state.setText(stateS+new_val+" "+test_unite);
 						}else if(new_val>=valueMax){
-							state.setText(stateS+"100 "+test_unite);
-							new_val=valueMax;
+							state.setText(stateS+valueMax+" "+test_unite);
 						}
 						state.setAnimation(animation);
-						new SBAnim(seekBarVaria.getProgress(),new_val).execute();
+						new SBAnim(seekBarVaria.getProgress(),new_val-valueMin).execute();
 						
 					} else if(msg.what == 9998) {
 						// state_engine send us a signal to notify it'll die !
@@ -311,16 +310,17 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 
 	public void onProgressChanged(SeekBar seekBar,int progress,boolean fromTouch) {
-		//TODO #1649
+		//#1649
 		//Value min and max should be the limit of the widget
-		if(progress<=valueMin){
-			state.setText("State : "+0+test_unite);
+		int realprogress=(progress+valueMin);
+		if(realprogress<=valueMin){
+			state.setText(stateS+valueMin+" "+test_unite);
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-		}else if(progress>valueMin && progress<valueMax){
-			state.setText("State : "+(int)(progress*(100f/(float)valueMax))+test_unite);
+		}else if(realprogress>valueMin && realprogress<valueMax){
+			state.setText(stateS+realprogress+" "+test_unite);
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 1));
-		}else if(progress>=valueMax){
-			state.setText("State : "+100+test_unite);
+		}else if(realprogress>=valueMax){
+			state.setText(stateS+valueMax+" "+test_unite);
 			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		}
 	}
@@ -334,7 +334,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 
 
 	public void onStopTrackingTouch(SeekBar arg0) {
-		state_progress = arg0.getProgress();
+		//send the correct value by replacing it with a converted one.
+		state_progress=(int)(arg0.getProgress()+valueMin);
 		new CommandeThread().execute();
 		touching=false;
 	}

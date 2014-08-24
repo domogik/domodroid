@@ -489,13 +489,15 @@ public class MapView extends View {
 					}
 					//Tracer.e("MapView","DrawWidget value0  <"+value0+"> value1 <"+value1+"> valueMin <"+valueMin+"> valueMax <"+valueMax+">");
 				}
-				if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
-				//if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
-				{
-					intstate=1;
+				if (states != "????"){
+					if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
+					//if ((states.equals("high")) || (states.equals("on") || ((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>0)))))
+					{
+						intstate=1;
+					}
+					//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+					featureMap.setState(intstate);
 				}
-				//set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-				featureMap.setState(intstate);
 				
 				try {
 					// Draw symbol of feature

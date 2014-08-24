@@ -1,0 +1,9 @@
+============
+House option
+============
+
+* Add a new area
+* Add a new room in an area
+* Add a widget in any room
+
+.. image:: Config_house.png

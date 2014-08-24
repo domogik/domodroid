@@ -107,6 +107,7 @@ public class MapView extends View {
 	private Graphical_Color colorw;
 	private Graphical_List list;
 	private Graphical_Cam cam;
+	private Graphical_Color color;
 	
 	private Vector<String> files;
 	private Entity_Map[] listFeatureMap;
@@ -772,18 +773,18 @@ public class MapView extends View {
 				//ignore it : it'll have another device for Color, displaying the switch !)
 			} else {
 				if (params.getBoolean("WIDGET_CHOICE",false)==false) {
-				onoff = new Graphical_Binary(Tracer, context,Address,
-				label,Id,DevId,State_key,URL,iconName,
-				parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
-				onoff.container=(FrameLayout) panel_widget;
-				panel_widget.addView(onoff);
+					onoff = new Graphical_Binary(Tracer, context,Address,
+							label,Id,DevId,State_key,URL,iconName,
+							parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
+					onoff.container=(FrameLayout) panel_widget;
+					panel_widget.addView(onoff);
 				}
 				else{
-				onoff_New = new Graphical_Binary_New(Tracer, context,Address,
-				label,Id,DevId,State_key,URL,iconName,
-				parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
-				onoff_New.container=(FrameLayout) panel_widget;
-				panel_widget.addView(onoff_New);
+					onoff_New = new Graphical_Binary_New(Tracer, context,Address,
+							label,Id,DevId,State_key,URL,iconName,
+							parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
+					onoff_New.container=(FrameLayout) panel_widget;
+					panel_widget.addView(onoff_New);
 				}
 					
 			}
@@ -806,6 +807,14 @@ public class MapView extends View {
 					parameters,device_type_id,widgetSize, mytype,0,zone,params);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
+		else if(State_key.equals("color")){
+			color = new Graphical_Color(Tracer, context, 
+				params,Id,DevId,label,
+				device_type_id,	//Added by Doume to know the 'techno'
+				Address,//  idem to know the address
+				State_key,URL,iconName,update_timer,
+			widgetSize, mytype,0,zone);
+			panel_widget.addView(color);}
 		else if (feature.getValue_type().equals("number")) {
 			if (params.getBoolean("Graph_CHOICE",false)==true) {
 				info1= new Graphical_Info_with_achartengine(Tracer, context,
@@ -853,7 +862,6 @@ public class MapView extends View {
 				panel_widget.addView(info);}
 			}
 		
-	//TODO Seems it miss some device type like in Widgets_Manager.java
 	}
 
 	@Override

@@ -143,9 +143,9 @@ public class Widgets_Manager {
 						onoff = new Graphical_Binary(Tracer, context,Address,label,
 							Id,DevId,State_key,URL,iconName,parameters,device_type_id,
 							update_timer,widgetSize, mytype,id,zone,params);
-					onoff.container=tmpPan;
-					tmpPan.addView(onoff);
-					Tracer.i(mytag,"   ==> Graphical_Binary");
+						onoff.container=tmpPan;
+						tmpPan.addView(onoff);
+						Tracer.i(mytag,"   ==> Graphical_Binary");
 					}
 					else {
 						onoff_New = new Graphical_Binary_New(Tracer, context,Address,label,

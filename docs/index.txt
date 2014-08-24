@@ -17,6 +17,7 @@ End User Documentation
 	* :doc:`Configuration Server </end_user/Config_server>`
 	* :doc:`Configuration Map </end_user/Config_map>`
 	* :doc:`Configuration Debug </end_user/Config_debug>`
+	* :doc:`Configuration House </end_user/Config_house>`
 * :doc:`Usage </end_user/usage>`
 * :doc:`Nightly builds </end_user/nightly_builds>`
 

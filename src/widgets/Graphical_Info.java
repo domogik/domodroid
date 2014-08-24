@@ -107,7 +107,7 @@ public class Graphical_Info extends FrameLayout implements OnLongClickListener, 
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
-			final String state_key, String url,String usage, int period, int update, 
+			final String state_key, String url,String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
@@ -203,7 +203,6 @@ public class Graphical_Info extends FrameLayout implements OnLongClickListener, 
 			canvas.dev_id = dev_id;
 			canvas.state_key = state_key;
 			canvas.url = url;
-			//canvas.period = period;
 			canvas.update = update;
 			
 			LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.domogik.domodroid.R;
 
+import database.DomodroidDB;
 import database.WidgetUpdate;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
@@ -73,6 +74,7 @@ public class MapView extends View {
 	float currentScaleheight = 1;
 	private int screenwidth;
 	private int screenheight;
+	private int widgetSize;
 	private boolean addMode=false;
 	private boolean removeMode=false;
 	private boolean moveMode=false;
@@ -728,6 +730,8 @@ public class MapView extends View {
 	}	
 	
 	public void showTopWidget(Entity_Map feature) throws JSONException{
+		DomodroidDB domodb = new DomodroidDB(Tracer, context);
+		domodb.owner="MapView.showTopWidgets";
 		if(panel_widget.getChildCount()!=0){
 			panel_widget.removeAllViews();
 		}
@@ -735,13 +739,32 @@ public class MapView extends View {
 		if(label.length() < 1)
 			label = feature.getName();
 		
+		
+		String URL = params.getString("URL","1.1.1.1");
+		String parameters = feature.getParameters();
+		String device_type_id = feature.getDevice_type_id();
 		String State_key = feature.getState_key();
+		String Address = feature.getAddress();
+		String zone = "";
+		int Graph = params.getInt("GRAPH",3);
+		int update_timer = params.getInt("UPDATE_TIMER",300);
+		int DevId = feature.getDevId();
+		int Id = feature.getId();
+		
+		String iconName = "unknow";
+		try {
+			iconName = domodb.requestIcons(Id, "feature").getValue().toString();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		if (iconName=="unknow")
+			iconName=feature.getDevice_usage_id();
 		
 		//add debug option to change label adding its Id
 		if (params.getBoolean("DEV",false)==true)
-			label = label+" ("+feature.getDevId()+")";
+			label = label+" ("+DevId+")";
 		
-		String[] model = feature.getDevice_type_id().split("\\.");
+		String[] model = device_type_id.split("\\.");
 		String type = model[1];
 		
 		if (feature.getValue_type().equals("binary")) {
@@ -749,18 +772,16 @@ public class MapView extends View {
 				//ignore it : it'll have another device for Color, displaying the switch !)
 			} else {
 				if (params.getBoolean("WIDGET_CHOICE",false)==false) {
-				onoff = new Graphical_Binary(Tracer, context,feature.getAddress(),
-				label,feature.getId(),feature.getDevId(),feature.getState_key(),
-				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"",params);
+				onoff = new Graphical_Binary(Tracer, context,Address,
+				label,Id,DevId,State_key,URL,iconName,
+				parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
 				onoff.container=(FrameLayout) panel_widget;
 				panel_widget.addView(onoff);
 				}
 				else{
-				onoff_New = new Graphical_Binary_New(Tracer, context,feature.getAddress(),
-				label,feature.getId(),feature.getDevId(),feature.getState_key(),
-				params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-				feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"",params);
+				onoff_New = new Graphical_Binary_New(Tracer, context,Address,
+				label,Id,DevId,State_key,URL,iconName,
+				parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
 				onoff_New.container=(FrameLayout) panel_widget;
 				panel_widget.addView(onoff_New);
 				}
@@ -768,89 +789,65 @@ public class MapView extends View {
 			}
 		}
 		else if (feature.getValue_type().equals("boolean")) {
-			bool = new Graphical_Boolean(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),
-					feature.getDevice_usage_id(),feature.getParameters(),
-					feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"");
+			bool = new Graphical_Boolean(Tracer, context,Address,
+					label,Id,DevId,State_key,iconName,
+					parameters,device_type_id,update_timer,widgetSize, mytype,0,zone);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {
-			variator = new Graphical_Range(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),
-					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-					feature.getParameters(),feature.getDevice_type_id(),params.getInt("UPDATE",300),0, mytype,0,"",params);
+			variator = new Graphical_Range(Tracer, context,Address,
+					label,Id,DevId,State_key,URL,iconName,
+					parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
 			variator.container=(FrameLayout) panel_widget;
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
-			trigger = new Graphical_Trigger(Tracer, context,feature.getAddress(),
-					label,feature.getId(),feature.getDevId(),feature.getState_key(),
-					params.getString("URL","1.1.1.1"),feature.getDevice_usage_id(),
-					feature.getParameters(),feature.getDevice_type_id(),0, mytype,0,"",params);
+			trigger = new Graphical_Trigger(Tracer, context,Address,
+					label,Id,DevId,State_key,URL,iconName,
+					parameters,device_type_id,widgetSize, mytype,0,zone,params);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
 		else if (feature.getValue_type().equals("number")) {
 			if (params.getBoolean("Graph_CHOICE",false)==true) {
-				info1= new Graphical_Info_with_achartengine(Tracer, context,feature.getId(),feature.getDevId(),
-					label,
-					feature.getState_key(),params.getString("URL","1.1.1.1"),
-					feature.getDevice_usage_id(),
-					params.getInt("GRAPH",3),
-					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),0,"",params);
+				info1= new Graphical_Info_with_achartengine(Tracer, context,
+					Id,DevId,label,State_key,URL,iconName,Graph,
+					update_timer,widgetSize, mytype, parameters,0,zone,params);
 				info1.container=(FrameLayout) panel_widget;
 				panel_widget.addView(info1);
 				}else{
-				info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),
-						label,
-						feature.getState_key(),params.getString("URL","1.1.1.1"),
-						feature.getDevice_usage_id(),
-						params.getInt("GRAPH",3),
-						params.getInt("UPDATE",300),0, mytype, feature.getParameters(),0,"",params);
+				info = new Graphical_Info(Tracer, context,Id,DevId,
+						label,State_key,URL,iconName,
+						update_timer,widgetSize, mytype, parameters,0,zone,params);
 				info.container=(FrameLayout) panel_widget;
 				panel_widget.addView(info);
 				}
 			}
 		 else if (feature.getValue_type().equals("list")) {
-			list = new Graphical_List(Tracer, context,feature.getId(),feature.getDevId(), label,
-					feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
-					feature.getAddress(),			//  idem to know the address
-					feature.getState_key(),
-					params.getString("URL","1.1.1.1"),
-					feature.getDevice_usage_id(),
-					params.getInt("GRAPH",3),
-					params.getInt("UPDATE",300),0, mytype, feature.getParameters(),feature.getDevice_type_id(),0,"",params);
+			list = new Graphical_List(Tracer, context,Id,DevId, label,
+					device_type_id,	//Added by Doume to know the 'techno'
+					Address,			//  idem to know the address
+					State_key,URL,iconName,Graph,
+					update_timer,widgetSize, mytype, parameters,device_type_id,0,zone,params);
 			list.container=(FrameLayout) panel_widget;
 			panel_widget.addView(list);}
-		else if (feature.getState_key().equals("color")) {
+		else if (State_key.equals("color")) {
 			colorw = new Graphical_Color(Tracer, context,
-					params,
-					feature.getId(),feature.getDevId(),
-					label,
-					feature.getDevice_feature_model_id(),
-					feature.getAddress(),
-					feature.getState_key(),
-					params.getString("URL","1.1.1.1"),
-					feature.getDevice_usage_id(),
-					params.getInt("UPDATE",300),
-					0, mytype,0,""
+					params,Id,DevId,label,feature.getDevice_feature_model_id(),
+					Address,State_key,URL,iconName,
+					update_timer,
+					widgetSize, mytype,0,zone
 					);
 			colorw.container=(FrameLayout) panel_widget;
 			panel_widget.addView(colorw);}
 		 else if(feature.getValue_type().equals("string")){
 			if(feature.getDevice_feature_model_id().contains("camera")) {
 				cam = new Graphical_Cam(Tracer, context,
-					feature.getId(),
-					feature.getDevId(),
-					label,
-					feature.getAddress(),0, mytype,0,"");
+					Id,DevId,label,
+					Address,widgetSize, mytype,0,zone);
 				panel_widget.addView(cam);}
 			else {
-				info = new Graphical_Info(Tracer, context,feature.getId(),feature.getDevId(),label,
-						feature.getState_key(),
-						"",
-						feature.getDevice_usage_id(),
-						0,
-						params.getInt("UPDATE_TIMER",300),
-						0, mytype, feature.getParameters(),0,"",params);
+				info = new Graphical_Info(Tracer, context,Id,DevId,label,
+						State_key,"",iconName,update_timer,
+						widgetSize, mytype, parameters,0,zone,params);
 				info.container=(FrameLayout) panel_widget;
 				info.with_graph=false;
 				panel_widget.addView(info);}

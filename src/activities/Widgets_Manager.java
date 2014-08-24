@@ -110,6 +110,12 @@ public class Widgets_Manager {
 			
 			String Value_type = feature.getValue_type();
 			String Address = feature.getAddress();
+			String URL = params.getString("URL","1.1.1.1");
+			String parameters = feature.getParameters();
+			String device_type_id = feature.getDevice_type_id();
+			String State_key = feature.getState_key();
+			int Graph = params.getInt("GRAPH",3);
+			int update_timer = params.getInt("UPDATE_TIMER",300);
 			int DevId = feature.getDevId();
 			int Id = feature.getId();
 			String iconName = "unknow";
@@ -120,13 +126,12 @@ public class Widgets_Manager {
 			}
 			if (iconName=="unknow")
 				iconName=feature.getDevice_usage_id();
-			String State_key = feature.getState_key();
 			
 			//add debug option to change label adding its Id
 			if (params.getBoolean("DEV",false)==true) 
 				label = label+" ("+Id+")";
 			
-			String[] model = feature.getDevice_type_id().split("\\.");
+			String[] model = device_type_id.split("\\.");
 			String type = model[1];
 			
 			Tracer.i(mytag, "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
@@ -136,28 +141,16 @@ public class Widgets_Manager {
 				} else {
 					if (params.getBoolean("WIDGET_CHOICE",false)==false) {
 						onoff = new Graphical_Binary(Tracer, context,Address,label,
-							Id,DevId,
-							State_key,
-							params.getString("URL","1.1.1.1"),
-							iconName,
-							feature.getParameters(),
-							feature.getDevice_type_id(),
-							params.getInt("UPDATE_TIMER",300),
-							widgetSize, mytype,id,zone,params);
+							Id,DevId,State_key,URL,iconName,parameters,device_type_id,
+							update_timer,widgetSize, mytype,id,zone,params);
 					onoff.container=tmpPan;
 					tmpPan.addView(onoff);
 					Tracer.i(mytag,"   ==> Graphical_Binary");
 					}
 					else {
 						onoff_New = new Graphical_Binary_New(Tracer, context,Address,label,
-								Id,DevId,
-								State_key,
-								params.getString("URL","1.1.1.1"),
-								iconName,
-								feature.getParameters(),
-								feature.getDevice_type_id(),
-								params.getInt("UPDATE_TIMER",300),
-								widgetSize, mytype,id,zone,params);
+								Id,DevId,State_key,URL,iconName,parameters,device_type_id,
+								update_timer,widgetSize, mytype,id,zone,params);
 						onoff_New.container=tmpPan;
 						tmpPan.addView(onoff_New);
 						Tracer.i(mytag,"   ==> Graphical_Binary");
@@ -165,37 +158,21 @@ public class Widgets_Manager {
 				}
 			} else if (Value_type.equals("boolean")) {
 				bool = new Graphical_Boolean(Tracer, context,Address,label,
-						Id,DevId,
-						State_key,
-						iconName, 
-						feature.getParameters(),
-						feature.getDevice_type_id(),
-						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype,id,zone);
+						Id,DevId,State_key,iconName,parameters,device_type_id,
+						update_timer,widgetSize, mytype,id,zone);
 				bool.container=tmpPan;
 				tmpPan.addView(bool);
 				Tracer.i(mytag,"   ==> Graphical_Boolean");
 			} else if (Value_type.equals("range")) {
 				variator = new Graphical_Range(Tracer,context,Address,label,
-						Id,DevId,
-						State_key,
-						params.getString("URL","1.1.1.1"),
-						iconName,
-						feature.getParameters(),
-						feature.getDevice_type_id(),
-						params.getInt("UPDATE_TIMER",300), 
-						widgetSize, mytype,id,zone,params);
+						Id,DevId,State_key,URL,iconName,parameters,device_type_id,
+						update_timer,widgetSize, mytype,id,zone,params);
 				variator.container=tmpPan;
 				tmpPan.addView(variator);
 				Tracer.i(mytag,"   ==> Graphical_Range");
 			} else if (Value_type.equals("trigger")) {
 				trigger = new Graphical_Trigger(Tracer, context,Address,label,
-						Id,DevId,
-						State_key,
-						params.getString("URL","1.1.1.1"),
-						iconName,
-						feature.getParameters(),
-						feature.getDevice_type_id(),
+						Id,DevId,State_key,URL,iconName,parameters,device_type_id,
 						widgetSize, mytype,id,zone,params);
 				trigger.container=tmpPan;
 				tmpPan.addView(trigger);
@@ -204,42 +181,28 @@ public class Widgets_Manager {
 			} else if(State_key.equals("color")){
 				Tracer.e(mytag,"add Graphical_Color for "+label+" ("+DevId+") key="+State_key);
 				color = new Graphical_Color(Tracer, context, 
-						params, 
-						Id,DevId,
-						label,
-						feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
-						Address,			//  idem to know the address
-						State_key,
-						params.getString("URL","1.1.1.1"),
-						iconName,
-						params.getInt("UPDATE_TIMER",300),
+						params,Id,DevId,label,
+						device_type_id,	//Added by Doume to know the 'techno'
+						Address,//  idem to know the address
+						State_key,URL,iconName,update_timer,
 						widgetSize, mytype,id,zone);
 				tmpPan.addView(color);
 				Tracer.i(mytag,"   ==> Graphical_Color");
 			} else if (Value_type.equals("number")) {
 				if (params.getBoolean("Graph_CHOICE",false)==true) {
 				Tracer.e(mytag,"add Graphical_Info for "+label+" ("+DevId+") key="+State_key);
-					info1 = new Graphical_Info_with_achartengine(Tracer, context,Id,DevId, label,
-						State_key,
-						params.getString("URL","1.1.1.1"),
-						iconName,
-						params.getInt("GRAPH",3),
-						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters(),id,zone,params);
+					info1 = new Graphical_Info_with_achartengine(Tracer, context,
+						Id,DevId, label,State_key,URL,iconName,Graph,
+						update_timer,widgetSize, mytype, parameters,id,zone,params);
 				info1.setLayoutParams(layout_param);
 				info1.container=tmpPan;
 				tmpPan.addView(info1);
 				Tracer.i(mytag,"   ==> Graphical_Info + Graphic");
 				} else{
 					Tracer.e(mytag,"add Graphical_Info for "+label+" ("+DevId+") key="+State_key);
-					
 					info = new Graphical_Info(Tracer, context,Id,DevId, label,
-							State_key,
-							params.getString("URL","1.1.1.1"),
-							iconName,
-							params.getInt("GRAPH",3),
-							params.getInt("UPDATE_TIMER",300),
-							widgetSize, mytype, feature.getParameters(),id,zone,params);
+							State_key,URL,iconName,update_timer,
+							widgetSize, mytype, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.container=tmpPan;
 					tmpPan.addView(info);
@@ -248,14 +211,10 @@ public class Widgets_Manager {
 			} else if (Value_type.equals("list")) {
 				Tracer.e(mytag,"add Graphical_List for "+label+" ("+DevId+") key="+State_key);
 				list = new Graphical_List(Tracer, context,Id,DevId, label,
-						feature.getDevice_type_id(),	//Added by Doume to know the 'techno'
+						device_type_id,	//Added by Doume to know the 'techno'
 						Address,			//  idem to know the address
-						State_key,
-						params.getString("URL","1.1.1.1"),
-						iconName,
-						params.getInt("GRAPH",3),
-						params.getInt("UPDATE_TIMER",300),
-						widgetSize, mytype, feature.getParameters(),feature.getDevice_type_id(),id,zone,params);
+						State_key,URL,iconName,Graph,
+						update_timer,widgetSize, mytype, parameters,device_type_id,id,zone,params);
 				list.setLayoutParams(layout_param);
 				list.container=tmpPan;
 				tmpPan.addView(list);
@@ -263,18 +222,13 @@ public class Widgets_Manager {
 			} else if(Value_type.equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
-							Address,
-							widgetSize, mytype,id,zone);
+							Address,widgetSize, mytype,id,zone);
 					tmpPan.addView(cam);
 					Tracer.i(mytag,"   ==> Graphical_Cam");
 				} else {
 					info = new Graphical_Info(Tracer, context,Id,DevId,label,
-							State_key,
-							"",
-							iconName,
-							0,
-							params.getInt("UPDATE_TIMER",300),
-							0, mytype, feature.getParameters(),id,zone,params);
+							State_key,URL,iconName,update_timer,
+							widgetSize, mytype, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					tmpPan.addView(info);

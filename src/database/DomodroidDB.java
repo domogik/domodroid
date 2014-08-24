@@ -19,17 +19,16 @@ public class DomodroidDB {
 
 	private Activity context;
 	// Added by Doume to clarify debugging
-	private String mytag="DomodroidDB";
-	public String owner="";
+	private String mytag = "DomodroidDB";
+	public String owner = "";
 	private tracerengine Tracer = null;
-	
 	//////////////////////////////////////
 	
 	public DomodroidDB(tracerengine Trac, Activity context){
 		this.context = context;
 		this.Tracer = Trac;
 		Tracer.refresh_settings();
-		Tracer.i("DomodroidDB", "Instance started...");
+		Tracer.i(mytag, "Instance started...");
 		
 	}
 
@@ -311,28 +310,28 @@ public class DomodroidDB {
 			ContentValues values = new ContentValues();
 			values.put("id", id);
 			values.put("newname", name);
-			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for device: "+id);
+			Tracer.e(mytag, "Description set to: "+name+" for device: "+id);
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
 		}
 		else if (type.equals("area")){
 			ContentValues values = new ContentValues();
 			values.put("id", id);
 			values.put("newname", name);
-			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for area: "+id);
+			Tracer.e(mytag, "Description set to: "+name+" for area: "+id);
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_AREA_NAME, values);
 		}
 		else if (type.equals("room")){
 			ContentValues values = new ContentValues();
 			values.put("id", id);
 			values.put("newname", name);
-			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for room: "+id);
+			Tracer.e(mytag, "Description set to: "+name+" for room: "+id);
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ROOM_NAME, values);
 		}
 		else if (type.equals("icon")){
 			ContentValues values = new ContentValues();
 			values.put("id", id);
 			values.put("newname", name);
-			Tracer.e("DomodrdoidDB", "Description set to: "+name+" for icon: "+id);
+			Tracer.e(mytag, "Description set to: "+name+" for icon: "+id);
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
 		}
 	}

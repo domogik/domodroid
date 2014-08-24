@@ -147,7 +147,7 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 			Intent intent = new Intent(context,Activity_Cam.class);
 			Bundle b = new Bundle();
 			b.putString("url", url);
-			Tracer.e("tag",""+url);
+			Tracer.e(mytag,""+url);
 			b.putString("name",name_cam);
 			intent.putExtras(b);
 			context.startActivity(intent);

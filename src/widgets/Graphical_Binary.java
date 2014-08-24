@@ -359,17 +359,17 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		protected Void doInBackground(Void... params) {
 			updating=3;
 			String Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
-			Tracer.i("Graphical_Binary","Sending to Rinor : <"+Url2send+">");
+			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {
 				json_Ack = Rest_com.connect(Url2send,login,password);
 			} catch (Exception e) {
-				Tracer.e("Graphical_Binary", "Rinor exception sending command <"+e.getMessage()+">");
+				Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
 			}
 			try {
 				Boolean ack = JSONParser.Ack(json_Ack);
 				if(ack==false){
-					Tracer.i("Graphical_Binary","Received error from Rinor : <"+json_Ack.toString()+">");
+					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 					handler.sendEmptyMessage(2);
 				}
 			} catch (Exception e) {

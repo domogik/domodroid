@@ -196,7 +196,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		Tracer.e("Graphical_Info Frame", "Get icone for usage : "+usage);
+		Tracer.e(mytag, "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setTag("img");
 		img.setOnLongClickListener(this);

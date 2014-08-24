@@ -186,13 +186,13 @@ public class MapView extends View {
 	private void startCacheEngine() {
 		
 		if(cache_engine == null) {
-			Tracer.w("Activity_Map", "Starting WidgetUpdate engine !");
+			Tracer.w(mytag, "Starting WidgetUpdate engine !");
 			cache_engine = WidgetUpdate.getInstance();
 			//MapView is'nt the first caller, so init is'nt required (already done by View)
 			cache_engine.set_handler(handler, mytype);	//Put our main handler to cache engine (as MapView)
 		}  
 		Tracer.set_engine(cache_engine);
-		Tracer.w("Activity_Map", "WidgetUpdate engine connected !");
+		Tracer.w(mytag, "WidgetUpdate engine connected !");
 		
 	}
 	
@@ -315,7 +315,7 @@ public class MapView extends View {
 			canvasWidget = new Canvas(widget);
 			
 			}catch (Exception e) {
-				Tracer.e("MapView initmap()","formatMode=1 "+e.getStackTrace().toString());
+				Tracer.e(mytag+" initmap()","formatMode=1 "+e.getStackTrace().toString());
 				return;
 			}
 		//Case using a png file as map
@@ -338,7 +338,7 @@ public class MapView extends View {
 			canvasWidget = new Canvas(widget);
 		
 			}catch (Exception e) {
-			Tracer.e("MapView initmap()","formatMode=2 "+e.getStackTrace().toString());
+			Tracer.e(mytag+" initmap()","formatMode=2 "+e.getStackTrace().toString());
 			return;
 		}
 		}
@@ -373,7 +373,7 @@ public class MapView extends View {
 			//Case using a png file as map
 			
 			}catch (Exception e) {
-			Tracer.e("MapView refreshmap()","formatMode=1 "+e.getStackTrace().toString());
+			Tracer.e(mytag+" refreshmap()","formatMode=1 "+e.getStackTrace().toString());
 			return;
 			}
 		}else if(formatMode==2){
@@ -396,7 +396,7 @@ public class MapView extends View {
 			canvasWidget = new Canvas(widget);
 
 		}catch (Exception e) {
-		Tracer.e("MapView refreshmap()","formatMode=2 "+e.getStackTrace().toString());
+		Tracer.e(mytag+" refreshmap()","formatMode=2 "+e.getStackTrace().toString());
 		return;
 		
 		}
@@ -435,12 +435,12 @@ public class MapView extends View {
 									(switchesMap.getPosy()*currentScale)-drawable.getWidth()/2, 
 									paint_map);
 						} else {
-							Tracer.e("MapView","No drawable available for map switch");
+							Tracer.e(mytag,"No drawable available for map switch");
 							return;
 						}
 					
 					} catch (Exception e) {
-						Tracer.e("MapView","cannot draw map switch icon ! ! ! !");
+						Tracer.e(mytag,"cannot draw map switch icon ! ! ! !");
 						return;
 					}
 				
@@ -467,7 +467,7 @@ public class MapView extends View {
 			if(featureMap != null) {
 				states = featureMap.getCurrentState();
 			} else {
-				Tracer.e("MapView","Wrong feature in featureMap list ! ! ! Abort processing !");
+				Tracer.e(mytag,"Wrong feature in featureMap list ! ! ! Abort processing !");
 				return;
 			}
 			
@@ -485,12 +485,12 @@ public class MapView extends View {
 						valueMax = jparam.getInt("valueMax");
 					} catch (JSONException e1) {
 						//e1.printStackTrace();
-						//Tracer.e("MapView","DrawWidget No parameters ! ");
-						//Tracer.e("MapView","DrawWidget   for mini widget type <"+featureMap.getValue_type()+">");
+						//Tracer.e(mytag,"DrawWidget No parameters ! ");
+						//Tracer.e(mytag,"DrawWidget   for mini widget type <"+featureMap.getValue_type()+">");
 						
 						//TODO : what to put into value0, 1, min & max ?
 					}
-					//Tracer.e("MapView","DrawWidget value0  <"+value0+"> value1 <"+value1+"> valueMin <"+valueMin+"> valueMax <"+valueMax+">");
+					//Tracer.e(mytag,"DrawWidget value0  <"+value0+"> value1 <"+value1+"> valueMin <"+valueMin+"> valueMax <"+valueMax+">");
 				}
 				if (states != "????"){
 					if ((states.equals(value1)) ||((featureMap.getValue_type().equals("range") && (Integer.parseInt(states)>valueMin))))
@@ -510,13 +510,13 @@ public class MapView extends View {
 								(featureMap.getPosx()*currentScale)-drawable.getWidth()/2, 
 								(featureMap.getPosy()*currentScale)-drawable.getWidth()/2, 
 								paint_map);
-						Tracer.e("MapView","Draw symbol of feature X="+((featureMap.getPosx()*currentScale)-drawable.getWidth()/2)+" Y="+((featureMap.getPosy()*currentScale)-drawable.getWidth()/2)+" MAP "+paint_map);
+						Tracer.e(mytag,"Draw symbol of feature X="+((featureMap.getPosx()*currentScale)-drawable.getWidth()/2)+" Y="+((featureMap.getPosy()*currentScale)-drawable.getWidth()/2)+" MAP "+paint_map);
 					} else {
-						Tracer.e("MapView","No drawable available for object");
+						Tracer.e(mytag,"No drawable available for object");
 						return;
 					}
 				} catch (Exception e) {
-					Tracer.e("MapView","cannot draw object ! ! ! !");
+					Tracer.e(mytag,"cannot draw object ! ! ! !");
 					return;
 				}
 				
@@ -568,7 +568,7 @@ public class MapView extends View {
 								label = featureMap.getDevice_usage_id();
 							canvasWidget.drawText(featureMap.getCurrentState().toUpperCase(), (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y, paint_text);
 							canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, (featureMap.getPosy()*currentScale)+text_Offset_Y+(15*(int)scale), paint_text);
-							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+							//Tracer.e(mytag,"Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						}
 					}
 				
@@ -611,12 +611,12 @@ public class MapView extends View {
 								if(label == null)
 									label = "";
 								
-								//Tracer.e("MapView","Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+								//Tracer.e(mytag,"Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 								canvasWidget.drawText(value, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y-(10*(int)scale), 
 										paint_text);
 								paint_text.setTextSize(texsize* scale + 0.5f-1);
-								//Tracer.e("MapView","Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+								//Tracer.e(mytag,"Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 								if (params.getBoolean("HIDE",false)==false){ 
 									canvasWidget.drawText(label, (featureMap.getPosx()*currentScale)+text_Offset_X, 
 										(featureMap.getPosy()*currentScale)+text_Offset_Y+(6*(int)scale), 
@@ -641,7 +641,7 @@ public class MapView extends View {
 									(featureMap.getPosx()*currentScale)+text_Offset_X, 
 									(featureMap.getPosy()*currentScale)+text_Offset_Y, 
 									paint_text);
-							//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+							//Tracer.e(mytag,"Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						}else{
 							if  (featureMap.getState_key().equals("light")){
 								if (Integer.parseInt(featureMap.getCurrentState()) > valueMin){
@@ -663,11 +663,11 @@ public class MapView extends View {
 								(featureMap.getPosx()*currentScale)+text_Offset_X, 
 								(featureMap.getPosy()*currentScale)+text_Offset_Y, 
 								paint_text);
-						//Tracer.e("MapView","Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+						//Tracer.e(mytag,"Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
 						
 					}
 				}else if(featureMap.getState_key().equals("color")){
-					Tracer.e("MapView","Drawing color for "+featureMap.getName()+" Value = "+states);
+					Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" Value = "+states);
 					Paint paint_color = new Paint();
 					paint_color.setPathEffect(null);
 					paint_color.setAntiAlias(true);
@@ -683,7 +683,7 @@ public class MapView extends View {
 						//To avoid http://tracker.domogik.org/issues/1972 here
 						argbS="#FFFFFF";
 					}
-					//Tracer.e("MapView","Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
+					//Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
 					//Draw first a black background...
 					paint_color.setColor(Color.BLACK);
 					paint_color.setShadowLayer(1, 0, 0, Color.BLACK);

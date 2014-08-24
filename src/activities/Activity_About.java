@@ -37,6 +37,7 @@ import android.widget.TextView;
 public class Activity_About extends Activity{
     protected PowerManager.WakeLock mWakeLock;
     private String pn = "";
+    private String mytag="Activity_About";
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class Activity_About extends Activity{
 			PackageInfo pi = getPackageManager().getPackageInfo( pn, 0);
 			version = pi.versionName;
 		} catch (PackageManager.NameNotFoundException e) {
-			//Tracer.e("Activity_About", "Version name not found in package");
+			//Tracer.e(mytag, "Version name not found in package");
 		}
 		return version;
 	}
@@ -99,7 +100,7 @@ public class Activity_About extends Activity{
 			PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
 			version = pi.versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
-			//Tracer.e("Activity_About", "Version number not found in package");
+			//Tracer.e(mytag, "Version number not found in package");
 		}
 		return version;
 	}

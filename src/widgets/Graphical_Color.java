@@ -544,21 +544,21 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			if(seekBar.getProgress()<20){
 				seekBar.setProgress(0);
 				switch_state=false;
-				Tracer.i("Graphical_Color","Change switch to OFF" );
+				Tracer.i(mytag,"Change switch to OFF" );
 				// Force color picker to black....
 				seekBarRGBYBar.setProgress(0);		//No brightness => black !
 			}else{
 				seekBar.setProgress(100);
 				switch_state=true;
 				LoadSelections();			//Recall last known value, till state engine refresh...
-				Tracer.i("Graphical_Color","Change switch to ON" );
+				Tracer.i(mytag,"Change switch to ON" );
 			}
 			new CommandeThread().execute();		//And send switch_state to Domogik
 			
 		} else {
 			state_progress = seekBar.getProgress();
 			SaveSelections();
-			Tracer.i("Graphical_Color","End of change : new rgb value =  #"+argbS );
+			Tracer.i(mytag,"End of change : new rgb value =  #"+argbS );
 			if(seekBarOnOff.getProgress() > 50)
 				if(switch_state)
 					new CommandeThread().execute();		//send new color
@@ -594,7 +594,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				
 			updating=1;
 			
-			Tracer.i("Graphical_Color","Sending to Rinor : <"+Url2send+">");
+			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {
 				json_Ack = Rest_com.connect(Url2send,login,password);
@@ -631,10 +631,10 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		prefEditor.putString("COLORRGB","#"+argbS);
 		prefEditor.commit();
 		/*
-		Tracer.i("Graphical_Color", "SaveSelections()");
-		Tracer.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
-		Tracer.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
-		Tracer.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+		Tracer.i(mytag, "SaveSelections()");
+		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
+		Tracer.i(mytag,"Sat    = "+params.getInt("COLORSATURATION",0));
+		Tracer.i(mytag,"Bright = "+params.getInt("COLORBRIGHTNESS",0));
 		*/
 	}
 
@@ -643,23 +643,23 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION",255));
 		seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS",255));
 		/*
-		Tracer.i("Graphical_Color", "LoadSelections()");
-		Tracer.i("Graphical_Color","Hue    = "+params.getInt("COLORHUE",0));
-		Tracer.i("Graphical_Color","Sat    = "+params.getInt("COLORSATURATION",0));
-		Tracer.i("Graphical_Color","Bright = "+params.getInt("COLORBRIGHTNESS",0));
+		Tracer.i(mytag, "LoadSelections()");
+		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
+		Tracer.i(mytag,"Sat    = "+params.getInt("COLORSATURATION",0));
+		Tracer.i(mytag,"Bright = "+params.getInt("COLORBRIGHTNESS",0));
 		*/
 	}
 	public void onClick(View arg0) {
-		Tracer.i("Graphical_Color", "Touch....");
+		Tracer.i(mytag, "Touch....");
 		if(featurePan2.getVisibility()== INVISIBLE){
 			background.addView(featurePan2);
 			featurePan2.setVisibility(VISIBLE);
-			Tracer.i("Graphical_Color", "FeaturePan2 set to VISIBLE");
+			Tracer.i(mytag, "FeaturePan2 set to VISIBLE");
 		}
 		else{
 			background.removeView(featurePan2);
 			featurePan2.setVisibility(INVISIBLE);
-			Tracer.i("Graphical_Color", "FeaturePan2 set to INVISIBLE");
+			Tracer.i(mytag, "FeaturePan2 set to INVISIBLE");
 		}
 		return;
 	}

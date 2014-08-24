@@ -40,7 +40,7 @@ import misc.tracerengine;
   
 public class Rest_com {
 	private SharedPreferences params;
-	
+	private static String mytag = "Rest_com";
 	
 	private static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -91,7 +91,7 @@ public class Rest_com {
 			}
             else
 			{
-            	Tracer.d("Rest_com", "Resource not available>");
+            	Tracer.d(mytag, "Resource not available>");
 			}
  
  

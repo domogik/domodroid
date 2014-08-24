@@ -116,7 +116,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 
 		background.addView(imgPan);
 		background.addView(infoPan);
-		//Tracer.d("Graphical_Room("+id+")","creating view for "+name_room+" "+description_room);
+		//Tracer.d(mytag+"("+id+")","creating view for "+name_room+" "+description_room);
 		
 		this.addView(background);
 	}

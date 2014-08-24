@@ -235,7 +235,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			public void handleMessage(Message msg) {
 				/// Deprecated method to die /////////////////////////////////////////
 				if(activate) {
-					Tracer.d("Graphical_Range","Handler receives a request to die " );
+					Tracer.d(mytag,"Handler receives a request to die " );
 					//That seems to be a zombie
 					removeView(background);
 					myself.setVisibility(GONE);
@@ -252,7 +252,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						if(session == null)
 							return;
 						try {
-							Tracer.d("Graphical_Range","Handler receives a new value from cache_engine <"+session.getValue()+">" );
+							Tracer.d(mytag,"Handler receives a new value from cache_engine <"+session.getValue()+">" );
 							new_val = Integer.parseInt(session.getValue());
 						} catch (Exception e) {
 							new_val = 0;
@@ -271,7 +271,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						
 					} else if(msg.what == 9998) {
 						// state_engine send us a signal to notify it'll die !
-						Tracer.d("Graphical_Range","state engine disappeared ===> Harakiri !" );
+						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
 						session = null;
 						realtime = false;
 						removeView(background);

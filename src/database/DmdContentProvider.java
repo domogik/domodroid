@@ -21,7 +21,7 @@ import android.util.Log;
  * ===========================================================
  */
 public class DmdContentProvider extends ContentProvider {
-
+	private String mytag = "DmdContentProvider";
 	private DatabaseHelper mDB;
 	private SQLiteDatabase bdd;
 	private static final String AUTHORITY = "database.DmdContentProvider";
@@ -258,15 +258,15 @@ public class DmdContentProvider extends ContentProvider {
 			mDB.getWritableDatabase().execSQL("delete from table_room where 1=1");
 			break;
 		case CLEAR_ICON:
-			Log.e("DmdContentProvider","Clear icons table");
+			Log.e(mytag,"Clear icons table");
 			mDB.getWritableDatabase().execSQL("delete from table_icon where 1=1");
 			break;
 		case CLEAR_FEATURE:
-			Log.e("DmdContentProvider","Clear feature table");
+			Log.e(mytag,"Clear feature table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature where 1=1");
 			break;
 		case CLEAR_FEATURE_ASSOCIATION:
-			Log.e("DmdContentProvider","Clear feature_association table");
+			Log.e(mytag,"Clear feature_association table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature_association where 1=1");
 			break;
 		case CLEAR_FEATURE_MAP:
@@ -274,11 +274,11 @@ public class DmdContentProvider extends ContentProvider {
 			//it removes them from the table_feature_map table in DB.
 			String[] map_name = new String[1] ;
 			map_name[0] = values.getAsString("map");
-			Log.e("DmdContentProvider","Clear widgets from map : "+values.getAsString("map"));
+			Log.e(mytag,"Clear widgets from map : "+values.getAsString("map"));
 			mDB.getWritableDatabase().delete("table_feature_map", "map=?", map_name);
 			break;
 		case CLEAR_FEATURE_STATE:
-			//Log.e("DmdContentProvider","Clear feature_state table");
+			//Log.e(mytag,"Clear feature_state table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature_state where 1=1");
 			break;
 		
@@ -287,7 +287,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_area WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting area: "+e.toString());
+				Log.e(mytag, "Error deleting area: "+e.toString());
 				}
 			break;
 		case CLEAR_one_ROOM:
@@ -295,7 +295,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_room WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting room: "+e.toString());
+				Log.e(mytag, "Error deleting room: "+e.toString());
 				}
 			break;
 		case CLEAR_one_ICON:
@@ -305,7 +305,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting feature: "+e.toString());
+				Log.e(mytag, "Error deleting feature: "+e.toString());
 				}
 			break;
 		case CLEAR_one_FEATURE_ASSOCIATION:
@@ -313,7 +313,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting feature_association: "+e.toString());
+				Log.e(mytag, "Error deleting feature_association: "+e.toString());
 				}
 			break;
 		case CLEAR_one_unique_FEATURE_ASSOCIATION:
@@ -321,7 +321,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id="+values.getAsString("id")+" AND place_id="+values.getAsString("place_id")+" AND place_type='"+values.getAsString("place_type")+"'" );
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting one_unique_feature_association: "+e.toString());
+				Log.e(mytag, "Error deleting one_unique_feature_association: "+e.toString());
 				}
 			break;
 		case CLEAR_one_place_type_in_FEATURE_ASSOCIATION:
@@ -329,13 +329,13 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE place_id="+values.getAsString("place_id")+" AND place_type='"+values.getAsString("place_type")+"'" );
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting one_place_type_in_FEATURE_ASSOCIATION: "+e.toString());
+				Log.e(mytag, "Error deleting one_place_type_in_FEATURE_ASSOCIATION: "+e.toString());
 				}
 			break;
 		//Add a new select case to remove only one widget on map
 		//careful to avoid problem it must be call with id, posx, posy and map
 		case CLEAR_one_FEATURE_MAP:
-			//Tracer.e("DmdContentProvider","Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
+			//Tracer.e(mytag,"Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
 			try{
 				//Get a min and max value to be sure not needing a precise click.
 				int posxlow=values.getAsInteger("posx")-20;
@@ -343,10 +343,10 @@ public class DmdContentProvider extends ContentProvider {
 				int posylow=values.getAsInteger("posy")-20;
 				int posyhigh=values.getAsInteger("posy")+20;
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
-				//Tracer.d("DmdContentProvider", "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
+				//Tracer.d(mytag, "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting widget: "+e.toString());
+				Log.e(mytag, "Error deleting widget: "+e.toString());
 				}
 			break;
 		case CLEAR_one_feature_in_FEATURE_MAP:
@@ -354,7 +354,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error deleting feature_map: "+e.toString());
+				Log.e(mytag, "Error deleting feature_map: "+e.toString());
 				}
 			break;
 		case CLEAR_one_FEATURE_STATE:
@@ -364,37 +364,37 @@ public class DmdContentProvider extends ContentProvider {
 			//Rename the description of a device because it's what is first display if exist in a widget
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description: "+e.toString());
 				}
 			break;
 		case UPDATE_AREA_NAME:
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_area SET name='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description: "+e.toString());
 				}
 			break;
 		case UPDATE_ROOM_NAME:
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_room SET name='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description: "+e.toString());
 				}
 			break;
 		case UPDATE_ICON_NAME:
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_icon SET value='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				//Tracer.d("DmdContentProvider", "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
+				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e("DmdContentProvider", "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description: "+e.toString());
 				}
 			break;
 		default:
@@ -418,13 +418,13 @@ public class DmdContentProvider extends ContentProvider {
 			cursor=mDB.getReadableDatabase().rawQuery(
 					"SELECT * FROM table_area "
 					,null);
-			Log.d("DmdContentProvider","Query on table_area return "+cursor.getCount()+" rows");
+			Log.d(mytag,"Query on table_area return "+cursor.getCount()+" rows");
 			break;
 		case REQUEST_ROOM:
 			queryBuilder.setTables("table_room");
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
 			
-			//Log.d("DmdContentProvider","Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
+			//Log.d(mytag,"Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
 			break;
 		case REQUEST_ICON:
 			queryBuilder.setTables("table_icon");

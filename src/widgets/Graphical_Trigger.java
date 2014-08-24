@@ -195,7 +195,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		try {
 			json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command,login,password);
 		} catch (Exception e) {
-			Tracer.e("Graphical_Trigger", "Exception Rest getting command <"+e.getMessage()+">");
+			Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
 		}
 		try {
 			Boolean ack = JSONParser.Ack(json_Ack);

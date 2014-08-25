@@ -1,0 +1,22 @@
+Domodroid is a remote control application that allow you to control your Domogik home automation system.
+
+The following features are already available on the latest version of Domodroid:
+
+- Graph Data Values with homemade graph engine (by default)
+- Graph Data Values with Achartengine (in development)
+- Video camera streaming
+- On/Off (2 versions available), Variator, Actuator, State and Data Widgets
+- Auto-Updated widgets
+- Full icon pack supported
+- Technologies supported: Onewire, PLCBus, IPX800, Mirror, Teleinfo, X10, WakeOnLan, Ping, Zibase, RFXCom, YahooWather (Theorycally, all that are supported by Domogik)
+- All screen size supported Smartphone/Tablet
+- Power management control
+- Startup dirctley in map mode.
+
+http:/domogik.org
+
+Documentation is here:
+http://doc.domogik.org/domodroid/dev/en/
+
+Nightly builds are available here:
+http://repo.domogik.org/domodroid-nightly/

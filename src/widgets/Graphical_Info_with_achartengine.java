@@ -239,19 +239,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 
 		if(with_graph) {
 			values = new Vector<Vector<Float>>();
-
-
-
-
-
-
-
-
-
-
-
-
-			
+		
 			final String[] mMonth = new String[] {
 					"Jan", "Feb" , "Mar", "Apr", "May", "Jun",
 					"Jul", "Aug" , "Sep", "Oct", "Nov", "Dec"
@@ -265,10 +253,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 			currentTimestamp=time_end.getTime()/1000;
 			startTimestamp=time_start.getTime()/1000;
 
-
-
-			
-	    	//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+			//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 			Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 			JSONObject json_GraphValues = null;
 			try {
@@ -281,25 +266,14 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 			}
 				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-				Vector<Float> vect = new Vector<Float>();
 				// Creating an  XYSeries for Income
 		    	XYSeries nameSeries = new XYSeries(name);
 		    	
 			for (int i =0; i < valueArray.length(); i++){
 				real_val = valueArray.getJSONArray(i).getDouble(limit-1);
-				// stats per hour return [ year, month, week, day, hour, value]
-				for (int j=0; j < 6; j++){
-					vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
-					
-					Tracer.d(mytag,"(j="+j+")="+(float)valueArray.getJSONArray(i).getDouble(j));
-				}
-				Tracer.d(mytag,"(i="+i+" (real_val)="+real_val);
-				// Adding data to Series
-		    	for(int w = 0 ; w < valueArray.length() ; w++){
+				for(int w = 0 ; w < valueArray.length() ; w++){
 		    		nameSeries.add(i, real_val);
 		    	}
-				// each vector contains 6  floats
-				values.add(vect);
 				if(minf == 0)
 					minf=real_val.floatValue();
 				
@@ -318,11 +292,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 						
 			Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
 
-
-
-			
-	    	
-	    	
 	    	// Creating a dataset to hold each series
 	    	XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 	    	// Adding nameSeries Series to the dataset
@@ -367,31 +336,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	   		multiRenderer.setSelectableBuffer(10);     	
 	   		// Adding the Combined Chart to the LinearLayout
 	    	chartContainer.addView(mChart);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		}
 		featurePan.addView(value);
@@ -498,34 +442,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//updateTimer();	//Don't use anymore cyclic refresh....	
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @Override
 	protected void onWindowVisibilityChanged(int visibility) {

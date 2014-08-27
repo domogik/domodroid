@@ -38,6 +38,7 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+import org.achartengine.tools.PanListener;
 import org.domogik.domodroid.R;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,7 +93,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	private LinearLayout background;
 	private LinearLayout featurePan;
 	private LinearLayout chartContainer;
-
+	
 	private LinearLayout infoPan;
 	private LinearLayout topPan;
 	private ImageView img;
@@ -108,7 +109,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	private Animation animation;
 	private Activity context;
 	private Message msg;
-	private String wname;
+	private String name;
 	private String mytag="";
 	private String url = null;
 	private String place_type;
@@ -144,8 +145,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 										// 30 = 1 month
 										// 365 = 1 year
 	private int sav_period;
-
-	
+		
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int period, int update, 
@@ -157,7 +157,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		this.id = id;
 		this.state_key = state_key;
 		this.update=update;
-		this.wname = name;
+		this.name = name;
 		this.url = url;
 		this.myself = this;
 		this.session_type = session_type;
@@ -173,7 +173,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
     	
 		mytag="Graphical_Info_with_achartengine ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
-		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		Tracer.e(mytag,"New instance for name = "+name+" state_key = "+state_key);
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -237,107 +237,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 
-		if(with_graph) {
-			values = new Vector<Vector<Float>>();
-		
-			final String[] mMonth = new String[] {
-					"Jan", "Feb" , "Mar", "Apr", "May", "Jun",
-					"Jul", "Aug" , "Sep", "Oct", "Nov", "Dec"
-				};
-	    	int[] x = { 0,1,2,3,4,5,6,7 };
-	    	int[] income = { 2000,2500,2700,3000,2800,3500,3700,3800};
-	    	int nb_of_value = 20;
-	    	
-	    	period_type = 1;	//by default, display 24 hours
-			compute_period();	//To initialize time_start & time_end
-			currentTimestamp=time_end.getTime()/1000;
-			startTimestamp=time_start.getTime()/1000;
-
-			//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
-			Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
-			JSONObject json_GraphValues = null;
-			try {
-				//json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+1385857510+"/interval/"+step+"/selector/avg");
-				json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
-				
-			} catch (Exception e) {
-				//return null;
-				Tracer.e(mytag,"Error with json");
-			}
-				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
-				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-				// Creating an  XYSeries for Income
-		    	XYSeries nameSeries = new XYSeries(name);
-		    	
-			for (int i =0; i < valueArray.length(); i++){
-				real_val = valueArray.getJSONArray(i).getDouble(limit-1);
-				for(int w = 0 ; w < valueArray.length() ; w++){
-		    		nameSeries.add(i, real_val);
-		    	}
-				if(minf == 0)
-					minf=real_val.floatValue();
-				
-				avgf+=real_val;	// Get the real 'value'
-				if(real_val > maxf){  
-					maxf = real_val.floatValue();  
-				}  
-				if(real_val < minf){  
-					minf = real_val.floatValue(); 
-				}
-			}
-			avgf=avgf/values.size();
-			Tracer.d(mytag,"minf ("+dev_id+")="+minf);
-			Tracer.d(mytag,"maxf ("+dev_id+")="+maxf);
-			Tracer.d(mytag,"avgf ("+dev_id+")="+avgf);
-						
-			Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
-
-	    	// Creating a dataset to hold each series
-	    	XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-	    	// Adding nameSeries Series to the dataset
-	    	dataset.addSeries(nameSeries);
-	    	
-	    	// Creating XYSeriesRenderer to customize incomeSeries
-	    	XYSeriesRenderer incomeRenderer = new XYSeriesRenderer();
-	    	incomeRenderer.setColor(0xff006400);
-	    	incomeRenderer.setPointStyle(PointStyle.CIRCLE);
-	    	incomeRenderer.setFillPoints(true);
-	    	incomeRenderer.setLineWidth(2);
-	    	incomeRenderer.setDisplayChartValues(true);
-	    	
-	    	// Creating a XYMultipleSeriesRenderer to customize the whole chart
-	    	XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
-	    	multiRenderer.setXLabels(0);
-	    	//Disable zoom button
-	    	multiRenderer.setZoomButtonsVisible(false);
-	    	multiRenderer.setBarSpacing(4);
-	    	//get background transparent
-	    	multiRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00));
-	    	
-	    	// Adding incomeRenderer and expenseRenderer to multipleRenderer
-	    	// Note: The order of adding dataseries to dataset and renderers to multipleRenderer
-	    	// should be same
-	    	multiRenderer.addSeriesRenderer(incomeRenderer);
-	    	
-	    	// Getting a reference to LinearLayout of the MainActivity Layout
-	    	chartContainer = new LinearLayout(context);
-	    	chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-	    	chartContainer.setGravity(Gravity.CENTER_VERTICAL);
-	    	chartContainer.setPadding(5, 10, 5, 10);
-	   		
-	    	// Specifying chart types to be drawn in the graph
-	    	// Number of data series and number of types should be same
-	    	// Order of data series and chart type will be same
-	    	String[] types = new String[] { LineChart.TYPE };
-
-	    	// Creating a combined chart with the chart types specified in types array
-	    	mChart = (GraphicalView) ChartFactory.getCombinedXYChartView(context, dataset, multiRenderer, types);
-	   		
-	   		multiRenderer.setSelectableBuffer(10);     	
-	   		// Adding the Combined Chart to the LinearLayout
-	    	chartContainer.addView(mChart);
-
-		}
 		featurePan.addView(value);
 		infoPan.addView(nameDevices);
 		infoPan.addView(state_key_view);
@@ -443,6 +342,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 
 	}
 
+
 @Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
@@ -533,10 +433,26 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 					background.removeView(chartContainer);
 					
 				} catch (Exception e) {}
-				
+				try {
+					
+					//background_stats.addView(canvas)
+					final String[] mMonth = new String[] {
+							"Jan", "Feb" , "Mar", "Apr", "May", "Jun",
+							"Jul", "Aug" , "Sep", "Oct", "Nov", "Dec"
+						};
+					int[] x = { 0,1,2,3,4,5,6,7 };
+					int[] income = { 2000,2500,2700,3000,2800,3500,3700,3800};
+					int nb_of_value = 20;
+					
+					period_type = 1;	//by default, display 24 hours
+					compute_period();	//To initialize time_start & time_end
+					drawgraph();
+				} catch (JSONException e) {
+					Tracer.d(mytag, "Acharengine failed"+ e.toString());
+				}
 				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 				background.addView(chartContainer);
-
+				
 			}
 			else{
 				background.removeView(chartContainer);
@@ -545,7 +461,116 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		}
 		return;
 	}
+
+	private void drawgraph() throws JSONException {
+	values = new Vector<Vector<Float>>();
+	chartContainer = new LinearLayout(context);
+	currentTimestamp=time_end.getTime()/1000;
+	startTimestamp=time_start.getTime()/1000;
+		
+	//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+	Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+	JSONObject json_GraphValues = null;
+	try {
+		//json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+1385857510+"/interval/"+step+"/selector/avg");
+		json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
+		
+	} catch (Exception e) {
+		//return null;
+		Tracer.e(mytag,"Error with json");
+	}
+		JSONArray itemArray = json_GraphValues.getJSONArray("stats");
+		JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
+		// Creating an  XYSeries for Income
+    	XYSeries nameSeries = new XYSeries(name);
+    	
+	for (int i =0; i < valueArray.length(); i++){
+		real_val = valueArray.getJSONArray(i).getDouble(limit-1);
+		for(int w = 0 ; w < valueArray.length() ; w++){
+    		nameSeries.add(i, real_val);
+    	}
+		if(minf == 0)
+			minf=real_val.floatValue();
+		
+		avgf+=real_val;	// Get the real 'value'
+		if(real_val > maxf){  
+			maxf = real_val.floatValue();  
+		}  
+		if(real_val < minf){  
+			minf = real_val.floatValue(); 
+		}
+	}
+	avgf=avgf/values.size();
+	Tracer.d(mytag,"minf ("+dev_id+")="+minf);
+	Tracer.d(mytag,"maxf ("+dev_id+")="+maxf);
+	Tracer.d(mytag,"avgf ("+dev_id+")="+avgf);
+				
+	Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
+
+	// Creating a dataset to hold each series
+	XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+	// Adding nameSeries Series to the dataset
+	dataset.addSeries(nameSeries);
 	
+	// Creating XYSeriesRenderer to customize incomeSeries
+	XYSeriesRenderer incomeRenderer = new XYSeriesRenderer();
+	incomeRenderer.setColor(0xff006400);
+	incomeRenderer.setPointStyle(PointStyle.CIRCLE);
+	incomeRenderer.setFillPoints(true);
+	incomeRenderer.setLineWidth(2);
+	incomeRenderer.setDisplayChartValues(true);
+	
+	// Creating a XYMultipleSeriesRenderer to customize the whole chart
+	final XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
+	multiRenderer.setXLabels(0);
+	//Disable zoom button
+	multiRenderer.setZoomButtonsVisible(false);
+	//get background transparent
+	multiRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00));
+	
+	// Adding incomeRenderer and expenseRenderer to multipleRenderer
+	// Note: The order of adding dataseries to dataset and renderers to multipleRenderer
+	// should be same
+	multiRenderer.addSeriesRenderer(incomeRenderer);
+	
+	// Getting a reference to LinearLayout of the MainActivity Layout
+	chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+	chartContainer.setGravity(Gravity.CENTER_VERTICAL);
+	chartContainer.setPadding(5, 10, 5, 10);
+		
+	// Specifying chart types to be drawn in the graph
+	// Number of data series and number of types should be same
+	// Order of data series and chart type will be same
+	String[] types = new String[] { LineChart.TYPE };
+
+	// Creating a combined chart with the chart types specified in types array
+	mChart = (GraphicalView) ChartFactory.getCombinedXYChartView(context, dataset, multiRenderer, types);
+		//Disable Zoom in Y axis
+		multiRenderer.setZoomEnabled(true, false);
+		//Disable Pan in Y axis
+		multiRenderer.setPanEnabled(true, false);
+		//Limits pan mouvement
+		//[panMinimumX, panMaximumX, panMinimumY, panMaximumY] 
+		double[] panLimits={-48,24,0,0};
+		multiRenderer.setPanLimits(panLimits);
+		
+		//Sets the selectable radius value around clickable points. 
+		multiRenderer.setSelectableBuffer(10);     	
+		
+		mChart.addPanListener(
+			new PanListener() {
+				public void panApplied() {
+					compute_period();
+					Tracer.i("Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
+					+ "], Y range=[" + multiRenderer.getYAxisMax() + ", " + multiRenderer.getYAxisMax() + "]");
+				}
+			}
+		);
+		
+	// Adding the Combined Chart to the LinearLayout
+	chartContainer.addView(mChart);
+	}
+
 	public boolean onLongClick(View v) {
 		if(v.getTag().equals("namedevices")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());

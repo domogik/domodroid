@@ -66,6 +66,8 @@ import android.os.Message;
 import android.os.Process;
 import misc.tracerengine;
 
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -467,6 +469,14 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	chartContainer = new LinearLayout(context);
 	currentTimestamp=time_end.getTime()/1000;
 	startTimestamp=time_start.getTime()/1000;
+	// Creating a XYMultipleSeriesRenderer to customize the whole chart
+	final XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
+	// Creating XYSeriesRenderer to customize incomeSeries
+	XYSeriesRenderer incomeRenderer = new XYSeriesRenderer();
+	// Creating a dataset to hold each series
+	XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+	// Creating an  XYSeries for Income
+	XYSeries nameSeries = new XYSeries(name);
 		
 	//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 	Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
@@ -481,14 +491,26 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	}
 		JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 		JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-		// Creating an  XYSeries for Income
-    	XYSeries nameSeries = new XYSeries(name);
-    	
+	//int j=0
 	for (int i =0; i < valueArray.length(); i++){
 		real_val = valueArray.getJSONArray(i).getDouble(limit-1);
-		for(int w = 0 ; w < valueArray.length() ; w++){
-    		nameSeries.add(i, real_val);
-    	}
+			int year=valueArray.getJSONArray(i).getInt(0);
+    		int month=valueArray.getJSONArray(i).getInt(1);
+    		int week=valueArray.getJSONArray(i).getInt(2);
+    		int day=valueArray.getJSONArray(i).getInt(3);
+    		int hour=valueArray.getJSONArray(i).getInt(4);
+    		//int hour_next=valueArray.getJSONArray(i+1).getInt(4);
+    		//if (hour+1 == hour_next){
+    			nameSeries.add(i, real_val); //change to j to avoid missing value
+        		String date=String.valueOf(hour)+"h";
+    			multiRenderer.addXTextLabel(i, date);
+    		//} else{
+    		//	for (int k=1; k < (hour_next - hour); k++){
+    		//		nameSeries.add(j+k, real_val);
+    		//		j++;        			
+    		//	}
+    		//}
+    			
 		if(minf == 0)
 			minf=real_val.floatValue();
 		
@@ -499,6 +521,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		if(real_val < minf){  
 			minf = real_val.floatValue(); 
 		}
+	//j++;
 	}
 	avgf=avgf/values.size();
 	Tracer.d(mytag,"minf ("+dev_id+")="+minf);
@@ -507,22 +530,26 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 				
 	Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
 
-	// Creating a dataset to hold each series
-	XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 	// Adding nameSeries Series to the dataset
 	dataset.addSeries(nameSeries);
 	
-	// Creating XYSeriesRenderer to customize incomeSeries
-	XYSeriesRenderer incomeRenderer = new XYSeriesRenderer();
 	incomeRenderer.setColor(0xff006400);
 	incomeRenderer.setPointStyle(PointStyle.CIRCLE);
 	incomeRenderer.setFillPoints(true);
 	incomeRenderer.setLineWidth(2);
 	incomeRenderer.setDisplayChartValues(true);
+	//Label Text size according to the screen size
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
+		incomeRenderer.setChartValuesTextSize(val);
 	
-	// Creating a XYMultipleSeriesRenderer to customize the whole chart
-	final XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
+	//Remove default X axis label
 	multiRenderer.setXLabels(0);
+	//Label Text size according to the screen size
+	//DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+	//float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
+	multiRenderer.setLabelsTextSize(val);
+	
 	//Disable zoom button
 	multiRenderer.setZoomButtonsVisible(false);
 	//get background transparent

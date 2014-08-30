@@ -18,6 +18,8 @@
 package widgets;
 
 import java.lang.Thread.State;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +47,7 @@ import android.os.Message;
 import android.os.Process;
 import misc.tracerengine;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -104,6 +107,9 @@ public class Graphical_Info extends FrameLayout implements OnLongClickListener, 
 	private String password;
 	private SharedPreferences params;
 	private int dpiClassification;
+	private DisplayMetrics metrics;
+	private float size10;
+	private float size5;	
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -125,7 +131,12 @@ public class Graphical_Info extends FrameLayout implements OnLongClickListener, 
 		this.place_type= place_type;
 		this.params=params;
 		mytag="Graphical_Info ("+dev_id+")";
-		this.setPadding(5, 5, 5, 5);
+		metrics = getResources().getDisplayMetrics();
+		//Label Text size according to the screen size
+		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
+		size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
+
+		this.setPadding((int)size5, (int)size5, (int)size5, (int)size5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
@@ -377,12 +388,21 @@ public class Graphical_Info extends FrameLayout implements OnLongClickListener, 
 		}
 	}
 	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
+	
 	public static float Round(float Rval, int Rpl) {
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
+	
 	public boolean onLongClick(View v) {
 		if(v.getTag().equals("namedevices")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());

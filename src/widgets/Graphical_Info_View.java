@@ -1,5 +1,7 @@
 package widgets;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -596,6 +598,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					
 					Vector<Float> vect = new Vector<Float>();
 					Double real_val = valueArray.getJSONArray(i).getDouble(limit-1);	// Get the real 'value'
+					real_val=round(real_val, 2);
 					
 					if(limit == 6) {
 						// stats per hour return [ year, month, week, day, hour, value]
@@ -811,7 +814,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				e.printStackTrace();
 			}
 			avgf=avgf/values.size();
-
+			avgf=Round(avgf, 2);
+			
 			gridStartX=Float.toString(maxf).length()*7;
 			if(Float.toString(minf).length()*7 > gridStartX)
 				gridStartX=Float.toString(minf).length()*7;
@@ -823,16 +827,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			return null;
 		}
 	}
-
-
-	public static float Round(float Rval, int Rpl) {
-		float p = (float)Math.pow(10,Rpl);
-		Rval = Rval * p;
-		float tmp = Math.round(Rval);
-		return (float)tmp/p;
-	}
-	
-	
 	
 	private void compute_period() {
 		long duration = 0; 
@@ -900,6 +894,21 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			limit=3;
 		}
 		
+	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
+	
+	public static float Round(float Rval, int Rpl) {
+		float p = (float)Math.pow(10,Rpl);
+		Rval = Rval * p;
+		float tmp = Math.round(Rval);
+		return (float)tmp/p;
 	}
 	
 

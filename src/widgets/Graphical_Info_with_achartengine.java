@@ -152,8 +152,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	
 	private DisplayMetrics metrics;
 	private float size12;
-//	private float size10;
-	
+	private float size10;
+	private float size5;	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int period, int update, 
@@ -176,12 +176,14 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		metrics = getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
 		size12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
+		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
+		size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
 
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	
 		mytag="Graphical_Info_with_achartengine ("+dev_id+")";
-		this.setPadding(5, 5, 5, 5);
+		this.setPadding((int)size5, (int)size5, (int)size5, (int)size5);
 		Tracer.e(mytag,"New instance for name = "+name+" state_key = "+state_key);
 		//panel with border
 		background = new LinearLayout(context);
@@ -201,7 +203,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//panel to set img with padding left
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding(5, 10, 5, 10);
+		imgPan.setPadding((int)size5, (int)size10, (int)size5, (int)size10);
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
@@ -238,7 +240,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		featurePan=new LinearLayout(context);
 		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		featurePan.setPadding(10, 0, 10, 0);
+		featurePan.setPadding((int)size10, 0, (int)size10, 0);
 		//value
 		value = new TextView(context);
 		value.setTextSize(28);
@@ -357,13 +359,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		if(visibility==0){
 			
 		}
-	}
-	
-	public static float Round(float Rval, int Rpl) {
-		float p = (float)Math.pow(10,Rpl);
-		Rval = Rval * p;
-		float tmp = Math.round(Rval);
-		return (float)tmp/p;
 	}
 	
 	private void compute_period() {
@@ -566,7 +561,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		// Getting a reference to LinearLayout of the MainActivity Layout
 		chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		chartContainer.setGravity(Gravity.CENTER_VERTICAL);
-		chartContainer.setPadding(5, 10, 5, 10);
+		//TODO at size
+		chartContainer.setPadding((int)size5, (int)size10, (int)size5, (int)size10);
 			
 		// Specifying chart types to be drawn in the graph
 		// Number of data series and number of types should be same
@@ -600,7 +596,22 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		// Adding the Combined Chart to the LinearLayout
 		chartContainer.addView(mChart);
 	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
 
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
+	
+	public static float Round(float Rval, int Rpl) {
+		float p = (float)Math.pow(10,Rpl);
+		Rval = Rval * p;
+		float tmp = Math.round(Rval);
+		return (float)tmp/p;
+	}
+	
 	public boolean onLongClick(View v) {
 		if(v.getTag().equals("namedevices")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -646,14 +657,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		return false;
 		
 	}
-	
-	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    BigDecimal bd = new BigDecimal(value);
-	    bd = bd.setScale(places, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
-	}
+
 }
 
 

@@ -135,6 +135,9 @@ public class TransformManager {
 	}
 
 	public void setScreenConfigScaling() {
+		//TODO
+		//value[2] is on X
+		//value[5] is on Y
 		matrix.getValues(value);
 		value[2] = -100;
 		value[5] = -50;
@@ -143,6 +146,8 @@ public class TransformManager {
 
 	public void setLandscapeMode() {
 		screenMode = 2;
+		//value[2] is on X
+		//value[5] is on Y
 		matrix.getValues(value);
 		value[0] = 1;
 		value[4] = 1;

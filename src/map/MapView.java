@@ -291,7 +291,8 @@ public class MapView extends View {
 		
 		//Get screen size
 		DisplayMetrics metrics = new DisplayMetrics();
-		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		//context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		metrics = getContext().getResources().getDisplayMetrics();
 		screenwidth= metrics.widthPixels;
 		screenheight= metrics.heightPixels;
 		
@@ -332,6 +333,8 @@ public class MapView extends View {
 			canvasMap = new Canvas(map);
 			Matrix matScale = new Matrix();
 			matScale.postScale(currentScale, currentScale);
+			origin = canvasMap.getMatrix();
+			origin.postConcat(mat.matrix);
 			canvasMap.setMatrix(matScale);
 			canvasMap.drawBitmap(bitmap, 0, 0, paint_map );
 			widget = Bitmap.createBitmap((int)((bitmap.getWidth()+200)*currentScale), (int)((bitmap.getHeight()+200)*currentScale), Bitmap.Config.ARGB_8888);
@@ -370,12 +373,12 @@ public class MapView extends View {
 			canvasMap.drawPicture(picture);	
 			widget = Bitmap.createBitmap((int)(svg.getSurfaceWidth()*currentScale), (int)(svg.getSurfaceHeight()*currentScale), Bitmap.Config.ARGB_8888);
 			canvasWidget = new Canvas(widget);
-			//Case using a png file as map
 			
 			}catch (Exception e) {
 			Tracer.e(mytag+" refreshmap()","formatMode=1 "+e.getStackTrace().toString());
 			return;
 			}
+		//Case using a png file as map
 		}else if(formatMode==2){
 			try{
 			

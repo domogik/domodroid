@@ -493,8 +493,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		}
 			JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 			JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-		//int j=0
-		for (int i =0; i < valueArray.length(); i++){
+		int j=0;
+		for (int i =0; i < valueArray.length()-1; i++){
 			real_val = valueArray.getJSONArray(i).getDouble(limit-1);
 			real_val=round(real_val, 2);
 			int year=valueArray.getJSONArray(i).getInt(0);
@@ -502,17 +502,22 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	    	int week=valueArray.getJSONArray(i).getInt(2);
 	    	int day=valueArray.getJSONArray(i).getInt(3);
 	    	int hour=valueArray.getJSONArray(i).getInt(4);
-	    	//int hour_next=valueArray.getJSONArray(i+1).getInt(4);
-	    	//if (hour+1 == hour_next){
-	    		nameSeries.add(i, real_val); //change to j to avoid missing value
-	        	String date=String.valueOf(hour)+"'";
-	    		multiRenderer.addXTextLabel(i, date);
-	    	//} else{
-	    	//	for (int k=1; k < (hour_next - hour); k++){
-	    	//		nameSeries.add(j+k, real_val);
-	    	//		j++;        			
-	    	//	}
-	    	//}
+	    	int hour_next=valueArray.getJSONArray(i+1).getInt(4);
+	    	if (hour != 23 && (hour < hour_next)){
+	    		//no day change
+	    		if((hour+1) != hour_next) {
+					//ruptur : simulate next missing steps
+	    			for (int k=1; k < (hour_next - hour); k++){
+		    			nameSeries.add(j+k, real_val);
+		    		}
+	    			j = j + hour_next - hour;
+	    		} else{
+	    			nameSeries.add(j, real_val); //change to j to avoid missing value
+		        	String date=String.valueOf(hour)+"'";
+		    		multiRenderer.addXTextLabel(j, date);
+		    		j++;
+	    		}
+	    	}
 	    			
 			if(minf == 0)
 				minf=real_val.floatValue();
@@ -525,7 +530,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 			if(real_val < minf){  
 				minf = real_val.floatValue(); 
 			}
-		//j++;
 		}
 		avgf=avgf/values.size();
 		Tracer.d(mytag,"minf ("+dev_id+")="+minf);

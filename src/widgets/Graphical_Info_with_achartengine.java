@@ -60,6 +60,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint.Align;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -517,8 +518,12 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		    		multiRenderer.addXTextLabel(j, date);
 		    		j++;
 	    		}
+	    	} else if (hour == 23){
+	    		nameSeries.add(j, real_val); //change to j to avoid missing value
+	        	String date=String.valueOf(hour)+"'";
+	    		multiRenderer.addXTextLabel(j, date);
+	    		j++;
 	    	}
-	    			
 			if(minf == 0)
 				minf=real_val.floatValue();
 			
@@ -551,6 +556,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//Remove default X axis label
 		multiRenderer.setXLabels(0);
 		multiRenderer.setLabelsTextSize(size12);
+		multiRenderer.setXLabelsAngle(-45);
+		multiRenderer.setXLabelsAlign(Align.LEFT);
 		
 		//Disable zoom button
 		multiRenderer.setZoomButtonsVisible(false);
@@ -591,6 +598,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 				new PanListener() {
 					public void panApplied() {
 						//compute_period();
+						//mChart.repaint();
 						Tracer.i("Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
 						+ "], Y range=[" + multiRenderer.getYAxisMax() + ", " + multiRenderer.getYAxisMax() + "]");
 					}

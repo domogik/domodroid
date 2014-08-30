@@ -57,6 +57,7 @@
 	<string name="map_button1">Ajouter Widget</string>
 	<string name="map_button2">Effacer Widget</string>
 	<string name="map_button2b">Supprimer tous les Widgets</string>
+	<string name="map_button2c">Déplacer Widgets</string>
 	<string name="map_nothing">Aucune carte chargée, Cliquez \"Aide\"</string>
 	<string name="map_button3">Aide</string>
 	<string name="map_help_text">Un répertoire nommé \"domodroid\" a été créé à la racine du stockage externe (ou interne suivant les équipements). Les images de cartes doivent y être installées, au format PNG ou SVG créé par votre outil \"Illustrator\" (les textures de base sont supportées). </string>

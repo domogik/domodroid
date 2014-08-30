@@ -57,6 +57,7 @@
 	<string name="map_button1">Add Widget</string>
 	<string name="map_button2">Remove Widget</string>
 	<string name="map_button2b">Remove all Widgets</string>
+	<string name="map_button2c">Move Widgets</string>
 	<string name="map_nothing">No Map Loaded, press \"Help\"</string>
 	<string name="map_button3">Help</string>
 	<string name="map_help_text">A folder called \"domodroid\" has been created at the root of the external storage directory (or internal for some devices). Map must be put in that folder using the PNG format or SVG format created from Illustrator (basic shapes supported). </string>
@@ -117,7 +118,6 @@
 	<string name="Red">Red</string>
 	<string name="Green">Green</string>
 	<string name="Blue">Blue</string>
-	<string name="map_button2c">Move Widgets</string>
 	
 	<string name="debug_settings">Debug configuration</string>
 	<string name="debug_explain">This screen allow debugging configuration</string>

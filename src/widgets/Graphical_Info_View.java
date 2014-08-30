@@ -120,7 +120,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		//width= metrics.widthPixels;
 		//height= metrics.heightPixels;
 		//fixed 15 float text size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
-		DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+		metrics = getContext().getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
 		size15 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
 		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);

@@ -147,7 +147,11 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 										// 30 = 1 month
 										// 365 = 1 year
 	private int sav_period;
-		
+	
+	private DisplayMetrics metrics;
+	private float size12;
+//	private float size10;
+	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int period, int update, 
@@ -168,7 +172,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		this.place_type= place_type;
 		this.params=params;
 
-
+		//Label Text size according to the screen size
+		size12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
 
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
@@ -538,17 +543,11 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	incomeRenderer.setFillPoints(true);
 	incomeRenderer.setLineWidth(2);
 	incomeRenderer.setDisplayChartValues(true);
-	//Label Text size according to the screen size
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
-		incomeRenderer.setChartValuesTextSize(val);
+	incomeRenderer.setChartValuesTextSize(size12);
 	
 	//Remove default X axis label
 	multiRenderer.setXLabels(0);
-	//Label Text size according to the screen size
-	//DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-	//float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
-	multiRenderer.setLabelsTextSize(val);
+	multiRenderer.setLabelsTextSize(size12);
 	
 	//Disable zoom button
 	multiRenderer.setZoomButtonsVisible(false);

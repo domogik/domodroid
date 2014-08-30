@@ -171,7 +171,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		this.place_id= place_id;
 		this.place_type= place_type;
 		this.params=params;
-
+		metrics = getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
 		size12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
 

@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.Message;
 import misc.tracerengine;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -94,6 +95,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private String login;
 	private String password;
 	private SharedPreferences params;
+	private DisplayMetrics metrics;
+	private float size15;
+	private float size10;
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params){
@@ -111,11 +115,16 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		period_type = 1;	//by default, display 24 hours
 		compute_period();	//To initialize time_start & time_end
 
-		//TODO correct kitkat problem
+		//correct kitkat problem
 		//DisplayMetrics metrics = getResources().getDisplayMetrics();
 		//width= metrics.widthPixels;
 		//height= metrics.heightPixels;
-		
+		//fixed 15 float text size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
+		DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+		//Label Text size according to the screen size
+		size15 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
+		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -209,13 +218,12 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	@Override 
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		//TODO correct kitkat view
 		width = getMeasuredWidth();
 		height = getMeasuredHeight();
-		gridStartY = height-15;
-		gridStopY = 15;
-		gridOffset = 15;
-		valueOffset = 10;
+		gridStartY = height-size15;
+		gridStopY = size15;
+		gridOffset = size15;
+		valueOffset = size10;
 		
 
 		buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
@@ -241,7 +249,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		Paint paint = new Paint();
 		paint.setColor(Color.DKGRAY);	
 		paint.setAntiAlias(true);
-		paint.setTextSize(15);
+		paint.setTextSize(size15);
 		can2.drawText("Loading Data ...", 10, 15, paint);
 	}
 
@@ -276,7 +284,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		paint.setPathEffect(null);
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
-		paint.setTextSize(10);
+		paint.setTextSize(size10);
 		paint.setColor(Color.BLACK);
 		can.drawText(minf+"", gridStartX-valueOffset-(Float.toString(minf).length()*5), gridStartY-gridOffset, paint);
 		can.drawText(maxf+"", gridStartX-valueOffset-(Float.toString(maxf).length()*5), gridStopY+gridOffset, paint);
@@ -335,6 +343,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				paint.setAntiAlias(true);
 				paint.setStrokeWidth(0);
 				paint.setColor(Color.parseColor("#157C9E"));
+				paint.setTextSize(size10);
 				can.drawText(top_txt, 
 						gridStartX+(i*step)-8, 
 						gridStopY+gridOffset-20, 

@@ -159,8 +159,10 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	private float size5;
 	private XYMultipleSeriesRenderer multiRenderer;
 	private XYSeriesRenderer incomeRenderer;
+	private XYSeriesRenderer emptyRenderer;
 	private XYMultipleSeriesDataset dataset;
 	private XYSeries nameSeries;
+	private XYSeries EmptySeries;
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -192,17 +194,26 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		multiRenderer = new XYMultipleSeriesRenderer();
 		//Creating XYSeriesRenderer to customize incomeSeries
 		incomeRenderer = new XYSeriesRenderer();
+		emptyRenderer = new XYSeriesRenderer();
 		//Creating a dataset to hold each series
 		dataset = new XYMultipleSeriesDataset();
 		//Creating an  XYSeries for Income
 		nameSeries = new XYSeries(name);
+		//TODO translate
+		EmptySeries = new XYSeries("NO VALUE");
 		//Adding nameSeries Series to the dataset
 		dataset.addSeries(nameSeries);
+		dataset.addSeries(EmptySeries);
 		incomeRenderer.setColor(0xff0B909A);
+		emptyRenderer.setColor(0xffff0000);
 		incomeRenderer.setPointStyle(PointStyle.CIRCLE);
+		//emptyRenderer.setPointStyle(PointStyle.CIRCLE);
 		incomeRenderer.setFillPoints(true);
-		incomeRenderer.setLineWidth(2);
+		emptyRenderer.setFillPoints(true);
+		incomeRenderer.setLineWidth(4);
+		emptyRenderer.setLineWidth(4);
 		incomeRenderer.setDisplayChartValues(true);
+		emptyRenderer.setDisplayChartValues(false);
 		incomeRenderer.setChartValuesTextSize(size12);		
 		//Change the type of line between point
 		//incomeRenderer.setStroke(BasicStroke.DASHED);
@@ -234,10 +245,11 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		multiRenderer.setPanLimits(panLimits);
 		//Sets the selectable radius value around clickable points. 
 		multiRenderer.setSelectableBuffer(10);     	
-		//Adding incomeRenderer and expenseRenderer to multipleRenderer
+		//Adding incomeRenderer and emptyRenderer to multipleRenderer
 		//Note: The order of adding dataseries to dataset and renderers to multipleRenderer
 		//should be same
 		multiRenderer.addSeriesRenderer(incomeRenderer);
+		multiRenderer.addSeriesRenderer(emptyRenderer);
 		//Add grid
 		multiRenderer.setShowGrid(true);
 		//Set color for grid
@@ -493,6 +505,10 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 
 	
 	private void drawgraph() throws JSONException {
+		//Clear to avoid crash on 5th redraw
+		EmptySeries.clear();
+		nameSeries.clear();
+		
 		values = new Vector<Vector<Float>>();
 		chartContainer = new LinearLayout(context);
 		// Getting a reference to LinearLayout of the MainActivity Layout
@@ -517,7 +533,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 			JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 			JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
 		int j=0;
-		for (int i =0; i < valueArray.length()-1; i++){
+		Boolean ruptur=false;
+    	for (int i =0; i < valueArray.length()-1; i++){
 			real_val = valueArray.getJSONArray(i).getDouble(limit-1);
 			real_val=round(real_val, 2);
 			int year=valueArray.getJSONArray(i).getInt(0);
@@ -526,39 +543,62 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	    	int day=valueArray.getJSONArray(i).getInt(3);
 	    	int hour=valueArray.getJSONArray(i).getInt(4);
 	    	int hour_next=valueArray.getJSONArray(i+1).getInt(4);
-	    	if (hour != 23 && (hour < hour_next)){
+	    	String date=String.valueOf(hour)+"'";
+    		if (hour != 23 && (hour < hour_next)){
 	    		//no day change
 	    		if((hour+1) != hour_next) {
 					//ruptur : simulate next missing steps
-	    			for (int k=1; k < (hour_next - hour); k++){
+	    			EmptySeries.add(j,real_val );
+	    			nameSeries.add(j,real_val );
+	    			multiRenderer.addXTextLabel(j, date);
+	    			Tracer.d(mytag, "Ok "+ j + " hour: "+ hour +" value: "+ real_val);
+		    		for (int k=1 ; k < (hour_next - hour); k++){
 		    			nameSeries.add(j+k, MathHelper.NULL_VALUE);
+		    			EmptySeries.add(j+k,real_val );
+		    			Tracer.d(mytag, "Missing "+ (j+k) + " hour: "+ (hour+k) +" value: "+ real_val);
 		    		}
-	    			j = j + hour_next - hour;
+	    			j = j + (hour_next - hour);
+	    			ruptur=true;
 	    		} else{
+	    			if (ruptur){
+	    				EmptySeries.add(j,real_val);
+	    			}else{
+	    				EmptySeries.add(j,MathHelper.NULL_VALUE);
+	    			}
+	    			ruptur=false;
 	    			nameSeries.add(j, real_val); //change to j to avoid missing value
-		        	String date=String.valueOf(hour)+"'";
-		    		multiRenderer.addXTextLabel(j, date);
+	    			//EmptySeries.add(j+1,real_val );
+	    			multiRenderer.addXTextLabel(j, date);
+		    		Tracer.d(mytag, "Ok "+ j + " hour: "+ hour +" value: "+ real_val);
 		    		j++;
 	    		}
 	    	} else if (hour == 23){
-	    		nameSeries.add(j, real_val); //change to j to avoid missing value
-	        	String date=String.valueOf(hour)+"'";
+	    		if (ruptur){
+    				EmptySeries.add(j,real_val);
+	    		}else{
+    				EmptySeries.add(j,MathHelper.NULL_VALUE);
+	    		}
+    			ruptur=false;
+    			nameSeries.add(j, real_val); //change to j to avoid missing value
 	    		multiRenderer.addXTextLabel(j, date);
+	    		Tracer.d(mytag, "Ok "+ j + " value for 23h: "+ real_val);
 	    		j++;
 	    	}
 			if(minf == 0)
 				minf=real_val.floatValue();
-			multiRenderer.setYAxisMin(minf);
-			avgf+=real_val;	// Get the real 'value'
+				avgf+=real_val;	// Get the real 'value'
 			
 			if(real_val > maxf){  
 				maxf = real_val.floatValue();  
-				multiRenderer.setYAxisMax(maxf);
+				
 			}  
 			if(real_val < minf){  
 				minf = real_val.floatValue(); 
+				
 			}
 		}
+		multiRenderer.setYAxisMin(minf);
+		multiRenderer.setYAxisMax(maxf);
 		avgf=avgf/values.size();
 		Tracer.d(mytag,"minf ("+dev_id+")="+minf);
 		Tracer.d(mytag,"maxf ("+dev_id+")="+maxf);
@@ -568,7 +608,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		// Specifying chart types to be drawn in the graph
 		// Number of data series and number of types should be same
 		// Order of data series and chart type will be same
-		String[] types = new String[] { LineChart.TYPE };
+		String[] types = new String[] { LineChart.TYPE , LineChart.TYPE };
 		// Creating a combined chart with the chart types specified in types array
 		mChart = (GraphicalView) ChartFactory.getCombinedXYChartView(context, dataset, multiRenderer, types);
 			

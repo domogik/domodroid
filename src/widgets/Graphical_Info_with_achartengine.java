@@ -206,12 +206,16 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		multiRenderer.setXLabels(0);
 		//Set X label text color
 		multiRenderer.setXLabelsColor(Color.BLACK);
+		//Set Y label text color
+		multiRenderer.setYLabelsColor(0, Color.BLACK);
 		//Set X label text size 
 		multiRenderer.setLabelsTextSize(size12);
 		//Set X label text angle 
 		multiRenderer.setXLabelsAngle(-45);
 		//Set X label text alignement
 		multiRenderer.setXLabelsAlign(Align.LEFT);
+		//Set to make value of y axis Left aligned
+		multiRenderer.setYLabelsAlign(Align.LEFT, 0);
 		//Disable zoom button
 		multiRenderer.setZoomButtonsVisible(false);
 		//get background transparent

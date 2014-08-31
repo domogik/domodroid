@@ -38,9 +38,11 @@ import org.achartengine.chart.LineChart;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.BasicStroke;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.tools.PanListener;
+import org.achartengine.util.MathHelper;
 import org.domogik.domodroid.R;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -202,6 +204,8 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		incomeRenderer.setLineWidth(2);
 		incomeRenderer.setDisplayChartValues(true);
 		incomeRenderer.setChartValuesTextSize(size12);		
+		//Change the type of line between point
+		//incomeRenderer.setStroke(BasicStroke.DASHED);
 		//Remove default X axis label
 		multiRenderer.setXLabels(0);
 		//Set X label text color
@@ -234,7 +238,10 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//Note: The order of adding dataseries to dataset and renderers to multipleRenderer
 		//should be same
 		multiRenderer.addSeriesRenderer(incomeRenderer);
-				
+		//Add grid
+		multiRenderer.setShowGrid(true);
+		//Set color for grid
+		multiRenderer.setGridColor(Color.BLACK, 0);
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
@@ -524,7 +531,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	    		if((hour+1) != hour_next) {
 					//ruptur : simulate next missing steps
 	    			for (int k=1; k < (hour_next - hour); k++){
-		    			nameSeries.add(j+k, real_val);
+		    			nameSeries.add(j+k, MathHelper.NULL_VALUE);
 		    		}
 	    			j = j + hour_next - hour;
 	    		} else{
@@ -541,11 +548,12 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	    	}
 			if(minf == 0)
 				minf=real_val.floatValue();
-			
+			multiRenderer.setYAxisMin(minf);
 			avgf+=real_val;	// Get the real 'value'
 			
 			if(real_val > maxf){  
 				maxf = real_val.floatValue();  
+				multiRenderer.setYAxisMax(maxf);
 			}  
 			if(real_val < minf){  
 				minf = real_val.floatValue(); 

@@ -163,6 +163,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	private XYMultipleSeriesDataset dataset;
 	private XYSeries nameSeries;
 	private XYSeries EmptySeries;
+	private int j;
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -241,15 +242,10 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		multiRenderer.setPanEnabled(true, false);
 		//Limits pan mouvement
 		//[panMinimumX, panMaximumX, panMinimumY, panMaximumY] 
-		double[] panLimits={-48,24,0,0};
+		double[] panLimits={-5,26,0,0};
 		multiRenderer.setPanLimits(panLimits);
 		//Sets the selectable radius value around clickable points. 
 		multiRenderer.setSelectableBuffer(10);     	
-		//Adding incomeRenderer and emptyRenderer to multipleRenderer
-		//Note: The order of adding dataseries to dataset and renderers to multipleRenderer
-		//should be same
-		multiRenderer.addSeriesRenderer(incomeRenderer);
-		multiRenderer.addSeriesRenderer(emptyRenderer);
 		//Add grid
 		multiRenderer.setShowGrid(true);
 		//Set color for grid
@@ -508,7 +504,12 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//Clear to avoid crash on 5th redraw
 		EmptySeries.clear();
 		nameSeries.clear();
-		
+		//Adding incomeRenderer and emptyRenderer to multipleRenderer
+				//Note: The order of adding dataseries to dataset and renderers to multipleRenderer
+				//should be same
+				multiRenderer.addSeriesRenderer(incomeRenderer);
+				multiRenderer.addSeriesRenderer(emptyRenderer);
+				
 		values = new Vector<Vector<Float>>();
 		chartContainer = new LinearLayout(context);
 		// Getting a reference to LinearLayout of the MainActivity Layout
@@ -532,7 +533,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		}
 			JSONArray itemArray = json_GraphValues.getJSONArray("stats");
 			JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-		int j=0;
+		j=0;
 		Boolean ruptur=false;
     	for (int i =0; i < valueArray.length()-1; i++){
 			real_val = valueArray.getJSONArray(i).getDouble(limit-1);
@@ -615,10 +616,33 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 			mChart.addPanListener(
 				new PanListener() {
 					public void panApplied() {
-						//compute_period();
-						//mChart.repaint();
 						Tracer.i("Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
-						+ "], Y range=[" + multiRenderer.getYAxisMax() + ", " + multiRenderer.getYAxisMax() + "]");
+						+ "]");
+						//TO move the graph to left or right
+						if (multiRenderer.getXAxisMin()<-2){
+							period_type = -1;
+							compute_period();
+							try {
+								multiRenderer.removeAllRenderers();
+								multiRenderer.setXAxisMin(0);
+								mChart.destroyDrawingCache();
+								drawgraph();
+							} catch (JSONException e) {
+								Tracer.d(mytag,e.toString());
+							}
+						}
+						if (multiRenderer.getXAxisMax()>j+2){
+							period_type = 0;
+							compute_period();
+							try {
+								multiRenderer.removeAllRenderers();
+								multiRenderer.setXAxisMin(0);
+								mChart.destroyDrawingCache();
+								drawgraph();
+							} catch (JSONException e) {
+								Tracer.d(mytag,e.toString());
+							}
+						}
 					}
 				}
 			);
@@ -665,6 +689,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 					
 					period_type = 1;	//by default, display 24 hours
 					compute_period();	//To initialize time_start & time_end
+					sav_period=period_type;		//Save the current graph period
 					drawgraph();
 				} catch (JSONException e) {
 					Tracer.d(mytag, "Acharengine failed"+ e.toString());

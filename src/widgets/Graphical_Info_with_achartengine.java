@@ -157,6 +157,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	private float size12;
 	private float size10;
 	private float size5;
+	private float size2;
 	private XYMultipleSeriesRenderer multiRenderer;
 	private XYSeriesRenderer incomeRenderer;
 	private XYSeriesRenderer emptyRenderer;
@@ -189,6 +190,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		size12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
 		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
 		size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
+		size2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 2, metrics);
 		
 		//Design the graph
 		//Creating a XYMultipleSeriesRenderer to customize the whole chart
@@ -252,7 +254,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
     	password = params.getString("http_auth_password",null);
     	
 		mytag="Graphical_Info_with_achartengine ("+dev_id+")";
-		this.setPadding((int)size5, (int)size5, (int)size5, (int)size5);
+		this.setPadding((int)size2, (int)size2, (int)size2, (int)size2);
 		Tracer.e(mytag,"New instance for name = "+name+" state_key = "+state_key);
 		//panel with border
 		background = new LinearLayout(context);
@@ -272,7 +274,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		//panel to set img with padding left
 		imgPan = new FrameLayout(context);
 		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding((int)size5, (int)size10, (int)size5, (int)size10);
+		imgPan.setPadding((int)size2, (int)size10, (int)size2, (int)size10);
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
@@ -309,7 +311,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		featurePan=new LinearLayout(context);
 		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		featurePan.setPadding((int)size10, 0, (int)size10, 0);
+		featurePan.setPadding((int)size2, 0, (int)size2, 0);
 		//value
 		value = new TextView(context);
 		value.setTextSize(28);
@@ -498,19 +500,24 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 
 	
 	private void drawgraph() throws JSONException {
+		//Clear to avoid crash on multiple redraw
+		EmptySeries.clear();
+		nameSeries.clear();
 		dataset.clear();
+		//Clear all labels
+		multiRenderer.clearXTextLabels();
+		multiRenderer.clearYTextLabels();
 		multiRenderer.removeAllRenderers();
+		//Set position of graph to 0
+		multiRenderer.setXAxisMin(0);
 		//Adding nameSeries Series to the dataset
 		dataset.addSeries(nameSeries);
 		dataset.addSeries(EmptySeries);
-		//Clear to avoid crash on 5th redraw
-		EmptySeries.clear();
-		nameSeries.clear();
 		//Adding incomeRenderer and emptyRenderer to multipleRenderer
-				//Note: The order of adding dataseries to dataset and renderers to multipleRenderer
-				//should be same
-				multiRenderer.addSeriesRenderer(incomeRenderer);
-				multiRenderer.addSeriesRenderer(emptyRenderer);
+		//Note: The order of adding dataseries to dataset and renderers to multipleRenderer
+		//should be same
+		multiRenderer.addSeriesRenderer(incomeRenderer);
+		multiRenderer.addSeriesRenderer(emptyRenderer);
 				
 		values = new Vector<Vector<Float>>();
 		chartContainer = new LinearLayout(context);
@@ -625,8 +632,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 							period_type = -1;
 							compute_period();
 							try {
-								multiRenderer.removeAllRenderers();
-								multiRenderer.setXAxisMin(0);
 								mChart.destroyDrawingCache();
 								drawgraph();
 							} catch (JSONException e) {
@@ -637,8 +642,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 							period_type = 0;
 							compute_period();
 							try {
-								multiRenderer.removeAllRenderers();
-								multiRenderer.setXAxisMin(0);
 								mChart.destroyDrawingCache();
 								drawgraph();
 							} catch (JSONException e) {

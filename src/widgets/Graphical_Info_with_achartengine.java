@@ -202,9 +202,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		nameSeries = new XYSeries(name);
 		//TODO translate
 		EmptySeries = new XYSeries("NO VALUE");
-		//Adding nameSeries Series to the dataset
-		dataset.addSeries(nameSeries);
-		dataset.addSeries(EmptySeries);
 		incomeRenderer.setColor(0xff0B909A);
 		emptyRenderer.setColor(0xffff0000);
 		incomeRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -501,6 +498,11 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 
 	
 	private void drawgraph() throws JSONException {
+		dataset.clear();
+		multiRenderer.removeAllRenderers();
+		//Adding nameSeries Series to the dataset
+		dataset.addSeries(nameSeries);
+		dataset.addSeries(EmptySeries);
 		//Clear to avoid crash on 5th redraw
 		EmptySeries.clear();
 		nameSeries.clear();

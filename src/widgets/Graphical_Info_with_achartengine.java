@@ -215,10 +215,13 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		incomeRenderer.setDisplayChartValues(true);
 		emptyRenderer.setDisplayChartValues(false);
 		incomeRenderer.setChartValuesTextSize(size12);		
+		
 		//Change the type of line between point
 		//incomeRenderer.setStroke(BasicStroke.DASHED);
 		//Remove default X axis label
 		multiRenderer.setXLabels(0);
+		//Remove default Y axis label
+		multiRenderer.setYLabels(0);
 		//Set X label text color
 		multiRenderer.setXLabelsColor(Color.BLACK);
 		//Set Y label text color
@@ -227,10 +230,12 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		multiRenderer.setLabelsTextSize(size12);
 		//Set X label text angle 
 		multiRenderer.setXLabelsAngle(-45);
+		//Set Y label text angle 
+		//multiRenderer.setYLabelsAngle(-45);
 		//Set X label text alignement
 		multiRenderer.setXLabelsAlign(Align.LEFT);
-		//Set to make value of y axis Left aligned
-		multiRenderer.setYLabelsAlign(Align.LEFT, 0);
+		//Set to make value of y axis left aligned
+		multiRenderer.setYLabelsAlign(Align.LEFT);
 		//Disable zoom button
 		multiRenderer.setZoomButtonsVisible(false);
 		//get background transparent
@@ -607,9 +612,13 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 				
 			}
 		}
-		multiRenderer.setYAxisMin(minf);
-		multiRenderer.setYAxisMax(maxf);
-		avgf=avgf/values.size();
+    	avgf=avgf/values.size();
+		multiRenderer.addYTextLabel(((double)minf)-1, (""+minf));
+    	multiRenderer.addYTextLabel(((double)avgf),(""+avgf));
+    	multiRenderer.addYTextLabel(((double)maxf),(""+maxf));
+    	//SET limit up and down on Y axis
+    	multiRenderer.setYAxisMin(minf-1);
+		multiRenderer.setYAxisMax(maxf+1);
 		Tracer.d(mytag,"minf ("+dev_id+")="+minf);
 		Tracer.d(mytag,"maxf ("+dev_id+")="+maxf);
 		Tracer.d(mytag,"avgf ("+dev_id+")="+avgf);

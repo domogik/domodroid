@@ -505,6 +505,9 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 
 	
 	private void drawgraph() throws JSONException {
+		minf=0;
+		maxf=0;
+		avgf=0;
 		//Clear to avoid crash on multiple redraw
 		EmptySeries.clear();
 		nameSeries.clear();

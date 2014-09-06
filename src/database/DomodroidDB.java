@@ -484,7 +484,31 @@ public class DomodroidDB {
 		curs.close();
 		return icon;
 	}
-
+	public Entity_Icon[] requestallIcon() {
+		Entity_Icon[] Icon=null;
+		String[] projection = { "name", "value", "reference"};
+		Cursor curs=null;	
+		try {
+			//curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, "area_id = \'"+area_id+"\'", null, null);
+			curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ICON,
+					projection, 
+					null,
+					null,
+					null);
+			Icon=new Entity_Icon[curs.getCount()];
+			int count=curs.getCount();
+			for(int i=0;i<count;i++) {
+				curs.moveToPosition(i);
+				Icon[i]=new Entity_Icon(curs.getString(0),curs.getString(1),
+						curs.getInt(2));
+			}
+		} catch (Exception e) {
+			Tracer.v(mytag+"("+owner+")","Exception requesting all rooms ");
+			e.printStackTrace();
+		}
+		curs.close();
+		return Icon;
+	}
 	public Entity_Feature[] requestFeatures(int id, String zone) {
 		Cursor curs=null;
 		Entity_Feature[] features=null;

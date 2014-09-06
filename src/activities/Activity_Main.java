@@ -17,7 +17,7 @@
  */
 package activities;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

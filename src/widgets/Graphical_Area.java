@@ -17,7 +17,7 @@
  */
 package widgets;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 
 import database.DomodroidDB;
 

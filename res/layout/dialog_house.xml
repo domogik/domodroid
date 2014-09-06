@@ -114,6 +114,7 @@
 					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>
+               
                <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -131,7 +132,24 @@
 					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>
-               
+			   
+			   <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+					<Button
+                        android:id="@+id/house_add_icon"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:text="@string/house_add_icon" />
+					<Spinner
+					    android:id="@+id/spin_list_icon"
+					    android:layout_width="wrap_content"
+					    android:layout_height="fill_parent"
+					    android:layout_weight="1" />
+               </LinearLayout>
            </LinearLayout> 
             <!--  Layout for bottom buttons -->
 			<LinearLayout

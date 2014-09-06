@@ -11,7 +11,7 @@
 	If not, see <http://www.gnu.org/licenses/>. -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid"
+	xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid13"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:background="@drawable/background">
 

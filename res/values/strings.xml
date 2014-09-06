@@ -37,7 +37,7 @@
 	<string name="help_Text4">Domodroid documentation is avalaibale at: http://docs.domogik.org/domodroid/dev/en/</string>
 	<string name="help_Text5">Contacts by mailing list :\n domogik-developers@lists.labs.libre-entreprise.org</string>
 	
-	<string name="splash_title">Welcome to Domodroid 1.2 !</string>
+	<string name="splash_title">Welcome to Domodroid 1.3 !</string>
 	<string name="home_splash">This new version of Domodroid contains lot of new features and improvements that have not been tested on all kind of Android devices. If anything goes wrong, you can contact dev at the following address: http://wiki.domogik.org/Contact+and+support .</string>
 	<string name="home_splash2">Please delete the Domodroid cache data from the \"Application Settings\" panel before using this new version.</string>
 	
@@ -177,6 +177,7 @@
 	<string name="house_add_area">Add an area</string>
 	<string name="house_add_room">Add a room</string>
 	<string name="house_add_widget">Add a widget</string>
+	<string name="house_add_icon">Choose an icon</string>
 	
 	<string name="State">State : </string>
 	<string name="light_stat_0">Off</string>

@@ -13,7 +13,7 @@ import rinor.Rest_com;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import org.domogik.domodroid.*;
+import org.domogik.domodroid13.*;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;

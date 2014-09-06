@@ -23,7 +23,7 @@ import java.util.TimerTask;
 
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 
 import rinor.Stats_Com;
 

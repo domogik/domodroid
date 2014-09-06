@@ -9,7 +9,7 @@ import misc.Color_Result;
 import misc.tracerengine;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import org.json.JSONObject;
 
 import rinor.Rest_com;

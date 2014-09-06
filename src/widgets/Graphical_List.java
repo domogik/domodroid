@@ -25,7 +25,7 @@ import android.content.Context;
 
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
-import org.domogik.domodroid.*;
+import org.domogik.domodroid13.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

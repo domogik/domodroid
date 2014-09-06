@@ -20,7 +20,7 @@ package widgets;
 import rinor.Rest_com;
 import database.JSONParser;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Gradients_Manager;

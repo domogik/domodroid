@@ -1,6 +1,6 @@
 package map;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 
 import android.app.Dialog;
 import android.content.Context;

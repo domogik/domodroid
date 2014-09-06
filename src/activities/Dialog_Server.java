@@ -3,7 +3,7 @@ package activities;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;

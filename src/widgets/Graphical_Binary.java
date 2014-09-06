@@ -25,7 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 
 import widgets.Entity_Area;
 import widgets.Entity_Feature;

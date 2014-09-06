@@ -11,10 +11,10 @@
 	received a copy of the GNU General Public License along with * Domodroid. 
 	If not, see <http://www.gnu.org/licenses/>.
 -->
-<!-- xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid" -->
+<!-- xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid13" -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid"
+    xmlns:panel="http://schemas.android.com/apk/res/org.domogik.domodroid13"
 	android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/background" >

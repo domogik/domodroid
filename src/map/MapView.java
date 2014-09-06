@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 
 import database.DomodroidDB;
 import database.WidgetUpdate;

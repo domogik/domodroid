@@ -3,7 +3,7 @@ Installation
 ============
 Current Beta 1.2 is on the Google playstore here:
 
-https://play.google.com/store/apps/details?id=org.domogik.domodroid
+https://play.google.com/store/apps/details?id=org.domogik.domodroid1313
 
 If you wish to use the current developper version:
 

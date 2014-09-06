@@ -16,7 +16,7 @@ import widgets.Entity_Feature;
 import widgets.Entity_Map;
 import widgets.Entity_client;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,6 +1,6 @@
 package activities;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import video.MjpegInputStream;
 import video.MjpegView;
 import video.MjpegViewAsync;

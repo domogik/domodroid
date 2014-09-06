@@ -17,7 +17,7 @@
  */
 package activities;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

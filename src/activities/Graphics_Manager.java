@@ -18,7 +18,7 @@
 
 package activities;
 
-import org.domogik.domodroid.*;
+import org.domogik.domodroid13.*;
 
 import android.app.Activity;
 import android.content.Context;

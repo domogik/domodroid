@@ -1,7 +1,7 @@
 package activities;
 
 import java.util.ArrayList;
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import rinor.Rest_com;
 import database.DomodroidDB;
 import org.json.JSONArray;

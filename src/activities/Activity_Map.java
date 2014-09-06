@@ -1,6 +1,6 @@
 package activities;
 
-import org.domogik.domodroid.R;
+import org.domogik.domodroid13.R;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;

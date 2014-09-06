@@ -109,38 +109,40 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		dialog_feature = new Dialog(getContext());
 
 		//list area where to put room
-		final AlertDialog.Builder list_area_choice = new AlertDialog.Builder(getContext());
-		List<String> list_area = new ArrayList<String>();
-		for (Entity_Area area : listArea) {
-			list_area.add(area.getName());
-			}
-		final CharSequence[] char_list_zone =list_area.toArray(new String[list_area.size()]);
-		list_area_choice.setTitle(R.string.Wich_AREA_message);
-		list_area_choice.setSingleChoiceItems(char_list_zone, -1,
-		 new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int item) {
-		  //item is replaces by the area Id because Db could be altered by removing an area for example
-			  area_id=listArea[item].getId();
-		  dialog.cancel();
-		  }
-		 });
-		
+			final AlertDialog.Builder list_area_choice = new AlertDialog.Builder(getContext());
+			List<String> list_area = new ArrayList<String>();
+			for (Entity_Area area : listArea) {
+				list_area.add(area.getName());
+				}
+			final CharSequence[] char_list_zone =list_area.toArray(new String[list_area.size()]);
+			list_area_choice.setTitle(R.string.Wich_AREA_message);
+			list_area_choice.setSingleChoiceItems(char_list_zone, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						//item is replaces by the area Id because Db could be altered by removing an area for example
+						area_id=listArea[item].getId();
+						dialog.cancel();
+					}
+				}
+			);
+			
 		//list room where to put widget
-		final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
-		List<String> list_room = new ArrayList<String>();
-		for (Entity_Room room : listRoom) {
-			list_room.add(room.getName());
+			final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
+			List<String> list_room = new ArrayList<String>();
+			for (Entity_Room room : listRoom) {
+				list_room.add(room.getName());
 			}
-		final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
-		list_room_choice.setTitle(R.string.Wich_ROOM_message);
-		list_room_choice.setSingleChoiceItems(char_list_room, -1,
-		 new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int item) {
-		  //item is replaces by the area Id because Db could be altered by removing an area for example
-			  room_id=listRoom[item].getId();
-		  dialog.cancel();
-		  }
-		});
+			final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
+			list_room_choice.setTitle(R.string.Wich_ROOM_message);
+			list_room_choice.setSingleChoiceItems(char_list_room, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						//item is replaces by the area Id because Db could be altered by removing an area for example
+						room_id=listRoom[item].getId();
+						dialog.cancel();
+					}
+				}
+			);
 			
 		//list widget to put in room
 			final AlertDialog.Builder list_feature_choice = new AlertDialog.Builder(getContext());
@@ -151,13 +153,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			final CharSequence[] char_list_feature =list_feature.toArray(new String[list_feature.size()]);
 			list_feature_choice.setTitle(R.string.Wich_feature_message);
 			list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
-			new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-			//item is replaces by the area Id because Db could be altered by removing an area for example
-			 feature_id=listFeature[item].getId();
-			dialog.cancel();
-			}
-		});
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
+							//item is replaces by the area Id because Db could be altered by removing an area for example
+							feature_id=listFeature[item].getId();
+							dialog.cancel();
+						}
+					}
+			);
 					
 		//ADD a room
 			AlertDialog.Builder alert_Room = new AlertDialog.Builder(getContext());
@@ -243,7 +246,36 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					
 				}
 			});
-				
+			
+		//ADD an icon
+			AlertDialog.Builder alert_Icon = new AlertDialog.Builder(getContext());
+			//set a title
+			//TODO Not the good text
+			//alert_Feature.setTitle(R.string.Rename_title);
+			//set a message
+			//alert_Feature.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			//final EditText name2 = new EditText(getContext());
+			//alert_Feature.setView(name2);
+			alert_Icon.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					ContentValues values = new ContentValues();
+					//type = area, room, feature
+					//values.put("name", type);
+					//icon is the name of the icon wich will be select 
+					//values.put("value", icon);
+					//reference is the id of the area, room, or feature
+					//values.put("reference", reference);
+					context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ICON, values);
+					loadSpinnerData();
+				}
+			});
+			alert_Icon.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					
+				}
+			});
+			
 		if (tag.equals("house_cancel"))
 			dismiss();
 		else if (tag.equals("house_ok")) {
@@ -262,19 +294,26 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		}else if (tag.equals("add_area")) {
 			alert_Area.show();
 		}else if (tag.equals("add_room")) {
-			AlertDialog alert_list_area = list_area_choice.create();
 			alert_Room.show();
+			AlertDialog alert_list_area = list_area_choice.create();
 			alert_list_area.show();
 		}else if (tag.equals("add_widget")) {
-			AlertDialog alert_list_room = list_room_choice.create();
-			AlertDialog alert_list_feature = list_feature_choice.create();
 			alert_Feature.show();
+			AlertDialog alert_list_room = list_room_choice.create();
 			alert_list_room.show();
+			AlertDialog alert_list_feature = list_feature_choice.create();
 			alert_list_feature.show();
 		}else if (tag.equals("add_icon")) {
-				//TODO Ask user what icon i want to modify area, room, widget
-				//display list of all icons
-				//when select add it to database
+			//alert_Icon.show();
+			//TODO Ask user what icon i want to modify area, room, widget
+			//in function display 
+			//	AlertDialog alert_list_area = list_area_choice.create();
+			//	alert_list_area.show();
+			//	AlertDialog alert_list_room = list_room_choice.create();
+			//	alert_list_room.show();
+			//	AlertDialog alert_list_feature = list_feature_choice.create();
+			//	alert_list_feature.show();
+			//display list of all icons
 			}	
 	}
 	
@@ -317,7 +356,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		feature_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_feature.setAdapter(feature_adapter);
 		
-		//4th list icon to associate with area or room
+		//4th list icon to associate with area, room or widget
 		ArrayList<String> list_icon= new ArrayList<String>();
 		for (Entity_Icon icon : listIcon) {
 			list_icon.add(icon.getName()+"-"+icon.getReference()+"-"+icon.getValue());

@@ -110,8 +110,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	
 	public void onClick(final View v) {
 		String tag = v.getTag().toString();
-		dialog_feature = new Dialog(getContext());
-
+		
 		//list area where to put room
 			final AlertDialog.Builder list_area_choice = new AlertDialog.Builder(getContext());
 			List<String> list_area = new ArrayList<String>();
@@ -187,7 +186,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			List<String> list_type = new ArrayList<String>();
 				list_type.add("area");
 				list_type.add("room");
-				list_type.add("feature");
+				if (!v.getTag().equals("add_widget"))
+					list_type.add("feature");
 			final CharSequence[] char_list_type =list_type.toArray(new String[list_type.size()]);
 			list_type_choice.setTitle(R.string.Wich_TYPE_message);
 			list_type_choice.setSingleChoiceItems(char_list_type, -1,
@@ -196,7 +196,10 @@ public class Dialog_House extends Dialog implements OnClickListener {
 						ListView lw = ((AlertDialog)dialog).getListView();
 						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
 						type = checkedItem.toString();
-						v.setTag("add_icon_"+type);
+						if (v.getTag().equals("add_widget"))
+							v.setTag("add_widget_"+type);
+						else if (v.getTag().equals("add_icon"))
+							v.setTag("add_icon_"+type);
 						dialog.cancel();
 						Dialog_House.this.onClick(v);
 					}
@@ -271,8 +274,11 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					lastid = domodb.requestidlastFeature_association();
 					ContentValues values = new ContentValues();
 					//roomid must come from the selected in list
-					values.put("place_id", (room_id));
-					values.put("place_type", ("room"));
+					if (type.equals("area"))
+						values.put("place_id", (area_id));
+					if (type.equals("room"))
+						values.put("place_id", (room_id));
+					values.put("place_type", type);
 					//device_feature_id must come from the selected  one in list
 					values.put("device_feature_id",(feature_id));
 					values.put("id", (lastid+1));
@@ -345,11 +351,17 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			AlertDialog alert_list_area = list_area_choice.create();
 			alert_list_area.show();
 		}else if (tag.equals("add_widget")) {
+			list_type_choice.show();
+			AlertDialog alert_list_feature = list_feature_choice.create();
+			alert_list_feature.show();
+		}else if (tag.equals("add_widget_area")) {
+			alert_Feature.show();
+			AlertDialog alert_list_area = list_area_choice.create();
+			alert_list_area.show();
+		}else if (tag.equals("add_widget_room")) {
 			alert_Feature.show();
 			AlertDialog alert_list_room = list_room_choice.create();
 			alert_list_room.show();
-			AlertDialog alert_list_feature = list_feature_choice.create();
-			alert_list_feature.show();
 		}else if (tag.equals("add_icon")) {
 			list_type_choice.show();
 			AlertDialog alert_list_icon = list_icon_choice.create();

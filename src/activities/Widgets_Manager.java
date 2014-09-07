@@ -222,7 +222,7 @@ public class Widgets_Manager {
 			} else if(Value_type.equals("string")){
 				if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
-							Address,widgetSize, mytype,id,zone);
+							Address,iconName,widgetSize, mytype,id,zone);
 					tmpPan.addView(cam);
 					Tracer.i(mytag,"   ==> Graphical_Cam");
 				} else {

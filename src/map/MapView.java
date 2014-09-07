@@ -854,7 +854,7 @@ public class MapView extends View {
 			if(feature.getDevice_feature_model_id().contains("camera")) {
 				cam = new Graphical_Cam(Tracer, context,
 					Id,DevId,label,
-					Address,widgetSize, mytype,0,zone);
+					Address,iconName,widgetSize, mytype,0,zone);
 				panel_widget.addView(cam);}
 			else {
 				info = new Graphical_Info(Tracer, context,Id,DevId,label,

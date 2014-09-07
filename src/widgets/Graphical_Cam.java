@@ -19,6 +19,8 @@ package widgets;
 
 import activities.Activity_Cam;
 import activities.Gradients_Manager;
+import activities.Graphics_Manager;
+
 import org.domogik.domodroid13.R;
 
 import android.app.Activity;
@@ -65,7 +67,7 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 	public FrameLayout myself = null;
 	
 
-	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,int widgetSize, int session_type,int place_id,String place_type) {
+	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
 		super(context);
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
@@ -102,7 +104,8 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 		//img
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		img.setBackgroundResource(R.drawable.camera);
+		Tracer.e(mytag, "Get icone for usage : "+usage);
+		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 		img.setTag("img");
 		img.setOnClickListener(this);
 		img.setOnLongClickListener(this);

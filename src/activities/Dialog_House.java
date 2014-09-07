@@ -19,6 +19,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Entity;
 import android.content.SharedPreferences;
 import misc.tracerengine;
 import android.view.View;
@@ -53,6 +54,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private int room_id = 0;
 	private int feature_id = 0;
 	private int lastid = 0;
+	private String type=null;
 	private WidgetUpdate widgetUpdate;
 	private HashMap<String,String> map;
 	private Dialog dialog_feature;
@@ -61,6 +63,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private Entity_Room[] listRoom;
 	private Entity_Feature[] listFeature;
 	private Entity_Icon[] listIcon;
+	private Entity[] listType;
 	private String mytag;
 	
 	public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
@@ -104,7 +107,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         
 	}
 	
-	public void onClick(View v) {
+	public void onClick(final View v) {
 		String tag = v.getTag().toString();
 		dialog_feature = new Dialog(getContext());
 
@@ -119,7 +122,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			list_area_choice.setSingleChoiceItems(char_list_zone, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
-						//item is replaces by the area Id because Db could be altered by removing an area for example
 						area_id=listArea[item].getId();
 						dialog.cancel();
 					}
@@ -137,7 +139,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			list_room_choice.setSingleChoiceItems(char_list_room, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
-						//item is replaces by the area Id because Db could be altered by removing an area for example
 						room_id=listRoom[item].getId();
 						dialog.cancel();
 					}
@@ -155,13 +156,32 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int item) {
-							//item is replaces by the area Id because Db could be altered by removing an area for example
 							feature_id=listFeature[item].getId();
 							dialog.cancel();
 						}
 					}
 			);
-					
+			
+		//list type area,room, widget
+			final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+			List<String> list_type = new ArrayList<String>();
+				list_type.add("area");
+				list_type.add("room");
+				list_type.add("feature");
+			final CharSequence[] char_list_type =list_type.toArray(new String[list_type.size()]);
+			list_type_choice.setTitle(R.string.Wich_TYPE_message);
+			list_type_choice.setSingleChoiceItems(char_list_type, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						ListView lw = ((AlertDialog)dialog).getListView();
+						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+						type = checkedItem.toString();
+						v.setTag("add_icon_"+type);
+						dialog.cancel();
+						Dialog_House.this.onClick(v);
+					}
+				}
+			);					
 		//ADD a room
 			AlertDialog.Builder alert_Room = new AlertDialog.Builder(getContext());
 			//set a title
@@ -261,11 +281,18 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					ContentValues values = new ContentValues();
 					//type = area, room, feature
-					//values.put("name", type);
+					values.put("name", type);
 					//icon is the name of the icon wich will be select 
 					//values.put("value", icon);
 					//reference is the id of the area, room, or feature
-					//values.put("reference", reference);
+					int reference = 0;
+					if (type.equals("area"))
+						reference=area_id;
+					if (type.equals("room"))
+						reference=room_id;
+					if (type.equals("feature"))
+						reference=feature_id;
+					values.put("reference", reference);
 					context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ICON, values);
 					loadSpinnerData();
 				}
@@ -304,17 +331,24 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			AlertDialog alert_list_feature = list_feature_choice.create();
 			alert_list_feature.show();
 		}else if (tag.equals("add_icon")) {
-			//alert_Icon.show();
+			list_type_choice.show();
 			//TODO Ask user what icon i want to modify area, room, widget
 			//in function display 
-			//	AlertDialog alert_list_area = list_area_choice.create();
-			//	alert_list_area.show();
-			//	AlertDialog alert_list_room = list_room_choice.create();
-			//	alert_list_room.show();
-			//	AlertDialog alert_list_feature = list_feature_choice.create();
-			//	alert_list_feature.show();
 			//display list of all icons
-			}	
+		}else if (tag.equals("add_icon_area")){
+			alert_Icon.show();
+			AlertDialog alert_list_area = list_area_choice.create();
+			alert_list_area.show();	
+		}else if (tag.equals("add_icon_room")){
+			alert_Icon.show();
+			AlertDialog alert_list_room = list_room_choice.create();
+			alert_list_room.show();	
+		}else if (tag.equals("add_icon_feature")){
+			alert_Icon.show();
+			AlertDialog alert_list_feature = list_feature_choice.create();
+			alert_list_feature.show();	
+		}
+				
 	}
 	
 	private void loadSpinnerData() {

@@ -92,7 +92,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private String type;
 	private String address;
 	private Activity mycontext;
-	private FrameLayout myself = null;
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 	private Boolean switch_state = false;
 	private TimerTask doAsynchronousTask;
 	
@@ -114,7 +115,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private tracerengine Tracer = null;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	public View container = null;
 	private int session_type;
 	private String place_type;
 	private int place_id;
@@ -695,8 +695,10 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 					//Tracer.get_engine().remove_one_feature_association(id);
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
-					removeAllViewsInLayout ();	
-					postInvalidate();
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -432,8 +432,10 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 					//Tracer.get_engine().remove_one_feature_association(id);
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
-					removeAllViewsInLayout ();	
-					postInvalidate();
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

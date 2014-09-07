@@ -44,6 +44,8 @@ import android.view.View.OnClickListener;
 
 public class Graphical_Room extends FrameLayout implements OnClickListener, OnLongClickListener{
 
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 	private FrameLayout imgPan;
 	private LinearLayout background;
 	private LinearLayout infoPan;
@@ -59,6 +61,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);
+		this.myself = this;
 		this.Tracer = Trac;
 		this.id_room = id;
 		this.name_room = name_room;
@@ -146,8 +149,10 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_things(id_room,"room");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room,"room");
-					removeAllViewsInLayout ();	
-					postInvalidate();
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

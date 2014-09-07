@@ -46,6 +46,8 @@ import android.view.View.OnClickListener;
 public class Graphical_Area extends FrameLayout implements OnClickListener, OnLongClickListener{
 
 	private FrameLayout imgPan;
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 	private LinearLayout background;
 	private LinearLayout infoPan;
 	private ImageView img;
@@ -62,6 +64,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);
+		this.myself = this;
 		this.Tracer = Trac;
 		this.id_area = id;
 		this.name_area = name_area;
@@ -159,8 +162,10 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					
 					Tracer.get_engine().remove_one_things(id_area,"area");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
-					removeAllViewsInLayout ();	
-					postInvalidate();
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -61,6 +61,8 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 	private Message msg;
 	private String place_type;
 	private int place_id;
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 	
 
 	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,int widgetSize, int session_type,int place_id,String place_type) {
@@ -76,7 +78,7 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 		this.place_type= place_type;
 		setOnClickListener(this);
 		mytag="Graphical_Boolean("+dev_id+")";
-		
+		this.myself = this;
 		this.setPadding(5, 5, 5, 5);
 
 		//panel with border
@@ -185,8 +187,10 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 					//Tracer.get_engine().remove_one_feature_association(id);
 					//Tracer.get_engine().remove_one_feature(id);
 					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
-					removeAllViewsInLayout ();	
-					postInvalidate();
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

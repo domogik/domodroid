@@ -1,6 +1,7 @@
 package activities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private int feature_id = 0;
 	private int lastid = 0;
 	private String type=null;
+	private String icon=null;
 	private WidgetUpdate widgetUpdate;
 	private HashMap<String,String> map;
 	private Dialog dialog_feature;
@@ -63,7 +65,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 	private Entity_Room[] listRoom;
 	private Entity_Feature[] listFeature;
 	private Entity_Icon[] listIcon;
-	private Entity[] listType;
 	private String mytag;
 	
 	public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
@@ -161,7 +162,26 @@ public class Dialog_House extends Dialog implements OnClickListener {
 						}
 					}
 			);
-			
+		//list type area,room, widget
+			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
+			List<String> list_icon = new ArrayList<String>();
+			String[] fiilliste;
+			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
+			for (int i=0; i < fiilliste.length ; i++){
+				list_icon.add(fiilliste[i].toString());
+			}
+			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
+			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						ListView lw = ((AlertDialog)dialog).getListView();
+						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+						icon = checkedItem.toString();
+						dialog.cancel();
+					}
+				}
+			);	
 		//list type area,room, widget
 			final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 			List<String> list_type = new ArrayList<String>();
@@ -283,7 +303,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					//type = area, room, feature
 					values.put("name", type);
 					//icon is the name of the icon wich will be select 
-					//values.put("value", icon);
+					values.put("value", icon);
 					//reference is the id of the area, room, or feature
 					int reference = 0;
 					if (type.equals("area"))
@@ -332,6 +352,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			alert_list_feature.show();
 		}else if (tag.equals("add_icon")) {
 			list_type_choice.show();
+			AlertDialog alert_list_icon = list_icon_choice.create();
+			alert_list_icon.show();
 			//TODO Ask user what icon i want to modify area, room, widget
 			//in function display 
 			//display list of all icons

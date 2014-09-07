@@ -110,6 +110,7 @@
 	<string name="Wich_feature_message">Select a Widget</string>
 	
 	<string name="Wich_TYPE_message">Select a Type</string>
+	<string name="Wich_ICON_message">Select an Icon</string>
 	
 	<string name="version">Rev</string>
 	<string name="Hue">RGB Color</string>

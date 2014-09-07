@@ -18,16 +18,13 @@
  -->
 <resources>
 <string-array name="icon_area_array">
-    <item>Area</item>
-    <item>Basement</item>
- 	<item>Firstfloor</item>
-    <item>Garage</item>
-    <item>Garden</item>
-    <item>Groundfloor</item>
-    <item>Secondfloor</item>
-</string-array>
-
-<string-array name="icon_room_array">
+    <item>area</item>
+    <item>basement</item>
+ 	<item>first_floor</item>
+    <item>garage</item>
+    <item>garden</item>
+    <item>ground_floor</item>
+    <item>second_floor</item>
     <item>bathroom</item>
     <item>bedroom</item>
  	<item>garage</item>

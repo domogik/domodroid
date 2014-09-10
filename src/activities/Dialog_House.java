@@ -263,9 +263,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			AlertDialog.Builder alert_Feature = new AlertDialog.Builder(getContext());
 			//set a title
 			//TODO Not the good text
-			//alert_Feature.setTitle(R.string.Rename_title);
+			alert_Feature.setTitle(R.string.Confirm_title);
 			//set a message
-			//alert_Feature.setMessage(R.string.Rename_message);
+			alert_Feature.setMessage(R.string.Confirm_message);
 			// Set an EditText view to get user input 
 			//final EditText name2 = new EditText(getContext());
 			//alert_Feature.setView(name2);
@@ -297,9 +297,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			AlertDialog.Builder alert_Icon = new AlertDialog.Builder(getContext());
 			//set a title
 			//TODO Not the good text
-			//alert_Feature.setTitle(R.string.Rename_title);
+			alert_Icon.setTitle(R.string.Confirm_title);
 			//set a message
-			//alert_Feature.setMessage(R.string.Rename_message);
+			alert_Icon.setMessage(R.string.Confirm_message);
 			// Set an EditText view to get user input 
 			//final EditText name2 = new EditText(getContext());
 			//alert_Feature.setView(name2);

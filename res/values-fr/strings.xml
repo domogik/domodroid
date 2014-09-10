@@ -109,6 +109,9 @@
 	<string name="Add_widget_title">Selectionner un widget</string>
 	<string name="Wich_feature_message">Selectionner un widget</string>
 	
+	<string name="Confirm_title">Confirmer</string>
+	<string name="Confirm_message">Etes-vous sur de vouloir faire cela?</string>
+	
 	<string name="Wich_TYPE_message">Selectionner un Type</string>
 	<string name="Wich_ICON_message">Selectionner une Icone</string>
 	

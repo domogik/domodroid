@@ -32,6 +32,32 @@
     <item>kitchen</item>
     <item>kidsroom</item>
     <item>tvlounge</item>
+    <item>air_conditionning</item>
+	<item>appliance</item>
+	<item>christmas_tree</item>
+	<item>computer</item>
+	<item>door</item>
+	<item>electricity</item>
+	<item>heating</item>
+	<item>light</item>
+	<item>mirror</item>
+	<item>music</item>
+	<item>nanoztag</item>
+	<item>portal</item>
+	<item>scene</item>
+	<item>security_camera</item>
+	<item>server</item>
+	<item>socket</item>
+	<item>shutter</item>
+	<item>telephony</item>
+	<item>temperature</item>
+	<item>tv</item>
+	<item>ventilation</item>
+	<item>water</item>
+	<item>water_tank</item>
+	<item>window</item>
+	<item>map</item>
+	<item>statistics</item>
 </string-array>
 
 </resources>

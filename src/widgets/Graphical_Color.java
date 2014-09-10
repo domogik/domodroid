@@ -51,7 +51,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListener,  OnTouchListener, OnLongClickListener, OnClickListener{
+public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListener,  OnLongClickListener, OnClickListener{
 
 
 	private int mInitialColor, mDefaultColor;
@@ -158,6 +158,7 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		this.place_id= place_id;
 		this.place_type= place_type;
 		mytag="Graphical_Color("+dev_id+")";
+		setOnClickListener(this);
 		setOnLongClickListener(this);
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
@@ -187,8 +188,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-		img.setTag("img");
-		img.setOnTouchListener(this);
 		
 		// info panel
 		infoPan = new LinearLayout(context);
@@ -731,11 +730,4 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			alert.show();
 		}		
 	}
-
-
-
-	public boolean onTouch(View v, MotionEvent event) {
-		return false;
-	}
-
 }

@@ -20,6 +20,7 @@ package widgets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 import android.content.Context;
 
@@ -72,7 +73,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class Graphical_List extends FrameLayout implements OnTouchListener, OnLongClickListener,OnClickListener {
+public class Graphical_List extends FrameLayout implements OnLongClickListener,OnClickListener {
 
 
 	private FrameLayout imgPan;
@@ -147,6 +148,9 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		Graphical_List.myself = this;
 		this.session_type = session_type;
 		this.parameters = parameters;
+		setOnLongClickListener(this);
+		setOnClickListener(this);
+		
 		mytag="Graphical_List ("+dev_id+")";
 		this.setPadding(5, 5, 5, 5);
 		login = params.getString("http_auth_username",null);
@@ -177,10 +181,6 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		Tracer.e(mytag, "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-		img.setTag("img");
-		img.setOnLongClickListener(this);
-		img.setOnTouchListener(this);
-		img.setOnClickListener(this);
 		
 		// info panel
 		infoPan = new LinearLayout(context);
@@ -194,28 +194,24 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
-		nameDevices.setTag("namedevices");
-		nameDevices.setOnLongClickListener(this);
-		//nameDevices.setLines(1);
-
+		
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
-
 
 		//feature panel
 		featurePan=new LinearLayout(context);
 		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
 		featurePan.setPadding(10, 0, 10, 0);
+		
 		//value
 		value = new TextView(context);
 		value.setTextSize(28);
 		value.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
-
 		
 		if(with_list) {
 			//Exploit parameters
@@ -445,7 +441,32 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 	}
 	
 	public boolean onLongClick(View v) {
-		if(v.getTag().equals("namedevices")) {
+		//TODO open a menu to ask what to do.
+		//list type area,room, widget
+		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Rename");
+			list_choice.add("Change_icon");
+			list_choice.add("Delete");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					do_action(checkedItem.toString());
+					dialog.cancel();
+				}
+			}
+		);
+	
+		list_type_choice.show();
+		return false;
+	}
+
+	private void do_action(String action) {
+		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);
 			alert.setMessage(R.string.Rename_message);
@@ -464,17 +485,13 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 					}
 				});
 				alert.show();
-		}else if (v.getTag().equals("img")){
+		}else if (action.equals("Delete")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					//TODO do this in a menu
-					//Tracer.get_engine().remove_one_feature_association(id);
-					//Tracer.get_engine().remove_one_feature(id);
-					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
@@ -488,12 +505,6 @@ public class Graphical_List extends FrameLayout implements OnTouchListener, OnLo
 			});
 			alert.show();
 		}
-		return false;
-		
-	}
-
-	public boolean onTouch(View v, MotionEvent event) {
-		return false;
 	}
 
 }

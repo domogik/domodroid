@@ -17,6 +17,9 @@
  */
 package widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rinor.Rest_com;
 import database.JSONParser;
 
@@ -44,6 +47,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,6 +98,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		this.dev_id = dev_id;
 		this.place_id= place_id;
 		this.place_type= place_type;
+		setOnLongClickListener(this);
 		mytag="Graphical_Trigger("+dev_id+")";
 		this.params=params;
 		login = params.getString("http_auth_username",null);
@@ -135,10 +140,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-		img.setTag("img");
-		img.setOnLongClickListener(this);
-
-
+		
 		// info panel
 		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
@@ -151,10 +153,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
 		nameDevices.setTextSize(14);
-		nameDevices.setTag("namedevices");
-		nameDevices.setOnLongClickListener(this);
 		
-
 		//feature panel
 		featurePan=new LinearLayout(context);
 		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
@@ -215,7 +214,32 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	}
 	
 	public boolean onLongClick(View v) {
-		if(v.getTag().equals("namedevices")) {
+		//TODO open a menu to ask what to do.
+		//list type area,room, widget
+		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Rename");
+			list_choice.add("Change_icon");
+			list_choice.add("Delete");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					do_action(checkedItem.toString());
+					dialog.cancel();
+				}
+			}
+		);
+	
+		list_type_choice.show();
+		return false;
+	}
+
+	private void do_action(String action) {
+		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);
 			alert.setMessage(R.string.Rename_message);
@@ -234,7 +258,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 					}
 				});
 				alert.show();
-		}else if (v.getTag().equals("img")){
+		}else if (action.equals("Delete")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
@@ -258,8 +282,6 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 			});
 			alert.show();
 		}
-		return false;
-		
 	}
 }
 

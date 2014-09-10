@@ -5,5 +5,6 @@ House option
 * Add a new area
 * Add a new room in an area
 * Add a widget in any room
+* Add another icon to an area, a room, or a device
 
 .. image:: Config_house.png

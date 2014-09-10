@@ -66,7 +66,6 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	private String mytag="Graphical_Area";
 	private Activity Activity;
 	private Entity_Room[] listRoom;
-	private String action="";
 	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);
@@ -148,7 +147,6 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 
 
 	public boolean onLongClick(View v) {
-		action="";
 		//TODO open a menu to ask what to do.
 		//list type area,room, widget
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());

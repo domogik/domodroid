@@ -17,6 +17,9 @@
  */
 package widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
@@ -37,6 +40,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import android.view.View.OnLongClickListener;
@@ -58,7 +62,6 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
 	private String mytag="Graphical_Room";
-	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);
 		this.myself = this;
@@ -141,7 +144,31 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	}
 	
 	public boolean onLongClick(View v) {
-		if(v.getTag().equals("img")) {
+		//TODO open a menu to ask what to do.
+		//list type area,room, widget
+		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Rename");
+			list_choice.add("Change_icon");
+			list_choice.add("Delete");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					do_action(checkedItem.toString());
+				}
+			}
+		);
+	
+		list_type_choice.show();
+		return false;
+	}
+	
+	private void do_action(String action) {
+		if(action.equals("Delete")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
@@ -164,7 +191,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 				}
 			});
 			alert.show();
-		}else if (v.getTag().equals("name")){
+		}else if (action.equals("Rename")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);
 			alert.setMessage(R.string.Rename_message);
@@ -183,9 +210,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 					}
 				});
 				alert.show();
+			}
 		}
-	return false;
-	
-}
 
 }

@@ -17,6 +17,9 @@
  */
 package widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import activities.Activity_Cam;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
@@ -41,6 +44,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,15 +86,15 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 		mytag="Graphical_Boolean("+dev_id+")";
 		this.myself = this;
 		this.setPadding(5, 5, 5, 5);
-
+		setOnLongClickListener(this);
+		setOnClickListener(this);
+		
 		//panel with border
 		background = new LinearLayout(context);
 		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		background.setOrientation(LinearLayout.VERTICAL);
 		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
-
-
 
 		//main panel
 		mainPan=new LinearLayout(context);
@@ -106,10 +110,7 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		Tracer.e(mytag, "Get icone for usage : "+usage);
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-		img.setTag("img");
-		img.setOnClickListener(this);
-		img.setOnLongClickListener(this);
-
+		
 		// info panel
 		infoPan = new LinearLayout(context);
 		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
@@ -122,9 +123,7 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 		nameDevices.setTextSize(14);
 		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		nameDevices.setTextColor(Color.BLACK);
-		nameDevices.setTag("namedevices");
-		nameDevices.setOnLongClickListener(this);
-
+		
 		imgPan.addView(img);
 		infoPan.addView(nameDevices);		
 		mainPan.addView(imgPan);
@@ -160,7 +159,32 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 		return;
 	}
 	public boolean onLongClick(View v) {
-		if(v.getTag().equals("namedevices")) {
+		//TODO open a menu to ask what to do.
+		//list type area,room, widget
+		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Rename");
+			list_choice.add("Change_icon");
+			list_choice.add("Delete");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					do_action(checkedItem.toString());
+					dialog.cancel();
+				}
+			}
+		);
+	
+		list_type_choice.show();
+		return false;
+	}
+
+	private void do_action(String action) {
+		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);
 			alert.setMessage(R.string.Rename_message);
@@ -179,17 +203,13 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 					}
 				});
 				alert.show();
-		}else if (v.getTag().equals("img")){
+		}else if (action.equals("Delete")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					//TODO do this in a menu
-					//Tracer.get_engine().remove_one_feature_association(id);
-					//Tracer.get_engine().remove_one_feature(id);
-					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
@@ -202,8 +222,6 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 				}
 			});
 			alert.show();
-		}
-		return false;
-		
+		}		
 	}
 }

@@ -17,10 +17,14 @@
  */
 package widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.domogik.domodroid13.R;
 
 import database.DomodroidDB;
 
+import activities.Dialog_House;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
@@ -39,6 +43,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnClickListener;
@@ -61,6 +66,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	private String mytag="Graphical_Area";
 	private Activity Activity;
 	private Entity_Room[] listRoom;
+	private String action="";
 	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context);
@@ -142,7 +148,33 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 
 
 	public boolean onLongClick(View v) {
-		if(v.getTag().equals("img")) {
+		action="";
+		//TODO open a menu to ask what to do.
+		//list type area,room, widget
+		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Rename");
+			list_choice.add("Change_icon");
+			list_choice.add("Delete");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					do_action(checkedItem.toString());
+				}
+			}
+		);
+	
+		list_type_choice.show();
+		return false;
+	}
+
+	private void do_action(String action) {
+
+		if(action.equals("Delete")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
@@ -158,10 +190,12 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					for (Entity_Room room : listRoom) {
 						Tracer.get_engine().remove_one_things(room.getId(),"room");
 						Tracer.get_engine().remove_one_place_type_in_Featureassociation(room.getId(),"room");
+						Tracer.get_engine().remove_one_icon(room.getId(),"room");
 						}
 					
 					Tracer.get_engine().remove_one_things(id_area,"area");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
+					Tracer.get_engine().remove_one_icon(id_area,"area");
 					removeView(background);
 					myself.setVisibility(GONE);
 					if(container != null) {
@@ -176,7 +210,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 				}
 			});
 			alert.show();
-		}else if (v.getTag().equals("name")){
+		}else if (action.equals("Rename")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);
 			alert.setMessage(R.string.Rename_message);
@@ -196,8 +230,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 				});
 				alert.show();
 			}
-		return false;
-		}
+	}
 	}
 
 

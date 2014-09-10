@@ -249,10 +249,16 @@ public class DomodroidDB {
 	
 	public void remove_one_icon(int id){
 		ContentValues values = new ContentValues();
-		values.put("id", id);
+		values.put("reference", id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_ICON, values);
 	}
 	
+	public void remove_one_icon(int id,String type){
+		ContentValues values = new ContentValues();
+		values.put("reference", id);
+		values.put("name", type);
+		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_ICON, values);
+	}
 	public void remove_one_feature(int id){
 		ContentValues values = new ContentValues();
 		values.put("id", id);

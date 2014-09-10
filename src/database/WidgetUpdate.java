@@ -911,6 +911,9 @@ public class WidgetUpdate  {
 		else if (type.equals("icon")){ domodb.remove_one_icon(id);}
 		else if (type.equals("feature")){ domodb.remove_one_feature(id);}
 	}
+	public void remove_one_icon(int id, String place_type) {
+		domodb.remove_one_icon(id, place_type);
+	}
 	public void remove_one_feature_association(int id, int place_id, String place_type) {
 		domodb.remove_one_feature_association(id, place_id, place_type);
 	}

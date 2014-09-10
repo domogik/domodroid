@@ -358,10 +358,12 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			alert_Feature.show();
 			AlertDialog alert_list_area = list_area_choice.create();
 			alert_list_area.show();
+			v.setTag("add_widget");
 		}else if (tag.equals("add_widget_room")) {
 			alert_Feature.show();
 			AlertDialog alert_list_room = list_room_choice.create();
 			alert_list_room.show();
+			v.setTag("add_widget");
 		}else if (tag.equals("add_icon")) {
 			list_type_choice.show();
 			AlertDialog alert_list_icon = list_icon_choice.create();
@@ -372,15 +374,18 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		}else if (tag.equals("add_icon_area")){
 			alert_Icon.show();
 			AlertDialog alert_list_area = list_area_choice.create();
-			alert_list_area.show();	
+			alert_list_area.show();
+			v.setTag("add_icon");
 		}else if (tag.equals("add_icon_room")){
 			alert_Icon.show();
 			AlertDialog alert_list_room = list_room_choice.create();
-			alert_list_room.show();	
+			alert_list_room.show();
+			v.setTag("add_icon");
 		}else if (tag.equals("add_icon_feature")){
 			alert_Icon.show();
 			AlertDialog alert_list_feature = list_feature_choice.create();
-			alert_list_feature.show();	
+			alert_list_feature.show();
+			v.setTag("add_icon");
 		}
 				
 	}

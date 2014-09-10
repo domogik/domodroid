@@ -159,6 +159,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 					ListView lw = ((AlertDialog)dialog).getListView();
 					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
 					do_action(checkedItem.toString());
+					dialog.cancel();
 				}
 			}
 		);

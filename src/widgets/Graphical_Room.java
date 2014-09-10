@@ -149,6 +149,8 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_things(id_room,"room");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room,"room");
+					removeView(background);
+					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);

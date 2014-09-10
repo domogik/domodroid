@@ -162,6 +162,8 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					
 					Tracer.get_engine().remove_one_things(id_area,"area");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
+					removeView(background);
+					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);

@@ -62,6 +62,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
 	private String mytag="Graphical_Room";
+	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);
 		this.myself = this;
@@ -72,6 +73,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 		this.widgetHandler=handler;
 		this.setPadding(5, 5, 5, 5);
 		setOnClickListener(this);
+		setOnLongClickListener(this);
 		mytag="Graphical_Room("+id_room+")";
 		
 		//panel with border
@@ -89,9 +91,6 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 		img = new ImageView(context);
 		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
-		img.setTag("img");
-		img.setOnLongClickListener(this);
-		img.setOnClickListener(this);
 		
 		//info panel
 		infoPan=new LinearLayout(context);
@@ -107,8 +106,6 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 		name.setTextSize(18);
 		name.setTextColor(Color.WHITE);
 		name.setGravity(Gravity.RIGHT);
-		name.setTag("name");
-		name.setOnLongClickListener(this);
 				
 		//description
 		description=new TextView(context);

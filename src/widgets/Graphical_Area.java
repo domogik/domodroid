@@ -143,8 +143,6 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 
 
 	public boolean onLongClick(View v) {
-		//TODO open a menu to ask what to do.
-		//list type area,room, widget
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();
 			list_choice.add("Rename");
@@ -168,15 +166,14 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	}
 
 	private void do_action(String action) {
-
+		//TODO CHANGE icon.
+		
 		if(action.equals("Delete")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					//remove all room in this area
-					//need to list them first and then delete also all feature in those rooms
 					DomodroidDB domodb = new DomodroidDB(Tracer,Activity);
 					domodb.owner="Widgets_Manager.loadRoomWidgets";
 					Tracer.e(mytag, "load widgets for area "+id_area);
@@ -216,6 +213,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						String result= input.getText().toString(); 
 						Tracer.get_engine().descUpdate(id_area,result,"area");
+						//TODO refresh layout to take change
 					}
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -418,8 +418,6 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		}
 	}
 	public boolean onLongClick(View v) {
-		//TODO open a menu to ask what to do.
-		//list type area,room, widget
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();
 			list_choice.add("Rename");
@@ -443,6 +441,8 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	}
 
 	private void do_action(String action) {
+		//TODO CHANGE icon.
+		
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);

@@ -22,6 +22,7 @@ import java.util.List;
 
 import rinor.Rest_com;
 import widgets.Graphical_Binary.SBAnim;
+import database.DmdContentProvider;
 import database.JSONParser;
 import database.WidgetUpdate;
 
@@ -32,6 +33,7 @@ import activities.Graphics_Manager;
 import org.domogik.domodroid13.R;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -106,6 +108,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 	private String password;
 	private SharedPreferences params;
 	private String test_unite;
+	private Activity context;
 	
 	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,
 			String state_key, String url, String usage, 
@@ -125,6 +128,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 		this.session_type = session_type;
 		this.place_id= place_id;
 		this.place_type= place_type;
+		this.context=context;
 		stateThread = 1;
 		this.stateS = getResources().getText(R.string.State).toString();
 		setOnLongClickListener(this);
@@ -454,10 +458,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					//TODO do this in a menu
-					//Tracer.get_engine().remove_one_feature_association(id);
-					//Tracer.get_engine().remove_one_feature(id);
-					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
@@ -470,6 +470,39 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 				}
 			});
 			alert.show();
-		}
+		}else if (action.equals("Change_icon")){
+			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
+			List<String> list_icon = new ArrayList<String>();
+			String[] fiilliste;
+			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
+			for (int i=0; i < fiilliste.length ; i++){
+				list_icon.add(fiilliste[i].toString());
+			}
+			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
+			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						ListView lw = ((AlertDialog)dialog).getListView();
+						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+						usage = checkedItem.toString();
+						ContentValues values = new ContentValues();
+						//type = area, room, feature
+						values.put("name", "feature");
+						//icon is the name of the icon wich will be select 
+						values.put("value", usage);
+						//reference is the id of the area, room, or feature
+						int reference = 0;
+						reference=id;
+						values.put("reference", reference);
+						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						dialog.cancel();
+					}
+				}
+			);	
+			AlertDialog alert_list_icon = list_icon_choice.create();
+			alert_list_icon.show();
+			
+		}	
 	}
 }

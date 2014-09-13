@@ -24,7 +24,10 @@ import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
+
+import database.DmdContentProvider;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -62,6 +65,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	private Handler widgetHandler;
 	private tracerengine Tracer = null;
 	private String mytag="Graphical_Room";
+	private String icon;
 	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context);
@@ -72,6 +76,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 		this.context = context;
 		this.widgetHandler=handler;
 		this.setPadding(5, 5, 5, 5);
+		this.icon=icon;
 		setOnClickListener(this);
 		setOnLongClickListener(this);
 		mytag="Graphical_Room("+id_room+")";
@@ -208,7 +213,40 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 					}
 				});
 				alert.show();
+		}else if (action.equals("Change_icon")){
+			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
+			List<String> list_icon = new ArrayList<String>();
+			String[] fiilliste;
+			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
+			for (int i=0; i < fiilliste.length ; i++){
+				list_icon.add(fiilliste[i].toString());
 			}
+			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
+			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						ListView lw = ((AlertDialog)dialog).getListView();
+						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+						icon = checkedItem.toString();
+						ContentValues values = new ContentValues();
+						//type = area, room, feature
+						values.put("name", "room");
+						//icon is the name of the icon wich will be select 
+						values.put("value", icon);
+						//reference is the id of the area, room, or feature
+						int reference = 0;
+						reference=id_room;
+						values.put("reference", reference);
+						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						dialog.cancel();
+					}
+				}
+			);	
+			AlertDialog alert_list_icon = list_icon_choice.create();
+			alert_list_icon.show();
+			
+		}	
 		}
 
 }

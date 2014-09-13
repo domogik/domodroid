@@ -303,7 +303,7 @@ public class DmdContentProvider extends ContentProvider {
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_icon WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'");
 				}
 			catch (SQLException e) {
-				Log.e(mytag, "Error deleting room: "+e.toString());
+				Log.e(mytag, "Error deleting icon: "+e.toString());
 				}
 			break;
 		case CLEAR_one_FEATURE:
@@ -373,7 +373,7 @@ public class DmdContentProvider extends ContentProvider {
 				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e(mytag, "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description of feature: "+e.toString());
 				}
 			break;
 		case UPDATE_AREA_NAME:
@@ -382,7 +382,7 @@ public class DmdContentProvider extends ContentProvider {
 				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e(mytag, "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description of area: "+e.toString());
 				}
 			break;
 		case UPDATE_ROOM_NAME:
@@ -391,16 +391,22 @@ public class DmdContentProvider extends ContentProvider {
 				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				}
 			catch (SQLException e) {
-				Log.e(mytag, "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description of room: "+e.toString());
 				}
 			break;
 		case UPDATE_ICON_NAME:
 			try{
-				mDB.getWritableDatabase().execSQL("UPDATE table_icon SET value='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				}
+				Cursor cursor=null;
+				cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_icon WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'",null);
+		        if (cursor == null || !cursor.moveToFirst()) {
+		        	mDB.getWritableDatabase().insert("table_icon", null, values);
+					} else {
+					mDB.getWritableDatabase().execSQL("UPDATE table_icon SET value='" + values.getAsString("value") + "' WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'");
+					//Log.d(mytag, "Doing sql, UPDATE table_feature SET value='" + values.getAsString("value") + "' WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'");
+					}
+		        }
 			catch (SQLException e) {
-				Log.e(mytag, "Error modifiying the description: "+e.toString());
+				Log.e(mytag, "Error modifiying the description of icon: "+e.toString());
 				}
 			break;
 		default:

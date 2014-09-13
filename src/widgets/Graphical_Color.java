@@ -16,12 +16,14 @@ import org.json.JSONObject;
 
 import rinor.Rest_com;
 import widgets.Graphical_Binary.SBAnim;
+import database.DmdContentProvider;
 import database.JSONParser;
 import database.WidgetUpdate;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -123,7 +125,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	private int place_id;
 	private String login;
 	private String password;
-	
+	private String usage;
+	private Context context;
 
 	@SuppressLint("HandlerLeak")
 	public Graphical_Color(tracerengine Trac, Context context, 
@@ -140,10 +143,12 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			int session_type,int place_id,String place_type) {
 		
 		super(context);
+		this.context=context;
 		this.Tracer = Trac;
 		mycontext = (Activity) context;
 		this.dev_id = dev_id;
 		this.id = id;
+		this.usage=usage;
 		this.state_key = state_key;
 		this.name=name;
 		this.wname=name;
@@ -728,6 +733,39 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 				}
 			});
 			alert.show();
-		}		
+		}else if (action.equals("Change_icon")){
+			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
+			List<String> list_icon = new ArrayList<String>();
+			String[] fiilliste;
+			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
+			for (int i=0; i < fiilliste.length ; i++){
+				list_icon.add(fiilliste[i].toString());
+			}
+			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
+			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						ListView lw = ((AlertDialog)dialog).getListView();
+						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+						usage = checkedItem.toString();
+						ContentValues values = new ContentValues();
+						//type = area, room, feature
+						values.put("name", "feature");
+						//icon is the name of the icon wich will be select 
+						values.put("value", usage);
+						//reference is the id of the area, room, or feature
+						int reference = 0;
+						reference=id;
+						values.put("reference", reference);
+						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						dialog.cancel();
+					}
+				}
+			);	
+			AlertDialog alert_list_icon = list_icon_choice.create();
+			alert_list_icon.show();
+			
+		}			
 	}
 }

@@ -693,8 +693,6 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 	}
 
 	private void do_action(String action) {
-		//TODO CHANGE icon.
-		
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);

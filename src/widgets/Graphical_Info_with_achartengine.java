@@ -751,8 +751,6 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 	}
 
 	private void do_action(String action) {
-		//TODO CHANGE icon.
-		
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);

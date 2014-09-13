@@ -170,8 +170,6 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 	}
 
 	private void do_action(String action) {
-		//TODO CHANGE icon.
-		
 		if(action.equals("Delete")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Delete_feature_title);
@@ -258,7 +256,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 			);	
 			AlertDialog alert_list_icon = list_icon_choice.create();
 			alert_list_icon.show();
-			
+			//TODO refresh layout to take change
 		}
 	}
 	}

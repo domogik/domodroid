@@ -146,7 +146,7 @@
     <string name="map_option_max_size">--Maximum Map Size:</string>	
     <string name="map_option_size">300 px</string>
     <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
-    <string name="map_option_hide_text">Hide text:</string>
+    <string name="map_option_hide_text">Hide text</string>
     <string name="map_option_menu_disable">Disallow editing map</string>
    	<string name="map_autozoom">Zoom auto in map mode:</string>	
     

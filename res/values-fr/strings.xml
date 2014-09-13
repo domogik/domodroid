@@ -146,7 +146,7 @@
     <string name="map_option_max_size">--Taille maximum carte:</string>	
     <string name="map_option_size">300 pixels</string>
     <string name="map_option_advert">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
-    <string name="map_option_hide_text">Masquer texte:</string>
+    <string name="map_option_hide_text">Masquer texte</string>
     <string name="map_option_menu_disable">Interdire les modifications de map</string>
     <string name="map_autozoom">Zoom automatique en map:</string>	
    	

@@ -243,8 +243,6 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	}
 
 	private void do_action(String action) {
-		//TODO CHANGE icon.
-		
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);
@@ -271,10 +269,6 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					//TODO do this in a menu
-					//Tracer.get_engine().remove_one_feature_association(id);
-					//Tracer.get_engine().remove_one_feature(id);
-					//Tracer.get_engine().remove_one_feature_in_FeatureMap(id);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);

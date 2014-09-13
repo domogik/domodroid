@@ -41,7 +41,7 @@ public class Widgets_Manager {
 	private Graphical_Boolean bool;
 	private Graphical_Range variator;
 	private Graphical_Info info;
-	private Graphical_Info_with_achartengine info1;
+	private Graphical_Info_with_achartengine info_with_achartengine;
 	private Graphical_List list;
 	private Graphical_Trigger trigger;
 	private Graphical_Cam cam;
@@ -189,15 +189,19 @@ public class Widgets_Manager {
 				tmpPan.addView(color);
 				Tracer.i(mytag,"   ==> Graphical_Color");
 			} else if (Value_type.equals("number")) {
+				if(feature.getDevice_feature_model_id().contains("call")) {
+					//TODO New widget for callerID
+					Tracer.i(mytag,"   ==> Device_feature_model_id().contains(call)");
+				}
 				if (params.getBoolean("Graph_CHOICE",false)==true) {
-				Tracer.e(mytag,"add Graphical_Info for "+label+" ("+DevId+") key="+State_key);
-					info1 = new Graphical_Info_with_achartengine(Tracer, context,
+				Tracer.e(mytag,"add Graphical_Info_with_achartengine for "+label+" ("+DevId+") key="+State_key);
+					info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context,
 						Id,DevId, label,State_key,URL,iconName,Graph,
 						update_timer,widgetSize, mytype, parameters,id,zone,params);
-				info1.setLayoutParams(layout_param);
-				info1.container=tmpPan;
-				tmpPan.addView(info1);
-				Tracer.i(mytag,"   ==> Graphical_Info + Graphic");
+					info_with_achartengine.setLayoutParams(layout_param);
+					info_with_achartengine.container=tmpPan;
+				tmpPan.addView(info_with_achartengine);
+				Tracer.i(mytag,"   ==> Graphical_Info_with_achartengine + Graphic");
 				} else{
 					Tracer.e(mytag,"add Graphical_Info for "+label+" ("+DevId+") key="+State_key);
 					info = new Graphical_Info(Tracer, context,Id,DevId, label,

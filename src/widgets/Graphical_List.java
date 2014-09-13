@@ -467,8 +467,6 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 	}
 
 	private void do_action(String action) {
-		//TODO CHANGE icon.
-		
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(R.string.Rename_title);

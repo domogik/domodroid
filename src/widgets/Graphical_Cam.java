@@ -76,22 +76,22 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 
 	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
 		super(context);
+		this.context = context;
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
 		this.id = id;
 		this.usage=usage;
 		this.name_cam = name;
 		this.url = url;
-		this.context = context;
 		this.session_type = session_type;
 		this.place_id= place_id;
 		this.place_type= place_type;
-		setOnClickListener(this);
-		mytag="Graphical_Boolean("+dev_id+")";
 		this.myself = this;
+		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 		setOnLongClickListener(this);
 		setOnClickListener(this);
+		mytag="Graphical_Cam("+dev_id+")";
 		
 		//panel with border
 		background = new LinearLayout(context);

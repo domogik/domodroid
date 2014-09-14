@@ -57,7 +57,6 @@ import android.widget.Toast;
 
 public class Graphical_Boolean extends FrameLayout implements OnLongClickListener{
 
-
 	private FrameLayout imgPan;
 	private LinearLayout background;
 	private LinearLayout featurePan;

@@ -17,6 +17,7 @@ import widgets.Graphical_Binary_New;
 import widgets.Graphical_Boolean;
 import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
+import widgets.Graphical_History;
 import widgets.Graphical_Info;
 import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
@@ -40,6 +41,7 @@ public class Widgets_Manager {
 	private Graphical_Binary_New onoff_New;
 	private Graphical_Boolean bool;
 	private Graphical_Range variator;
+	private Graphical_History info_with_history;
 	private Graphical_Info info;
 	private Graphical_Info_with_achartengine info_with_achartengine;
 	private Graphical_List list;
@@ -189,10 +191,6 @@ public class Widgets_Manager {
 				tmpPan.addView(color);
 				Tracer.i(mytag,"   ==> Graphical_Color");
 			} else if (Value_type.equals("number")) {
-				if(feature.getDevice_feature_model_id().contains("call")) {
-					//TODO New widget for callerID
-					Tracer.i(mytag,"   ==> Device_feature_model_id().contains(call)");
-				}
 				if (params.getBoolean("Graph_CHOICE",false)==true) {
 				Tracer.e(mytag,"add Graphical_Info_with_achartengine for "+label+" ("+DevId+") key="+State_key);
 					info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context,
@@ -208,6 +206,7 @@ public class Widgets_Manager {
 							State_key,URL,iconName,update_timer,
 							widgetSize, mytype, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
+					info.with_graph=true;
 					info.container=tmpPan;
 					tmpPan.addView(info);
 					Tracer.i(mytag,"   ==> Graphical_Info + Graphic");
@@ -224,6 +223,17 @@ public class Widgets_Manager {
 				tmpPan.addView(list);
 				Tracer.i(mytag,"   ==> Graphical_List");
 			} else if(Value_type.equals("string")){
+				//TODO New widget for callerID
+				/*if(feature.getDevice_feature_model_id().contains("call")) {
+					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
+							State_key,URL,iconName,update_timer,
+							widgetSize, mytype, parameters,id,zone,params);
+					info_with_history.setLayoutParams(layout_param);
+					tmpPan.addView(info_with_history);
+					Tracer.i(mytag,"   ==> Device_feature_model_id().contains(call)");
+					Tracer.i(mytag,"   ==> Graphical_history");
+				}
+				*/
 				if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
 							Address,iconName,widgetSize, mytype,id,zone);

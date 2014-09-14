@@ -36,7 +36,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
-public class Graphical_Info_View extends View implements OnClickListener {
+public class Graphical_History  extends FrameLayout implements OnClickListener {
 
 	private int width;
 	private int height;
@@ -66,7 +66,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private Handler handler;
 	public boolean activate=false;
 	public boolean loaded=false;
-	private String mytag="Graphical_Info_View";
+	private String mytag="Graphical_History";
 	public FrameLayout container = null;
 	public View myself = null;
 	@SuppressLint("SimpleDateFormat")
@@ -81,12 +81,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
 										// 30 = 1 month
 										// 365 = 1 year
 	private int sav_period;
-	private Button Prev = null;
-	private Button Next = null;
-	private Button Year = null;
-	private Button Month = null;
-	private Button Week = null;
-	private Button Day = null;
 	
 	private String step="hour";
 	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
@@ -102,7 +96,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private float size10;
 	
 	@SuppressLint("HandlerLeak")
-	public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params){
+	public Graphical_History(tracerengine Trac, Context context, SharedPreferences params){
 		super(context);
 		invalidate();
 		this.Tracer=Trac;
@@ -113,9 +107,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		values = new Vector<Vector<Float>>();
 		activate=true;
 		this.myself=this;
-		period_type = 1;	//by default, display 24 hours
-		compute_period();	//To initialize time_start & time_end
-
+		
 		//correct kitkat problem
 		//DisplayMetrics metrics = getResources().getDisplayMetrics();
 		//width= metrics.widthPixels;
@@ -146,72 +138,13 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		};
 	}
 	public void onClick(View v) {
-		String tag = (String)v.getTag();
-		sav_period=period_type;		//Save the current graph period
-		if(tag.equals("Prev")) {
-			Prev=(Button)v;
-			period_type = -1;
-		} else if(tag.equals("Next")) {
-			Next=(Button)v;
-			period_type = 0;
-		} else if(tag.equals("Year")) {
-			Year=(Button)v;
-			period_type = 365;
-		}else if(tag.equals("Month")) {
-			Month=(Button)v;
-			period_type = 31;
-		}else if(tag.equals("Week")) {
-			Week=(Button)v;
-			period_type = 8;
-		}else if(tag.equals("Day")) {
-			Day=(Button)v;
-			period_type = 1;
+		//TODO do something onclick
 		}
-		force_aspect(period_type);
-		compute_period();
-		updateTimer();
-	}
-	private void force_aspect(int which) {
-		float big = 13f;
-		float normal = 10f;
-		
-		if(Prev != null)
-			if(which != -1)
-				Prev.setTextSize(normal);
-			else
-				Prev.setTextSize(big);
-		if(Next != null)
-			if(which != 0)
-				Next.setTextSize(normal);
-			else
-				Next.setTextSize(big);
-		if(Year != null)
-			if(which != 365)
-				Year.setTextSize(normal);
-			else
-				Year.setTextSize(big);
-		if(Month != null)
-			if(which != 31)
-				Month.setTextSize(normal);
-			else
-				Month.setTextSize(big);
-		if(Week != null)
-			if(which != 8)
-				Week.setTextSize(normal);
-			else
-				Week.setTextSize(big);
-		if(Day != null)
-			if(which != 1)
-				Day.setTextSize(normal);
-			else
-				Day.setTextSize(big);
-	}
 	
 	public void  onWindowVisibilityChanged (int visibility) {
 		Tracer.i(mytag,"Visibility changed to : "+visibility);
 		if(visibility == View.VISIBLE) {
 			this.activate = true;
-			display_dates();
 		} else
 			activate=false;
 	}
@@ -232,12 +165,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		can=new Canvas(buffer);
 		can2=new Canvas(text);
 		
-		drawMessage();
-		
 		try{	
-			drawGrid();
 			drawValue();
-			drawGraph();
 		}catch(Exception e){
 		}
 		if(loaded)
@@ -246,24 +175,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			canvas.drawBitmap(text, 0, 0, new Paint());
 	}
 
-	public void drawMessage(){
-		Paint paint = new Paint();
-		paint.setColor(Color.DKGRAY);	
-		paint.setAntiAlias(true);
-		paint.setTextSize(size15);
-		can2.drawText("Loading Data ...", 10, 15, paint);
-	}
 
-	public void drawGrid(){
-		Paint paint = new Paint();
-		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.GRAY);	
-		paint.setStyle(Paint.Style.STROKE);
-
-		can.drawColor(Color.TRANSPARENT);
-		can.drawLine(gridStartX, gridStartY, gridStopX, gridStartY, paint);
-		can.drawLine(gridStartX, gridStartY, gridStartX, gridStopY, paint);
-	}
 
 	public void drawValue(){
 		//min - max - avg lines
@@ -304,205 +216,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			paint.setAntiAlias(true);
 			paint.setColor(Color.BLACK);
 			can.drawText(minf+temp_step*i+"", gridStopX+5, (gridStartY-gridOffset)-((temp_step*i)*scale_values), paint);
-		}
-	}
-
-	public void drawGraph(){
-		float gridSize_values = (gridStartY-gridOffset)-(gridStopY+gridOffset);
-		float scale_values = gridSize_values/(maxf-minf);
-		float step = (gridStopX-gridStartX)/(values.size()-1);
-		int top = 0;
-		String top_txt = "";
-		int rythm = 1;
-		int curr = 0;
-		
-		Paint paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setStyle(Paint.Style.FILL);
-		//Tracer.i(mytag,"drawGraph limit = "+limit+" , step = "+step+"Array size = "+values.size());
-		for(int i=0; i<values.size();i++){
-			if(limit == 6) {
-				top = values.get(i).get(4).intValue();	//get the hour
-				top_txt = top+"'"; 
-			}
-			//top texts on X separators
-			if(step > 24){
-				paint.setStrokeWidth(1);
-				paint.setColor(Color.LTGRAY);
-				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, 
-						gridStartX+(i*step), 
-						gridStopY, 
-						paint);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, 
-						gridStartX+(i*step), 
-						gridStartY-4, 
-						paint);
-
-				paint.setAntiAlias(true);
-				paint.setStrokeWidth(0);
-				paint.setColor(Color.parseColor("#157C9E"));
-				paint.setTextSize(size10);
-				can.drawText(top_txt, 
-						gridStartX+(i*step)-8, 
-						gridStopY+gridOffset-20, 
-						paint);
-			}
-			else if(step > 8 && (top == 3 || 
-					top == 6 ||
-					top == 9 || 
-					top == 12 || 
-					top == 15 || 
-					top == 18 || 
-					top == 21 ||
-					top == 0)){
-				paint.setStrokeWidth(1);
-				paint.setColor(Color.LTGRAY);
-				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, gridStartX+(i*step), 
-						gridStopY, 
-						paint);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, gridStartX+(i*step), 
-						gridStartY-4, 
-						paint);
-
-				paint.setAntiAlias(true);
-				paint.setStrokeWidth(0);
-				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(top_txt, 
-						gridStartX+(i*step)-8, 
-						gridStopY+gridOffset-20, 
-						paint);
-			}
-			else if(step > 4 && (top == 6 ||
-					top == 12 || 
-					top == 18 || 
-					top == 0)) {
-				paint.setStrokeWidth(1);
-				paint.setColor(Color.LTGRAY);
-				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, gridStartX+(i*step), 
-						gridStopY, 
-						paint);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, 
-						gridStartX+(i*step), 
-						gridStartY-4, 
-						paint);
-
-				paint.setAntiAlias(true);
-				paint.setStrokeWidth(0);
-				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(top_txt, 
-						gridStartX+(i*step)-8, 
-						gridStopY+gridOffset-20, 
-						paint);
-			} else if(step > 2 && (top == 12 || 
-					top == 0)){
-				paint.setStrokeWidth(1);
-				paint.setColor(Color.LTGRAY);
-				paint.setAntiAlias(false);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, 
-						gridStartX+(i*step), 
-						gridStopY, paint);
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, 
-						gridStartX+(i*step), 
-						gridStartY-4, 
-						paint);
-
-				paint.setAntiAlias(true);
-				paint.setStrokeWidth(0);
-				paint.setColor(Color.parseColor("#157C9E"));
-				can.drawText(top_txt, 
-						gridStartX+(i*step)-8, 
-						gridStopY+gridOffset-20, 
-						paint);
-			}
-			if (top == 0){
-				paint.setAntiAlias(false);
-				paint.setColor(Color.parseColor("#AEB255"));	
-				can.drawLine(gridStartX+(i*step), 
-						gridStartY, 
-						gridStartX+(i*step), 
-						gridStopY, 
-						paint);
-			}
-
-			// bottom texts
-			int bottom_val1 = 0;
-			int bottom_val2 = 0;
-			int hour = values.get(i+1).get(4).intValue();
-			String bottom_txt = "";
-			
-			if( limit == 6) {
-				//day or week
-				rythm = 1;
-				bottom_val1 = values.get(i+1).get(3).intValue();	//day
-				bottom_val2 = values.get(i).get(1).intValue();		//month
-				bottom_txt = Integer.toString(bottom_val1)+"/"+Integer.toString(bottom_val2);
-			} else if (limit == 5) {
-				//one month
-				rythm = 3;
-				bottom_val1 = values.get(i+1).get(3).intValue();	//day
-				bottom_val2 = values.get(i).get(1).intValue();		//month
-				bottom_txt = Integer.toString(bottom_val1)+"/"+Integer.toString(bottom_val2);
-			} else {
-				//one year (by weeks )
-				if(values.size() < 18)	//17 weeks
-					rythm = 1;
-				else if (values.size() < 36)	//35 weeks
-					rythm = 2;
-				else
-					rythm = 3;		//full year
-				
-				bottom_val1 = values.get(i).get(0).intValue();	//year
-				bottom_val2 = values.get(i+1).get(2).intValue(); // week
-				String tmp = Integer.toString(bottom_val1);
-				tmp = tmp.substring(2);	//Only keep last 2 digits
-				bottom_txt = tmp+"/"+Integer.toString(bottom_val2);
-			}
-			
-			
-			// Intermediate points
-			if(values.get(i).get(0).intValue() == 0 || values.get(i+1).get(0).intValue() == 0){
-				paint.setColor(Color.RED);
-			}else{
-				paint.setColor(Color.parseColor("#157C9E"));
-				paint.setStrokeWidth(4);
-				can.drawPoint(gridStartX+(step*(i)), 
-						(gridStartY-gridOffset)-((values.get(i).get(5))-minf)*scale_values, 
-						paint);
-				can.drawPoint(gridStartX+(step*(i+1)),
-						(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, 
-						paint);
-			}
-			paint.setStrokeWidth(2);
-			can.drawLine(gridStartX+(step*(i)), 
-					(gridStartY-gridOffset)-((values.get(i).get(5))-minf)*scale_values,
-					gridStartX+(step*(i+1)),
-					(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, 
-					paint);
-			
-			//text on X Axis
-			if((curr == 0) || (curr == rythm )) { 
-				if(hour == 0){
-					paint.setColor(Color.parseColor("#157C9E"));
-					can.drawText(bottom_txt, 
-							gridStartX+((i+1)*step), 
-							gridStartY+gridOffset, 
-							paint);
-					curr=1;	//to skip next draw
-				}
-			} else {
-				curr++;	//draw text skipped
-			}
 		}
 	}
 

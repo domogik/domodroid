@@ -1,632 +1,361 @@
+/*
+ * This file is part of Domodroid.
+ * 
+ * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
+ * 
+ * Domodroid is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * Domodroid. If not, see <http://www.gnu.org/licenses/>.
+ */
 package widgets;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 
-import rinor.Rest_com;
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.domogik.domodroid13.*;
+import activities.Gradients_Manager;
+import activities.Graphics_Manager;
+import org.domogik.domodroid13.R;
+
+import database.DmdContentProvider;
+import database.WidgetUpdate;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import misc.tracerengine;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-
-import android.widget.Button;
+import android.view.View.OnLongClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.FrameLayout.LayoutParams;
+
+public class Graphical_History extends FrameLayout implements OnLongClickListener, OnClickListener{
 
 
-public class Graphical_History  extends FrameLayout implements OnClickListener {
-
-	private int width;
-	private int height;
-	private Bitmap buffer;
-	private Bitmap text;
-	private Canvas can;
-	private Canvas can2;
-	private Vector<Vector<Float>> values;
-
-	private float gridStartX;
-	private float gridStartY;
-	private float gridStopX;
-	private float gridStopY;
-	private float gridOffset;
-	private float valueOffset;
-
-	private float minf;
-	private float maxf;
-	private float avgf;
-
-	public int dev_id;
-	public String state_key;
-	public String url;
-	public Thread thread;
-	//public int period;
-	public int update;
+	private FrameLayout imgPan;
+	private LinearLayout background;
+	private LinearLayout featurePan;
+	private LinearLayout topPan;
+	private LinearLayout infoPan;
+	private ImageView img;
+	private TextView nameDevices;
+	private TextView value;
+	private TextView state;
+	private TextView state_key_view;
+	private int dev_id;
+	private int id;
 	private Handler handler;
-	public boolean activate=false;
-	public boolean loaded=false;
-	private String mytag="Graphical_History";
-	public FrameLayout container = null;
-	public View myself = null;
-	@SuppressLint("SimpleDateFormat")
-	private Calendar calendar = Calendar.getInstance();
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	private Date time_start=new Date();
-	private Date time_end=new Date();
-	public TextView dates = null;
-	private int period_type = 0;		// 0 = period defined by settings
-										// 1 = 1 day
-										// 8 = 1 week
-										// 30 = 1 month
-										// 365 = 1 year
-	private int sav_period;
+	private String state_key;
+	private int update;
+	private String mytag;
+	private Message msg;
+	private String wname;
+	private String stateS = "";
 	
-	private String step="hour";
-	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
-	private long currentTimestamp = 0;
-	private long startTimestamp = 0; 
-	private   OnClickListener listener = null;
+	public FrameLayout container = null;
+	public FrameLayout myself = null;
 	private tracerengine Tracer = null;
-	private String login;
-	private String password;
-	private SharedPreferences params;
-	private DisplayMetrics metrics;
-	private float size15;
-	private float size10;
+	
+	private Entity_client session = null; 
+	private Boolean realtime = false;
+	private int session_type;
+	private String place_type;
+	private int place_id;
+	private Activity context;
+	private String usage;
+	private Animation animation;
 	
 	@SuppressLint("HandlerLeak")
-	public Graphical_History(tracerengine Trac, Context context, SharedPreferences params){
+	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+			final String state_key, String url,String usage, int update, 
+			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
 		super(context);
-		invalidate();
-		this.Tracer=Trac;
-		this.params = params;
-		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	
-		values = new Vector<Vector<Float>>();
-		activate=true;
+		this.context = context;
+		this.Tracer = Trac;
+		this.state_key = state_key;
+		this.dev_id = dev_id;
+		this.id = id;
+		this.usage=usage;
+		this.update = update;
+		this.wname = name;
 		this.myself=this;
-		
-		//correct kitkat problem
-		//DisplayMetrics metrics = getResources().getDisplayMetrics();
-		//width= metrics.widthPixels;
-		//height= metrics.heightPixels;
-		//fixed 15 float text size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
-		metrics = getContext().getResources().getDisplayMetrics();
-		//Label Text size according to the screen size
-		size15 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
-		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
+		this.session_type = session_type;
+		this.setPadding(5, 5, 5, 5);
+		this.stateS = getResources().getText(R.string.State).toString();
+		this.place_id= place_id;
+		this.place_type= place_type;
+		setOnLongClickListener(this);
 
+		mytag="Graphical_History("+dev_id+")";
+		//panel with border
+		background = new LinearLayout(context);
+		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
+		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
+
+		//panel with border
+		topPan = new LinearLayout(context);
+		topPan.setOrientation(LinearLayout.HORIZONTAL);
+		topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+
+		//panel to set img with padding left
+		imgPan = new FrameLayout(context);
+		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
+		imgPan.setPadding(5, 10, 5, 10);
+		
+		//img
+		img = new ImageView(context);
+		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
+		//set default color to (usage,0) off.png
+		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+		
+		// info panel
+		infoPan = new LinearLayout(context);
+		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
+		infoPan.setOrientation(LinearLayout.VERTICAL);
+		infoPan.setGravity(Gravity.CENTER_VERTICAL);
+
+		//name of devices
+		nameDevices=new TextView(context);
+		nameDevices.setText(name);
+		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+		nameDevices.setTextColor(Color.BLACK);
+		nameDevices.setTextSize(14);
+		
+		//state key
+		state_key_view = new TextView(context);
+		state_key_view.setText(state_key);
+		state_key_view.setTextColor(Color.parseColor("#333333"));
+
+		//feature panel
+		featurePan=new LinearLayout(context);
+		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
+		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+		featurePan.setPadding(0, 0, 20, 0);
+
+		//value
+		value = new TextView(context);
+		value.setTextSize(28);
+		value.setTextColor(Color.BLACK);
+		animation = new AlphaAnimation(0.0f, 1.0f);
+		animation.setDuration(1000);
+		featurePan.addView(value);
+
+		infoPan.addView(nameDevices);
+		infoPan.addView(state_key_view);
+		imgPan.addView(img);
+
+		topPan.addView(imgPan);
+		topPan.addView(infoPan);
+		topPan.addView(featurePan);
+		background.addView(topPan);
+		this.addView(background);
+		
 		handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg) {
-				if(! activate) {
-					Tracer.d(mytag,"Handler receives a request to die " );
-					//That seems to be a zombie
+			public void handleMessage(Message msg) {	
+				String status;
+				if(msg.what == 9999) {
+					if(session == null)
+						return;
+					status = session.getValue();
+					String loc_Value = session.getValue();
+					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
+						value.setAnimation(animation);
+						value.setText(loc_Value);
+				} else if(msg.what == 9998) {
+					// state_engine send us a signal to notify it'll die !
+					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					session = null;
+					realtime = false;
+					removeView(background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
 					}
-					invalidate();
-					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
-				} else {
-					invalidate();
+					try { 
+						finalize(); 
+					} catch (Throwable t) {}	//kill the handler thread itself
 				}
+				
 			}
+			
 		};
-	}
-	public void onClick(View v) {
-		//TODO do something onclick
-		}
-	
-	public void  onWindowVisibilityChanged (int visibility) {
-		Tracer.i(mytag,"Visibility changed to : "+visibility);
-		if(visibility == View.VISIBLE) {
-			this.activate = true;
-		} else
-			activate=false;
-	}
-	
-	@Override 
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		width = getMeasuredWidth();
-		height = getMeasuredHeight();
-		gridStartY = height-size15;
-		gridStopY = size15;
-		gridOffset = size15;
-		valueOffset = size10;
-		
-
-		buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-		text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);		
-		can=new Canvas(buffer);
-		can2=new Canvas(text);
-		
-		try{	
-			drawValue();
-		}catch(Exception e){
-		}
-		if(loaded)
-			canvas.drawBitmap(buffer, 0, 0, new Paint());
-		else 
-			canvas.drawBitmap(text, 0, 0, new Paint());
-	}
-
-
-
-	public void drawValue(){
-		//min - max - avg lines
-		float gridSize_values = (gridStartY-gridOffset)-(gridStopY+gridOffset);
-		float scale_values = gridSize_values/(maxf-minf);
-
-		DashPathEffect dashPath = new DashPathEffect(new float[]{10,5}, 1);
-		Paint paint = new Paint();
-		paint.setPathEffect(dashPath);
-		paint.setColor(Color.GRAY);
-		paint.setStrokeWidth(1);
-		can.drawLine(gridStartX, gridStartY-gridOffset , gridStopX, gridStartY-gridOffset, paint);
-		can.drawLine(gridStartX, gridStopY+gridOffset , gridStopX, gridStopY+gridOffset, paint);
-		paint.setColor(Color.parseColor("#993300"));
-		can.drawLine(gridStartX,(gridStartY-gridOffset)-((avgf-minf)*scale_values), gridStopX, (gridStartY-gridOffset)-((avgf-minf)*scale_values), paint);
-
-
-		//min - max - avg values
-		paint.setPathEffect(null);
-		paint.setAntiAlias(true);
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);
-		paint.setTextSize(size10);
-		paint.setColor(Color.BLACK);
-		can.drawText(minf+"", gridStartX-valueOffset-(Float.toString(minf).length()*5), gridStartY-gridOffset, paint);
-		can.drawText(maxf+"", gridStartX-valueOffset-(Float.toString(maxf).length()*5), gridStopY+gridOffset, paint);
-		can.drawText(avgf+"", gridStartX-valueOffset-(Float.toString(avgf).length()*5), (gridStartY-gridOffset)-((avgf-minf)*scale_values), paint);
-
-		//temp values
-		DashPathEffect dashPath2 = new DashPathEffect(new float[]{3,8}, 1);
-		paint.setStyle(Paint.Style.FILL);
-		float temp_step = (maxf - minf)/6;
-		for(int i=1; i<6;i++){
-			paint.setPathEffect(dashPath2);
-			paint.setAntiAlias(false);
-			paint.setColor(Color.parseColor("#0B909A"));
-			can.drawLine(gridStartX,(gridStartY-gridOffset)-((temp_step*i)*scale_values), gridStopX, (gridStartY-gridOffset)-((temp_step*i)*scale_values), paint);
-			paint.setPathEffect(null);
-			paint.setAntiAlias(true);
-			paint.setColor(Color.BLACK);
-			can.drawText(minf+temp_step*i+"", gridStopX+5, (gridStartY-gridOffset)-((temp_step*i)*scale_values), paint);
-		}
-	}
-
-	public void updateTimer() {
-		
-		TimerTask doAsynchronousTask;
-		final Timer timer = new Timer();
-		doAsynchronousTask = new TimerTask() {
-
-			@Override
-			public void run() {
-				Runnable myTH = new Runnable() {
-				//handler.post(new Runnable() {	//Doume : to avoid Exception on ICS
-					public void run() {
-						try {
-							if(activate){
-								new UpdateThread().execute();
-							}else{
-								//Tracer.i(mytag+"("+dev_id+")","update Timer : Destroy runnable");
-								timer.cancel();
-								this.finalize();
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-					}}
-				//)
-				;
-				//Tracer.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
-				try {
-					handler.post(myTH);		//Doume : to avoid Exception on ICS
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			} //TimerTask Run method
-		}; //TimerTask
-		//timer.schedule(doAsynchronousTask, 0, update*10000);
-		timer.schedule(doAsynchronousTask, 0, update*1000);	// Fix Doume
-	}
-
-	/*
-	 * Graphs are refreshed using a direct request to Domogik server
-	 */
-	public class UpdateThread extends AsyncTask<Void, Integer, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			if( ! activate)
-				return null;
+		//================================================================================
+		/*
+		 * New mechanism to be notified by widgetupdate engine when our value is changed
+		 * 
+		 */
+		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+		if(cache_engine != null) {
+			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if(Tracer.get_engine().subscribe(session)) {
+				realtime = true;		//we're connected to engine
+										//each time our value change, the engine will call handler
+				handler.sendEmptyMessage(9999);	//Force to consider current value in session
+			}
 			
-			loaded=false;
+		}
+		
+		//================================================================================
+	}
+	
+	
+	@Override
+	protected void onWindowVisibilityChanged(int visibility) {
+		
+	}
+	public void onClick(View arg0) {
+	//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+	float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+	int sizeint=(int)size;
+		if(background.getHeight() != sizeint){
+/*
+//TODO add last X value
+ 
 			try {
-				avgf=0;
-				values.clear();
-				currentTimestamp=time_end.getTime()/1000;
-				startTimestamp=time_start.getTime()/1000;
+				background.removeView(featurePan2_buttons);
+				background.removeView(featurePan2);
 				
-				
-				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
-				JSONObject json_GraphValues = null;
-				try {
-					json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
-						state_key+
-						"/from/"+
-						startTimestamp+
-						"/to/"+
-						currentTimestamp+
-						"/interval/"+step+"/selector/avg",login,password);
-				} catch (Exception e) {
-					return null;
-				}
-				//Tracer.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
-				if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
-					//That seems to be a zombie
-					loaded=false;
-					handler.sendEmptyMessage(0);	// To force a close of this instance
-					return null;
-				}
-				Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
-				
-				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
-				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-
-				//minf=(float)valueArray.getJSONArray(0).getDouble(limit-1);
-				maxf=minf=0;
-				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
-
-				for (int i =0; i < valueArray.length(); i++){
-					// Create a vector with all entry components
-					
-					Vector<Float> vect = new Vector<Float>();
-					Double real_val = valueArray.getJSONArray(i).getDouble(limit-1);	// Get the real 'value'
-					real_val=round(real_val, 2);
-					
-					if(limit == 6) {
-						// stats per hour return [ year, month, week, day, hour, value]
-						for (int j=0; j < 6; j++){
-							vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
-						}
-					} else if(limit == 5) {
-						// stats per day return [year, month, week, day, value]
-						for (int j=0; j < 4; j++){
-							vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
-						}
-						vect.addElement((float)0f);	//null hour
-						vect.addElement(real_val.floatValue());
-					} else  {
-						// stats per week return [ year,  week, value ]
-						Calendar date_value = Calendar.getInstance();
-						date_value.setTimeInMillis(0);
-						date_value.set(Calendar.YEAR, (int)valueArray.getJSONArray(i).getDouble(0));
-						date_value.set(Calendar.WEEK_OF_YEAR, (int)valueArray.getJSONArray(i).getDouble(1));
-						Date loc_date = new Date();
-						loc_date.setTime(date_value.getTimeInMillis());
-						//Tracer.d(mytag,"Case week : Inserting value at "+sdf.format(loc_date));
-						vect.addElement((float)valueArray.getJSONArray(i).getDouble(0));	//year
-						vect.addElement((float)loc_date.getMonth());	// month
-						vect.addElement((float)valueArray.getJSONArray(i).getDouble(1));	//week
-						vect.addElement((float)loc_date.getDay());	// day
-						vect.addElement((float)0f);	//null hour
-						vect.addElement(real_val.floatValue());
-					}
-					// each vector contains 6  floats
-					values.add(vect);
-					if(minf == 0)
-						minf=real_val.floatValue();
-					
-					avgf+=real_val;	// Get the real 'value'
-					if(real_val > maxf){  
-						maxf = real_val.floatValue();  
-					}  
-					if(real_val < minf){  
-						minf = real_val.floatValue(); 
-					}
-
-					if( i < valueArray.length()-1){
-						// It's not the last component
-						int loc_hour,loc_hour_next = 0;
-						int loc_day,loc_day_next = 0;
-						int loc_week,loc_week_next = 0;
-						int loc_year = 0;
-						int loc_month = 0;
-						float loc_value = 0;
-						
-						if(limit == 6) {
-							// range between 1 to 8 days (average per hour)
-							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
-							loc_month = (int)valueArray.getJSONArray(i).getDouble(1);
-							loc_week  = (int)valueArray.getJSONArray(i).getDouble(2);
-							loc_day   = (int)valueArray.getJSONArray(i).getDouble(3);
-							loc_hour = (int)valueArray.getJSONArray(i).getDouble(4);
-							loc_hour_next = (int)valueArray.getJSONArray(i+1).getDouble(4);
-							loc_value = (float)valueArray.getJSONArray(i).getDouble(5);
-							//Tracer.d(mytag,"Case hour : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_hour+" - "+loc_value);
-
-							if(loc_hour != 23 && (loc_hour < loc_hour_next) ) {
-								//no day change
-								//Tracer.d(mytag,"Case hour 1 ");
-
-								if((loc_hour+1) != loc_hour_next) {
-									//ruptur : simulate next missing steps
-									for (int k=1; k < (loc_hour_next - loc_hour); k++){
-										Vector<Float> vect2 = new Vector<Float>();
-										vect2.addElement(0f);
-										vect2.addElement((float)loc_month);	//month
-										vect2.addElement((float)loc_week);	//week
-										vect2.addElement((float)loc_day);	//day
-										vect2.addElement((float)loc_hour +k);	//hour
-										vect2.addElement(loc_value);	//value
-										values.add(vect2);
-										//Tracer.e(mytag,"Case 1 : added : 0 - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+(loc_hour+k)+" - "+loc_value);
-										avgf+=loc_value;	//value
-									}
-								}
-							} else {
-								//Tracer.d(mytag,"Case hour 2 ");
-								//if((loc_hour ==23) && (loc_hour_next != 0) ){
-								if( loc_hour ==23 ){
-									// day change : simulate missing steps
-									//Tracer.d(mytag,"Case hour 2a ");
-
-									for (int k=0; k < loc_hour_next ; k++){
-										Vector<Float> vect2 = new Vector<Float>();
-										vect2.addElement(0f);
-										vect2.addElement((float)loc_month+1);	//month
-										vect2.addElement((float)loc_week);	//week
-										vect2.addElement((float)loc_day+1);	// next day
-										vect2.addElement((float)k);			//simulated hour
-										vect2.addElement(loc_value);	//value
-										values.add(vect2);
-										//Tracer.e(mytag,"Case 2 : added : 0 - "+loc_month+" - "+loc_week+" - "+(loc_day+1)+" - "+k+" - "+loc_value);
-										avgf+=loc_value;	//value
-									}
-								}
-							}
-						} else if(limit == 5) {
-							// range between 9 to 32 days (average per day)
-							loc_day_next = (int)valueArray.getJSONArray(i+1).getDouble(limit-2);
-							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
-							loc_month = (int)valueArray.getJSONArray(i).getDouble(1);
-							loc_week  = (int)valueArray.getJSONArray(i).getDouble(2);
-							loc_day   = (int)valueArray.getJSONArray(i).getDouble(3);
-							loc_day_next = (int)valueArray.getJSONArray(i+1).getDouble(3);
-							loc_hour = 0;
-							loc_value = (float)valueArray.getJSONArray(i).getDouble(4);
-							//Tracer.d(mytag,"Case day : "+loc_year+" - "+loc_month+" - "+loc_week+" - "+loc_day+" - "+loc_value);
-
-							//if(loc_day != 31 && (loc_day < loc_day_next) ) {
-							if(loc_day < loc_day_next ) {
-								// month continues...
-								//Tracer.d(mytag,"Case day 1 ");
-
-								if((loc_day+1) != loc_day_next){
-									// but a hole exists : simulate missing days
-									//Tracer.d(mytag,"Case day 1a ");
-									for (int k=1; k < (loc_day_next - loc_day); k++){
-										Vector<Float> vect2 = new Vector<Float>();
-										vect2.addElement(0f);
-										vect2.addElement((float)loc_month);	//month
-										vect2.addElement((float)loc_week);	//week
-										vect2.addElement((float)(loc_day+k));	//day
-										vect2.addElement((float)loc_hour); // = 0
-										vect2.addElement(loc_value);	//value
-										values.add(vect2);
-										avgf+=loc_value;	//value
-									}
-								}
-							} else {
-								// next day being less than current day, month has changed !
-								//Tracer.d(mytag,"Case day 2 ");
-								
-								//if((loc_day == 31) && (loc_day_next != 0) ){
-								if( loc_day_next != 0 ){
-									//Tracer.d(mytag,"Case day 2a ");
-									
-									for (int k=0; k < loc_day_next ; k++){
-										Vector<Float> vect2 = new Vector<Float>();
-										vect2.addElement(0f);
-										vect2.addElement((float)loc_month);	//month
-										vect2.addElement((float)loc_week);	//week
-										//vect2.addElement(0f);				// no week in scale
-										vect2.addElement((float)k);			//day
-										vect2.addElement((float)loc_hour); // = 0
-										vect2.addElement(loc_value);		//value
-										values.add(vect2);
-										//Tracer.d(mytag,"Case day 2a with k="+k);
-										
-										avgf+=loc_value;	//value
-									}
-								}
-							}
-						} else if(limit == 3) {
-							Calendar date_value = Calendar.getInstance();
-							date_value.setTimeInMillis(0);
-							date_value.set(Calendar.YEAR, (int)valueArray.getJSONArray(i).getDouble(0));
-							date_value.set(Calendar.WEEK_OF_YEAR, (int)valueArray.getJSONArray(i).getDouble(1));
-							Date loc_date = new Date();
-							loc_date.setTime(date_value.getTimeInMillis());
-							// range of 1 year (average per week)
-							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
-							loc_month=loc_date.getMonth();	// month
-							loc_week  = (int)valueArray.getJSONArray(i).getDouble(1);
-							loc_week_next = (int)valueArray.getJSONArray(i+1).getDouble(1);
-							loc_day   = loc_date.getDate();
-							loc_day_next = 0;
-							loc_hour = loc_date.getHours();
-							loc_value = (float)valueArray.getJSONArray(i).getDouble(2);
-							//Tracer.d(mytag,"Case week : "+loc_year+" - "+loc_week+" - "+loc_value);
-
-							if(loc_week != 52 && (loc_week < loc_week_next) ) {
-								if((loc_week+1) != loc_week_next){
-									// Changing year
-									for (int k=1; k < (loc_week_next - loc_week); k++){
-										Vector<Float> vect2 = new Vector<Float>();
-										//vect2.addElement((float)loc_year);	//year
-										vect2.addElement(0f);
-										vect2.addElement((float)loc_month);	//month
-										vect2.addElement((float)(loc_week+k));	//week
-										vect2.addElement((float)loc_day);	//day
-										vect2.addElement(0f);	//hour
-										vect2.addElement((float)loc_value);	//value
-										values.add(vect2);
-										avgf+=loc_value;	//value
-									}
-								}
-							}
-							if((loc_week == 52) && (loc_week_next != 0) ){
-								//last week of the year
-								for (int k=0; k < loc_week_next ; k++){
-									Vector<Float> vect2 = new Vector<Float>();
-									//vect2.addElement((float)loc_year);	//year
-									vect2.addElement(0f);
-									vect2.addElement((float)loc_month);	//month
-									vect2.addElement((float)k);	//week
-									vect2.addElement((float)loc_day);	//day
-									vect2.addElement(0f);	//hour
-									vect2.addElement((float)loc_value);	//value
-									values.add(vect2);
-									avgf+=valueArray.getJSONArray(i).getDouble(limit-1);	//value
-								}
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			avgf=avgf/values.size();
-			avgf=Round(avgf, 2);
+			} catch (Exception e) {}
 			
-			gridStartX=Float.toString(maxf).length()*7;
-			if(Float.toString(minf).length()*7 > gridStartX)
-				gridStartX=Float.toString(minf).length()*7;
-			if(Float.toString(avgf).length()*7 > gridStartX)
-				gridStartX=Float.toString(avgf).length()*7;
-			gridStopX=width-gridStartX;
-			loaded=true;
-			handler.sendEmptyMessage(0);
-			return null;
+			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
+			background.addView(featurePan2_buttons);
+			background.addView(featurePan2);
+*/	
+		return ;
 		}
 	}
+	public boolean onLongClick(View v) {
+		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Rename");
+			list_choice.add("Change_icon");
+			list_choice.add("Delete");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					do_action(checkedItem.toString());
+					dialog.cancel();
+				}
+			}
+		);
 	
-	private void compute_period() {
-		long duration = 0; 
-		//Calendar cal = Calendar.getInstance(); // The 'now' time
-		
-		switch(period_type ) {
-		case -1 :
-			//user requires the 'Prev' period
-			period_type=sav_period;
-			duration = 86400l * 1000l * period_type;
-			if(time_end != null) {
-				long new_end = time_end.getTime();
-				new_end -= duration;
-				time_end.setTime(new_end);
-				new_end -= duration;
-				time_start.setTime(new_end);
-				
-			}
-			//Tracer.i(mytag,"type prev on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
-			break;
-		case 0 :
-			//user requires the 'Next' period
-			period_type=sav_period;
-			duration = 86400l * 1000l * period_type;
-			if(time_start != null) {
-				long new_start = time_start.getTime();
-				new_start += duration;
-				time_start.setTime(new_start);
-				new_start+= duration;
-				time_end.setTime(new_start);
-			}
-			long new_start = time_start.getTime();
-			long new_end = time_end.getTime();
-			long now = System.currentTimeMillis();
-			if(new_end > now) {
-				time_end.setTime(now);
-				double new_timestamp = now - duration;
-				new_start = (long)new_timestamp;
-				time_start.setTime(new_start);
-			}
-			//Tracer.i(mytag,"type next on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
-			break;
-		default :
-			//period_type indicates the number of days to graph
-			// relative to 'now' date
-			duration = 86400l * 1000l * period_type;
-			long new_end_time = System.currentTimeMillis();
-			time_end.setTime(new_end_time);	//Get actual system time
-			new_end_time -= duration;
-			time_start.setTime(new_end_time);
-			//Tracer.i(mytag,"type = "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
-			break;
-		}
-		// time_start & time_end are set....
-		display_dates();
-		
-		if(period_type < 9) {
-			step="hour";
-			limit=6;
-		} else if(period_type < 32) {
-			step="day";
-			limit=5;
-		} else {
-			step="week";
-			limit=3;
-		}
-		
+		list_type_choice.show();
+		return false;
 	}
-	
-	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    BigDecimal bd = new BigDecimal(value);
-	    bd = bd.setScale(places, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
-	}
-	
-	public static float Round(float Rval, int Rpl) {
-		float p = (float)Math.pow(10,Rpl);
-		Rval = Rval * p;
-		float tmp = Math.round(Rval);
-		return (float)tmp/p;
-	}
-	
-
-	private void display_dates() {
-		if(dates != null) {
-			dates.setText(getContext().getText(R.string.from)+"  "+sdf.format(time_start)+"   "+getContext().getText(R.string.to)+"  "+sdf.format(time_end));
-		}
+	private void do_action(String action) {
+		if(action.equals("Rename")) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Rename_title);
+			alert.setMessage(R.string.Rename_message);
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(getContext());
+				alert.setView(input);
+				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						String result= input.getText().toString(); 
+						Tracer.get_engine().descUpdate(id,result,"feature");
+					}
+				});
+				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						Tracer.e(mytag, "Customname Canceled.");
+					}
+				});
+				alert.show();
+		}else if (action.equals("Delete")){
+			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+			alert.setTitle(R.string.Delete_feature_title);
+			alert.setMessage(R.string.Delete_feature_message);
+			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					if(container != null) {
+						container.removeView(myself);
+						container.recomputeViewAttributes(myself);
+					}
+				}
+			});
+			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.e(mytag, "delete Canceled.");
+				}
+			});
+			alert.show();
+		}else if (action.equals("Change_icon")){
+			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
+			List<String> list_icon = new ArrayList<String>();
+			String[] fiilliste;
+			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
+			for (int i=0; i < fiilliste.length ; i++){
+				list_icon.add(fiilliste[i].toString());
+			}
+			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
+			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						ListView lw = ((AlertDialog)dialog).getListView();
+						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+						usage = checkedItem.toString();
+						ContentValues values = new ContentValues();
+						//type = area, room, feature
+						values.put("name", "feature");
+						//icon is the name of the icon wich will be select 
+						values.put("value", usage);
+						//reference is the id of the area, room, or feature
+						int reference = 0;
+						reference=id;
+						values.put("reference", reference);
+						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						dialog.cancel();
+					}
+				}
+			);	
+			AlertDialog alert_list_icon = list_icon_choice.create();
+			alert_list_icon.show();
+			
+		}		
 	}
 }
+
+
+

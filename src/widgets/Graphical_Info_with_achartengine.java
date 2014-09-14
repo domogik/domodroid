@@ -321,6 +321,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
 		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
 		featurePan.setPadding((int)size2, 0, (int)size2, 0);
+		
 		//value
 		value = new TextView(context);
 		value.setTextSize(28);
@@ -378,21 +379,11 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 								}
 							else value.setText(loc_Value);
 							}
-
-
-							value.setAnimation(animation);
+						value.setAnimation(animation);
 					} catch (Exception e) {
 						// It's probably a String that could'nt be converted to a float
 						Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
-
-
-
-
-
 						value.setText(loc_Value);
-
-						
-
 					}
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !

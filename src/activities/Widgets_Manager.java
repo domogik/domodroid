@@ -224,7 +224,7 @@ public class Widgets_Manager {
 				Tracer.i(mytag,"   ==> Graphical_List");
 			} else if(Value_type.equals("string")){
 				//TODO New widget for callerID
-				/*if(feature.getDevice_feature_model_id().contains("call")) {
+				if(feature.getDevice_feature_model_id().contains("call")) {
 					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
 							State_key,URL,iconName,update_timer,
 							widgetSize, mytype, parameters,id,zone,params);
@@ -232,9 +232,7 @@ public class Widgets_Manager {
 					tmpPan.addView(info_with_history);
 					Tracer.i(mytag,"   ==> Device_feature_model_id().contains(call)");
 					Tracer.i(mytag,"   ==> Graphical_history");
-				}
-				*/
-				if(feature.getDevice_feature_model_id().contains("camera")) {
+				}else if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
 							Address,iconName,widgetSize, mytype,id,zone);
 					tmpPan.addView(cam);

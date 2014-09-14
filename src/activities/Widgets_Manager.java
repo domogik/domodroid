@@ -188,6 +188,7 @@ public class Widgets_Manager {
 						Address,//  idem to know the address
 						State_key,URL,iconName,update_timer,
 						widgetSize, mytype,id,zone);
+				color.container=tmpPan;
 				tmpPan.addView(color);
 				Tracer.i(mytag,"   ==> Graphical_Color");
 			} else if (Value_type.equals("number")) {
@@ -229,12 +230,13 @@ public class Widgets_Manager {
 							State_key,URL,iconName,update_timer,
 							widgetSize, mytype, parameters,id,zone,params);
 					info_with_history.setLayoutParams(layout_param);
+					info_with_history.container=tmpPan;
 					tmpPan.addView(info_with_history);
-					Tracer.i(mytag,"   ==> Device_feature_model_id().contains(call)");
 					Tracer.i(mytag,"   ==> Graphical_history");
 				}else if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
 							Address,iconName,widgetSize, mytype,id,zone);
+					cam.container=tmpPan;
 					tmpPan.addView(cam);
 					Tracer.i(mytag,"   ==> Graphical_Cam");
 				} else {
@@ -243,6 +245,7 @@ public class Widgets_Manager {
 							widgetSize, mytype, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
+					info.container=tmpPan;
 					tmpPan.addView(info);
 					Tracer.i(mytag,"   ==> Graphical_Info + No graphic !!!");
 				}

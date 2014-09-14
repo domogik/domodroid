@@ -66,6 +66,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	private FrameLayout imgPan;
 	private LinearLayout background;
 	private LinearLayout featurePan;
+	private LinearLayout featurePan2;
 	private LinearLayout topPan;
 	private LinearLayout infoPan;
 	private ImageView img;
@@ -115,6 +116,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		this.stateS = getResources().getText(R.string.State).toString();
 		this.place_id= place_id;
 		this.place_type= place_type;
+		setOnClickListener(this);
 		setOnLongClickListener(this);
 
 		mytag="Graphical_History("+dev_id+")";
@@ -171,7 +173,13 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 		featurePan.addView(value);
-
+		
+		//feature panel 2 which will contain last value
+		featurePan2=new LinearLayout(context);
+		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		featurePan2.setGravity(Gravity.CENTER_VERTICAL);
+		featurePan2.setPadding(5, 10, 5, 10);
+		
 		infoPan.addView(nameDevices);
 		infoPan.addView(state_key_view);
 		imgPan.addView(img);
@@ -242,22 +250,26 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
 	int sizeint=(int)size;
 		if(background.getHeight() != sizeint){
-/*
-//TODO add last X value
- 
+			Tracer.d(mytag,"on click");
 			try {
-				background.removeView(featurePan2_buttons);
 				background.removeView(featurePan2);
+				Tracer.d(mytag,"removeView(featurePan2)");
 				
 			} catch (Exception e) {}
-			
+			Tracer.d(mytag,"addView(featurePan2)");
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-			background.addView(featurePan2_buttons);
+			//TODO add something in the view
+			//add last 5 values with their dates
+			//featurePan2.addView();
 			background.addView(featurePan2);
-*/	
-		return ;
+		}else{
+			background.removeView(featurePan2);
+			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
+		return ;
+		
 	}
+	
 	public boolean onLongClick(View v) {
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();

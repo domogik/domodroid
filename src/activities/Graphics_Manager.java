@@ -64,6 +64,7 @@ public class Graphics_Manager {
 			else if(usage.equals("office")){return R.drawable.room_office;}
 			else if(usage.equals("tvlounge")){return R.drawable.room_tvlounge;}
 			else if(usage.equals("usage")){return R.drawable.logo;}
+			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
@@ -116,6 +117,7 @@ public class Graphics_Manager {
 			else if(usage.equals("office")){return R.drawable.room_office;}
 			else if(usage.equals("tvlounge")){return R.drawable.room_tvlounge;}
 			else if(usage.equals("usage")){return R.drawable.logo;}
+			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
@@ -168,6 +170,7 @@ public class Graphics_Manager {
 			else if(usage.equals("office")){return R.drawable.room_office;}
 			else if(usage.equals("tvlounge")){return R.drawable.room_tvlounge;}
 			else if(usage.equals("usage")){return R.drawable.logo;}
+			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
@@ -220,6 +223,7 @@ public class Graphics_Manager {
 			else if(usage.equals("office")){return R.drawable.room_office;}
 			else if(usage.equals("tvlounge")){return R.drawable.room_tvlounge;}
 			else if(usage.equals("usage")){return R.drawable.logo;}
+			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}

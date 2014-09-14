@@ -26,6 +26,7 @@ import widgets.Graphical_Binary_New;
 import widgets.Graphical_Boolean;
 import widgets.Graphical_Cam;
 import widgets.Graphical_Color;
+import widgets.Graphical_History;
 import widgets.Graphical_Info;
 import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
@@ -102,6 +103,7 @@ public class MapView extends View {
 	private Graphical_Binary onoff;
 	private Graphical_Binary_New onoff_New;
 	private Graphical_Info info;
+	private Graphical_History info_with_history;
 	private Graphical_Info_with_achartengine info1;
 	private Graphical_Boolean bool;
 	private Graphical_Color colorw;
@@ -851,7 +853,12 @@ public class MapView extends View {
 			colorw.container=(FrameLayout) panel_widget;
 			panel_widget.addView(colorw);}
 		 else if(feature.getValue_type().equals("string")){
-			if(feature.getDevice_feature_model_id().contains("camera")) {
+			 if(feature.getDevice_feature_model_id().contains("call")) {
+					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
+							State_key,"",iconName,update_timer,
+							widgetSize, mytype, parameters,0,zone,params);
+					panel_widget.addView(info_with_history);
+			}else if(feature.getDevice_feature_model_id().contains("camera")) {
 				cam = new Graphical_Cam(Tracer, context,
 					Id,DevId,label,
 					Address,iconName,widgetSize, mytype,0,zone);

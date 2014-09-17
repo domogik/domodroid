@@ -66,17 +66,18 @@ public class Graphics_Manager {
 			else if(usage.equals("usage")){return R.drawable.logo;}
 			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
+			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("attic")){return R.drawable.area_attic;}
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
+			else if(usage.equals("basement2")){return R.drawable.area_basement2;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
 			else if(usage.equals("garden")){return R.drawable.area_garden;}
 			else if(usage.equals("ground_floor")){return R.drawable.area_ground_floor;}
+			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor2;}
 			else if(usage.equals("first_floor")){return R.drawable.area_first_floor;}
+			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor2;}
 			else if(usage.equals("second_floor")){return R.drawable.area_second_floor;}
-			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor;}
-			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor;}
-			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor;}
-			else if(usage.equals("basement2")){return R.drawable.area_basement;}
-			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("statistics")){return R.drawable.statistics;}
@@ -119,17 +120,18 @@ public class Graphics_Manager {
 			else if(usage.equals("usage")){return R.drawable.logo;}
 			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
+			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("attic")){return R.drawable.area_attic;}
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
+			else if(usage.equals("basement2")){return R.drawable.area_basement2;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
 			else if(usage.equals("garden")){return R.drawable.area_garden;}
 			else if(usage.equals("ground_floor")){return R.drawable.area_ground_floor;}
+			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor2;}
 			else if(usage.equals("first_floor")){return R.drawable.area_first_floor;}
+			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor2;}
 			else if(usage.equals("second_floor")){return R.drawable.area_second_floor;}
-			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor;}
-			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor;}
-			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor;}
-			else if(usage.equals("basement2")){return R.drawable.area_basement;}
-			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("statistics")){return R.drawable.statistics;}
@@ -172,17 +174,18 @@ public class Graphics_Manager {
 			else if(usage.equals("usage")){return R.drawable.logo;}
 			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
+			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("attic")){return R.drawable.area_attic;}
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
+			else if(usage.equals("basement2")){return R.drawable.area_basement2;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
 			else if(usage.equals("garden")){return R.drawable.area_garden;}
 			else if(usage.equals("ground_floor")){return R.drawable.area_ground_floor;}
+			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor2;}
 			else if(usage.equals("first_floor")){return R.drawable.area_first_floor;}
+			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor2;}
 			else if(usage.equals("second_floor")){return R.drawable.area_second_floor;}
-			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor;}
-			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor;}
-			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor;}
-			else if(usage.equals("basement2")){return R.drawable.area_basement;}
-			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("statistics")){return R.drawable.statistics;}
@@ -225,17 +228,18 @@ public class Graphics_Manager {
 			else if(usage.equals("usage")){return R.drawable.logo;}
 			else if(usage.equals("unknow")){return R.drawable.unknown;}
 			//area
+			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("attic")){return R.drawable.area_attic;}
 			else if(usage.equals("basement")){return R.drawable.area_basement;}
+			else if(usage.equals("basement2")){return R.drawable.area_basement2;}
 			else if(usage.equals("garage")){return R.drawable.area_garage;}
 			else if(usage.equals("garden")){return R.drawable.area_garden;}
 			else if(usage.equals("ground_floor")){return R.drawable.area_ground_floor;}
+			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor2;}
 			else if(usage.equals("first_floor")){return R.drawable.area_first_floor;}
+			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor2;}
 			else if(usage.equals("second_floor")){return R.drawable.area_second_floor;}
-			else if(usage.equals("ground_floor2")){return R.drawable.area_ground_floor;}
-			else if(usage.equals("first_floor2")){return R.drawable.area_first_floor;}
-			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor;}
-			else if(usage.equals("basement2")){return R.drawable.area_basement;}
-			else if(usage.equals("area")){return R.drawable.area_area;}
+			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else if(usage.equals("statistics")){return R.drawable.statistics;}

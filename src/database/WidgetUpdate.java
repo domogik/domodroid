@@ -520,6 +520,8 @@ public class WidgetUpdate  {
 	}
 	
 	public void wakeup() {
+		//TODO ADD try catch due ot an android error message in dev console on a DROID RAZR i (smi)
+		try{
 		Tracer.d(mytag,"Wake up requested...");
 		if(eventsManager != null) {
 			eventsManager.wakeup();
@@ -540,6 +542,9 @@ public class WidgetUpdate  {
 			}
 			
 		}
+		} catch (Exception e){
+			Tracer.e(mytag, "Crash cause by: "+e.toString());
+		};
 	}
 	public class waitingThread extends AsyncTask<Void, Integer, Void>{
 		@Override

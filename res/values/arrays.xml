@@ -19,12 +19,17 @@
 <resources>
 <string-array name="icon_area_array">
     <item>area</item>
+    <item>attic</item>
     <item>basement</item>
+    <item>basement2</item>
  	<item>first_floor</item>
+    <item>first_floor2</item>
     <item>garage</item>
     <item>garden</item>
     <item>ground_floor</item>
+    <item>ground_floor2</item>
     <item>second_floor</item>
+    <item>second_floor2</item>
     <item>bathroom</item>
     <item>bedroom</item>
  	<item>garage</item>

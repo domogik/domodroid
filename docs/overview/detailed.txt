@@ -75,4 +75,4 @@ Camera
 
 To use the camera streaming feature, the Camera plugin has to be installed in Domogik. If none of your camera stream Mjpeg datas, you can use Zoneminder which a free video camera security application that encode many kind of video stream format to mjpeg stream.
 
-Image
+.. image:: Camera1.png

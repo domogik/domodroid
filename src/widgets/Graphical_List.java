@@ -407,7 +407,10 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 	
 	public void onClick(View arg0, MotionEvent arg1) {
 		if(with_list) {
-			if(background.getHeight() != 350){
+			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+			int sizeint=(int)size;
+			if(background.getHeight() != sizeint){
 				try {
 					background.removeView(featurePan2);
 					

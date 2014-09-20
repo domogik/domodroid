@@ -18,16 +18,21 @@
 package widgets;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid13.R;
+
+import rinor.Rest_com;
 
 import database.DmdContentProvider;
 import database.WidgetUpdate;
@@ -56,6 +61,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
@@ -66,9 +72,9 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	private FrameLayout imgPan;
 	private LinearLayout background;
 	private LinearLayout featurePan;
-	private LinearLayout featurePan2;
 	private LinearLayout topPan;
 	private LinearLayout infoPan;
+	private ListView listeChoices;
 	private ImageView img;
 	private TextView nameDevices;
 	private TextView value;
@@ -83,6 +89,9 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	private Message msg;
 	private String wname;
 	private String stateS = "";
+	private String url = null;
+	private String login;
+	private String password;
 	
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
@@ -107,6 +116,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		this.state_key = state_key;
 		this.dev_id = dev_id;
 		this.id = id;
+		this.url = url;
 		this.usage=usage;
 		this.update = update;
 		this.wname = name;
@@ -118,7 +128,9 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		this.place_type= place_type;
 		setOnClickListener(this);
 		setOnLongClickListener(this);
-
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		mytag="Graphical_History("+dev_id+")";
 		//panel with border
 		background = new LinearLayout(context);
@@ -173,12 +185,6 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 		featurePan.addView(value);
-		
-		//feature panel 2 which will contain last value
-		featurePan2=new LinearLayout(context);
-		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		featurePan2.setGravity(Gravity.CENTER_VERTICAL);
-		featurePan2.setPadding(5, 10, 5, 10);
 		
 		infoPan.addView(nameDevices);
 		infoPan.addView(state_key_view);
@@ -245,6 +251,38 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	protected void onWindowVisibilityChanged(int visibility) {
 		
 	}
+	
+	private void getlastvalue() {
+		//TODO add something in the view
+		//add last 5 values with their dates
+		//featurePan2.addView();
+		JSONObject json_LastValues = null;
+		JSONArray itemArray=null; 
+		try {
+			json_LastValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
+			itemArray = json_LastValues.getJSONArray("stats");
+		} catch (Exception e) {
+			//return null;
+			Tracer.e(mytag,"Error getting json object");
+		}
+		listeChoices = new ListView(context);
+		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
+		for (int i =0; i < itemArray.length(); i++){
+			try {
+				HashMap<String,String> map=new HashMap<String,String>();
+				map.put("value",itemArray.getJSONObject(i).getString("value"));
+				map.put("date",itemArray.getJSONObject(i).getString("date"));
+				listItem.add(map);
+				Tracer.d(mytag, map.toString());
+			}catch (Exception e) {
+				Tracer.e(mytag,"Error getting json value");
+			}
+		}
+		SimpleAdapter adapter_map=new SimpleAdapter(getContext(),listItem,
+				R.layout.item_phone,new String[] {"value", "date"},new int[] {R.id.value, R.id.date});
+		listeChoices.setAdapter(adapter_map);
+		}
+	
 	public void onClick(View arg0) {
 	//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
 	float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
@@ -252,18 +290,16 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		if(background.getHeight() != sizeint){
 			Tracer.d(mytag,"on click");
 			try {
-				background.removeView(featurePan2);
-				Tracer.d(mytag,"removeView(featurePan2)");
+				background.removeView(listeChoices);
+				Tracer.d(mytag,"removeView(listeChoices)");
 				
 			} catch (Exception e) {}
-			Tracer.d(mytag,"addView(featurePan2)");
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-			//TODO add something in the view
-			//add last 5 values with their dates
-			//featurePan2.addView();
-			background.addView(featurePan2);
+			getlastvalue();
+			Tracer.d(mytag,"addView(listeChoices)");
+			background.addView(listeChoices);
 		}else{
-			background.removeView(featurePan2);
+			background.removeView(listeChoices);
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
 		return ;

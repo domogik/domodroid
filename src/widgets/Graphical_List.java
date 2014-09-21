@@ -74,6 +74,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_List extends FrameLayout implements OnLongClickListener,OnClickListener {
 
@@ -256,9 +257,6 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 			}
 			//list of choices
 			listeChoices = new ListView(context);
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
-			
-			listeChoices.setLayoutParams(lp);
 			
 			listItem=new ArrayList<HashMap<String,String>>();
 			list_usable_choices = new Vector<String>();
@@ -428,20 +426,21 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
 			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
 			int sizeint=(int)size;
-			if(background.getHeight() != sizeint){
-				try {
+				if(background.getHeight() != sizeint){
+					Tracer.d(mytag,"on click");
+					try {
+						background.removeView(featurePan2);
+						Tracer.d(mytag,"removeView(featurePan2)");
+						
+					} catch (Exception e) {}
+					background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
+					Tracer.d(mytag,"addView(featurePan2)");
+					background.addView(featurePan2);
+				}
+				else{
 					background.removeView(featurePan2);
-					Tracer.d(mytag,"removeView(featurePan2)");
-				} catch (Exception e) {}
-				
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
-				background.addView(featurePan2);
-				Tracer.d(mytag,"addView(featurePan2)");
-			}
-			else{
-				background.removeView(featurePan2);
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-			}
+					background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+				}
 		}
 		return;
 	}

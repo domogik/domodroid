@@ -286,7 +286,7 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 				}
 			});
 
-			
+			listeChoices.setScrollingCacheEnabled(false);
 			//feature panel 2 which will contain list of selectable choices
 			featurePan2=new LinearLayout(context);
 			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));

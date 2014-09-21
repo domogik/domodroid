@@ -855,7 +855,7 @@ public class MapView extends View {
 		 else if(feature.getValue_type().equals("string")){
 			 if(feature.getDevice_feature_model_id().contains("call")) {
 					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
-							State_key,"",iconName,update_timer,
+							State_key,URL,iconName,update_timer,
 							widgetSize, mytype, parameters,0,zone,params);
 					panel_widget.addView(info_with_history);
 			}else if(feature.getDevice_feature_model_id().contains("camera")) {

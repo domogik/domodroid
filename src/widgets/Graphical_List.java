@@ -225,9 +225,12 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 				jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 				command = jparam.getString("command");
 				commandValues = jparam.getJSONArray("commandValues");
+				Tracer.e(mytag, "Json command :"+commandValues);
 			} catch (Exception e) {
 				command = "";
 				commandValues = null;
+				Tracer.e(mytag, "Json command error "+e.toString());
+				
 			}
 			int nbitems = 0;
 			String list = "";
@@ -405,29 +408,6 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 	    }
 	
 	
-	public void onClick(View arg0, MotionEvent arg1) {
-		if(with_list) {
-			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
-			int sizeint=(int)size;
-			if(background.getHeight() != sizeint){
-				try {
-					background.removeView(featurePan2);
-					
-				} catch (Exception e) {}
-				
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
-				background.addView(featurePan2);
-				
-			}
-			else{
-				background.removeView(featurePan2);
-				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-			}
-		}
-		return;
-	}
-	
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
@@ -444,6 +424,26 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 
 
 	public void onClick(View v) {
+		if(with_list) {
+			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+			int sizeint=(int)size;
+			if(background.getHeight() != sizeint){
+				try {
+					background.removeView(featurePan2);
+					Tracer.d(mytag,"removeView(featurePan2)");
+				} catch (Exception e) {}
+				
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,350));
+				background.addView(featurePan2);
+				Tracer.d(mytag,"addView(featurePan2)");
+			}
+			else{
+				background.removeView(featurePan2);
+				background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+			}
+		}
+		return;
 	}
 	
 	public boolean onLongClick(View v) {

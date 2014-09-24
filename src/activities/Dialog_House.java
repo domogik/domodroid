@@ -161,7 +161,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 						}
 					}
 			);
-		//list type area,room, widget
+		//list icon from array R.array.icon_area_array
 			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
 			List<String> list_icon = new ArrayList<String>();
 			String[] fiilliste;

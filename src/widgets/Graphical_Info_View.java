@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -172,39 +173,37 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		updateTimer();
 	}
 	private void force_aspect(int which) {
-		float big = 13f;
-		float normal = 10f;
 		
 		if(Prev != null)
 			if(which != -1)
-				Prev.setTextSize(normal);
+				Prev.setTypeface(null, Typeface.NORMAL);
 			else
-				Prev.setTextSize(big);
+				Prev.setTypeface(null, Typeface.BOLD);
 		if(Next != null)
 			if(which != 0)
-				Next.setTextSize(normal);
+				Next.setTypeface(null, Typeface.NORMAL);
 			else
-				Next.setTextSize(big);
+				Next.setTypeface(null, Typeface.BOLD);
 		if(Year != null)
 			if(which != 365)
-				Year.setTextSize(normal);
+				Year.setTypeface(null, Typeface.NORMAL);
 			else
-				Year.setTextSize(big);
+				Year.setTypeface(null, Typeface.BOLD);
 		if(Month != null)
 			if(which != 31)
-				Month.setTextSize(normal);
+				Month.setTypeface(null, Typeface.NORMAL);
 			else
-				Month.setTextSize(big);
+				Month.setTypeface(null, Typeface.BOLD);
 		if(Week != null)
 			if(which != 8)
-				Week.setTextSize(normal);
+				Week.setTypeface(null, Typeface.NORMAL);
 			else
-				Week.setTextSize(big);
+				Week.setTypeface(null, Typeface.BOLD);
 		if(Day != null)
 			if(which != 1)
-				Day.setTextSize(normal);
+				Day.setTypeface(null, Typeface.NORMAL);
 			else
-				Day.setTextSize(big);
+				Day.setTypeface(null, Typeface.BOLD);
 	}
 	
 	public void  onWindowVisibilityChanged (int visibility) {

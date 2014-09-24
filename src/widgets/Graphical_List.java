@@ -233,24 +233,18 @@ public class Graphical_List extends FrameLayout implements OnLongClickListener,O
 				Tracer.e(mytag, "Json command error "+e.toString());
 				
 			}
-			int nbitems = 0;
-			String list = "";
 			if(commandValues != null) {
-				nbitems = commandValues.length();
-				if(nbitems > 0) {
+				if(commandValues.length() > 0) {
 					if(known_values != null)
 						known_values = null;
 					
-					known_values = new String[nbitems];
-					for(int i=0; i < nbitems; i++) {
+					known_values = new String[commandValues.length()];
+					for(int i=0; i < commandValues.length(); i++) {
 						try {
 							known_values[i] = commandValues.getString(i);
 						} catch (Exception e) {
 							known_values[i] = "???";
 						}
-						list+=known_values[i];
-						list+=", ";
-						
 					}
 				}
 					

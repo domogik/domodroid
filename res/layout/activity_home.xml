@@ -59,7 +59,7 @@
             android:layout_width="fill_parent"
  			android:layout_height="fill_parent">
 
-    <LinearLayout
+    	<LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/drawer_button"
@@ -68,56 +68,12 @@
             android:paddingRight="5dip"
             android:paddingTop="30dip" >
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-					<Button
-                        android:id="@+id/sync"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Sync" />
-               </LinearLayout>
-               
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-				     <!-- Added by Doume to allow a full stop of Domodroid -->
-
-                    <Button
-                        android:id="@+id/Stop_all"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Exit_Program"/>
-
-            </LinearLayout>
-			<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="10dip" >
-                
-	            <!--  Add a button to allow normal usage configuration -->
-            	<Button
-				    android:id="@+id/bt_usage_settings"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/usage_settings"
-	     		/>
-	    	</LinearLayout>
              <LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="10dip" >
-                
-	            <!--  Add a button to allow server configuration -->
+                <!--  Add a button to allow server configuration -->
             	<Button
 				    android:id="@+id/bt_server_settings"
 				    style="?android:attr/buttonStyleSmall"
@@ -126,7 +82,36 @@
 				    android:text="@string/server_settings"
 	     		/>
 	    	</LinearLayout>
+	    	
 	    	<LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+				<Button
+				android:id="@+id/sync"
+					style="?android:attr/buttonStyleSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/Sync"
+                />
+               </LinearLayout>
+               
+            <LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="10dip" >
+                <!--  Add a button to allow normal usage configuration -->
+            	<Button
+				    android:id="@+id/bt_usage_settings"
+				    style="?android:attr/buttonStyleSmall"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/usage_settings"
+	     		/>
+	    	</LinearLayout>
+            <LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
@@ -140,13 +125,13 @@
 				    android:text="@string/map_settings"
 	     		/>
 	    	</LinearLayout>
+	    	
 	    	<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="10dip" >
-                
-	            <!--  Add a button to allow debug configuration -->
+                <!--  Add a button to allow debug configuration -->
             	<Button
 				    android:id="@+id/bt_debug_settings"
 				    style="?android:attr/buttonStyleSmall"
@@ -155,13 +140,13 @@
 				    android:text="@string/debug_settings"
 	     		/>
 	    	</LinearLayout>
+			
 			<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
 				android:paddingTop="10dip" >
-                
-	            <!--  Add a button to allow house configuration -->
+                <!--  Add a button to allow house configuration -->
             	<Button
 				    android:id="@+id/bt_house_settings"
 				    style="?android:attr/buttonStyleSmall"
@@ -171,6 +156,21 @@
 	     		/>
 	    	</LinearLayout>
 	    	
+	    	<LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dip" >
+				<!-- Added by Doume to allow a full stop of Domodroid -->
+				<Button
+                	android:id="@+id/Stop_all"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Exit_Program"
+                   />
+            </LinearLayout>
+			
         </LinearLayout>
         </ScrollView>
         <!-- End of general config/sync  menu slider -->

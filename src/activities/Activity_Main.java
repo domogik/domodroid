@@ -52,6 +52,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -148,7 +149,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		
 		//sharedPref
-		SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		//SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		SP_params = PreferenceManager.getDefaultSharedPreferences(this);
 		SP_prefEditor=SP_params.edit();
 		Tracer = tracerengine.getInstance(SP_params);
 		
@@ -192,6 +194,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			}
 		//option
 		appname = (ImageView)findViewById(R.id.app_name);
+		
+		//TODO Change to normal menu for a try
+		//Intent helpI = new Intent(Activity_Main.this, Preference.class);
+		//startActivity(helpI);
 		
 		BUTTON_Exit=(Button)findViewById(R.id.Stop_all);
 		BUTTON_Exit.setOnClickListener(this);
@@ -387,8 +393,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		TV_menu_about.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
-				Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
-				startActivity(helpI);				
+				//Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
+				//startActivity(helpI);
+				//TODO Change to normal menu for a try
+				Intent helpI = new Intent(Activity_Main.this, Preference.class);
+				startActivity(helpI);
+				
 			}
 		});
 		
@@ -749,8 +759,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    ObjectOutputStream output = null;
 	    try {
 	        output = new ObjectOutputStream(new FileOutputStream(dst));
-	        SharedPreferences pref = 
-	                            getSharedPreferences("PREFS", MODE_PRIVATE);
+	        //TODO pref
+	        //SharedPreferences pref = getSharedPreferences("PREFS", MODE_PRIVATE);
+	        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 	        output.writeObject(pref.getAll());
 
 	        res = true;
@@ -777,8 +788,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    ObjectInputStream input = null;
 	    try {
 	        input = new ObjectInputStream(new FileInputStream(src));
-	            Editor prefEdit = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-	            prefEdit.clear();
+	            //TODO pref
+		        //Editor prefEdit = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+	            Editor prefEdit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		        prefEdit.clear();
 	            Map<String, ?> entries = (Map<String, ?>) input.readObject();
 	            for (Entry<String, ?> entry : entries.entrySet()) {
 	                Object v = entry.getValue();
@@ -891,8 +904,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private void SaveSelections(Boolean mode) {
 		try{
-			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-			SharedPreferences.Editor prefEditor=params.edit();
+			//TODO pref
+	        //SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
+			SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
+	        SharedPreferences.Editor prefEditor=params.edit();
 			prefEditor.commit();
 			if(backupprefs != null)
 				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
@@ -904,8 +919,10 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private void LoadSelections() {
-		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		tempUrl=params.getString("IP1",null);
+		//TODO pref
+        //SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
+        tempUrl=params.getString("IP1",null);
 		by_usage = params.getBoolean("BY_USAGE", false);
 	}
 	

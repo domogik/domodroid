@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import misc.CopyFile;
 import misc.tracerengine;
 import android.view.KeyEvent;
@@ -114,8 +115,10 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		Tracer = tracerengine.getInstance(params);
+		//TODO pref
+        //params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		params = PreferenceManager.getDefaultSharedPreferences(this);
+        Tracer = tracerengine.getInstance(params);
 		prefEditor=params.edit();
 		mapView = new MapView(Tracer, this);
 		mapView.setParams(params);

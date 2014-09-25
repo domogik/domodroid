@@ -520,7 +520,7 @@ public class WidgetUpdate  {
 	}
 	
 	public void wakeup() {
-		//TODO ADD try catch due ot an android error message in dev console on a DROID RAZR i (smi)
+		//TODO ADD try catch due to an android error message in dev console on a DROID RAZR i (smi)
 		try{
 		Tracer.d(mytag,"Wake up requested...");
 		if(eventsManager != null) {

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+android:title="Préférences">
+ 
+ <PreferenceCategory android:title="Serveur">
+     <EditTextPreference android:title="rinorIP" android:dialogTitle="rinorIP" android:key="rinorIP"/>
+     <EditTextPreference android:title="rinorPort" android:defaultValue="40405" android:dialogTitle="rinorPort" android:key="rinorPort"/>
+     <EditTextPreference android:title="rinorPath" android:dialogTitle="rinorPath" android:key="rinorPath"/>
+     <EditTextPreference android:title="http_auth_username" android:dialogTitle="http_auth_username" android:key="http_auth_username"/>
+     <EditTextPreference android:title="http_auth_password" android:dialogTitle="http_auth_password" android:key="http_auth_password"/>
+     <Preference android:title="UPDATE_TIMER" android:key="UPDATE_TIMER"/>
+ </PreferenceCategory><PreferenceCategory android:title="Widget"><CheckBoxPreference android:summaryOn="Alternative on/off" android:summaryOff="Normal on/off" android:key="WIDGET_CHOICE" android:title="Widget Button On/Off" />
+ <CheckBoxPreference android:summaryOn="AChartengine Graph" android:summaryOff="Normal Graph" android:key="Graph_CHOICE" android:title="Graph"/>
+ <CheckBoxPreference android:summaryOn="twocol_lanscape on" android:summaryOff="twocol_lanscape off" android:key="twocol_lanscape" android:title="twocol_lanscape"/>
+ <CheckBoxPreference android:summaryOn="twocol_portrait on" android:summaryOff="twocol_portrait off" android:key="twocol_portrait" android:title="twocol_portrait"/>
+ <CheckBoxPreference android:summaryOn="BY_USAGE on" android:summaryOff="BY_USAGE off" android:key="BY_USAGE" android:title="BY_USAGE"/>
+</PreferenceCategory><PreferenceCategory android:title="Map">
+    <CheckBoxPreference android:summaryOn="DRAG on" android:summaryOff="DRAG off" android:key="DRAG" android:title="DRAG"/>
+    <CheckBoxPreference android:summaryOn="ZOOM of" android:summaryOff="ZOOM off" android:key="ZOOM" android:title="ZOOM"/>
+    <CheckBoxPreference android:summaryOn="HIDE on" android:summaryOff="HIDE off" android:key="HIDE" android:title="HIDE"/>
+    <CheckBoxPreference android:summaryOn="map_menu_disable on" android:summaryOff="map_menu_disable off" android:key="map_menu_disable" android:title="map_menu_disable"/>
+    <CheckBoxPreference android:summaryOn="START_ON_MAP on" android:summaryOff="START_ON_MAP off" android:key="START_ON_MAP" android:title="START_ON_MAP"/>
+    <CheckBoxPreference android:summaryOn="map_autozoom on" android:summaryOff="map_autozoom off" android:key="map_autozoom" android:title="map_autozoom"/>
+    <Preference android:title="SIZE" android:defaultValue="800" android:key="SIZE"/>
+</PreferenceCategory><PreferenceCategory android:title="Debug">
+    <CheckBoxPreference android:summaryOn="LOG_DEBUG on" android:summaryOff="LOG_DEBUG off" android:key="LOG_DEBUG" android:title="LOG_DEBUG"/>
+    <CheckBoxPreference android:summaryOn="LOG_ERROR on" android:summaryOff="LOG_ERROR off" android:key="LOG_ERROR" android:title="LOG_ERROR"/>
+    <CheckBoxPreference android:summaryOn="LOG_INFO on" android:summaryOff="LOG_INFO off" android:key="LOG_INFO" android:title="LOG_INFO"/>
+    <CheckBoxPreference android:summaryOn="LOG_VERBOSE on" android:summaryOff="LOG_VERBOSE off" android:key="LOG_VERBOSE" android:title="LOG_VERBOSE"/>
+    <CheckBoxPreference android:summaryOn="LOG_WARNING on" android:summaryOff="LOG_WARNING off" android:key="LOG_WARNING" android:title="LOG_WARNING"/>
+    <CheckBoxPreference android:summaryOn="SYSTEMLOG on" android:summaryOff="SYSTEMLOG off" android:key="SYSTEMLOG" android:title="SYSTEMLOG"/>
+    <CheckBoxPreference android:summaryOn="SCREENLOG on" android:summaryOff="SCREENLOG off" android:key="SCREENLOG" android:title="SCREENLOG"/>
+    <CheckBoxPreference android:summaryOn="TEXTLOG on" android:summaryOff="TEXTLOG off" android:key="TEXTLOG" android:title="TEXTLOG"/>
+    <EditTextPreference android:title="LOGPATH" android:dialogTitle="LOGPATH" android:key="LOGPATH"/>
+    <EditTextPreference android:title="LOGNAME" android:dialogTitle="LOGNAME" android:key="LOGNAME"/>
+    <CheckBoxPreference android:summaryOn="Device id show" android:summaryOff="Device id hide" android:key="DEV" android:title="DEV"/>
+</PreferenceCategory><PreferenceCategory android:title="House"></PreferenceCategory><PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="Autre"><CheckBoxPreference android:title="Ma super checkbox" android:key="macheckbox" android:summaryOn="La checkbox est cochée" android:summaryOff="La checkbox n'est plus cochée" android:defaultValue="true" /><EditTextPreference android:title="Mon EditText" android:dialogTitle="Modification du texte" android:dialogMessage="Entrez le nouveau texte" android:dialogIcon="@drawable/usage_water_undefined" android:defaultValue="Texte par défaut" />
+ 
+</PreferenceScreen>
+ 
+ 
+ 
+ 
+ 
+</PreferenceScreen>

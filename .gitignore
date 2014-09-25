@@ -6,3 +6,5 @@
 /build.xml
 /.classpath
 Thumbs.db
+/.settings
+/.pydevproject

@@ -4,12 +4,25 @@
 android:title="Préférences">
  
  <PreferenceCategory android:title="Serveur">
-     <EditTextPreference android:title="rinorIP" android:dialogTitle="rinorIP" android:key="rinorIP"/>
-     <EditTextPreference android:title="rinorPort" android:defaultValue="40405" android:dialogTitle="rinorPort" android:key="rinorPort"/>
-     <EditTextPreference android:title="rinorPath" android:dialogTitle="rinorPath" android:key="rinorPath"/>
-     <EditTextPreference android:title="http_auth_username" android:dialogTitle="http_auth_username" android:key="http_auth_username"/>
-     <EditTextPreference android:title="http_auth_password" android:dialogTitle="http_auth_password" android:key="http_auth_password"/>
+     <EditTextPreference android:title="rinorIP"
+         android:dialogTitle="rinorIP"
+         android:key="rinorIP"/>
+     <EditTextPreference android:title="rinorPort"
+         android:defaultValue="40405"
+         android:dialogTitle="rinorPort"
+         android:key="rinorPort"/>
+     <EditTextPreference android:title="rinorPath"
+         android:dialogTitle="rinorPath"
+         android:key="rinorPath"/>
+     <EditTextPreference android:title="http_auth_username"
+         android:dialogTitle="http_auth_username"
+         android:key="http_auth_username"/>
+     <EditTextPreference android:title="http_auth_password"
+         android:dialogTitle="http_auth_password"
+         android:key="http_auth_password"
+         android:inputType="textPassword"/>
      <Preference android:title="UPDATE_TIMER" android:key="UPDATE_TIMER"/>
+     <Preference android:key="UPDATE_URL" android:title="UPDATE_URL"/>
  </PreferenceCategory><PreferenceCategory android:title="Widget"><CheckBoxPreference android:summaryOn="Alternative on/off" android:summaryOff="Normal on/off" android:key="WIDGET_CHOICE" android:title="Widget Button On/Off" />
  <CheckBoxPreference android:summaryOn="AChartengine Graph" android:summaryOff="Normal Graph" android:key="Graph_CHOICE" android:title="Graph"/>
  <CheckBoxPreference android:summaryOn="twocol_lanscape on" android:summaryOff="twocol_lanscape off" android:key="twocol_lanscape" android:title="twocol_lanscape"/>

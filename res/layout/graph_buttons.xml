@@ -11,25 +11,24 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:text="@string/bt_prev"
-        android:textSize="10sp" />
+        android:textSize="6sp" />
 
 	<Button
 	    android:id="@+id/bt_next"
 	    android:tag="Next"
         android:layout_width="wrap_content"
 	    android:layout_height="32dp"
-	    android:layout_marginRight="25px"
 	    android:text="@string/bt_next"
-	    android:textSize="10sp" />
+	    android:textSize="6sp" />
 
 	<Button
 	    android:id="@+id/bt_year"
 	    android:tag="Year"
         android:layout_width="wrap_content"
 	    android:layout_height="32dp"
-	    android:layout_marginLeft="10px"
+	    android:layout_marginLeft="5dp"
 	    android:text="@string/bt_year"
-	    android:textSize="10sp" />
+	    android:textSize="6sp" />
 	
 	<Button
         android:id="@+id/bt_month"
@@ -37,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
        	android:text="@string/bt_month" 
-        android:textSize="10sp" />
+        android:textSize="6sp" />
 	
 	<Button
 	    android:id="@+id/bt_week"
@@ -45,7 +44,7 @@
 	    android:layout_height="32dp"
 	    android:tag="Week"
 	    android:text="@string/bt_week"
-	    android:textSize="10sp"
+	    android:textSize="6sp"
 	     />
 	
 	<Button
@@ -54,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
        	android:text="@string/bt_day"
-        android:textSize="10sp" />
+        android:textSize="6sp" />
 
 	<EditText
 	    android:id="@+id/period"
@@ -62,7 +61,7 @@
 	    android:layout_height="32dp"
 	    android:ems="10"
 	    android:gravity="center"
-	    android:textSize="10sp" >
+	    android:textSize="6sp" >
 	   
 	</EditText>
 	

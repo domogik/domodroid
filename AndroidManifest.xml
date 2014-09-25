@@ -39,8 +39,6 @@
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
 		<activity android:name="activities.Activity_About" android:theme="@android:style/Theme.NoTitleBar"
 			android:configChanges="orientation"></activity>
-		<activity android:name="activities.Preference" android:theme="@android:style/Theme.NoTitleBar"
-			android:configChanges="orientation"></activity>
 		<activity android:name="activities.Activity_Cam"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 			android:configChanges="orientation"></activity>

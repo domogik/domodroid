@@ -72,11 +72,9 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	private FrameLayout imgPan;
 	private LinearLayout background;
 	private LinearLayout featurePan;
-	private LinearLayout featurePan2;
 	private LinearLayout topPan;
 	private LinearLayout infoPan;
 	private ListView listeChoices;
-	private ArrayList<HashMap<String,String>> listItem;
 	private ImageView img;
 	private TextView nameDevices;
 	private TextView value;
@@ -186,7 +184,6 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		value.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
-		
 		featurePan.addView(value);
 		
 		infoPan.addView(nameDevices);
@@ -257,22 +254,19 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	
 	private void getlastvalue() {
 		//TODO add something in the view
-		//add last 5 values with their date
+		//add last 5 values with their dates
+		//featurePan2.addView();
 		JSONObject json_LastValues = null;
 		JSONArray itemArray=null; 
 		try {
 			json_LastValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
 			itemArray = json_LastValues.getJSONArray("stats");
-			Tracer.d(mytag, "Get :"+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
-			Tracer.d(mytag, "Get Json for device:"+dev_id+" for stats "+state_key);
 		} catch (Exception e) {
 			//return null;
-			Tracer.e(mytag,"Error with json");
+			Tracer.e(mytag,"Error getting json object");
 		}
-		
 		listeChoices = new ListView(context);
-		listItem=new ArrayList<HashMap<String,String>>();
-		
+		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
 		for (int i =0; i < itemArray.length(); i++){
 			try {
 				HashMap<String,String> map=new HashMap<String,String>();
@@ -281,25 +275,13 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 				listItem.add(map);
 				Tracer.d(mytag, map.toString());
 			}catch (Exception e) {
-				Tracer.e(mytag,"Error translating json object");
+				Tracer.e(mytag,"Error getting json value");
 			}
-		}		
-		Tracer.d(mytag, listItem.toString());
-
-		SimpleAdapter adapter_map=new SimpleAdapter(context,listItem,
+		}
+		SimpleAdapter adapter_map=new SimpleAdapter(getContext(),listItem,
 				R.layout.item_phone,new String[] {"value", "date"},new int[] {R.id.value, R.id.date});
-		//list of choices
 		listeChoices.setAdapter(adapter_map);
-		listeChoices.setScrollingCacheEnabled(false);
-
-		//feature panel 2 which will contain list of selectable choices
-		featurePan2=new LinearLayout(context);
-		featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		featurePan2.setGravity(Gravity.CENTER_VERTICAL);
-		featurePan2.setPadding(5, 10, 5, 10);
-		featurePan2.addView(listeChoices);
-		
-	}
+		}
 	
 	public void onClick(View arg0) {
 	//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
@@ -307,17 +289,17 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	int sizeint=(int)size;
 		if(background.getHeight() != sizeint){
 			Tracer.d(mytag,"on click");
-			getlastvalue();
 			try {
-				background.removeView(featurePan2);
-				Tracer.d(mytag,"removeView(featurePan2)");
-				} catch (Exception e) {}
+				background.removeView(listeChoices);
+				Tracer.d(mytag,"removeView(listeChoices)");
+				
+			} catch (Exception e) {}
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-			Tracer.d(mytag,"addView(featurePan2)");
-			background.addView(featurePan2);
-		}
-		else{
-			background.removeView(featurePan2);
+			getlastvalue();
+			Tracer.d(mytag,"addView(listeChoices)");
+			background.addView(listeChoices);
+		}else{
+			background.removeView(listeChoices);
 			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
 		return ;

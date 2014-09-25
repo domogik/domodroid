@@ -30,7 +30,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -48,8 +47,7 @@ public class Activity_About extends Activity{
 		setContentView(R.layout.activity_help);
 		//display domogik version
 		TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
-		//SharedPreferences SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		TV_domogikversionText.setText("Domogik version: "+SP_params.getString("DOMOGIK-VERSION", ""));
 		//display domodroid version
 		TextView TV_versionText = (TextView) findViewById(R.id.versionText);

@@ -27,7 +27,7 @@ public class TransformManager {
 	private float oldDist = 1f;
 	float lastPosX = 0;
 	float lastPosY = 0;
-	float lastScale = 1;
+	//float lastScale = 1;
 	public Matrix matrix = new Matrix();
 	public int screenMode = 2;
 	private float[] value = new float[9];
@@ -85,7 +85,7 @@ public class TransformManager {
 
 			if (mode != DRAG && zoom) {
 				matrix.postScale(scale, scale, mid.x, mid.y);
-				lastScale = scale;
+				//lastScale = scale;
 			}
 			//else matrix.postScale(lastScale, lastScale, mid.x, mid.y);
 
@@ -94,8 +94,9 @@ public class TransformManager {
 				lastPosX = event.getX() - mid.x;
 				lastPosY = event.getY() - mid.y;
 			}
-		}
 		matrixTuning();
+		}
+		
 	}
 
 	// rearrange the matrix

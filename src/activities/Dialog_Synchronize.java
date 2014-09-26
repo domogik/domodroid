@@ -252,6 +252,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	                if(json_FeatureList != null)
 	                	list_size = json_FeatureList.getJSONArray("feature").length();
 	                Tracer.d(mytag,"Features list size = "+list_size);
+					//TODO correct a bug #2020 if device is empty.
 					for(int i = 0; i < list_size; i++) {
 						try {
 							usage = json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id");

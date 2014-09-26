@@ -11,12 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MySimpleArrayAdapter extends ArrayAdapter<String> {
+public class List_Icon_Adapter extends ArrayAdapter<String> {
   private final Context context;
   private final String[] values;
 
-  public MySimpleArrayAdapter(Context context, String[] values) {
-    super(context, R.layout.rowlayout, values);
+  public List_Icon_Adapter(Context context, String[] values) {
+    super(context, R.layout.row_layout_list_icon, values);
     this.context = context;
     this.values = values;
   }
@@ -25,7 +25,7 @@ public class MySimpleArrayAdapter extends ArrayAdapter<String> {
   public View getView(int position, View convertView, ViewGroup parent) {
     LayoutInflater inflater = (LayoutInflater) context
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
+    View rowView = inflater.inflate(R.layout.row_layout_list_icon, parent, false);
     TextView textView = (TextView) rowView.findViewById(R.id.label);
     ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
     textView.setText(values[position]);

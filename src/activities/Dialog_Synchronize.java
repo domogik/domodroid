@@ -254,12 +254,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	                Tracer.d(mytag,"Features list size = "+list_size);
 					//TODO correct a bug #2020 if device is empty.
 					for(int i = 0; i < list_size; i++) {
+						usage=null;
 						try {
-							usage = json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id");
+						
+							usage = json_FeatureList.getJSONArray("feature").getJSONObject(i)
+									.getJSONObject("device").getString("device_usage_id");
 						} catch (Exception e) {
 							// Cannot parse JSON Array or JSONObject
 							 Tracer.d(mytag,"Exception processing Features list ("+i+")");
-								
 						}
 						 Tracer.d(mytag,"Features list processing usage = <"+usage+">");
 							
@@ -279,7 +281,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 									rooms.put(room);
 									list_usage.add(json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id"));
 								}
-							}
 							// And its associated widget
 							JSONObject Widget = new JSONObject();
 							Widget.put("place_type","room");
@@ -293,6 +294,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							device_feature.put("device_id",json_FeatureList.getJSONArray("feature").getJSONObject(i).getString("device_id"));
 							Widget.put("device_feature", device_feature);
 							ListFeature.put(Widget);
+							}
+							
 						}
 						
 					} // for loop on feature list...

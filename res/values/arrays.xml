@@ -24,15 +24,14 @@
     <item>basement2</item>
  	<item>first_floor</item>
     <item>first_floor2</item>
-    <item>garage</item>
-    <item>garden</item>
     <item>ground_floor</item>
     <item>ground_floor2</item>
     <item>second_floor</item>
     <item>second_floor2</item>
     <item>bathroom</item>
     <item>bedroom</item>
- 	<item>garage</item>
+    <item>garage</item>
+    <item>garden</item>
     <item>office</item>
     <item>kitchen</item>
     <item>kidsroom</item>

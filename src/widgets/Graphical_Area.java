@@ -38,6 +38,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import misc.MySimpleArrayAdapter;
 import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
@@ -234,6 +235,8 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			MySimpleArrayAdapter adapter=new MySimpleArrayAdapter(getContext(), fiilliste);
+			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {

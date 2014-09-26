@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
+import misc.MySimpleArrayAdapter;
 import misc.tracerengine;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
@@ -741,6 +742,8 @@ public class Graphical_Color extends FrameLayout implements OnSeekBarChangeListe
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			MySimpleArrayAdapter adapter=new MySimpleArrayAdapter(getContext(), fiilliste);
+			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {

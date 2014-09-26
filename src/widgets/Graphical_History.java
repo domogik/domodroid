@@ -49,6 +49,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import misc.MySimpleArrayAdapter;
 import misc.tracerengine;
 import android.view.Gravity;
 import android.view.View;
@@ -278,9 +279,9 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 				Tracer.e(mytag,"Error getting json value");
 			}
 		}
-		SimpleAdapter adapter_map=new SimpleAdapter(getContext(),listItem,
-				R.layout.item_phone,new String[] {"value", "date"},new int[] {R.id.value, R.id.date});
-		listeChoices.setAdapter(adapter_map);
+		SimpleAdapter adapter_feature=new SimpleAdapter(this.context,listItem,
+				R.layout.item_feature,new String[] {"value","date","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
+		listeChoices.setAdapter(adapter_feature);
 		}
 	
 	public void onClick(View arg0) {
@@ -378,6 +379,8 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			MySimpleArrayAdapter adapter=new MySimpleArrayAdapter(getContext(), fiilliste);
+			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {

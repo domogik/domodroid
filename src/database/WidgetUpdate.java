@@ -520,7 +520,7 @@ public class WidgetUpdate  {
 	}
 	
 	public void wakeup() {
-		//TODO ADD try catch due ot an android error message in dev console on a DROID RAZR i (smi)
+		//TODO ADD try catch due to an android error message in dev console on a DROID RAZR i (smi)
 		try{
 		Tracer.d(mytag,"Wake up requested...");
 		if(eventsManager != null) {
@@ -727,7 +727,7 @@ public class WidgetUpdate  {
 				last_position = cache_position;		//Keep the position, for next search
 				if( (cache.get(cache_position).Value.equals(Val))) {
 					//value not changed
-					//Tracer.i(mytag, "cache engine no value change for ("+dev_id+") ("+skey+") ("+Val+")");
+					Tracer.i(mytag, "cache engine no value change for ("+dev_id+") ("+skey+") ("+Val+")");
 					
 				} else {
 					//value changed : has to notify clients....
@@ -820,7 +820,7 @@ public class WidgetUpdate  {
 		
 		while(locked) {
 			//Somebody else is updating list...
-			//Tracer.i(mytag, "cache engine locked : wait !");
+			Tracer.i(mytag, "cache engine locked : wait !");
 			try{
 				Thread.sleep(100);		//Standby 10 milliseconds
 			} catch (Exception e) {};

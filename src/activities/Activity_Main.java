@@ -138,7 +138,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Boolean end_of_init_requested = true;
 	private LinearLayout LL_info;
 	private TextView TV_info_msg;
-	
+	private String mytag="Activity_Main";
+    
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -201,7 +202,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		BUTTON_usage_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				//Disconnect all opened sessions....
-				Tracer.v("Activity_Main.onclick()","Call to usage settings screen");
+				Tracer.v(mytag+".onclick()","Call to usage settings screen");
 				if(DIALOG_usage_set != null)
 					DIALOG_usage_set.get_params();
 				else
@@ -215,7 +216,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		BUTTON_server_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				//Disconnect all opened sessions....
-				Tracer.v("Activity_Main.onclick()","Call to server settings screen");
+				Tracer.v(mytag+".onclick()","Call to server settings screen");
 				if(DIALOG_server_set != null)
 					DIALOG_server_set.get_params();
 				else
@@ -229,7 +230,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		BUTTON_map_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				//Disconnect all opened sessions....
-				Tracer.v("Activity_Main.onclick()","Call to Map settings screen");
+				Tracer.v(mytag+".onclick()","Call to Map settings screen");
 				if(DIALOG_map_set != null)
 					DIALOG_map_set.get_params();
 				else
@@ -243,7 +244,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		BUTTON_debug_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				//Disconnect all opened sessions....
-				Tracer.v("Activity_Main.onclick()","Call to Debug settings screen");
+				Tracer.v(mytag+".onclick()","Call to Debug settings screen");
 				if(DIALOG_debug_set != null)
 					DIALOG_debug_set.get_params();
 				else
@@ -257,7 +258,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		BUTTON_house_settings.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				//Disconnect all opened sessions....
-				Tracer.v("Activity_Main.onclick()","Call to House settings screen");
+				Tracer.v(mytag+".onclick()","Call to House settings screen");
 				DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
 				DIALOG_house_set.show();
 				return;
@@ -281,18 +282,18 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 				public void onDismiss(DialogInterface dialog) {
 					
-					Tracer.d("Activity_Main","sync dialog has been closed !");
+					Tracer.d(mytag,"sync dialog has been closed !");
 					
 					// Is it success or fail ?
 					if(((Dialog_Synchronize)dialog).need_refresh) {
 						// Sync has been successful : Force to refresh current main view
-						Tracer.d("Activity_Main","sync dialog requires a refresh !");
+						Tracer.d(mytag,"sync dialog requires a refresh !");
 						reload = true;	// Sync being done, consider shared prefs are OK
 						VG_parent.removeAllViews();
 						if(WU_widgetUpdate != null) {
 							WU_widgetUpdate.resync();
 						} else {
-							Tracer.i("Activity_Main.onCreate","WidgetUpdate is null startCacheengine!");
+							Tracer.i(mytag+".onCreate","WidgetUpdate is null startCacheengine!");
 							startCacheEngine();
 						}
 						Bundle b = new Bundle();
@@ -311,7 +312,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 						}
 						onResume();
 					} else {
-						Tracer.d("Activity_Main","sync dialog end with no refresh !");
+						Tracer.d(mytag,"sync dialog end with no refresh !");
 						
 					}
 					((Dialog_Synchronize)dialog).need_refresh = false;					
@@ -332,8 +333,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				}else if(msg.what==3){
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
 				} else if(msg.what==8000){
+					Tracer.e(mytag,"Request to display message : 8000");
 					/*
-					Tracer.e("Activity_Main","Request to display message : 8000");
 					if(dialog_message == null) {
 						Create_message_box();
 					}
@@ -344,7 +345,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				} else if(msg.what==8999){
 					//Cache engine is ready for use....
 					if(Tracer != null)
-						Tracer.e("Activity_Main","Cache engine has notified it's ready !");
+						Tracer.e(mytag,"Cache engine has notified it's ready !");
 					cache_ready=true;
 					if(end_of_init_requested)
 						end_of_init();
@@ -455,14 +456,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				}
 				if(SP_params.getBoolean("SYNC", false)==true){
 					//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
-					Tracer.w("Activity_Main","Before call to Map, Disconnect widgets from engine !");
+					Tracer.w(mytag,"Before call to Map, Disconnect widgets from engine !");
 					if(WU_widgetUpdate != null) {
 						WU_widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
 						//widgetUpdate.dump_cache();	//For debug
 						dont_kill = true;	// to avoid engines kill when onDestroy()
 					}
 					INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
-					Tracer.d("Activity_Main","Call to Map, run it now !");
+					Tracer.d(mytag,"Call to Map, run it now !");
 					Tracer.Map_as_main = false;
 					startActivity(INTENT_map);
 				}else{
@@ -502,12 +503,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				reload = false;
 				if(backupprefs.exists()) {
 					// A backup exists : Ask if reload it
-					Tracer.v("Activity_Main","settings backup found after a fresh install...");
+					Tracer.v(mytag,"settings backup found after a fresh install...");
 					
 					DialogInterface.OnClickListener reload_listener = new DialogInterface.OnClickListener() {
 
 						public void onClick(DialogInterface dialog, int which) {
-							Tracer.e("Activity_Home","Reload dialog returns : "+which);
+							Tracer.e(mytag,"Reload dialog returns : "+which);
 							if(which == dialog.BUTTON_POSITIVE) {
 								reload = true;
 							}
@@ -527,7 +528,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					init_done=false;	//A choice is pending : Rest of init has to be completed...
 				} else {
 					//No settings backup found
-					Tracer.v("Activity_Main","no settings backup found after fresh install...");
+					Tracer.v(mytag,"no settings backup found after fresh install...");
 					end_of_init_requested = true;
 					// open server config view
 					BUTTON_server_settings.performClick();
@@ -540,36 +541,36 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			if(SP_params.getBoolean("SYNC", false)){
 				//A config exists and a sync as been done by past.
 				if(WU_widgetUpdate == null) {
-					Tracer.i("Activity_Main.onCreate","Params splach is false and WidgetUpdate is null startCacheengine!");
+					Tracer.i(mytag+".onCreate","Params splach is false and WidgetUpdate is null startCacheengine!");
 					startCacheEngine();
 				}
 
 			}
 			
-			Tracer.e("Activity_Main","OnCreate() complete !");
+			Tracer.e(mytag,"OnCreate() complete !");
 			// End of onCreate (UIThread)
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		Tracer.e("Activity_Main.onResume","Check if initialize requested !");
+		Tracer.e(mytag+".onResume","Check if initialize requested !");
 		if(! init_done) {
-			Tracer.i("Activity_Main.onResume","Init not done!");
+			Tracer.i(mytag+".onResume","Init not done!");
 			if(SP_params.getBoolean("SPLASH", false)){
-				Tracer.i("Activity_Main.onResume","params Splash is false !");
+				Tracer.i(mytag+".onResume","params Splash is false !");
 				cache_ready = false;
 				//try to solve 1rst launch and orientation problem
-				Tracer.i("Activity_Main.onresume","Init not done! and params Splash is false startCacheengine!");
+				Tracer.i(mytag+".onresume","Init not done! and params Splash is false startCacheengine!");
 				//startCacheEngine();
 				//end_of_init();		//Will be done when cache will be ready
 			}
 		}
 		else {
-			Tracer.i("Activity_Main.onResume","Init done!");
+			Tracer.i(mytag+".onResume","Init done!");
 				end_of_init_requested=true;
 				if(WU_widgetUpdate != null) {
-					Tracer.i("Activity_Main.onResume","Widget update is not null so wakeup widget engine!");
+					Tracer.i(mytag+".onResume","Widget update is not null so wakeup widget engine!");
 					WU_widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
 				}
 				//end_of_init();	//all client widgets will be re-created
@@ -582,7 +583,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	public void onPause(){
 		super.onPause();
 		SD_panel.setOpen(false, false);
-		Tracer.w("Activity_Main.onPause","Going to background !");
+		Tracer.w(mytag+".onPause","Going to background !");
 		if(WU_widgetUpdate != null)  {
 			if(! Tracer.Map_as_main) {
 				// We're the main initial activity
@@ -601,7 +602,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			WU_widgetUpdate.Disconnect(0);	//remove all pending subscribings
 			if(! Tracer.Map_as_main) {
 				// We're the main initial activity
-				Tracer.w("Activity_Main.onDestroy","cache engine set to sleeping !");
+				Tracer.w(mytag+".onDestroy","cache engine set to sleeping !");
 				this.PM_WakeLock.release();	// We allow screen shut, now...
 				WU_widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
 												// only if we are the main initial activity
@@ -647,7 +648,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		// Finalize screen appearence
 		if(Tracer == null)
 			Tracer = Tracer.getInstance();
-		Tracer.v("Activity_Main","end_of_init Main Screen..");
+		Tracer.v(mytag,"end_of_init Main Screen..");
 		if(! reload) {
 			//alertDialog not sync splash
 			if(AD_notSyncAlert == null)
@@ -671,7 +672,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		//load widgets
 		if(widgetHandler == null) {
-			Tracer.i("Activity_Main", "Starting WidgetHandler thread !");
+			Tracer.i(mytag, "Starting WidgetHandler thread !");
 			widgetHandler = new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
@@ -679,17 +680,17 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					try {
 						historyPosition++;
 						loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-						Tracer.v("Activity_Main.widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
+						Tracer.v(mytag+".widgetHandler", "add history "+msg.getData().getInt("id")+" "+msg.getData().getString("type"));
 						history.add(historyPosition,new String [] {msg.getData().getInt("id")+"",msg.getData().getString("type")});
 					} catch (Exception e) {
-						Tracer.e("Activity_Main.widgetHandler", "handler error into loadWidgets");
+						Tracer.e(mytag+".widgetHandler", "handler error into loadWidgets");
 						e.printStackTrace();
 					}
 				}	
 			};
 		}
 		if(WM_Agent == null) {
-			Tracer.v("Activity_Main", "Starting wAgent !");
+			Tracer.v(mytag, "Starting wAgent !");
 			WM_Agent=new Widgets_Manager(Tracer, widgetHandler);
 			WM_Agent.widgetupdate = WU_widgetUpdate;
 		}
@@ -702,7 +703,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		init_done = true;
 		
 		if((SP_params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
-			Tracer.e("Activity_Main", "Direct start on Map requested...");
+			Tracer.e(mytag, "Direct start on Map requested...");
 			Tracer.Map_as_main = true;		//Memorize that Map is now the main screen
 			INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
 			startActivity(INTENT_map);
@@ -720,16 +721,16 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	 * Check the answer after the proposal to reload existing settings (fresh install)
 	 */
 	private void check_answer() {
-		Tracer.v("Activity_Main","reload choice done..");
+		Tracer.v(mytag,"reload choice done..");
 		if(reload) {
 			// If answer is 'yes', load preferences from backup
-			Tracer.e("Activity_Home","reload settings..");
+			Tracer.e(mytag,"reload settings..");
 			loadSharedPreferencesFromFile(backupprefs);
 			SD_panel.setOpen(false, false);
 			run_sync_dialog();
 			
 		} else {
-			Tracer.v("Activity_Main","Settings not reloaded : clear database..");
+			Tracer.v(mytag,"Settings not reloaded : clear database..");
 			File database = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db");
 			if(database.exists()) {
 				database.delete();
@@ -783,7 +784,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	            for (Entry<String, ?> entry : entries.entrySet()) {
 	                Object v = entry.getValue();
 	                String key = entry.getKey();
-	                Tracer.v("Activity_Main","Loading pref : "+key+" -> "+v.toString());
+	                Tracer.v(mytag,"Loading pref : "+key+" -> "+v.toString());
 	                if (v instanceof Boolean)
 	                    prefEdit.putBoolean(key, ((Boolean) v).booleanValue());
 	                else if (v instanceof Float)
@@ -817,7 +818,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	public void loadWigets(int id, String type){
-		Tracer.d("Activity_Main.loadWidgets","Construct main View id="+id+" type="+type);
+		Tracer.d(mytag+".loadWidgets","Construct main View id="+id+" type="+type);
 		VG_parent.removeAllViews();
 		LL_area = new LinearLayout(this);
 		LL_area.setOrientation(LinearLayout.VERTICAL);
@@ -938,7 +939,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	public void onPanelOpened(Sliding_Drawer panel) {
-		Tracer.v("Activity_Main","onPanelOpened");
+		Tracer.v(mytag,"onPanelOpened");
 		TV_menu_green.setVisibility(View.VISIBLE);
 		TV_menu_green.startAnimation(A_animation1);
 	}
@@ -948,7 +949,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//ALL other that are not explicitly used
 		if(v.getTag().equals("Exit")) {
 			//Disconnect all opened sessions....
-			Tracer.v("Activity_Main Exit","Stopping WidgetUpdate thread !");
+			Tracer.v(mytag+"Exit","Stopping WidgetUpdate thread !");
 			this.WM_Agent=null;
 			widgetHandler=null;
 			Tracer.set_engine(null);
@@ -960,14 +961,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.finish();
 			return;
 		} else if(v.getTag().equals("reload_cancel")) {
-			Tracer.v("Activity_Main","Choosing no reload settings");
+			Tracer.v(mytag,"Choosing no reload settings");
 			reload = false;
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
 	        }
 			return;
 		}  else if(v.getTag().equals("reload_ok")) {
-			Tracer.v("Activity_Main","Choosing settings reload");
+			Tracer.v(mytag,"Choosing settings reload");
 			reload=true;
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
@@ -980,7 +981,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			this.Create_message_box();
 			PG_dialog_message.setMessage(getText(R.string.loading_cache)); 
 			PG_dialog_message.show();
-			Tracer.w("Activity_Main", "Starting WidgetUpdate cache engine !");
+			Tracer.w(mytag, "Starting WidgetUpdate cache engine !");
 			WU_widgetUpdate = WidgetUpdate.getInstance();
 			WU_widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)
 			Boolean result = WU_widgetUpdate.init(Tracer, this,SP_params);

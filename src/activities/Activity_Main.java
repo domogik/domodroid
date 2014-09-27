@@ -389,6 +389,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			public void onClick(View v) {
 				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 				Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
+				//TODO prepare a normal menu call. 
+				//Intent helpI = new Intent(Activity_Main.this,Preference.class);
 				startActivity(helpI);				
 			}
 		});
@@ -844,7 +846,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
 					VG_parent.addView(LL_area);	//and areas
 					LL_activ.removeAllViews();
-					LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ,SP_params, mytype);
+					LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ,SP_params, mytype);//add widgets in root
 					VG_parent.addView(LL_activ);
 				} else {
 					// by_usage
@@ -853,7 +855,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);	//List of known usages 'as rooms'
 					VG_parent.addView(LL_room);
 					LL_activ.removeAllViews();
-					LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ,SP_params, mytype);
+					LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ,SP_params, mytype);//add widgets in area 1
 					VG_parent.addView(LL_activ);
 				}
 			/*Should never arrive in this type.	
@@ -880,15 +882,15 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					VG_parent.addView(LL_house_map);	// House & map
 				}
 				LL_room.removeAllViews();
-				LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);
+				LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
 				VG_parent.addView(LL_room);
 				LL_activ.removeAllViews();
-				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
+				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);//add widgets in this area
 				VG_parent.addView(LL_activ);
 				
 			} else 	if(type.equals("room")) {
 				LL_activ.removeAllViews();
-				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
+				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);//add widgets in this room
 				VG_parent.addView(LL_activ);
 			}
 			
@@ -1059,7 +1061,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	{
 	    super.onConfigurationChanged(newConfig);
 	    //setContentView(R.layout.activity_home);
-
+	    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
 	}
 }
 

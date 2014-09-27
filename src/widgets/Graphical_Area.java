@@ -216,7 +216,7 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						String result= input.getText().toString(); 
 						Tracer.get_engine().descUpdate(id_area,result,"area");
-						//TODO refresh layout to take change
+						name.setText(result);
 					}
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -253,6 +253,8 @@ public class Graphical_Area extends FrameLayout implements OnClickListener, OnLo
 						reference=id_area;
 						values.put("reference", reference);
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+
 						dialog.cancel();
 					}
 				}

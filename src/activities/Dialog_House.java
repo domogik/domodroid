@@ -187,6 +187,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 		//list type area,room, widget
 			final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 			List<String> list_type = new ArrayList<String>();
+				list_type.add("root");
 				list_type.add("area");
 				list_type.add("room");
 				if (!v.getTag().equals("add_widget"))
@@ -277,6 +278,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					lastid = domodb.requestidlastFeature_association();
 					ContentValues values = new ContentValues();
 					//roomid must come from the selected in list
+					//TODO add a way to add a widget in place 1 named root
+					if (type.equals("root"))
+						values.put("place_id", ("1"));
 					if (type.equals("area"))
 						values.put("place_id", (area_id));
 					if (type.equals("room"))
@@ -357,6 +361,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			list_type_choice.show();
 			AlertDialog alert_list_feature = list_feature_choice.create();
 			alert_list_feature.show();
+		}else if (tag.equals("add_widget_root")) {
+			alert_Feature.show();
+			v.setTag("add_widget");
 		}else if (tag.equals("add_widget_area")) {
 			alert_Feature.show();
 			AlertDialog alert_list_area = list_area_choice.create();

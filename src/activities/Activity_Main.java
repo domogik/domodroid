@@ -843,11 +843,18 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					VG_parent.addView(LL_house_map);	// House & map
 					LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
 					VG_parent.addView(LL_area);	//and areas
+					LL_activ.removeAllViews();
+					LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ,SP_params, mytype);
+					VG_parent.addView(LL_activ);
 				} else {
 					// by_usage
 					VG_parent.addView(LL_house_map);	// With only map
+					//TODO #2021 change 1 in loadRoomWidgets by the right value.
 					LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);	//List of known usages 'as rooms'
 					VG_parent.addView(LL_room);
+					LL_activ.removeAllViews();
+					LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ,SP_params, mytype);
+					VG_parent.addView(LL_activ);
 				}
 				
 			} else if(type.equals("house")) {

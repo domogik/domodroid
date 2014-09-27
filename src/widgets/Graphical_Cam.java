@@ -34,6 +34,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -213,6 +214,14 @@ public class Graphical_Cam extends FrameLayout implements OnClickListener, OnLon
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+
+					SharedPreferences params=context.getSharedPreferences("PREFS",context.MODE_PRIVATE);
+					String url=params.getString("UPDATE_URL",null);
+					url=url.replace(dev_id+"//", "");
+					SharedPreferences.Editor prefEditor=params.edit();
+					prefEditor.putString("UPDATE_URL",url);
+					prefEditor.commit();
+					
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);

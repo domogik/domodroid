@@ -252,7 +252,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	                if(json_FeatureList != null)
 	                	list_size = json_FeatureList.getJSONArray("feature").length();
 	                Tracer.d(mytag,"Features list size = "+list_size);
-					//TODO correct a bug #2020 if device is empty.
+					//correct a bug #2020 if device is empty.
 					for(int i = 0; i < list_size; i++) {
 						try {
 						
@@ -331,6 +331,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				//Tracer.v(mytag, "FeatureList = <"+json_FeatureList+">");
 				//Tracer.v(mytag, "FeatureAssociationList = <"+json_FeatureAssociationList+">");
 				
+				//TODO change UrlAccess to make cache more light.
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				Tracer.v(mytag,"prepare UPDATE_URL items="+listFeature.length);

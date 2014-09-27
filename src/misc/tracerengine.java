@@ -222,7 +222,7 @@ public class tracerengine {
 			try {
 				String line = typeC+" | "+dateS+" | "+tids+" | "+tagS+" | "+msg;
 				//String line = typeC+" | "+dateS+" | "+tagS+" | "+msg;
-				//Log.w("Tracerengine",line);
+				//Log.w(tag,line);
 				txtFile.write(line+"\n");
 				//txtFile.flush(); 	//To improve performances, don't flush on each write
 			} catch (IOException i) {

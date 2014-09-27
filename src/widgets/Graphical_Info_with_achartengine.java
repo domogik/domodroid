@@ -633,7 +633,7 @@ public class Graphical_Info_with_achartengine extends FrameLayout implements OnL
 			mChart.addPanListener(
 				new PanListener() {
 					public void panApplied() {
-						Tracer.i("Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
+						Tracer.i(mytag+"Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
 						+ "]");
 						//TO move the graph to left or right
 						if (multiRenderer.getXAxisMin()<-2){

@@ -927,7 +927,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	public void onPanelClosed(Sliding_Drawer panel) {
-		Tracer.w("Activity_Main","onPanelClosed");
+		Tracer.w(mytag,"onPanelClosed");
 		TV_menu_green.startAnimation(A_animation2);
 		TV_menu_green.setVisibility(View.GONE);
 		SaveSelections(false);		// To force a sync operation, if something has been modified...

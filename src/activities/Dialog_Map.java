@@ -26,7 +26,7 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 	private TextView mProgressText3;
 	private SeekBar mSeekBar3;
 	private int sizeOffset = 300;
-	
+	private String mytag="Dialog_Map";
 	private SharedPreferences.Editor prefEditor;
 	private SharedPreferences params;
 	private Activity context;
@@ -108,7 +108,7 @@ public class Dialog_Map extends Dialog implements OnClickListener,OnSeekBarChang
 				value = sizeOffset;
 				seekBar.setProgress(value);
 			}
-			//Tracer.e("Dialog_Map", "Updating size : "+value+" "+context.getString(R.string.pixels));
+			Tracer.e(mytag, "Updating size : "+value+" "+context.getString(R.string.pixels));
 			mProgressText3.setText((value)+" "+context.getString(R.string.pixels));
 		}
 	}

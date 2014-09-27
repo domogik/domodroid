@@ -436,7 +436,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				if(SP_params.getBoolean("SYNC", false)==true){
-					loadWigets(0, "house");
+					loadWigets(0, "root");
 					historyPosition++;
 					history.add(historyPosition,new String [] {"0","house"});
 				}else{
@@ -856,8 +856,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ,SP_params, mytype);
 					VG_parent.addView(LL_activ);
 				}
-				
-			} else if(type.equals("house")) {
+			/*Should never arrive in this type.	
+			}else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
@@ -866,7 +866,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
-				
+			*/	
 			}else if(type.equals("statistics")) {
 				//Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
 				LL_area.removeAllViews();

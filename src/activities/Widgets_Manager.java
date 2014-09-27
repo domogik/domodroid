@@ -90,6 +90,7 @@ public class Widgets_Manager {
 		int counter=0;
 
 		//check option and adapt columns in function
+		columns=false;
 		colonnes(context, ll, mainPan, leftPan, rightPan, params);
 		
 		if(id == -1) {
@@ -287,6 +288,7 @@ public class Widgets_Manager {
 		int counter=0;
 		
 		//check option and adapt columns in function
+		columns=false;
 		colonnes(context, ll, mainPan, leftPan, rightPan, params);
 		
 		for (Entity_Area area : listArea) {
@@ -339,6 +341,7 @@ public class Widgets_Manager {
 		int counter=0;
 
 		//check option and adapt columns in function
+		columns=false;
 		colonnes(context, ll, mainPan, leftPan, rightPan, params);
 		
 		for (Entity_Room room : listRoom) {
@@ -392,22 +395,24 @@ public class Widgets_Manager {
 			landscape=false;
 		}
 		
-		if(width>maxSize && landscape && params.getBoolean("twocol_lanscape",false)==false){
-		Tracer.i(mytag, "params.getBoolean twocol_lanscape "+params.getBoolean("twocol_lanscape",false));
-		
-			columns=true;
-			mainPan.addView(leftPan);
-			mainPan.addView(rightPan);
-			ll.addView(mainPan);
-		}
-		if(width>maxSize && !landscape && params.getBoolean("twocol_portrait",false)==false){
-		Tracer.i(mytag, "params.getBoolean twocol_portrait "+params.getBoolean("twocol_portrait",false));
+		if(width>maxSize){
+			if(landscape && params.getBoolean("twocol_lanscape",false)==false){
+				Tracer.i(mytag, "params.getBoolean twocol_lanscape "+params.getBoolean("twocol_lanscape",false));
+				
+					columns=true;
+					mainPan.addView(leftPan);
+					mainPan.addView(rightPan);
+					ll.addView(mainPan);
+			}else if(!landscape && params.getBoolean("twocol_portrait",false)==false){
+				Tracer.i(mytag, "params.getBoolean twocol_portrait "+params.getBoolean("twocol_portrait",false));
 
-			columns=true;
-			mainPan.addView(leftPan);
-			mainPan.addView(rightPan);
-			ll.addView(mainPan);
+					columns=true;
+					mainPan.addView(leftPan);
+					mainPan.addView(rightPan);
+					ll.addView(mainPan);
+			}
 		}
+		
 	}
 }
 

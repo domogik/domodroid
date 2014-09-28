@@ -277,8 +277,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					lastid = domodb.requestidlastFeature_association();
 					ContentValues values = new ContentValues();
-					//roomid must come from the selected in list
-					//TODO add a way to add a widget in place 1 named root
 					if (type.equals("root"))
 						values.put("place_id", ("1"));
 					if (type.equals("area"))
@@ -390,9 +388,10 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			list_type_choice.show();
 			AlertDialog alert_list_icon = list_icon_choice.create();
 			alert_list_icon.show();
-			//TODO Ask user what icon i want to modify area, room, widget
+			//Ask user what icon i want to modify area, room, widget
 			//in function display 
 			//display list of all icons
+			//and change the tag for onclic() method
 		}else if (tag.equals("add_icon_area")){
 			alert_Icon.show();
 			AlertDialog alert_list_area = list_area_choice.create();

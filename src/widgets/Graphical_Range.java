@@ -442,6 +442,7 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						String result= input.getText().toString(); 
 						Tracer.get_engine().descUpdate(id,result,"feature");
+						nameDevices.setText(result);
 					}
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -457,14 +458,6 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-
-					SharedPreferences params=context.getSharedPreferences("PREFS",context.MODE_PRIVATE);
-					String url=params.getString("UPDATE_URL",null);
-					url=url.replace(dev_id+"/"+state_key+"/", "");
-					SharedPreferences.Editor prefEditor=params.edit();
-					prefEditor.putString("UPDATE_URL",url);
-					prefEditor.commit();
-					
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
@@ -505,6 +498,8 @@ public class Graphical_Range extends FrameLayout implements SeekBar.OnSeekBarCha
 						reference=id;
 						values.put("reference", reference);
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						//TODO need to select good icon in function of his state
+						img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 						dialog.cancel();
 					}
 				}

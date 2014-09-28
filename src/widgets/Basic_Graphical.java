@@ -34,6 +34,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.FeatureInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
@@ -47,16 +48,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Basic_widgets extends FrameLayout implements OnLongClickListener{
+public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 
 	private FrameLayout FL_imgPan;
 	private LinearLayout LL_background;
-	private LinearLayout LL_infoPan;
-	private LinearLayout LL_featurePan;
-	private ImageView IV_img;
-	protected ImageView IV_view_type;
+	protected LinearLayout LL_infoPan;
+	protected LinearLayout LL_featurePan;
+	protected ImageView IV_img;
 	private TextView TV_name;
-	//private TextView TV_description;
 	public FrameLayout myself = null;
 	private int id;
 	private int session_type;
@@ -66,9 +65,11 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 	private String icon;
 	private String place_type;
 	private int place_id;
+	private String mytag;
 	
-	public Basic_widgets(Activity context,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,LinearLayout LL_featurePan) {
+	public Basic_Graphical(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag) {
 		super(context);
+		this.Tracer=Trac;
 		this.context = context;
 		this.icon=icon;
 		this.id = id;
@@ -77,7 +78,7 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 		this.myself=this;
 		this.place_id= place_id;
 		this.place_type= place_type;
-		this.LL_featurePan=LL_featurePan;
+		this.mytag=mytag;
 		setOnLongClickListener(this);
 
 		//panel with border	
@@ -88,11 +89,12 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 			LL_background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",LL_background.getHeight()));
 		
-		//panel to set img with padding left
+		//panel to set icon with padding left
 		FL_imgPan = new FrameLayout(context);
 		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		FL_imgPan.setPadding(5, 8, 10, 10);
-		//img
+		
+		//icon
 		IV_img = new ImageView(context);
 		IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
 		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
@@ -100,10 +102,15 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 		//info panel
 		LL_infoPan=new LinearLayout(context);
 		LL_infoPan.setOrientation(LinearLayout.VERTICAL);
-		LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		LL_infoPan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+		LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
+		LL_infoPan.setGravity(Gravity.CENTER_VERTICAL);
 		LL_infoPan.setPadding(0, 0, 10, 0);
 
+		//feature panel
+		LL_featurePan=new LinearLayout(context);
+		LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
+		LL_featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+		LL_featurePan.setPadding(0, 0, 20, 0);
 
 		//name of room
 		TV_name=new TextView(context);
@@ -112,21 +119,7 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 		TV_name.setTextColor(Color.BLACK);
 		TV_name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 		
-		//feature panel
-		//LL_featurePan=new LinearLayout(context);
-		//LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
-		//LL_featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		//LL_featurePan.setPadding(0, 0, 20, 0);
-		
-		IV_view_type = new ImageView(context);
-		/*//description
-		TV_description=new TextView(context);
-		TV_description.setText(description);
-		TV_name.setTextSize(17);
-		TV_description.setGravity(Gravity.RIGHT);
-		 */
 		LL_infoPan.addView(TV_name);
-		//LL_infoPan.addView(TV_description);
 		FL_imgPan.addView(IV_img);
 		
 		LL_background.addView(FL_imgPan);
@@ -175,7 +168,7 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						//Tracer.e(mytag, "Customname Canceled.");
+						Tracer.e(mytag, "Customname Canceled.");
 					}
 				});
 				alert.show();
@@ -194,7 +187,7 @@ public class Basic_widgets extends FrameLayout implements OnLongClickListener{
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					//Tracer.e(mytag, "delete Canceled.");
+					Tracer.e(mytag, "delete Canceled.");
 				}
 			});
 			alert.show();

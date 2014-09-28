@@ -57,28 +57,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
-public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeListener, OnLongClickListener{
+public class Graphical_Binary extends Basic_Graphical implements OnSeekBarChangeListener{
 
-
-	private FrameLayout imgPan;
-	private LinearLayout background;
-	private LinearLayout featurePan;
-	private LinearLayout infoPan;
-	private ImageView img;
-	private TextView nameDevices;
 	private TextView state;
 	private SeekBar seekBarOnOff;
 	private String address;
 	private String state_progress;
 	private String url;
 	private String usage;
-	private int dev_id;
-	private int id;
 	private Handler handler;
 	private String state_key;
 	private String value0;
@@ -90,11 +82,9 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	private boolean touching;
 	private int updating=0;
 	private Message msg;
-	private String name;
-	private String wname;
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
-	private String mytag = "";
+	private static String mytag = "";
 	private tracerengine Tracer = null;
 	private Activity context = null;
 	private String stateS = "";
@@ -112,28 +102,23 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	
 	
 	public Graphical_Binary(tracerengine Trac, 
-			Activity context, String address, String name, int id,int dev_id,String state_key, String url, String usage, 
+			Activity context, String address, final String name, int id,int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag);
 		this.Tracer = Trac;
 		this.context = context;
 		this.address = address;
 		this.url = url;
 		this.state_key = state_key;
-		this.dev_id = dev_id;
-		this.id = id;
 		this.usage = usage;
 		this.update = update;
-		this.name = name;
 		this.setPadding(5, 5, 5, 5);
-		this.wname = name;
 		this.myself = this;
 		this.session_type = session_type;
 		this.stateS = getResources().getText(R.string.State).toString();
 		this.place_id= place_id;
 		this.place_type= place_type;
 		this.params = params;
-		setOnLongClickListener(this);
 		
 		mytag = "Graphical_Binary("+dev_id+")";
 		//get parameters		
@@ -162,48 +147,13 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
 		
-		//panel with border
-		background = new LinearLayout(context);
-		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
-
-
-		//panel to set img with padding left
-		imgPan = new FrameLayout(context);
-		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding(5, 10, 5, 10);
-		
-		//img
-		img = new ImageView(context);
-		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-		
-		// info panel
-		infoPan = new LinearLayout(context);
-		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
-		infoPan.setOrientation(LinearLayout.VERTICAL);
-		infoPan.setGravity(Gravity.CENTER_VERTICAL);
-		
-		//name of devices
-		nameDevices=new TextView(context);
-		nameDevices.setText(name);
-		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		nameDevices.setTextColor(Color.BLACK);
-		nameDevices.setTextSize(14);
-		
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 
-		//feature panel
-		featurePan=new LinearLayout(context);
-		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
-		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		featurePan.setPadding(10, 0, 10, 0);
-
+		
 		//first seekbar on/off
 		seekBarOnOff=new SeekBar(context);
 		seekBarOnOff.setProgress(0);
@@ -216,15 +166,9 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 		seekBarOnOff.setOnSeekBarChangeListener(this);
 		seekBarOnOff.setTag("0");
 
-		featurePan.addView(seekBarOnOff);
-		infoPan.addView(nameDevices);
-		infoPan.addView(state);
-		imgPan.addView(img);
-		background.addView(imgPan);
-		background.addView(infoPan);
-		background.addView(featurePan);
-
-		this.addView(background);
+		super.LL_infoPan.addView(state);
+		super.LL_featurePan.addView(seekBarOnOff);
+		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	
@@ -239,7 +183,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						realtime = false;
 					}
 					//That seems to be a zombie
-					removeView(background);
+					//removeView(background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
@@ -284,7 +228,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 								Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
 								session = null;
 								realtime = false;
-								removeView(background);
+								//removeView(background);
 								myself.setVisibility(GONE);
 								if(container != null) {
 									container.removeView(myself);
@@ -297,7 +241,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 						}
 						
 					} catch (Exception e) {
-						Tracer.e(mytag, "Handler error for device "+wname);
+						Tracer.e(mytag, "Handler error for device "+name);
 						e.printStackTrace();
 					}
 				}
@@ -327,12 +271,12 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 	public void onProgressChanged(SeekBar seekBarOnOff,int progress,boolean fromTouch) {
 		switch(progress) {
 		case 0:
-			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 			//state.setText(stateS +value0);
 			state.setText(stateS+Value_0);
 			break;
 		case 40:
-			img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 			//state.setText(stateS + value1);
 			state.setText(stateS+Value_1);
 			break;
@@ -420,108 +364,7 @@ public class Graphical_Binary extends FrameLayout implements OnSeekBarChangeList
 			//activate=true;
 		}
 	}
-	public boolean onLongClick(View v) {
-		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-		List<String> list_choice = new ArrayList<String>();
-			list_choice.add("Rename");
-			list_choice.add("Change_icon");
-			list_choice.add("Delete");
-		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
-		//list_type_choice.setTitle(R.string.What_to_do_message);
-		list_type_choice.setSingleChoiceItems(char_list, -1,
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					ListView lw = ((AlertDialog)dialog).getListView();
-					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-					do_action(checkedItem.toString());
-					dialog.cancel();
-				}
-			}
-		);
-	
-		list_type_choice.show();
-		return false;
-	}
 
-	private void do_action(String action) {
-		if(action.equals("Rename")) {
-			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Rename_title);
-			alert.setMessage(R.string.Rename_message);
-			// Set an EditText view to get user input 
-			final EditText input = new EditText(getContext());
-				alert.setView(input);
-				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						String result= input.getText().toString(); 
-						Tracer.get_engine().descUpdate(id,result,"feature");
-						nameDevices.setText(result);
-					}
-				});
-				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e(mytag, "Customname Canceled.");
-					}
-				});
-				alert.show();
-		}else if (action.equals("Delete")){
-			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Delete_feature_title);
-			alert.setMessage(R.string.Delete_feature_message);
-			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-				}
-			});
-			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e(mytag, "delete Canceled.");
-				}
-			});
-			alert.show();
-		}else if (action.equals("Change_icon")){
-			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-			List<String> list_icon = new ArrayList<String>();
-			String[] fiilliste;
-			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
-			for (int i=0; i < fiilliste.length ; i++){
-				list_icon.add(fiilliste[i].toString());
-			}
-			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
-			list_icon_choice.setTitle(R.string.Wich_ICON_message);
-			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
-			list_icon_choice.setAdapter(adapter,null );
-			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						ListView lw = ((AlertDialog)dialog).getListView();
-						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-						usage = checkedItem.toString();
-						ContentValues values = new ContentValues();
-						//type = area, room, feature
-						values.put("name", "feature");
-						//icon is the name of the icon wich will be select 
-						values.put("value", usage);
-						//reference is the id of the area, room, or feature
-						int reference = 0;
-						reference=id;
-						values.put("reference", reference);
-						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-						//TODO need to select good icon in function of his state
-						img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-						dialog.cancel();
-					}
-				}
-			);	
-			AlertDialog alert_list_icon = list_icon_choice.create();
-			alert_list_icon.show();
-			
-		}		
-	}
 }
 
 

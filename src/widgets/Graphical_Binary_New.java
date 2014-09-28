@@ -90,8 +90,8 @@ public class Graphical_Binary_New extends Basic_Graphical implements OnClickList
 	private Message msg;
 	private String name;
 	private String wname;
-	public FrameLayout container = null;
-	public FrameLayout myself = null;
+	public static FrameLayout container = null;
+	private static FrameLayout myself = null;
 	private static String mytag = "";
 	private tracerengine Tracer = null;
 	private Activity context = null;
@@ -112,7 +112,7 @@ public class Graphical_Binary_New extends Basic_Graphical implements OnClickList
 	public Graphical_Binary_New(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, final String usage, 
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
 		this.Tracer = Trac;
 		this.context = context;
 		this.address = address;

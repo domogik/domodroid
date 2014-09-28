@@ -50,16 +50,10 @@ import android.widget.TextView;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnClickListener;
 
-public class Graphical_Room extends FrameLayout implements OnClickListener, OnLongClickListener{
+public class Graphical_Room extends Graphical_Feature implements OnClickListener, OnLongClickListener{
 
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
-	private FrameLayout imgPan;
-	private LinearLayout background;
-	private LinearLayout infoPan;
-	private ImageView img;
-	private TextView name;
-	private TextView description;
 	private Context context;
 	private String name_room;
 	private int id_room;
@@ -69,7 +63,8 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 	private String icon;
 	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
-		super(context);
+		super(context, id, name_room, description_room, icon, widgetSize);
+		
 		this.myself = this;
 		this.Tracer = Trac;
 		this.id_room = id;
@@ -82,58 +77,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 		setOnLongClickListener(this);
 		mytag="Graphical_Room("+id_room+")";
 		
-		//panel with border
-		background = new LinearLayout(context);
-		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("ltblack",background.getHeight()));
-
-		//panel to set img with padding left
-		imgPan = new FrameLayout(context);
-		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding(20, 8, 20, 10);
-		
-		//img
-		img = new ImageView(context);
-		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
-		
-		//info panel
-		infoPan=new LinearLayout(context);
-		infoPan.setOrientation(LinearLayout.VERTICAL);
-		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		infoPan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		infoPan.setPadding(0, 0, 10, 0);
-
-
-		//name of room
-		name=new TextView(context);
-		name.setText(name_room);
-		name.setTextSize(18);
-		name.setTextColor(Color.WHITE);
-		name.setGravity(Gravity.RIGHT);
-				
-		//description
-		description=new TextView(context);
-		description.setText(description_room);
-		name.setTextSize(17);
-		description.setGravity(Gravity.RIGHT);
-
-		infoPan.addView(name);
-		infoPan.addView(description);
-		imgPan.addView(img);
-
-		background.addView(imgPan);
-		background.addView(infoPan);
-		//Tracer.d(mytag+"("+id+")","creating view for "+name_room+" "+description_room);
-		
-		this.addView(background);
 	}
-
-	public int getId() {
-		return id_room;
-	}
-	
 	
 	public void onClick(View v) {
 			Bundle b = new Bundle();
@@ -179,7 +123,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 					Tracer.get_engine().remove_one_things(id_room,"room");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room,"room");
 					Tracer.get_engine().remove_one_icon(id_room,"room");
-					removeView(background);
+					removeView(LL_background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
@@ -204,7 +148,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						String result= input.getText().toString(); 
 						Tracer.get_engine().descUpdate(id_room,result,"room");
-						name.setText(result);
+						TV_name.setText(result);
 					}
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -241,7 +185,7 @@ public class Graphical_Room extends FrameLayout implements OnClickListener, OnLo
 						reference=id_room;
 						values.put("reference", reference);
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-						img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+						IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
 						dialog.cancel();
 					}
 				}

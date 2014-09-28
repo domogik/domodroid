@@ -40,6 +40,7 @@ import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -51,15 +52,16 @@ import android.widget.FrameLayout.LayoutParams;
 public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 
 	private FrameLayout FL_imgPan;
-	private LinearLayout LL_background;
+	protected LinearLayout LL_background;
 	protected LinearLayout LL_infoPan;
 	protected LinearLayout LL_featurePan;
+	protected LinearLayout LL_topPan;
 	protected ImageView IV_img;
 	private TextView TV_name;
-	public FrameLayout myself = null;
 	private int id;
 	private int session_type;
-	public FrameLayout container = null;
+	protected static FrameLayout container;
+	protected static FrameLayout myself;
 	private tracerengine Tracer = null;
 	private Activity context;
 	private String icon;
@@ -67,7 +69,7 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 	private int place_id;
 	private String mytag;
 	
-	public Basic_Graphical(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag) {
+	public Basic_Graphical(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container, FrameLayout myself) {
 		super(context);
 		this.Tracer=Trac;
 		this.context = context;
@@ -75,10 +77,11 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 		this.id = id;
 		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
-		this.myself=this;
 		this.place_id= place_id;
 		this.place_type= place_type;
 		this.mytag=mytag;
+		this.container=container;
+		this.myself=myself;
 		setOnLongClickListener(this);
 
 		//panel with border	
@@ -89,6 +92,11 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 			LL_background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",LL_background.getHeight()));
 		
+		//panel with border
+		LL_topPan = new LinearLayout(context);
+		LL_topPan.setOrientation(LinearLayout.HORIZONTAL);
+		LL_topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+
 		//panel to set icon with padding left
 		FL_imgPan = new FrameLayout(context);
 		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
@@ -122,12 +130,14 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 		LL_infoPan.addView(TV_name);
 		FL_imgPan.addView(IV_img);
 		
-		LL_background.addView(FL_imgPan);
-		LL_background.addView(LL_infoPan);
-		LL_background.addView(LL_featurePan);
+		LL_topPan.addView(FL_imgPan);
+		LL_topPan.addView(LL_infoPan);
+		LL_topPan.addView(LL_featurePan);
 		
+		LL_background.addView(LL_topPan);
 		this.addView(LL_background);
 	}
+	
 	public boolean onLongClick(View v) {
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();
@@ -179,9 +189,11 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//TODO refresh the view
 					if(container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
+						Tracer.d(mytag, "removing a view");
 					}
 				}
 			});

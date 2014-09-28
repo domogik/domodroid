@@ -72,8 +72,8 @@ public class Graphical_Boolean extends Basic_Graphical{
 	private Message msg;
 	private String stateS = "";
 	
-	public FrameLayout container = null;
-	public FrameLayout myself = null;
+	public static FrameLayout container = null;
+	private static FrameLayout myself = null;
 	private tracerengine Tracer = null;
 	
 	private Entity_client session = null; 
@@ -93,13 +93,13 @@ public class Graphical_Boolean extends Basic_Graphical{
 			String model_id, int update, 
 			int widgetSize,
 			int session_type,int place_id,String place_type) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
+		this.myself=this;
 		this.context = context;
 		this.Tracer = Trac;
 		this.state_key = state_key;
 		this.usage=usage;
 		this.update = update;
-		this.myself=this;
 		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
@@ -174,7 +174,7 @@ public class Graphical_Boolean extends Basic_Graphical{
 					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
 					session = null;
 					realtime = false;
-					//removeView(background);
+					removeView(LL_background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);

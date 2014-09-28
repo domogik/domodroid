@@ -54,15 +54,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickListener, OnLongClickListener {
+public class Graphical_Trigger extends Basic_Graphical implements Runnable, OnClickListener {
 
 
-	private FrameLayout imgPan;
-	private LinearLayout background;
-	private LinearLayout featurePan;
-	private LinearLayout infoPan;
-	private ImageView img;
-	private TextView nameDevices;
+	//private FrameLayout imgPan;
+	//private LinearLayout background;
+	//private LinearLayout featurePan;
+	//private LinearLayout infoPan;
+	//private ImageView img;
+	//private TextView nameDevices;
 	private TextView unusable;
 	private Graphical_Trigger_Button trigger;
 	private String address;
@@ -71,8 +71,8 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private Thread threadCommande;
 	private String type; 
 	private String command; 
-	public FrameLayout container = null;
-	public FrameLayout myself = null;
+	public static FrameLayout container = null;
+	public static FrameLayout myself = null;
 	private int dev_id;
 	private int id;
 	private String place_type;
@@ -80,7 +80,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 	private tracerengine Tracer = null;
 	private int session_type;
 	private boolean usable=false;
-	private String mytag;
+	private static String mytag;
 	private Message msg;
 	private SharedPreferences params;
 	private String login;
@@ -92,8 +92,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 			String address, String name, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
 			String model_id, int widgetSize,int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		
-		super(context);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
 		this.address = address;
 		this.Tracer = Trac;
 		this.url = url;
@@ -129,44 +128,6 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 
 		this.setPadding(5, 5, 5, 5);
         
-		//panel with border
-		background = new LinearLayout(context);
-		if(widgetSize==0)
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else 
-			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
-
-
-		//panel to set img with padding left
-		imgPan = new FrameLayout(context);
-		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding(5, 10, 10, 10);
-		//img
-		img = new ImageView(context);
-		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-		
-		// info panel
-		infoPan = new LinearLayout(context);
-		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		infoPan.setOrientation(LinearLayout.VERTICAL);
-		infoPan.setGravity(Gravity.CENTER_VERTICAL);
-
-		//name of devices
-		nameDevices=new TextView(context);
-		nameDevices.setText(name);
-		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		nameDevices.setTextColor(Color.BLACK);
-		nameDevices.setTextSize(14);
-		
-		//feature panel
-		featurePan=new LinearLayout(context);
-		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		featurePan.setPadding(0, 0, 15, 0);
-
 		//first seekbar on/off
 		trigger = new Graphical_Trigger_Button(context);
 		trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
@@ -181,17 +142,11 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		unusable.setPadding(0, 0, 15, 0);
 
 		if (usable==true){
-			featurePan.addView(trigger);
+			LL_featurePan.addView(trigger);
 		}else{
-			featurePan.addView(unusable);
+			LL_featurePan.addView(unusable);
 		}
-		infoPan.addView(nameDevices);
-		imgPan.addView(img);
-		background.addView(imgPan);
-		background.addView(infoPan);
-		background.addView(featurePan);
-
-		this.addView(background);
+		
 		
 	}
 
@@ -219,109 +174,7 @@ public class Graphical_Trigger extends FrameLayout implements Runnable, OnClickL
 		threadCommande = new Thread(this);
 		threadCommande.start();	
 	}
-	
-	public boolean onLongClick(View v) {
-		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-		List<String> list_choice = new ArrayList<String>();
-			list_choice.add("Rename");
-			list_choice.add("Change_icon");
-			list_choice.add("Delete");
-		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
-		//list_type_choice.setTitle(R.string.What_to_do_message);
-		list_type_choice.setSingleChoiceItems(char_list, -1,
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					ListView lw = ((AlertDialog)dialog).getListView();
-					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-					do_action(checkedItem.toString());
-					dialog.cancel();
-				}
-			}
-		);
-	
-		list_type_choice.show();
-		return false;
-	}
 
-	private void do_action(String action) {
-		if(action.equals("Rename")) {
-			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Rename_title);
-			alert.setMessage(R.string.Rename_message);
-			// Set an EditText view to get user input 
-			final EditText input = new EditText(getContext());
-				alert.setView(input);
-				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						String result= input.getText().toString(); 
-						Tracer.get_engine().descUpdate(id,result,"feature");
-						nameDevices.setText(result);
-					}
-				});
-				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e(mytag, "Customname Canceled.");
-					}
-				});
-				alert.show();
-		}else if (action.equals("Delete")){
-			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Delete_feature_title);
-			alert.setMessage(R.string.Delete_feature_message);
-			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-				}
-			});
-			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e(mytag, "delete Canceled.");
-				}
-			});
-			alert.show();
-		}else if (action.equals("Change_icon")){
-			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-			List<String> list_icon = new ArrayList<String>();
-			String[] fiilliste;
-			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
-			for (int i=0; i < fiilliste.length ; i++){
-				list_icon.add(fiilliste[i].toString());
-			}
-			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
-			list_icon_choice.setTitle(R.string.Wich_ICON_message);
-			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
-			list_icon_choice.setAdapter(adapter,null );
-			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						ListView lw = ((AlertDialog)dialog).getListView();
-						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-						usage = checkedItem.toString();
-						ContentValues values = new ContentValues();
-						//type = area, room, feature
-						values.put("name", "feature");
-						//icon is the name of the icon wich will be select 
-						values.put("value", usage);
-						//reference is the id of the area, room, or feature
-						int reference = 0;
-						reference=id;
-						values.put("reference", reference);
-						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-						//TODO need to select good icon in function of his state
-						img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-						dialog.cancel();
-					}
-				}
-			);	
-			AlertDialog alert_list_icon = list_icon_choice.create();
-			alert_list_icon.show();
-			
-		}
-	}
 }
 
 

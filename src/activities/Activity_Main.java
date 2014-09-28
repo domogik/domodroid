@@ -417,18 +417,18 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				Graphics_Manager.Names_Agent(this, "House"),
 				"",
 				"house",
-				0, mytype);
+				0);
 		house.setPadding(0, 0, 5, 0);
 		map = new Graphical_Feature(getApplicationContext(),0,
 				Graphics_Manager.Names_Agent(this, "Map"),
 				"",
 				"map",
-				0, mytype);
+				0);
 		map.setPadding(5, 0, 0, 0);
 		stats = new Graphical_Feature(getApplicationContext(),0,
 				Graphics_Manager.Names_Agent(this, "statistics"),
 				"",
-				"statistics",0, mytype);
+				"statistics",0);
 		stats.setPadding(0, 0, 5, 0);
 		
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);

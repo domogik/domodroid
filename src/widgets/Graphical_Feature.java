@@ -31,18 +31,19 @@ import android.widget.TextView;
 public class Graphical_Feature extends FrameLayout{
 
 	private FrameLayout FL_imgPan;
-	private LinearLayout LL_background;
+	protected LinearLayout LL_background;
 	private LinearLayout LL_infoPan;
-	private ImageView IV_img;
-	private TextView TV_name;
+	protected ImageView IV_img;
+	protected TextView TV_name;
 	private TextView TV_description;
 	private int id;
-	private int session_type;
+	//private int session_type;
 
-	public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
+	//public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
+	public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize) {
 		super(context);
 		this.id = id;
-		this.session_type = session_type;
+		//this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 
 		//panel with border	

@@ -67,17 +67,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Graphical_History extends FrameLayout implements OnLongClickListener, OnClickListener{
+public class Graphical_History extends Basic_Graphical implements OnClickListener{
 
 
-	private FrameLayout imgPan;
-	private LinearLayout background;
-	private LinearLayout featurePan;
-	private LinearLayout topPan;
-	private LinearLayout infoPan;
+	//private FrameLayout imgPan;
+	//private LinearLayout background;
+	//private LinearLayout featurePan;
+	//private LinearLayout topPan;
+	//private LinearLayout infoPan;
 	private ListView listeChoices;
-	private ImageView img;
-	private TextView nameDevices;
+	//private ImageView img;
+	//private TextView nameDevices;
 	private TextView value;
 	private TextView state;
 	private TextView state_key_view;
@@ -86,7 +86,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	private Handler handler;
 	private String state_key;
 	private int update;
-	private String mytag;
+	private static String mytag;
 	private Message msg;
 	private String wname;
 	private String stateS = "";
@@ -94,8 +94,8 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	private String login;
 	private String password;
 	
-	public FrameLayout container = null;
-	public FrameLayout myself = null;
+	public static FrameLayout container = null;
+	public static FrameLayout myself = null;
 	private tracerengine Tracer = null;
 	
 	private Entity_client session = null; 
@@ -111,7 +111,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
-		super(context);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
 		this.context = context;
 		this.Tracer = Trac;
 		this.state_key = state_key;
@@ -128,56 +128,16 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		this.place_id= place_id;
 		this.place_type= place_type;
 		setOnClickListener(this);
-		setOnLongClickListener(this);
+		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	
 		mytag="Graphical_History("+dev_id+")";
-		//panel with border
-		background = new LinearLayout(context);
-		if(widgetSize==0)background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		else background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
-
-		//panel with border
-		topPan = new LinearLayout(context);
-		topPan.setOrientation(LinearLayout.HORIZONTAL);
-		topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-
-		//panel to set img with padding left
-		imgPan = new FrameLayout(context);
-		imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		imgPan.setPadding(5, 10, 5, 10);
-		
-		//img
-		img = new ImageView(context);
-		img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
-		//set default color to (usage,0) off.png
-		img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-		
-		// info panel
-		infoPan = new LinearLayout(context);
-		infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
-		infoPan.setOrientation(LinearLayout.VERTICAL);
-		infoPan.setGravity(Gravity.CENTER_VERTICAL);
-
-		//name of devices
-		nameDevices=new TextView(context);
-		nameDevices.setText(name);
-		nameDevices.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		nameDevices.setTextColor(Color.BLACK);
-		nameDevices.setTextSize(14);
 		
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
-
-		//feature panel
-		featurePan=new LinearLayout(context);
-		featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1));
-		featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
-		featurePan.setPadding(0, 0, 20, 0);
 
 		//value
 		value = new TextView(context);
@@ -185,17 +145,9 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		value.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
-		featurePan.addView(value);
 		
-		infoPan.addView(nameDevices);
-		infoPan.addView(state_key_view);
-		imgPan.addView(img);
-
-		topPan.addView(imgPan);
-		topPan.addView(infoPan);
-		topPan.addView(featurePan);
-		background.addView(topPan);
-		this.addView(background);
+		super.LL_featurePan.addView(value);
+		super.LL_infoPan.addView(state_key_view);
 		
 		handler = new Handler() {
 			@Override
@@ -214,7 +166,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
 					session = null;
 					realtime = false;
-					removeView(background);
+					removeView(LL_background);
 					myself.setVisibility(GONE);
 					if(container != null) {
 						container.removeView(myself);
@@ -268,7 +220,7 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 		}
 		listeChoices = new ListView(context);
 		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
-		for (int i =0; i < itemArray.length(); i++){
+		for (int i =itemArray.length(); i >= 0; i--){
 			try {
 				HashMap<String,String> map=new HashMap<String,String>();
 				map.put("value",itemArray.getJSONObject(i).getString("value"));
@@ -280,135 +232,35 @@ public class Graphical_History extends FrameLayout implements OnLongClickListene
 			}
 		}
 		SimpleAdapter adapter_feature=new SimpleAdapter(this.context,listItem,
-				R.layout.item_feature,new String[] {"value","date","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
+				R.layout.item_phone,new String[] {"value","date"},new int[] {R.id.phone_value,R.id.phone_date});
 		listeChoices.setAdapter(adapter_feature);
+		listeChoices.setScrollingCacheEnabled(false);
 		}
 	
 	public void onClick(View arg0) {
 	//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
 	float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
 	int sizeint=(int)size;
-		if(background.getHeight() != sizeint){
+		if(LL_background.getHeight() != sizeint){
 			Tracer.d(mytag,"on click");
 			try {
-				background.removeView(listeChoices);
+				LL_topPan.removeView(listeChoices);
 				Tracer.d(mytag,"removeView(listeChoices)");
 				
 			} catch (Exception e) {}
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
+			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 			getlastvalue();
 			Tracer.d(mytag,"addView(listeChoices)");
-			background.addView(listeChoices);
+			LL_topPan.addView(listeChoices);
 		}else{
-			background.removeView(listeChoices);
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+			LL_topPan.removeView(listeChoices);
+			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
 		return ;
 		
 	}
 	
-	public boolean onLongClick(View v) {
-		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-		List<String> list_choice = new ArrayList<String>();
-			list_choice.add("Rename");
-			list_choice.add("Change_icon");
-			list_choice.add("Delete");
-		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
-		//list_type_choice.setTitle(R.string.What_to_do_message);
-		list_type_choice.setSingleChoiceItems(char_list, -1,
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					ListView lw = ((AlertDialog)dialog).getListView();
-					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-					do_action(checkedItem.toString());
-					dialog.cancel();
-				}
-			}
-		);
 	
-		list_type_choice.show();
-		return false;
-	}
-
-	private void do_action(String action) {
-		if(action.equals("Rename")) {
-			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Rename_title);
-			alert.setMessage(R.string.Rename_message);
-			// Set an EditText view to get user input 
-			final EditText input = new EditText(getContext());
-				alert.setView(input);
-				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						String result= input.getText().toString(); 
-						Tracer.get_engine().descUpdate(id,result,"feature");
-						nameDevices.setText(result);
-					}
-				});
-				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e(mytag, "Customname Canceled.");
-					}
-				});
-				alert.show();
-		}else if (action.equals("Delete")){
-			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Delete_feature_title);
-			alert.setMessage(R.string.Delete_feature_message);
-			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
-					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-				}
-			});
-			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog_customname, int whichButton) {
-					Tracer.e(mytag, "delete Canceled.");
-				}
-			});
-			alert.show();
-		}else if (action.equals("Change_icon")){
-			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-			List<String> list_icon = new ArrayList<String>();
-			String[] fiilliste;
-			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
-			for (int i=0; i < fiilliste.length ; i++){
-				list_icon.add(fiilliste[i].toString());
-			}
-			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
-			list_icon_choice.setTitle(R.string.Wich_ICON_message);
-			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
-			list_icon_choice.setAdapter(adapter,null );
-			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						ListView lw = ((AlertDialog)dialog).getListView();
-						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-						usage = checkedItem.toString();
-						ContentValues values = new ContentValues();
-						//type = area, room, feature
-						values.put("name", "feature");
-						//icon is the name of the icon wich will be select 
-						values.put("value", usage);
-						//reference is the id of the area, room, or feature
-						int reference = 0;
-						reference=id;
-						values.put("reference", reference);
-						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-						//TODO need to select good icon in function of his state
-						img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-						dialog.cancel();
-					}
-				}
-			);	
-			AlertDialog alert_list_icon = list_icon_choice.create();
-			alert_list_icon.show();
-			
-		}		
-	}
 }
 
 

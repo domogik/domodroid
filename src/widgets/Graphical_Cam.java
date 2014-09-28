@@ -59,12 +59,12 @@ public class Graphical_Cam extends Basic_Graphical implements OnClickListener{
 	private Context context;
 	private static String mytag;
 	private tracerengine Tracer = null;
-	public FrameLayout container = null;
-	public FrameLayout myself = null;
+	public static FrameLayout container = null;
+	private static FrameLayout myself = null;
 	private String name_cam;
 	
 	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
 		this.context = context;
 		this.Tracer = Trac;
 		this.dev_id = dev_id;

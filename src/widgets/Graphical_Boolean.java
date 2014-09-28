@@ -302,6 +302,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						String result= input.getText().toString(); 
 						Tracer.get_engine().descUpdate(id,result,"feature");
+						nameDevices.setText(result);
 					}
 				});
 				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -357,6 +358,7 @@ public class Graphical_Boolean extends FrameLayout implements OnLongClickListene
 						reference=id;
 						values.put("reference", reference);
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+						img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 						dialog.cancel();
 					}
 				}

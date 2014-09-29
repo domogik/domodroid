@@ -64,7 +64,7 @@ public class Graphical_Cam extends Basic_Graphical implements OnClickListener{
 	private String name_cam;
 	
 	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context = context;
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
@@ -73,14 +73,11 @@ public class Graphical_Cam extends Basic_Graphical implements OnClickListener{
 		this.myself = this;
 		setOnClickListener(this);
 		mytag="Graphical_Cam("+dev_id+")";
-		
-		//panel with border
-		
-		
-	}
 
-	public int getId() {
-		return dev_id;
+		//To have the icon colored as it has no state
+		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+		
+		
 	}
 
 	public void onClick(View v) {

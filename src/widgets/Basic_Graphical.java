@@ -60,8 +60,8 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 	private TextView TV_name;
 	private int id;
 	private int session_type;
-	protected static FrameLayout container;
-	protected static FrameLayout myself;
+	protected FrameLayout container;
+	protected FrameLayout myself;
 	private tracerengine Tracer = null;
 	private Activity context;
 	private String icon;
@@ -69,7 +69,7 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 	private int place_id;
 	private String mytag;
 	
-	public Basic_Graphical(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container, FrameLayout myself) {
+	public Basic_Graphical(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container) {
 		super(context);
 		this.Tracer=Trac;
 		this.context = context;
@@ -81,7 +81,7 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 		this.place_type= place_type;
 		this.mytag=mytag;
 		this.container=container;
-		this.myself=myself;
+		this.myself=this;
 		setOnLongClickListener(this);
 
 		//panel with border	
@@ -192,9 +192,11 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
 					//TODO refresh the view
 					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
+						removeView(myself);
+						removeAllViews();
+						recomputeViewAttributes(myself);
 						Tracer.d(mytag, "removing a view");
+						
 					}
 				}
 			});

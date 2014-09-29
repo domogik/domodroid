@@ -121,9 +121,9 @@ public class Graphical_List extends Basic_Graphical implements OnClickListener {
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			String type, String address,
-			final String state_key, String url,String usage, int period, int update, 
+			final String state_key, String url,final String usage, int period, int update, 
 			int widgetSize, int session_type, final String parameters,String model_id,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
 		this.context = context;
 		this.dev_id = dev_id;
@@ -141,7 +141,7 @@ public class Graphical_List extends Basic_Graphical implements OnClickListener {
 		this.place_type= place_type;
 		this.params=params;
 		packageName = context.getPackageName();
-		Graphical_List.myself = this;
+		this.myself = this;
 		this.session_type = session_type;
 		this.parameters = parameters;
 		setOnLongClickListener(this);
@@ -255,7 +255,9 @@ public class Graphical_List extends Basic_Graphical implements OnClickListener {
 					String loc_Value = session.getValue();
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
 					value.setText(getStringResourceByName(loc_Value));
-					
+					//To have the icon colored as it has no state
+			    	IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+			    	
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
 					Tracer.d(mytag,"cache engine disappeared ===> Harakiri !" );

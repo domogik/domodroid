@@ -86,7 +86,7 @@ public class Graphical_Trigger extends Basic_Graphical implements Runnable, OnCl
 			String address, String name, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
 			String model_id, int widgetSize,int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.address = address;
 		this.Tracer = Trac;
 		this.url = url;

@@ -102,9 +102,9 @@ public class Graphical_History extends Basic_Graphical implements OnClickListene
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name, 
-			final String state_key, String url,String usage, int update, 
+			final String state_key, String url,final String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context = context;
 		this.Tracer = Trac;
 		this.state_key = state_key;
@@ -123,7 +123,7 @@ public class Graphical_History extends Basic_Graphical implements OnClickListene
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    			
 		mytag="Graphical_History("+dev_id+")";
 		
 		//state key
@@ -153,6 +153,9 @@ public class Graphical_History extends Basic_Graphical implements OnClickListene
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
 						value.setAnimation(animation);
 						value.setText(loc_Value);
+						//To have the icon colored as it has no state
+				    	IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+				    	
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
 					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );

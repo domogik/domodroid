@@ -93,7 +93,7 @@ public class Graphical_Boolean extends Basic_Graphical{
 			String model_id, int update, 
 			int widgetSize,
 			int session_type,int place_id,String place_type) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container,myself);
+		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.myself=this;
 		this.context = context;
 		this.Tracer = Trac;

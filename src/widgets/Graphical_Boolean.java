@@ -101,7 +101,6 @@ public class Graphical_Boolean extends Basic_Graphical{
 		this.usage=usage;
 		this.update = update;
 		this.session_type = session_type;
-		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
 		this.place_id= place_id;
 		this.place_type= place_type;

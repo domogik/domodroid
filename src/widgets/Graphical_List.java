@@ -80,22 +80,13 @@ import android.widget.FrameLayout.LayoutParams;
 public class Graphical_List extends Basic_Graphical implements OnClickListener {
 
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
-	//private LinearLayout featurePan;
 	private LinearLayout featurePan2;
-	//private View		  featurePan2_buttons;
-	//private LinearLayout infoPan;
-	//private LinearLayout topPan;
-	//private ImageView img;
-	//private TextView nameDevices;
 	private TextView value;
 	private int dev_id;
 	private int id;
 	private Handler handler;
 	private String state_key;
 	private TextView state_key_view;
-	//private Graphical_Info_View canvas;
 	private int update;
 	private Animation animation;
 	private final Context context;
@@ -157,7 +148,6 @@ public class Graphical_List extends Basic_Graphical implements OnClickListener {
 		setOnClickListener(this);
 		
 		mytag="Graphical_List ("+dev_id+")";
-		this.setPadding(5, 5, 5, 5);
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	
@@ -371,16 +361,16 @@ public class Graphical_List extends Basic_Graphical implements OnClickListener {
 				if(LL_background.getHeight() != sizeint){
 					Tracer.d(mytag,"on click");
 					try {
-						LL_topPan.removeView(featurePan2);
+						LL_background.removeView(featurePan2);
 						Tracer.d(mytag,"removeView(featurePan2)");
 						
 					} catch (Exception e) {}
 					LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 					Tracer.d(mytag,"addView(featurePan2)");
-					LL_topPan.addView(featurePan2);
+					LL_background.addView(featurePan2);
 				}
 				else{
-					LL_topPan.removeView(featurePan2);
+					LL_background.removeView(featurePan2);
 					LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 				}
 		}

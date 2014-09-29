@@ -75,7 +75,6 @@ public class Graphical_Area extends Graphical_Feature implements OnClickListener
 		this.context = context;
 		this.Activity = (android.app.Activity) context;
 		this.widgetHandler=handler;
-		this.setPadding(5, 5, 5, 5);
 		setOnClickListener(this);
 		setOnLongClickListener(this);
 		

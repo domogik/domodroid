@@ -112,7 +112,6 @@ public class Graphical_Binary extends Basic_Graphical implements OnSeekBarChange
 		this.state_key = state_key;
 		this.usage = usage;
 		this.update = update;
-		this.setPadding(5, 5, 5, 5);
 		this.myself = this;
 		this.session_type = session_type;
 		this.stateS = getResources().getText(R.string.State).toString();

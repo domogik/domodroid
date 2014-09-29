@@ -72,19 +72,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Info extends Basic_Graphical implements OnClickListener {
 
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
-	//private LinearLayout featurePan;
-	private LinearLayout featurePan2;
+	LinearLayout featurePan2;
 	private View		  featurePan2_buttons;
-	//private LinearLayout infoPan;
-	//private LinearLayout topPan;
-	//private ImageView img;
-	//private TextView nameDevices;
 	private TextView value;
 	private int dev_id;
 	private int id;
@@ -139,15 +133,13 @@ public class Graphical_Info extends Basic_Graphical implements OnClickListener {
 		this.place_type= place_type;
 		this.params=params;
 		setOnClickListener(this);
-		setOnLongClickListener(this);
-		
+				
 		mytag="Graphical_Info ("+dev_id+")";
 		metrics = getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
-		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
-		size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
+		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
+		size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, metrics);
 
-		this.setPadding((int)size5, (int)size5, (int)size5, (int)size5);
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
@@ -165,9 +157,10 @@ public class Graphical_Info extends Basic_Graphical implements OnClickListener {
 		animation.setDuration(1000);
 
 		if(with_graph) {
+			
 			//feature panel 2 which will contain graphic
 			featurePan2=new LinearLayout(context);
-			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
 			featurePan2.setPadding(5, 10, 5, 10);
 			//canvas
@@ -215,7 +208,7 @@ public class Graphical_Info extends Basic_Graphical implements OnClickListener {
 		
 		LL_featurePan.addView(value);
 		LL_infoPan.addView(state_key_view);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -314,20 +307,20 @@ public class Graphical_Info extends Basic_Graphical implements OnClickListener {
 			int sizeint=(int)size;
 			if(LL_background.getHeight() != sizeint){
 				try {
-					LL_topPan.removeView(featurePan2_buttons);
-					LL_topPan.removeView(featurePan2);
+					LL_background.removeView(featurePan2_buttons);
+					LL_background.removeView(featurePan2);
 					
 				} catch (Exception e) {}
 				
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-				LL_topPan.addView(featurePan2_buttons);
-				LL_topPan.addView(featurePan2);
+				LL_background.addView(featurePan2_buttons);
+				LL_background.addView(featurePan2);
 				canvas.activate = true;
 				canvas.updateTimer();
 			}
 			else{
-				LL_topPan.removeView(featurePan2_buttons);
-				LL_topPan.removeView(featurePan2);
+				LL_background.removeView(featurePan2_buttons);
+				LL_background.removeView(featurePan2);
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 				canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer
 			}

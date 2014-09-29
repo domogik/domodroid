@@ -102,14 +102,7 @@ import android.widget.FrameLayout.LayoutParams;
 public class Graphical_Info_with_achartengine extends Basic_Graphical implements OnClickListener {
 
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
-	//private LinearLayout featurePan;
 	private LinearLayout chartContainer;
-	//private LinearLayout infoPan;
-	//private LinearLayout topPan;
-	//private ImageView img;
-	//private TextView nameDevices;
 	private TextView value;
 	private int dev_id;
 	private int id;
@@ -192,7 +185,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical implements
 		this.place_id= place_id;
 		this.place_type= place_type;
 		this.params=params;
-		setOnLongClickListener(this);
 		setOnClickListener(this);
 		
 		metrics = getResources().getDisplayMetrics();
@@ -269,7 +261,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical implements
     	password = params.getString("http_auth_password",null);
     	
 		mytag="Graphical_Info_with_achartengine ("+dev_id+")";
-		this.setPadding((int)size2, (int)size2, (int)size2, (int)size2);
 		Tracer.e(mytag,"New instance for name = "+name+" state_key = "+state_key);
 		
 		//state key
@@ -632,7 +623,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical implements
 			int sizeint=(int)size;
 			if(LL_background.getHeight() != sizeint){
 				try {
-					LL_topPan.removeView(chartContainer);
+					LL_background.removeView(chartContainer);
 					
 				} catch (Exception e) {}
 				try {
@@ -654,11 +645,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical implements
 					Tracer.d(mytag, "Acharengine failed"+ e.toString());
 				}
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-				LL_topPan.addView(chartContainer);
+				LL_background.addView(chartContainer);
 				
 			}
 			else{
-				LL_topPan.removeView(chartContainer);
+				LL_background.removeView(chartContainer);
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			}
 		}

@@ -71,7 +71,6 @@ public class Graphical_Room extends Graphical_Feature implements OnClickListener
 		this.name_room = name_room;
 		this.context = context;
 		this.widgetHandler=handler;
-		this.setPadding(5, 5, 5, 5);
 		this.icon=icon;
 		setOnClickListener(this);
 		setOnLongClickListener(this);

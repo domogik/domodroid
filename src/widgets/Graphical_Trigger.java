@@ -57,12 +57,6 @@ import android.widget.Toast;
 public class Graphical_Trigger extends Basic_Graphical implements Runnable, OnClickListener {
 
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
-	//private LinearLayout featurePan;
-	//private LinearLayout infoPan;
-	//private ImageView img;
-	//private TextView nameDevices;
 	private TextView unusable;
 	private Graphical_Trigger_Button trigger;
 	private String address;
@@ -104,7 +98,6 @@ public class Graphical_Trigger extends Basic_Graphical implements Runnable, OnCl
 		this.dev_id = dev_id;
 		this.place_id= place_id;
 		this.place_type= place_type;
-		setOnLongClickListener(this);
 		mytag="Graphical_Trigger("+dev_id+")";
 		this.params=params;
 		login = params.getString("http_auth_username",null);
@@ -125,9 +118,7 @@ public class Graphical_Trigger extends Basic_Graphical implements Runnable, OnCl
 
         String[] model = model_id.split("\\.");
         type = model[0];
-
-		this.setPadding(5, 5, 5, 5);
-        
+ 
 		//first seekbar on/off
 		trigger = new Graphical_Trigger_Button(context);
 		trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));

@@ -70,14 +70,7 @@ import android.widget.FrameLayout.LayoutParams;
 public class Graphical_History extends Basic_Graphical implements OnClickListener{
 
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
-	//private LinearLayout featurePan;
-	//private LinearLayout topPan;
-	//private LinearLayout infoPan;
 	private ListView listeChoices;
-	//private ImageView img;
-	//private TextView nameDevices;
 	private TextView value;
 	private TextView state;
 	private TextView state_key_view;
@@ -123,7 +116,6 @@ public class Graphical_History extends Basic_Graphical implements OnClickListene
 		this.wname = name;
 		this.myself=this;
 		this.session_type = session_type;
-		this.setPadding(5, 5, 5, 5);
 		this.stateS = getResources().getText(R.string.State).toString();
 		this.place_id= place_id;
 		this.place_type= place_type;
@@ -244,16 +236,16 @@ public class Graphical_History extends Basic_Graphical implements OnClickListene
 		if(LL_background.getHeight() != sizeint){
 			Tracer.d(mytag,"on click");
 			try {
-				LL_topPan.removeView(listeChoices);
+				LL_background.removeView(listeChoices);
 				Tracer.d(mytag,"removeView(listeChoices)");
 				
 			} catch (Exception e) {}
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 			getlastvalue();
 			Tracer.d(mytag,"addView(listeChoices)");
-			LL_topPan.addView(listeChoices);
+			LL_background.addView(listeChoices);
 		}else{
-			LL_topPan.removeView(listeChoices);
+			LL_background.removeView(listeChoices);
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
 		return ;

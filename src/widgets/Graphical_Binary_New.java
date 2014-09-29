@@ -123,7 +123,6 @@ public class Graphical_Binary_New extends Basic_Graphical implements OnClickList
 		this.usage = usage;
 		this.update = update;
 		this.name = name;
-		this.setPadding(5, 5, 5, 5);
 		this.wname = name;
 		this.myself = this;
 		this.session_type = session_type;

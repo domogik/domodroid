@@ -61,14 +61,9 @@ import android.widget.Toast;
 
 public class Graphical_Range extends Basic_Graphical implements SeekBar.OnSeekBarChangeListener {
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
 	private FrameLayout rightPan;
 	private LinearLayout bodyPanHorizontal;
-	//private LinearLayout infoPan;
 	private LinearLayout leftPan;
-	//private ImageView img;
-	//private TextView nameDevices;
 	private TextView state;
 	private SeekBar seekBarVaria;
 	private String address;
@@ -132,7 +127,6 @@ public class Graphical_Range extends Basic_Graphical implements SeekBar.OnSeekBa
 		this.context=context;
 		stateThread = 1;
 		this.stateS = getResources().getText(R.string.State).toString();
-		setOnLongClickListener(this);
 		mytag="Graphical_Range("+dev_id+")";
 		this.params=params;
 		login = params.getString("http_auth_username",null);
@@ -155,8 +149,6 @@ public class Graphical_Range extends Basic_Graphical implements SeekBar.OnSeekBa
 		}
 		String[] model = model_id.split("\\.");
 		type = model[0];
-
-		this.setPadding(5, 5, 5, 5);
 
 		//linearlayout horizontal body		
 		bodyPanHorizontal=new LinearLayout(context);

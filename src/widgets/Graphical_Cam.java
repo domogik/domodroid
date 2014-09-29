@@ -71,7 +71,6 @@ public class Graphical_Cam extends Basic_Graphical implements OnClickListener{
 		this.name_cam=name;
 		this.url = url;
 		this.myself = this;
-		this.setPadding(5, 5, 5, 5);
 		setOnClickListener(this);
 		mytag="Graphical_Cam("+dev_id+")";
 		

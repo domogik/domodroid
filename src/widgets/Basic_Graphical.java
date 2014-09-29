@@ -86,6 +86,7 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 
 		//panel with border	
 		LL_background = new LinearLayout(context);
+		LL_background.setOrientation(LinearLayout.VERTICAL);
 		if(widgetSize==0)
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		else 

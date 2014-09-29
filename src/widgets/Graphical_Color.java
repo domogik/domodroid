@@ -60,17 +60,9 @@ public class Graphical_Color extends Basic_Graphical implements OnSeekBarChangeL
 	private int mInitialColor, mDefaultColor;
 	private String mKey;
 
-	//private FrameLayout imgPan;
-	//private LinearLayout background;
 	private LinearLayout color_LeftPan;
 	private LinearLayout color_RightPan;
-	//private LinearLayout featurePan;
 	private LinearLayout featurePan2;
-	//private LinearLayout infoPan;
-	//private LinearLayout topPan;
-	//private ImageView img;
-	//private TextView nameDevices;
-	private TextView value;
 	private int dev_id;
 	private int id;
 	private Handler handler;
@@ -155,7 +147,6 @@ public class Graphical_Color extends Basic_Graphical implements OnSeekBarChangeL
 		this.url = url;
 		this.update=update;
 		this.widgetSize=widgetSize;
-		this.setPadding(5, 5, 5, 5);
 		this.params = params;
 		this.myself = this;
 		this.session_type = session_type;

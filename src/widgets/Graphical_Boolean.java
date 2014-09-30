@@ -57,7 +57,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Graphical_Boolean extends Basic_Graphical{
+public class Graphical_Boolean extends Basic_Graphical_widget{
 	
 	private TextView state;
 	private String value0;

@@ -99,7 +99,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Graphical_Info_with_achartengine extends Basic_Graphical implements OnClickListener {
+public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
 
 	private LinearLayout chartContainer;

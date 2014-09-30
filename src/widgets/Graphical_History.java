@@ -67,7 +67,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Graphical_History extends Basic_Graphical implements OnClickListener{
+public class Graphical_History extends Basic_Graphical_widget implements OnClickListener{
 
 
 	private ListView listeChoices;

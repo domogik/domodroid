@@ -49,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
+public class Basic_Graphical_widget extends FrameLayout implements OnLongClickListener{
 
 	private FrameLayout FL_imgPan;
 	protected LinearLayout LL_background;
@@ -69,7 +69,7 @@ public class Basic_Graphical extends FrameLayout implements OnLongClickListener{
 	private int place_id;
 	private String mytag;
 	
-	public Basic_Graphical(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container) {
+	public Basic_Graphical_widget(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container) {
 		super(context);
 		this.Tracer=Trac;
 		this.context = context;

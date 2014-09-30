@@ -32,7 +32,7 @@ import java.util.Vector;
 import org.json.JSONException;
 
 import widgets.Com_Stats;
-import widgets.Graphical_Feature;
+import widgets.Basic_Graphical_zone;
 import misc.tracerengine;
 import database.WidgetUpdate;
 
@@ -113,9 +113,9 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Vector<String[]> history;
 	private int historyPosition;
 	private LinearLayout LL_house_map;
-	private Graphical_Feature house;
-	private Graphical_Feature map;
-	private Graphical_Feature stats;
+	private Basic_Graphical_zone house;
+	private Basic_Graphical_zone map;
+	private Basic_Graphical_zone stats;
 	
 	private String tempUrl;
 	private Boolean reload = false;
@@ -413,22 +413,23 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
 		LL_house_map.setPadding(5, 5, 5, 5);
 		
-		house = new Graphical_Feature(getApplicationContext(),0,
+		house = new Basic_Graphical_zone(getApplicationContext(),0,
 				Graphics_Manager.Names_Agent(this, "House"),
 				"",
 				"house",
-				0);
+				0,"",null);
 		house.setPadding(0, 0, 5, 0);
-		map = new Graphical_Feature(getApplicationContext(),0,
+		map = new Basic_Graphical_zone(getApplicationContext(),0,
 				Graphics_Manager.Names_Agent(this, "Map"),
 				"",
 				"map",
-				0);
+				0,"",null);
 		map.setPadding(5, 0, 0, 0);
-		stats = new Graphical_Feature(getApplicationContext(),0,
+		stats = new Basic_Graphical_zone(getApplicationContext(),0,
 				Graphics_Manager.Names_Agent(this, "statistics"),
 				"",
-				"statistics",0);
+				"statistics",
+				0,"",null);
 		stats.setPadding(0, 0, 5, 0);
 		
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);

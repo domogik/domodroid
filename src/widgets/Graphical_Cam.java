@@ -52,7 +52,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Cam extends Basic_Graphical implements OnClickListener{
+public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener{
 
 	private int dev_id;
 	private String url;

@@ -63,7 +63,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
-public class Graphical_Binary extends Basic_Graphical implements OnSeekBarChangeListener{
+public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBarChangeListener{
 
 	private TextView state;
 	private SeekBar seekBarOnOff;

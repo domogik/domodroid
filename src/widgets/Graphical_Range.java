@@ -59,7 +59,7 @@ import android.widget.Toast;
 
 
 
-public class Graphical_Range extends Basic_Graphical implements SeekBar.OnSeekBarChangeListener {
+public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.OnSeekBarChangeListener {
 
 	private FrameLayout rightPan;
 	private LinearLayout bodyPanHorizontal;

@@ -4,18 +4,13 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content" 
 	android:layout_gravity="center_vertical"
-	android:paddingLeft="10dp" 
-	android:layout_weight="1" 
-	android:paddingTop="4dip" 
-	android:paddingBottom="4dip">
+	>
 	<LinearLayout 
 	    android:orientation="horizontal" 
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center_vertical"
-		android:paddingLeft="10dp" 
-		android:paddingTop="4dip" 
-		android:paddingBottom="4dip"
+		android:paddingLeft="10dp"
 	    >
 	    
 		<TextView android:id="@+id/choice" 
@@ -33,7 +28,6 @@
 		    android:layout_height="match_parent"
 		    android:layout_weight="0.4"
 		    android:gravity="right"
-		    android:paddingRight="10dip"
 		    android:textColor="@android:color/black"
 		    android:textSize="12sp"
 		    android:visibility="invisible" />

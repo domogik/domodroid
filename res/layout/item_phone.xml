@@ -10,6 +10,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center_vertical"
+	    android:paddingLeft="10dp"
 	    >
 	    
     <TextView
@@ -18,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:textColor="@android:color/black"
-        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textSize="14sp"
     />
 	</LinearLayout>
 	<LinearLayout 
@@ -26,13 +28,14 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center_vertical"
+	    android:paddingLeft="5dp"
 	    >
     <TextView
         android:id="@+id/phone_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#0000F0"
-        android:textSize="14sp"
+        android:textSize="10sp"
      />
 
 	</LinearLayout>

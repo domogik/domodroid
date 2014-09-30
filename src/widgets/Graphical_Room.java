@@ -50,7 +50,7 @@ import android.widget.TextView;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnClickListener;
 
-public class Graphical_Room extends Graphical_Feature implements OnClickListener, OnLongClickListener{
+public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickListener{
 
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
@@ -63,7 +63,7 @@ public class Graphical_Room extends Graphical_Feature implements OnClickListener
 	private String icon;
 	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
-		super(context, id, name_room, description_room, icon, widgetSize);
+		super(context, id, name_room, description_room, icon, widgetSize, "room", handler);
 		
 		this.myself = this;
 		this.Tracer = Trac;
@@ -72,22 +72,11 @@ public class Graphical_Room extends Graphical_Feature implements OnClickListener
 		this.context = context;
 		this.widgetHandler=handler;
 		this.icon=icon;
-		setOnClickListener(this);
 		setOnLongClickListener(this);
 		mytag="Graphical_Room("+id_room+")";
 		
 	}
 	
-	public void onClick(View v) {
-			Bundle b = new Bundle();
-			b.putInt("id", id_room);
-			b.putString("name",name_room);
-			b.putString("type", "room");
-			Message msg = new Message();
-			msg.setData(b);
-			widgetHandler.sendMessage(msg);
-		return;
-	}
 	
 	public boolean onLongClick(View v) {
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());

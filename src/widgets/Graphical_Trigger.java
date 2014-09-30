@@ -54,7 +54,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Trigger extends Basic_Graphical implements Runnable, OnClickListener {
+public class Graphical_Trigger extends Basic_Graphical_widget implements Runnable, OnClickListener {
 
 
 	private TextView unusable;

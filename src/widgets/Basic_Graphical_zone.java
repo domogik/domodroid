@@ -22,13 +22,19 @@ import activities.Graphics_Manager;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.view.View.OnClickListener;
 
-public class Graphical_Feature extends FrameLayout{
+public class Basic_Graphical_zone extends FrameLayout implements OnClickListener{
 
 	private FrameLayout FL_imgPan;
 	protected LinearLayout LL_background;
@@ -36,16 +42,25 @@ public class Graphical_Feature extends FrameLayout{
 	protected ImageView IV_img;
 	protected TextView TV_name;
 	private TextView TV_description;
-	private int id;
+	protected int id;
 	//private int session_type;
+	protected String name;
+	protected String description;
+	protected Handler widgetHandler;
+	protected String type;
 
 	//public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
-	public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize) {
+	public Basic_Graphical_zone(Context context,int id,String name, String description, String icon, int widgetSize, String type, Handler handler) {
 		super(context);
 		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.type = type;
 		//this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
-
+		this.widgetHandler=handler;
+		setOnClickListener(this);
+		
 		//panel with border	
 		LL_background = new LinearLayout(context);
 		if(widgetSize==0)
@@ -74,14 +89,14 @@ public class Graphical_Feature extends FrameLayout{
 
 		//name of room
 		TV_name=new TextView(context);
-		TV_name.setText(name_room);
+		TV_name.setText(name);
 		TV_name.setTextSize(18);
 		TV_name.setTextColor(Color.WHITE);
 		TV_name.setGravity(Gravity.RIGHT);
 
 		//description
 		TV_description=new TextView(context);
-		TV_description.setText(description_room);
+		TV_description.setText(description);
 		TV_name.setTextSize(17);
 		TV_description.setGravity(Gravity.RIGHT);
 
@@ -95,8 +110,16 @@ public class Graphical_Feature extends FrameLayout{
 		this.addView(LL_background);
 	}
 
-	public int getId() {
-		return id;
+	public void onClick(View v) {
+		Bundle b = new Bundle();
+		b.putInt("id", id);
+		b.putString("name",name);
+		b.putString("type",type);
+		Message msg = new Message();
+		msg.setData(b);
+		widgetHandler.sendMessage(msg);
+	return;
+
 	}
 }
 

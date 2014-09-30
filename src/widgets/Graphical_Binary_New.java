@@ -66,7 +66,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
-public class Graphical_Binary_New extends Basic_Graphical implements OnClickListener{
+public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener{
 
 	private Button ON;
 	private Button OFF;

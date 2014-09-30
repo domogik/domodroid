@@ -74,7 +74,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Graphical_Info extends Basic_Graphical implements OnClickListener {
+public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
 
 	LinearLayout featurePan2;

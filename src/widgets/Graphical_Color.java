@@ -54,7 +54,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class Graphical_Color extends Basic_Graphical implements OnSeekBarChangeListener,  OnClickListener{
+public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBarChangeListener,  OnClickListener{
 
 
 	private int mInitialColor, mDefaultColor;

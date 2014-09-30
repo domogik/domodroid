@@ -25,8 +25,6 @@ import org.domogik.domodroid13.R;
 import database.DmdContentProvider;
 import database.DomodroidDB;
 
-import activities.Dialog_House;
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import android.app.Activity;
@@ -34,36 +32,25 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
-import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnClickListener;
 
 public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickListener{
 
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private Context context;
-	private String name_area;
 	private int id_area;
-	private Handler widgetHandler;
 	private tracerengine Tracer = null;
 	private String mytag="Graphical_Area";
 	private String icon;
 	private Activity Activity;
-	private Entity_Room[] listRoom;
 	
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context, id, name_area, description_area, icon, widgetSize, "area", handler);
@@ -71,10 +58,8 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 		this.Tracer = Trac;
 		this.icon = icon;
 		this.id_area = id;
-		this.name_area = name_area;
 		this.context = context;
 		this.Activity = (android.app.Activity) context;
-		this.widgetHandler=handler;
 		setOnLongClickListener(this);
 		
 		mytag="Graphical_Area("+id_area+")";

@@ -64,7 +64,8 @@ public class Activity_About extends Activity{
 			int vc = getVersionCode();
 			if(vc != -1)
 				vcs=Integer.toString(vc);
-			TV_versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
+			//TV_versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
+			TV_versionText.setText(pn+" "+vns+" "+getString(R.string.version)+"_"+vcs);
 		}
 		
 		//titlebar

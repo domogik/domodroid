@@ -15,10 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * This code to get version number and name is adapt from 
- * http://ballardhack.wordpress.com/2010/09/28/subversion-revision-in-android-app-version-with-eclipse/
- */
+
 package activities;
 
 
@@ -81,7 +78,9 @@ public class Preference extends PreferenceActivity implements
   private void updatePreferences(android.preference.Preference preference) {
     if (preference instanceof EditTextPreference) {
       EditTextPreference editTextPref = (EditTextPreference) preference;
-      preference.setSummary(editTextPref.getText());
+      //Add to avoid password in clear in this view
+      if (!preference.getKey().equals("http_auth_password"))
+    	  preference.setSummary(editTextPref.getText());
     }
   }
 } 

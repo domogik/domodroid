@@ -96,20 +96,7 @@
 					android:text="@string/Sync"
                 />
                </LinearLayout>
-             
-             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-				<Button
-				android:id="@+id/New_settings"
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="New_settings"
-                />
-               </LinearLayout>
+               
             <LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"

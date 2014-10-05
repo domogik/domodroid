@@ -20,11 +20,9 @@ android:title="Préférences">
      <EditTextPreference android:title="@string/server_http_password"
          android:dialogTitle="http_auth_password"
          android:key="http_auth_password"
-         android:inputType="textPassword"
-         android:password="true"
-         />
-     <Preference android:title="UPDATE_TIMER" android:key="UPDATE_TIMER" android:selectable="false" android:enabled="false" android:shouldDisableView="true"/>
-     <Preference android:key="UPDATE_URL" android:title="UPDATE_URL" android:shouldDisableView="true" android:enabled="false" android:selectable="false"/>
+         android:inputType="textPassword"/>
+     <Preference android:title="UPDATE_TIMER" android:key="UPDATE_TIMER"/>
+     <Preference android:key="UPDATE_URL" android:title="UPDATE_URL"/>
  </PreferenceCategory><PreferenceCategory android:title="@string/usage_settings" android:summary="@string/usage_explain"><CheckBoxPreference android:summaryOn="Alternative on/off" android:summaryOff="Normal on/off" android:key="WIDGET_CHOICE" android:title="@string/widget_choice" />
  <CheckBoxPreference android:summaryOn="AChartengine Graph" android:summaryOff="Normal Graph" android:key="Graph_CHOICE" android:title="@string/graph_choice"/>
  <CheckBoxPreference android:summaryOn="twocol_lanscape on" android:summaryOff="twocol_lanscape off" android:key="twocol_lanscape" android:title="@string/twocollandscapecheckbox"/>
@@ -32,7 +30,7 @@ android:title="Préférences">
  <CheckBoxPreference android:summaryOn="BY_USAGE on" android:summaryOff="BY_USAGE off" android:key="BY_USAGE" android:title="@string/usage_byusagecheckbox"/>
 </PreferenceCategory><PreferenceCategory android:title="@string/map_settings" android:summary="@string/map_explain">
     <CheckBoxPreference android:summaryOn="DRAG on" android:summaryOff="DRAG off" android:key="DRAG" android:title="@string/map_option_drag"/>
-    <CheckBoxPreference android:summaryOn="ZOOM on" android:summaryOff="ZOOM off" android:key="ZOOM" android:title="@string/map_option_zoom"/>
+    <CheckBoxPreference android:summaryOn="ZOOM of" android:summaryOff="ZOOM off" android:key="ZOOM" android:title="@string/map_option_zoom"/>
     <CheckBoxPreference android:summaryOn="HIDE on" android:summaryOff="HIDE off" android:key="HIDE" android:title="HIDE"/>
     <CheckBoxPreference android:summaryOn="map_menu_disable on" android:summaryOff="map_menu_disable off" android:key="map_menu_disable" android:title="@string/map_option_menu_disable"/>
     <CheckBoxPreference android:summaryOn="START_ON_MAP on" android:summaryOff="START_ON_MAP off" android:key="START_ON_MAP" android:title="@string/map_option_start"/>

@@ -25,6 +25,13 @@
 		android:layout_width="fill_parent" android:layout_height="0dip"
 		android:paddingLeft="5dp" android:layout_weight="1">
 
+		<ImageView
+        	android:id="@+id/icon"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:layout_marginTop="1dp"
+        	android:src="@drawable/ic_launcher"/>
+		
 		<TextView android:id="@+id/name" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="16sp"
 			android:textColor="#FFFFFF" android:paddingBottom="3dip" />

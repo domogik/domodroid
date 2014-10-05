@@ -254,6 +254,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					map.put("name",feature.getName());
 					map.put("type",feature.getValue_type());
 					map.put("state_key", feature.getState_key());
+					map.put("icon", Integer.toString(feature.getRessources()));
 					listItem1.add(map);
 				}
 			}
@@ -270,7 +271,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		}
 		if((listItem1 != null) && (listItem1.size() > 0) ) {
 			SimpleAdapter adapter_feature=new SimpleAdapter(getBaseContext(),listItem1,
-					R.layout.item_feature,new String[] {"name","type","state_key"},new int[] {R.id.name,R.id.description,R.id.state_key});
+					R.layout.item_feature,new String[] {"name","type","state_key","icon"},new int[] {R.id.name,R.id.description,R.id.state_key,R.id.icon});
 			listview_feature.setAdapter(adapter_feature);
 			listview_feature.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -266,6 +266,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				map.put("name",getText(R.string.go_to_Map).toString());
 				map.put("type", "");
 				map.put("state_key", list_usable_files.elementAt(i));
+				map.put("icon", Integer.toString(R.drawable.map_next));
 				listItem1.add(map);
 			}
 		}

@@ -249,12 +249,15 @@ public class Graphics_Manager {
 	}
 
 	public static String Names_Agent(Context context, String usage){
-			  int resId;
-			  String result = usage;
-		      String packageName = context.getPackageName();
-		      String search = usage;
-		      if(search.equals("air conditioning"))
-		    	  search = "conditioning";
+		//Use to translate value in current language
+		//For example if an a room is named kitchen,
+		//in French The text display will be cuisine
+			int resId;
+			String result = usage;
+		    String packageName = context.getPackageName();
+		    String search = usage;
+		    if(search.equals("air conditioning"))
+		    	search = "conditioning";
 		      
 		      resId = context.getResources().getIdentifier(search, "string", packageName);
 		      if(resId != 0) {
@@ -268,6 +271,7 @@ public class Graphics_Manager {
 	}
 	
 	public static int Names_conditioncodes(Context context,int code){
+		//used to get the translate text from yahoo weather infocode.
 		try{
 			return context.getResources().getIdentifier("info"+code, "string", context.getPackageName());
 		} catch (Exception e){
@@ -342,7 +346,7 @@ public class Graphics_Manager {
 		name=name.replace(" ", "_");
 		//To get a drawable R.Drawable
 		//context.getResources().getIdentifier(name, "drawable", context.getPackageName());
-		//To et a string from R.String
+		//To get a string from R.String
 		return context.getResources().getIdentifier(name, "string", context.getPackageName());
 	}
 

@@ -1062,6 +1062,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	{
 	    super.onConfigurationChanged(newConfig);
 	    //setContentView(R.layout.activity_home);
+	    refresh();
+	}
+	
+	public void refresh()
+	{
+	   //setContentView(R.layout.activity_home);
 	    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
 	}
 }

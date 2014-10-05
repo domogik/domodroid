@@ -120,6 +120,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				}
 			final CharSequence[] char_list_zone =list_area.toArray(new String[list_area.size()]);
 			list_area_choice.setTitle(R.string.Wich_AREA_message);
+			//TODO display icon in list
+			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), list_area);
+			list_area_choice.setAdapter(adapter,null );
 			list_area_choice.setSingleChoiceItems(char_list_zone, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -137,6 +140,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			}
 			final CharSequence[] char_list_room =list_room.toArray(new String[list_room.size()]);
 			list_room_choice.setTitle(R.string.Wich_ROOM_message);
+			//TODO display icon in list
+			List_Icon_Adapter adapter2=new List_Icon_Adapter(getContext(), list_room);
+			list_room_choice.setAdapter(adapter2,null );
 			list_room_choice.setSingleChoiceItems(char_list_room, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -154,6 +160,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				}
 			final CharSequence[] char_list_feature =list_feature.toArray(new String[list_feature.size()]);
 			list_feature_choice.setTitle(R.string.Wich_feature_message);
+			//TODO display icon in list
+			List_Icon_Adapter adapter1=new List_Icon_Adapter(getContext(), list_feature);
+			list_feature_choice.setAdapter(adapter1,null );
 			list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int item) {
@@ -172,8 +181,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 			list_icon_choice.setTitle(R.string.Wich_ICON_message);
-			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
-			list_icon_choice.setAdapter(adapter,null );
+			List_Icon_Adapter adapter11=new List_Icon_Adapter(getContext(), fiilliste);
+			list_icon_choice.setAdapter(adapter11,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
@@ -194,6 +203,9 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					list_type.add("feature");
 			final CharSequence[] char_list_type =list_type.toArray(new String[list_type.size()]);
 			list_type_choice.setTitle(R.string.Wich_TYPE_message);
+			//TODO display icon in list
+			List_Icon_Adapter adapter111=new List_Icon_Adapter(getContext(), list_type);
+			list_type_choice.setAdapter(adapter111,null );
 			list_type_choice.setSingleChoiceItems(char_list_type, -1,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {

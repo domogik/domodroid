@@ -66,7 +66,7 @@ public class Activity_About extends Activity{
 				vcs=Integer.toString(vc);
 			//TV_versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
 			
-			TV_versionText.setText(pn+" "+vns+" "+getString(R.string.version)+"_"+vcs);
+			TV_versionText.setText("Domodroid DEV version "+vns+" "+getString(R.string.version)+"_"+vcs);
 		}
 		
 		//titlebar

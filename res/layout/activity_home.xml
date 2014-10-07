@@ -68,22 +68,7 @@
             android:paddingRight="5dip"
             android:paddingTop="30dip" >
 
-             <LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="10dip" >
-                <!--  Add a button to allow server configuration -->
-            	<Button
-				    android:id="@+id/bt_server_settings"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/server_settings"
-	     		/>
-	    	</LinearLayout>
-	    	
-	    	<LinearLayout
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -111,50 +96,6 @@
                 />
                </LinearLayout>
             <LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="10dip" >
-                <!--  Add a button to allow normal usage configuration -->
-            	<Button
-				    android:id="@+id/bt_usage_settings"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/usage_settings"
-	     		/>
-	    	</LinearLayout>
-            <LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="10dip" >
-	            <!--  Add a button to allow map configuration -->
-            	<Button
-				    android:id="@+id/bt_map_settings"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/map_settings"
-	     		/>
-	    	</LinearLayout>
-	    	
-	    	<LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="10dip" >
-                <!--  Add a button to allow debug configuration -->
-            	<Button
-				    android:id="@+id/bt_debug_settings"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/debug_settings"
-	     		/>
-	    	</LinearLayout>
-			
-			<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"

@@ -93,16 +93,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Intent INTENT_map = null;
 	private Button BUTTON_sync;
 	private Button BUTTON_Exit;	//Added by Doume
-	private Button BUTTON_usage_settings;	//Added by Tikismoke
-	private Button BUTTON_server_settings;	//Added by Tikismoke
 	private Button BUTTON_New_settings;	//Added by Tikismoke
-	private Button BUTTON_map_settings;	//Added by Tikismoke
-	private Button BUTTON_debug_settings;	//Added by Doume
 	private Button BUTTON_house_settings;	//Added by Doume
-	private Dialog_Usage DIALOG_usage_set = null;
-	private Dialog_Server DIALOG_server_set = null;
-	private Dialog_Map DIALOG_map_set = null;
-	private Dialog_Debug DIALOG_debug_set = null;
 	private Dialog_House DIALOG_house_set = null;
 	private ImageView appname;
 	
@@ -202,62 +194,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		BUTTON_Exit=(Button)findViewById(R.id.Stop_all);
 		BUTTON_Exit.setOnClickListener(this);
 		BUTTON_Exit.setTag("Exit");
-		
-		BUTTON_usage_settings=(Button)findViewById(R.id.bt_usage_settings);
-		BUTTON_usage_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				//Disconnect all opened sessions....
-				Tracer.v(mytag+".onclick()","Call to usage settings screen");
-				if(DIALOG_usage_set != null)
-					DIALOG_usage_set.get_params();
-				else
-					DIALOG_usage_set = new Dialog_Usage(Tracer, SP_params, myself);
-				DIALOG_usage_set.show();
-				return;
-			}
-		});
-		
-		BUTTON_server_settings=(Button)findViewById(R.id.bt_server_settings);
-		BUTTON_server_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				//Disconnect all opened sessions....
-				Tracer.v(mytag+".onclick()","Call to server settings screen");
-				if(DIALOG_server_set != null)
-					DIALOG_server_set.get_params();
-				else
-					DIALOG_server_set = new Dialog_Server(Tracer, SP_params, myself);
-				DIALOG_server_set.show();
-				return;
-			}
-		});
-		
-		BUTTON_map_settings=(Button)findViewById(R.id.bt_map_settings);
-		BUTTON_map_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				//Disconnect all opened sessions....
-				Tracer.v(mytag+".onclick()","Call to Map settings screen");
-				if(DIALOG_map_set != null)
-					DIALOG_map_set.get_params();
-				else
-					DIALOG_map_set = new Dialog_Map(Tracer, SP_params, myself);
-				DIALOG_map_set.show();
-				return;
-			}
-		});
-		
-		BUTTON_debug_settings=(Button)findViewById(R.id.bt_debug_settings);
-		BUTTON_debug_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				//Disconnect all opened sessions....
-				Tracer.v(mytag+".onclick()","Call to Debug settings screen");
-				if(DIALOG_debug_set != null)
-					DIALOG_debug_set.get_params();
-				else
-					DIALOG_debug_set = new Dialog_Debug(Tracer, SP_params, myself);
-				DIALOG_debug_set.show();
-				return;
-			}
-		});
 		
 		BUTTON_house_settings=(Button)findViewById(R.id.bt_house_settings);
 		BUTTON_house_settings.setOnClickListener(new OnClickListener(){
@@ -549,7 +485,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					Tracer.v(mytag,"no settings backup found after fresh install...");
 					end_of_init_requested = true;
 					// open server config view
-					BUTTON_server_settings.performClick();
+					BUTTON_New_settings.performClick();
 				}
 			} else {
 				// It's not the 1st use after fresh install
@@ -761,7 +697,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				database.delete();
 			}
 			// open server config view
-			BUTTON_server_settings.performClick();
+			BUTTON_New_settings.performClick();
 		}
 
 		if(! init_done) {

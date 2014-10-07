@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Search / will display always -->
+    <item android:id="@+id/menu_exit"
+          android:icon="@drawable/icon_bookmark"
+          android:title="menu_exit"
+          />
+     
+    <!-- menu_house_config -->
+    <item android:id="@+id/menu_house_config"
+          android:icon="@drawable/icon_preferences"
+          android:title="menu_house_config"
+          />
+     
+    <!-- menu_preferences -->
+    <item android:id="@+id/menu_preferences"
+          android:icon="@drawable/icon_save"
+          android:title="menu_preferences"
+          />
+     
+    <!-- menu_sync -->
+    <item android:id="@+id/menu_sync"
+          android:icon="@drawable/icon_search"
+          android:title="menu_sync"
+          />
+
+</menu>

@@ -55,6 +55,9 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -69,19 +72,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 @SuppressWarnings({ "static-access" })
-public class Activity_Main extends Activity implements OnPanelListener,OnClickListener{
+public class Activity_Main extends Activity implements OnClickListener{
 
 	
 	@SuppressWarnings("unused")
 	private Sliding_Drawer SD_topPanel;
-	private Sliding_Drawer SD_panel;
 	protected PowerManager.WakeLock PM_WakeLock;
 	private SharedPreferences SP_params;
 	private SharedPreferences.Editor SP_prefEditor;
 	private Animation A_animation1;
 	private Animation A_animation2;
-	private TextView TV_menu_white;
-	private TextView TV_menu_green;
 	private TextView TV_menu_about;
 	private AlertDialog.Builder AD_notSyncAlert;
 	private Toast T_starting;
@@ -91,10 +91,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Handler sbanim;
 	private static Handler widgetHandler;
 	private Intent INTENT_map = null;
-	private Button BUTTON_sync;
-	private Button BUTTON_Exit;	//Added by Doume
-	private Button BUTTON_New_settings;	//Added by Tikismoke
-	private Button BUTTON_house_settings;	//Added by Doume
 	private Dialog_House DIALOG_house_set = null;
 	private ImageView appname;
 	
@@ -191,42 +187,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		//option
 		appname = (ImageView)findViewById(R.id.app_name);
 		
-		BUTTON_Exit=(Button)findViewById(R.id.Stop_all);
-		BUTTON_Exit.setOnClickListener(this);
-		BUTTON_Exit.setTag("Exit");
-		
-		BUTTON_house_settings=(Button)findViewById(R.id.bt_house_settings);
-		BUTTON_house_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				//Disconnect all opened sessions....
-				Tracer.v(mytag+".onclick()","Call to House settings screen");
-				DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
-				DIALOG_house_set.show();
-				return;
-			}
-		});
-		BUTTON_New_settings=(Button)findViewById(R.id.New_settings);
-		BUTTON_New_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				// click on 'sync' button into Sliding_Drawer View
-				SD_panel.setOpen(false, false);	// Hide the View
-				//TODO prepare a normal menu call. 
-				Intent helpI = new Intent(Activity_Main.this,Preference.class);
-				startActivity(helpI);
-			}
-			
-		});
-		
-		BUTTON_sync=(Button)findViewById(R.id.sync);
-		BUTTON_sync.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				// click on 'sync' button into Sliding_Drawer View
-				SD_panel.setOpen(false, false);	// Hide the View
-				run_sync_dialog();		// And run a resync with Rinor server
-			}
-			
-		});
-		
 		LoadSelections();
 		
 		// Prepare a listener to know when a sync dialog is closed...
@@ -317,26 +277,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
 		titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
 
-
 		//menu button
-		
-		TV_menu_green = (TextView) findViewById(R.id.menu_button2);
-		TV_menu_green.setVisibility(View.GONE);
-		
-		TV_menu_white = (TextView) findViewById(R.id.menu_button1);
-		TV_menu_white.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				// A clic on menu will activate/deactivate panel allowing settings configuration and giving
-				//  access to 'sync' button
-				if(!SD_panel.isOpen()){
-					SD_panel.setOpen(true, true);	//open with animation
-				}else{
-					SD_panel.setOpen(false, true);	//hide with animation
-				}
-			}
-		});
-		TV_menu_white.setVisibility(View.VISIBLE);
-		
 		TV_menu_about = (TextView) findViewById(R.id.About_button);
 		TV_menu_about.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -353,11 +294,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 
 		//Parent view
 		VG_parent = (ViewGroup) findViewById(R.id.home_container);
-		//sliding drawer
-		SD_topPanel = SD_panel = (Sliding_Drawer) findViewById(R.id.topPanel);
-		SD_panel.setOnPanelListener(this);
-		//panel.setPadding(0, 45, 0, 0);
-
 		
 		LL_house_map = new LinearLayout(this);
 		LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
@@ -404,10 +340,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		map.setLayoutParams(param);
 		map.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				if(SD_panel.isOpen()){
-					// Ignore map call if panel is opened, to avoid confusion between objects
-					return;
-				}
 				if(SP_params.getBoolean("SYNC", false)){
 					//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 					Tracer.w(mytag,"Before call to Map, Disconnect widgets from engine !");
@@ -485,7 +417,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					Tracer.v(mytag,"no settings backup found after fresh install...");
 					end_of_init_requested = true;
 					// open server config view
-					BUTTON_New_settings.performClick();
+					//TODO
+					//BUTTON_New_settings.performClick();
 				}
 			} else {
 				// It's not the 1st use after fresh install
@@ -536,7 +469,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	@Override
 	public void onPause(){
 		super.onPause();
-		SD_panel.setOpen(false, false);
 		Tracer.w(mytag+".onPause","Going to background !");
 		if(WU_widgetUpdate != null)  {
 			if(! Tracer.Map_as_main) {
@@ -687,7 +619,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			// If answer is 'yes', load preferences from backup
 			Tracer.e(mytag,"reload settings..");
 			loadSharedPreferencesFromFile(backupprefs);
-			SD_panel.setOpen(false, false);
 			run_sync_dialog();
 			
 		} else {
@@ -697,7 +628,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				database.delete();
 			}
 			// open server config view
-			BUTTON_New_settings.performClick();
+			//TODO
+			//BUTTON_New_settings.performClick();
 		}
 
 		if(! init_done) {
@@ -886,42 +818,11 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		DIALOG_dialog_sync.show();
 		DIALOG_dialog_sync.startSync();
 	}
-	
-	public void onPanelClosed(Sliding_Drawer panel) {
-		Tracer.w(mytag,"onPanelClosed");
-		TV_menu_green.startAnimation(A_animation2);
-		TV_menu_green.setVisibility(View.GONE);
-		SaveSelections(false);		// To force a sync operation, if something has been modified...
-		/*
-		if(widgetUpdate == null) {
-			startDBEngine();
-		}
-		*/
-	}
-	
-	public void onPanelOpened(Sliding_Drawer panel) {
-		Tracer.v(mytag,"onPanelOpened");
-		TV_menu_green.setVisibility(View.VISIBLE);
-		TV_menu_green.startAnimation(A_animation1);
-	}
 
 	public void onClick(View v) {
 		dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
 		//ALL other that are not explicitly used
-		if(v.getTag().equals("Exit")) {
-			//Disconnect all opened sessions....
-			Tracer.v(mytag+"Exit","Stopping WidgetUpdate thread !");
-			this.WM_Agent=null;
-			widgetHandler=null;
-			Tracer.set_engine(null);
-			if (!(WU_widgetUpdate == null)) {
-				WU_widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
-			}
-			dont_kill = false;		//To force OnDestroy() to also kill engines
-			//And stop main program
-			this.finish();
-			return;
-		} else if(v.getTag().equals("reload_cancel")) {
+		if(v.getTag().equals("reload_cancel")) {
 			Tracer.v(mytag,"Choosing no reload settings");
 			reload = false;
 			synchronized(waiting_thread){
@@ -968,8 +869,62 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    startActivity(intent);
 		return true;
 	}
-    
+	
 	@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+		 MenuInflater inflater = getMenuInflater();
+	        inflater.inflate(R.menu.activity_main, menu);
+	        return super.onCreateOptionsMenu(menu);
+    }
+	/**
+     * Event Handling for Individual menu item selected
+     * Identify single menu item by it's id
+     * */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        
+        switch (item.getItemId())
+        {
+        case R.id.menu_exit:
+        	//Disconnect all opened sessions....
+			Tracer.v(mytag+"Exit","Stopping WidgetUpdate thread !");
+			this.WM_Agent=null;
+			widgetHandler=null;
+			Tracer.set_engine(null);
+			if (!(WU_widgetUpdate == null)) {
+				WU_widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
+			}
+			dont_kill = false;		//To force OnDestroy() to also kill engines
+			//And stop main program
+			this.finish();
+			return true;
+
+        case R.id.menu_house_config:
+        	//Disconnect all opened sessions....
+			Tracer.v(mytag+".onclick()","Call to House settings screen");
+			DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
+			DIALOG_house_set.show();
+			return true;
+
+        case R.id.menu_preferences:
+        	// click on 'sync' button into Sliding_Drawer View
+			//TODO prepare a normal menu call. 
+			Intent helpI = new Intent(Activity_Main.this,Preference.class);
+			startActivity(helpI);
+			return true;
+
+        case R.id.menu_sync:
+        	// click on 'sync' button into Sliding_Drawer View
+			run_sync_dialog();		// And run a resync with Rinor server
+			return true;
+
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }  
+/*	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(keyCode==82 && !SD_panel.isOpen()){
 			SD_panel.setOpen(true, true);
@@ -984,7 +939,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
+*/
 	public class SBAnim extends AsyncTask<Void, Void, Void>{
 
 		@Override

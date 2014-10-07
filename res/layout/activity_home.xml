@@ -144,15 +144,16 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal" >
-        
+        	<!--
 	        <LinearLayout 
 	            android:layout_width="91dp"
 			    android:layout_height="match_parent"
 			    android:layout_gravity="left"
 			    android:gravity="left"
 			    android:orientation="horizontal" 
-                >
+                >-->
 				<!--  menu_green -->
+		        <!--
 		        <TextView
 		            android:id="@+id/menu_button1"
 		            android:layout_width="match_parent"
@@ -164,8 +165,9 @@
 		            android:text="@string/home_button1"
 		            android:textColor="#cfD1D1"
 		            android:textSize="16sp" />
-		
+				-->
 		       <!--  menu_white -->
+			    <!--
 			    <TextView
 			        android:id="@+id/menu_button2"
 			        android:layout_width="match_parent"
@@ -179,7 +181,7 @@
 			        android:textSize="16sp" />
 			    
 	       </LinearLayout>
-	       
+	       -->
 
         <TextView
             android:id="@+id/About_button"

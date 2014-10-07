@@ -52,7 +52,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -95,7 +94,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	private Button BUTTON_Exit;	//Added by Doume
 	private Button BUTTON_usage_settings;	//Added by Tikismoke
 	private Button BUTTON_server_settings;	//Added by Tikismoke
-	private Button BUTTON_New_settings;	//Added by Tikismoke
 	private Button BUTTON_map_settings;	//Added by Tikismoke
 	private Button BUTTON_debug_settings;	//Added by Doume
 	private Button BUTTON_house_settings;	//Added by Doume
@@ -151,10 +149,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		
 		
 		//sharedPref
-		//SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		//TODO use normal menu
-		SP_params = PreferenceManager
-                .getDefaultSharedPreferences(this);
+		SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		SP_prefEditor=SP_params.edit();
 		Tracer = tracerengine.getInstance(SP_params);
 		
@@ -269,18 +264,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 				return;
 			}
 		});
-		BUTTON_New_settings=(Button)findViewById(R.id.New_settings);
-		BUTTON_New_settings.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				// click on 'sync' button into Sliding_Drawer View
-				SD_panel.setOpen(false, false);	// Hide the View
-				//TODO prepare a normal menu call. 
-				Intent helpI = new Intent(Activity_Main.this,Preference.class);
-				startActivity(helpI);
-			}
-			
-		});
-		
 		BUTTON_sync=(Button)findViewById(R.id.sync);
 		BUTTON_sync.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -775,7 +758,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    ObjectOutputStream output = null;
 	    try {
 	        output = new ObjectOutputStream(new FileOutputStream(dst));
+<<<<<<< HEAD
 	        output.writeObject(SP_params.getAll());
+=======
+	        SharedPreferences pref = 
+	                            getSharedPreferences("PREFS", MODE_PRIVATE);
+	        output.writeObject(pref.getAll());
+>>>>>>> branch 'master' of ssh://git@github.com/domogik/domodroid
 
 	        res = true;
 	    } catch (FileNotFoundException e) {
@@ -801,7 +790,12 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    ObjectInputStream input = null;
 	    try {
 	        input = new ObjectInputStream(new FileInputStream(src));
+<<<<<<< HEAD
 	            SP_prefEditor.clear();
+=======
+	            Editor prefEdit = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+	            prefEdit.clear();
+>>>>>>> branch 'master' of ssh://git@github.com/domogik/domodroid
 	            Map<String, ?> entries = (Map<String, ?>) input.readObject();
 	            for (Entry<String, ?> entry : entries.entrySet()) {
 	                Object v = entry.getValue();
@@ -921,7 +915,13 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private void SaveSelections(Boolean mode) {
 		try{
+<<<<<<< HEAD
 			SP_prefEditor.commit();
+=======
+			SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
+			SharedPreferences.Editor prefEditor=params.edit();
+			prefEditor.commit();
+>>>>>>> branch 'master' of ssh://git@github.com/domogik/domodroid
 			if(backupprefs != null)
 				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
 			/*
@@ -932,8 +932,14 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private void LoadSelections() {
+<<<<<<< HEAD
 		tempUrl=SP_params.getString("IP1",null);
 		by_usage = SP_params.getBoolean("BY_USAGE", false);
+=======
+		SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
+		tempUrl=params.getString("IP1",null);
+		by_usage = params.getBoolean("BY_USAGE", false);
+>>>>>>> branch 'master' of ssh://git@github.com/domogik/domodroid
 	}
 	
 	private void run_sync_dialog() {

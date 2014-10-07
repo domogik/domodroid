@@ -406,8 +406,6 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 			public void onClick(View v) {
 				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 				Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
-				//TODO prepare a normal menu call. 
-				//Intent helpI = new Intent(Activity_Main.this,Preference.class);
 				startActivity(helpI);				
 			}
 		});
@@ -455,7 +453,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		house.setLayoutParams(param);
 		house.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				if(SP_params.getBoolean("SYNC", false)==true){
+				if(SP_params.getBoolean("SYNC", false)){
 					loadWigets(0, "root");
 					historyPosition++;
 					history.add(historyPosition,new String [] {"0","house"});
@@ -474,7 +472,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 					// Ignore map call if panel is opened, to avoid confusion between objects
 					return;
 				}
-				if(SP_params.getBoolean("SYNC", false)==true){
+				if(SP_params.getBoolean("SYNC", false)){
 					//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 					Tracer.w(mytag,"Before call to Map, Disconnect widgets from engine !");
 					if(WU_widgetUpdate != null) {
@@ -497,7 +495,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		stats.setLayoutParams(param);
 		stats.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				if(SP_params.getBoolean("SYNC", false)==true){
+				if(SP_params.getBoolean("SYNC", false)){
 					loadWigets(0, "statistics");
 					historyPosition++;
 					history.add(historyPosition,new String [] {"0","statistics"});
@@ -723,10 +721,17 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		init_done = true;
 		
 		if((SP_params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
+			//Solve #2029
+			if(SP_params.getBoolean("SYNC", false)){
 			Tracer.e(mytag, "Direct start on Map requested...");
 			Tracer.Map_as_main = true;		//Memorize that Map is now the main screen
 			INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
 			startActivity(INTENT_map);
+			}else{
+				if(AD_notSyncAlert == null)
+					createAlert();
+				AD_notSyncAlert.show();
+			}	
 		} else {
 			Tracer.force_Main = false;	//Reset flag 'called from Map view'
 			loadWigets(0,"root");
@@ -770,11 +775,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    ObjectOutputStream output = null;
 	    try {
 	        output = new ObjectOutputStream(new FileOutputStream(dst));
-	        //SharedPreferences pref = getSharedPreferences("PREFS", MODE_PRIVATE);
-	        //TODO add normal menu
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this); 
-			
-	        output.writeObject(pref.getAll());
+	        output.writeObject(SP_params.getAll());
 
 	        res = true;
 	    } catch (FileNotFoundException e) {
@@ -800,27 +801,24 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	    ObjectInputStream input = null;
 	    try {
 	        input = new ObjectInputStream(new FileInputStream(src));
-	            //Editor prefEdit = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-	            //TODO add normal menu
-	        	Editor prefEdit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-	            prefEdit.clear();
+	            SP_prefEditor.clear();
 	            Map<String, ?> entries = (Map<String, ?>) input.readObject();
 	            for (Entry<String, ?> entry : entries.entrySet()) {
 	                Object v = entry.getValue();
 	                String key = entry.getKey();
 	                Tracer.v(mytag,"Loading pref : "+key+" -> "+v.toString());
 	                if (v instanceof Boolean)
-	                    prefEdit.putBoolean(key, ((Boolean) v).booleanValue());
+	                	SP_prefEditor.putBoolean(key, ((Boolean) v).booleanValue());
 	                else if (v instanceof Float)
-	                    prefEdit.putFloat(key, ((Float) v).floatValue());
+	                	SP_prefEditor.putFloat(key, ((Float) v).floatValue());
 	                else if (v instanceof Integer)
-	                    prefEdit.putInt(key, ((Integer) v).intValue());
+	                	SP_prefEditor.putInt(key, ((Integer) v).intValue());
 	                else if (v instanceof Long)
-	                    prefEdit.putLong(key, ((Long) v).longValue());
+	                	SP_prefEditor.putLong(key, ((Long) v).longValue());
 	                else if (v instanceof String)
-	                    prefEdit.putString(key, ((String) v));
+	                	SP_prefEditor.putString(key, ((String) v));
 	            }
-	            prefEdit.commit();
+	            SP_prefEditor.commit();
 	            this.LoadSelections();	// to set panel with known values
 	        res = true;         
 	    } catch (FileNotFoundException e) {
@@ -923,11 +921,7 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	
 	private void SaveSelections(Boolean mode) {
 		try{
-			//SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-			//TODO add normal menu
-			SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this); 
-			SharedPreferences.Editor prefEditor=params.edit();
-			prefEditor.commit();
+			SP_prefEditor.commit();
 			if(backupprefs != null)
 				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
 			/*
@@ -938,11 +932,8 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 	}
 	
 	private void LoadSelections() {
-		//SharedPreferences params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		//TODO add normal menu
-		SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this); 
-		tempUrl=params.getString("IP1",null);
-		by_usage = params.getBoolean("BY_USAGE", false);
+		tempUrl=SP_params.getString("IP1",null);
+		by_usage = SP_params.getBoolean("BY_USAGE", false);
 	}
 	
 	private void run_sync_dialog() {

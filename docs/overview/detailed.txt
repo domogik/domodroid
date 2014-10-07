@@ -3,31 +3,45 @@ Detailled
 =========
 
 Domodroid 1.0 provides plenty of features:
+
 General
 
     Multi display compatibility (Smartphone and Tablet)
+    
     Easy configuration: Set your RINOR IP/URL access and synchronize
+    
+    Domogik could be install behind a proxy with http auth for security
+     
     Ability to set the widget's update timer from 10 to 300 seconds
+    
     A new feature register to Domogik event to update in real time
+    
     Power Management control keeping your screen on during the use of Domodroid
+    
     Full icon pack supported 
 
 
 Widgets
 
     8 animated widgets
+    
     Auto-Updated with an asynchrone threading system and in real time with event
+    
     Data widget with 2d chart engine
-    A longClick on his name allow you to rename the widget.
-    A longClick on his icon allow you to remove the feature from this area/room.
-
+    
+    A longClick on an area, room or widget allow you to rename it, change his icon or remove it.
+    
 
 Map system
 
 Creation of the "Domodroid" directory at the root of the external storage directory (or internal for some specific devices), maps have to be put in this directory.
+
 * Zoom: 2 fingers pinch
+
 * Drag: 2 fingers move
-* Change map: 3 fingers tap 
+
+* Change map: 3 fingers tap
+ 
 * Add a map directly from the map view with the android internal image picker.
 
     Multi-touch gesture (Zoom, Drag, Change Map, Hide text, Block map edition) can be activated from the "MAP Options" screen. 
@@ -42,11 +56,17 @@ This library supports a subset of the SVG Basic 1.1 specification. Typically, yo
 Be careful, you must use "px" as unit because of a bug in float conversion in this parser. If you use "mm" or "in" it might not work. 
 
         All text and font features.
+        
         Raster images (bitmaps).
+        
         Symbols, conditional processing.
+        
         Patterns.
+        
         Masks, filters and views.
+        
         Interactivity, linking, scripting and animation.
+        
         Arc commands in paths (work on this is in progress). 
 
 
@@ -70,9 +90,12 @@ Be careful, you must use "px" as unit because of a bug in float conversion in th
 Camera
 
     Mjpeg Stream supported
+    
     Framerate counter 
 
 
-To use the camera streaming feature, the Camera plugin has to be installed in Domogik. If none of your camera stream Mjpeg datas, you can use Zoneminder which a free video camera security application that encode many kind of video stream format to mjpeg stream.
+To use the camera streaming feature, the Camera plugin has to be installed in Domogik.
+
+If none of your camera stream Mjpeg datas, you can use Zoneminder which is a free video camera security application that encode many kind of video stream format to mjpeg stream.
 
 .. image:: Camera1.png

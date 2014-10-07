@@ -3,7 +3,9 @@ Overview
 ========
 
 	Domodroid is a free Android user interface for Domogik under GNU/GPL v3 Licence.
+	
 	With Domodroid, users can control most of the devices supported by Domogik (PLCBus, X10, 1wire, Mjpeg Camera, WolPing, Yahoo Weather...).
+	
 	Domodroid provides the following usages compatible with many technologies:
 
 .. image:: Widgets.png
@@ -24,25 +26,11 @@ Overview
 
 - Color Picker
 
-All text and font features.
-Raster images (bitmaps).
-Symbols, conditional processing.
-Patterns.
-Masks, filters and views.
-Interactivity, linking, scripting and animation.
-Arc commands in paths (work on this is in progress). 
-
-Add widgets button allows users to place a widget on the map by choosing an item from the feature list and touching the map to place the widget. 
-You can also Move,Remove one widgets or remove all widgets from the current map. 
+Map mode
 
 .. image:: map1.png
 
 Camera
 
-Mjpeg Stream supported
-Framerate counter 
-
-
-To use the camera streaming feature, the Camera plugin has to be installed in Domogik. If none of your camera stream Mjpeg datas, you can use Zoneminder which a free video camera security application that encode many kind of video stream format to mjpeg stream.
 
 .. image:: Camera1.png

@@ -706,10 +706,17 @@ public class Activity_Main extends Activity implements OnPanelListener,OnClickLi
 		init_done = true;
 		
 		if((SP_params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
+			//Solve #2029
+			if(SP_params.getBoolean("SYNC", false)){
 			Tracer.e(mytag, "Direct start on Map requested...");
 			Tracer.Map_as_main = true;		//Memorize that Map is now the main screen
 			INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
 			startActivity(INTENT_map);
+			}else{
+				if(AD_notSyncAlert == null)
+					createAlert();
+				AD_notSyncAlert.show();
+			}	
 		} else {
 			Tracer.force_Main = false;	//Reset flag 'called from Map view'
 			loadWigets(0,"root");

@@ -19,8 +19,15 @@
 package activities;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import org.domogik.domodroid13.R;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceActivity;
  
 import android.content.SharedPreferences;
@@ -30,10 +37,13 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceManager;
 
 public class Preference extends PreferenceActivity implements
     OnSharedPreferenceChangeListener {
-
+	
+	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
+	
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -62,6 +72,10 @@ public class Preference extends PreferenceActivity implements
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
       String key) {
     updatePreferences(findPreference(key));
+    //Save to file
+    if(backupprefs != null)
+		saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
+	
   }
 
   private void initSummary(android.preference.Preference preference) {
@@ -83,4 +97,27 @@ public class Preference extends PreferenceActivity implements
     	  preference.setSummary(editTextPref.getText());
     }
   }
+  private boolean saveSharedPreferencesToFile(File dst) {
+	    boolean res = false;
+	    ObjectOutputStream output = null;
+	    try {
+	        output = new ObjectOutputStream(new FileOutputStream(dst));
+	        output.writeObject(PreferenceManager.getDefaultSharedPreferences(this).getAll());
+	        res = true;
+	    } catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }finally {
+	        try {
+	            if (output != null) {
+	                output.flush();
+	                output.close();
+	            }
+	        } catch (IOException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+	    return res;
+	}
 } 

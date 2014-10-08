@@ -18,6 +18,8 @@
 package activities;
 
 import org.domogik.domodroid13.R;
+import org.domogik.domodroid13.R.menu;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,14 +77,9 @@ import android.widget.TextView;
 public class Activity_Main extends Activity implements OnClickListener{
 
 	
-	@SuppressWarnings("unused")
-	private Sliding_Drawer SD_topPanel;
 	protected PowerManager.WakeLock PM_WakeLock;
 	private SharedPreferences SP_params;
 	private SharedPreferences.Editor SP_prefEditor;
-	private Animation A_animation1;
-	private Animation A_animation2;
-	private TextView TV_menu_about;
 	private AlertDialog.Builder AD_notSyncAlert;
 	private Toast T_starting;
 	private Widgets_Manager WM_Agent;
@@ -129,7 +126,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private LinearLayout LL_info;
 	private TextView TV_info_msg;
 	private String mytag="Activity_Main";
-    
+	private Menu menu;
+	 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -277,21 +275,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 		final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
 		titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
 
-		//menu button
-		TV_menu_about = (TextView) findViewById(R.id.About_button);
-		TV_menu_about.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				dont_freeze=true;		//To avoid WidgetUpdate engine freeze
-				Intent helpI = new Intent(Activity_Main.this,Activity_About.class);
-				startActivity(helpI);				
-			}
-		});
-		
-		A_animation1 = new AlphaAnimation(0.0f, 1.0f);
-		A_animation1.setDuration(500);
-		A_animation2 = new AlphaAnimation(1.0f, 0.0f);
-		A_animation2.setDuration(500);
-
 		//Parent view
 		VG_parent = (ViewGroup) findViewById(R.id.home_container);
 		
@@ -418,7 +401,13 @@ public class Activity_Main extends Activity implements OnClickListener{
 					end_of_init_requested = true;
 					// open server config view
 					//TODO
-					//BUTTON_New_settings.performClick();
+//					//if(menu != null){
+//						Tracer.i(mytag, "Menu = "+menu);
+//						MenuItem item_up = (MenuItem)menu.findItem(R.id.menu_preferences);
+//						Tracer.i(mytag, "Menuitem = "+item_up);
+//						onOptionsItemSelected(item_up);
+//					//}
+					
 				}
 			} else {
 				// It's not the 1st use after fresh install
@@ -629,7 +618,12 @@ public class Activity_Main extends Activity implements OnClickListener{
 			}
 			// open server config view
 			//TODO
-			//BUTTON_New_settings.performClick();
+//			//if(menu != null){
+//				Tracer.i(mytag, "Menu = "+menu);
+//				MenuItem item_up = (MenuItem)menu.findItem(R.id.menu_preferences);
+//				Tracer.i(mytag, "Menuitem = "+item_up);
+//				onOptionsItemSelected(item_up);
+//			//}
 		}
 
 		if(! init_done) {
@@ -871,9 +865,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 	}
 	
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-		 MenuInflater inflater = getMenuInflater();
+    public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
 	        inflater.inflate(R.menu.activity_main, menu);
 	        return super.onCreateOptionsMenu(menu);
     }
@@ -884,7 +877,8 @@ public class Activity_Main extends Activity implements OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        
+    	//TODO prepare a normal menu call. 
+		 
         switch (item.getItemId())
         {
         case R.id.menu_exit:
@@ -910,16 +904,22 @@ public class Activity_Main extends Activity implements OnClickListener{
 
         case R.id.menu_preferences:
         	// click on 'sync' button into Sliding_Drawer View
-			//TODO prepare a normal menu call. 
+        	//TODO prepare a normal preferences menu. 
 			Intent helpI = new Intent(Activity_Main.this,Preference.class);
 			startActivity(helpI);
 			return true;
 
-        case R.id.menu_sync:
+        case R.id.menu_about:
+			dont_freeze=true;		//To avoid WidgetUpdate engine freeze
+			Intent helpI1 = new Intent(Activity_Main.this,Activity_About.class);
+			startActivity(helpI1);
+			return true;
+			
+		case R.id.menu_sync:
         	// click on 'sync' button into Sliding_Drawer View
 			run_sync_dialog();		// And run a resync with Rinor server
 			return true;
-
+			        	
         default:
             return super.onOptionsItemSelected(item);
         }

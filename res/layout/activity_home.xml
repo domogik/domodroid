@@ -33,106 +33,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
         </LinearLayout>
-    </ScrollView>
-
-    <!-- Panel to configure IP, refresh period, and so on... -->
-
-    
-    <activities.Sliding_Drawer
-        android:id="@+id/topPanel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        panel:animationDuration="800"
-        panel:linearFlying="true"
-        panel:position="top" >
-     
-        <Button
-            android:id="@id/panelHandle"
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="#00000000"
-            android:paddingLeft="5dip"
-            android:paddingRight="10dip" />
-		
-<ScrollView
-  			android:id="@id/panelContent"
-            android:layout_width="fill_parent"
- 			android:layout_height="fill_parent">
-
-    	<LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/drawer_button"
-            android:orientation="vertical"
-            android:paddingLeft="5dip"
-            android:paddingRight="5dip"
-            android:paddingTop="30dip" >
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-				<Button
-				android:id="@+id/sync"
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/Sync"
-                />
-               </LinearLayout>
-             
-             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-				<Button
-				android:id="@+id/New_settings"
-					style="?android:attr/buttonStyleSmall"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="New_settings"
-                />
-               </LinearLayout>
-            <LinearLayout
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingTop="10dip" >
-                <!--  Add a button to allow house configuration -->
-            	<Button
-				    android:id="@+id/bt_house_settings"
-				    style="?android:attr/buttonStyleSmall"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/house_settings"
-	     		/>
-	    	</LinearLayout>
-	    	
-	    	<LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="10dip" >
-				<!-- Added by Doume to allow a full stop of Domodroid -->
-				<Button
-                	android:id="@+id/Stop_all"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Exit_Program"
-                   />
-            </LinearLayout>
-			
-        </LinearLayout>
-        </ScrollView>
-        <!-- End of general config/sync  menu slider -->
-    </activities.Sliding_Drawer>
-    
+    </ScrollView>    
 
     <!-- Set center image + background -->
-	<!-- Title Bar with 2 menus, About, and logo -->
+	<!-- Title Bar with logo -->
     <FrameLayout
         android:id="@+id/TitleBar"
         android:layout_width="fill_parent"
@@ -141,112 +45,18 @@
        >
         
         <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal" >
-        	<!--
-	        <LinearLayout 
-	            android:layout_width="91dp"
-			    android:layout_height="match_parent"
-			    android:layout_gravity="left"
-			    android:gravity="left"
-			    android:orientation="horizontal" 
-                >-->
-				<!--  menu_green -->
-		        <!--
-		        <TextView
-		            android:id="@+id/menu_button1"
-		            android:layout_width="match_parent"
-		            android:layout_height="fill_parent"
-		            android:layout_gravity="left"
-		            android:paddingLeft="10dip"
-			        android:paddingTop="4dip"
-			        android:gravity="center"
-		            android:text="@string/home_button1"
-		            android:textColor="#cfD1D1"
-		            android:textSize="16sp" />
-				-->
-		       <!--  menu_white -->
-			    <!--
-			    <TextView
-			        android:id="@+id/menu_button2"
-			        android:layout_width="match_parent"
-			        android:layout_height="fill_parent"
-			        android:layout_gravity="left"
-			        android:gravity="center"
-			        android:paddingLeft="10dip"
-			        android:paddingTop="4dip"
-			        android:text="@string/home_button1"
-			        android:textColor="#A5C933"
-			        android:textSize="16sp" />
-			    
-	       </LinearLayout>
-	       -->
-
-        <TextView
-            android:id="@+id/About_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.53"
-            android:gravity="center"
-            android:text="@string/button4"
-            android:textColor="#cfD1D1"
-            android:textSize="16sp" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
 
        <ImageView
-                android:id="@+id/app_name"
-                android:layout_width="164dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:src="@drawable/app_name1" />
+           android:id="@+id/app_name"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_gravity="right"
+           android:src="@drawable/app_name1" />
         
     </LinearLayout>
-        
-	<!-- 
-        <TextView
-            android:id="@+id/menu_button1"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:gravity="left"
-            android:paddingLeft="10dip"
-            android:paddingTop="4dip"
-            android:text="@string/home_button1"
-            android:textColor="#cfD1D1"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/menu_button2"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:gravity="left"
-            android:paddingLeft="10dip"
-            android:paddingTop="4dip"
-            android:text="@string/home_button1"
-            android:textColor="#A5C933"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/About_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingLeft="10dip"
-            android:paddingTop="4dip"
-            android:text="@string/button4"
-            android:textColor="#A5C933"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingRight="5dip"
-            android:paddingTop="5dip"
-            android:src="@drawable/app_name1" />
-         -->
          
     </FrameLayout>
 

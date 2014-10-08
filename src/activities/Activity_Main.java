@@ -924,22 +924,16 @@ public class Activity_Main extends Activity implements OnClickListener{
             return super.onOptionsItemSelected(item);
         }
     }  
-/*	@Override
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if(keyCode==82 && !SD_panel.isOpen()){
-			SD_panel.setOpen(true, true);
-			return false;
-		}else if((keyCode==82 || keyCode == 4) && SD_panel.isOpen()){
-			SD_panel.setOpen(false, true);
-			return false;
-		}else if(keyCode == 4 && !SD_panel.isOpen() && historyPosition > 0){
+		if((keyCode == 4) && historyPosition > 0){
 			historyPosition--;
 			loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-*/
+
 	public class SBAnim extends AsyncTask<Void, Void, Void>{
 
 		@Override

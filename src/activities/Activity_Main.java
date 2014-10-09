@@ -103,7 +103,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Basic_Graphical_zone house;
 	private Basic_Graphical_zone map;
 	
-	private String tempUrl;
 	private Boolean reload = false;
 	DialogInterface.OnClickListener reload_listener = null;
 	DialogInterface.OnDismissListener sync_listener = null;
@@ -122,8 +121,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 	protected ProgressDialog PG_dialog_message;
 	private Boolean cache_ready = false;
 	private Boolean end_of_init_requested = true;
-	private LinearLayout LL_info;
-	private TextView TV_info_msg;
 	private String mytag="Activity_Main";
 	private Menu menu;
 	 
@@ -134,12 +131,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		myself=this;
 		setContentView(R.layout.activity_home);
 		
-		
-		//sharedPref
-		//SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		//TODO use normal menu
-		SP_params = PreferenceManager
-                .getDefaultSharedPreferences(this);
+		SP_params = PreferenceManager.getDefaultSharedPreferences(this);
 		SP_prefEditor=SP_params.edit();
 		Tracer = tracerengine.getInstance(SP_params);
 		
@@ -181,7 +173,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			}
 				catch(Exception e) {
 			}
-		//option
+		
 		appname = (ImageView)findViewById(R.id.app_name);
 		
 		LoadSelections();
@@ -606,30 +598,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 			end_of_init();
 		}
 	}
-	
-	private boolean saveSharedPreferencesToFile(File dst) {
-	    boolean res = false;
-	    ObjectOutputStream output = null;
-	    try {
-	        output = new ObjectOutputStream(new FileOutputStream(dst));
-	        output.writeObject(SP_params.getAll());
-	        res = true;
-	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }finally {
-	        try {
-	            if (output != null) {
-	                output.flush();
-	                output.close();
-	            }
-	        } catch (IOException ex) {
-	            ex.printStackTrace();
-	        }
-	    }
-	    return res;
-	}
 
 	@SuppressWarnings({ "unchecked" })
 	private boolean loadSharedPreferencesFromFile(File src) {
@@ -686,31 +654,28 @@ public class Activity_Main extends Activity implements OnClickListener{
 		LL_activ.setOrientation(LinearLayout.VERTICAL);
 		
 		LL_house_map.removeAllViews();
-		
 		LL_house_map.addView(house);
 		LL_house_map.addView(map);
 		
 		try {
 			if(type.equals("root")){
 				LL_area.removeAllViews();
+				VG_parent.addView(LL_house_map);	// House & map
 				if(! by_usage) {
 					// Version 0.2 or un-force by_usage : display house, map and areas
-					VG_parent.addView(LL_house_map);	// House & map
 					LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
 					VG_parent.addView(LL_area);	//and areas
 					LL_activ.removeAllViews();
 					LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ,SP_params, mytype);//add widgets in root
-					VG_parent.addView(LL_activ);
 				} else {
 					// by_usage
-					VG_parent.addView(LL_house_map);	// With only map
 					//TODO #2021 change 1 in loadRoomWidgets by the right value.
 					LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);	//List of known usages 'as rooms'
 					VG_parent.addView(LL_room);
 					LL_activ.removeAllViews();
 					LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ,SP_params, mytype);//add widgets in area 1
-					VG_parent.addView(LL_activ);
 				}
+				VG_parent.addView(LL_activ);
 			/*Should never arrive in this type.	
 			}else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
@@ -752,20 +717,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		}
 	}
 	
-	private void SaveSelections(Boolean mode) {
-		try{
-			SP_prefEditor.commit();
-			if(backupprefs != null)
-				saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
-			/*
-			if(! mode)
-				run_sync_dialog();	// force a resync with server if just after a reload
-			*/
-		} catch(Exception e){}
-	}
-	
 	private void LoadSelections() {
-		tempUrl=SP_params.getString("IP1",null);
 		by_usage = SP_params.getBoolean("BY_USAGE", false);
 	}
 	
@@ -842,11 +794,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 	        inflater.inflate(R.menu.activity_main, menu);
 	        return super.onCreateOptionsMenu(menu);
     }
-	/**
-     * Event Handling for Individual menu item selected
-     * Identify single menu item by it's id
-     * */
-    @Override
+	 
+	@Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
     	//TODO prepare a normal menu call. 
@@ -908,6 +857,7 @@ public class Activity_Main extends Activity implements OnClickListener{
             return super.onOptionsItemSelected(item);
         }
     }  
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if((keyCode == 4) && historyPosition > 0){

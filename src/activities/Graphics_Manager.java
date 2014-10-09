@@ -80,7 +80,6 @@ public class Graphics_Manager {
 			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
-			else if(usage.equals("statistics")){return R.drawable.statistics;}
 			else return R.drawable.usage_default_off;
 
 		case 1: //For median value (50%)
@@ -134,7 +133,6 @@ public class Graphics_Manager {
 			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
-			else if(usage.equals("statistics")){return R.drawable.statistics;}
 			else return R.drawable.usage_default_50;
 
 		case 2: //For on
@@ -188,7 +186,6 @@ public class Graphics_Manager {
 			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
-			else if(usage.equals("statistics")){return R.drawable.statistics;}
 			else return R.drawable.usage_default_on;
 		
 		case 3: //For undefined
@@ -242,7 +239,6 @@ public class Graphics_Manager {
 			else if(usage.equals("second_floor2")){return R.drawable.area_second_floor2;}
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
-			else if(usage.equals("statistics")){return R.drawable.statistics;}
 			else return R.drawable.usage_default_undefined;
 		}	
 		return R.drawable.icon;

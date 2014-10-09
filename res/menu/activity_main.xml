@@ -21,6 +21,12 @@
           android:title="@string/home_button3"
           />
     
+    <!-- menu_stats -->
+    <item android:id="@+id/menu_stats"
+          android:icon="@drawable/statistics"
+          android:title="@string/home_button3"
+          />
+    
     <!-- menu_about -->
 	<item android:id="@+id/menu_about"
 		android:title="@string/button4"

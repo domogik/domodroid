@@ -102,7 +102,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private LinearLayout LL_house_map;
 	private Basic_Graphical_zone house;
 	private Basic_Graphical_zone map;
-	private Basic_Graphical_zone stats;
 	
 	private String tempUrl;
 	private Boolean reload = false;
@@ -295,12 +294,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 				"map",
 				0,"",null);
 		map.setPadding(5, 0, 0, 0);
-		stats = new Basic_Graphical_zone(getApplicationContext(),0,
-				Graphics_Manager.Names_Agent(this, "statistics"),
-				"",
-				"statistics",
-				0,"",null);
-		stats.setPadding(0, 0, 5, 0);
 		
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 
@@ -343,27 +336,9 @@ public class Activity_Main extends Activity implements OnClickListener{
 			}
 		});
 		
-		stats.setLayoutParams(param);
-		stats.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				if(SP_params.getBoolean("SYNC", false)){
-					loadWigets(0, "statistics");
-					historyPosition++;
-					history.add(historyPosition,new String [] {"0","statistics"});
-				}else{
-					if(AD_notSyncAlert == null)
-						createAlert();
-					AD_notSyncAlert.show();
-				}
-			}
-		});
-
-		if(! by_usage)
-			LL_house_map.addView(house);
-		else
-			LL_house_map.addView(stats);
-		
+		LL_house_map.addView(house);
 		LL_house_map.addView(map);
+		
 		init_done = false;
 		// Detect if it's the 1st use after installation...
 			if(!SP_params.getBoolean("SPLASH", false)){
@@ -711,13 +686,10 @@ public class Activity_Main extends Activity implements OnClickListener{
 		LL_activ.setOrientation(LinearLayout.VERTICAL);
 		
 		LL_house_map.removeAllViews();
-		if( ! by_usage) {
-			LL_house_map.addView(house);
-			LL_house_map.addView(map);
-		} else {
-			LL_house_map.addView(stats);
-			LL_house_map.addView(map);
-		}
+		
+		LL_house_map.addView(house);
+		LL_house_map.addView(map);
+		
 		try {
 			if(type.equals("root")){
 				LL_area.removeAllViews();
@@ -915,12 +887,24 @@ public class Activity_Main extends Activity implements OnClickListener{
 			startActivity(helpI1);
 			return true;
 			
-		case R.id.menu_sync:
+		case R.id.menu_stats:
+			if(SP_params.getBoolean("SYNC", false)){
+				loadWigets(0, "statistics");
+				historyPosition++;
+				history.add(historyPosition,new String [] {"0","statistics"});
+			}else{
+				if(AD_notSyncAlert == null)
+					createAlert();
+				AD_notSyncAlert.show();
+			}
+			return true;
+			
+        case R.id.menu_sync:
         	// click on 'sync' button into Sliding_Drawer View
 			run_sync_dialog();		// And run a resync with Rinor server
 			return true;
 			        	
-        default:
+		default:
             return super.onOptionsItemSelected(item);
         }
     }  

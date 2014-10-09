@@ -62,7 +62,7 @@
   <string name="delete_map__OK">Ja</string>
   <string name="delete_map__NO">Nee</string>
   <string name="network_Title">- Opties -</string>
-  <string name="network_Text10">--Grapiek periode</string>
+  <string name="network_Text10">Grapiek periode</string>
   <string name="network_Text11">1 Dag(en)</string>
   <string name="network_Text11a">Dag(en)</string>
   <string name="from">Van :</string>
@@ -82,7 +82,7 @@
   <string name="server_portHint">40405</string>
   <string name="server_PathHint">/</string>
   <string name="server_Text3">2 Seconden</string>
-  <string name="server_http_user">--Gebruikersnaam</string>
+  <string name="server_http_user">Gebruikersnaam</string>
   <string name="usage_bt_apply">Pas wijzegingen toe</string>
   <string name="usage_bt_cancel">Anuleren</string>
   <string name="house_bt_cancel">Anuleren</string>

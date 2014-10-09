@@ -84,7 +84,7 @@
 	<string name="delete_map__NO">No</string>
 	
 	<string name="network_Title">- Options -</string>
-	<string name="network_Text10">--Graphic Period:</string>
+	<string name="network_Text10">Graphic Period:</string>
 	<string name="network_Text11">1 Day(s)</string>
 	<string name="network_Text11a"> Day(s)</string>
 	<string name="from">From : </string>	
@@ -140,10 +140,10 @@
 	<string name="map_explain">This screen allow map view configuration</string>
 	<string name="map_bt_apply">Apply changes</string>
 	<string name="map_bt_cancel">Cancel</string>
-	<string name="map_menu_explain">--Map Multitouch Features :</string>
+	<string name="map_menu_explain">Map Multitouch Features :</string>
 	<string name="map_option_drag">Drag:</string>
     <string name="map_option_zoom">Zoom:</string>
-    <string name="map_option_max_size">--Maximum Map Size:</string>	
+    <string name="map_option_max_size">Maximum Map Size:</string>	
     <string name="map_option_size">300 px</string>
     <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="map_option_hide_text">Hide text</string>
@@ -154,16 +154,16 @@
 	<string name="server_bt_apply">Apply changes</string>
 	<string name="server_bt_cancel">Cancel</string>
 	<string name="server_explain">This screen allow server configuration</string>
-	<string name="server_IP">--Domogik Rinor IP Address</string>
+	<string name="server_IP">Domogik Rinor IP Address</string>
 	<string name="server_ipHint">http://address-rinor</string>
-	<string name="server_PORT">--Domogik Rinor Port</string>
+	<string name="server_PORT">Domogik Rinor Port</string>
 	<string name="server_portHint">40405</string>
-	<string name="server_Path">--Access path</string>
+	<string name="server_Path">Access path</string>
 	<string name="server_PathHint">/</string>
-	<string name="server_Text2">--Auto-Update Timer:</string>
+	<string name="server_Text2">Auto-Update Timer:</string>
 	<string name="server_Text3">2 Secondes</string>
-	<string name="server_http_password">--Http auth password</string>
-	<string name="server_http_user">--Username</string>
+	<string name="server_http_password">Http auth password</string>
+	<string name="server_http_user">Username</string>
 	   
 	<string name="usage_settings">Widget configuration</string>
 	<string name="usage_bt_apply">Apply changes</string>

@@ -84,7 +84,7 @@
 	<string name="delete_map__NO">Non</string>
 	
 	<string name="network_Title">- Options -</string>
-	<string name="network_Text10">-- Période des graphiques:</string>
+	<string name="network_Text10">Période des graphiques:</string>
 	<string name="network_Text11">1 Jour(s)</string>
 	<string name="network_Text11a"> Jour(s)</string>
 	<string name="from">Du  : </string>	
@@ -140,10 +140,10 @@
 	<string name="map_explain">Cet écran permet la configuration du mode map</string>
 	<string name="map_bt_apply">Appliquer</string>
 	<string name="map_bt_cancel">Annuler</string>
-	<string name="map_menu_explain">--Fonctions multi touches sur Cartes:</string>
+	<string name="map_menu_explain">Fonctions multi touches sur Cartes:</string>
 	<string name="map_option_drag">Drag:</string>
     <string name="map_option_zoom">Zoom:</string>
-    <string name="map_option_max_size">--Taille maximum carte:</string>	
+    <string name="map_option_max_size">Taille maximum carte:</string>	
     <string name="map_option_size">300 pixels</string>
     <string name="map_option_advert">L\'activation du Multitouches ou la définition d\'une taille maximum pour les cartes peut générer des plantages dans la gestion mémoire.</string>	
     <string name="map_option_hide_text">Masquer texte</string>
@@ -154,16 +154,16 @@
 	<string name="server_bt_apply">Appliquer</string>
 	<string name="server_bt_cancel">Annuler</string>
 	<string name="server_explain">Cet écran permet la configuration du serveur</string>
-	<string name="server_IP">--Adresse ou IP du serveur Rinor Domogik</string>
+	<string name="server_IP">Adresse ou IP du serveur Rinor Domogik</string>
 	<string name="server_ipHint">http://addresse-rinor</string>
-	<string name="server_PORT">--Port du serveur Rinor Domogik</string>
+	<string name="server_PORT">Port du serveur Rinor Domogik</string>
 	<string name="server_portHint">40405</string>
-	<string name="server_Path">--Chemin d\'àccès</string>
+	<string name="server_Path">Chemin d\'àccès</string>
 	<string name="server_PathHint">/</string>
-	<string name="server_Text2">-- Tempo. de mise à jour données:</string>
+	<string name="server_Text2">Tempo. de mise à jour données:</string>
 	<string name="server_Text3">2 Secondes</string>
-	<string name="server_http_password">--Mot de passe http auth</string>
-	<string name="server_http_user">--Nom d\'utilisateur</string>
+	<string name="server_http_password">Mot de passe http auth</string>
+	<string name="server_http_user">Nom d\'utilisateur</string>
 		
 	<string name="usage_settings">Configurer widget</string>
 	<string name="usage_bt_apply">Appliquer</string>

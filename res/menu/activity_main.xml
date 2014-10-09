@@ -23,8 +23,8 @@
     
     <!-- menu_stats -->
     <item android:id="@+id/menu_stats"
-          android:icon="@drawable/statistics"
-          android:title="@string/home_button3"
+          android:icon="@drawable/icon_menu_statistics"
+          android:title="@string/statistics"
           />
     
     <!-- menu_about -->

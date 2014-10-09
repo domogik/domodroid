@@ -5,7 +5,7 @@
      
     <!-- menu_house_config -->
     <item android:id="@+id/menu_house_config"
-          android:icon="@drawable/house"
+          android:icon="@drawable/icon_menu_house"
           android:title="@string/house_settings"
           />
      

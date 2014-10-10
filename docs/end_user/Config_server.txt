@@ -1,9 +1,0 @@
-=============
-Server option
-=============
-
-In server menu, set the IP, PORT and PATH of the Rinor server, for example http://192.168.0.1 40405 and /domodroid.
-	You can also set a user and password for http auth method.
-	
-
-.. image:: Config_server.png

@@ -4,10 +4,12 @@ Configuration
 
 In the menu you have choice of:
 
-* Organize you house
-* Access to options
-* Sync with domogik server
-* See statistics about echange with the server (Stats and Events)
-* Open about view
+* :doc:`Organize you house <Config_house>`
+* :doc:`Access to options <Options>`
+* :doc:`Sync with domogik server <>`
+* :doc:`See statistics about echange with the server (Stats and Events) <>`
+* :doc:`Open about view <>`
 * Exit
+
+.. image:: image/menu_open.png
 

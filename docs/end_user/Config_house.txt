@@ -11,6 +11,6 @@ When you add a room it will first ask you where to put it.
 
 When you add a widget, it will ask you witch widget, then where to put it (root,area,room) and display list of them. 
 
-.. image:: Config_house.png
+.. image:: image/Config_house.png
 
 Don't forget to click on apply to save change.

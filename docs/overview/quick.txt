@@ -8,8 +8,6 @@ Overview
 	
 	Domodroid provides the following usages compatible with many technologies:
 
-.. image:: Widgets.png
-
 - Switch
 
 - Dimmer
@@ -26,11 +24,14 @@ Overview
 
 - Color Picker
 
+- History of Caller ID
+
+.. image:: Widgets.png
+
 Map mode
 
 .. image:: map1.png
 
 Camera
-
 
 .. image:: Camera1.png

@@ -206,26 +206,27 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		//featurePan2.addView();
 		JSONObject json_LastValues = null;
 		JSONArray itemArray=null; 
+		listeChoices = new ListView(context);
+		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
 		try {
 			json_LastValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
 			itemArray = json_LastValues.getJSONArray("stats");
+			for (int i =itemArray.length(); i >= 0; i--){
+				try {
+					HashMap<String,String> map=new HashMap<String,String>();
+					map.put("value",itemArray.getJSONObject(i).getString("value"));
+					map.put("date",itemArray.getJSONObject(i).getString("date"));
+					listItem.add(map);
+					Tracer.d(mytag, map.toString());
+				}catch (Exception e) {
+					Tracer.e(mytag,"Error getting json value");
+				}
+			}
 		} catch (Exception e) {
 			//return null;
 			Tracer.e(mytag,"Error getting json object");
 		}
-		listeChoices = new ListView(context);
-		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
-		for (int i =itemArray.length(); i >= 0; i--){
-			try {
-				HashMap<String,String> map=new HashMap<String,String>();
-				map.put("value",itemArray.getJSONObject(i).getString("value"));
-				map.put("date",itemArray.getJSONObject(i).getString("date"));
-				listItem.add(map);
-				Tracer.d(mytag, map.toString());
-			}catch (Exception e) {
-				Tracer.e(mytag,"Error getting json value");
-			}
-		}
+		
 		SimpleAdapter adapter_feature=new SimpleAdapter(this.context,listItem,
 				R.layout.item_phone,new String[] {"value","date"},new int[] {R.id.phone_value,R.id.phone_date});
 		listeChoices.setAdapter(adapter_feature);

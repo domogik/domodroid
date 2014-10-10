@@ -2,20 +2,12 @@
 Configuration
 =============
 
-In the menu view you have choice of:
+In the menu you have choice of:
 
-* Sync
+* Organize you house
+* Access to options
+* Sync with domogik server
+* See statistics about echange with the server (Stats and Events)
+* Open about view
+* Exit
 
-Just run a mechanism to sync your domogik configuration with domodroid.
-
-If it fail, start to check if rinor is listening on the good adress and port, not on localhost.
-
-Be careful, it will destroy all your cutom_name and delete map widget link. It means you have to re-create you map design with your widget.
-
-Exit
-
-* :doc:`Configuration Widget </end_user/Config_widget>`
-* :doc:`Configuration Server </end_user/Config_server>`
-* :doc:`Configuration Map </end_user/Config_map>`
-* :doc:`Configuration Debug </end_user/Config_debug>`
-* :doc:`Configuration House </end_user/Config_house>`

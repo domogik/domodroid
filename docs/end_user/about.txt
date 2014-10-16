@@ -1,0 +1,14 @@
+=====
+ABOUT
+=====
+
+This view display The About information.
+
+What's important here his the value at the bottom of the view:
+
+* Domodroid complete version code and name.
+* Domogik Version code.
+
+It could help to see witch version you are using.
+
+.. image:: image/About.png

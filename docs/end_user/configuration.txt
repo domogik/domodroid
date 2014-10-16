@@ -8,7 +8,7 @@ In the menu you have choice of:
 * :doc:`Access to options <Options>`
 * :doc:`Sync with domogik server <sync>`
 * :doc:`See statistics about echange with the server (Stats and Events) <stats>`
-* :doc:`Open about view <>`
+* :doc:`Open about view <about>`
 * Exit
 
 .. image:: image/menu_open.png

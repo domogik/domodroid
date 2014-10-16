@@ -296,7 +296,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 				if(SP_params.getBoolean("SYNC", false)){
 					loadWigets(0, "root");
 					historyPosition++;
-					history.add(historyPosition,new String [] {"0","house"});
+					history.add(historyPosition,new String [] {"0","root"});
 				}else{
 					if(AD_notSyncAlert == null)
 						createAlert();

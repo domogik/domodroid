@@ -156,15 +156,19 @@
 	<string name="OPTION_server_explain">Cet écran permet la configuration du serveur</string>
 	<string name="OPTION_server_IP">Adresse ou IP du serveur Rinor Domogik</string>
 	<string name="OPTION_server_IP_Title">IP ou Adresse</string>
-	<string name="OPTION_server_ipHint">http://addresse-rinor</string>
+	<string name="OPTION_server_IP_Hint">http://addresse-rinor</string>
 	<string name="OPTION_server_PORT">Port du serveur Rinor Domogik</string>
-	<string name="OPTION_server_portHint">40405</string>
+	<string name="OPTION_server_PORT_Title">saisir le port de domogik</string>
+	<string name="OPTION_server_PORT_Hint">40405</string>
 	<string name="OPTION_server_Path">Chemin d\'àccès</string>
-	<string name="OPTION_server_PathHint">/</string>
+	<string name="OPTION_server_Path_Title">Definir le chemin d\'àccès</string>
+	<string name="OPTION_server_Path_Hint">/</string>
 	<string name="OPTION_server_Text2">Tempo. de mise à jour données:</string>
 	<string name="OPTION_server_Text3">2 Secondes</string>
-	<string name="OPTION_server_http_password">Mot de passe http auth</string>
 	<string name="OPTION_server_http_user">Nom d\'utilisateur</string>
+	<string name="OPTION_server_http_user_Title">Saisir un nom d\'utilisateur</string>
+	<string name="OPTION_server_http_password">Mot de passe http auth</string>
+	<string name="OPTION_server_http_password_Title">Saisir le mot de passe http auth</string>
 		
 	<string name="usage_settings">Configurer widget</string>
 	<string name="usage_bt_apply">Appliquer</string>

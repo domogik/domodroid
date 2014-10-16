@@ -78,11 +78,11 @@
   <string name="Add_widget_title">Selecteer een widget</string>
   <string name="Wich_feature_message">Selecteer een widget</string>
   <string name="Confirm_title">Bevestig</string>
-  <string name="server_bt_cancel">Anuleren</string>
-  <string name="server_portHint">40405</string>
-  <string name="server_PathHint">/</string>
-  <string name="server_Text3">2 Seconden</string>
-  <string name="server_http_user">Gebruikersnaam</string>
+  <string name="OPTION_server_bt_cancel">Anuleren</string>
+  <string name="OPTION_server_portHint">40405</string>
+  <string name="OPTION_server_PathHint">/</string>
+  <string name="OPTION_server_Text3">2 Seconden</string>
+  <string name="OPTION_server_http_user">Gebruikersnaam</string>
   <string name="usage_bt_apply">Pas wijzegingen toe</string>
   <string name="usage_bt_cancel">Anuleren</string>
   <string name="house_bt_cancel">Anuleren</string>

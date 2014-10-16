@@ -150,20 +150,21 @@
     <string name="map_option_menu_disable">Interdire les modifications de map</string>
     <string name="map_autozoom">Zoom automatique en map:</string>	
    	
-    <string name="server_settings">Configurer Serveur</string>
-	<string name="server_bt_apply">Appliquer</string>
-	<string name="server_bt_cancel">Annuler</string>
-	<string name="server_explain">Cet écran permet la configuration du serveur</string>
-	<string name="server_IP">Adresse ou IP du serveur Rinor Domogik</string>
-	<string name="server_ipHint">http://addresse-rinor</string>
-	<string name="server_PORT">Port du serveur Rinor Domogik</string>
-	<string name="server_portHint">40405</string>
-	<string name="server_Path">Chemin d\'àccès</string>
-	<string name="server_PathHint">/</string>
-	<string name="server_Text2">Tempo. de mise à jour données:</string>
-	<string name="server_Text3">2 Secondes</string>
-	<string name="server_http_password">Mot de passe http auth</string>
-	<string name="server_http_user">Nom d\'utilisateur</string>
+    <string name="OPTION_server_settings">Configurer Serveur</string>
+	<string name="OPTION_server_bt_apply">Appliquer</string>
+	<string name="OPTION_server_bt_cancel">Annuler</string>
+	<string name="OPTION_server_explain">Cet écran permet la configuration du serveur</string>
+	<string name="OPTION_server_IP">Adresse ou IP du serveur Rinor Domogik</string>
+	<string name="OPTION_server_IP_Title">IP ou Adresse</string>
+	<string name="OPTION_server_ipHint">http://addresse-rinor</string>
+	<string name="OPTION_server_PORT">Port du serveur Rinor Domogik</string>
+	<string name="OPTION_server_portHint">40405</string>
+	<string name="OPTION_server_Path">Chemin d\'àccès</string>
+	<string name="OPTION_server_PathHint">/</string>
+	<string name="OPTION_server_Text2">Tempo. de mise à jour données:</string>
+	<string name="OPTION_server_Text3">2 Secondes</string>
+	<string name="OPTION_server_http_password">Mot de passe http auth</string>
+	<string name="OPTION_server_http_user">Nom d\'utilisateur</string>
 		
 	<string name="usage_settings">Configurer widget</string>
 	<string name="usage_bt_apply">Appliquer</string>

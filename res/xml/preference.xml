@@ -3,22 +3,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
 android:title="Préférences">
  
- <PreferenceCategory android:title="@string/server_settings">
-     <Preference android:selectable="false" android:shouldDisableView="false" android:enabled="false" android:summary="@string/server_explain"/>
-     <EditTextPreference android:title="@string/server_IP"
-         android:dialogTitle="rinorIP"
+ <PreferenceCategory android:title="@string/OPTION_server_settings">
+     <Preference android:selectable="false" android:shouldDisableView="false" android:enabled="false" android:summary="@string/OPTION_server_explain"/>
+     <EditTextPreference android:title="@string/OPTION_server_IP"
+         android:dialogTitle="@string/OPTION_server_IP_Title"
          android:key="rinorIP"/>
-     <EditTextPreference android:title="@string/server_PORT"
+     <EditTextPreference android:title="@string/OPTION_server_PORT"
          android:defaultValue="40405"
          android:dialogTitle="rinorPort"
          android:key="rinorPort"/>
-     <EditTextPreference android:title="@string/server_Path"
+     <EditTextPreference android:title="@string/OPTION_server_Path"
          android:dialogTitle="rinorPath"
          android:key="rinorPath"/>
-     <EditTextPreference android:title="@string/server_http_user"
+     <EditTextPreference android:title="@string/OPTION_server_http_user"
          android:dialogTitle="http_auth_username"
          android:key="http_auth_username"/>
-     <EditTextPreference android:title="@string/server_http_password"
+     <EditTextPreference android:title="@string/OPTION_server_http_password"
          android:dialogTitle="http_auth_password"
          android:key="http_auth_password"
          android:inputType="textPassword"

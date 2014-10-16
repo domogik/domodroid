@@ -1,0 +1,9 @@
+=====
+STATS
+=====
+
+Domodroid contain a mechanism witch record number and size of events and stats send and received.
+
+This view display them (maybe it could help you to see what's wrong):
+
+.. image:: image/Stats_view.png

@@ -16,6 +16,7 @@ Table Of Content
     /end_user/sync
     /end_user/Config_house
     /end_user/stats
+    /end_user/about
     /end_user/usage
     /package_development/index
     /package_development/developers_documentation

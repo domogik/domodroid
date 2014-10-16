@@ -1,0 +1,88 @@
+====
+Sync
+====
+
+When you click on Sync button, Domodroid will attempt to contact your Domogik server with the configuration previously entered.
+
+It's don in further steps depending of your version of domogik:
+
+Domogik 0.3 (API version >5)
+============================
+
+*It get a json containing list of feature from:
+
+http://yourIP:YourPort/base/feature/list
+
+If it works, progress goes to 25%.
+
+*It creates Base House containing only one area named "USAGE":
+
+If it works, progress goes to 45%.
+
+*It creates room named "USAGE" in the Area, and prepare feature_associationList:
+
+Feature_association_list will make the relation between a device (sensor or command) and the place where it will be displayed (Base, Area or Room).
+
+If it works, progress goes to 55%.
+
+*Then for each feature get from domogik:
+
+It will look for his usage to create a room names by it's usage.
+
+Create the feature and his feature association in the room.
+
+If it works, progress goes to a value depending of the number of feature.
+
+*Domodroid put all data needed in AndroidSharedPreference to use them later.
+
+*Erase the internal DB and replaced it by new value.
+
+*Create the UPDATE_URL used for cache Engine:
+
+Looks like http://YourIP:YourPort/stats/multi/"device_ID1"/"device_State1"/"device_ID2"/"device_State2"/"device_ID..."/"device_State..."
+
+Each device_ID and State comes from list of feature.
+
+Progress goes to 100% HOURRA!!
+
+*Just after this process ended, domodroid will start the cache engine. Depending of the number of feature and the speed of your connection it could takes seconds to minutes.
+
+Domogik 0.2 (API version <=5)
+=============================
+
+It his not the same process as domogik handle the house structure.
+
+*Domodroid grab area list:
+
+From  http://YourIP:YourPort/base/area/list/
+
+If it works, progress goes to 20%.
+
+*Domodroid grab room list:
+
+From  http://YourIP:YourPort/base/room/list/
+
+If it works, progress goes to 40%.
+
+*Domodroid grab feature list:
+
+From  http://YourIP:YourPort/base/feature/list/
+
+If it works, progress goes to 60%.
+
+*Domodroid grab feature_association list:
+
+From  http://YourIP:YourPort/base/feature_association/list/
+
+If it works, progress goes to 80%.
+
+*Domodroid grab icon list:
+
+From  http://YourIP:YourPort/base/ui_config/list/
+
+If it works, progress goes to 100%.
+
+*Put all data into Android SharedPreference then to DB like before.
+
+*Just after this process ended, domodroid will start the cache engine. Depending of the number of feature and the speed of your connection it could takes seconds to minutes.
+

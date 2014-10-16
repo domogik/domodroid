@@ -6,7 +6,7 @@ In the menu you have choice of:
 
 * :doc:`Organize you house <Config_house>`
 * :doc:`Access to options <Options>`
-* :doc:`Sync with domogik server <>`
+* :doc:`Sync with domogik server <sync>`
 * :doc:`See statistics about echange with the server (Stats and Events) <>`
 * :doc:`Open about view <>`
 * Exit

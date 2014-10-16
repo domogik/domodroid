@@ -212,40 +212,44 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						handler.sendEmptyMessage(0);
 						return null;
 					}
-					//JSONObject json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list");
 					publishProgress(25);
 					
+					//Create JSONObject
 					json_RoomList = new JSONObject();
-					
 					json_FeatureAssociationList = new JSONObject();
-					
 					json_AreaList = new JSONObject();
+					JSONObject map_area = new JSONObject();
+					JSONObject area = new JSONObject();
+					//Create JSONArray
+					JSONArray list = new JSONArray();
+					JSONArray rooms = new JSONArray();
+					JSONArray ListFeature = new JSONArray();
+	                //Create string
+					String usage = new String();
+					//Create an ArrayList
+					ArrayList<String> list_usage = new ArrayList<String>();
+										
 					json_AreaList.put("status","OK");
 					json_AreaList.put("code",0);
 					json_AreaList.put("description","None");
-					JSONArray list = new JSONArray();
-					JSONObject map_area = new JSONObject();
 					map_area.put("description", "");
 					map_area.put("id", "1");
 					map_area.put("name", "Usage");
 					list.put(map_area);
 					json_AreaList.put("area",list);
 					publishProgress(45);
-					String usage = new String();
+					
 					json_RoomList.put("status","OK");
 					json_RoomList.put("code",0);
 					json_RoomList.put("description","None");
-					JSONArray rooms = new JSONArray();
-					JSONObject area = new JSONObject();
 					area.put("description","");
 					area.put("id","1");
 					area.put("name","Usage");
-					ArrayList<String> list_usage = new ArrayList<String>();
+					
 					int j=2;
 					json_FeatureAssociationList.put("status","OK");
 					json_FeatureAssociationList.put("code","0");
 					json_FeatureAssociationList.put("description","");
-	                JSONArray ListFeature = new JSONArray();
 	                publishProgress(55);
 					
 	                int list_size = 0;

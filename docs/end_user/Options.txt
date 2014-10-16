@@ -1,25 +1,31 @@
-=============
+======
+OPTION
+======
+
 Server option
 =============
 
-In server menu, set the IP, PORT and PATH of the Rinor server, for example http://192.168.0.1 40405 and /domodroid.
-	You can also set a user and password for http auth method.
+* In server menu, set the IP, PORT and PATH of the Rinor server
 	
+	For example http://192.168.0.1 40405 and /domogik.
+	
+	If you don't know path let him empty.
+
+* You can also set a user and password for http auth method.
+* Update_Timer and Update_Url are not available for user.	
 
 .. image:: image/Config_server.png
 
-=============
 Widget option
 =============
 
 * Alternative widget allow the use of a new ON/OFF widget.
-* Alternative graph use chartengine as graph engine.
+* Alternative graph use achartengine as graph engine.
 * Forbid 2 columns in each mode Landscape or portrait will show widget on only one columns if your screen have more than 700px in height or width.
-* Force 0.3 by usage allow to un-force the by usage mode and restore by house view. For the moment you have to create your house in the db directly.
+* Force 0.3 by usage allow to un-force the by usage mode and restore by house view. Then you could organize your house as you want.
 
 .. image:: image/Config_widget.png
 
-==========
 Map option
 ==========
 
@@ -33,7 +39,6 @@ Max map size in px (be careful it could make memory error).
 
 .. image:: image/Config_map.png
 
-============
 Debug option
 ============
 

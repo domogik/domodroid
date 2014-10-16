@@ -7,7 +7,7 @@ Table Of Content
 .. toctree::
 
     /index
- 	/overview/quick
+ 	/overview/index
     /overview/detailed
     /end_user/installation
     /end_user/configuration

@@ -5,7 +5,7 @@ Domodroid
 Overview
 ========
 
-* :doc:`Quick </overview/quick>` 
+* :doc:`Quick </overview/index>` 
 * :doc:`Detailed </overview/detailed>`
 
 End User Documentation

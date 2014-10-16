@@ -1,14 +1,14 @@
-========
-Overview
-========
+==============
+Quick overview
+==============
 
 	Domodroid is a free Android user interface for Domogik under GNU/GPL v3 Licence.
 	
-	With Domodroid, users can control most of the devices supported by Domogik (PLCBus, X10, 1wire, Mjpeg Camera, WolPing, Yahoo Weather...).
+	With Domodroid, users can control most(theoretically all) of the devices supported by Domogik (PLCBus, X10, 1wire, Mjpeg Camera, WolPing, Yahoo Weather...).
 	
 	Domodroid provides the following usages compatible with many technologies:
 
-- Switch
+- Switch (2 different switch type)
 
 - Dimmer
 
@@ -16,7 +16,7 @@ Overview
 
 - Camera
 
-- Sensor
+- Sensor (with 2 different graph engine)
 
 - Binary 
 
@@ -24,14 +24,18 @@ Overview
 
 - Color Picker
 
+- Range
+
 - History of Caller ID
 
 .. image:: Widgets.png
 
 Map mode
+========
 
 .. image:: map1.png
 
 Camera
+======
 
 .. image:: Camera1.png

@@ -95,6 +95,18 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		public LoadConfig() {
 			super();
 			prefEditor=params.edit();
+			urlAccess = params.getString("rinorIP","1.1.1.1")+":"+params.getString("rinorPort","40405")+params.getString("rinorPath","/");
+			urlAccess = urlAccess.replaceAll("[\r\n]+", "");
+			//Try to solve #1623
+			urlAccess = urlAccess.replaceAll(" ", "%20");
+			String format_urlAccess;
+			//add a '/' at the end of the IP address
+			if(urlAccess.lastIndexOf("/")==urlAccess.toString().length()-1)
+				format_urlAccess = urlAccess;
+			else
+				format_urlAccess = urlAccess.concat("/");
+			prefEditor.putString("URL",format_urlAccess);
+			prefEditor.commit();
 			urlAccess = params.getString("URL","1.1.1.1");
 			if(db == null)
 				db = new DomodroidDB(Tracer, context);

@@ -367,14 +367,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 					Tracer.v(mytag,"no settings backup found after fresh install...");
 					end_of_init_requested = true;
 					// open server config view
-					//TODO
-//					//if(menu != null){
-//						Tracer.i(mytag, "Menu = "+menu);
-//						MenuItem item_up = (MenuItem)menu.findItem(R.id.menu_preferences);
-//						Tracer.i(mytag, "Menuitem = "+item_up);
-//						onOptionsItemSelected(item_up);
-//					//}
-					
+					Intent helpI = new Intent(Activity_Main.this,Preference.class);
+					startActivity(helpI);					
 				}
 			} else {
 				// It's not the 1st use after fresh install
@@ -584,13 +578,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 				database.delete();
 			}
 			// open server config view
-			//TODO
-//			//if(menu != null){
-//				Tracer.i(mytag, "Menu = "+menu);
-//				MenuItem item_up = (MenuItem)menu.findItem(R.id.menu_preferences);
-//				Tracer.i(mytag, "Menuitem = "+item_up);
-//				onOptionsItemSelected(item_up);
-//			//}
+			Intent helpI = new Intent(Activity_Main.this,Preference.class);
+			startActivity(helpI);
 		}
 
 		if(! init_done) {

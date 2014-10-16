@@ -158,7 +158,7 @@
 	<string name="OPTION_server_IP_Title">IP ou Adresse</string>
 	<string name="OPTION_server_IP_Hint">http://addresse-rinor</string>
 	<string name="OPTION_server_PORT">Port du serveur Rinor Domogik</string>
-	<string name="OPTION_server_PORT_Title">saisir le port de domogik</string>
+	<string name="OPTION_server_PORT_Title">Saisir le port de domogik</string>
 	<string name="OPTION_server_PORT_Hint">40405</string>
 	<string name="OPTION_server_Path">Chemin d\'àccès</string>
 	<string name="OPTION_server_Path_Title">Definir le chemin d\'àccès</string>

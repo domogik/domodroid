@@ -41,8 +41,9 @@ import android.preference.PreferenceManager;
 
 public class Preference extends PreferenceActivity implements
     OnSharedPreferenceChangeListener {
-	
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
+	private SharedPreferences.Editor prefEditor;
+	private SharedPreferences params;
 	
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -68,14 +69,23 @@ public class Preference extends PreferenceActivity implements
     getPreferenceScreen().getSharedPreferences()
         .unregisterOnSharedPreferenceChangeListener(this);
    }
-
-  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+ 
+   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
       String key) {
     updatePreferences(findPreference(key));
     //Save to file
     if(backupprefs != null)
 		saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
-	
+    
+    //Correct Rinor Ip to add http:// on start
+    params = PreferenceManager.getDefaultSharedPreferences(this);
+    String temp = params.getString("rinorIP", "");
+  	if (!temp.toUpperCase().startsWith("HTTP://")){
+  		PreferenceManager.getDefaultSharedPreferences(this).edit();
+  		prefEditor=params.edit();
+  		prefEditor.putString("rinorIP", "http://"+temp);
+  		prefEditor.commit();
+  	}
   }
 
   private void initSummary(android.preference.Preference preference) {

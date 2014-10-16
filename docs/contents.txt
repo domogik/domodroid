@@ -13,6 +13,7 @@ Table Of Content
     /end_user/configuration
     /end_user/Config_house
     /end_user/Options
+    /end_user/sync
     /end_user/usage
     /end_user/nightly_builds
     /package_development/index

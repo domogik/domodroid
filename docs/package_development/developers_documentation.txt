@@ -18,7 +18,7 @@ activities/Activity_About.java
 TABLE STRUCURE
 ==============
 
-*The First 3 DB are only used to organize Domodroid House structure and display: 
+* The First 3 DB are only used to organize Domodroid House structure and display: 
 
 As Area and Room contains same information they could be optimize in next version with a new field for each type...
 
@@ -26,7 +26,7 @@ As Area and Room contains same information they could be optimize in next versio
 .. image:: image/table_room.png
 .. image:: image/table_icon.png
 
-*This DB contain list of feature available in your domogik server:
+* This DB contain list of feature available in your domogik server:
 
 .. image:: image/table_feature.png
 
@@ -34,14 +34,14 @@ An example:
 
 .. image:: image/table_feature_exemple.png
 
-*This one contains the feature and a place to display it (Base, Area or Room)
+* This one contains the feature and a place to display it (Base, Area or Room)
 
 .. image:: image/table_feature_association.png
 
-*Same but for the map mode with position on X and Y axis:
+* Same but for the map mode with position on X and Y axis:
 
 .. image:: image/table_feature_map.png
 
-*The state his no more used by Domodroid with the cache engine but it his still here:
+* The state his no more used by Domodroid with the cache engine but it his still here:
 
 .. image:: image/table_feature_state.png

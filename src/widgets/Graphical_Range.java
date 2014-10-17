@@ -188,7 +188,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		leftPan.addView(seekBarVaria);
 		rightPan.addView(leftPan);
 		bodyPanHorizontal.addView(rightPan);
-		super.LL_featurePan.addView(bodyPanHorizontal);
+		super.LL_topPan.removeView(super.LL_featurePan);
+		super.LL_infoPan.addView(bodyPanHorizontal);
 
 		handler = new Handler() {
 			@Override

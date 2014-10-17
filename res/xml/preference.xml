@@ -29,14 +29,14 @@ android:title="Préférences">
      <EditTextPreference android:key="URL" android:title="URL" android:shouldDisableView="true" android:enabled="false" android:selectable="false" />
  </PreferenceCategory><PreferenceCategory android:title="@string/usage_settings"><Preference android:summary="@string/usage_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/><CheckBoxPreference android:summaryOn="Alternative on/off" android:summaryOff="Normal on/off" android:key="WIDGET_CHOICE" android:title="@string/widget_choice" />
  <CheckBoxPreference android:summaryOn="AChartengine Graph" android:summaryOff="Normal Graph" android:key="Graph_CHOICE" android:title="@string/graph_choice"/>
- <CheckBoxPreference android:summaryOn="1 colum in landscape" android:summaryOff="2 colums in Landcape" android:key="twocol_lanscape" android:title="@string/twocollandscapecheckbox"/>
- <CheckBoxPreference android:summaryOn="1 colum in portrait" android:summaryOff="2 colums in portrait" android:key="twocol_portrait" android:title="@string/twocolportraitcheckbox"/>
+ <CheckBoxPreference android:summaryOn="1 colum in landscape" android:summaryOff="2 colums in Landcape" android:key="twocol_lanscape" android:title="@string/twocollandscapecheckbox" android:defaultValue="true"/>
+ <CheckBoxPreference android:summaryOn="1 colum in portrait" android:summaryOff="2 colums in portrait" android:key="twocol_portrait" android:title="@string/twocolportraitcheckbox" android:defaultValue="true"/>
  <CheckBoxPreference android:summaryOn="Usage organisation" android:summaryOff="House organisation" android:key="BY_USAGE" android:title="@string/usage_byusagecheckbox"/>
  
  
 </PreferenceCategory><PreferenceCategory android:title="@string/map_settings"><Preference android:summary="@string/map_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/>
-    <CheckBoxPreference android:summaryOn="Allow drag on map" android:summaryOff="Drag in map not allowed" android:key="DRAG" android:title="@string/map_option_drag"/>
-    <CheckBoxPreference android:summaryOn="Allow zoom in map" android:summaryOff="Map not zoomable" android:key="ZOOM" android:title="@string/map_option_zoom"/>
+    <CheckBoxPreference android:summaryOn="Allow drag on map" android:summaryOff="Drag in map not allowed" android:key="DRAG" android:title="@string/map_option_drag" android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="Allow zoom in map" android:summaryOff="Map not zoomable" android:key="ZOOM" android:title="@string/map_option_zoom" android:defaultValue="true"/>
     <CheckBoxPreference android:summaryOn="Hide text on map" android:summaryOff="Show text in map" android:key="HIDE" android:title="HIDE"/>
     <CheckBoxPreference android:summaryOn="Menu not available in map" android:summaryOff="Menu available in map" android:key="map_menu_disable" android:title="@string/map_option_menu_disable"/>
     
@@ -44,19 +44,19 @@ android:title="Préférences">
     <Preference android:title="@string/map_option_size" android:defaultValue="800" android:key="SIZE"/>
     
 </PreferenceCategory><PreferenceCategory android:title="@string/debug_settings">
-    <Preference android:summary="@string/debug_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/><CheckBoxPreference android:summaryOn="LOG_DEBUG on" android:summaryOff="LOG_DEBUG off" android:key="LOG_DEBUG" android:title="LOG_DEBUG"/>
-    <CheckBoxPreference android:summaryOn="LOG_ERROR on" android:summaryOff="LOG_ERROR off" android:key="LOG_ERROR" android:title="LOG_ERROR"/>
-    <CheckBoxPreference android:summaryOn="LOG_INFO on" android:summaryOff="LOG_INFO off" android:key="LOG_INFO" android:title="LOG_INFO"/>
-    <CheckBoxPreference android:summaryOn="LOG_VERBOSE on" android:summaryOff="LOG_VERBOSE off" android:key="LOG_VERBOSE" android:title="LOG_VERBOSE"/>
-    <CheckBoxPreference android:summaryOn="LOG_WARNING on" android:summaryOff="LOG_WARNING off" android:key="LOG_WARNING" android:title="LOG_WARNING"/>
-    <CheckBoxPreference android:summaryOn="SYSTEMLOG on" android:summaryOff="SYSTEMLOG off" android:key="SYSTEMLOG" android:title="@string/debug_system"/>
+    <Preference android:summary="@string/debug_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/><CheckBoxPreference android:summaryOn="LOG_DEBUG on" android:summaryOff="LOG_DEBUG off" android:key="LOG_DEBUG" android:title="LOG_DEBUG" android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="LOG_ERROR on" android:summaryOff="LOG_ERROR off" android:key="LOG_ERROR" android:title="LOG_ERROR" android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="LOG_INFO on" android:summaryOff="LOG_INFO off" android:key="LOG_INFO" android:title="LOG_INFO" android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="LOG_VERBOSE on" android:summaryOff="LOG_VERBOSE off" android:key="LOG_VERBOSE" android:title="LOG_VERBOSE" android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="LOG_WARNING on" android:summaryOff="LOG_WARNING off" android:key="LOG_WARNING" android:title="LOG_WARNING" android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="SYSTEMLOG on" android:summaryOff="SYSTEMLOG off" android:key="SYSTEMLOG" android:title="@string/debug_system" android:defaultValue="true"/>
     <CheckBoxPreference android:summaryOn="SCREENLOG on" android:summaryOff="SCREENLOG off" android:key="SCREENLOG" android:title="@string/debug_screen"/>
-    <CheckBoxPreference android:summaryOn="TEXTLOG on" android:summaryOff="TEXTLOG off" android:key="TEXTLOG" android:title="@string/debug_file"/>
+    <CheckBoxPreference android:summaryOn="TEXTLOG on" android:summaryOff="TEXTLOG off" android:key="TEXTLOG" android:title="@string/debug_file" android:defaultValue="true"/>
     <EditTextPreference android:title="@string/debug_dirpath" android:dialogTitle="LOGPATH" android:key="LOGPATH"/>
     <EditTextPreference android:title="@string/debug_filename" android:dialogTitle="LOGNAME" android:key="LOGNAME"/>
     <CheckBoxPreference android:summaryOn="Device id show" android:summaryOff="Device id hide" android:key="DEV" android:title="@string/network_Text18"/>
     
-</PreferenceCategory><PreferenceCategory android:title="@string/house_settings">
+</PreferenceCategory><PreferenceCategory android:title="@string/house_settings" android:summary="Soon......">
     <Preference android:summary="@string/house_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/>
 </PreferenceCategory>
  

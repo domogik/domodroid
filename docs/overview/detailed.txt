@@ -70,9 +70,13 @@ Interactivity, linking, scripting and animation.
 
 Arc commands in paths (work on this is in progress). 
 
+.. image:: Menu_open_in_map.png
 
 Add widgets button allows users to place a widget on the map by choosing an item from the feature list and touching the map to place the widget.
 It can be replaced later by using move widget    
+
+.. image:: map_add_list.png
+.. image:: map_add_list1.png
 
 Help open the map mode help splash screen. 
 
@@ -82,7 +86,7 @@ Move widgets button allows users to move the widget from the current map, select
 
 Remove all  button allows users to remove all widget from the current map. 
 
-.. image:: Menu_open_in_map.png
+
 
 Camera
 ======

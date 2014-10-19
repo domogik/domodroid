@@ -106,7 +106,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Boolean reload = false;
 	DialogInterface.OnClickListener reload_listener = null;
 	DialogInterface.OnDismissListener sync_listener = null;
-	private Boolean by_usage = false;
+	private static Boolean by_usage = false;
 	private Boolean init_done = false;
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
 	private Boolean dont_freeze = false;
@@ -123,7 +123,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Boolean end_of_init_requested = true;
 	private String mytag="Activity_Main";
 	private Menu menu;
-	 
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -472,11 +472,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 		AD_notSyncAlert = new AlertDialog.Builder(this);
 		AD_notSyncAlert.setMessage(getText(R.string.not_sync)).setTitle("Warning!");
 		AD_notSyncAlert.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-
-	public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();						
+				}
 			}
-		});
+		);
 
 	}
 	
@@ -762,21 +762,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 		return true;
 	}
 	
-	private Boolean restartdomodroid(){
-		Intent i = getBaseContext().getPackageManager()
-	            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
-		return true;
-	}
-	
-	private Boolean restartactivity(){
-		Intent intent = getIntent();
-	    finish();
-	    startActivity(intent);
-		return true;
-	}
-	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
@@ -806,15 +791,15 @@ public class Activity_Main extends Activity implements OnClickListener{
 			return true;
 
         case R.id.menu_house_config:
-        	//Disconnect all opened sessions....
 			Tracer.v(mytag+".onclick()","Call to House settings screen");
 			DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
 			DIALOG_house_set.show();
+			//TODO Try to redraw after house dialog closed.
+			//loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
 			return true;
 
         case R.id.menu_preferences:
-        	// click on 'sync' button into Sliding_Drawer View
-        	//TODO prepare a normal preferences menu. 
+        	//Prepare a normal preferences activity. 
 			Intent helpI = new Intent(Activity_Main.this,Preference.class);
 			startActivity(helpI);
 			return true;
@@ -851,7 +836,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if((keyCode == 4) && historyPosition > 0){
 			historyPosition--;
-			loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
+			refresh();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -884,14 +869,12 @@ public class Activity_Main extends Activity implements OnClickListener{
 	// (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
 	{
 	    super.onConfigurationChanged(newConfig);
-	    //setContentView(R.layout.activity_home);
 	    refresh();
 	}
 	
 	public void refresh()
 	{
-	   //setContentView(R.layout.activity_home);
-	    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
+		loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
 	}
 }
 

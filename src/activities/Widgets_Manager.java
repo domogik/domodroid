@@ -225,7 +225,7 @@ public class Widgets_Manager {
 				tmpPan.addView(list);
 				Tracer.i(mytag,"   ==> Graphical_List");
 			} else if(Value_type.equals("string")){
-				//TODO New widget for callerID
+				//New widget for callerID
 				if(feature.getDevice_feature_model_id().contains("call")) {
 					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
 							State_key,URL,iconName,update_timer,

@@ -145,7 +145,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 	public void run() {
 		JSONObject json_Ack = null;
 		try {
-			json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command,login,password);
+			json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command,login,password);
 		} catch (Exception e) {
 			Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
 		}

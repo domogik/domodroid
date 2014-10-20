@@ -605,12 +605,13 @@ public class WidgetUpdate  {
 					JSONObject json_widget_state = null;
 					stats_com.add(Stats_Com.STATS_SEND, request.length());
 					try{
-						json_widget_state = Rest_com.connect(request,login,password);
+						json_widget_state = Rest_com.connect_jsonobject(request,login,password);
 					} catch (Exception e) {
 						//stats request cannot be completed (broken link or terminal in standby ?)
 						//Will retry automatically in 2'05, if no events received
 						Tracer.e(mytag,"get stats : Rinor error <"+e.getMessage()+">");
-						Toast.makeText(context,  "Error "+e.getMessage(), Toast.LENGTH_SHORT).show();
+						//Toast not available in asynctask
+						//Toast.makeText(context,  "Error "+e.getMessage().toString(), Toast.LENGTH_SHORT).show();
 			        	return null;
 					}
 					//Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));

@@ -565,7 +565,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				JSONObject json_GraphValues = null;
 				try {
-					json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+
+					json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+
 						state_key+
 						"/from/"+
 						startTimestamp+

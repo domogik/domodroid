@@ -309,7 +309,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 			updating=3;
 			JSONObject json_Ack = null;
 			try {
-				json_Ack = Rest_com.connect(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress,login,password);
+				json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress,login,password);
 			} catch (Exception e) {
 				Tracer.e(mytag, "Rest exception getting state : <"+e.getMessage()+">");
 			}

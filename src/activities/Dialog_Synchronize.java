@@ -142,7 +142,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				// if API rinor >0.5 génération auto sinon classic
 				JSONObject json_rinor = null;
 				try {
-					json_rinor = Rest_com.connect(urlAccess,login,password);
+					json_rinor = Rest_com.connect_jsonobject(urlAccess,login,password);
 				} catch (Exception e) {
 					json_rinor = null;
 				}
@@ -151,20 +151,36 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					handler.sendEmptyMessage(0);
 					return null;
 				}
-				String Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
+				//TODO test for other version
+				String Rinor_Api_ver=new String();
+				try {
+					Rinor_Api_ver = json_rinor.getJSONObject("info").getString("REST_API_version");
+				} catch (Exception e){
+					Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
+				}
+				Tracer.d(mytag, "RinorAPI= "+Rinor_Api_ver);
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
-				String domogik_Version = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("Domogik_version");
-				
+				String domogik_Version =new String();
+				try{
+					domogik_Version = json_rinor.getJSONObject("info").getString("Domogik_version");
+				}catch (Exception e){
+					domogik_Version = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("Domogik_version");	
+				}
+				Tracer.d(mytag, "domogik_Version= "+domogik_Version);
 				
 				JSONObject json_AreaList = null;
 				JSONObject json_RoomList = null;
 				JSONObject json_FeatureList = null;
+				JSONArray json_FeatureList1 = null;
+				JSONObject json_FeatureList2=null;
 				JSONObject json_FeatureAssociationList = null;
 				JSONObject json_IconList = null;
 				Tracer.d(mytag, "urlAccess = <"+urlAccess+">");
 				
-				if(Rinor_Api_Version <=0.5){
-					json_AreaList = Rest_com.connect(urlAccess+"base/area/list/",login,password);
+				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
+				
+				if(Rinor_Api_Version <=0.5f){
+					json_AreaList = Rest_com.connect_jsonobject(urlAccess+"base/area/list/",login,password);
 					if(json_AreaList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -173,7 +189,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					Tracer.d(mytag, "AreaList = <"+json_AreaList.toString()+">");
 					
 					publishProgress(20);
-					json_RoomList = Rest_com.connect(urlAccess+"base/room/list/",login,password);
+					json_RoomList = Rest_com.connect_jsonobject(urlAccess+"base/room/list/",login,password);
 					if(json_RoomList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -182,7 +198,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					//Tracer.d(mytag, "RoomList = <"+json_RoomList.toString()+">");
 					
 					publishProgress(40);
-					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list",login,password);
+					json_FeatureList = Rest_com.connect_jsonobject(urlAccess+"base/feature/list",login,password);
 					if(json_FeatureList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -190,14 +206,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					}
 					
 					publishProgress(60);
-					json_FeatureAssociationList = Rest_com.connect(urlAccess+"base/feature_association/list/",login,password);
+					json_FeatureAssociationList = Rest_com.connect_jsonobject(urlAccess+"base/feature_association/list/",login,password);
 					if(json_FeatureAssociationList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
 						return null;
 					}
 					publishProgress(80);
-					json_IconList = Rest_com.connect(urlAccess+"base/ui_config/list/",login,password);
+					json_IconList = Rest_com.connect_jsonobject(urlAccess+"base/ui_config/list/",login,password);
 					if(json_IconList == null) {
 						//Cannot connect to server...
 						handler.sendEmptyMessage(0);
@@ -216,9 +232,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
 					
 					
-				}else{
+				}else if (Rinor_Api_Version <= 0.6f){
 					// Fonction special Basilic domogik 0.3
-					json_FeatureList = Rest_com.connect(urlAccess+"base/feature/list",login,password);
+					json_FeatureList = Rest_com.connect_jsonobject(urlAccess+"base/feature/list",login,password);
 					if(json_FeatureList == null) {
 						// Cannot connect to Rinor server.....
 						handler.sendEmptyMessage(0);
@@ -327,18 +343,160 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putBoolean("SYNC", true);
 					prefEditor.putBoolean("BY_USAGE", true);
 					prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
+				
+				}else if (Rinor_Api_Version <= 0.7f){
+					//TODO lot of work on this.
+					// Fonction special Domogik 0.4
+					json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess+"device",login,password);
+					if(json_FeatureList1 == null) {
+						// Cannot connect to Rinor server.....
+						handler.sendEmptyMessage(0);
+						return null;
+					}
+					publishProgress(25);
+					Tracer.d(mytag, "connected to a 0.4 domogik Version");
+					
+					//Create JSONObject
+					json_RoomList = new JSONObject();
+					json_FeatureAssociationList = new JSONObject();
+					json_AreaList = new JSONObject();
+					JSONObject map_area = new JSONObject();
+					JSONObject area = new JSONObject();
+					//Create JSONArray
+					JSONArray list = new JSONArray();
+					JSONArray rooms = new JSONArray();
+					JSONArray ListFeature = new JSONArray();
+	                //Create string
+					String usage = new String();
+					//Create an ArrayList
+					ArrayList<String> list_usage = new ArrayList<String>();
+										
+					json_AreaList.put("status","OK");
+					json_AreaList.put("code",0);
+					json_AreaList.put("description","None");
+					map_area.put("description", "");
+					map_area.put("id", "1");
+					map_area.put("name", "Usage");
+					list.put(map_area);
+					json_AreaList.put("area",list);
+					publishProgress(45);
+					
+					json_RoomList.put("status","OK");
+					json_RoomList.put("code",0);
+					json_RoomList.put("description","None");
+					area.put("description","");
+					area.put("id","1");
+					area.put("name","Usage");
+					
+					json_FeatureList = new JSONObject();
+					json_FeatureList.put("status","OK");
+					json_FeatureList.put("code","0");
+					json_FeatureList.put("description","");
+										
+					int j=2;
+					int k=50;
+					json_FeatureAssociationList.put("status","OK");
+					json_FeatureAssociationList.put("code","0");
+					json_FeatureAssociationList.put("description","");
+	                publishProgress(55);
+					
+	                int list_size = 0;
+	                if(json_FeatureList1 != null)
+	                	list_size = json_FeatureList1.length();
+	                Tracer.d(mytag,"Device list size = "+list_size);
+				for(int i = 0; i < list_size; i++) {
+	                int list_size1 = 0;
+					json_FeatureList2=json_FeatureList1.getJSONObject(i).getJSONObject("sensors");
+					if(json_FeatureList2 != null)
+	                	list_size1 = json_FeatureList2.length();
+	                Tracer.d(mytag,list_size1+" sensors for device id "+ json_FeatureList1.getJSONObject(i).getString("id") );
+	                JSONArray listsensor = json_FeatureList2.names();
+	                for(int y = 0; y < list_size1; y++) {
+						try {
+							//TODO reorder for the moment it his done by data_Type
+							usage = json_FeatureList1.getJSONObject(i).getString("name");
+						} catch (Exception e) {
+							usage=null;
+							// Cannot parse JSON Array or JSONObject
+							 Tracer.d(mytag,"Exception processing sensor list ("+y+")");
+						}
+						 Tracer.d(mytag,"Features list processing usage = "+usage);
+							
+						// Create a pseudo 'room' for each usage returned by Rinor
+						if (usage != null) {
+							if(! list_usage.contains(usage)){
+								if(json_FeatureList2.length() > 0) {
+									publishProgress(100*y/json_FeatureList2.length());
+									JSONObject room = new JSONObject();
+									room.put("area_id","1");
+									room.put("description","");
+	
+									room.put("area",area);
+									room.put("id",j);
+									j++;
+									room.put("name",json_FeatureList1.getJSONObject(i).getString("name"));
+									rooms.put(room);
+									list_usage.add(json_FeatureList1.getJSONObject(i).getString("name"));
+								}
+							}
+							// And its associated widget
+							JSONObject Widget = new JSONObject();
+							Widget.put("place_type","room");
+							Widget.put("place_id",list_usage.indexOf( 
+									json_FeatureList1.getJSONObject(i).getString("name"))+2); //id_rooms);
+							Widget.put("device_feature_id",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("id"));
+							Widget.put("id",k);
+							k++;
+							JSONObject device_feature = new JSONObject();
+							JSONObject device_feature1 = new JSONObject();
+							device_feature.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
+							device_feature.put("id",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("id"));
+							device_feature.put("device_id",json_FeatureList1.getJSONObject(i).getString("id"));
+							Widget.put("device_feature", device_feature);
+							ListFeature.put(Widget);
+							json_FeatureAssociationList.put("feature_association",ListFeature);
+							device_feature1.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
+							device_feature1.put("id",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("id"));
+							device_feature1.put("device_id",json_FeatureList1.getJSONObject(i).getString("id"));
+							device_feature1.put("device_usage_id",json_FeatureList1.getJSONObject(i).getString("client_id"));
+							device_feature1.put("adress","");
+							device_feature1.put("device_type_id",json_FeatureList1.getJSONObject(i).getString("device_type_id"));
+							device_feature1.put("description",json_FeatureList1.getJSONObject(i).getString("description"));
+							device_feature1.put("name",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("name"));
+							device_feature1.put("stat_key",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
+							device_feature1.put("parameters","1");
+							device_feature1.put("value_type",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("data_type"));
+							db.insertFeature_0_4(device_feature1);
+						}
+						
+					} // for loop on feature list...
+					//Prepare list of rooms, and list of usable features
+					json_RoomList.put("room", rooms);
+					
 				}
-				// Common sequence for both versions sync
+					//Save result in sharedpref
+					prefEditor.putString("AREA_LIST",json_AreaList.toString());
+					prefEditor.putString("ROOM_LIST",json_RoomList.toString());
+					prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());
+					prefEditor.putString("ASSOCIATION_LIST",json_FeatureAssociationList.toString());
+					//prefEditor.putString("ICON_LIST",json_IconList.toString());
+					prefEditor.putBoolean("SYNC", true);
+					prefEditor.putBoolean("BY_USAGE", true);
+					prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
+				}
+				
+				// Common sequence for all versions sync
 				
 				// Insert results into local database
 				
-				db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
+				
 				Tracer.v(mytag,"Updating database tables with new House configuration");
 				db.insertArea(json_AreaList);
 				db.insertRoom(json_RoomList);
-				db.insertFeature(json_FeatureList);
+				if(Rinor_Api_Version <=0.6f)
+					db.insertFeature(json_FeatureList);
 				db.insertFeatureAssociation(json_FeatureAssociationList);
-				if(Rinor_Api_Version <=0.5){
+				if(Rinor_Api_Version <=0.5f){
 					db.insertIcon(json_IconList);
 				}
 				
@@ -352,7 +510,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				String urlUpdate = urlAccess+"stats/multi/";
 				Tracer.v(mytag,"prepare UPDATE_URL items="+listFeature.length);
 				for (Entity_Feature feature : listFeature) {
-					urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
+					if(Rinor_Api_Version <=0.6f){
+						urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
+					}if(Rinor_Api_Version <=0.7f){
+						urlUpdate = urlUpdate.concat(feature.getDevId()+"/");
+					}
 				}
 				prefEditor.putString("UPDATE_URL", urlUpdate);
 				need_refresh = true;	// To notify main activity that screen must be refreshed

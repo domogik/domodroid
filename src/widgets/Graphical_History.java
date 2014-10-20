@@ -209,7 +209,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		listeChoices = new ListView(context);
 		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
 		try {
-			json_LastValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
+			json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
 			itemArray = json_LastValues.getJSONArray("stats");
 			for (int i =itemArray.length(); i >= 0; i--){
 				try {

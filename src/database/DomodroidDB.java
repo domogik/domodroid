@@ -115,6 +115,27 @@ public class DomodroidDB {
 		}
 		}
 	}
+	public void insertFeature_0_4(JSONObject itemArray) throws JSONException{
+		ContentValues values = new ContentValues();
+		try {
+				values.put("device_feature_model_id", itemArray.getString("device_feature_model_id").toString());
+				values.put("id", itemArray.getInt("id"));
+				values.put("device_id", itemArray.getInt("device_id"));
+				values.put("device_usage_id", itemArray.getString("device_usage_id").toString());
+				values.put("address", itemArray.getString("adress").toString());
+				values.put("device_type_id", itemArray.getString("device_type_id").toString());
+				values.put("description", itemArray.getString("description").toString());
+				values.put("name", itemArray.getString("name").toString());
+				values.put("state_key", itemArray.getString("stat_key"));
+				values.put("parameters", itemArray.getString("parameters").toString());
+				values.put("value_type", itemArray.getString("value_type"));
+				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
+			} catch (Exception e) {
+				// Cannot parse JSON Array or JSONObject
+				 Tracer.d(mytag,"Exception inserting Features list in bdd");
+				 Tracer.d(mytag,e.toString());
+			}
+	}
 
 	public void insertFeatureAssociation(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
@@ -652,8 +673,6 @@ public class DomodroidDB {
 		
 
 		return state;
-	}
-
-	
+	}	
 
 }

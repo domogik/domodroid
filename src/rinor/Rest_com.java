@@ -30,6 +30,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,7 +65,7 @@ public class Rest_com {
     }
  
     @SuppressWarnings("null")
-	public static JSONObject connect(String url,String login, String password)
+	public static JSONObject connect_jsonobject(String url,String login, String password)
     {
     	
     	tracerengine Tracer = null;
@@ -85,7 +86,7 @@ public class Rest_com {
 			    if (entity != null) {
 			    	InputStream instream = entity.getContent();
 			    	result= convertStreamToString(instream);
-			    	json=new JSONObject(result);
+			    	json= new JSONObject(result);
 			    	instream.close();
 			    }
 			}
@@ -106,7 +107,50 @@ public class Rest_com {
         }
         return json;
     }
-	public void setParams(SharedPreferences params) {
+    @SuppressWarnings("null")
+	public static JSONArray connect_jsonarray(String url,String login, String password)
+    {
+    	
+    	tracerengine Tracer = null;
+    	JSONArray json = null;
+    		try {
+    		DefaultHttpClient httpclient = new DefaultHttpClient();
+    		httpclient.getCredentialsProvider().setCredentials( new AuthScope(null, -1),new UsernamePasswordCredentials(login+":"+password));
+    		// TODO Set timeout
+    		// this doesn't work
+    		//httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
+    		HttpGet httpget = new HttpGet(url);    		
+    		HttpResponse response;
+    		String result = null;
+            response = httpclient.execute(httpget);
+            if(response.getStatusLine().getStatusCode() == 200)
+			{
+            	HttpEntity entity = response.getEntity();
+			    if (entity != null) {
+			    	InputStream instream = entity.getContent();
+			    	result= convertStreamToString(instream);
+			    	json= new JSONArray(result);
+			    	instream.close();
+			    }
+			}
+            else
+			{
+            	Tracer.d(mytag, "Resource not available>");
+			}
+ 
+ 
+        } catch (HttpHostConnectException e) {
+        	//e.printStackTrace();
+        } catch (ClientProtocolException e) {
+        	e.printStackTrace();
+        } catch (IOException e) {
+        	e.printStackTrace();
+        } catch (JSONException e) {
+        	e.printStackTrace();
+        }
+        return json;
+    }
+    public void setParams(SharedPreferences params) {
 		this.params = params;
 	}
 }

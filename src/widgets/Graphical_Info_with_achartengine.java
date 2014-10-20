@@ -478,7 +478,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		JSONObject json_GraphValues = null;
 		try {
 			//json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+1385857510+"/interval/"+step+"/selector/avg");
-			json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
+			json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
 			
 		} catch (Exception e) {
 			//return null;

@@ -238,7 +238,7 @@ public class Events_manager {
 				stats_com.add(Stats_Com.EVENTS_SEND, request.length());
 				Tracer.w(mytag,"Requesting server <"+request+">");
 				try {
-					event = Rest_com.connect(request,login,password);		//Blocking request : we must have an answer to continue...
+					event = Rest_com.connect_jsonobject(request,login,password);		//Blocking request : we must have an answer to continue...
 					error=0;
 				} catch (Exception e) {
 					error = 1;
@@ -350,7 +350,7 @@ public class Events_manager {
 				try {
 					Tracer.w(mytag,"Freeing ticket <"+request+">");
 					stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-					event = Rest_com.connect(request,login,password);		//Blocking request : we must have an answer to continue...
+					event = Rest_com.connect_jsonobject(request,login,password);		//Blocking request : we must have an answer to continue...
 					stats_com.add(Stats_Com.EVENTS_RCV, event.length());
 					Tracer.w(mytag,"Received on free ticket = <"+event.toString()+">");
 				} catch (Exception e) {

@@ -66,7 +66,7 @@ public class WidgetUpdate  {
 	private static Stats_Com stats_com = null; 
 	private String login;
 	private String password;
-	
+	private float api_version;
 	//
 	// Table of handlers to notify
 	// pos 0 = Main
@@ -125,7 +125,7 @@ public class WidgetUpdate  {
 		activated = true;
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=sharedparams.getFloat("API_VERSION", 0);
 		/*
 		if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -281,8 +281,6 @@ public class WidgetUpdate  {
 			stats_com.cancel();
 		stats_com = null;
 		Tracer.d(mytag,"cache engine cancel requested : Waiting for events_manager dead !");
-		
-		
 		
 	}
 	
@@ -601,11 +599,21 @@ public class WidgetUpdate  {
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");
 				String request = sharedparams.getString("UPDATE_URL", null);
+				
 				if(request != null){
 					JSONObject json_widget_state = null;
+					JSONArray json_widget_state_0_4 = null;
 					stats_com.add(Stats_Com.STATS_SEND, request.length());
 					try{
-						json_widget_state = Rest_com.connect_jsonobject(request,login,password);
+						if(api_version<=0.6f){
+							json_widget_state = Rest_com.connect_jsonobject(request,login,password);
+							Tracer.d(mytag,"json_widget_state for <0.6 API="+json_widget_state.toString());
+						}else if(api_version==0.7f){
+							json_widget_state_0_4 = Rest_com.connect_jsonarray(request,login,password);
+							json_widget_state=new JSONObject();
+							json_widget_state.put("stats", json_widget_state_0_4);
+							Tracer.d(mytag,"json_widget_state for 0.7 API="+json_widget_state.toString());
+						}
 					} catch (Exception e) {
 						//stats request cannot be completed (broken link or terminal in standby ?)
 						//Will retry automatically in 2'05, if no events received
@@ -649,13 +657,14 @@ public class WidgetUpdate  {
 		
 		if(json_widget_state == null)
 			return 0;
-		//Tracer.i(mytag, "Cache update : stats result <"+json_widget_state.toString()+">");
+		Tracer.i(mytag, "Cache update : stats result <"+json_widget_state.toString()+">");
 		
 		try {
 			itemArray = json_widget_state.getJSONArray("stats");
 			to_process = true;
 		}catch (Exception e) {
 			Tracer.i(mytag, "Cache update : No stats result !");
+			Tracer.d(mytag,e.toString());
 			return 0;
 		}
 		if(itemArray == null)
@@ -664,20 +673,38 @@ public class WidgetUpdate  {
 		for (int i =0; i < itemArray.length(); i++){
 			//Retrieve Json infos
 			try {
-				dev_id = itemArray.getJSONObject(i).getInt("device_id");
+				if(api_version<=0.6f){
+					dev_id = itemArray.getJSONObject(i).getInt("device_id");
+				}else if(api_version==0.7f){
+					dev_id = itemArray.getJSONObject(i).getInt("id");
+				}
+				
 			}catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No feature id ! ");
+				Tracer.d(mytag,e.toString());
 				to_process = false;
 			}
 			try {
-				skey = itemArray.getJSONObject(i).getString("skey");
+				if(api_version<=0.6f){
+					skey = itemArray.getJSONObject(i).getString("skey");
+				}else if(api_version==0.7f){
+					skey = itemArray.getJSONObject(i).getString("reference");
+				}
 			} catch (Exception e) {
+				Tracer.i(mytag, "Cache update : No skey ! ");
+				Tracer.d(mytag,e.toString());
 				skey = "_";
 				Val = "0";
 			}
 			try {
-				Val = itemArray.getJSONObject(i).getString("value");
+				if(api_version<=0.6f){
+					Val = itemArray.getJSONObject(i).getString("value");
+				}else if(api_version==0.7f){
+					Val = itemArray.getJSONObject(i).getString("last_value");
+				}
 			}catch (Exception e) {
+				Tracer.i(mytag, "Cache update : No value ! ");
+				Tracer.d(mytag,e.toString());
 				Val = "0";
 			}
 			// Try to put this in cache, now

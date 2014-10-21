@@ -5,6 +5,7 @@ import org.domogik.domodroid13.R;
 import rinor.Rest_com;
 import database.DomodroidDB;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import widgets.Entity_Feature;
 
@@ -348,8 +349,17 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					//TODO lot of work on this.
 					// Fonction special Domogik 0.4
 					json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess+"device",login,password);
+					JSONObject Json_data_type = new JSONObject();
+					Json_data_type = Rest_com.connect_jsonobject(urlAccess+"datatype",login,password);
 					if(json_FeatureList1 == null) {
 						// Cannot connect to Rinor server.....
+						Tracer.d(mytag, "Cannot connect to Rinor server.....");
+						handler.sendEmptyMessage(0);
+						return null;
+					}
+					if(Json_data_type == null) {
+						// Cannot get data_type from Rinor server.....
+						Tracer.d(mytag, "Cannot get data_type from Rinor server.....");
 						handler.sendEmptyMessage(0);
 						return null;
 					}
@@ -387,12 +397,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					area.put("description","");
 					area.put("id","1");
 					area.put("name","Usage");
-					
-					json_FeatureList = new JSONObject();
-					json_FeatureList.put("status","OK");
-					json_FeatureList.put("code","0");
-					json_FeatureList.put("description","");
-										
+															
 					int j=2;
 					int k=50;
 					json_FeatureAssociationList.put("status","OK");
@@ -464,8 +469,23 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							device_feature1.put("description",json_FeatureList1.getJSONObject(i).getString("description"));
 							device_feature1.put("name",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("name"));
 							device_feature1.put("stat_key",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
-							device_feature1.put("parameters","1");
-							device_feature1.put("value_type",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("data_type"));
+							String data_type=json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("data_type");
+							String parent_type=null;
+							try{
+							parent_type=Json_data_type.getJSONObject(data_type).getString("parent");
+							}catch (JSONException e){
+								parent_type=data_type;
+							}
+							parent_type=parent_type.replace("DT_", "");
+							parent_type=parent_type.toLowerCase();
+							device_feature1.put("value_type",parent_type);
+							String parameters=null;
+							try{
+								parameters="{&quot;unit&quot;:&quot;"+Json_data_type.getJSONObject(data_type).getString("unit")+"&quot;}";
+								}catch (JSONException e){
+									parameters = " ";
+								}
+							device_feature1.put("parameters",parameters);
 							db.insertFeature_0_4(device_feature1);
 						}
 						
@@ -477,12 +497,17 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					//Save result in sharedpref
 					prefEditor.putString("AREA_LIST",json_AreaList.toString());
 					prefEditor.putString("ROOM_LIST",json_RoomList.toString());
-					prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());
+					if(Rinor_Api_Version <=0.6f){
+						prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());	
+					}else if(Rinor_Api_Version <=0.7f){
+						prefEditor.putString("FEATURE_LIST",json_FeatureList1.toString());
+					}					
 					prefEditor.putString("ASSOCIATION_LIST",json_FeatureAssociationList.toString());
 					//prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
 					prefEditor.putBoolean("BY_USAGE", true);
 					prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
+					prefEditor.putFloat("API_VERSION", Rinor_Api_Version);
 				}
 				
 				// Common sequence for all versions sync
@@ -512,8 +537,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				for (Entity_Feature feature : listFeature) {
 					if(Rinor_Api_Version <=0.6f){
 						urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
-					}if(Rinor_Api_Version <=0.7f){
-						urlUpdate = urlUpdate.concat(feature.getDevId()+"/");
+					}else if(Rinor_Api_Version <=0.7f){
+						urlUpdate = urlAccess+"sensor/";
 					}
 				}
 				prefEditor.putString("UPDATE_URL", urlUpdate);

@@ -673,12 +673,7 @@ public class WidgetUpdate  {
 		for (int i =0; i < itemArray.length(); i++){
 			//Retrieve Json infos
 			try {
-				if(api_version<=0.6f){
-					dev_id = itemArray.getJSONObject(i).getInt("device_id");
-				}else if(api_version==0.7f){
-					dev_id = itemArray.getJSONObject(i).getInt("id");
-				}
-				
+				dev_id = itemArray.getJSONObject(i).getInt("device_id");
 			}catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No feature id ! ");
 				Tracer.d(mytag,e.toString());

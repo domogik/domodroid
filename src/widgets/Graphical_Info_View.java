@@ -59,6 +59,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private float avgf;
 
 	public int dev_id;
+	public int id;
 	public String state_key;
 	public String url;
 	public Thread thread;
@@ -101,6 +102,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private DisplayMetrics metrics;
 	private float size15;
 	private float size10;
+	private float api_version;
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params){
@@ -110,7 +112,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		this.params = params;
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		values = new Vector<Vector<Float>>();
 		activate=true;
 		this.myself=this;
@@ -561,32 +564,53 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				currentTimestamp=time_end.getTime()/1000;
 				startTimestamp=time_start.getTime()/1000;
 				
-				
-				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				JSONObject json_GraphValues = null;
 				try {
-					json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+
+					if(api_version<=0.6f){
+						//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+						json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+
 						state_key+
 						"/from/"+
 						startTimestamp+
 						"/to/"+
 						currentTimestamp+
 						"/interval/"+step+"/selector/avg",login,password);
+					}else if(api_version==0.7f){
+						//Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+						//Don't forget old "dev_id"+"state_key" is replaced by "id"
+						json_GraphValues = Rest_com.connect_jsonobject(url+"sensorhistory/id/"+id+
+								"/from/"+
+								startTimestamp+
+								"/to/"+
+								currentTimestamp+
+								"/interval/"+step+"/selector/avg",login,password);
+					}
 				} catch (Exception e) {
+					Tracer.d(mytag, "Could not get sensor history.");
+					Tracer.d(mytag, e.toString());
 					return null;
 				}
 				//Tracer.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
-				if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
+				
+				//TODO
+				//replace json_GraphValues.getJSONArray("stats") != null by somthing else as it may crash on a 0.4.
+				//if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
+				if(! (json_GraphValues != null)) {
 					//That seems to be a zombie
 					loaded=false;
 					handler.sendEmptyMessage(0);	// To force a close of this instance
 					return null;
 				}
 				Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
+				JSONArray itemArray=null;
+				JSONArray valueArray=null;
+				if(api_version<=0.6f){
+					itemArray = json_GraphValues.getJSONArray("stats");
+					valueArray = itemArray.getJSONObject(0).getJSONArray("values");
+				}else if(api_version==0.7f){
+					valueArray = json_GraphValues.getJSONArray("values");
+				}
 				
-				JSONArray itemArray = json_GraphValues.getJSONArray("stats");
-				JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-
 				//minf=(float)valueArray.getJSONArray(0).getDouble(limit-1);
 				maxf=minf=0;
 				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());

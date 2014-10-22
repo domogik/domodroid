@@ -166,6 +166,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 			//canvas
 			canvas = new Graphical_Info_View(Tracer,context,params);
 			canvas.dev_id = dev_id;
+			canvas.id = id;
 			canvas.state_key = state_key;
 			canvas.url = url;
 			canvas.update = update;

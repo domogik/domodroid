@@ -164,6 +164,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	private XYSeries EmptySeries;
 	private int j;
 	private String usage;
+	private float api_version;
 	
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
@@ -259,6 +260,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
+    	api_version=params.getFloat("API_VERSION", 0);
     	
 		mytag="Graphical_Info_with_achartengine ("+dev_id+")";
 		Tracer.e(mytag,"New instance for name = "+name+" state_key = "+state_key);
@@ -473,19 +475,31 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		currentTimestamp=time_end.getTime()/1000;
 		startTimestamp=time_start.getTime()/1000;
 				
-		//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
-		Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 		JSONObject json_GraphValues = null;
 		try {
-			//json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+1385857510+"/interval/"+step+"/selector/avg");
-			json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
+			if(api_version<=0.6f){
+				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
+			}else if(api_version==0.7f){
+				//Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				//Don't forget old "dev_id"+"state_key" is replaced by "id"
+				json_GraphValues = Rest_com.connect_jsonobject(url+"sensorhistory/id/"+id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
+			}
 			
 		} catch (Exception e) {
 			//return null;
 			Tracer.e(mytag,"Error with json");
 		}
-			JSONArray itemArray = json_GraphValues.getJSONArray("stats");
-			JSONArray valueArray = itemArray.getJSONObject(0).getJSONArray("values");
+		
+		JSONArray itemArray=null;
+		JSONArray valueArray=null;
+		if(api_version<=0.6f){
+			itemArray = json_GraphValues.getJSONArray("stats");
+			valueArray = itemArray.getJSONObject(0).getJSONArray("values");
+		}else if(api_version==0.7f){
+			valueArray = json_GraphValues.getJSONArray("values");
+		}
+		
 		j=0;
 		Boolean ruptur=false;
     	for (int i =0; i < valueArray.length()-1; i++){

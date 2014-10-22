@@ -611,6 +611,8 @@ public class WidgetUpdate  {
 						}else if(api_version==0.7f){
 							json_widget_state_0_4 = Rest_com.connect_jsonarray(request,login,password);
 							json_widget_state=new JSONObject();
+							// Create a false jsonarray like if it was domomgik 0.3
+							//(meaning provide value in an stats: array containing a list of value in jsonobject format)
 							json_widget_state.put("stats", json_widget_state_0_4);
 							Tracer.d(mytag,"json_widget_state for 0.7 API="+json_widget_state.toString());
 						}
@@ -657,7 +659,7 @@ public class WidgetUpdate  {
 		
 		if(json_widget_state == null)
 			return 0;
-		Tracer.i(mytag, "Cache update : stats result <"+json_widget_state.toString()+">");
+		//Tracer.i(mytag, "Cache update : stats result <"+json_widget_state.toString()+">");
 		
 		try {
 			itemArray = json_widget_state.getJSONArray("stats");

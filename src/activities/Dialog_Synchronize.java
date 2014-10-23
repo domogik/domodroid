@@ -542,6 +542,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				//Tracer.v(mytag, "FeatureAssociationList = <"+json_FeatureAssociationList+">");
 				
 				//TODO change UrlAccess to make cache more light.
+				// 1st need to change when this urlupdate his create.
+				// 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
+				// 3rd add it in path only if it is the case.
+				// So when a user will remove it from assotiation or map it will be removed from cache
+				// And when it will be add, it wil get back in cahce. 
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				Tracer.v(mytag,"prepare UPDATE_URL items="+listFeature.length);

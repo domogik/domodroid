@@ -176,8 +176,8 @@
 	<string name="usage_explain">This screen allow widget configuration</string>
 	<string name="widget_choice">Alternative Widget:</string>
 	<string name="graph_choice">Alternative Graph:</string>
-	<string name="twocollandscapecheckbox">Forbid 2 columns in landcape:</string>
-	<string name="twocolportraitcheckbox">Forbid 2 columns in portrait:</string>
+	<string name="twocollandscapecheckbox">Nb of columns in landcape:</string>
+	<string name="twocolportraitcheckbox">Nb of columns in portrait:</string>
 	<string name="usage_byusagecheckbox">Force by usage for 0.3:</string>
 	<string name="unusable">Not available</string>
 	

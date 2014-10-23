@@ -663,7 +663,6 @@ public class WidgetUpdate  {
 		
 		try {
 			itemArray = json_widget_state.getJSONArray("stats");
-			to_process = true;
 		}catch (Exception e) {
 			Tracer.i(mytag, "Cache update : No stats result !");
 			Tracer.d(mytag,e.toString());
@@ -673,6 +672,7 @@ public class WidgetUpdate  {
 			return 0;
 		mapView = null;
 		for (int i =0; i < itemArray.length(); i++){
+			to_process = true;
 			//Retrieve Json infos
 			try {
 				dev_id = itemArray.getJSONObject(i).getInt("device_id");
@@ -692,17 +692,24 @@ public class WidgetUpdate  {
 				Tracer.d(mytag,e.toString());
 				skey = "_";
 				Val = "0";
+				to_process = false;
 			}
 			try {
 				if(api_version<=0.6f){
 					Val = itemArray.getJSONObject(i).getString("value");
 				}else if(api_version==0.7f){
-					Val = itemArray.getJSONObject(i).getString("last_value");
+					String temp = itemArray.getJSONObject(i).getString("last_value");
+					if (temp.equals(null)||temp.equals("null")){
+						to_process = false;
+					}else{
+						Val=temp;
+					}
 				}
 			}catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No value ! ");
 				Tracer.d(mytag,e.toString());
 				Val = "0";
+				to_process = false;
 			}
 			// Try to put this in cache, now
 			if(to_process) {

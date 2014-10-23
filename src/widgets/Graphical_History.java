@@ -86,7 +86,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 	private String url = null;
 	private String login;
 	private String password;
-	
+	private float api_version;
+
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
 	private tracerengine Tracer = null;
@@ -123,7 +124,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    			
+    	api_version=params.getFloat("API_VERSION", 0);
+				
 		mytag="Graphical_History("+dev_id+")";
 		
 		//state key
@@ -209,12 +211,26 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		listeChoices = new ListView(context);
 		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
 		try {
-			json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
+			if(api_version<=0.6f){
+				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
+				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
+			}else if(api_version==0.7f){
+				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/last/5");
+				//Don't forget old "dev_id"+"state_key" is replaced by "id"
+				JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url+"sensorhistory/id/"+id+"/last/5",login,password);
+				json_LastValues=new JSONObject();
+				json_LastValues.put("stats", json_LastValues_0_4);
+				
+			}
 			itemArray = json_LastValues.getJSONArray("stats");
 			for (int i =itemArray.length(); i >= 0; i--){
 				try {
 					HashMap<String,String> map=new HashMap<String,String>();
-					map.put("value",itemArray.getJSONObject(i).getString("value"));
+					if(api_version<=0.6f){
+						map.put("value",itemArray.getJSONObject(i).getString("value"));
+					}else if(api_version==0.7f){
+						map.put("value",itemArray.getJSONObject(i).getString("value_str"));
+					}
 					map.put("date",itemArray.getJSONObject(i).getString("date"));
 					listItem.add(map);
 					Tracer.d(mytag, map.toString());

@@ -43,6 +43,7 @@ public class Events_manager {
 	private Boolean sleeping = false;
 	private String login;
 	private String password;
+	private float api_version;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
@@ -83,6 +84,7 @@ public class Events_manager {
 		urlAccess = params.getString("URL","1.1.1.1");
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
+    	api_version=params.getFloat("API_VERSION", 0);
     	
 		//The father's cache should already contain a list of devices features
 		this.state_engine_handler = state_engine_handler;

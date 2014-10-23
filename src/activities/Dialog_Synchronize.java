@@ -481,10 +481,15 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							device_feature1.put("value_type",parent_type);
 							String parameters=null;
 							try{
-								parameters="{&quot;unit&quot;:&quot;"+Json_data_type.getJSONObject(data_type).getString("unit")+"&quot;}";
-								}catch (JSONException e){
+								String unit=Json_data_type.getJSONObject(data_type).getString("unit");
+								if(!unit.equals(null)&& !unit.equals("null")){
+									parameters="{&quot;unit&quot;:&quot;"+unit+"&quot;}";
+								}else{
 									parameters = " ";
-								}
+								}	
+							}catch (JSONException e){
+								parameters = " ";
+							}
 							device_feature1.put("parameters",parameters);
 							db.insertFeature_0_4(device_feature1);
 						}

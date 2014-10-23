@@ -138,6 +138,7 @@ public class Widgets_Manager {
 			String type = model[1];
 			
 			Tracer.i(mytag, "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
+			//TODO adapt to 0.4
 			if (Value_type.equals("binary")) {
 				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 					//ignore it : it'll have another device for Color, displaying the switch !)

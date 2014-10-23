@@ -242,6 +242,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						return null;
 					}
 					publishProgress(25);
+
+					//TODO grab area,room,feature and feature_assotiation from previous sync if exists.
+					//Avoiding the user organization to be lost
 					
 					//Create JSONObject
 					json_RoomList = new JSONObject();
@@ -365,6 +368,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					}
 					publishProgress(25);
 					Tracer.d(mytag, "connected to a 0.4 domogik Version");
+
+					//TODO grab area,room,feature and feature_assotiation from previous sync if exists.
+					//Avoiding the user organization to be lost
 					
 					//Create JSONObject
 					json_RoomList = new JSONObject();

@@ -672,6 +672,8 @@ public class WidgetUpdate  {
 			return 0;
 		mapView = null;
 		for (int i =0; i < itemArray.length(); i++){
+			//force to process to true for all item and then to false if something wrong
+			//then if false it will not update the cache value, avoiding display of null value.
 			to_process = true;
 			//Retrieve Json infos
 			try {
@@ -690,8 +692,6 @@ public class WidgetUpdate  {
 			} catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No skey ! ");
 				Tracer.d(mytag,e.toString());
-				skey = "_";
-				Val = "0";
 				to_process = false;
 			}
 			try {
@@ -708,7 +708,6 @@ public class WidgetUpdate  {
 			}catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No value ! ");
 				Tracer.d(mytag,e.toString());
-				Val = "0";
 				to_process = false;
 			}
 			// Try to put this in cache, now

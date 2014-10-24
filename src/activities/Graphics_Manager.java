@@ -308,7 +308,7 @@ public class Graphics_Manager {
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
 			else if(usage.equals("cron")){return R.drawable.map_usage_cron_off;}
-			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_off;}
+			else if(usage.equals("door")){return R.drawable.map_usage_door_off;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_off;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_off;}
 			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}
@@ -327,7 +327,7 @@ public class Graphics_Manager {
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}
 			else if(usage.equals("cron")){return R.drawable.map_usage_cron_on;}
-			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_on;}
+			else if(usage.equals("door")){return R.drawable.map_usage_door_on;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_on;}
 			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_on;}

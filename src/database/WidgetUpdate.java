@@ -13,6 +13,7 @@ import rinor.Rest_com;
 import rinor.Rinor_event;
 import rinor.Stats_Com;
 import widgets.Entity_Feature;
+import widgets.Entity_Feature_Association;
 import widgets.Entity_Map;
 import widgets.Entity_client;
 
@@ -25,6 +26,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -600,7 +602,44 @@ public class WidgetUpdate  {
 				}
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");
+				
+
+				//TODO change UrlAccess to make cache more light.
+				// 1st need to change when this urlupdate his create.
+				// 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
+				// 3rd add it in path only if it is the case.
+				// So when a user will remove it from assotiation or map it will be removed from cache
+				// And when it will be add, it wil get back in cahce.
+				DomodroidDB db = new DomodroidDB(Tracer, context);
+				int[] listFeature_Association = db.requestAllFeatures_association();
+				Entity_Feature[] listFeature = db.requestFeatures();
+				String urlUpdate = sharedparams.getString("URL","1.1.1.1")+"stats/multi/";
+				Tracer.i(mytag, "urlupdate= "+urlUpdate);
+				int compteur=0;
+				for (Entity_Feature feature : listFeature) {
+					for (int i=0;i<listFeature_Association.length;i++) {
+						if (feature.getId()==listFeature_Association[i]){
+							if (!feature.getState_key().equals("")){
+								urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
+								compteur=compteur+1;
+								Tracer.i(mytag, "urlupdate= "+urlUpdate);
+								
+							}
+						}
+						
+					}
+					
+				}
+				Tracer.v(mytag,"prepare UPDATE_URL items="+String.valueOf(compteur));
+				SharedPreferences.Editor prefEditor=sharedparams.edit();
+				prefEditor.putString("UPDATE_URL", urlUpdate);
+				//need_refresh = true;	// To notify main activity that screen must be refreshed
+				prefEditor.commit();
+				
+				
 				String request = sharedparams.getString("UPDATE_URL", null);
+				Tracer.i(mytag, "urlupdate enregistré = "+request);
+				
 				if(request != null){
 					JSONObject json_widget_state = null;
 					stats_com.add(Stats_Com.STATS_SEND, request.length());

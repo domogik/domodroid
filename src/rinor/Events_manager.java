@@ -30,7 +30,7 @@ public class Events_manager {
 	private int stack_out = -1;
 	private int event_item = 0;
 	private int stack_size = 500;
-	private String mytag ="Events";
+	private String mytag ="Events_manager";
 	private String urlAccess;
 	private ListenerThread listener = null;
 	public Boolean alive = false;

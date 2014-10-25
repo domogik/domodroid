@@ -1,11 +1,14 @@
 package database;
 
+import java.util.Arrays;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import database.DmdContentProvider;
 import widgets.Entity_Area;
 import widgets.Entity_Feature;
+import widgets.Entity_Feature_Association;
 import widgets.Entity_Icon;
 import widgets.Entity_Map;
 import widgets.Entity_Room;
@@ -433,6 +436,44 @@ public class DomodroidDB {
 		curs.close();
 		return lastid;
 	}
+	
+	//TODO Add a request for all device_feature_id in feature_association and feature_map
+	//Maybe by id will be enough
+	public int[] requestAllFeatures_association() {
+			Cursor curs1=null;
+			Cursor curs2=null;
+			int[] dev_id = null;
+			
+			try {
+				Tracer.v(mytag+"("+owner+")","requesting features list");
+			
+				curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
+				curs2 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP_ALL, null, null, null, null);
+				
+				dev_id=new int[curs1.getCount()+curs2.getCount()];
+				
+				int count=curs1.getCount();
+				for(int i=0;i<count;i++) {
+					curs1.moveToPosition(i);
+					//We need only the device_feature_id in 3rd columns of table feature_association
+					dev_id[i]=curs1.getInt(2);
+				}
+				count=curs2.getCount()+curs1.getCount();
+				for(int i=curs1.getCount();i<count;i++) {
+					curs2.moveToPosition(i-curs1.getCount());
+					//We need only the device_feature_id in 1st columns of table feature_map
+					dev_id[i]=curs2.getInt(0);
+				}
+				
+			} catch (Exception e) {
+				Tracer.e(mytag+"("+owner+")","request feature_association error");
+				e.printStackTrace();
+			}
+			curs1.close();
+			curs2.close();
+			return dev_id;		
+	}
+
 	public int requestidlastFeature_association() {
 		String[] projection = { "place_id", "place_type", "device_feature_id", "id", "device_feature"};
 		Cursor curs=null;

@@ -55,8 +55,8 @@ public class Events_manager {
 	private String login;
 	private String password;
 	private float api_version;
-	private String MQadress;
-	private String MQport;
+	private String MQaddress;
+	private String MQsubport;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
@@ -98,8 +98,8 @@ public class Events_manager {
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	api_version=params.getFloat("API_VERSION", 0);
-    	MQadress=params.getString("MQadress",null);
-    	MQport=params.getString("MQport",null);
+    	MQaddress=params.getString("MQaddress",null);
+    	MQsubport=params.getString("MQsubport",null);
     	
 		//The father's cache should already contain a list of devices features
 		this.state_engine_handler = state_engine_handler;
@@ -198,14 +198,14 @@ public class Events_manager {
 			}
 			//TODO Make it for 0.4
 			//TODO zeromMQ
-			if (api_version == 0.7f){
+			if (api_version == 0.7f && !MQaddress.equals("") && !MQsubport.equals("")){
 				  ZMQ.Context zmqContext = ZMQ.context(1);
 				   ZMQ.Socket subscriber=zmqContext.socket(ZMQ.SUB);;
 				        Log.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
 				        subscriber.setIdentity("domodroid".getBytes());
 				        Log.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
-				        subscriber.connect ("tcp://"+MQadress+":"+MQport);
-				        Log.d(mytag, "subscriber.connect (tcp://"+MQadress+":"+MQport+")");
+				        subscriber.connect ("tcp://"+MQaddress+":"+MQsubport);
+				        Log.d(mytag, "subscriber.connect (tcp://"+MQaddress+":"+MQsubport+")");
 				        subscriber.subscribe("device-stats".getBytes());
 			           	Log.d(mytag, "subscriber.subscribe(device-stats)");
 			           	

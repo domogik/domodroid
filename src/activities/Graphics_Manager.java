@@ -35,6 +35,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
+			else if(usage.equals("cron")){return R.drawable.usage_cron_off;}
 			else if(usage.equals("door")){return R.drawable.usage_door_off;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_off;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_off;}
@@ -88,6 +89,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_50;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_50;}
+			else if(usage.equals("cron")){return R.drawable.usage_cron_50;}
 			else if(usage.equals("door")){return R.drawable.usage_door_50;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_50;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_50;}
@@ -141,6 +143,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_on;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
+			else if(usage.equals("cron")){return R.drawable.usage_cron_on;}
 			else if(usage.equals("door")){return R.drawable.usage_door_on;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_on;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_on;}	//Added by Doume
@@ -194,6 +197,7 @@ public class Graphics_Manager {
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_undefined;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_undefined;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_undefined;}
+			else if(usage.equals("cron")){return R.drawable.usage_cron_undefined;}
 			else if(usage.equals("door")){return R.drawable.usage_door_undefined;}
 			else if(usage.equals("electricity")){return R.drawable.usage_electricity_undefined;}
 			else if(usage.equals("heating")){return R.drawable.usage_heating_undefined;}	//Added by Doume
@@ -303,7 +307,8 @@ public class Graphics_Manager {
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
-			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_off;}
+			else if(usage.equals("cron")){return R.drawable.map_usage_cron_off;}
+			else if(usage.equals("door")){return R.drawable.map_usage_door_off;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_off;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_off;}
 			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_off;}
@@ -321,7 +326,8 @@ public class Graphics_Manager {
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}
-			else if(usage.equals("door")){return R.drawable.map_usage_usage_door_on;}
+			else if(usage.equals("cron")){return R.drawable.map_usage_cron_on;}
+			else if(usage.equals("door")){return R.drawable.map_usage_door_on;}
 			else if(usage.equals("electricity")){return R.drawable.map_usage_electricity_on;}
 			else if(usage.equals("light")){return R.drawable.map_usage_light_on;}
 			else if(usage.equals("security_camera")){return R.drawable.map_usage_security_cam_on;}

@@ -5,7 +5,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-import org.jeromq.ZMQ;
+import org.zeromq.ZMQ;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,6 +55,8 @@ public class Events_manager {
 	private String login;
 	private String password;
 	private float api_version;
+	private String MQadress;
+	private String MQport;
 	
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
@@ -96,6 +98,8 @@ public class Events_manager {
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	api_version=params.getFloat("API_VERSION", 0);
+    	MQadress=params.getString("MQadress",null);
+    	MQport=params.getString("MQport",null);
     	
 		//The father's cache should already contain a list of devices features
 		this.state_engine_handler = state_engine_handler;
@@ -200,13 +204,9 @@ public class Events_manager {
 				        Log.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
 				        subscriber.setIdentity("domodroid".getBytes());
 				        Log.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
-				        subscriber.connect ("tcp://192.168.1.23:40412");
-				        Log.d(mytag, "subscriber.connect (tcp://192.168.1.23:40412)");
-				        //subscriber.connect ("tcp://les-cours-du-chaos.hd.free.fr:50012");
-				        //Log.d(mytag, "subscriber.connect (tcp://les-cours-du-chaos.hd.free.fr:50012)");
-				        //subscriber.connect ("tcp://78.198.200.93:50011");
-				        //Log.d(mytag, "subscriber.connect (tcp://78.198.200.93:50011)");
-				        subscriber.subscribe("device-stats");
+				        subscriber.connect ("tcp://"+MQadress+":"+MQport);
+				        Log.d(mytag, "subscriber.connect (tcp://"+MQadress+":"+MQport+")");
+				        subscriber.subscribe("device-stats".getBytes());
 			           	Log.d(mytag, "subscriber.subscribe(device-stats)");
 			           	
 			           	while (true) {

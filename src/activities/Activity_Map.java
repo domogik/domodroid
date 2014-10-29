@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import database.WidgetUpdate;
@@ -148,7 +150,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		createDirIfNotExists();
 		f=new File(Environment.getExternalStorageDirectory()+"/domodroid/"); 
 		if(f.isDirectory()){ 
-			files= f.list(); 
+			files= f.list();
+			//Reorder method
+			List<String> words = new ArrayList<String>();
+			for (int i =0;i<files.length;i++){
+				words.add(files[i]);
+			}
+			Collections.sort(words);
+			files=new String[words.size()];;
+			files=words.toArray(files);
+			
 		}
 
 		build_maps_list();

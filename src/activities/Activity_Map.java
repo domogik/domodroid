@@ -157,8 +157,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				words.add(files[i]);
 			}
 			Collections.sort(words);
-			files=new String[words.size()];;
-			files=words.toArray(files);
+			files=words.toArray(new String[words.size()]);
 			
 		}
 

@@ -35,7 +35,10 @@ import org.json.JSONException;
 
 import widgets.Com_Stats;
 import widgets.Basic_Graphical_zone;
+import widgets.Entity_Feature;
 import misc.tracerengine;
+import database.Cache_management;
+import database.DomodroidDB;
 import database.WidgetUpdate;
 
 import activities.Sliding_Drawer.OnPanelListener;
@@ -746,6 +749,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	}
 	
 	private Boolean startCacheEngine() {
+		Cache_management.checkcache(Tracer, myself);
 		if(WU_widgetUpdate == null) {
 			this.Create_message_box();
 			PG_dialog_message.setMessage(getText(R.string.loading_cache)); 

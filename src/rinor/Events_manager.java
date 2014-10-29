@@ -196,46 +196,46 @@ public class Events_manager {
 				Tracer.e(mytag,"Empty WidgetUpdate cache : cannot create ticket : ListenerThread aborted ! ! !");
 				return null;
 			}
-			//TODO Make it for 0.4
-			//TODO zeromMQ
+			//For 0.4 with zeromMQ
 			if (api_version == 0.7f && !MQaddress.equals("") && !MQsubport.equals("")){
-				  ZMQ.Context zmqContext = ZMQ.context(1);
-				   ZMQ.Socket subscriber=zmqContext.socket(ZMQ.SUB);;
-				        Log.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
-				        subscriber.setIdentity("domodroid".getBytes());
-				        Log.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
-				        subscriber.connect ("tcp://"+MQaddress+":"+MQsubport);
-				        Log.d(mytag, "subscriber.connect (tcp://"+MQaddress+":"+MQsubport+")");
-				        subscriber.subscribe("device-stats".getBytes());
-			           	Log.d(mytag, "subscriber.subscribe(device-stats)");
-			           	
-			           	while (true) {
-					        String result = subscriber.recvStr(0);
-					        Log.d(mytag, "result= "+result);
-					        if (result.contains("stored_value")) {
-					        	Log.d(mytag, "result= "+result);
-					        	try {
-									JSONObject json_stats_04=new JSONObject(result);
-									Tracer.d(mytag, "Parsing result to jsonobject");
-									Tracer.d(mytag, json_stats_04.toString());
-									String ticket="1";
-									String device_id=json_stats_04.get("sensor_id").toString();
-									String New_Value=json_stats_04.get("stored_value").toString();
-									//TODO find a way to get the state_key of the feature by id=sensorid here!!
-									String New_Key="";
-									Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
-									put_event(to_stack);	//Put in stack, and notify cache engine
-								} catch (JSONException e) {
-									Tracer.d(mytag, "Error making the json from MQ result");
-									Tracer.d(mytag, e.toString());
-								}
-					        }
-					        if (subscriber.getReceiveTimeOut()==1){
-					        	break;
-					        }
-				        }
-				        subscriber.close();
-				        zmqContext.term();
+				//TODO find a way to know when ZeroMQ didn't response anymore.
+				ZMQ.Context zmqContext = ZMQ.context(1);
+				ZMQ.Socket subscriber=zmqContext.socket(ZMQ.SUB);;
+		        Log.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
+		        subscriber.setIdentity("domodroid".getBytes());
+		        Log.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
+		        subscriber.connect ("tcp://"+MQaddress+":"+MQsubport);
+		        Log.d(mytag, "subscriber.connect (tcp://"+MQaddress+":"+MQsubport+")");
+		        subscriber.subscribe("device-stats".getBytes());
+	           	Log.d(mytag, "subscriber.subscribe(device-stats)");
+	           	
+	           	while (true) {
+			        String result = subscriber.recvStr(0);
+			        Log.d(mytag, "result= "+result);
+			        if (result.contains("stored_value")) {
+			        	Log.d(mytag, "result= "+result);
+			        	try {
+							JSONObject json_stats_04=new JSONObject(result);
+							Tracer.d(mytag, "Parsing result to jsonobject");
+							Tracer.d(mytag, json_stats_04.toString());
+							String ticket="1";
+							String device_id=json_stats_04.get("sensor_id").toString();
+							String New_Value=json_stats_04.get("stored_value").toString();
+							//TODO find a way to get the state_key of the feature by id=sensorid here!!
+							String New_Key="";
+							Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
+							put_event(to_stack);	//Put in stack, and notify cache engine
+						} catch (JSONException e) {
+							Tracer.d(mytag, "Error making the json from MQ result");
+							Tracer.d(mytag, e.toString());
+						}
+			        }
+			        if (subscriber.getReceiveTimeOut()==1){
+			        	break;
+			        }
+		        }
+		        subscriber.close();
+		        zmqContext.term();
 			}else if (api_version <= 0.6f){
 				//This is for 0.3 version
 				//Build the list of devices concerned by ticket request

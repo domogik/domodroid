@@ -889,6 +889,7 @@ public class WidgetUpdate  {
 			return result;
 		device = client.getDevId();
 		skey = client.getskey();
+			
 		Tracer.i(mytag, "cache engine subscription requested by <"+client.getName()+"> Device ("+device+") ("+skey+")");
 		if(! ready) {
 			Tracer.i(mytag, "cache engine not yet ready : reject !");

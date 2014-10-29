@@ -118,6 +118,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	private int place_id;
 	private String login;
 	private String password;
+	private float api_version;
 	private String usage;
 	private Context context;
 
@@ -157,7 +158,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
@@ -400,7 +402,11 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if (api_version<=0.6f){
+				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			}else if (api_version==0.7f){
+				session = new Entity_client(id, "", mytag, handler, session_type);
+			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler

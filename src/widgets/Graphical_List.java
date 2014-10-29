@@ -115,6 +115,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 	private int place_id;
 	private String login;
 	private String password;
+	private float api_version;
 	private SharedPreferences params;
 	private String usage;
 		
@@ -150,7 +151,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		mytag="Graphical_List ("+dev_id+")";
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
@@ -284,8 +286,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			if(tracerengine.get_engine().subscribe(session)) {
+			if (api_version<=0.6f){
+				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			}else if (api_version==0.7f){
+				session = new Entity_client(id, "", mytag, handler, session_type);
+			}
+			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session

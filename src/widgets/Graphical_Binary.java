@@ -95,6 +95,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 	private SharedPreferences params;
 	private String login;
 	private String password;
+	private float api_version;
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
@@ -170,7 +171,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -253,7 +255,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if (api_version<=0.6f){
+				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			}else if (api_version==0.7f){
+				session = new Entity_client(id, "", mytag, handler, session_type);
+			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler

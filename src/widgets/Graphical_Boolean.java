@@ -36,6 +36,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -71,6 +72,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 	private static String mytag;
 	private Message msg;
 	private String stateS = "";
+	private float api_version;
+	private SharedPreferences params;
 	
 	public static FrameLayout container = null;
 	private static FrameLayout myself = null;
@@ -92,7 +95,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 			String parameters, 
 			String model_id, int update, 
 			int widgetSize,
-			int session_type,int place_id,String place_type) throws JSONException {
+			int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
 		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.myself=this;
 		this.context = context;
@@ -104,6 +107,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		this.stateS = getResources().getText(R.string.State).toString();
 		this.place_id= place_id;
 		this.place_type= place_type;
+		this.params = params;
+		api_version=params.getFloat("API_VERSION", 0);
 		
 		try {
 			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -194,7 +199,11 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if (api_version<=0.6f){
+				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			}else if (api_version==0.7f){
+				session = new Entity_client(id, "", mytag, handler, session_type);
+			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler
@@ -202,8 +211,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 			}
 			
 		}
-		
 		//================================================================================
+		//updateTimer();	//Don't use anymore cyclic refresh....	
 	}
 	
 }

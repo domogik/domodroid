@@ -163,7 +163,7 @@ public class Widgets_Manager {
 			} else if (Value_type.equals("boolean")) {
 				bool = new Graphical_Boolean(Tracer, context,Address,label,
 						Id,DevId,State_key,iconName,parameters,device_type_id,
-						update_timer,widgetSize, mytype,id,zone);
+						update_timer,widgetSize, mytype,id,zone,params);
 				bool.container=tmpPan;
 				tmpPan.addView(bool);
 				Tracer.i(mytag,"   ==> Graphical_Boolean");

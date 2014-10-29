@@ -102,6 +102,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 	private int place_id;
 	private String login;
 	private String password;
+	private float api_version;
 	
 	private Entity_client session = null; 
 	private Boolean realtime = false;
@@ -133,7 +134,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		mytag = "Graphical_Binary_New("+dev_id+")";
 		//get parameters		
 		
@@ -275,7 +277,11 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if (api_version<=0.6f){
+				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			}else if (api_version==0.7f){
+				session = new Entity_client(id, "", mytag, handler, session_type);
+			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler

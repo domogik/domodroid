@@ -97,7 +97,6 @@ public class MapView extends View {
 	private Sliding_Drawer top_drawer;
 	private Sliding_Drawer bottom_drawer;
 
-
 	private Graphical_Trigger trigger;
 	private Graphical_Range variator;
 	private Graphical_Binary onoff;
@@ -120,7 +119,8 @@ public class MapView extends View {
 	private int currentFile = 0;
 
 	private SharedPreferences params;
-
+	private float api_version;
+	
 	private float pos_X0=0;
 	private float pos_X1=0;
 
@@ -143,6 +143,8 @@ public class MapView extends View {
 		super(context);
 		this.Tracer = Trac;
 		this.context=context;
+		api_version=params.getFloat("API_VERSION", 0);
+		
 		//activated=true;
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		screen_width = metrics.widthPixels;
@@ -239,14 +241,24 @@ public class MapView extends View {
 		
 		//Each real mini widget must be connected to cache engine, to receive notifications
 		for (Entity_Map featureMap : listFeatureMap) {
-			int map_id = featureMap.getDevId();
-			Entity_client cursession = new Entity_client(
-						map_id,
+			Entity_client cursession=null;
+			if (api_version<=0.6f){
+				cursession = new Entity_client(
+						featureMap.getDevId(),
 						featureMap.getState_key(), 
 						"mini widget",
 						handler,
 						mytype);
 			cursession.setType(true);	//It's a mini widget !
+			} else if (api_version==0.7f){
+				cursession = new Entity_client(
+						featureMap.getId(),
+						"", 
+						"mini widget",
+						handler,
+						mytype);
+				cursession.setType(true);	//It's a mini widget !
+			}
 			
 			if(Tracer.get_engine().subscribe(cursession) ) {
 				//This widget is connected to state_engine
@@ -797,7 +809,7 @@ public class MapView extends View {
 		else if (feature.getValue_type().equals("boolean")) {
 			bool = new Graphical_Boolean(Tracer, context,Address,
 					label,Id,DevId,State_key,iconName,
-					parameters,device_type_id,update_timer,widgetSize, mytype,0,zone);
+					parameters,device_type_id,update_timer,widgetSize, mytype,0,zone,params);
 			bool.container=(FrameLayout) panel_widget;
 			panel_widget.addView(bool);}
 		else if (feature.getValue_type().equals("range")) {

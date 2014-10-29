@@ -79,6 +79,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 	private SharedPreferences params;
 	private String login;
 	private String password;
+	private float api_version;
 	private Activity context;
 	private String usage;
 	
@@ -102,7 +103,8 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 		this.params=params;
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		//get parameters
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
         
@@ -145,6 +147,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 	public void run() {
 		JSONObject json_Ack = null;
 		try {
+			//TODO adapt for 0.4
 			json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command,login,password);
 		} catch (Exception e) {
 			Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");

@@ -102,6 +102,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 	private String stateS = "";
 	private String login;
 	private String password;
+	private float api_version;
 	private SharedPreferences params;
 	private String test_unite;
 	private Activity context;
@@ -131,7 +132,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		this.params=params;
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+    	api_version=params.getFloat("API_VERSION", 0);
+		
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 		command = jparam.getString("command");
@@ -257,7 +259,11 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			if (api_version<=0.6f){
+				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+			}else if (api_version==0.7f){
+				session = new Entity_client(id, "", mytag, handler, session_type);
+			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
 										//each time our value change, the engine will call handler
@@ -266,7 +272,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 			
 		}
 		//================================================================================
-		
+		//updateTimer();	//Don't use anymore cyclic refresh....			
 	}
 
 

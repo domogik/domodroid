@@ -23,7 +23,9 @@ import java.util.List;
 
 import activities.Graphics_Manager;
 
+import database.Cache_management;
 import database.DmdContentProvider;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -46,6 +48,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 	private tracerengine Tracer = null;
 	private String mytag="Graphical_Room";
 	private String icon;
+	private Activity Activity;
 	
 	public Graphical_Room(tracerengine Trac, Context context,int id,String name_room, String description_room, String icon, int widgetSize, Handler handler) {
 		super(context, id, name_room, description_room, icon, widgetSize, "room", handler);
@@ -54,6 +57,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 		this.id_room = id;
 		this.context = context;
 		this.icon=icon;
+		this.Activity = (android.app.Activity) context;
 		setOnLongClickListener(this);
 		mytag="Graphical_Room("+id_room+")";		
 	}
@@ -92,6 +96,8 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 					Tracer.get_engine().remove_one_things(id_room,"room");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room,"room");
 					Tracer.get_engine().remove_one_icon(id_room,"room");
+					//recheck cache element to remove those no more need.
+					Cache_management.checkcache(Tracer,Activity);
 					removeView(LL_background);
 					myself.setVisibility(GONE);
 					if(container != null) {

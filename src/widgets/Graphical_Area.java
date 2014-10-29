@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.domogik.domodroid13.R;
 
+import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
 
@@ -112,6 +113,8 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 					Tracer.get_engine().remove_one_things(id_area,"area");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
 					Tracer.get_engine().remove_one_icon(id_area,"area");
+					//recheck cache element to remove those no more need.
+					Cache_management.checkcache(Tracer,Activity);
 					removeView(LL_background);
 					myself.setVisibility(GONE);
 					if(container != null) {
@@ -182,7 +185,6 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 			);	
 			AlertDialog alert_list_icon = list_icon_choice.create();
 			alert_list_icon.show();
-			//TODO refresh layout to take change
 		}
 	}
 	}

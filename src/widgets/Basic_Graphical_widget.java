@@ -25,7 +25,9 @@ import misc.tracerengine;
 
 import org.domogik.domodroid13.R;
 
+import database.Cache_management;
 import database.DmdContentProvider;
+import activities.Activity_Main;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
@@ -37,6 +39,7 @@ import android.content.DialogInterface;
 import android.content.pm.FeatureInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.MailTo;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -190,6 +193,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
+					//recheck cache element to remove those no more need.
+					Cache_management.checkcache(Tracer,context);
 					//TODO refresh the view
 					if(container != null) {
 						removeView(myself);

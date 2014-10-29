@@ -600,41 +600,6 @@ public class WidgetUpdate  {
 				if(Tracer != null)
 					Tracer.d(mytag,"Request to server for stats update...");
 				
-
-				//TODO change UrlAccess to make cache more light.
-				// 1st need to change when this urlupdate his create.
-				// 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
-				// 3rd add it in path only if it is the case.
-				// So when a user will remove it from assotiation or map it will be removed from cache
-				// And when it will be add, it wil get back in cahce.
-				if (api_version<=0.6f){ 
-					DomodroidDB db = new DomodroidDB(Tracer, context);
-					int[] listFeature_Association = db.requestAllFeatures_association();
-					Entity_Feature[] listFeature = db.requestFeatures();
-					String urlUpdate = sharedparams.getString("URL","1.1.1.1")+"stats/multi/";
-					Tracer.i(mytag, "urlupdate= "+urlUpdate);
-					int compteur=0;
-					for (Entity_Feature feature : listFeature) {
-						for (int i=0;i<listFeature_Association.length;i++) {
-							if (feature.getId()==listFeature_Association[i]){
-								if (!feature.getState_key().equals("")){
-									urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
-									compteur=compteur+1;
-									Tracer.i(mytag, "urlupdate= "+urlUpdate);
-									
-								}
-							}
-							
-						}
-						
-					}
-					Tracer.v(mytag,"prepare UPDATE_URL items="+String.valueOf(compteur));
-					SharedPreferences.Editor prefEditor=sharedparams.edit();
-					prefEditor.putString("UPDATE_URL", urlUpdate);
-					//need_refresh = true;	// To notify main activity that screen must be refreshed
-					prefEditor.commit();
-					
-				}
 				String request = sharedparams.getString("UPDATE_URL", null);
 				Tracer.i(mytag, "urlupdate enregistré = "+request);
 				

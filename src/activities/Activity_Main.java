@@ -43,6 +43,7 @@ import android.app.ProgressDialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -103,6 +104,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Boolean reload = false;
 	DialogInterface.OnClickListener reload_listener = null;
 	DialogInterface.OnDismissListener sync_listener = null;
+	DialogInterface.OnDismissListener house_listener = null;
+	
 	private static Boolean by_usage = false;
 	private Boolean init_done = false;
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
@@ -175,6 +178,17 @@ public class Activity_Main extends Activity implements OnClickListener{
 		
 		LoadSelections();
 		
+		// Prepare a listener to know when the house organization dialog is closed...
+				if( house_listener == null){
+					house_listener= new DialogInterface.OnDismissListener() {
+						public void onDismiss(DialogInterface dialog) {
+							//TODO Try to redraw after house dialog closed.
+							loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
+							
+						}
+					};
+				}
+		
 		// Prepare a listener to know when a sync dialog is closed...
 		if( sync_listener == null){
 			sync_listener = new DialogInterface.OnDismissListener() {
@@ -192,7 +206,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 						if(WU_widgetUpdate != null) {
 							WU_widgetUpdate.resync();
 						} else {
-							Tracer.i(mytag+".onCreate","WidgetUpdate is null startCacheengine!");
+							Tracer.i(mytag,"OnCreate WidgetUpdate is null startCacheengine!");
 							startCacheEngine();
 						}
 						Bundle b = new Bundle();
@@ -375,7 +389,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			if(SP_params.getBoolean("SYNC", false)){
 				//A config exists and a sync as been done by past.
 				if(WU_widgetUpdate == null) {
-					Tracer.i(mytag+".onCreate","Params splach is false and WidgetUpdate is null startCacheengine!");
+					Tracer.i(mytag,"OnCreate Params splach is false and WidgetUpdate is null startCacheengine!");
 					startCacheEngine();
 				}
 
@@ -743,7 +757,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 	}
 	
 	private Boolean startCacheEngine() {
-		Cache_management.checkcache(Tracer, myself);
 		if(WU_widgetUpdate == null) {
 			this.Create_message_box();
 			PG_dialog_message.setMessage(getText(R.string.loading_cache)); 
@@ -792,8 +805,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			Tracer.v(mytag+".onclick()","Call to House settings screen");
 			DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
 			DIALOG_house_set.show();
-			//TODO Try to redraw after house dialog closed.
-			//loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
+			DIALOG_house_set.setOnDismissListener(house_listener);
 			return true;
 
         case R.id.menu_preferences:

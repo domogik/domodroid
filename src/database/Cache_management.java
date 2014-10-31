@@ -1,5 +1,7 @@
 package database;
 
+import org.domogik.domodroid13.R;
+
 import misc.tracerengine;
 import widgets.Entity_Feature;
 import android.app.Activity;
@@ -11,6 +13,7 @@ public class Cache_management {
 	private static tracerengine Tracer = null;
 	private static SharedPreferences sharedparams;
 	private static Activity context;
+	private static WidgetUpdate WU_widgetUpdate;
 	
 	public static void checkcache(tracerengine Trac, Activity Context){
 		Tracer = Trac;
@@ -42,5 +45,8 @@ public class Cache_management {
 		prefEditor.commit();
 		//TODO restart the cacheengine.
 		//Empty it then refill it with right value
+		WU_widgetUpdate = WidgetUpdate.getInstance();
+		if(WU_widgetUpdate != null)
+			WU_widgetUpdate.refreshNow();
 	}
 }

@@ -34,7 +34,7 @@
 	<string name="help_Text1">Domodroid free Android application under GNU GPLv3 Licence and developed by Pierre Lainé\n Modified by Dominique DAMBRAIN</string>
 	<string name="help_Text2">Dim the lights, get informations about the inside temperature or the outside humidity, all with a single tap on your Android device. Requires a home automation system and a Domogik server. Domodroid offers you control of your Domogik home automation system with a large variety of devices supported</string>
 	<string name="help_Text3">Domogik Project : http://www.domogik.org/</string>
-	<string name="help_Text4">Domodroid documentation is avalaibale at: http://docs.domogik.org/domodroid/dev/en/</string>
+	<string name="help_Text4">Domodroid documentation is avalaibale at: http://domodroid.readthedocs.org/en/1.3-dev/</string>
 	<string name="help_Text5">Contacts by mailing list :\n domogik-developers@lists.labs.libre-entreprise.org</string>
 	
 	<string name="splash_title">Welcome to Domodroid 1.3 !</string>

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class Cache_management {
+	private static WidgetUpdate WU_widgetUpdate = null;
 	public static String mytag="Cache_management";
 	private static tracerengine Tracer = null;
 	private static SharedPreferences sharedparams;
@@ -45,6 +46,9 @@ public class Cache_management {
 			prefEditor.commit();
 			//TODO restart the cacheengine.
 			//Empty it then refill it with right value
+			WU_widgetUpdate = WidgetUpdate.getInstance();
+			if(WU_widgetUpdate != null)
+				WU_widgetUpdate.refreshNow();
 		}
 	}
 }

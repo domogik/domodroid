@@ -21,83 +21,56 @@
  */
 package widgets;
 
-import java.lang.Thread.State;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.LineChart;
 import org.achartengine.chart.PointStyle;
+import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.BasicStroke;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.tools.PanListener;
+import org.achartengine.tools.ZoomEvent;
+import org.achartengine.tools.ZoomListener;
 import org.achartengine.util.MathHelper;
-import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import rinor.Rest_com;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import database.DmdContentProvider;
 import database.WidgetUpdate;
 
+import rinor.Rest_com;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
@@ -204,9 +177,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		//Creating a dataset to hold each series
 		dataset = new XYMultipleSeriesDataset();
 		//Creating an  XYSeries for Income
-		nameSeries = new XYSeries(name);
+		nameSeries = new TimeSeries(name);
 		//TODO translate
-		EmptySeries = new XYSeries("NO VALUE");
+		EmptySeries = new TimeSeries("NO VALUE");
 		incomeRenderer.setColor(0xff0B909A);
 		emptyRenderer.setColor(0xffff0000);
 		incomeRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -222,21 +195,24 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		//Change the type of line between point
 		//incomeRenderer.setStroke(BasicStroke.DASHED);
 		//Remove default X axis label
-		multiRenderer.setXLabels(0);
-		//Remove default Y axis label
+		//multiRenderer.setXLabels(0);
+		//TODO translate
+		//Set X title
+		multiRenderer.setXTitle("Time");
+	    //Remove default Y axis label
 		multiRenderer.setYLabels(0);
 		//Set X label text color
 		multiRenderer.setXLabelsColor(Color.BLACK);
 		//Set Y label text color
 		multiRenderer.setYLabelsColor(0, Color.BLACK);
 		//Set X label text size 
-		multiRenderer.setLabelsTextSize(size12);
+		multiRenderer.setLabelsTextSize(size10);
 		//Set X label text angle 
-		multiRenderer.setXLabelsAngle(-45);
+		multiRenderer.setXLabelsAngle(-15);
 		//Set Y label text angle 
-		//multiRenderer.setYLabelsAngle(-45);
+		multiRenderer.setYLabelsAngle(-10);
 		//Set X label text alignement
-		multiRenderer.setXLabelsAlign(Align.LEFT);
+		multiRenderer.setXLabelsAlign(Align.CENTER);
 		//Set to make value of y axis left aligned
 		multiRenderer.setYLabelsAlign(Align.LEFT);
 		//Disable zoom button
@@ -249,8 +225,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		multiRenderer.setPanEnabled(true, false);
 		//Limits pan mouvement
 		//[panMinimumX, panMaximumX, panMinimumY, panMaximumY] 
-		double[] panLimits={-5,26,0,0};
-		multiRenderer.setPanLimits(panLimits);
+		//double[] panLimits={-5,26,0,0};
+		//multiRenderer.setPanLimits(panLimits);
 		//Sets the selectable radius value around clickable points. 
 		multiRenderer.setSelectableBuffer(10);     	
 		//Add grid
@@ -455,7 +431,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		multiRenderer.clearYTextLabels();
 		multiRenderer.removeAllRenderers();
 		//Set position of graph to 0
-		multiRenderer.setXAxisMin(0);
+		//multiRenderer.setXAxisMin(0);
+		//Set max position of graph to now
+		//multiRenderer.setXAxisMax(new Date().getTime());
 		//Adding nameSeries Series to the dataset
 		dataset.addSeries(nameSeries);
 		dataset.addSeries(EmptySeries);
@@ -471,17 +449,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		chartContainer.setGravity(Gravity.CENTER_VERTICAL);
 		chartContainer.setPadding((int)size5, (int)size10, (int)size5, (int)size10);
-		
-		currentTimestamp=time_end.getTime()/1000;
-		startTimestamp=time_start.getTime()/1000;
-				
+
 		JSONObject json_GraphValues = null;
 		try {
 			if(api_version<=0.6f){
-				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
 			}else if(api_version==0.7f){
-				//Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				//Don't forget old "dev_id"+"state_key" is replaced by "id"
 				json_GraphValues = Rest_com.connect_jsonobject(url+"sensorhistory/id/"+id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
 			}
@@ -511,45 +486,48 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	    	int day=valueArray.getJSONArray(i).getInt(3);
 	    	int hour=valueArray.getJSONArray(i).getInt(4);
 	    	int hour_next=valueArray.getJSONArray(i+1).getInt(4);
-	    	String date=String.valueOf(hour)+"'";
-    		if (hour != 23 && (hour < hour_next)){
+	    	//String date=String.valueOf(hour)+"'";
+	    	SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+	    	Date date1=new Date();
+	    	try {
+				date1 = format.parse(String.valueOf(year)+"-"
+						+String.valueOf(month)+"-"
+						+String.valueOf(day)+" "
+						+String.valueOf(hour)+":00");
+			} catch (ParseException e) {
+				Tracer.d(mytag, "Error converting date");
+				Tracer.d (mytag,e.toString());
+			}
+	    	if (hour != 23 && (hour < hour_next)){
 	    		//no day change
 	    		if((hour+1) != hour_next) {
 					//ruptur : simulate next missing steps
-	    			EmptySeries.add(j,real_val );
-	    			nameSeries.add(j,real_val );
-	    			multiRenderer.addXTextLabel(j, date);
-	    			Tracer.d(mytag, "Ok "+ j + " hour: "+ hour +" value: "+ real_val);
-		    		for (int k=1 ; k < (hour_next - hour); k++){
-		    			nameSeries.add(j+k, MathHelper.NULL_VALUE);
-		    			EmptySeries.add(j+k,real_val );
-		    			Tracer.d(mytag, "Missing "+ (j+k) + " hour: "+ (hour+k) +" value: "+ real_val);
+	    			EmptySeries.add(date1.getTime(),real_val );
+	    			nameSeries.add(date1.getTime(),real_val );
+	    			for (int k=1 ; k < (hour_next - hour); k++){
+		    			nameSeries.add(date1.getTime(), MathHelper.NULL_VALUE);
+		    			EmptySeries.add(date1.getTime(),real_val );
 		    		}
 	    			j = j + (hour_next - hour);
 	    			ruptur=true;
 	    		} else{
 	    			if (ruptur){
-	    				EmptySeries.add(j,real_val);
+	    				EmptySeries.add(date1.getTime(),real_val);
 	    			}else{
-	    				EmptySeries.add(j,MathHelper.NULL_VALUE);
+	    				EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 	    			}
 	    			ruptur=false;
-	    			nameSeries.add(j, real_val); //change to j to avoid missing value
-	    			//EmptySeries.add(j+1,real_val );
-	    			multiRenderer.addXTextLabel(j, date);
-		    		Tracer.d(mytag, "Ok "+ j + " hour: "+ hour +" value: "+ real_val);
-		    		j++;
+	    			nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+	    			j++;
 	    		}
 	    	} else if (hour == 23){
 	    		if (ruptur){
-    				EmptySeries.add(j,real_val);
+    				EmptySeries.add(date1.getTime(),real_val);
 	    		}else{
-    				EmptySeries.add(j,MathHelper.NULL_VALUE);
+    				EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 	    		}
     			ruptur=false;
-    			nameSeries.add(j, real_val); //change to j to avoid missing value
-	    		multiRenderer.addXTextLabel(j, date);
-	    		Tracer.d(mytag, "Ok "+ j + " value for 23h: "+ real_val);
+    			nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
 	    		j++;
 	    	}
 			if(minf == 0)
@@ -564,7 +542,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				minf = real_val.floatValue(); 
 				
 			}
-		}
+			}
     	avgf=avgf/values.size();
 		multiRenderer.addYTextLabel(((double)minf)-1, (""+minf));
     	multiRenderer.addYTextLabel(((double)avgf),(""+avgf));
@@ -576,42 +554,54 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		Tracer.d(mytag,"maxf ("+dev_id+")="+maxf);
 		Tracer.d(mytag,"avgf ("+dev_id+")="+avgf);
 		Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
-
+		
 		// Specifying chart types to be drawn in the graph
 		// Number of data series and number of types should be same
 		// Order of data series and chart type will be same
-		String[] types = new String[] { LineChart.TYPE , LineChart.TYPE };
-		// Creating a combined chart with the chart types specified in types array
-		mChart = (GraphicalView) ChartFactory.getCombinedXYChartView(context, dataset, multiRenderer, types);
-			
-			mChart.addPanListener(
+		String types = "dd-MM HH:mm";
+		// Creating a Timed chart with the chart types specified in types array
+		mChart = (GraphicalView) ChartFactory.getTimeChartView(context, dataset, multiRenderer, types);
+
+		mChart.addPanListener(
 				new PanListener() {
 					public void panApplied() {
 						Tracer.i(mytag+"Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
 						+ "]");
-						//TO move the graph to left or right
-						if (multiRenderer.getXAxisMin()<-2){
-							period_type = -1;
-							compute_period();
-							try {
-								mChart.destroyDrawingCache();
-								drawgraph();
-							} catch (JSONException e) {
-								Tracer.d(mytag,e.toString());
-							}
+						//To get the start of the graph after a move and grab new value
+						startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
+						currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
+						//TODO avoid graph to go in the future.
+						//This didn't work
+						if (currentTimestamp>System.currentTimeMillis())
+							multiRenderer.setXAxisMax(System.currentTimeMillis());
+						try {
+							drawgraph();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						if (multiRenderer.getXAxisMax()>j+2){
-							period_type = 0;
-							compute_period();
-							try {
-								mChart.destroyDrawingCache();
-								drawgraph();
-							} catch (JSONException e) {
-								Tracer.d(mytag,e.toString());
-							}
-						}
+						mChart.refreshDrawableState();					
 					}
 				}
+			);
+			mChart.addZoomListener(
+				new ZoomListener() {
+					public void zoomReset() {}
+				
+					public void zoomApplied(ZoomEvent arg0) {
+						Tracer.i(mytag+"zoom", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
+						+ "]");
+						startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
+						currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
+						try {
+							drawgraph();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						mChart.invalidate();
+					}
+				}, ruptur, ruptur
 			);
 			
 		// Adding the Combined Chart to the LinearLayout
@@ -645,18 +635,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				} catch (Exception e) {}
 				try {
 					
-					//background_stats.addView(canvas)
-					final String[] mMonth = new String[] {
-							"Jan", "Feb" , "Mar", "Apr", "May", "Jun",
-							"Jul", "Aug" , "Sep", "Oct", "Nov", "Dec"
-						};
-					int[] x = { 0,1,2,3,4,5,6,7 };
-					int[] income = { 2000,2500,2700,3000,2800,3500,3700,3800};
-					int nb_of_value = 20;
-					
 					period_type = 1;	//by default, display 24 hours
 					compute_period();	//To initialize time_start & time_end
 					sav_period=period_type;		//Save the current graph period
+					startTimestamp=time_start.getTime()/1000;
+					currentTimestamp=time_end.getTime()/1000;
 					drawgraph();
 				} catch (JSONException e) {
 					Tracer.d(mytag, "Acharengine failed"+ e.toString());
@@ -672,8 +655,4 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		}
 		return;
 	}
-
 }
-
-
-

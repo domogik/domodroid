@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.domogik.domodroid13.R;
 
+import database.Cache_management;
 import database.DomodroidDB;
 import database.WidgetUpdate;
 import activities.Graphics_Manager;
@@ -218,6 +219,8 @@ public class MapView extends View {
 		String map_name=files.elementAt(currentFile);
 		Tracer.i(mytag,"Request to clear all widgets from : "+map_name);
 		Tracer.get_engine().cleanFeatureMap(map_name);
+		//All device as been delete re-check the cache URL
+		Cache_management.checkcache(Tracer,context);
 		initMap();
 		
 	}
@@ -229,6 +232,8 @@ public class MapView extends View {
 		f.delete();
 		//remove feature of this map in table_feature_map
 		Tracer.get_engine().cleanFeatureMap(map_name);
+		//All device on this map as been delete re-check the cache URL
+		Cache_management.checkcache(Tracer,context);
 		initMap();		
 	}
 	
@@ -962,6 +967,8 @@ public class MapView extends View {
 							(int)((event.getX()-value[2])/currentScale), 
 							(int)((event.getY()-value[5])/currentScale),
 							files.elementAt(currentFile));
+					//Re-check the cache URL
+					Cache_management.checkcache(Tracer,context);
 				}
 				map_id = -1;
 				temp_id = -1;
@@ -977,6 +984,8 @@ public class MapView extends View {
 							(int)((event.getX()-value[2])/currentScale), 
 							(int)((event.getY()-value[5])/currentScale),
 							files.elementAt(currentFile));
+						//A device on this map as been delete re-check the cache URL
+						Cache_management.checkcache(Tracer,context);
 						removeMode=false;
 						//new UpdateThread().execute();
 						//refresh the map

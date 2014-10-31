@@ -47,7 +47,7 @@ public class WidgetUpdate  {
 	private boolean activated;
 	private Activity context;
 	private DomodroidDB domodb;
-	public  String mytag="WidgetUpdate";
+	public String mytag="WidgetUpdate";
 	private TimerTask doAsynchronousTask;
 	private tracerengine Tracer = null;
 	

@@ -323,6 +323,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 				LL_background.addView(featurePan2_buttons);
 				LL_background.addView(featurePan2);
+				//TODO get value and draw graph in async-task to Avoid ANR.
 				canvas.activate = true;
 				canvas.updateTimer();
 			}

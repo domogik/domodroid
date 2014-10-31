@@ -13,6 +13,7 @@ import widgets.Entity_Icon;
 import widgets.Entity_Room;
 import misc.List_Icon_Adapter;
 
+import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
 import database.WidgetUpdate;
@@ -301,6 +302,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					values.put("id", (lastid+1));
 					//values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
 					context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
+					//A device as been add re-check the cache URL
+					Cache_management.checkcache(Tracer,context);
 					loadSpinnerData();
 					
 					/*

@@ -27,7 +27,6 @@ import org.domogik.domodroid13.R;
 
 import database.Cache_management;
 import database.DmdContentProvider;
-import activities.Activity_Main;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 

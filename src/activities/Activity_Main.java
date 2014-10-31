@@ -18,7 +18,6 @@
 package activities;
 
 import org.domogik.domodroid13.R;
-import org.domogik.domodroid13.R.menu;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,39 +25,37 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.json.JSONException;
 
-import widgets.Com_Stats;
 import widgets.Basic_Graphical_zone;
-import widgets.Entity_Feature;
 import misc.tracerengine;
 import database.Cache_management;
-import database.DomodroidDB;
 import database.WidgetUpdate;
 
-import activities.Sliding_Drawer.OnPanelListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+
 import android.preference.PreferenceManager;
-import android.view.Gravity;
+
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,15 +63,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
+
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 @SuppressWarnings({ "static-access" })
 public class Activity_Main extends Activity implements OnClickListener{

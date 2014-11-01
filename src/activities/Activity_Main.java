@@ -130,7 +130,12 @@ public class Activity_Main extends Activity implements OnClickListener{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		myself=this;
-		setContentView(R.layout.activity_home);
+		   if(android.os.Build.VERSION.SDK_INT == 8) // FROYO (8)
+		    {
+		        java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
+		        java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
+		    }
+		   setContentView(R.layout.activity_home);
 		
 		SP_params = PreferenceManager.getDefaultSharedPreferences(this);
 		SP_prefEditor=SP_params.edit();

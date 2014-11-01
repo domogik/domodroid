@@ -211,13 +211,12 @@ public class Events_manager {
 	           	
 	           	while (true) {
 			        String result = subscriber.recvStr(0);
-			        Log.d(mytag, "result= "+result);
+			        Log.d(mytag, "MQ information receive: "+result);
 			        if (result.contains("stored_value")) {
-			        	Log.d(mytag, "result= "+result);
 			        	try {
 							JSONObject json_stats_04=new JSONObject(result);
-							Tracer.d(mytag, "Parsing result to jsonobject");
-							Tracer.d(mytag, json_stats_04.toString());
+							Tracer.d(mytag, "MQ Parsing result to jsonobject");
+							//Tracer.d(mytag, json_stats_04.toString());
 							String ticket="1";
 							String device_id=json_stats_04.get("sensor_id").toString();
 							String New_Value=json_stats_04.get("stored_value").toString();

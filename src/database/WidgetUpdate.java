@@ -684,8 +684,8 @@ public class WidgetUpdate  {
 					dev_id = itemArray.getJSONObject(i).getInt("device_id");
 				}else if(api_version==0.7f){
 					//Todo try to avoid problem with MQ
-					//dev_id = itemArray.getJSONObject(i).getInt("id");
-					dev_id = itemArray.getJSONObject(i).getInt("device_id");
+					dev_id = itemArray.getJSONObject(i).getInt("id");
+					//dev_id = itemArray.getJSONObject(i).getInt("device_id");
 				}
 			}catch (Exception e) {
 				Tracer.i(mytag, "Cache update : No feature id ! ");
@@ -697,8 +697,8 @@ public class WidgetUpdate  {
 					skey = itemArray.getJSONObject(i).getString("skey");
 				}else if(api_version==0.7f){
 					//Todo try to avoid problem with MQ
-					//skey = "";
-					skey = itemArray.getJSONObject(i).getString("reference");
+					skey = "";
+					//skey = itemArray.getJSONObject(i).getString("reference");
 					
 				}
 			} catch (Exception e) {

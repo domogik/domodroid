@@ -267,6 +267,7 @@ public class Events_manager {
 							Thread.sleep(sleep_time);	//Wait for 2s
 						} catch (Throwable t) {}
 						sleep_duration+=sleep_time;
+						//TODO 0.4 try to change this to listen when MQ is no more connected.
 						if(sleep_duration > max_time_for_ticket) {
 							cache_out_of_date = true;
 							request = ticket_request;

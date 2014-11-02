@@ -32,16 +32,11 @@ import activities.Graphics_Manager;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
-import org.achartengine.chart.LineChart;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.tools.PanListener;
-import org.achartengine.tools.ZoomEvent;
-import org.achartengine.tools.ZoomListener;
 import org.achartengine.util.MathHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,7 +104,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	private String step="hour";
 	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
 	private long currentTimestamp = 0;
-	private long startTimestamp = 0; 
+	private long startTimestamp = 0;
+	private long duration = 0; 
 	private Date time_start=new Date();
 	private Date time_end=new Date();
 	private Vector<Vector<Float>> values;
@@ -133,8 +129,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	private XYSeriesRenderer incomeRenderer;
 	private XYSeriesRenderer emptyRenderer;
 	private XYMultipleSeriesDataset dataset;
-	private XYSeries nameSeries;
-	private XYSeries EmptySeries;
+	private TimeSeries nameSeries;
+	private TimeSeries EmptySeries;
 	private int j;
 	private String usage;
 	
@@ -352,7 +348,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	}
 	
 	private void compute_period() {
-		long duration = 0; 
 		//Calendar cal = Calendar.getInstance(); // The 'now' time
 		
 		switch(period_type ) {
@@ -442,7 +437,10 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		//should be same
 		multiRenderer.addSeriesRenderer(incomeRenderer);
 		multiRenderer.addSeriesRenderer(emptyRenderer);
-				
+
+		multiRenderer.setXAxisMin(startTimestamp*1000);
+		multiRenderer.setXAxisMax(currentTimestamp*1000);
+	
 		values = new Vector<Vector<Float>>();
 		chartContainer = new LinearLayout(context);
 		// Getting a reference to LinearLayout of the MainActivity Layout
@@ -455,7 +453,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		try {
 			//json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+1385857510+"/interval/"+step+"/selector/avg");
 			json_GraphValues = Rest_com.connect(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
-			
 		} catch (Exception e) {
 			//return null;
 			Tracer.e(mytag,"Error with json");
@@ -549,24 +546,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		// Creating a Timed chart with the chart types specified in types array
 		mChart = (GraphicalView) ChartFactory.getTimeChartView(context, dataset, multiRenderer, types);
 		mChart.setOnClickListener(new OnClickListener() {
-			//on click is called when pan or zoom movement id ended
+			//on click is called when pan or zoom movement is ended
 			public void onClick(View v) {
-				Tracer.i(mytag+"Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
-						+ "]");
-						//To get the start of the graph after a move and grab new value
-						startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
-						currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
-						//TODO avoid graph to go in the future.
-						//This didn't work
-						if (currentTimestamp>System.currentTimeMillis())
-							multiRenderer.setXAxisMax(System.currentTimeMillis());
-						try {
-							drawgraph();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						mChart.refreshDrawableState();		
+				//To get the start of the graph after a move and grab new value
+				startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
+				currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
+				//avoid graph to go in the future.
+				if (currentTimestamp>(System.currentTimeMillis()/1000))
+					currentTimestamp=System.currentTimeMillis()/1000;
+					startTimestamp=currentTimestamp-duration/1000;
+					mChart.repaint();
+				try {
+					drawgraph();
+				} catch (JSONException e) {
+					Tracer.d(mytag, "Error redrawing graph: "+e.toString());
+				}	
 			}
 		});
 		

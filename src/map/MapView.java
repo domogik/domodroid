@@ -140,10 +140,11 @@ public class MapView extends View {
 	private WidgetUpdate cache_engine = null;
 	private float texsize = 14;
 	private float scale;
-	public MapView(tracerengine Trac, Activity context) {
+	public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
 		this.context=context;
+		this.params=params;
 		api_version=params.getFloat("API_VERSION", 0);
 		
 		//activated=true;

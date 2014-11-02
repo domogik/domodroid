@@ -123,7 +123,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				
 		Tracer = tracerengine.getInstance(params);
 		prefEditor=params.edit();
-		mapView = new MapView(Tracer, this);
+		mapView = new MapView(Tracer, this, params);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));
 		setContentView(R.layout.activity_map);

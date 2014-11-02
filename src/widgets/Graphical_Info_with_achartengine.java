@@ -233,6 +233,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		multiRenderer.setShowGrid(true);
 		//Set color for grid
 		multiRenderer.setGridColor(Color.BLACK, 0);
+		//To allow on click method (called when pan or zoom aplied)
+		multiRenderer.setClickEnabled(true);
 		
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
@@ -565,11 +567,10 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		String types = "dd-MM HH:mm";
 		// Creating a Timed chart with the chart types specified in types array
 		mChart = (GraphicalView) ChartFactory.getTimeChartView(context, dataset, multiRenderer, types);
-
-		mChart.addPanListener(
-				new PanListener() {
-					public void panApplied() {
-						Tracer.i(mytag+"Pan", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
+		mChart.setOnClickListener(new OnClickListener() {
+			//on click is called when pan or zoom movement id ended
+			public void onClick(View v) {
+						Tracer.i(mytag+"Pan or zoom", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
 						+ "]");
 						//To get the start of the graph after a move and grab new value
 						startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
@@ -588,26 +589,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					}
 				}
 			);
-			mChart.addZoomListener(
-				new ZoomListener() {
-					public void zoomReset() {}
-				
-					public void zoomApplied(ZoomEvent arg0) {
-						Tracer.i(mytag+"zoom", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
-						+ "]");
-						startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
-						currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
-						try {
-							drawgraph();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						mChart.invalidate();
-					}
-				}, ruptur, ruptur
-			);
-			
+		
 		// Adding the Combined Chart to the LinearLayout
 		chartContainer.addView(mChart);
 	}

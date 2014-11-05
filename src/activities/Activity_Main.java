@@ -878,8 +878,10 @@ public class Activity_Main extends Activity implements OnClickListener{
 	//this is called when the screen rotates.
 	// (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
 	{
-	    super.onConfigurationChanged(newConfig);
-	    refresh();
+	    //TODO check if sync as been done by past to avoid crash
+		//on orientation change when user have to reload saved parameters.
+		super.onConfigurationChanged(newConfig);
+	    //refresh();
 	}
 	
 	public void refresh()

@@ -20,6 +20,7 @@ package widgets;
 import java.lang.Thread.State;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -52,6 +53,7 @@ import android.os.Process;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -228,7 +230,13 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 							//Basilic add, number feature has a unit parameter
 							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 							String test_unite = jparam.getString("unit");
-							value.setText(formatedValue+ " "+test_unite);
+							//To solve #2045 only for disque_usage
+							if(formatedValue<100000){
+								value.setText(formatedValue+ " "+test_unite);
+							} else if (test_unite.equals("ko")){
+								String formated_converted=readableFileSize(Long.parseLong(loc_Value)*1024);
+								value.setText(formated_converted);
+							}
 						} catch (JSONException e) {							
 						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
@@ -350,7 +358,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
-		
+
+	public static String readableFileSize(long formatedValue) {
+	    Log.d(mytag, "readableFileSize");
+		if(formatedValue <= 0) return "0";
+	    final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+	    int digitGroups = (int) (Math.log10(formatedValue)/Math.log10(1024));
+	    return new DecimalFormat("#,##0.#").format(formatedValue/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+	}
 }
 
 

@@ -23,6 +23,7 @@ package widgets;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,6 +57,7 @@ import android.os.Message;
 import misc.tracerengine;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -271,7 +273,13 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 							//Basilic add, number feature has a unit parameter
 							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 							String test_unite = jparam.getString("unit");
-							value.setText(formatedValue+ " "+test_unite);
+							//To solve #2045 only for disque_usage
+							if(formatedValue<100000){
+								value.setText(formatedValue+ " "+test_unite);
+							} else if (test_unite.equals("ko")){
+								String formated_converted=readableFileSize(Long.parseLong(loc_Value)*1024);
+								value.setText(formated_converted);
+							}
 						} catch (JSONException e) {							
 							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
@@ -614,5 +622,13 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 			}
 		}
 		return;
+	}
+	
+	public static String readableFileSize(long formatedValue) {
+	    Log.d(mytag, "readableFileSize");
+		if(formatedValue <= 0) return "0";
+	    final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+	    int digitGroups = (int) (Math.log10(formatedValue)/Math.log10(1024));
+	    return new DecimalFormat("#,##0.#").format(formatedValue/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 }

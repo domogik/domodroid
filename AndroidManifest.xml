@@ -27,16 +27,6 @@
 			</intent-filter>
 		</activity>
 		
-		<activity android:name="activities.Activity_Area"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-		</activity>
-		
-		<activity android:name="activities.Activity_Options" android:theme="@android:style/Theme.NoTitleBar">
-		</activity>
-		<activity android:name="activities.Activity_Room"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-		<activity android:name="activities.Activity_House"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
 		<activity android:name="activities.Activity_About" android:theme="@android:style/Theme.NoTitleBar"
 			android:configChanges="orientation"></activity>
 		<activity android:name="activities.Preference" android:theme="@android:style/Theme.NoTitleBar"
@@ -47,7 +37,6 @@
 		<activity android:name="activities.Activity_Map"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 			android:configChanges="orientation"></activity>
-		<activity android:name="activities.DialogActivity"></activity>
 		
 		<provider
 		    android:authorities="database.DmdContentProvider"

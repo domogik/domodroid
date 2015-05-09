@@ -1147,15 +1147,16 @@ public class MapView extends View {
 								
 							}else{
 								showTopWidget(featureMap);
+								panel_button.setVisibility(View.GONE);
+								panel_widget.setVisibility(View.VISIBLE);
+								if(!top_drawer.isOpen())top_drawer.setOpen(true, true);
+								if(bottom_drawer.isOpen())bottom_drawer.setOpen(false, true);
+								widgetActiv=true;
 							}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							panel_button.setVisibility(View.GONE);
-							panel_widget.setVisibility(View.VISIBLE);
-							if(!top_drawer.isOpen())top_drawer.setOpen(true, true);
-							if(bottom_drawer.isOpen())bottom_drawer.setOpen(false, true);
-							widgetActiv=true;
+
 						}
 
 					}

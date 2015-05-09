@@ -15,8 +15,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.domogik.domodroid13.R;
 
+import rinor.Rest_com;
+
 import database.Cache_management;
 import database.DomodroidDB;
+import database.JSONParser;
 import database.WidgetUpdate;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
@@ -118,7 +121,7 @@ public class MapView extends View {
 	private int formatMode;
 	private String svg_string;
 	private int currentFile = 0;
-
+	private String type;
 	private SharedPreferences params;
 	private float api_version;
 	
@@ -140,13 +143,18 @@ public class MapView extends View {
 	private WidgetUpdate cache_engine = null;
 	private float texsize = 14;
 	private float scale;
+	private String login;
+	private String password;
+	
 	public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
 		this.context=context;
 		this.params=params;
 		api_version=params.getFloat("API_VERSION", 0);
-		
+		login = params.getString("http_auth_username",null);
+    	password = params.getString("http_auth_password",null);
+    	
 		//activated=true;
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		screen_width = metrics.widthPixels;
@@ -789,7 +797,11 @@ public class MapView extends View {
 			label = label+" ("+DevId+")";
 		
 		String[] model = device_type_id.split("\\.");
-		String type = model[1];
+		type = model[1];
+		Tracer.d(mytag, "model="+model.toString());
+		Tracer.d(mytag, "mode[1]="+model[1].toString());
+		Tracer.d(mytag, "mode[0]="+model[0].toString());
+		
 		
 		if (feature.getValue_type().equals("binary")) {
 			if(type.equals("rgb_leds") && (State_key.equals("command"))) {
@@ -1098,7 +1110,44 @@ public class MapView extends View {
 						if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 								(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 							try {
-								showTopWidget(featureMap);	
+							//TODO #2009 action directly if binary
+							if (featureMap.getValue_type().equals("binary")){
+								Tracer.d(mytag, "This is a binary try to change is state");
+								Tracer.d(mytag, "State is "+featureMap.getCurrentState().toString());
+								if (featureMap.getCurrentState().equals("true")){
+									featureMap.setCurrentState("false");
+								}else if (featureMap.getCurrentState().equals("false")){
+									featureMap.setCurrentState("true");
+								}else if (featureMap.getCurrentState().equals("on")){
+									featureMap.setCurrentState("off");
+								}else if (featureMap.getCurrentState().equals("off")){
+									featureMap.setCurrentState("on");
+								}
+								String URL = params.getString("URL","1.1.1.1");
+								String Address = featureMap.getAddress();
+								String[] model = featureMap.getDevice_type_id().split("\\.");
+								type = model[0];								
+								String Url2send = URL+"command/"+type+"/"+Address+"/"+featureMap.getCurrentState();
+									Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+									JSONObject json_Ack = null;
+									try {
+										json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
+									} catch (Exception e) {
+										Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+									}
+									try {
+										Boolean ack = JSONParser.Ack(json_Ack);
+										if(ack==false){
+											Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+											handler.sendEmptyMessage(2);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								
+							}else{
+								showTopWidget(featureMap);
+							}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -1252,5 +1301,5 @@ public class MapView extends View {
 	public void setMoveMode(boolean moveMode) {
 		this.moveMode = moveMode;	
 	}
-	
+
 }

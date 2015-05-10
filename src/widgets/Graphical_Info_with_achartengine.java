@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
@@ -483,7 +484,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		
 		j=0;
 		Boolean ruptur=false;
-    	for (int i =0; i < valueArray.length()-1; i++){
+		if(limit == 6) {
+			// range between 1 to 8 days (average per hour)
+			for (int i =0; i < valueArray.length()-1; i++){
 			real_val = valueArray.getJSONArray(i).getDouble(limit-1);
 			real_val=round(real_val, 2);
 			int year=valueArray.getJSONArray(i).getInt(0);
@@ -500,7 +503,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 						+String.valueOf(month)+"-"
 						+String.valueOf(day)+" "
 						+String.valueOf(hour)+":00");
-			} catch (ParseException e) {
+				Tracer.d(mytag, "date1="+date1);
+				Tracer.d(mytag, "Value="+real_val);
+		    } catch (ParseException e) {
 				Tracer.d(mytag, "Error converting date");
 				Tracer.d (mytag,e.toString());
 			}
@@ -549,6 +554,135 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				
 			}
 			}
+		}else if(limit == 5) {
+			// range between 9 to 32 days (average per day)
+			for (int i =0; i < valueArray.length()-1; i++){
+			real_val = valueArray.getJSONArray(i).getDouble(limit-1);
+			real_val=round(real_val, 2);
+			int year=valueArray.getJSONArray(i).getInt(0);
+	    	int month=valueArray.getJSONArray(i).getInt(1);
+	    	int day=valueArray.getJSONArray(i).getInt(3);
+	    	int day_next=valueArray.getJSONArray(i+1).getInt(3);
+	    	//String date=String.valueOf(hour)+"'";
+	    	SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+	    	Calendar calendar = Calendar.getInstance();
+	         calendar.clear();
+	         calendar.set(Calendar.DAY_OF_MONTH, day);
+	         //JAVA calendar month his very strange but start from 0
+	         //find a way to always get the right month this way
+	         //TODO will make a problem for december or january
+	         month=(month - 1);
+	         //set to 12h because it's an average and much more nice like this.
+	         calendar.set(Calendar.HOUR, 12);
+	         calendar.set(Calendar.MONTH, month);
+	         calendar.set(Calendar.YEAR, year);
+	         Date date1=new Date();
+	         date1 = calendar.getTime();
+	         if((day+1) != day_next) {
+					//ruptur : simulate next missing steps
+	    			EmptySeries.add(date1.getTime(),real_val );
+	    			nameSeries.add(date1.getTime(),real_val );
+	    			for (int k=1 ; k < (day_next - day); k++){
+		    			nameSeries.add(date1.getTime(), MathHelper.NULL_VALUE);
+		    			EmptySeries.add(date1.getTime(),real_val );
+		    		}
+	    			j = j + (day_next - day);
+	    			ruptur=true;
+	    		} else{
+	    			if (ruptur){
+	    				EmptySeries.add(date1.getTime(),real_val);
+	    				Tracer.d(mytag, "date1="+date1);
+		    	        Tracer.d(mytag, "Value="+real_val); 
+	    			}else{
+	    				EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
+	    				Tracer.d(mytag, "date1="+date1);
+		    	        Tracer.d(mytag, "Value="+real_val); 
+	    			}
+	    			ruptur=false;
+	    			nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+	    			j++;
+	    		}
+			if(minf == 0)
+				minf=real_val.floatValue();
+				avgf+=real_val;	// Get the real 'value'
+			
+			if(real_val > maxf){  
+				maxf = real_val.floatValue();  
+				
+			}  
+			if(real_val < minf){  
+				minf = real_val.floatValue(); 
+				
+			}
+			}
+		}else if(limit == 3) {
+			// (average per week)
+			for (int i =0; i < valueArray.length()-1; i++){
+			real_val = valueArray.getJSONArray(i).getDouble(limit-1);
+			real_val=round(real_val, 2);
+			int year=valueArray.getJSONArray(i).getInt(0);
+	    	int week=valueArray.getJSONArray(i).getInt(1);
+	    	int week_next=valueArray.getJSONArray(i+1).getInt(1);
+	    	//String date=String.valueOf(hour)+"'";
+	    	SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+	    	 Calendar calendar = Calendar.getInstance();
+	         calendar.clear();
+	       //set to 12h because it's an average and much more nice like this.
+	         calendar.set(Calendar.DAY_OF_WEEK, 4);
+	         calendar.set(Calendar.WEEK_OF_YEAR, week);
+	         calendar.set(Calendar.YEAR, year);
+	         Date date1=new Date();
+	         date1 = calendar.getTime();
+	         if (week != 52 && (week < week_next)){
+	    		//no day change
+	    		if((week+1) != week_next) {
+					//ruptur : simulate next missing steps
+	    			EmptySeries.add(date1.getTime(),real_val );
+	    			nameSeries.add(date1.getTime(),real_val );
+	    			for (int k=1 ; k < (week_next - week); k++){
+		    			nameSeries.add(date1.getTime(), MathHelper.NULL_VALUE);
+		    			EmptySeries.add(date1.getTime(),real_val );
+		    		}
+	    			j = j + (week_next - week);
+	    			ruptur=true;
+	    		} else{
+	    			if (ruptur){
+	    				EmptySeries.add(date1.getTime(),real_val);
+	    				Tracer.d(mytag, "date1="+date1);
+		   		     	Tracer.d(mytag, "Value="+real_val);
+	    			}else{
+	    				EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
+	    				Tracer.d(mytag, "date1="+date1);
+		    	        Tracer.d(mytag, "Value="+real_val);
+	    			}
+	    			ruptur=false;
+	    			nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+	    			j++;
+	    		}
+	    	} else if (week == 52){
+	    		if (ruptur){
+    				EmptySeries.add(date1.getTime(),real_val);
+	    		}else{
+    				EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
+	    		}
+    			ruptur=false;
+    			nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+	    		j++;
+	    	}
+			if(minf == 0)
+				minf=real_val.floatValue();
+				avgf+=real_val;	// Get the real 'value'
+			
+			if(real_val > maxf){  
+				maxf = real_val.floatValue();  
+				
+			}  
+			if(real_val < minf){  
+				minf = real_val.floatValue(); 
+				
+			}
+			}
+		}
     	avgf=avgf/values.size();
 		multiRenderer.addYTextLabel(((double)minf)-1, (""+minf));
     	multiRenderer.addYTextLabel(((double)avgf),(""+avgf));
@@ -575,14 +709,26 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 						//To get the start of the graph after a move and grab new value
 						startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
 						currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
+						Tracer.i(mytag, "Period from "+startTimestamp+" to "+currentTimestamp);
+						Tracer.i(mytag, "Differcence= "+(currentTimestamp-startTimestamp));
+						//period_type=1;
+						long difference=currentTimestamp-startTimestamp;
+						if (difference<604800){
+							period_type=8;
+						}else if (difference<2419200){
+							period_type=31;
+						//}else if (difference>2419200){
+						}else{
+							period_type=33;
+						}
+						compute_period();
 						//TODO avoid graph to go in the future.
 						//This didn't work
-						if (currentTimestamp>System.currentTimeMillis())
-							multiRenderer.setXAxisMax(System.currentTimeMillis());
+						//if (currentTimestamp>System.currentTimeMillis())
+						//	multiRenderer.setXAxisMax(System.currentTimeMillis());
 						try {
 							drawgraph();
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						mChart.refreshDrawableState();					

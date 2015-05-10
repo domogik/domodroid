@@ -455,7 +455,7 @@ public class DmdContentProvider extends ContentProvider {
 		case REQUEST_FEATURE_ALL:
 			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
 			cursor=mDB.getReadableDatabase().rawQuery(
-					"SELECT * FROM table_feature "
+					"SELECT * FROM table_feature order by name COLLATE NOCASE"
 					,null);
 			break;
 		case REQUEST_FEATURE_ASSOCIATION_ALL:

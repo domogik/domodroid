@@ -37,6 +37,7 @@ import widgets.Graphical_List;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
 import widgets.Graphical_Binary.SBAnim;
+import widgets.Graphical_Binary_New.CommandeThread;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -145,6 +146,9 @@ public class MapView extends View {
 	private float scale;
 	private String login;
 	private String password;
+	private String Address;
+	private String URL;
+	private String state_progress;
 	
 	public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
@@ -1110,7 +1114,7 @@ public class MapView extends View {
 						if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 								(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 							try {
-							//TODO #2009 action directly if binary
+							// #2009 action directly if binary
 							if (featureMap.getValue_type().equals("binary")){
 								Tracer.d(mytag, "This is a binary try to change is state");
 								Tracer.d(mytag, "State is "+featureMap.getCurrentState().toString());
@@ -1122,28 +1126,17 @@ public class MapView extends View {
 									featureMap.setCurrentState("off");
 								}else if (featureMap.getCurrentState().equals("off")){
 									featureMap.setCurrentState("on");
+								}else if (featureMap.getCurrentState().equals("1")){
+									featureMap.setCurrentState("0");
+								}else if (featureMap.getCurrentState().equals("0")){
+									featureMap.setCurrentState("1");
 								}
-								String URL = params.getString("URL","1.1.1.1");
-								String Address = featureMap.getAddress();
+								this.URL = params.getString("URL","1.1.1.1");
+								this.Address = featureMap.getAddress();
 								String[] model = featureMap.getDevice_type_id().split("\\.");
-								type = model[0];								
-								String Url2send = URL+"command/"+type+"/"+Address+"/"+featureMap.getCurrentState();
-									Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
-									JSONObject json_Ack = null;
-									try {
-										json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
-									} catch (Exception e) {
-										Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-									}
-									try {
-										Boolean ack = JSONParser.Ack(json_Ack);
-										if(ack==false){
-											Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
-											handler.sendEmptyMessage(2);
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
+								this.type = model[0];
+								this.state_progress=featureMap.getCurrentState();
+								new CommandeThread().execute();
 								
 							}else{
 								showTopWidget(featureMap);
@@ -1302,5 +1295,28 @@ public class MapView extends View {
 	public void setMoveMode(boolean moveMode) {
 		this.moveMode = moveMode;	
 	}
+	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
+		@Override
+		protected Void doInBackground(Void... params) {
+			String Url2send = URL+"command/"+type+"/"+Address+"/"+state_progress;
+			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+			JSONObject json_Ack = null;
+			try {
+				json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
+			} catch (Exception e) {
+				Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+			}
+			try {
+				Boolean ack = JSONParser.Ack(json_Ack);
+				if(ack==false){
+					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+					handler.sendEmptyMessage(2);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
 }

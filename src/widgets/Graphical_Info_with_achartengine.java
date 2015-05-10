@@ -570,7 +570,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	         calendar.set(Calendar.DAY_OF_MONTH, day);
 	         //JAVA calendar month his very strange but start from 0
 	         //find a way to always get the right month this way
-	         //TODO will make a problem for december or january
 	         month=(month - 1);
 	         //set to 12h because it's an average and much more nice like this.
 	         calendar.set(Calendar.HOUR, 12);
@@ -627,8 +626,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	    	SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd HH:mm");  
 	    	 Calendar calendar = Calendar.getInstance();
 	         calendar.clear();
-	       //set to 12h because it's an average and much more nice like this.
-	         calendar.set(Calendar.DAY_OF_WEEK, 4);
+	       //set to thursday because it's an average and much more nice like this.
+	         calendar.set(Calendar.DAY_OF_WEEK, 5);
 	         calendar.set(Calendar.WEEK_OF_YEAR, week);
 	         calendar.set(Calendar.YEAR, year);
 	         Date date1=new Date();
@@ -713,19 +712,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 						Tracer.i(mytag, "Differcence= "+(currentTimestamp-startTimestamp));
 						//period_type=1;
 						long difference=currentTimestamp-startTimestamp;
+						//Avoid graph to go in the future.
+						if (currentTimestamp>(System.currentTimeMillis()/1000)){
+							multiRenderer.setXAxisMax(System.currentTimeMillis());
+							multiRenderer.setXAxisMin(System.currentTimeMillis()-(difference*1000));
+							startTimestamp=((new Date((long) multiRenderer.getXAxisMin())).getTime())/1000;
+							currentTimestamp=((new Date((long) multiRenderer.getXAxisMax())).getTime())/1000;
+						}
 						if (difference<604800){
 							period_type=8;
 						}else if (difference<2419200){
 							period_type=31;
-						//}else if (difference>2419200){
 						}else{
 							period_type=33;
-						}
+						}						
 						compute_period();
-						//TODO avoid graph to go in the future.
-						//This didn't work
-						//if (currentTimestamp>System.currentTimeMillis())
-						//	multiRenderer.setXAxisMax(System.currentTimeMillis());
 						try {
 							drawgraph();
 						} catch (JSONException e) {

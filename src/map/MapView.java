@@ -1115,6 +1115,7 @@ public class MapView extends View {
 								(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 							try {
 							// #2009 action directly if binary
+							// via the asynctask new CommandeThread()
 							if (featureMap.getValue_type().equals("binary")){
 								Tracer.d(mytag, "This is a binary try to change is state");
 								Tracer.d(mytag, "State is "+featureMap.getCurrentState().toString());
@@ -1295,8 +1296,8 @@ public class MapView extends View {
 	public void setMoveMode(boolean moveMode) {
 		this.moveMode = moveMode;	
 	}
-	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
+	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 		@Override
 		protected Void doInBackground(Void... params) {
 			String Url2send = URL+"command/"+type+"/"+Address+"/"+state_progress;

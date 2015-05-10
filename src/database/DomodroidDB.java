@@ -458,8 +458,9 @@ public class DomodroidDB {
 		return lastid;
 	}
 	
-	//TODO Add a request for all device_feature_id in feature_association and feature_map
-	//Maybe by id will be enough
+	//Add a request for all device_feature_id in feature_association and feature_map
+	//It's used to be sure that the url always contains all associated devices
+	//to grab information if they're displayed somewhere.
 	public int[] requestAllFeatures_association() {
 			Cursor curs1=null;
 			Cursor curs2=null;

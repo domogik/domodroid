@@ -305,18 +305,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					//A device as been add re-check the cache URL
 					Cache_management.checkcache(Tracer,context);
 					loadSpinnerData();
-					
-					/*
-					//TODO add feature device and his state key
-					 * to URL update path to add it to cache
-					 *  
-					SharedPreferences params=context.getSharedPreferences("PREFS",context.MODE_PRIVATE);
-					String url=params.getString("UPDATE_URL",null);
-					url=url.concat(feature_id+"/"+feature.getState_key()+"/");
-					SharedPreferences.Editor prefEditor=params.edit();
-					prefEditor.putString("UPDATE_URL",url);
-					prefEditor.commit();
-					*/
 				}
 			});
 			alert_Feature.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -15,16 +15,22 @@ public class Cache_management {
 	private static float api_version;
 		
 	public static void checkcache(tracerengine Trac, Activity Context){
+		// Change UrlAccess to make cache more light.
+		// 1st need to change when this urlupdate his create.
+		// 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
+		// 3rd add it in path only if it is the case.
+		// So when a user will remove it from association or map it will be removed from cache
+		// And when it will be add, it will get back in cache. 
 		Tracer = Trac;
 		context = Context;
 		sharedparams= PreferenceManager.getDefaultSharedPreferences(context);
 		api_version=sharedparams.getFloat("API_VERSION", 0);
-		
-		if (api_version<=0.6f){ 
+		String urlUpdate="";
+		if (api_version<=0.6f){
 			DomodroidDB db = new DomodroidDB(Tracer, context);
 			int[] listFeature_Association = db.requestAllFeatures_association();
 			Entity_Feature[] listFeature = db.requestFeatures();
-			String urlUpdate = sharedparams.getString("URL","1.1.1.1")+"stats/multi/";
+			urlUpdate = sharedparams.getString("URL","1.1.1.1")+"stats/multi/";
 			Tracer.i(mytag, "urlupdate= "+urlUpdate);
 			int compteur=0;
 			for (Entity_Feature feature : listFeature) {
@@ -44,11 +50,20 @@ public class Cache_management {
 			prefEditor.putString("UPDATE_URL", urlUpdate);
 			//need_refresh = true;	// To notify main activity that screen must be refreshed
 			prefEditor.commit();
-			//TODO restart the cacheengine.
+			//TODO restart the cache-engine.
 			//Empty it then refill it with right value
 			WU_widgetUpdate = WidgetUpdate.getInstance();
 			if(WU_widgetUpdate != null)
 				WU_widgetUpdate.refreshNow();
+		}else if(api_version <=0.7f){
+			urlUpdate = sharedparams.getString("URL","1.1.1.1")+"sensor/";
+			SharedPreferences.Editor prefEditor=sharedparams.edit();
+			prefEditor.putString("UPDATE_URL", urlUpdate);
+			//need_refresh = true;	// To notify main activity that screen must be refreshed
+			prefEditor.commit();
 		}
+
+		Tracer.v(mytag,"UPDATE_URL = "+urlUpdate);
+		
 	}
 }

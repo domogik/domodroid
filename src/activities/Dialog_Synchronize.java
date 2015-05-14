@@ -3,6 +3,7 @@ package activities;
 import java.util.ArrayList;
 import org.domogik.domodroid13.R;
 import rinor.Rest_com;
+import database.Cache_management;
 import database.DomodroidDB;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -152,7 +153,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					handler.sendEmptyMessage(0);
 					return null;
 				}
-				//TODO test for other version
 				String Rinor_Api_ver=new String();
 				try {
 					Rinor_Api_ver = json_rinor.getJSONObject("info").getString("REST_API_version");
@@ -557,23 +557,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					prefEditor.putBoolean("BY_USAGE", true);
 				}
 				
-				//TODO change UrlAccess to make cache more light.
-				// 1st need to change when this urlupdate his create.
-				// 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
-				// 3rd add it in path only if it is the case.
-				// So when a user will remove it from association or map it will be removed from cache
-				// And when it will be add, it will get back in cache. 
-				Entity_Feature[] listFeature = db.requestFeatures();
-				String urlUpdate = urlAccess+"stats/multi/";
-				Tracer.v(mytag,"prepare UPDATE_URL items="+listFeature.length);
-				for (Entity_Feature feature : listFeature) {
-					if(Rinor_Api_Version <=0.6f){
-						urlUpdate = urlUpdate.concat(feature.getDevId()+"/"+feature.getState_key()+"/");
-					}else if(Rinor_Api_Version <=0.7f){
-						urlUpdate = urlAccess+"sensor/";
-					}
-				}
-				prefEditor.putString("UPDATE_URL", urlUpdate);
+				//refresh cache address
+				Cache_management.checkcache(Tracer,(android.app.Activity) context);
 				need_refresh = true;	// To notify main activity that screen must be refreshed
 				prefEditor.commit();
 				/*
@@ -581,8 +566,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				db = null;
 				*/
 				publishProgress(100);
-				
-				Tracer.v(mytag,"UPDATE_URL = "+urlUpdate);
 				
 				Bundle b = new Bundle();
 				//Notify sync complete to parent Dialog

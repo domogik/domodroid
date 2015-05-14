@@ -493,7 +493,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							parent_type=parent_type.replace("DT_", "");
 							parent_type=parent_type.toLowerCase();
 							device_feature1.put("value_type",parent_type);
-							String parameters="{";
+							JSONObject parameters= new JSONObject();
+							
 							try{
 								//List sensors for this device
 				                int list_commands = 0;
@@ -510,11 +511,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					                	//this is just a try to get a binary switch working....
 										Tracer.d(mytag, "Json this id="+json_Commands.getJSONObject(list_command.getString(z)).getString("id"));
 										String command_id=json_Commands.getJSONObject(list_command.getString(z)).getString("id");
-										parameters = parameters + "&quot;command_id&quot;:&quot;"+command_id+"&quot;,";
+										parameters.put("command_id",command_id);
 										String  command_type=json_Commands.getJSONObject(list_command.getString(z)).getJSONArray("parameters").getJSONObject(0).getString("key");
 										if (command_type!=null)
 										Tracer.d(mytag, "Json command_type="+command_type);		                
-										parameters = parameters + "&quot;command_type&quot;:&quot;"+command_type+"&quot;";
+										parameters.put("command_type",command_type);
 										
 					                }catch(JSONException e){
 					                	
@@ -523,12 +524,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 								try{
 								String unit=Json_data_type.getJSONObject(data_type).getString("unit");
 								if(!unit.equals(null)&& !unit.equals("null"))
-									parameters = parameters + "&quot;unit&quot;:&quot;"+unit+"&quot;";
+									parameters.put("unit",unit);
 								}catch (JSONException e){
 								}
-								parameters = parameters+"}";
 							}catch (JSONException e){
-								parameters = "{}";
 							}
 							device_feature1.put("parameters",parameters);
 							db.insertFeature_0_4(device_feature1);

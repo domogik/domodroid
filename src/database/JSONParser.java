@@ -114,6 +114,7 @@ public class JSONParser{
 	//Parse JSON object, result of a request-------------------------
 	public static Boolean Ack(JSONObject json) throws JSONException {	
 		if(json.getString("status").equals("ERROR")){
+			//TODO need to say this to user.
 			return false;	
 		}else{
 			return true;

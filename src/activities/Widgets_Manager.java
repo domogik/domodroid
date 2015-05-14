@@ -139,7 +139,7 @@ public class Widgets_Manager {
 			
 			Tracer.i(mytag, "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
 			//TODO adapt to 0.4
-			if (Value_type.equals("binary")) {
+			if (Value_type.equals("binary")||Value_type.equals("bool")) {
 				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 					//ignore it : it'll have another device for Color, displaying the switch !)
 				} else {
@@ -291,34 +291,38 @@ public class Widgets_Manager {
 		//check option and adapt columns in function
 		columns=false;
 		colonnes(context, ll, mainPan, leftPan, rightPan, params);
-		
-		for (Entity_Area area : listArea) {
-			int Id = area.getId();
-			String iconId = "unknown";
-			try {
-				iconId = domodb.requestIcons(Id, "area").getValue().toString();
-			} catch (Exception e) {
-				//e.printStackTrace();
+		try {
+			for (Entity_Area area : listArea) {
+				int Id = area.getId();
+				String iconId = "unknown";
+				try {
+					iconId = domodb.requestIcons(Id, "area").getValue().toString();
+				} catch (Exception e) {
+					//e.printStackTrace();
+				}
+				tmpPan=null;
+				tmpPan=new FrameLayout(context);
+				Tracer.d(mytag+" loadRoomWidgets","Adding area : "+area.getName());
+				String name = area.getName();
+				name = Graphics_Manager.Names_Agent(context, name);
+				
+				graph_area = new Graphical_Area(Tracer, context,Id,name,area.getDescription(),iconId,widgetSize,widgetHandler);
+				tmpPan.addView(graph_area);
+				if(columns){	
+					if(counter==0){
+						leftPan.addView(tmpPan);
+					}
+					else if(counter==1){
+						rightPan.addView(tmpPan);
+					}
+					counter++;
+					if(counter==2)counter=0;
+				}else ll.addView(tmpPan);
 			}
-			tmpPan=null;
-			tmpPan=new FrameLayout(context);
-			Tracer.d(mytag+" loadRoomWidgets","Adding area : "+area.getName());
-			String name = area.getName();
-			name = Graphics_Manager.Names_Agent(context, name);
-			
-			graph_area = new Graphical_Area(Tracer, context,Id,name,area.getDescription(),iconId,widgetSize,widgetHandler);
-			tmpPan.addView(graph_area);
-			if(columns){	
-				if(counter==0){
-					leftPan.addView(tmpPan);
-				}
-				else if(counter==1){
-					rightPan.addView(tmpPan);
-				}
-				counter++;
-				if(counter==2)counter=0;
-			}else ll.addView(tmpPan);
+		}catch (Exception e) {
+			//e.printStackTrace();
 		}
+		
 		return ll;
 	}
 

@@ -96,7 +96,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 	private String login;
 	private String password;
 	private float api_version;
-	
+	private JSONObject jparam;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
@@ -124,7 +124,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		//get parameters		
 		
 		try {
-			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+			jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 			value0 = jparam.getString("value0");
 			value1 = jparam.getString("value1");
 		} catch (Exception e) {
@@ -311,7 +311,21 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		@Override
 		protected Void doInBackground(Void... params) {
 			updating=3;
-			String Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
+			String Url2send;
+			if(api_version>=0.7f){
+				String command_id = null;
+				String command_type = null;
+				try {
+					command_id = jparam.getString("command_id");
+					command_type= jparam.getString("command_type");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					Tracer.d(mytag, "No command_id for this device");
+				}
+				Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
+			}else{
+				Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
+			}
 			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {

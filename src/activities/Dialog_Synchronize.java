@@ -140,7 +140,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 			
 			try{
 				
-				// if API rinor >0.5 gÃ©nÃ©ration auto sinon classic
+				// if API rinor >0.5 génération auto sinon classic
 				JSONObject json_rinor = null;
 				try {
 					json_rinor = Rest_com.connect_jsonobject(urlAccess,login,password);
@@ -173,7 +173,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				JSONObject json_RoomList = null;
 				JSONObject json_FeatureList = null;
 				JSONArray json_FeatureList1 = null;
-				JSONObject json_FeatureList2=null;
+				JSONObject json_Sensors=null;
+				JSONObject json_Commands=null;
 				JSONObject json_FeatureAssociationList = null;
 				JSONObject json_IconList = null;
 				Tracer.d(mytag, "urlAccess = <"+urlAccess+">");
@@ -334,6 +335,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						}
 						
 					} // for loop on feature list...
+					
+					//TODO load existing room from prefeditor(room) and grab rooms as JSONArray
+					//The put method replace value by new one so loading previous version will
+					//avoid lost of user organization
+					//rooms.put(prefEditor.getString("ROOM_LIST");
+
 					//Prepare list of rooms, and list of usable features
 					json_RoomList.put("room", rooms);
 					json_FeatureAssociationList.put("feature_association",ListFeature);
@@ -416,13 +423,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	                	list_size = json_FeatureList1.length();
 	                Tracer.d(mytag,"Device list size = "+list_size);
 				for(int i = 0; i < list_size; i++) {
-	                int list_size1 = 0;
-					json_FeatureList2=json_FeatureList1.getJSONObject(i).getJSONObject("sensors");
-					if(json_FeatureList2 != null)
-	                	list_size1 = json_FeatureList2.length();
-	                Tracer.d(mytag,list_size1+" sensors for device id "+ json_FeatureList1.getJSONObject(i).getString("id") );
-	                JSONArray listsensor = json_FeatureList2.names();
-	                for(int y = 0; y < list_size1; y++) {
+	                int list_sensors = 0;
+					//List sensors for this device
+	                json_Sensors=json_FeatureList1.getJSONObject(i).getJSONObject("sensors");
+					if(json_Sensors != null)
+	                	list_sensors = json_Sensors.length();
+	                Tracer.d(mytag,list_sensors+" sensors for device id "+ json_FeatureList1.getJSONObject(i).getString("id") );
+	                JSONArray listsensor = json_Sensors.names();
+	                for(int y = 0; y < list_sensors; y++) {
 						try {
 							//TODO reorder for the moment it his done by data_Type
 							usage = json_FeatureList1.getJSONObject(i).getString("name");
@@ -436,8 +444,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 						// Create a pseudo 'room' for each usage returned by Rinor
 						if (usage != null) {
 							if(! list_usage.contains(usage)){
-								if(json_FeatureList2.length() > 0) {
-									publishProgress(100*y/json_FeatureList2.length());
+								if(json_Sensors.length() > 0) {
+									publishProgress(100*y/json_Sensors.length());
 									JSONObject room = new JSONObject();
 									room.put("area_id","1");
 									room.put("description","");
@@ -455,27 +463,27 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							Widget.put("place_type","room");
 							Widget.put("place_id",list_usage.indexOf( 
 									json_FeatureList1.getJSONObject(i).getString("name"))+2); //id_rooms);
-							Widget.put("device_feature_id",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("id"));
+							Widget.put("device_feature_id",json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
 							Widget.put("id",k);
 							k++;
 							JSONObject device_feature = new JSONObject();
 							JSONObject device_feature1 = new JSONObject();
-							device_feature.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
-							device_feature.put("id",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("id"));
+							device_feature.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
+							device_feature.put("id",json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
 							device_feature.put("device_id",json_FeatureList1.getJSONObject(i).getString("id"));
 							Widget.put("device_feature", device_feature);
 							ListFeature.put(Widget);
 							json_FeatureAssociationList.put("feature_association",ListFeature);
-							device_feature1.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
-							device_feature1.put("id",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("id"));
+							device_feature1.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
+							device_feature1.put("id",json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
 							device_feature1.put("device_id",json_FeatureList1.getJSONObject(i).getString("id"));
 							device_feature1.put("device_usage_id",json_FeatureList1.getJSONObject(i).getString("client_id"));
 							device_feature1.put("adress","");
 							device_feature1.put("device_type_id",json_FeatureList1.getJSONObject(i).getString("device_type_id"));
 							device_feature1.put("description",json_FeatureList1.getJSONObject(i).getString("description"));
-							device_feature1.put("name",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("name"));
-							device_feature1.put("stat_key",json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("reference"));
-							String data_type=json_FeatureList2.getJSONObject(listsensor.getString(y)).getString("data_type");
+							device_feature1.put("name",json_Sensors.getJSONObject(listsensor.getString(y)).getString("name"));
+							device_feature1.put("stat_key",json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
+							String data_type=json_Sensors.getJSONObject(listsensor.getString(y)).getString("data_type");
 							String parent_type=null;
 							try{
 							parent_type=Json_data_type.getJSONObject(data_type).getString("parent");
@@ -485,34 +493,59 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							parent_type=parent_type.replace("DT_", "");
 							parent_type=parent_type.toLowerCase();
 							device_feature1.put("value_type",parent_type);
-							String parameters=null;
+							String parameters="{";
 							try{
+								//List sensors for this device
+				                int list_commands = 0;
+				                json_Commands=json_FeatureList1.getJSONObject(i).getJSONObject("commands");
+								if(json_Commands != null){
+									Tracer.d(mytag, "Json list_command="+json_Commands.toString());
+				                	list_commands = json_Commands.length();
+								}
+				                Tracer.d(mytag,list_commands+" commands for device id "+ json_FeatureList1.getJSONObject(i).getString("id") );
+				                for(int z = 0; z < list_commands; z++) {
+									JSONArray list_command = json_Commands.names();
+									try{
+										//TODO FOR 0.4 get other params
+					                	//this is just a try to get a binary switch working....
+										Tracer.d(mytag, "Json this id="+json_Commands.getJSONObject(list_command.getString(z)).getString("id"));
+										String command_id=json_Commands.getJSONObject(list_command.getString(z)).getString("id");
+										parameters = parameters + "&quot;command_id&quot;:&quot;"+command_id+"&quot;,";
+										String  command_type=json_Commands.getJSONObject(list_command.getString(z)).getJSONArray("parameters").getJSONObject(0).getString("key");
+										if (command_type!=null)
+										Tracer.d(mytag, "Json command_type="+command_type);		                
+										parameters = parameters + "&quot;command_type&quot;:&quot;"+command_type+"&quot;";
+										
+					                }catch(JSONException e){
+					                	
+					                }					                
+								}
+								try{
 								String unit=Json_data_type.getJSONObject(data_type).getString("unit");
-								if(!unit.equals(null)&& !unit.equals("null")){
-									parameters="{&quot;unit&quot;:&quot;"+unit+"&quot;}";
-								}else{
-									parameters = " ";
-								}	
+								if(!unit.equals(null)&& !unit.equals("null"))
+									parameters = parameters + "&quot;unit&quot;:&quot;"+unit+"&quot;";
+								}catch (JSONException e){
+								}
+								parameters = parameters+"}";
 							}catch (JSONException e){
-								parameters = " ";
+								parameters = "{}";
 							}
 							device_feature1.put("parameters",parameters);
 							db.insertFeature_0_4(device_feature1);
 						}
 						
-					} // for loop on feature list...
-					//Prepare list of rooms, and list of usable features
+					}
+	                // for loop on feature list...
+	                
+	                //Prepare list of rooms, and list of usable features
 					json_RoomList.put("room", rooms);
-					
+					//List sensors for this device
+		               
 				}
 					//Save result in sharedpref
 					prefEditor.putString("AREA_LIST",json_AreaList.toString());
 					prefEditor.putString("ROOM_LIST",json_RoomList.toString());
-					if(Rinor_Api_Version <=0.6f){
-						prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());	
-					}else if(Rinor_Api_Version <=0.7f){
-						prefEditor.putString("FEATURE_LIST",json_FeatureList1.toString());
-					}					
+					prefEditor.putString("FEATURE_LIST",json_FeatureList1.toString());
 					prefEditor.putString("ASSOCIATION_LIST",json_FeatureAssociationList.toString());
 					//prefEditor.putString("ICON_LIST",json_IconList.toString());
 					prefEditor.putBoolean("SYNC", true);
@@ -545,8 +578,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				// 1st need to change when this urlupdate his create.
 				// 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
 				// 3rd add it in path only if it is the case.
-				// So when a user will remove it from assotiation or map it will be removed from cache
-				// And when it will be add, it wil get back in cahce. 
+				// So when a user will remove it from association or map it will be removed from cache
+				// And when it will be add, it will get back in cache. 
 				Entity_Feature[] listFeature = db.requestFeatures();
 				String urlUpdate = urlAccess+"stats/multi/";
 				Tracer.v(mytag,"prepare UPDATE_URL items="+listFeature.length);

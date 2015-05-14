@@ -89,9 +89,12 @@ public class Rest_com {
 			    	json= new JSONObject(result);
 			    	instream.close();
 			    }
-			}
-            else
-			{
+			}else if(response.getStatusLine().getStatusCode() == 204){
+				//TODO need to adapt for 0.4 since rest answer now with standard code
+				//204,400,404 and else
+				json= new JSONObject();
+				json.put("status", "204 NO CONTENT");
+			}else{
             	Tracer.d(mytag, "Resource not available>");
 			}
  

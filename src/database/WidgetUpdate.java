@@ -601,7 +601,7 @@ public class WidgetUpdate  {
 					Tracer.d(mytag,"Request to server for stats update...");
 				
 				String request = sharedparams.getString("UPDATE_URL", null);
-				Tracer.i(mytag, "urlupdate enregistré = "+request);
+				Tracer.i(mytag, "urlupdate saved = "+request);
 				
 				if(request != null){
 					JSONObject json_widget_state = null;

@@ -1,22 +1,22 @@
-Domodroid est une application de contr√¥le √† distance qui vous permet de contr√¥ler votre syst√®me domotique  via Domogki.
+Domodroid est une application de contrÙle ‡† distance qui vous permet de contrÙler votre syst‡®me domotique  via Domogki.
 
-Les fonctions suivante sont d√©j√† disponibles dans cette version de Domodroid:
+Les fonctions suivante sont dÈj‡† disponibles dans cette version de Domodroid:
 
-- Courbe avec un moteur de trac√© interne (par d√©faut)
-- Courbe avec le moteur Achartengine (en cours de d√©veloppement)
-- Visualisation des cam√©ras
-- Widgets On/Off ( deux versions disponibles), variateur, √©tat et donn√©es, envoie de commande
-- Mise √† jour automatique des widgets
-- De nombreuses ic√¥nes
-- Technologie support√©e: Onewire, PLCBus, IPX800, Mirror, Teleinfo, X10, WakeOnLan, Ping, Zibase, RFXCom, YahooWather. (Toutes celles support√©es par Domogik en th√©orie)
-- Toutes tailles d'√©crans t√©l√©phones et tablettes
-- Contr√¥le de la mise en veille de l'appareil
-- D√©marrage automatique en mode map
+- Courbe avec un moteur de tracÈ interne (par dÈfaut)
+- Courbe avec le moteur Achartengine (en cours de dÈveloppement)
+- Visualisation des camÈras
+- Widgets On/Off ( deux versions disponibles), variateur, Ètat et donnÈes, envoie de commande
+- Mise ‡† jour automatique des widgets
+- De nombreuses icÙnes
+- Technologie supportÈe: Onewire, PLCBus, IPX800, Mirror, Teleinfo, X10, WakeOnLan, Ping, Zibase, RFXCom, YahooWather. (Toutes celles supportÈes par Domogik en thÈorie)
+- Toutes tailles d'Ècrans tÈlÈphones et tablettes
+- ContrÙle de la mise en veille de l'appareil
+- DÈmarrage automatique en mode map
 
 http:/domogik.org/
 
 La documentation se trouve ici:
 http://doc.domogik.org/domodroid/dev/en/
 
-Les versions de d√©veloppement sont compil√©s tous les jours ici:
+Les versions de dÈveloppement sont compilÈs tous les jours ici:
 http://repo.domogik.org/domodroid-nightly/

@@ -157,7 +157,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				try {
 					Rinor_Api_ver = json_rinor.getJSONObject("info").getString("REST_API_version");
 				} catch (Exception e){
-					Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
+					try{
+						Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
+					}catch (Exception e1){
+						Tracer.e(mytag, "ERROR getting Rest version");
+					}
 				}
 				Tracer.d(mytag, "RinorAPI= "+Rinor_Api_ver);
 				Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);

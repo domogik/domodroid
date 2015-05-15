@@ -280,14 +280,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 							String test_unite = jparam.getString("unit");
 							value.setText(formatedValue+ " "+test_unite);
 						} catch (JSONException e) {							
-							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" Â°C");
+							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
 							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
 							else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
 							else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
-							else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" Â°C");
+							else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
 							else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
-							else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" Â°C");
+							else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
 							else if(state_key.equalsIgnoreCase("condition-code") == true)
 								//Add try catch to avoid other case that make #1794
 								try {

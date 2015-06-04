@@ -976,7 +976,7 @@ public class WidgetUpdate  {
 		domodb.remove_one_place_type_in_Featureassociation(id_room,place_type);
 	}
 	public Entity_Feature[] requestFeatures(){
-		return domodb.requestFeatures();		
+		return domodb.requestFeatures();
 	}
 	
 	

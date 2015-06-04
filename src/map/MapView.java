@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,9 +20,11 @@ import org.domogik.domodroid13.R;
 import rinor.Rest_com;
 
 import database.Cache_management;
+import database.DmdContentProvider;
 import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
+import activities.Activity_Map;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
 import widgets.Entity_Map;
@@ -38,8 +42,12 @@ import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
 import widgets.Graphical_Binary.SBAnim;
 import widgets.Graphical_Binary_New.CommandeThread;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,6 +61,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
+import misc.List_Icon_Adapter;
 import misc.tracerengine;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -61,7 +71,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MapView extends View {
@@ -139,6 +151,7 @@ public class MapView extends View {
 	private String value0;
 	private String value1;
 	private static Handler handler = null;
+	final Handler handler_longclic = new Handler(); 
 	private tracerengine Tracer = null;
 	private int mytype = 2;
 	private WidgetUpdate cache_engine = null;
@@ -149,7 +162,9 @@ public class MapView extends View {
 	private String Address;
 	private String URL;
 	private String state_progress;
-	
+	//Declare this flag globally
+	boolean longclic = false;
+
 	public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
@@ -158,7 +173,7 @@ public class MapView extends View {
 		api_version=params.getFloat("API_VERSION", 0);
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
-    	
+ 
 		//activated=true;
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		screen_width = metrics.widthPixels;
@@ -616,14 +631,14 @@ public class MapView extends View {
 						value=featureMap.getCurrentState()+test_unite;
 					} catch (JSONException e) {				
 						//Basilic : no sure that the key state was the better way to find unit
-						if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+" Â°C";
+						if(featureMap.getState_key().equals("temperature"))value=featureMap.getCurrentState()+" °C";
 						else if(featureMap.getState_key().equals("pressure"))value=featureMap.getCurrentState()+" hPa";
 						else if(featureMap.getState_key().equals("humidity"))value=featureMap.getCurrentState()+" %";
 						else if(featureMap.getState_key().equals("percent"))value=featureMap.getCurrentState()+" %";
 						else if(featureMap.getState_key().equals("visibility"))value=featureMap.getCurrentState()+" km";
-						else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+" Â°C";
+						else if(featureMap.getState_key().equals("chill"))value=featureMap.getCurrentState()+" °C";
 						else if(featureMap.getState_key().equals("speed"))value=featureMap.getCurrentState()+" km/h";
-						else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+" Â°C";
+						else if(featureMap.getState_key().equals("drewpoint"))value=featureMap.getCurrentState()+" °C";
 						else if( (featureMap.getState_key().equals("condition-code")))
 							//Add try catch to avoid other case that make #1794
 							try {
@@ -945,14 +960,18 @@ public class MapView extends View {
 		return b;
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	public boolean onTouchEvent(MotionEvent event) {
 		int nbPointers = event.getPointerCount();
 		float[] value = new float[9];
 		float[] saved_value = new float[9];
 		mat.matrix.getValues(value);
-		switch (event.getAction() & MotionEvent.ACTION_MASK) {
+		//switch (event.getAction() & MotionEvent.ACTION_MASK) {
+		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			moves=0;
+			longclic = false;
+			handler_longclic.postDelayed(mLongPressed, 800);
+            moves=0;
 			mat.matrix.getValues(saved_value);
 			mat.actionDown(event.getX(), event.getY());
 			//save to pos_XO where was release the press
@@ -963,7 +982,8 @@ public class MapView extends View {
 			break;
 			//when stop pressing
 		case MotionEvent.ACTION_UP:
-			mat.actionUp(event.getX(), event.getY());
+			handler_longclic.removeCallbacks(mLongPressed);
+	         mat.actionUp(event.getX(), event.getY());
 			//save to pos_X1 where was release the press
 			pos_X1 = event.getX();
 			//Select what action to do
@@ -1086,7 +1106,7 @@ public class MapView extends View {
 					pos_X0=0;
 					pos_X1=0;
 				//Display widget
-				}else{
+				}else if(longclic == false){
 					//show the normal widget on top , or switch map if a map switch clicked
 					boolean widgetActiv=false;
 					for (Entity_Map switchesMap : listMapSwitches) {
@@ -1160,11 +1180,11 @@ public class MapView extends View {
 						bottom_drawer.setOpen(false, true);
 					}
 				}
-
 			}
 			break;
 		case MotionEvent.ACTION_POINTER_UP:
-			mat.matrix.getValues(value);
+			handler_longclic.removeCallbacks(mLongPressed);
+	        mat.matrix.getValues(value);
 			currentScale*=value[0];
 			//Save current zoom scale
 			prefEditor=params.edit();
@@ -1176,7 +1196,8 @@ public class MapView extends View {
 			refreshMap();
 			break;
 		case MotionEvent.ACTION_MOVE:
-			moves++;
+			handler_longclic.removeCallbacks(mLongPressed);
+	        moves++;
 			mat.currentScale = currentScale;
 			mat.actionMove(nbPointers, event);
 			break;
@@ -1185,6 +1206,103 @@ public class MapView extends View {
 		return true;
 	}
 	
+		Runnable mLongPressed = new Runnable() {
+	    	public void run() { 
+	    		longclic = true;
+	            //TODO
+	            //Code for long click
+	            Tracer.v(mytag, "Long press :)");
+	            Toast toast = Toast.makeText(getContext(), "LONG CLIC", 5);
+	            toast.show();
+	            final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+	    		List<String> list_choice = new ArrayList<String>();
+	    			list_choice.add("Move");
+	    			list_choice.add("Delete");
+	    		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+	    		//list_type_choice.setTitle(R.string.What_to_do_message);
+	    		list_type_choice.setSingleChoiceItems(char_list, -1,
+	    			new DialogInterface.OnClickListener() {
+	    				public void onClick(DialogInterface dialog, int item) {
+	    					ListView lw = ((AlertDialog)dialog).getListView();
+	    					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+	    					do_action(checkedItem.toString());
+	    					dialog.cancel();
+	    				}
+	    			}
+	    		);
+	    	
+	    		list_type_choice.show();
+	        }   
+	    };
+	    private void do_action(String action) {
+			if(action.equals("Move")) {
+//				for (Entity_Map featureMap : listFeatureMap) {
+//					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
+//							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
+//						//remove entry
+//						Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
+//							(int)((event.getX()-value[2])/currentScale), 
+//							(int)((event.getY()-value[5])/currentScale),
+//							files.elementAt(currentFile));
+//						moveMode=false;
+//						//new UpdateThread().execute();
+//						//return to add mode on next click
+//						//refresh the map
+//						initMap();
+//						temp_id = featureMap.getId();
+//						addMode=true;
+//					}
+//				}
+//				for (Entity_Map switchesMap : listMapSwitches) {
+//					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+//							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+//						//remove entry
+//						Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
+//							(int)((event.getX()-value[2])/currentScale), 
+//							(int)((event.getY()-value[5])/currentScale),
+//							files.elementAt(currentFile));
+//						moveMode=false;
+//						//new UpdateThread().execute();
+//						//return to add mode on next click
+//						//refresh the map
+//						initMap();
+//						temp_id = switchesMap.getId();
+//						addMode=true;
+//					}
+//				}
+			}else if (action.equals("Delete")){
+//				for (Entity_Map featureMap : listFeatureMap) {
+//				if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
+//						(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
+//					//remove entry
+//					Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
+//						(int)((event.getX()-value[2])/currentScale), 
+//						(int)((event.getY()-value[5])/currentScale),
+//						files.elementAt(currentFile));
+//					//A device on this map as been delete re-check the cache URL
+//					Cache_management.checkcache(Tracer,context);
+//					removeMode=false;
+//					//new UpdateThread().execute();
+//					//refresh the map
+//					initMap();
+//				}
+//			}
+//			for (Entity_Map switchesMap : listMapSwitches) {
+//				if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+//						(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+//					//remove entry
+//					Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
+//						(int)((event.getX()-value[2])/currentScale), 
+//						(int)((event.getY()-value[5])/currentScale),
+//						files.elementAt(currentFile));
+//					removeMode=false;
+//					//new UpdateThread().execute();
+//					//refresh the map
+//					initMap();
+//				}
+			}		
+		}
+
 	public String getFileAsString(File file){ 
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -1320,4 +1438,5 @@ public class MapView extends View {
 			return null;
 		}
 	}
+	
 }

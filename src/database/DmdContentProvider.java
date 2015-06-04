@@ -487,7 +487,7 @@ public class DmdContentProvider extends ContentProvider {
 							,null);
 			break;
 		case REQUEST_FEATURE_ID:
-			cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id WHERE table_feature_association.place_id = "+selectionArgs[0]+" AND table_feature_association.place_type="+"\""+selectionArgs[1]+"\"",null);
+			cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id WHERE table_feature_association.place_id = "+selectionArgs[0]+" AND table_feature_association.place_type="+"\""+selectionArgs[1]+"\""+"order by table_feature_association.id ASC" ,null);
 			break;
 		case REQUEST_FEATURE_STATE:
 			queryBuilder.setTables("table_feature_state");

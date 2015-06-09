@@ -400,8 +400,7 @@ public class DomodroidDB {
 		int lastid = 0;
 		try {
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
-			curs.moveToLast();
-			lastid=curs.getInt(1);
+			lastid=curs.getCount();
 		} catch (Exception e) {
 			Tracer.e(mytag+"("+owner+")", "request last area error");
 			e.printStackTrace();
@@ -447,8 +446,7 @@ public class DomodroidDB {
 					null,
 					null,
 					null);
-			curs.moveToLast();
-			lastid=curs.getInt(2);
+			lastid=curs.getCount();
 			
 		} catch (Exception e) {
 			Tracer.v(mytag+"("+owner+")","request last room error");

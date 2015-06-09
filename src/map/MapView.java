@@ -164,7 +164,9 @@ public class MapView extends View {
 	private String state_progress;
 	//Declare this flag globally
 	boolean longclic = false;
-
+	private MotionEvent event1;
+	private float[] valuelongclic = new float[9];
+	
 	public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
@@ -560,7 +562,7 @@ public class MapView extends View {
 								(featureMap.getPosx()*currentScale)-drawable.getWidth()/2, 
 								(featureMap.getPosy()*currentScale)-drawable.getWidth()/2, 
 								paint_map);
-						Tracer.e(mytag,"Draw symbol of feature X="+((featureMap.getPosx()*currentScale)-drawable.getWidth()/2)+" Y="+((featureMap.getPosy()*currentScale)-drawable.getWidth()/2)+" MAP "+paint_map);
+						Tracer.i(mytag,"Draw symbol of feature X="+((featureMap.getPosx()*currentScale)-drawable.getWidth()/2)+" Y="+((featureMap.getPosy()*currentScale)-drawable.getWidth()/2)+" MAP "+paint_map);
 					} else {
 						Tracer.e(mytag,"No drawable available for object");
 						return;
@@ -965,88 +967,208 @@ public class MapView extends View {
 		int nbPointers = event.getPointerCount();
 		float[] value = new float[9];
 		float[] saved_value = new float[9];
+		//TODO save value at the good time
+		if(longclic == false){
+			event1=MotionEvent.obtain(event);
+			valuelongclic=value;
+			Tracer.d(mytag, "Saving this event X="+event1.getX()+" Y="+event1.getY());
+		}
 		mat.matrix.getValues(value);
 		//switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			longclic = false;
-			handler_longclic.postDelayed(mLongPressed, 800);
-            moves=0;
-			mat.matrix.getValues(saved_value);
-			mat.actionDown(event.getX(), event.getY());
-			//save to pos_XO where was release the press
-			pos_X0 = event.getX();
-			break;
-		case MotionEvent.ACTION_POINTER_DOWN:
-			mat.actionPointerDown(event);
-			break;
-			//when stop pressing
-		case MotionEvent.ACTION_UP:
-			handler_longclic.removeCallbacks(mLongPressed);
-	         mat.actionUp(event.getX(), event.getY());
-			//save to pos_X1 where was release the press
-			pos_X1 = event.getX();
-			//Select what action to do
-			//Add a widget mode
-			if (addMode==true){
-				int db_id = 0;
-				if(temp_id != -1) {
-					//insert in the database feature map the device id, its position and map name. 
-					db_id = temp_id;
-				} else {
-					if (map_id != -1) {
-						db_id = map_id;
-						// a map switch has been selected from list of widgets
+			case MotionEvent.ACTION_DOWN:
+				Tracer.d(mytag, "ACTION_DOWN");
+				longclic = false;
+				Tracer.d(mytag, "longclic=false");
+				handler_longclic.postDelayed(mLongPressed, 800);
+				moves=0;
+				mat.matrix.getValues(saved_value);
+				mat.actionDown(event.getX(), event.getY());
+				//save to pos_XO where was release the press
+				pos_X0 = event.getX();
+				break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				Tracer.d(mytag, "ACTION_POINTER_DOWN");
+				mat.actionPointerDown(event);
+				break;
+				//when stop pressing
+			case MotionEvent.ACTION_UP:
+				Tracer.d(mytag, "ACTION_UP");
+				handler_longclic.removeCallbacks(mLongPressed);
+		        mat.actionUp(event.getX(), event.getY());
+				//save to pos_X1 where was release the press
+				pos_X1 = event.getX();
+				//Select what action to do
+				if (addMode==true){
+					do_action("Add", event, value);
+				}else if(removeMode==true){
+					do_action("Delete", event, value);
+				}else if(moveMode==true){
+					do_action("Move", event, value);
+				}else{
+					//Move to left
+					if(pos_X1 - pos_X0 > screen_width/2){
+						if(currentFile +1 < files.size()) currentFile++;
+						else currentFile=0;
+						canvasMap=null;
+						canvasWidget=null;
+						System.gc();
+						//refresh the map
+						initMap();
+						//Re-init last save position
+						pos_X0=0;
+						pos_X1=0;
+					//Move to right
+					}else if(pos_X0 - pos_X1 > screen_width/2){
+						if(currentFile != 0) 
+							currentFile--;
+						else 
+							currentFile=files.size()-1;
+						canvasMap=null;
+						canvasWidget=null;
+						System.gc();
+						//refresh the map
+						initMap();
+						//Re-init last save position
+						pos_X0=0;
+						pos_X1=0;
+					//Display widget
+					}else if(longclic == false){
+						//show the normal widget on top , or switch map if a map switch clicked
+						boolean widgetActiv=false;
+						for (Entity_Map switchesMap : listMapSwitches) {
+							if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+									(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+								//That seems to be this switch map widget clicked !
+								int new_map = switchesMap.getId() - 9999;
+								if(new_map < files.size() && new_map >= 0) {
+									currentFile=new_map;
+								}
+								canvasMap=null;
+								canvasWidget=null;
+								System.gc();
+								initMap();
+										
+								panel_button.setVisibility(View.GONE);
+								panel_widget.setVisibility(View.VISIBLE);
+								widgetActiv=true;
+								postInvalidate();
+								return true;
+							}
+						}
+						widgetActiv=false;
+						for (Entity_Map featureMap : listFeatureMap) {
+							if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
+									(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
+								try {
+								// #2009 action directly if binary
+								// via the asynctask new CommandeThread()
+								if (featureMap.getValue_type().equals("binary")){
+									Tracer.d(mytag, "This is a binary try to change is state");
+									Tracer.d(mytag, "State is "+featureMap.getCurrentState().toString());
+									if (featureMap.getCurrentState().equals("true")){
+										featureMap.setCurrentState("false");
+									}else if (featureMap.getCurrentState().equals("false")){
+										featureMap.setCurrentState("true");
+									}else if (featureMap.getCurrentState().equals("on")){
+										featureMap.setCurrentState("off");
+									}else if (featureMap.getCurrentState().equals("off")){
+										featureMap.setCurrentState("on");
+									}else if (featureMap.getCurrentState().equals("1")){
+										featureMap.setCurrentState("0");
+									}else if (featureMap.getCurrentState().equals("0")){
+										featureMap.setCurrentState("1");
+									}
+									this.URL = params.getString("URL","1.1.1.1");
+									this.Address = featureMap.getAddress();
+									String[] model = featureMap.getDevice_type_id().split("\\.");
+									this.type = model[0];
+									this.state_progress=featureMap.getCurrentState();
+									new CommandeThread().execute();
+									
+								}else{
+									showTopWidget(featureMap);
+									panel_button.setVisibility(View.GONE);
+									panel_widget.setVisibility(View.VISIBLE);
+									if(!top_drawer.isOpen())top_drawer.setOpen(true, true);
+									if(bottom_drawer.isOpen())bottom_drawer.setOpen(false, true);
+									widgetActiv=true;
+								}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+	
+							}
+	
+						}
+						//hide it
+						if(!widgetActiv && moves < 5){
+							top_drawer.setOpen(false, true);
+							bottom_drawer.setOpen(false, true);
+						}
 					}
 				}
-				if (db_id != 0) {
-					Tracer.get_engine().insertFeatureMap(db_id, 
-							(int)((event.getX()-value[2])/currentScale), 
-							(int)((event.getY()-value[5])/currentScale),
-							files.elementAt(currentFile));
-					//Re-check the cache URL
-					Cache_management.checkcache(Tracer,context);
-				}
-				map_id = -1;
-				temp_id = -1;
-				addMode=false;
-				//refresh the map
-				initMap();
-			}else if(removeMode==true){
+				break;
+			case MotionEvent.ACTION_POINTER_UP:
+				Tracer.d(mytag, "ACTION_POINTER_UP");
+				handler_longclic.removeCallbacks(mLongPressed);
+		        mat.matrix.getValues(value);
+				currentScale*=value[0];
+				//Save current zoom scale
+				prefEditor=params.edit();
+				prefEditor.putFloat("Mapscale", currentScale);
+				prefEditor.commit();	//To save it really !
+				value[0]=1;
+				value[4]=1;
+				mat.matrix.setValues(value);
+				refreshMap();
+				break;
+			case MotionEvent.ACTION_MOVE:
+				Tracer.d(mytag, "ACTION_MOVE");
+				handler_longclic.removeCallbacks(mLongPressed);
+		        moves++;
+				mat.currentScale = currentScale;
+				mat.actionMove(nbPointers, event);
+				break;
+		}
+		postInvalidate();
+		return true;
+	}
+	
+	Runnable mLongPressed = new Runnable() {
+	    	public void run() { 
+	    		longclic = true;
+	    		//TODO
+	            //Code for long click
+	            Tracer.v(mytag, "Long press :)");
+	            final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+	    		List<String> list_choice = new ArrayList<String>();
+	    			list_choice.add("Move");
+	    			list_choice.add("Delete");
+	    		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+	    		//list_type_choice.setTitle(R.string.What_to_do_message);
+	    		list_type_choice.setSingleChoiceItems(char_list, -1,
+	    			new DialogInterface.OnClickListener() {
+	    				public void onClick(DialogInterface dialog, int item) {
+	    					ListView lw = ((AlertDialog)dialog).getListView();
+	    					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+	    					do_action(checkedItem.toString(), event1,valuelongclic);
+	    					Tracer.d(mytag, "do_action "+checkedItem.toString()+" at X="+event1.getX()+"at Y="+event1.getY());
+	    					dialog.cancel();
+	    				}
+	    			}
+	    		);
+	    		list_type_choice.show();
+	        }   
+	    };
+	
+	private void do_action(String action,MotionEvent event, float[] value) {
+			if(action.equals("Move")) {
+				Tracer.d(mytag, "Move");
 				for (Entity_Map featureMap : listFeatureMap) {
 					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
-						//remove entry
-						Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
-							(int)((event.getX()-value[2])/currentScale), 
-							(int)((event.getY()-value[5])/currentScale),
-							files.elementAt(currentFile));
-						//A device on this map as been delete re-check the cache URL
-						Cache_management.checkcache(Tracer,context);
-						removeMode=false;
-						//new UpdateThread().execute();
-						//refresh the map
-						initMap();
-					}
-				}
-				for (Entity_Map switchesMap : listMapSwitches) {
-					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
-							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
-						//remove entry
-						Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
-							(int)((event.getX()-value[2])/currentScale), 
-							(int)((event.getY()-value[5])/currentScale),
-							files.elementAt(currentFile));
-						removeMode=false;
-						//new UpdateThread().execute();
-						//refresh the map
-						initMap();
-					}
-				}
-			}else if(moveMode==true){
-				for (Entity_Map featureMap : listFeatureMap) {
-					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
-							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
+						Tracer.d(mytag, "Move find a feature");
 						//remove entry
 						Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
 							(int)((event.getX()-value[2])/currentScale), 
@@ -1078,230 +1200,65 @@ public class MapView extends View {
 						addMode=true;
 					}
 				}
-			}else{
-				//Move to left
-				if(pos_X1 - pos_X0 > screen_width/2){
-					if(currentFile +1 < files.size()) currentFile++;
-					else currentFile=0;
-					canvasMap=null;
-					canvasWidget=null;
-					System.gc();
+			}else if (action.equals("Delete")){
+				Tracer.d(mytag, "Delete");
+				for (Entity_Map featureMap : listFeatureMap) {
+				if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
+						(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
+					//remove entry
+					Tracer.d(mytag, "Delete a feature");
+					Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
+						(int)((event.getX()-value[2])/currentScale), 
+						(int)((event.getY()-value[5])/currentScale),
+						files.elementAt(currentFile));
+					//A device on this map as been delete re-check the cache URL
+					Cache_management.checkcache(Tracer,context);
+					removeMode=false;
+					//new UpdateThread().execute();
 					//refresh the map
 					initMap();
-					//Re-init last save position
-					pos_X0=0;
-					pos_X1=0;
-				//Move to right
-				}else if(pos_X0 - pos_X1 > screen_width/2){
-					if(currentFile != 0) 
-						currentFile--;
-					else 
-						currentFile=files.size()-1;
-					canvasMap=null;
-					canvasWidget=null;
-					System.gc();
-					//refresh the map
-					initMap();
-					//Re-init last save position
-					pos_X0=0;
-					pos_X1=0;
-				//Display widget
-				}else if(longclic == false){
-					//show the normal widget on top , or switch map if a map switch clicked
-					boolean widgetActiv=false;
-					for (Entity_Map switchesMap : listMapSwitches) {
-						if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
-								(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
-							//That seems to be this switch map widget clicked !
-							int new_map = switchesMap.getId() - 9999;
-							if(new_map < files.size() && new_map >= 0) {
-								currentFile=new_map;
-							}
-							canvasMap=null;
-							canvasWidget=null;
-							System.gc();
-							initMap();
-									
-							panel_button.setVisibility(View.GONE);
-							panel_widget.setVisibility(View.VISIBLE);
-							widgetActiv=true;
-							postInvalidate();
-							return true;
-						}
-					}
-					widgetActiv=false;
-					for (Entity_Map featureMap : listFeatureMap) {
-						if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
-								(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
-							try {
-							// #2009 action directly if binary
-							// via the asynctask new CommandeThread()
-							if (featureMap.getValue_type().equals("binary")){
-								Tracer.d(mytag, "This is a binary try to change is state");
-								Tracer.d(mytag, "State is "+featureMap.getCurrentState().toString());
-								if (featureMap.getCurrentState().equals("true")){
-									featureMap.setCurrentState("false");
-								}else if (featureMap.getCurrentState().equals("false")){
-									featureMap.setCurrentState("true");
-								}else if (featureMap.getCurrentState().equals("on")){
-									featureMap.setCurrentState("off");
-								}else if (featureMap.getCurrentState().equals("off")){
-									featureMap.setCurrentState("on");
-								}else if (featureMap.getCurrentState().equals("1")){
-									featureMap.setCurrentState("0");
-								}else if (featureMap.getCurrentState().equals("0")){
-									featureMap.setCurrentState("1");
-								}
-								this.URL = params.getString("URL","1.1.1.1");
-								this.Address = featureMap.getAddress();
-								String[] model = featureMap.getDevice_type_id().split("\\.");
-								this.type = model[0];
-								this.state_progress=featureMap.getCurrentState();
-								new CommandeThread().execute();
-								
-							}else{
-								showTopWidget(featureMap);
-								panel_button.setVisibility(View.GONE);
-								panel_widget.setVisibility(View.VISIBLE);
-								if(!top_drawer.isOpen())top_drawer.setOpen(true, true);
-								if(bottom_drawer.isOpen())bottom_drawer.setOpen(false, true);
-								widgetActiv=true;
-							}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-
-						}
-
-					}
-					//hide it
-					if(!widgetActiv && moves < 5){
-						top_drawer.setOpen(false, true);
-						bottom_drawer.setOpen(false, true);
 					}
 				}
+				for (Entity_Map switchesMap : listMapSwitches) {
+					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
+							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
+						//remove entry
+						Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
+						removeMode=false;
+						//new UpdateThread().execute();
+						//refresh the map
+						initMap();
+					}
+				}		
+			}else if (action.equals("Add")){
+				int db_id = 0;
+				if(temp_id != -1) {
+					//insert in the database feature map the device id, its position and map name. 
+					db_id = temp_id;
+				} else {
+					if (map_id != -1) {
+						db_id = map_id;
+						// a map switch has been selected from list of widgets
+					}
+				}
+				if (db_id != 0) {
+					Tracer.get_engine().insertFeatureMap(db_id, 
+							(int)((event.getX()-value[2])/currentScale), 
+							(int)((event.getY()-value[5])/currentScale),
+							files.elementAt(currentFile));
+					//Re-check the cache URL
+					Cache_management.checkcache(Tracer,context);
+				}
+				map_id = -1;
+				temp_id = -1;
+				addMode=false;
+				//refresh the map
+				initMap();
 			}
-			break;
-		case MotionEvent.ACTION_POINTER_UP:
-			handler_longclic.removeCallbacks(mLongPressed);
-	        mat.matrix.getValues(value);
-			currentScale*=value[0];
-			//Save current zoom scale
-			prefEditor=params.edit();
-			prefEditor.putFloat("Mapscale", currentScale);
-			prefEditor.commit();	//To save it really !
-			value[0]=1;
-			value[4]=1;
-			mat.matrix.setValues(value);
-			refreshMap();
-			break;
-		case MotionEvent.ACTION_MOVE:
-			handler_longclic.removeCallbacks(mLongPressed);
-	        moves++;
-			mat.currentScale = currentScale;
-			mat.actionMove(nbPointers, event);
-			break;
-		}
-		postInvalidate();
-		return true;
-	}
-	
-		Runnable mLongPressed = new Runnable() {
-	    	public void run() { 
-	    		longclic = true;
-	            //TODO
-	            //Code for long click
-	            Tracer.v(mytag, "Long press :)");
-	            Toast toast = Toast.makeText(getContext(), "LONG CLIC", 5);
-	            toast.show();
-	            final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-	    		List<String> list_choice = new ArrayList<String>();
-	    			list_choice.add("Move");
-	    			list_choice.add("Delete");
-	    		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
-	    		//list_type_choice.setTitle(R.string.What_to_do_message);
-	    		list_type_choice.setSingleChoiceItems(char_list, -1,
-	    			new DialogInterface.OnClickListener() {
-	    				public void onClick(DialogInterface dialog, int item) {
-	    					ListView lw = ((AlertDialog)dialog).getListView();
-	    					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-	    					do_action(checkedItem.toString());
-	    					dialog.cancel();
-	    				}
-	    			}
-	    		);
-	    	
-	    		list_type_choice.show();
-	        }   
-	    };
-	    private void do_action(String action) {
-			if(action.equals("Move")) {
-//				for (Entity_Map featureMap : listFeatureMap) {
-//					if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
-//							(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
-//						//remove entry
-//						Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
-//							(int)((event.getX()-value[2])/currentScale), 
-//							(int)((event.getY()-value[5])/currentScale),
-//							files.elementAt(currentFile));
-//						moveMode=false;
-//						//new UpdateThread().execute();
-//						//return to add mode on next click
-//						//refresh the map
-//						initMap();
-//						temp_id = featureMap.getId();
-//						addMode=true;
-//					}
-//				}
-//				for (Entity_Map switchesMap : listMapSwitches) {
-//					if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
-//							(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
-//						//remove entry
-//						Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
-//							(int)((event.getX()-value[2])/currentScale), 
-//							(int)((event.getY()-value[5])/currentScale),
-//							files.elementAt(currentFile));
-//						moveMode=false;
-//						//new UpdateThread().execute();
-//						//return to add mode on next click
-//						//refresh the map
-//						initMap();
-//						temp_id = switchesMap.getId();
-//						addMode=true;
-//					}
-//				}
-			}else if (action.equals("Delete")){
-//				for (Entity_Map featureMap : listFeatureMap) {
-//				if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
-//						(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
-//					//remove entry
-//					Tracer.get_engine().remove_one_FeatureMap(featureMap.getId(),
-//						(int)((event.getX()-value[2])/currentScale), 
-//						(int)((event.getY()-value[5])/currentScale),
-//						files.elementAt(currentFile));
-//					//A device on this map as been delete re-check the cache URL
-//					Cache_management.checkcache(Tracer,context);
-//					removeMode=false;
-//					//new UpdateThread().execute();
-//					//refresh the map
-//					initMap();
-//				}
-//			}
-//			for (Entity_Map switchesMap : listMapSwitches) {
-//				if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+20 && 
-//						(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
-//					//remove entry
-//					Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
-//						(int)((event.getX()-value[2])/currentScale), 
-//						(int)((event.getY()-value[5])/currentScale),
-//						files.elementAt(currentFile));
-//					removeMode=false;
-//					//new UpdateThread().execute();
-//					//refresh the map
-//					initMap();
-//				}
-			}		
-		}
+	   }
 
 	public String getFileAsString(File file){ 
 		FileInputStream fis = null;

@@ -253,7 +253,7 @@ public class tracerengine {
 			break;
 		}
 	}
-	public static WidgetUpdate get_engine() {
+	public WidgetUpdate get_engine() {
 		return state_engine;
 	}
 	public static void set_engine(WidgetUpdate engine) {

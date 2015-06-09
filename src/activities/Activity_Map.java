@@ -76,7 +76,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Button remove;
 	private Button move;
 	private Button remove_all;
-	private Dialog dialog_feature;
+	public static Dialog dialog_feature;
 	private Entity_Feature[] listFeature;
 	private HashMap<String,String> map;
 

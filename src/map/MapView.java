@@ -597,9 +597,12 @@ public class MapView extends View {
 						for(int j=1;j<5;j++){
 							paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 							paint_text.setTextSize(texsize* scale + 0.5f);
-							String label = featureMap.getDescription();
-							if(label.length() < 1)
-								label = featureMap.getDevice_usage_id();
+							String label="";
+							if (params.getBoolean("HIDE",false)==false){
+								label = featureMap.getDescription();
+								if(label.length() < 1)
+									label = featureMap.getDevice_usage_id();
+							}
 							canvasWidget.drawText(label, 
 								(featureMap.getPosx()*currentScale)+text_Offset_X, 
 								(featureMap.getPosy()*currentScale)+text_Offset_Y, 
@@ -1145,6 +1148,7 @@ public class MapView extends View {
 	    		List<String> list_choice = new ArrayList<String>();
 	    			list_choice.add("Move");
 	    			list_choice.add("Delete");
+	    			list_choice.add("Add");
 	    		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
 	    		//list_type_choice.setTitle(R.string.What_to_do_message);
 	    		list_type_choice.setSingleChoiceItems(char_list, -1,
@@ -1152,6 +1156,9 @@ public class MapView extends View {
 	    				public void onClick(DialogInterface dialog, int item) {
 	    					ListView lw = ((AlertDialog)dialog).getListView();
 	    					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+	    					if (checkedItem.toString()=="Add"){
+	    						Activity_Map.dialog_feature.show();
+	    					}	    					
 	    					do_action(checkedItem.toString(), event1,valuelongclic);
 	    					Tracer.d(mytag, "do_action "+checkedItem.toString()+" at X="+event1.getX()+"at Y="+event1.getY());
 	    					dialog.cancel();

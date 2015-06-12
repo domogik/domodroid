@@ -8,9 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
 import org.json.JSONException;
@@ -20,7 +17,6 @@ import org.domogik.domodroid13.R;
 import rinor.Rest_com;
 
 import database.Cache_management;
-import database.DmdContentProvider;
 import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
@@ -40,13 +36,9 @@ import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
-import widgets.Graphical_Binary.SBAnim;
-import widgets.Graphical_Binary_New.CommandeThread;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -61,17 +53,11 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -192,7 +178,6 @@ public class MapView extends View {
 				if(msg.what == 9997) {
 					//state_engine send us a signal to notify at least one value changed
 					Tracer.d(mytag,"state engine notify change for mini widget(s) : refresh all of them !" );
-					
 					for (Entity_Map featureMap : listFeatureMap) {
 						// if a miniwidget was connected to engine, session's value could have changed....
 						if(featureMap.getSession() != null) {
@@ -1128,8 +1113,7 @@ public class MapView extends View {
 				break;
 			case MotionEvent.ACTION_MOVE:
 				Tracer.d(mytag, "ACTION_MOVE");
-				handler_longclic.removeCallbacks(mLongPressed);
-		        moves++;
+				moves++;
 				mat.currentScale = currentScale;
 				mat.actionMove(nbPointers, event);
 				break;

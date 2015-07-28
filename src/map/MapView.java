@@ -39,6 +39,8 @@ import widgets.Graphical_Trigger;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -63,6 +65,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MapView extends View {
+	private Builder list_type_choice;
 	private Bitmap map;
 	private Bitmap widget;
 	private Bitmap drawable;
@@ -199,6 +202,27 @@ public class MapView extends View {
 				}
 			}	
 		};
+		list_type_choice = new AlertDialog.Builder(getContext());
+		List<String> list_choice = new ArrayList<String>();
+			list_choice.add("Move");
+			list_choice.add("Delete");
+			list_choice.add("Add");
+		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
+		//list_type_choice.setTitle(R.string.What_to_do_message);
+		list_type_choice.setSingleChoiceItems(char_list, -1,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					if (checkedItem.toString()=="Add"){
+						Activity_Map.dialog_feature.show();
+					}	    					
+					do_action(checkedItem.toString(), event1,valuelongclic);
+					Tracer.d(mytag, "do_action "+checkedItem.toString()+" at X="+event1.getX()+"at Y="+event1.getY());
+					dialog.dismiss();
+				}
+			}
+		);
 		//End of create method ///////////////////////
 		
 	}
@@ -1125,31 +1149,9 @@ public class MapView extends View {
 	Runnable mLongPressed = new Runnable() {
 	    	public void run() { 
 	    		longclic = true;
-	    		//TODO
-	            //Code for long click
+	    		//Code for long click
 	            Tracer.v(mytag, "Long press :)");
-	            final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-	    		List<String> list_choice = new ArrayList<String>();
-	    			list_choice.add("Move");
-	    			list_choice.add("Delete");
-	    			list_choice.add("Add");
-	    		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
-	    		//list_type_choice.setTitle(R.string.What_to_do_message);
-	    		list_type_choice.setSingleChoiceItems(char_list, -1,
-	    			new DialogInterface.OnClickListener() {
-	    				public void onClick(DialogInterface dialog, int item) {
-	    					ListView lw = ((AlertDialog)dialog).getListView();
-	    					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-	    					if (checkedItem.toString()=="Add"){
-	    						Activity_Map.dialog_feature.show();
-	    					}	    					
-	    					do_action(checkedItem.toString(), event1,valuelongclic);
-	    					Tracer.d(mytag, "do_action "+checkedItem.toString()+" at X="+event1.getX()+"at Y="+event1.getY());
-	    					dialog.cancel();
-	    				}
-	    			}
-	    		);
-	    		list_type_choice.show();
+	            list_type_choice.show();
 	        }   
 	    };
 	

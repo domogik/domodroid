@@ -128,7 +128,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
 						area_id=listArea[item].getId();
-						dialog.cancel();
+						dialog.dismiss();
 					}
 				}
 			);
@@ -148,7 +148,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
 						room_id=listRoom[item].getId();
-						dialog.cancel();
+						dialog.dismiss();
 					}
 				}
 			);
@@ -168,7 +168,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int item) {
 							feature_id=listFeature[item].getId();
-							dialog.cancel();
+							dialog.dismiss();
 						}
 					}
 			);
@@ -190,7 +190,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 						ListView lw = ((AlertDialog)dialog).getListView();
 						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
 						icon = checkedItem.toString();
-						dialog.cancel();
+						dialog.dismiss();
 					}
 				}
 			);	
@@ -217,7 +217,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
 							v.setTag("add_widget_"+type);
 						else if (v.getTag().equals("add_icon"))
 							v.setTag("add_icon_"+type);
-						dialog.cancel();
+						dialog.dismiss();
 						Dialog_House.this.onClick(v);
 					}
 				}

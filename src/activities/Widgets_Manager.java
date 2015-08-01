@@ -108,7 +108,7 @@ public class Widgets_Manager {
 			tmpPan=null;
 			tmpPan=new FrameLayout(context);
 			String label = feature.getDescription();
-			if(label.length() < 1)
+			if(label.length() < 1||label.equalsIgnoreCase("null"))
 				label = feature.getName();
 			
 			String Value_type = feature.getValue_type();

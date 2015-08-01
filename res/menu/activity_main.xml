@@ -8,7 +8,11 @@
           android:icon="@drawable/icon_menu_house"
           android:title="@string/house_settings"
           />
-     
+     <!-- menu_butler -->
+    <item android:id="@+id/menu_butler"
+          android:icon="@drawable/icon_menu_butler"
+          android:title="@string/butler"
+          />
     <!-- menu_preferences -->
     <item android:id="@+id/menu_preferences"
           android:icon="@drawable/icon_menu_options"

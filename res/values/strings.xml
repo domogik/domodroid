@@ -308,4 +308,11 @@
 	<string name="info3200">Not available</string>
 	<string name="info48">--</string>
 	
+	<string name="butler">butler</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">Domogik Butler</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_mq">MQ</string>
+    
 </resources>

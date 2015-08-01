@@ -71,7 +71,21 @@ android:title="Préférences">
     <Preference android:summary="@string/house_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/>
 </PreferenceCategory>
  
- 
+  <EditTextPreference android:title="Domogik IP"
+        android:key="dmg_ip"
+        android:summary="Set the Domogik address ip"></EditTextPreference>
+    <EditTextPreference android:title="Domogik MQ Pub port"
+        android:key="dmg_pub_port"
+        android:summary="Set the Domogik Message port used for publishing (usually 40411)"></EditTextPreference>
+    <EditTextPreference android:title="Domogik MQ Sub port"
+        android:key="dmg_sub_port"
+        android:summary="Set the Domogik Message port used for subscribing (usually 40412)"></EditTextPreference>
+    <EditTextPreference android:title="Butler name"
+        android:key="dmg_butler_name"
+        android:summary="Set the Domogik Butler name"></EditTextPreference>
+    <EditTextPreference android:title="Your name"
+        android:key="dmg_your_name"
+        android:summary="Set your name"></EditTextPreference>
  
  
  

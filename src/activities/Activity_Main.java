@@ -34,7 +34,9 @@ import org.json.JSONException;
 
 import widgets.Basic_Graphical_zone;
 import widgets.Entity_Feature;
+import widgets.Graphical_butler;
 import misc.tracerengine;
+import mq.Main;
 import database.Cache_management;
 import database.WidgetUpdate;
 
@@ -794,6 +796,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 		 
         switch (item.getItemId())
         {
+        case R.id.menu_butler:
+        	Intent intent = new Intent(this,Main.class);
+			this.startActivity(intent);
+        	return true;
+
         case R.id.menu_exit:
         	//Disconnect all opened sessions....
 			Tracer.v(mytag+"Exit","Stopping WidgetUpdate thread !");

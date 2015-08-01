@@ -51,10 +51,12 @@ public class Speaker implements OnInitListener {
 		// and the user has allowed speech
 		
 		if(ready && allowed) {
-			HashMap<String, String> hash = new HashMap<String,String>();
-			hash.put(TextToSpeech.Engine.KEY_PARAM_STREAM, 
-					String.valueOf(AudioManager.STREAM_NOTIFICATION));
-			tts.speak(text, TextToSpeech.QUEUE_ADD, hash);
+//			Log.e(this.getClass().getSimpleName(),"Try tts "+text);
+//			HashMap<String, String> hash = new HashMap<String,String>();
+//			hash.put(TextToSpeech.Engine.KEY_PARAM_STREAM, 
+//					String.valueOf(AudioManager.STREAM_NOTIFICATION));
+			//tts.speak(text, TextToSpeech.QUEUE_ADD, hash);
+			tts.speak(text, TextToSpeech.QUEUE_ADD, null);
 		}
 	}
 	

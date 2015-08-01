@@ -42,6 +42,8 @@ Creation of the "Domodroid" directory at the root of the external storage direct
 * Drag: 2 fingers move
 
 * Change map: 3 fingers tap
+
+* Longclick on map allow you to add/move/remove a widget directly from where or what you put finger on.
  
 * Add a map directly from the map view with the android internal image picker.
 

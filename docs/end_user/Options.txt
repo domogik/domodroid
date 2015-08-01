@@ -12,7 +12,8 @@ Server option
 	If you don't know path let him empty.
 
 * You can also set a user and password for http auth method.
-* Update_Timer and Update_Url are not available for user.	
+* Update_Timer and Update_Url are not available for user.
+* Mq pub and sub port (for 0.4 domogik's version).	
 
 .. image:: image/Config_server.png
 
@@ -56,3 +57,8 @@ Debug option
 
 .. image:: image/Config_debug1.png
 .. image:: image/Config_debug2.png
+
+Butler option
+============
+
+* Set your name and butler's one

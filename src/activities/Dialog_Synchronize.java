@@ -97,7 +97,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		public LoadConfig() {
 			super();
 			prefEditor=params.edit();
-			urlAccess = params.getString("rinorIP","1.1.1.1")+":"+params.getString("rinorPort","40405")+params.getString("rinorPath","/");
+			urlAccess = params.getString("rinor_IP","1.1.1.1")+":"+params.getString("rinorPort","40405")+params.getString("rinorPath","/");
 			urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 			//Try to solve #1623
 			urlAccess = urlAccess.replaceAll(" ", "%20");

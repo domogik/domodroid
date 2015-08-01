@@ -78,13 +78,18 @@ public class Preference extends PreferenceActivity implements
     if(backupprefs != null)
 		saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
     
-    //Correct Rinor Ip to add http:// on start
+    //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
     params = PreferenceManager.getDefaultSharedPreferences(this);
     String temp = params.getString("rinorIP", "");
   	if (!temp.toUpperCase().startsWith("HTTP://")){
   		PreferenceManager.getDefaultSharedPreferences(this).edit();
   		prefEditor=params.edit();
-  		prefEditor.putString("rinorIP", "http://"+temp);
+  		prefEditor.putString("rinor_IP", "http://"+temp);
+  		prefEditor.commit();
+  	}else if (temp.toUpperCase().startsWith("HTTP://")){
+  		PreferenceManager.getDefaultSharedPreferences(this).edit();
+  		prefEditor=params.edit();
+  		prefEditor.putString("rinorIP", temp.replace("http://", ""));
   		prefEditor.commit();
   	}
   }

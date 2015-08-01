@@ -137,7 +137,7 @@ public class Main extends Activity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     // Toast.makeText(getApplicationContext(), result.get(0), Toast.LENGTH_SHORT).show();
-                    String yourName = SP.getString("dmg_your_name", "You");    // TODO : use a R. for the default value
+                    String yourName = SP.getString("dmg_your_name", getString(R.string.you_default_name));
                     chatHistoryList.add(yourName + " > " + result.get(0));
                     arrayAdapter.notifyDataSetChanged();
                     chatHistory.setSelection(arrayAdapter.getCount() - 1);
@@ -218,7 +218,7 @@ public class Main extends Activity {
                 //Toast.makeText(this.context, message.getMessage(), Toast.LENGTH_SHORT).show();
                 // Toast.makeText(this.context, response, Toast.LENGTH_SHORT).show();
                 speaker.speak(response);
-                String butlerName = SP.getString("dmg_butler_name", "Butler");    // TODO : use a R. for the default value
+                String butlerName = SP.getString("dmg_butler_name",getString(R.string.butler_default_name));
                 chatHistoryList.add(butlerName + " > " + response);
                 arrayAdapter.notifyDataSetChanged();
                 chatHistory.setSelection(arrayAdapter.getCount() - 1);

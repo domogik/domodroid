@@ -314,5 +314,7 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_settings">Settings</string>
     <string name="pref_header_mq">MQ</string>
+    <string name="butler_default_name">Butler</string>
+    <string name="you_default_name">You</string>
     
 </resources>

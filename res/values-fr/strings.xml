@@ -363,4 +363,12 @@
 	<string name="snow_showers">Averses de neige</string>
 	<string name="solated_thundershower">Pluies d\'orages locales</string>
 	
+	<string name="butler">majordome</string>
+	<string name="action_settings">Parametres</string>
+    <string name="title_activity_main">Domogik Butler</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_settings">Parametres</string>
+    <string name="pref_header_mq">MQ</string>
+    <string name="butler_default_name">Majordome</string>
+    <string name="you_default_name">Vous</string>
 </resources>

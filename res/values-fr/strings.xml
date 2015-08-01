@@ -169,7 +169,11 @@
 	<string name="OPTION_server_http_user_Title">Saisir un nom d\'utilisateur</string>
 	<string name="OPTION_server_http_password">Mot de passe http auth</string>
 	<string name="OPTION_server_http_password_Title">Saisir le mot de passe http auth</string>
-		
+ 	<string name="OPTION_butler_settings">Configurer Majordome</string>
+	<string name="OPTION_butler_name">Nom du Majordome</string>
+	<string name="OPTION_your_name">Votre nom</string>
+	<string name="OPTION_butler_explain">Cet écran permet la configuration du majordome</string>
+			
 	<string name="usage_settings">Configurer widget</string>
 	<string name="usage_bt_apply">Appliquer</string>
 	<string name="usage_bt_cancel">Annuler</string>
@@ -371,4 +375,5 @@
     <string name="pref_header_mq">MQ</string>
     <string name="butler_default_name">Majordome</string>
     <string name="you_default_name">Vous</string>
+
 </resources>

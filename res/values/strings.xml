@@ -169,6 +169,10 @@
 	<string name="OPTION_server_http_user_Title">Type your username</string>
 	<string name="OPTION_server_http_password">Http auth password</string>
 	<string name="OPTION_server_http_password_Title">Type your http auth password</string>
+    <string name="OPTION_butler_settings">Butler configuration</string>
+	<string name="OPTION_butler_name">Butler name</string>
+	<string name="OPTION_your_name">Your name</string>
+	<string name="OPTION_butler_explain">This screen allow butler configuration</string>
 	   
 	<string name="usage_settings">Widget configuration</string>
 	<string name="usage_bt_apply">Apply changes</string>

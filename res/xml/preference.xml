@@ -32,7 +32,7 @@ android:title="Préférences">
      <EditTextPreference android:key="MQaddress"
         android:inputType = "textUri"
         android:title="MQ_ADDRESS"
-        />
+        android:selectable="false" android:enabled="false"/>
      <EditTextPreference android:key="MQsubport"
         android:title="MQ_SUB_PORT"
         android:inputType = "number"
@@ -75,7 +75,7 @@ android:title="Préférences">
 </PreferenceCategory><PreferenceCategory android:title="@string/house_settings" android:summary="Soon......">
     <Preference android:summary="@string/house_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/>
     
-</PreferenceCategory><PreferenceCategory android:title="Buttler part"><EditTextPreference android:title="Butler name" android:key="dmg_butler_name" android:summary="Set the Domogik Butler name"></EditTextPreference><EditTextPreference android:title="Your name" android:key="dmg_your_name" android:summary="Set your name"></EditTextPreference></PreferenceCategory>
+</PreferenceCategory><PreferenceCategory android:title="@string/OPTION_butler_settings"><Preference android:selectable="false" android:shouldDisableView="false" android:enabled="false" android:summary="@string/OPTION_butler_explain"/><EditTextPreference android:title="@string/OPTION_butler_name" android:key="dmg_butler_name" android:summary="Set the Domogik Butler name"></EditTextPreference><EditTextPreference android:title="@string/OPTION_your_name" android:key="dmg_your_name" android:summary="Set your name"></EditTextPreference></PreferenceCategory>
  
   
     

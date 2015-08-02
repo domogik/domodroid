@@ -62,18 +62,18 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
 	private tracerengine Tracer = null;
 	public static FrameLayout container = null;
 	private static FrameLayout myself = null;
-	private String name_cam;
+	private String name_butler;
 	
 	public Graphical_butler(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
 		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context = context;
 		this.Tracer = Trac;
 		this.dev_id = dev_id;
-		this.name_cam=name;
+		this.name_butler=name;
 		this.url = url;
 		this.myself = this;
 		setOnClickListener(this);
-		mytag="Graphical_Cam("+dev_id+")";
+		mytag="Graphical_butler("+dev_id+")";
 
 		//To have the icon colored as it has no state
 		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
@@ -87,7 +87,7 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
 			Bundle b = new Bundle();
 			b.putString("url", url);
 			Tracer.e(mytag,""+url);
-			b.putString("name",name_cam);
+			b.putString("name",name_butler);
 			intent.putExtras(b);
 			context.startActivity(intent);
 			}

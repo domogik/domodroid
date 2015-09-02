@@ -1148,10 +1148,12 @@ public class MapView extends View {
 	
 	Runnable mLongPressed = new Runnable() {
 	    	public void run() { 
-	    		longclic = true;
-	    		//Code for long click
-	            Tracer.v(mytag, "Long press :)");
-	            list_type_choice.show();
+	    		if(params.getBoolean("map_menu_disable",false)==false){
+	    			longclic = true;
+	    			//Code for long click
+	    			Tracer.v(mytag, "Long press :)");
+	    			list_type_choice.show();
+	    		}
 	        }   
 	    };
 	

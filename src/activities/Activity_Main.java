@@ -38,6 +38,7 @@ import widgets.Graphical_butler;
 import misc.tracerengine;
 import mq.Main;
 import database.Cache_management;
+import database.DomodroidDB;
 import database.WidgetUpdate;
 
 import android.app.Activity;
@@ -780,6 +781,20 @@ public class Activity_Main extends Activity implements OnClickListener{
 		}  
 		Tracer.set_engine(WU_widgetUpdate);
 		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+	    super.onPrepareOptionsMenu(menu);
+	    
+	    if (SP_params.getBoolean("SYNC", false)){
+	    	float api_version=SP_params.getFloat("API_VERSION",0);
+	    	if(api_version < 0.7f){
+	    		menu.findItem(R.id.menu_butler).setVisible(false);
+	    	}
+	    }
+	    
+	    return true;
 	}
 	
 	@Override

@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <style type='text/css'>
+      a            { color:#a0a0e0 }
+      div.title    {
+        color:#C0F0C0;
+        font-size:1.2em;
+        font-weight:bold;
+        margin-top:1em;
+        margin-bottom:0.5em;
+        text-align:center }
+      div.subtitle {
+        color:#C0F0C0;
+        font-size:0.8em;
+        margin-bottom:1em;
+        text-align:center }
+      div.freetext { color:#F0F0F0 }
+      div.list     { color:#C0C0F0 }
+    </style>
+  </head>
+  <body>
+    $ 1.4-DEV
+      % Version 10
+      _ 2015-xx-xx
+      * Add the Changelog
+      * correct some bugs (map modifiable by longclic but disable in option)
+      % Version 9
+      _ 2015-09-02
+      * Add the butler part if in 0.4
+      * Add boolean to be activated (on/off) directly from map
+      * Longlic on map to modify it
+      *	Device are now sorted by name in house organization menu
+      * Boolean command for 0.4 should work
+      % Version 8
+      _ 2015-05-09
+      * 1st domogik 0.4 compatible version.
+	  * Only sensor are working for the moment (no commands in this version).
+	  % Version 7
+      _ 2014-10-17
+      * Preview icon in add list from map mode
+	  * New menu
+	  * New icons
+	  * New preferences
+	  * New language NL start
+	  * Fix a bug in start on map when never sync
+	  * Fix Some Bug on 1st Launch
+	  % Version 5
+      _ 2014-09-27
+      * Fix a bug with 2 colons options.
+      * Allow user to add a widget on root house.
+      * Allow widgets in usage area to be seen even if by_usage is force
+	  % Version 4
+      _ 2014-09-26
+      * Icon are now visible when you want to change it.
+      * Correction of a bug in device as no usage in domogik 0.3
+      * Continue working new widget forCallerID
+	  % Version 3
+      _ 2014-09-14
+      * Correction of a bug when deleting widget
+	  * Starting a new widget forCallerID
+	  % Version 2
+      _ 2014-09-10
+      * Menu improve to change name,icon or delete area and room.
+      * Advance in house configuration.
+	  % Version 1
+      _ 2014-09-06
+      * Change to 1.3 version since lost of android dev key :(
+    $ END_OF_CHANGE_LOG
+  </body>
+</html>

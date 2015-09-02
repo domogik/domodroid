@@ -35,6 +35,7 @@ import org.json.JSONException;
 import widgets.Basic_Graphical_zone;
 import widgets.Entity_Feature;
 import widgets.Graphical_butler;
+import misc.changelog;
 import misc.tracerengine;
 import mq.Main;
 import database.Cache_management;
@@ -403,7 +404,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 				}
 
 			}
-			
+			// Changelog view
+			changelog cl = new changelog(this);
+			  if (cl.firstRun())
+			    cl.getLogDialog().show();
+			  
 			Tracer.e(mytag,"OnCreate() complete !");
 			// End of onCreate (UIThread)
 	}

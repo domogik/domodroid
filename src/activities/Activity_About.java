@@ -77,6 +77,8 @@ public class Activity_About extends Activity{
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         this.mWakeLock.acquire();
+        //TODO: integrate full changelog here
+        //cl.getFullLogDialog().show();
 	}
 	
 	@Override

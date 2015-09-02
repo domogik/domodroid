@@ -320,5 +320,11 @@
     <string name="pref_header_mq">MQ</string>
     <string name="butler_default_name">Butler</string>
     <string name="you_default_name">You</string>
+     
+    <string name="changelog_full_title">Change Log</string>
+	<string name="changelog_title">What\'s New</string>
+	<string name="changelog_ok_button">OK</string>
+	<string name="changelog_show_full">more...</string>
+	<string name="background_color">black</string>
     
 </resources>

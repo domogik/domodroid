@@ -100,6 +100,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
+	private String command_id = null;
+	private String command_type = null;
 	
 	
 	public Graphical_Binary(tracerengine Trac, 
@@ -172,8 +174,16 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		login = params.getString("http_auth_username",null);
     	password = params.getString("http_auth_password",null);
     	api_version=params.getFloat("API_VERSION", 0);
-		
-		handler = new Handler() {
+    	if (api_version>=0.7f){
+    		try {
+    			command_id = jparam.getString("command_id");
+    			command_type= jparam.getString("command_type");
+    		} catch (JSONException e) {
+    			Tracer.d(mytag, "No command_id for this device");
+    			seekBarOnOff.setEnabled(false);
+    		}	
+    	}
+    	handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
@@ -313,15 +323,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 			updating=3;
 			String Url2send;
 			if(api_version>=0.7f){
-				String command_id = null;
-				String command_type = null;
-				try {
-					command_id = jparam.getString("command_id");
-					command_type= jparam.getString("command_type");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					Tracer.d(mytag, "No command_id for this device");
-				}
 				Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
 			}else{
 				Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
@@ -336,7 +337,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 			try {
 				Boolean ack = JSONParser.Ack(json_Ack);
 				if(ack==false){
-					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+					try{
+						Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+					} catch (Exception e) {
+						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+					}
 					handler.sendEmptyMessage(2);
 				}
 			} catch (Exception e) {

@@ -20,6 +20,10 @@ package database;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
+import android.view.Gravity;
+import android.widget.Toast;
 import widgets.Entity_Area;
 import widgets.Entity_Feature;
 import widgets.Entity_Feature_Association;
@@ -113,12 +117,21 @@ public class JSONParser{
 
 	//Parse JSON object, result of a request-------------------------
 	public static Boolean Ack(JSONObject json) throws JSONException {	
-		if(json.getString("status").equals("ERROR")){
-			//TODO need to say this to user.
-			return false;	
-		}else{
-			return true;
-		}
+		try{
+			if(json.getString("status").equals("ERROR")){
+				//TODO need to say this to user.
+				Toast toast = Toast.makeText(null, "ERROR sending command", Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.TOP|Gravity.CENTER, 0, 0);
+				toast.show();
+				return false;	
+			}else{
+				return true;
+			}
+		}	catch (Exception e) {
+		// TODO: handle exception
+			return false;
+	}
+
 	}
 
 	public static int StateValueINT(JSONObject json) throws JSONException {

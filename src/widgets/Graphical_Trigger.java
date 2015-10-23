@@ -56,7 +56,6 @@ import android.widget.Toast;
 
 public class Graphical_Trigger extends Basic_Graphical_widget implements Runnable, OnClickListener {
 
-
 	private TextView unusable;
 	private Graphical_Trigger_Button trigger;
 	private String address;
@@ -82,6 +81,8 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 	private float api_version;
 	private Activity context;
 	private String usage;
+	private String command_id;
+	private String command_type;
 	
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name, int id,int dev_id,String stat_key, 
@@ -108,13 +109,28 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 		//get parameters
         JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
         
-        if(jparam != null) {
-        	try{
-        	command = jparam.getString("command");
-        	usable=true;
-        	} catch (Exception e) {
-        		usable=false;
-            	e.printStackTrace();
+        if(jparam != null ) {
+        	if (api_version>=0.7f) {
+        		try{
+        			command_id=jparam.getString("command_id");
+		    		command_type=jparam.getString("command_type");
+		    		usable=true;
+    		    	} catch (Exception e) {
+    		    		usable=false;
+    		    		Tracer.d(mytag, "Error with this widgets command");
+    		    		Tracer.d(mytag, "jparam= "+jparam.toString());
+    		    		Tracer.d(mytag, e.toString());
+    		    	}
+        	}else{
+		    	try{
+		    	command = jparam.getString("command");
+		    	usable=true;
+		    	} catch (Exception e) {
+		    		usable=false;
+		    		Tracer.d(mytag, "Error with this widgets command");
+		    		Tracer.d(mytag, "jparam= "+jparam.toString());
+		    		Tracer.d(mytag, e.toString());
+		    	}
         	}
         }
 
@@ -146,11 +162,21 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 
 	public void run() {
 		JSONObject json_Ack = null;
-		try {
-			//TODO adapt for 0.4
-			json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command,login,password);
-		} catch (Exception e) {
-			Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
+		if (api_version>=0.7f) {
+			try {
+				//TODO adapt for 0.4
+				Tracer.i(mytag, "Sending command to : "+url+"cmd/id/"+command_id+"?"+command_type+"=1");
+				json_Ack = Rest_com.connect_jsonobject(url+"cmd/id/"+command_id+"?"+command_type+"=1"+command,login,password);
+			} catch (Exception e) {
+				Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
+			}
+		}else{
+			try {
+				Tracer.i(mytag, "Sending command to : "+url+"command/"+type+"/"+address+"/"+command);
+				json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command,login,password);
+			} catch (Exception e) {
+				Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
+			}	
 		}
 		try {
 			Boolean ack = JSONParser.Ack(json_Ack);

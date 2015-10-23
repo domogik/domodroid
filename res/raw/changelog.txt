@@ -24,7 +24,7 @@
       _ 2015-xx-xx
       * Add the Changelog
       * correct some bugs (map modifiable by longclic but disable in option)
-      * Command working in 0.4 for DT_Trigger
+      * Command working in 0.4 for DT_Trigger with wol plugin at least
       % Version 9
       _ 2015-09-02
       * Add the butler part if in 0.4

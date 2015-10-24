@@ -70,6 +70,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 	private String place_type;
 	private int place_id;
 	private String mytag;
+	private String name;
 	
 	public Basic_Graphical_widget(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container) {
 		super(context);
@@ -84,6 +85,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		this.mytag=mytag;
 		this.container=container;
 		this.myself=this;
+		this.name=name;
 		setOnLongClickListener(this);
 
 		//panel with border	
@@ -167,7 +169,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 	private void do_action(String action) {
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Rename_title);
+			alert.setTitle(context.getString(R.string.Rename_title)+" "+name);
 			alert.setMessage(R.string.Rename_message);
 			// Set an EditText view to get user input 
 			final EditText input = new EditText(getContext());
@@ -187,7 +189,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 				alert.show();
 		}else if (action.equals("Delete")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Delete_feature_title);
+			alert.setTitle(context.getString(R.string.Delete_feature_title)+" "+name);
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
@@ -219,7 +221,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 				list_icon.add(fiilliste[i].toString());
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
-			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+name);
 			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
 			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,

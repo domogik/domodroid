@@ -95,7 +95,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 	private void do_action(String action) {
 		if(action.equals("Delete")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Delete_feature_title);
+			alert.setTitle(context.getString(R.string.Delete_feature_title)+" "+name);
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
@@ -131,7 +131,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 			alert.show();
 		}else if (action.equals("Rename")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(R.string.Rename_title);
+			alert.setTitle(context.getString(R.string.Rename_title)+" "+name);
 			alert.setMessage(R.string.Rename_message);
 			// Set an EditText view to get user input 
 			final EditText input = new EditText(getContext());
@@ -158,7 +158,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 				list_icon.add(fiilliste[i].toString());
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
-			list_icon_choice.setTitle(R.string.Wich_ICON_message);
+			list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+name);
 			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
 			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,

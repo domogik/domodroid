@@ -22,6 +22,8 @@
 package activities;
 
 
+import misc.changelog;
+
 import org.domogik.domodroid13.R;
 import android.app.Activity;
 import android.content.Context;
@@ -32,25 +34,27 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class Activity_About extends Activity{
+public class Activity_About extends Activity implements OnClickListener{
     protected PowerManager.WakeLock mWakeLock;
     private String pn = "";
     private String mytag="Activity_About";
-    
+    private Button showchangelog;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pn = getPackageName();
 		
-		setContentView(R.layout.activity_help);
+		setContentView(R.layout.activity_about);
 		//display domogik version
 		TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
 		
-		//SharedPreferences SP_params = getSharedPreferences("PREFS",MODE_PRIVATE);
-		//TODO add normal menu
 		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		TV_domogikversionText.setText("Domogik version: "+SP_params.getString("DOMOGIK-VERSION", ""));
@@ -64,22 +68,21 @@ public class Activity_About extends Activity{
 			int vc = getVersionCode();
 			if(vc != -1)
 				vcs=Integer.toString(vc);
-			//TV_versionText.setText(getString(R.string.version)+"_"+vcs+"_"+vns+" ("+pn+")");
-			
 			TV_versionText.setText(pn+" "+vns+" "+getString(R.string.version)+"_"+vcs);
 		}
 		
 		//titlebar
 		final FrameLayout FL_titlebar = (FrameLayout) findViewById(R.id.TitleBar);
 		FL_titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
+		showchangelog = (Button) findViewById(R.id.showchangelog);
+		showchangelog.setTag("showchangelog");
+		showchangelog.setOnClickListener(this);
 		
 		//power management
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         this.mWakeLock.acquire();
-        //TODO: integrate full changelog here
-        //cl.getFullLogDialog().show();
-	}
+    }
 	
 	@Override
     public void onDestroy() {
@@ -112,5 +115,12 @@ public class Activity_About extends Activity{
 			//Tracer.e(mytag, "Version number not found in package");
 		}
 		return version;
+	}
+
+	public void onClick(View v) {
+		changelog changelog = new changelog(this);
+		/** When OK Button is clicked, dismiss the dialog */
+		if (v == showchangelog)
+			changelog.getFullLogDialog().show();
 	}
 }

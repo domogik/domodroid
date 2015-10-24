@@ -227,12 +227,18 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 					try {
 						float formatedValue = 0;
 						if(loc_Value != null)
-							formatedValue = Round(Float.parseFloat(loc_Value),2);
+							formatedValue = Round(Float.parseFloat(loc_Value),2); 
 						try {
 							//Basilic add, number feature has a unit parameter
 							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 							String test_unite = jparam.getString("unit");
 							value.setText(formatedValue+ " "+test_unite);
+							//TODO #2045 add Scale value if too big
+//							if (test_unite.equals("b") == true){
+//								value.setText(android.text.format.Formatter.formatFileSize(context,(long)formatedValue));
+//							}else{
+//								value.setText(formatedValue+ " "+test_unite);
+//							}
 						} catch (JSONException e) {							
 						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");

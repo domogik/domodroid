@@ -141,7 +141,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	private float api_version;
 	
 	@SuppressLint("HandlerLeak")
-	public Graphical_Info_with_achartengine(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+	public Graphical_Info_with_achartengine(tracerengine Trac,final Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,final String usage, int period, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) throws JSONException {
 		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
@@ -279,6 +279,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 							String test_unite = jparam.getString("unit");
 							value.setText(formatedValue+ " "+test_unite);
+							//TODO #2045 add Scale value if too big
+//							if (test_unite.equals("b") == true){
+//								value.setText(android.text.format.Formatter.formatFileSize(context,(long)formatedValue));
+//							}else{
+//								value.setText(formatedValue+ " "+test_unite);
+//							}
 						} catch (JSONException e) {							
 							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
 							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");

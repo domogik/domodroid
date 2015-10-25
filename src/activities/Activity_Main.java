@@ -780,6 +780,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			WU_widgetUpdate = WidgetUpdate.getInstance();
 			WU_widgetUpdate.set_handler(sbanim, 0);	//put our main handler into cache engine (as Main)
 			Boolean result = WU_widgetUpdate.init(Tracer, this,SP_params);
+			Tracer.d(mytag, "widgetupdate_wakup");
 			WU_widgetUpdate.wakeup();
 			if(! result)
 				return result;

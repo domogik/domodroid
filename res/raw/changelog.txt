@@ -25,6 +25,7 @@
       * Correct some bugs (map modifiable by longclic but disable in option)
       * Command working in 0.4 for DT_Trigger with wol plugin at least
       * Add the Changelog (also in about view)
+      * Add name of current element it alert title box
       % Version 9
       _ 2015-09-02
       * Add the butler part if in 0.4

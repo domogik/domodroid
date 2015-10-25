@@ -193,6 +193,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.d(mytag,"deleting widget id= "+id+" place_id= "+place_id+" placetype= "+place_type);
+					
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
 					//recheck cache element to remove those no more need.
 					Cache_management.checkcache(Tracer,context);

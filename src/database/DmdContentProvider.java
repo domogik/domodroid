@@ -434,7 +434,7 @@ public class DmdContentProvider extends ContentProvider {
 			//queryBuilder.setTables("table_area");
 			//cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
 			cursor=mDB.getReadableDatabase().rawQuery(
-					"SELECT * FROM table_area "
+					"SELECT * FROM table_area order by id"
 					,null);
 			Log.d(mytag,"Query on table_area return "+cursor.getCount()+" rows");
 			break;
@@ -461,13 +461,13 @@ public class DmdContentProvider extends ContentProvider {
 		case REQUEST_FEATURE_ASSOCIATION_ALL:
 			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
 			cursor=mDB.getReadableDatabase().rawQuery(
-					"SELECT * FROM table_feature_association "
+					"SELECT * FROM table_feature_association order by id"
 					,null);
 			break;
 		case REQUEST_FEATURE_MAP_ALL:
 			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
 			cursor=mDB.getReadableDatabase().rawQuery(
-					"SELECT * FROM table_feature_map "
+					"SELECT * FROM table_feature_map order by id"
 					,null);
 			break;
 		case REQUEST_FEATURE_MAP:

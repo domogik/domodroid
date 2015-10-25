@@ -155,7 +155,9 @@ public class MapView extends View {
 	boolean longclic = false;
 	private MotionEvent event1;
 	private float[] valuelongclic = new float[9];
-	
+	private String command_id = null;
+	private String command_type = null;
+		
 	public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
 		super(context);
 		this.Tracer = Trac;
@@ -1096,6 +1098,15 @@ public class MapView extends View {
 									String[] model = featureMap.getDevice_type_id().split("\\.");
 									this.type = model[0];
 									this.state_progress=featureMap.getCurrentState();
+									if (api_version>=0.7f){
+							    		try {
+							    			JSONObject jparam= new JSONObject(parameters);
+							    			command_id = jparam.getString("command_id");
+							    			command_type= jparam.getString("command_type");
+							    		} catch (JSONException e) {
+							    			Tracer.d(mytag, "No command_id for this device");
+							    		}	
+							    	}
 									new CommandeThread().execute();
 									
 								}else{
@@ -1370,7 +1381,12 @@ public class MapView extends View {
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 		@Override
 		protected Void doInBackground(Void... params) {
-			String Url2send = URL+"command/"+type+"/"+Address+"/"+state_progress;
+			String Url2send="";
+			if(api_version>=0.7f){
+				Url2send = URL+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
+			}else{
+				Url2send = URL+"command/"+type+"/"+Address+"/"+state_progress;
+			}
 			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {

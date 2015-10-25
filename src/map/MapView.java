@@ -1075,9 +1075,26 @@ public class MapView extends View {
 							if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+20 && 
 									(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+20){
 								try {
-								// #2009 action directly if binary
+								// #2009 action directly if binary or trigger
 								// via the asynctask new CommandeThread()
-								if (featureMap.getValue_type().equals("binary")){
+								if (featureMap.getValue_type().equals("trigger")){
+									Tracer.d(mytag, "This is a Trigger launching it");
+									this.URL = params.getString("URL","1.1.1.1");
+									this.Address = featureMap.getAddress();
+									if (api_version>=0.7f){
+							    		try {
+							    			JSONObject jparam= new JSONObject(parameters);
+							    			command_id = jparam.getString("command_id");
+							    			command_type= jparam.getString("command_type");
+							    			state_progress="1";
+							    			new CommandeThread().execute();	
+							    		} catch (JSONException e) {
+							    			Tracer.d(mytag, "No command_id for this device");
+							    		}
+									}else{
+										new CommandeThread().execute();	
+									}
+								}else if (featureMap.getValue_type().equals("binary")){
 									Tracer.d(mytag, "This is a binary try to change is state");
 									Tracer.d(mytag, "State is "+featureMap.getCurrentState().toString());
 									if (featureMap.getCurrentState().equals("true")){
@@ -1103,12 +1120,13 @@ public class MapView extends View {
 							    			JSONObject jparam= new JSONObject(parameters);
 							    			command_id = jparam.getString("command_id");
 							    			command_type= jparam.getString("command_type");
+							    			new CommandeThread().execute();
 							    		} catch (JSONException e) {
 							    			Tracer.d(mytag, "No command_id for this device");
 							    		}	
+							    	}else{
+							    		new CommandeThread().execute();
 							    	}
-									new CommandeThread().execute();
-									
 								}else{
 									showTopWidget(featureMap);
 									panel_button.setVisibility(View.GONE);

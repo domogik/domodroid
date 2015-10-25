@@ -462,10 +462,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 								device_feature1.put("id",json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
 								device_feature1.put("device_id",json_FeatureList1.getJSONObject(i).getString("id"));
 								device_feature1.put("device_usage_id",json_FeatureList1.getJSONObject(i).getString("client_id"));
-								device_feature1.put("adress","");
+								device_feature1.put("adress",json_Sensors.getJSONObject(listsensor.getString(y)).getString("name"));
 								device_feature1.put("device_type_id",json_FeatureList1.getJSONObject(i).getString("device_type_id"));
 								device_feature1.put("description",json_FeatureList1.getJSONObject(i).getString("description"));
-								device_feature1.put("name",json_Sensors.getJSONObject(listsensor.getString(y)).getString("name"));
+								device_feature1.put("name",usage);
 								device_feature1.put("stat_key",json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
 								String data_type=json_Sensors.getJSONObject(listsensor.getString(y)).getString("data_type");
 								String parent_type=null;

@@ -503,7 +503,7 @@ public class DomodroidDB {
 					projection, 
 					null,
 					null,
-					"id Asc");
+					null);
 			lastid=curs.getCount();
 			
 		} catch (Exception e) {
@@ -523,7 +523,7 @@ public class DomodroidDB {
 					projection, 
 					"area_id = ?",
 					new String[] { area_id+"" },
-					"id Asc");
+					null);
 			rooms=new Entity_Room[curs.getCount()];
 			int count=curs.getCount();
 			for(int i=0;i<count;i++) {
@@ -564,7 +564,7 @@ public class DomodroidDB {
 					projection, 
 					null,
 					null,
-					"id Asc");
+					null);
 			Icon=new Entity_Icon[curs.getCount()];
 			int count=curs.getCount();
 			for(int i=0;i<count;i++) {

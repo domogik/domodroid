@@ -365,6 +365,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					
 					//Create JSONObject
 					json_RoomList = new JSONObject();
+					json_IconList = new JSONObject();
 					json_FeatureAssociationList = new JSONObject();
 					json_AreaList = new JSONObject();
 					JSONObject map_area = new JSONObject();
@@ -372,6 +373,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					//Create JSONArray
 					JSONArray list = new JSONArray();
 					JSONArray rooms = new JSONArray();
+					JSONArray icons= new JSONArray();
 					JSONArray ListFeature = new JSONArray();
 	                //Create string
 					String usage = new String();
@@ -391,6 +393,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 					json_RoomList.put("status","OK");
 					json_RoomList.put("code",0);
 					json_RoomList.put("description","None");
+					
+					json_IconList.put("status","OK");
+					json_IconList.put("code",0);
+					json_IconList.put("description","None");
+					
 					area.put("description","");
 					area.put("id","1");
 					area.put("name","Usage");
@@ -407,7 +414,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	                	list_size = json_FeatureList1.length();
 	                Tracer.d(mytag,"Device list size = "+list_size);
 					for(int i = 0; i < list_size; i++) {
-		                int list_sensors = 0;
+						int list_sensors = 0;
 						//List sensors for this device
 		                json_Sensors=json_FeatureList1.getJSONObject(i).getJSONObject("sensors");
 						if(json_Sensors != null)
@@ -426,20 +433,25 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 							 Tracer.d(mytag,"Features list processing usage = "+usage);
 								
 							// Create a pseudo 'room' for each usage returned by Rinor
+							//TODO prepare icon_table for room base on device_type_id in 0.4
 							if (usage != null) {
 								if(! list_usage.contains(usage)){
 									if(json_Sensors.length() > 0) {
-										publishProgress(100*y/json_Sensors.length());
+										publishProgress(55+(45*y/json_Sensors.length()));
 										JSONObject room = new JSONObject();
+										JSONObject icon = new JSONObject();
 										room.put("area_id","1");
 										room.put("description","");
-		
 										room.put("area",area);
 										room.put("id",j);
-										j++;
 										room.put("name",json_FeatureList1.getJSONObject(i).getString("name"));
 										rooms.put(room);
+										icon.put("name", "room");
+										icon.put("value", json_FeatureList1.getJSONObject(i).getString("device_type_id"));
+										icon.put("reference", j);
+										icons.put(icon);
 										list_usage.add(json_FeatureList1.getJSONObject(i).getString("name"));
+										j++;
 									}
 								}
 								// And its associated widget
@@ -461,7 +473,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 								device_feature1.put("device_feature_model_id",json_FeatureList1.getJSONObject(i).getString("device_type_id")+"."+json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
 								device_feature1.put("id",json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
 								device_feature1.put("device_id",json_FeatureList1.getJSONObject(i).getString("id"));
-								device_feature1.put("device_usage_id",json_FeatureList1.getJSONObject(i).getString("client_id"));
+								device_feature1.put("device_usage_id",json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
 								device_feature1.put("adress",json_Sensors.getJSONObject(listsensor.getString(y)).getString("name"));
 								device_feature1.put("device_type_id",json_FeatureList1.getJSONObject(i).getString("device_type_id"));
 								device_feature1.put("description",json_FeatureList1.getJSONObject(i).getString("description"));
@@ -480,7 +492,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 								JSONObject parameters= new JSONObject();
 								
 								try{
-									//List sensors for this device
+									//List commands for this device
 					                int list_commands = 0;
 					                json_Commands=json_FeatureList1.getJSONObject(i).getJSONObject("commands");
 									if(json_Commands != null){
@@ -522,6 +534,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 		                
 		                //Prepare list of rooms, and list of usable features
 						json_RoomList.put("room", rooms);
+						json_IconList.put("ui_config", icons);
 						//List sensors for this device
 						  
 					}
@@ -541,6 +554,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				prefEditor.putString("AREA_LIST",json_AreaList.toString());
 				db.insertRoom(json_RoomList);
 				prefEditor.putString("ROOM_LIST",json_RoomList.toString());
+				db.insertIcon(json_IconList);
+				prefEditor.putString("ICON_LIST",json_IconList.toString());
 				if(Rinor_Api_Version <=0.6f){
 					db.insertFeature(json_FeatureList);
 					prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());

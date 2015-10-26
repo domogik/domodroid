@@ -955,59 +955,57 @@ public class WidgetUpdate  {
 		domodb.insertFeatureMap(id, posx, posy, mapname);
 	}
 	public void remove_one_things(int id,String type) {
-		try{
+		//TODO correct #209O in a better way.
+		//seems domodb not create because widgetupdate not init.
+		//
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
+		}
 		if (type.equals("area")){ domodb.remove_one_area(id);}
 		else if (type.equals("room")){ domodb.remove_one_room(id);}
 		else if (type.equals("icon")){ domodb.remove_one_icon(id);}
 		else if (type.equals("feature")){ domodb.remove_one_feature(id);}
-		}catch (Exception e){
-			Tracer.d(mytag,e.toString());
-		}
+		
 	}
 	public void remove_one_icon(int id, String place_type) {
-		try{
-			domodb.remove_one_icon(id, place_type);
-		}catch (Exception e){
-			Tracer.d(mytag,e.toString());
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
 		}
+		domodb.remove_one_icon(id, place_type);
+		
 	}
 	public void remove_one_feature_association(int id, int place_id, String place_type) {
-		
-		//try{
-			domodb.remove_one_feature_association(id, place_id, place_type);
-//		}catch (Exception e){
-//			Tracer.d(mytag,"Error in remove_one_feature_association fo id= "+id+" place_id= "+place_id+" place_type="+place_type);
-//			Tracer.d(mytag,e.toString());
-//		}
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
+		}
+		domodb.remove_one_feature_association(id, place_id, place_type);
 	}
 	public void remove_one_FeatureMap(int id,int posx, int posy, String mapname) {
-		try{
-			domodb.remove_one_FeatureMap(id, posx, posy, mapname);
-		}catch (Exception e){
-			Tracer.d(mytag,e.toString());
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
 		}
+		domodb.remove_one_FeatureMap(id, posx, posy, mapname);
 	}
 	public void remove_one_feature_in_FeatureMap(int id) {
-		try{
-			domodb.remove_one_feature_in_FeatureMap(id);
-		}catch (Exception e){
-			Tracer.d(mytag,e.toString());
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
 		}
+		domodb.remove_one_feature_in_FeatureMap(id);
 	}
 	public void remove_one_place_type_in_Featureassociation(int id_room, String place_type) {
-		try{
-			domodb.remove_one_place_type_in_Featureassociation(id_room,place_type);
-		}catch (Exception e){
-			Tracer.d(mytag,e.toString());
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
 		}
-	}
+		domodb.remove_one_place_type_in_Featureassociation(id_room,place_type);
+	}	
 	public Entity_Feature[] requestFeatures(){
-		try{
-			return domodb.requestFeatures();
-		}catch (Exception e){
-			Tracer.d(mytag,e.toString());
-			return null;
-		}
+		return domodb.requestFeatures();
 		
 	}
 	

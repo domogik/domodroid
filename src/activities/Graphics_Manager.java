@@ -31,6 +31,30 @@ public class Graphics_Manager {
 		switch(state){
 		case 0: //Called for Off or Room
 			//reorder by usage name for easy update
+			//TODO adapt for 0.4
+			//information are in json device_types of each plugin
+			//BLUEZ "available"
+			//DISKFREE "get_total_space", "get_percent_used", "get_free_space", "get_used_space"
+			//GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
+			//GEOLOC "position_degrees"
+			//IPX800 "state", "input", "count"
+			//ONEWIRE "temperature", "humidity", "serial", "gpio", 
+			//PING "ping"
+			//TELEINFO "adco", "optarif", "isousc", "base", "iinst", "imax", "motdetat", "hchc", "hchp", "ptec", "papp", "hhphc", "iinst1", "iinst2"
+			//"iinst3", "imax1", "imax2", "imax3", "adps", "ejphn", "ejphpm", "pejp", "bbrhcjb", "bbrhpjb", "bbrhcjw", "bbrhpjw", "bbrhcjr", "bbrhpjr"
+			//RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting2", "rssi_lighting2","open_close", "rssi_open_close"
+			//VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
+			//WEATHER "current_barometer_value", "current_feels_like", "current_humidity", "current_last_updated", "current_station", "current_temperature"
+			//"current_text", "current_code", "current_visibility","current_wind_direction", "current_wind_speed", "current_sunrise", "current_sunset"
+			//"forecast_0_day", "forecast_0_temperature_high", "forecast_0_temperature_low", "forecast_0_condition_text", "forecast_0_condition_code"
+			//"forecast_1_day", "forecast_1_temperature_high", "forecast_1_temperature_low", "forecast_1_condition_text", "forecast_1_condition_code"
+			//"forecast_2_day", "forecast_2_temperature_high", "forecast_2_temperature_low", "forecast_2_condition_text", "forecast_2_condition_code"
+			//"forecast_3_day", "forecast_3_temperature_high", "forecast_3_temperature_low", "forecast_3_condition_text", "forecast_3_condition_code"
+			//"forecast_4_day","forecast_4_temperature_high", "forecast_4_temperature_low","forecast_4_condition_text","forecast_4_condition_code"
+			//WOL "wol"
+			//ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power", 
+			//"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
+			//"level", "motion_sensor_level", "luminance", "sensor_alarm","low_battery", "thermostat_setpoint"
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_off;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}

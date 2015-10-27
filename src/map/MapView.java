@@ -584,7 +584,18 @@ public class MapView extends View {
 				}
 				
 				// Draw state and description
-				
+				//TODO add missing datatype from 0.4
+				//String but carreful
+				//datetime
+				//ColorCII
+				//Char
+				//DayOfWeek
+				//HVACVent
+				//HVACFan
+				//HVACMode
+				//HVACHeat
+				//UPSEvent
+				//UPSState
 				if(featureMap.getValue_type().equals("string") && (! featureMap.getState_key().equals("color"))){
 					if(! featureMap.getDevice_feature_model_id().contains("camera")) {
 						String value;
@@ -622,7 +633,7 @@ public class MapView extends View {
 					}
 					
 						
-				} else if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")){
+				} else if(featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")|| featureMap.getValue_type().equals("bool")){
 					for(int j=1;j<5;j++){
 						paint_text.setShadowLayer(2*j, 0, 0, Color.BLACK);
 						paint_text.setTextSize(texsize* scale + 0.5f);
@@ -788,6 +799,7 @@ public class MapView extends View {
 				}
 			} else {
 				// This widget is'nt alive anymore...
+				Tracer.e(mytag,"Could not draw "+featureMap.getId());
 				canvasWidget = null; //?????
 				}
 			

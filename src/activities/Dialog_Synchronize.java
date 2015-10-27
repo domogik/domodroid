@@ -571,8 +571,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				prefEditor.putString("AREA_LIST",json_AreaList.toString());
 				db.insertRoom(json_RoomList);
 				prefEditor.putString("ROOM_LIST",json_RoomList.toString());
-				db.insertIcon(json_IconList);
-				prefEditor.putString("ICON_LIST",json_IconList.toString());
+				if(Rinor_Api_Version ==0.7f){
+					db.insertIcon(json_IconList);
+					prefEditor.putString("ICON_LIST",json_IconList.toString());
+				}
 				if(Rinor_Api_Version <=0.6f){
 					db.insertFeature(json_FeatureList);
 					prefEditor.putString("FEATURE_LIST",json_FeatureList.toString());

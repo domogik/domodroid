@@ -34,7 +34,7 @@ public class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(theContext);
         // TODO : DEL // //SharedPreferences SP = PreferenceManager.getSharedPreferences(Main.this, 0);
         // TODO : DEL // //SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext() );
-        String ip = SP.getString("rinorIP", "");    // TODO : use a R. for the default value
+        String ip = SP.getString("MQaddress", "");    // TODO : use a R. for the default value
         String port = SP.getString("MQsubport", "40412");    // TODO : use a R. for the default value
         String sub_url = "tcp://" + ip + ":" + port;
         // TODO : DEL // Log.d("foo", "we setUrl to : " + sub_url);

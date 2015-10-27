@@ -57,7 +57,6 @@ public class Events_manager {
 	private float api_version;
 	private String MQaddress;
 	private String MQsubport;
-	private Context thisContext;
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
 	

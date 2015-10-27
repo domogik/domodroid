@@ -145,7 +145,7 @@ public class Main extends Activity {
                     ZMQPubMessage pub = new ZMQPubMessage();
                     // TODO : move somewhere else to avoid the call each time
                     //SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                    String ip = SP.getString("rinorIP", "");    // TODO : use a R. for the default value
+                    String ip = SP.getString("MQaddress", "");    // TODO : use a R. for the default value
                     String port = SP.getString("MQpubport", "40411");    // TODO : use a R. for the default value
                     String pub_url = "tcp://" + ip + ":" + port;
                     Log.d(this.getClass().getSimpleName(), "Pub address : " + pub_url);

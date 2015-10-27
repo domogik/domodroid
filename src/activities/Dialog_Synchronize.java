@@ -24,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Dialog_Synchronize extends Dialog implements OnClickListener {
 	private Button cancelButton;
@@ -135,6 +136,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 			super.onProgressUpdate(values);
 		}
 
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
 		@Override
 		protected Void doInBackground(Void... params) {
 			//Requests
@@ -342,6 +346,19 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 				}else if (Rinor_Api_Version <= 0.7f){
 					//TODO lot of work on this.
 					// Fonction special Domogik 0.4
+					//get value from rinor.
+					try{
+						String MQaddress = json_rinor.getJSONObject("mq").getString("ip");
+						String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
+						String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
+					prefEditor.putString("MQaddress", MQaddress);
+					prefEditor.putString("MQsubport", MQsubport);
+					prefEditor.putString("MQpubport", MQpubport);
+					}catch (Exception e1){
+					    Toast.makeText(context, "Problem with MQ information", Toast.LENGTH_LONG).show();
+					    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+					    Tracer.e(mytag, "ERROR getting MQ information");
+					}
 					json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess+"device",login,password);
 					JSONObject Json_data_type = new JSONObject();
 					Json_data_type = Rest_com.connect_jsonobject(urlAccess+"datatype",login,password);

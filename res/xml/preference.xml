@@ -32,7 +32,7 @@ android:title="Préférences">
      <EditTextPreference android:key="MQaddress"
         android:inputType = "textUri"
         android:title="MQ_ADDRESS"
-        android:selectable="false" android:enabled="false"/>
+        android:selectable="true" android:enabled="true"/>
      <EditTextPreference android:key="MQsubport"
         android:title="MQ_SUB_PORT"
         android:inputType = "number"

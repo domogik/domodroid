@@ -57,7 +57,7 @@ public class Events_manager {
 	private float api_version;
 	private String MQaddress;
 	private String MQsubport;
-	
+	private Context thisContext;
 	private Rinor_event[] event_stack = new Rinor_event[stack_size];
 	private static Stats_Com stats_com = null; 
 	
@@ -203,13 +203,13 @@ public class Events_manager {
 						//TODO find a way to know when ZeroMQ didn't response anymore.
 						ZMQ.Context zmqContext = ZMQ.context(1);
 						ZMQ.Socket subscriber=zmqContext.socket(ZMQ.SUB);;
-				        Log.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
+						Tracer.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
 				        subscriber.setIdentity("domodroid".getBytes());
-				        Log.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
+				        Tracer.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
 				        subscriber.connect ("tcp://"+MQaddress+":"+MQsubport);
-				        Log.d(mytag, "subscriber.connect (tcp://"+MQaddress+":"+MQsubport+")");
+				        Tracer.d(mytag, "subscriber.connect (tcp://"+MQaddress+":"+MQsubport+")");
 				        subscriber.subscribe("device-stats".getBytes());
-			           	Log.d(mytag, "subscriber.subscribe(device-stats)");
+				        Tracer.d(mytag, "subscriber.subscribe(device-stats)");
 			           	
 			           	while (true) {
 					        String result = subscriber.recvStr(0);
@@ -251,6 +251,7 @@ public class Events_manager {
 			        }
 				}else{
 					//TODO say user MQ adress or port is empty
+					Tracer.d(mytag, "MQ adress or port is empty");
 				}
 			}else if (api_version <= 0.6f){
 				//This is for 0.3 version
@@ -428,6 +429,7 @@ public class Events_manager {
 			}
 		}
 		// should never reach this code.....
+		Tracer.e(mytag,"should never reach this code.....");
 		Tracer.e(mytag,"ListenerThread going down !!!!!!!!!!!!!!!!!");
 		listener_running = false;
 		if(state_engine_handler != null) {

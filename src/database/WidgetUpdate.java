@@ -228,6 +228,7 @@ public class WidgetUpdate  {
 					}
 				} else if (msg.what == 9901) {
 					// Events_Manager thread is dead....
+					Toast.makeText(WidgetUpdate.this.context, "Event_manage die. Check Log", Toast.LENGTH_LONG).show();
 					eventsManager = null;
 					init_done = false;
 					Tracer.i(mytag,"No more Events_Manager now ! ! ! ");
@@ -927,6 +928,10 @@ public class WidgetUpdate  {
 	 * 
 	 */
 	public void descUpdate(int id,String new_desc,String type) {
+		if (domodb==null){
+			Tracer.d(mytag, "domodb is null");
+			this.init(Tracer, context, sharedparams);
+		}
 		try{
 			domodb.update_name(id,new_desc,type);
 		}catch (Exception e){

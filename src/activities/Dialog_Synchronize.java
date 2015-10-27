@@ -500,6 +500,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 								String parent_type=null;
 								try{
 								parent_type=Json_data_type.getJSONObject(data_type).getString("parent");
+								//TODO for 0.4 make a loop until no more parent data_type	
 								}catch (JSONException e){
 									parent_type=data_type;
 								}

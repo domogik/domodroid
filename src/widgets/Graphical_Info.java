@@ -233,7 +233,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 							String test_unite = jparam.getString("unit");
 							value.setText(formatedValue+ " "+test_unite);
-							//TODO #2045 add Scale value if too big
+							//TODO #30 add Scale value if too big
 //							if (test_unite.equals("b") == true){
 //								value.setText(android.text.format.Formatter.formatFileSize(context,(long)formatedValue));
 //							}else{

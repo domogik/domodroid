@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import widgets.Entity_Feature;
 
+import android.R.bool;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -497,12 +498,18 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 								device_feature1.put("name",usage);
 								device_feature1.put("stat_key",json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
 								String data_type=json_Sensors.getJSONObject(listsensor.getString(y)).getString("data_type");
+								//For 0.4 make a loop until no more parent data_type	
 								String parent_type=null;
-								try{
-								parent_type=Json_data_type.getJSONObject(data_type).getString("parent");
-								//TODO for 0.4 make a loop until no more parent data_type	
-								}catch (JSONException e){
-									parent_type=data_type;
+								boolean parent_again=false;
+								String tempdata_type=data_type;
+								while(!parent_again){
+									try{
+									parent_type=Json_data_type.getJSONObject(tempdata_type).getString("parent");
+									tempdata_type=parent_type;
+									}catch (JSONException e){
+										parent_type=tempdata_type;
+										parent_again=true;
+									}
 								}
 								parent_type=parent_type.replace("DT_", "");
 								parent_type=parent_type.toLowerCase();

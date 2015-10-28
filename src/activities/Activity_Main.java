@@ -683,7 +683,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 					LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ,SP_params, mytype);//add widgets in root
 				} else {
 					// by_usage
-					//TODO #2021 change 1 in loadRoomWidgets by the right value.
+					//TODO #19 change 1 in loadRoomWidgets by the right value.
 					LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);	//List of known usages 'as rooms'
 					VG_parent.addView(LL_room);
 					LL_activ.removeAllViews();

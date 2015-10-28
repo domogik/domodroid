@@ -960,9 +960,9 @@ public class WidgetUpdate  {
 		domodb.insertFeatureMap(id, posx, posy, mapname);
 	}
 	public void remove_one_things(int id,String type) {
-		//TODO correct #209O in a better way.
+		//Correct #209O in a better way.
 		//seems domodb not create because widgetupdate not init.
-		//
+		//in case domogik MQ problem
 		if (domodb==null){
 			Tracer.d(mytag, "domodb is null");
 			this.init(Tracer, context, sharedparams);

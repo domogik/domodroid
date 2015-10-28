@@ -243,6 +243,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 						values.put("reference", reference);
 						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
 						//TODO need to select good icon in function of his state
+						//Redraw it for this.
 						IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
 						dialog.cancel();
 					}

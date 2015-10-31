@@ -51,6 +51,7 @@ import android.os.Message;
 import android.os.Process;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -115,7 +116,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 	private String usage;
 	
 	@SuppressLint("HandlerLeak")
-	public Graphical_Info(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+	public Graphical_Info(tracerengine Trac,final Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,final String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
@@ -267,6 +268,15 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 						}catch (Exception e1) {
 							Tracer.d(mytag,"Nothing in R.STRING for "+loc_Value );
 						value.setText(loc_Value);
+							if(state_key.equalsIgnoreCase("current_sunset") == true){
+								Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+								value.setTypeface(typeface, Typeface.NORMAL); 
+								value.setText(Html.fromHtml("&#xf052;"+" "+loc_Value), TextView.BufferType.SPANNABLE);
+							}else if(state_key.equalsIgnoreCase("current_sunrise") == true){
+								Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+								value.setTypeface(typeface, Typeface.NORMAL); 
+								value.setText(Html.fromHtml("&#xf051;"+" "+loc_Value), TextView.BufferType.SPANNABLE);
+							}
 						}
 					}
 					//To have the icon colored as it has no state

@@ -26,7 +26,7 @@ public class Cache_management {
 		sharedparams= PreferenceManager.getDefaultSharedPreferences(context);
 		api_version=sharedparams.getFloat("API_VERSION", 0);
 		String urlUpdate="";
-		if (api_version<=0.6f){
+		if (api_version <=0.6f){
 			DomodroidDB db = new DomodroidDB(Tracer, context);
 			int[] listFeature_Association = db.requestAllFeatures_association();
 			Entity_Feature[] listFeature = db.requestFeatures();
@@ -60,7 +60,7 @@ public class Cache_management {
 				WU_widgetUpdate.init(Tracer, Context, sharedparams);
 				Tracer.d(mytag, "launching a widget update init");
 			}
-		}else if(api_version <=0.7f){
+		}else if(api_version >=0.7f){
 			urlUpdate = sharedparams.getString("URL","1.1.1.1")+"sensor/";
 			SharedPreferences.Editor prefEditor=sharedparams.edit();
 			prefEditor.putString("UPDATE_URL", urlUpdate);

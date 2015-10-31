@@ -25,11 +25,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import misc.tracerengine;
+
 import org.domogik.domodroid13.R;
+
+import database.Cache_management;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
  
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -41,16 +46,21 @@ import android.preference.PreferenceManager;
 
 public class Preference extends PreferenceActivity implements
     OnSharedPreferenceChangeListener {
+	private Preference myself = null;
+	
+	private static tracerengine Tracer = null;
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
 	private SharedPreferences.Editor prefEditor;
 	private SharedPreferences params;
+	private String mytag="Preference";
 	
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     PreferenceManager.setDefaultValues(this, R.xml.preference, false);
     addPreferencesFromResource(R.xml.preference);
-    
+    Tracer= tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this));
+    myself=this;
     // show the current value in the settings screen
     for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
       initSummary(getPreferenceScreen().getPreference(i));
@@ -92,6 +102,23 @@ public class Preference extends PreferenceActivity implements
   		prefEditor.putString("rinorIP", temp.replace("http://", ""));
   		prefEditor.commit();
   	}
+  	//refresh URL address
+  	prefEditor=params.edit();
+	String urlAccess = params.getString("rinor_IP","1.1.1.1")+":"+params.getString("rinorPort","40405")+params.getString("rinorPath","/");
+	urlAccess = urlAccess.replaceAll("[\r\n]+", "");
+	urlAccess = urlAccess.replaceAll(" ", "%20");
+	String format_urlAccess;
+	if(urlAccess.lastIndexOf("/")==urlAccess.toString().length()-1)
+		format_urlAccess = urlAccess;
+	else
+		format_urlAccess = urlAccess.concat("/");
+	prefEditor.putString("URL",format_urlAccess);
+	prefEditor.commit();
+	urlAccess = params.getString("URL","1.1.1.1");
+	//refresh cache address.
+  	Cache_management.checkcache(Tracer,myself);
+  	this.onContentChanged();
+  	  
   }
 
   private void initSummary(android.preference.Preference preference) {
@@ -134,6 +161,6 @@ public class Preference extends PreferenceActivity implements
 	            ex.printStackTrace();
 	        }
 	    }
-	    return res;
+	  return res;
 	}
 } 

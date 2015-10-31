@@ -53,8 +53,13 @@ public class Cache_management {
 			//TODO restart the cache-engine.
 			//Empty it then refill it with right value
 			WU_widgetUpdate = WidgetUpdate.getInstance();
-			if(WU_widgetUpdate != null)
+			if(WU_widgetUpdate != null){
 				WU_widgetUpdate.refreshNow();
+				Tracer.d(mytag, "launching a widget update refresh");
+			}else {
+				WU_widgetUpdate.init(Tracer, Context, sharedparams);
+				Tracer.d(mytag, "launching a widget update init");
+			}
 		}else if(api_version <=0.7f){
 			urlUpdate = sharedparams.getString("URL","1.1.1.1")+"sensor/";
 			SharedPreferences.Editor prefEditor=sharedparams.edit();

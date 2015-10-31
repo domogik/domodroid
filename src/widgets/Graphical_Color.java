@@ -135,7 +135,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			int update, 
 			int widgetSize,
 			int session_type,int place_id,String place_type) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context=context;
 		this.Tracer = Trac;
 		this.dev_id = dev_id;

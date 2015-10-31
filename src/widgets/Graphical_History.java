@@ -105,7 +105,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,final String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context = context;
 		this.Tracer = Trac;
 		this.state_key = state_key;

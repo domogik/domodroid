@@ -85,10 +85,10 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 	private String command_type;
 	
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
-			String address, String name, int id,int dev_id,String stat_key, 
+			String address, String name,String state_key, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
 			String model_id, int widgetSize,int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.address = address;
 		this.Tracer = Trac;
 		this.url = url;

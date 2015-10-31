@@ -61,10 +61,11 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 	private tracerengine Tracer = null;
 	public static FrameLayout container = null;
 	private static FrameLayout myself = null;
+	private static String state_key;
 	private String name_cam;
 	
-	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String state_key,String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context = context;
 		this.Tracer = Trac;
 		this.dev_id = dev_id;

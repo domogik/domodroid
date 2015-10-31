@@ -124,7 +124,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 			String type, String address,
 			final String state_key, String url,final String usage, int period, int update, 
 			int widgetSize, int session_type, final String parameters,String model_id,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
 		this.context = context;
 		this.dev_id = dev_id;

@@ -111,7 +111,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 			String state_key, String url, String usage, 
 			String parameters, String model_id, int update, 
 			int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
 		this.address = address;
 		this.url = url;

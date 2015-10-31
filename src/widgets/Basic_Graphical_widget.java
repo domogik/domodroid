@@ -71,8 +71,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 	private int place_id;
 	private String mytag;
 	private String name;
+	private String state_key;
 	
-	public Basic_Graphical_widget(Activity context,tracerengine Trac,int id,String name, String description, String icon, int widgetSize, int session_type,int place_id,String place_type,String mytag, FrameLayout container) {
+	public Basic_Graphical_widget(Activity context, tracerengine Trac,int id,String name, String state_key, String icon, int widgetSize, int session_type,int place_id, String place_type, String mytag, FrameLayout container) {
 		super(context);
 		this.Tracer=Trac;
 		this.context = context;
@@ -86,6 +87,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		this.container=container;
 		this.myself=this;
 		this.name=name;
+		this.state_key=state_key;
 		setOnLongClickListener(this);
 
 		//panel with border	
@@ -169,7 +171,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 	private void do_action(String action) {
 		if(action.equals("Rename")) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(context.getString(R.string.Rename_title)+" "+name);
+			alert.setTitle(context.getString(R.string.Rename_title)+" "+name+"-"+state_key);
 			alert.setMessage(R.string.Rename_message);
 			// Set an EditText view to get user input 
 			final EditText input = new EditText(getContext());
@@ -189,7 +191,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 				alert.show();
 		}else if (action.equals("Delete")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-			alert.setTitle(context.getString(R.string.Delete_feature_title)+" "+name);
+			alert.setTitle(context.getString(R.string.Delete_feature_title)+" "+name+"-"+state_key);
 			alert.setMessage(R.string.Delete_feature_message);
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
@@ -223,7 +225,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 				list_icon.add(fiilliste[i].toString());
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
-			list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+name);
+			list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+name+"-"+state_key);
 			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
 			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,

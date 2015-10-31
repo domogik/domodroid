@@ -107,7 +107,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, final String name, int id,int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context,Trac, id, name, "", usage, widgetSize, session_type, place_id, place_type,mytag,container);
+		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
 		this.context = context;
 		this.address = address;

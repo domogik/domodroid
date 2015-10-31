@@ -586,7 +586,7 @@ public class MapView extends View {
 				// Draw state and description
 				//TODO add missing datatype from 0.4
 				//String but carreful
-				//datetime
+				//datetime done
 				//ColorCII
 				//Char
 				//DayOfWeek
@@ -596,7 +596,7 @@ public class MapView extends View {
 				//HVACHeat
 				//UPSEvent
 				//UPSState
-				if(featureMap.getValue_type().equals("string") && (! featureMap.getState_key().equals("color"))){
+				if((featureMap.getValue_type().equals("string") && (! featureMap.getState_key().equals("color")))||featureMap.getValue_type().equals("datetime")){
 					if(! featureMap.getDevice_feature_model_id().contains("camera")) {
 						String value;
 						for(int j=1;j<5;j++){
@@ -885,7 +885,7 @@ public class MapView extends View {
 			panel_widget.addView(variator);}
 		else if (feature.getValue_type().equals("trigger")) {
 			trigger = new Graphical_Trigger(Tracer, context,Address,
-					label,Id,DevId,State_key,URL,iconName,
+					State_key,label,Id,DevId,State_key,URL,iconName,
 					parameters,device_type_id,widgetSize, mytype,0,zone,params);
 			trigger.container=(FrameLayout) panel_widget;
 			panel_widget.addView(trigger);}
@@ -938,7 +938,7 @@ public class MapView extends View {
 			}else if(feature.getDevice_feature_model_id().contains("camera")) {
 				cam = new Graphical_Cam(Tracer, context,
 					Id,DevId,label,
-					Address,iconName,widgetSize, mytype,0,zone);
+					State_key,Address,iconName,widgetSize, mytype,0,zone);
 				panel_widget.addView(cam);}
 			else {
 				info = new Graphical_Info(Tracer, context,Id,DevId,label,

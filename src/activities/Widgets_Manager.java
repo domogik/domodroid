@@ -138,8 +138,19 @@ public class Widgets_Manager {
 			String type = model[1];
 			
 			Tracer.i(mytag, "Call to process device : "+DevId+" Address : "+Address+" Value_type : "+Value_type+" Label : "+label+" Key : "+State_key);
-			//TODO adapt to 0.4
-			if (Value_type.equals("binary")||Value_type.equals("bool")) {
+			//TODO add missing datatype from 0.4
+			//String but carreful
+			//datetime done
+			//ColorCII
+			//Char
+			//DayOfWeek
+			//HVACVent
+			//HVACFan
+			//HVACMode
+			//HVACHeat
+			//UPSEvent
+			//UPSState
+			if (Value_type.equals("binary")) {
 				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 					//ignore it : it'll have another device for Color, displaying the switch !)
 				} else {
@@ -160,7 +171,7 @@ public class Widgets_Manager {
 						Tracer.i(mytag,"   ==> Graphical_Binary");
 					}
 				}
-			} else if (Value_type.equals("boolean")) {
+			} else if (Value_type.equals("boolean")||Value_type.equals("bool")) {
 				bool = new Graphical_Boolean(Tracer, context,Address,label,
 						Id,DevId,State_key,iconName,parameters,device_type_id,
 						update_timer,widgetSize, mytype,id,zone,params);
@@ -176,7 +187,7 @@ public class Widgets_Manager {
 				Tracer.i(mytag,"   ==> Graphical_Range");
 			} else if (Value_type.equals("trigger")) {
 				trigger = new Graphical_Trigger(Tracer, context,Address,label,
-						Id,DevId,State_key,URL,iconName,parameters,device_type_id,
+						State_key,Id,DevId,State_key,URL,iconName,parameters,device_type_id,
 						widgetSize, mytype,id,zone,params);
 				trigger.container=tmpPan;
 				tmpPan.addView(trigger);
@@ -225,7 +236,7 @@ public class Widgets_Manager {
 				list.container=tmpPan;
 				tmpPan.addView(list);
 				Tracer.i(mytag,"   ==> Graphical_List");
-			} else if(Value_type.equals("string")){
+			} else if(Value_type.equals("string")||Value_type.equals("datetime")){
 				//New widget for callerID
 				if(feature.getDevice_feature_model_id().contains("call")) {
 					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
@@ -237,7 +248,7 @@ public class Widgets_Manager {
 					Tracer.i(mytag,"   ==> Graphical_history");
 				}else if(feature.getDevice_feature_model_id().contains("camera")) {
 					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
-							Address,iconName,widgetSize, mytype,id,zone);
+							State_key,Address,iconName,widgetSize, mytype,id,zone);
 					cam.container=tmpPan;
 					tmpPan.addView(cam);
 					Tracer.i(mytag,"   ==> Graphical_Cam");

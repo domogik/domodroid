@@ -213,9 +213,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 						Tracer.d(mytag,"sync dialog requires a refresh !");
 						reload = true;	// Sync being done, consider shared prefs are OK
 						VG_parent.removeAllViews();
-						if(WU_widgetUpdate != null) {
-							WU_widgetUpdate.resync();
-						} else {
+						if(WU_widgetUpdate == null) {
 							Tracer.i(mytag,"OnCreate WidgetUpdate is null startCacheengine!");
 							startCacheEngine();
 						}

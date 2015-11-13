@@ -22,6 +22,7 @@
     $ 1.4-DEV
       % Version 10
       _ 2015-xx-xx
+      * Close #43 old problem when re-sync make domodroid freeze
       * Correct some bugs (map modifiable by longclic but disable in option)
       * Command working in 0.4 for DT_Trigger with wol plugin at least
       * Add the Changelog (also in about view)

@@ -24,6 +24,7 @@
       _ 2015-xx-xx
       * Add the Changelog (also in about view)
       * Close #43 old problem when re-sync make domodroid freeze
+      * Close #42 Change Icon also work for map widgets
       * Close #41 Achartengine Crash if no value in db
       * Correct some bugs (map modifiable by longclic but disable in option)
       * Command working in 0.4 for DT_Trigger with wol plugin at least

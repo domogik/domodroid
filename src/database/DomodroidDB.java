@@ -619,7 +619,20 @@ public class DomodroidDB {
 			//create the Entity_Map with all parameter needed on map for each widget present in the current map
 			//careful has it his an innerjoin there is one more column.
 				curs.moveToPosition(i);
-				features[i]=new Entity_Map(curs.getString(0),curs.getInt(1),curs.getInt(2),curs.getString(3),curs.getString(4),curs.getString(5),
+				int Id=curs.getInt(1);
+				String device_usage_id=curs.getString(3);
+				String iconName = "unknow";
+				try {
+					iconName = this.requestIcons(Id, "feature").getValue().toString();
+					Tracer.i(mytag, "icon " + iconName );
+				} catch (Exception e) {
+					//e.printStackTrace();
+					Tracer.i(mytag, "NO icon for device id" + Id );
+				}
+				if (iconName=="unknow")
+					iconName=device_usage_id;
+				
+				features[i]=new Entity_Map(curs.getString(0),Id,curs.getInt(2),iconName,curs.getString(4),curs.getString(5),
 						curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));
 				}
 		} catch (Exception e) {

@@ -22,10 +22,11 @@
     $ 1.4-DEV
       % Version 10
       _ 2015-xx-xx
+      * Add the Changelog (also in about view)
       * Close #43 old problem when re-sync make domodroid freeze
+      * Close #41 Achartengine Crash if no value in db
       * Correct some bugs (map modifiable by longclic but disable in option)
       * Command working in 0.4 for DT_Trigger with wol plugin at least
-      * Add the Changelog (also in about view)
       * Add name of current element it alert title box
       * Improve MQ option by getting settings from rest at sync
       * Close #2090 bug with MQ address

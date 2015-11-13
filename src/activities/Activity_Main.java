@@ -433,7 +433,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 					Tracer.i(mytag+".onResume","Widget update is not null so wakeup widget engine!");
 					WU_widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
 				}
-				//end_of_init();	//all client widgets will be re-created
 			}
 		if(end_of_init_requested)
 			end_of_init();

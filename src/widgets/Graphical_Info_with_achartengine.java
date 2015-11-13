@@ -480,12 +480,17 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		}
 		
 		JSONArray itemArray=null;
-		JSONArray valueArray=null;
+		JSONArray valueArray=new JSONArray();;
 		if(api_version<=0.6f){
 			itemArray = json_GraphValues.getJSONArray("stats");
 			valueArray = itemArray.getJSONObject(0).getJSONArray("values");
 		}else if(api_version==0.7f){
-			valueArray = json_GraphValues.getJSONArray("values");
+			try{
+				valueArray = json_GraphValues.getJSONArray("values");
+			} catch (Exception e) {
+				//return null;
+				Tracer.e(mytag,"Error with json value");
+			}
 		}
 		
 		j=0;

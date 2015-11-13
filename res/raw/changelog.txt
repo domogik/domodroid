@@ -21,7 +21,7 @@
   <body>
     $ 1.4-DEV
       % Version 10
-      _ 2015-xx-xx
+      _ 2015-11-13
       * Add the Changelog (also in about view)
       * Close #43 old problem when re-sync make domodroid freeze
       * Close #42 Change Icon also work for map widgets

@@ -358,6 +358,15 @@ public class Graphics_Manager {
 		//TODO adapt for 0.4
 		//information are in json device_types of each plugin
 		//BLUEZ "available"
+		//CID "callerid"
+		if (usage.equals("callerid"))
+			usage="telephony";
+		//DAIKCODE "set_power", "set_setpoint", "set_mode", "set_vertical_swing", "set_horizontal_swing",
+		//"set_speedfan", "set_powerfull", "set_silent", "set_home_leave", "set_sensor", 
+		//"set_start_time", "set_stop_time", "power", "vertical_swing", "horizontal_swing", "powerfull"
+		//"silent", "home_leave", "sensor", "setpoint", "setmode", "speedfan", "starttime", "stoptime"
+		if (usage.contains("swing")||usage.contains("fan"))
+			usage="ventilation";
 		//DISKFREE "get_total_space", "get_percent_used", "get_free_space", "get_used_space"
 		if (usage.equals("get_total_space")||usage.equals("get_percent_used")
 				||usage.equals("get_free_space")||usage.equals("get_used_space"))
@@ -365,10 +374,17 @@ public class Graphics_Manager {
 		//GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
 		//GEOLOC "position_degrees"
 		//IPX800 "state", "input", "count"
+		//IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
+		//NOTIFY "msg_status", "error_send"
+		//NUTSERVE "test_battery_start", "test_battery_start_deep", "ups_status", "ups_event", "input_voltage", "output_voltage"
+		//"battery_voltage", "battery_charge", "ack_command",
 		//ONEWIRE "temperature", "humidity", "serial", "gpio", 
 		//PING "ping"
 		if (usage.equals("ping"))
 			usage="computer";
+		//SCRIPT "sensor_script_action", "sensor_script_info", 
+		if (usage.equals("sensor_script_action")||usage.equals("sensor_script_info"))
+			usage="scene";		
 		//TELEINFO "adco", "optarif", "isousc", "base", "iinst", "imax", "motdetat", "hchc", "hchp"
 		//"ptec", "papp", "hhphc", "iinst1", "iinst2", "iinst3", "imax1", "imax2", "imax3", "adps"
 		//"ejphn", "ejphpm", "pejp", "bbrhcjb", "bbrhpjb", "bbrhcjw", "bbrhpjw", "bbrhcjr", "bbrhpjr"
@@ -396,6 +412,8 @@ public class Graphics_Manager {
 		//"forecast_4_day","forecast_4_temperature_high", "forecast_4_temperature_low","forecast_4_condition_text","forecast_4_condition_code"
 		if (usage.contains("temperature")||usage.equals("current_feels_like"))
 			usage="temperature";
+		if (usage.contains("humidity"))
+			usage="water";		
 		//TODO change this on with a sun up and down icon
 		if (usage.contains("current_sunrise")||usage.equals("current_sunset"))
 			usage="cron";

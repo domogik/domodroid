@@ -12,14 +12,14 @@ public class Cache_Feature_Element {
 	public String skey = null;
 	public String Value = null;
 	public ArrayList<Entity_client> clients_list = null;
-	
+
 	public Cache_Feature_Element(int devid, String skey,String value) {
 		this.DevId = devid;
 		this.skey = skey;
 		this.Value = value;
 		clients_list = null;
 	}
-	
+
 	public int add_client(Entity_client new_client) {
 		// Check if it's for the good feature
 		if( (new_client.getDevId() == DevId) && (new_client.getskey().equals(skey))) {
@@ -65,14 +65,14 @@ public class Cache_Feature_Element {
 	public ArrayList<Entity_client> clone_clients_list() {
 		ArrayList<Entity_client> result = new ArrayList<Entity_client>();
 		if(clients_list != null) {
-		    for (int i = 0; i < clients_list.size(); i++) {
-		        result.add(clients_list.get(i));
-		    }
-		    return result;
+			for (int i = 0; i < clients_list.size(); i++) {
+				result.add(clients_list.get(i));
+			}
+			return result;
 		} else {
 			return null;
 		}
-	    
-		
+
+
 	}
 }

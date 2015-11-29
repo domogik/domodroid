@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 
 public class Entity_Feature_Association {
-	
+
 	private int place_id;
 	private String place_type;
 	private int device_feature_id;
@@ -31,8 +31,8 @@ public class Entity_Feature_Association {
 	private String feat_model_id;
 	private int feat_id;
 	private int feat_device_id;
-	
-	
+
+
 	public Entity_Feature_Association(int place_id,String place_type,int device_feature_id,int id,String device_feature) throws JSONException{
 		this.place_id=place_id;
 		this.place_type=place_type;

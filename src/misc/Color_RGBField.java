@@ -33,9 +33,9 @@ public class Color_RGBField extends View {
 	protected void onDraw(Canvas canvas) {
 
 		mPaint.setStrokeWidth(16);
-		
+
 		float[] hsv4 = {0,0,0};
-		
+
 		for (int x=0; x<32; x++)
 		{
 			float[] hsv5 = {mCurrentHue,(float)(x+1)/32f,1};

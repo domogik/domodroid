@@ -9,7 +9,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 
 public class Gradients_Manager {
-	
+
 	public static Drawable LoadDrawable(final String profile, final int height){
 		final int[] gradient_white={
 				Color.parseColor("#88999999"),
@@ -35,17 +35,17 @@ public class Gradients_Manager {
 				Color.parseColor("#000000"),
 				Color.parseColor("#FF222222"),
 				Color.parseColor("#00222222")};
-		
-		
-		
+
+
+
 		ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory() {
-				
+
 			@Override
 			public Shader resize(int width, int height) {
 				final float[] gradient_white_params={0, ((float)5/(float)height), ((float)5/(float)height), 1 };
 				final float[] gradient_black_params={0, ((float)5/(float)height), ((float)5/(float)height), 0.5f, 0.5f, 1 };
 				final float[] gradient_title_params={0, 0.85f, 0.85f, 1 };
-				
+
 				LinearGradient lg = null;
 				if(profile.equals("white")){
 					lg = new LinearGradient(0, 0, 0, height,gradient_white,gradient_white_params,Shader.TileMode.REPEAT);
@@ -59,7 +59,7 @@ public class Gradients_Manager {
 				return lg;
 			}
 		};
-		
+
 		PaintDrawable p = new PaintDrawable();
 		p.setDither(true);
 		p.setShape(new RectShape());

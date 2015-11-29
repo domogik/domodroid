@@ -78,10 +78,10 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private Date time_end=new Date();
 	public TextView dates = null;
 	private int period_type = 0;		// 0 = period defined by settings
-										// 1 = 1 day
-										// 8 = 1 week
-										// 30 = 1 month
-										// 365 = 1 year
+	// 1 = 1 day
+	// 8 = 1 week
+	// 30 = 1 month
+	// 365 = 1 year
 	private int sav_period;
 	private Button Prev = null;
 	private Button Next = null;
@@ -89,7 +89,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private Button Month = null;
 	private Button Week = null;
 	private Button Day = null;
-	
+
 	private String step="hour";
 	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
 	private long currentTimestamp = 0;
@@ -103,7 +103,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private float size15;
 	private float size10;
 	private float api_version;
-	
+
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params){
 		super(context);
@@ -111,9 +111,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		this.Tracer=Trac;
 		this.params = params;
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		values = new Vector<Vector<Float>>();
 		activate=true;
 		this.myself=this;
@@ -176,7 +176,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		updateTimer();
 	}
 	private void force_aspect(int which) {
-		
+
 		if(Prev != null)
 			if(which != -1)
 				Prev.setTypeface(null, Typeface.NORMAL);
@@ -208,7 +208,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			else
 				Day.setTypeface(null, Typeface.BOLD);
 	}
-	
+
 	public void  onWindowVisibilityChanged (int visibility) {
 		Tracer.i(mytag,"Visibility changed to : "+visibility);
 		if(visibility == View.VISIBLE) {
@@ -217,7 +217,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		} else
 			activate=false;
 	}
-	
+
 	@Override 
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -227,15 +227,15 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		gridStopY = size15;
 		gridOffset = size15;
 		valueOffset = size10;
-		
+
 
 		buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
 		text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);		
 		can=new Canvas(buffer);
 		can2=new Canvas(text);
-		
+
 		drawMessage();
-		
+
 		try{	
 			drawGrid();
 			drawValue();
@@ -317,7 +317,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		String top_txt = "";
 		int rythm = 1;
 		int curr = 0;
-		
+
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
@@ -442,7 +442,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			int bottom_val2 = 0;
 			int hour = values.get(i+1).get(4).intValue();
 			String bottom_txt = "";
-			
+
 			if( limit == 6) {
 				//day or week
 				rythm = 1;
@@ -463,15 +463,15 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					rythm = 2;
 				else
 					rythm = 3;		//full year
-				
+
 				bottom_val1 = values.get(i).get(0).intValue();	//year
 				bottom_val2 = values.get(i+1).get(2).intValue(); // week
 				String tmp = Integer.toString(bottom_val1);
 				tmp = tmp.substring(2);	//Only keep last 2 digits
 				bottom_txt = tmp+"/"+Integer.toString(bottom_val2);
 			}
-			
-			
+
+
 			// Intermediate points
 			if(values.get(i).get(0).intValue() == 0 || values.get(i+1).get(0).intValue() == 0){
 				paint.setColor(Color.RED);
@@ -491,7 +491,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					gridStartX+(step*(i+1)),
 					(gridStartY-gridOffset)-((values.get(i+1).get(5))-minf)*scale_values, 
 					paint);
-			
+
 			//text on X Axis
 			if((curr == 0) || (curr == rythm )) { 
 				if(hour == 0){
@@ -509,7 +509,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	}
 
 	public void updateTimer() {
-		
+
 		TimerTask doAsynchronousTask;
 		final Timer timer = new Timer();
 		doAsynchronousTask = new TimerTask() {
@@ -517,7 +517,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			@Override
 			public void run() {
 				Runnable myTH = new Runnable() {
-				//handler.post(new Runnable() {	//Doume : to avoid Exception on ICS
+					//handler.post(new Runnable() {	//Doume : to avoid Exception on ICS
 					public void run() {
 						try {
 							if(activate){
@@ -538,9 +538,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				//Tracer.i(mytag,"TimerTask.run : Queuing Runnable for Device : "+dev_id);
 				try {
 					handler.post(myTH);		//Doume : to avoid Exception on ICS
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			} //TimerTask Run method
 		}; //TimerTask
 		//timer.schedule(doAsynchronousTask, 0, update*10000);
@@ -556,26 +556,26 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		protected Void doInBackground(Void... params) {
 			if( ! activate)
 				return null;
-			
+
 			loaded=false;
 			try {
 				avgf=0;
 				values.clear();
 				currentTimestamp=time_end.getTime()/1000;
 				startTimestamp=time_start.getTime()/1000;
-				
+
 				JSONObject json_GraphValues = null;
 				try {
 					if(api_version<=0.6f){
 						//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 						json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+
-						state_key+
-						"/from/"+
-						startTimestamp+
-						"/to/"+
-						currentTimestamp+
-						"/interval/"+step+"/selector/avg",login,password);
-					}else if(api_version==0.7f){
+								state_key+
+								"/from/"+
+								startTimestamp+
+								"/to/"+
+								currentTimestamp+
+								"/interval/"+step+"/selector/avg",login,password);
+					}else if(api_version>=0.7f){
 						//Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 						//Don't forget old "dev_id"+"state_key" is replaced by "id"
 						json_GraphValues = Rest_com.connect_jsonobject(url+"sensorhistory/id/"+id+
@@ -591,7 +591,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					return null;
 				}
 				//Tracer.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
-				
+
 				//TODO
 				//replace json_GraphValues.getJSONArray("stats") != null by somthing else as it may crash on a 0.4.
 				//if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
@@ -607,21 +607,21 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				if(api_version<=0.6f){
 					itemArray = json_GraphValues.getJSONArray("stats");
 					valueArray = itemArray.getJSONObject(0).getJSONArray("values");
-				}else if(api_version==0.7f){
+				}else if(api_version>=0.7f){
 					valueArray = json_GraphValues.getJSONArray("values");
 				}
-				
+
 				//minf=(float)valueArray.getJSONArray(0).getDouble(limit-1);
 				maxf=minf=0;
 				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : array size "+valueArray.length());
 
 				for (int i =0; i < valueArray.length(); i++){
 					// Create a vector with all entry components
-					
+
 					Vector<Float> vect = new Vector<Float>();
 					Double real_val = valueArray.getJSONArray(i).getDouble(limit-1);	// Get the real 'value'
 					real_val=round(real_val, 2);
-					
+
 					if(limit == 6) {
 						// stats per hour return [ year, month, week, day, hour, value]
 						for (int j=0; j < 6; j++){
@@ -654,7 +654,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 					values.add(vect);
 					if(minf == 0)
 						minf=real_val.floatValue();
-					
+
 					avgf+=real_val;	// Get the real 'value'
 					if(real_val > maxf){  
 						maxf = real_val.floatValue();  
@@ -671,7 +671,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 						int loc_year = 0;
 						int loc_month = 0;
 						float loc_value = 0;
-						
+
 						if(limit == 6) {
 							// range between 1 to 8 days (average per hour)
 							loc_year = (int)valueArray.getJSONArray(i).getDouble(0);
@@ -758,11 +758,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
 							} else {
 								// next day being less than current day, month has changed !
 								//Tracer.d(mytag,"Case day 2 ");
-								
+
 								//if((loc_day == 31) && (loc_day_next != 0) ){
 								if( loc_day_next != 0 ){
 									//Tracer.d(mytag,"Case day 2a ");
-									
+
 									for (int k=0; k < loc_day_next ; k++){
 										Vector<Float> vect2 = new Vector<Float>();
 										vect2.addElement(0f);
@@ -774,7 +774,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 										vect2.addElement(loc_value);		//value
 										values.add(vect2);
 										//Tracer.d(mytag,"Case day 2a with k="+k);
-										
+
 										avgf+=loc_value;	//value
 									}
 								}
@@ -837,7 +837,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			}
 			avgf=avgf/values.size();
 			avgf=Round(avgf, 2);
-			
+
 			gridStartX=Float.toString(maxf).length()*7;
 			if(Float.toString(minf).length()*7 > gridStartX)
 				gridStartX=Float.toString(minf).length()*7;
@@ -849,11 +849,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			return null;
 		}
 	}
-	
+
 	private void compute_period() {
 		long duration = 0; 
 		//Calendar cal = Calendar.getInstance(); // The 'now' time
-		
+
 		switch(period_type ) {
 		case -1 :
 			//user requires the 'Prev' period
@@ -865,7 +865,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				time_end.setTime(new_end);
 				new_end -= duration;
 				time_start.setTime(new_end);
-				
+
 			}
 			//Tracer.i(mytag,"type prev on "+period_type+" Begin at :"+sdf.format(time_start)+"  End at : "+sdf.format(time_end));
 			break;
@@ -904,7 +904,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		}
 		// time_start & time_end are set....
 		display_dates();
-		
+
 		if(period_type < 9) {
 			step="hour";
 			limit=6;
@@ -915,24 +915,24 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			step="week";
 			limit=3;
 		}
-		
-	}
-	
-	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    BigDecimal bd = new BigDecimal(value);
-	    bd = bd.setScale(places, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
 	}
-	
+
+	public static double round(double value, int places) {
+		if (places < 0) throw new IllegalArgumentException();
+
+		BigDecimal bd = new BigDecimal(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
+	}
+
 	public static float Round(float Rval, int Rpl) {
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
-	
+
 
 	private void display_dates() {
 		if(dates != null) {

@@ -102,8 +102,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 	private int session_type;
 	private String command_id = null;
 	private String command_type = null;
-	
-	
+
+
 	public Graphical_Binary(tracerengine Trac, 
 			Activity context, String address, final String name, int id,int dev_id,String state_key, String url, String usage, 
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
@@ -121,19 +121,20 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		this.place_id= place_id;
 		this.place_type= place_type;
 		this.params = params;
-		
+
 		mytag = "Graphical_Binary("+dev_id+")";
 		//get parameters		
-		
+
 		try {
 			jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-			value0 = jparam.getString("value0");
 			value1 = jparam.getString("value1");
+			value0 = jparam.getString("value0");
+
 		} catch (Exception e) {
 			value0 = "0";
 			value1 = "1";
 		}
-		
+
 		if (usage.equals("light")){
 			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
 			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
@@ -144,18 +145,20 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 			this.Value_0 = value0;
 			this.Value_1 = value1;		
 		}
-		
+
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
-		
+
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
+		if(api_version>=0.7f)
+			state.setVisibility(INVISIBLE);
+	
 
-		
 		//first seekbar on/off
 		seekBarOnOff=new SeekBar(context);
 		seekBarOnOff.setProgress(0);
@@ -170,20 +173,20 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
 		super.LL_infoPan.addView(state);
 		super.LL_featurePan.addView(seekBarOnOff);
-		
+
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-    	if (api_version>=0.7f){
-    		try {
-    			command_id = jparam.getString("command_id");
-    			command_type= jparam.getString("command_type");
-    		} catch (JSONException e) {
-    			Tracer.d(mytag, "No command_id for this device");
-    			seekBarOnOff.setEnabled(false);
-    		}	
-    	}
-    	handler = new Handler() {
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+		if (api_version>=0.7f){
+			try {
+				command_id = jparam.getString("command_id");
+				command_type= jparam.getString("command_type");
+			} catch (JSONException e) {
+				Tracer.d(mytag, "No command_id for this device");
+				seekBarOnOff.setEnabled(false);
+			}	
+		}
+		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if(activate) {
@@ -250,7 +253,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 								} catch (Throwable t) {}	//kill the handler thread itself
 							}
 						}
-						
+
 					} catch (Exception e) {
 						Tracer.e(mytag, "Handler error for device "+name);
 						e.printStackTrace();
@@ -267,15 +270,15 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
@@ -306,48 +309,61 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
 	public void onStopTrackingTouch(SeekBar arg0) {
 		if(arg0.getProgress()<20){
-			state_progress = value0;
+			if(api_version>=0.7f){
+				state_progress = "0";
+			}else{
+				state_progress = value0;
+			}
 			arg0.setProgress(0);
 		}else{
-			state_progress = value1;
+			if(api_version>=0.7f){
+				state_progress = "1";
+			}else{
+				state_progress = value1;
+			}
 			arg0.setProgress(40);
 		}
 		new CommandeThread().execute();
 		touching=false;
 	}
-	
+
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			updating=3;
-			String Url2send;
-			if(api_version>=0.7f){
-				Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
-			}else{
-				Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
-			}
-			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
-			JSONObject json_Ack = null;
-			try {
-				json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
-			} catch (Exception e) {
-				Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-			}
-			try {
-				Boolean ack = JSONParser.Ack(json_Ack);
-				if(ack==false){
-					try{
-						Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+			Handler temphandler =  new Handler(context.getMainLooper());
+			temphandler.post( new Runnable(){
+				public void run(){
+					updating=3;
+					String Url2send;
+					if(api_version>=0.7f){
+						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
+					}else{
+						Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
+					}
+					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+					JSONObject json_Ack = null;
+					try {
+						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
 					} catch (Exception e) {
 						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
 					}
-					handler.sendEmptyMessage(2);
+					try {
+						Boolean ack = JSONParser.Ack(json_Ack);
+						if(ack==false){
+							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
+							handler.sendEmptyMessage(2);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+					);
 			return null;
+
 		}
 	}
 

@@ -60,7 +60,7 @@ public class JSONParser{
 		JSONArray itemArray = json.getJSONArray("room");
 		listRoom = new Entity_Room[itemArray.length()];
 		int area_id;
-		
+
 		//parsing JSON room list
 		for (int i =0; i < itemArray.length(); i++){
 			if(itemArray.getJSONObject(i).getString("area_id").equals(""))area_id=0;
@@ -128,9 +128,9 @@ public class JSONParser{
 				return true;
 			}
 		}	catch (Exception e) {
-		// TODO: handle exception
+			// TODO: handle exception
 			return false;
-	}
+		}
 
 	}
 
@@ -146,8 +146,8 @@ public class JSONParser{
 		return temp;
 	}
 
-	
-	
+
+
 	//Parse JSON object and create list of ICON-------------------------
 	public static Entity_Icon[] ListIcon(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("ui_config");

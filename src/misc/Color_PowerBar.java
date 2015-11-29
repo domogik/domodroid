@@ -36,7 +36,7 @@ public class Color_PowerBar extends View {
 			mHueBarColors[index] = Color.rgb((int) i, (int) i, (int) i);
 			index++;
 		}
-		
+
 		// Initializes the Paint that will draw the View
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mPaint.setTextAlign(Paint.Align.CENTER);
@@ -116,7 +116,7 @@ public class Color_PowerBar extends View {
 		mPaint.setTextSize(15);
 		mPaint.setStrokeWidth(0);
 		canvas.drawText("Luminosity", 12, 15, mPaint);
-		
+
 		int translatedHue = 255-(int)(mCurrentHue*255/360);
 		// Display all the colors of the hue bar with lines
 		for (int x=0; x<256; x++)
@@ -141,8 +141,8 @@ public class Color_PowerBar extends View {
 		if (event.getAction() != MotionEvent.ACTION_MOVE) return true;
 		float x = event.getX();
 		float y = event.getY();
-		
-		
+
+
 
 		// If the touch event is located in the hue bar
 		if (x > 0 && x < 256 && y > 0 && y < 40)

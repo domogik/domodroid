@@ -36,8 +36,8 @@ public class Entity_Feature{
 	private String value_type;
 	private String currentState;
 	private int state;
-	
-	
+
+
 	public Entity_Feature(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) throws JSONException{
 		this.device_feature_model_id = device_feature_model_id;
 		this.id = id;

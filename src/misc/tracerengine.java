@@ -23,20 +23,20 @@ public class tracerengine {
 	private static Boolean	Error = false;
 	private static Boolean	Verbose = false;	
 	private static Boolean	Warning = false;
-	
+
 	private static SharedPreferences settings = null;
 	private static SharedPreferences.Editor prefEditor;
-	
+
 	/*
 	 * It's not elegant, but Tracer will store the reference to widgetupdate instance,
 	 * and will offer to all users using Tracer to also retrieve instance
 	 * of state engine.....
 	 */
 	private static WidgetUpdate state_engine = null;
-	
+
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static FileWriter txtFile = null;
-	
+
 	public Boolean DBEngine_running = false;
 	public Boolean force_Main = false;
 	public Boolean Map_as_main = false;
@@ -45,8 +45,8 @@ public class tracerengine {
 	 * Only one instance will be started (by Main) and used by all other components
 	 */
 	/*******************************************************************************
-	*		Internal Constructor
-	*******************************************************************************/
+	 *		Internal Constructor
+	 *******************************************************************************/
 	private tracerengine()
 	{
 		super();
@@ -62,7 +62,7 @@ public class tracerengine {
 		settings = params;
 		set_profile(params);
 		return instance;
-		
+
 	}
 	public static tracerengine getInstance() {
 		if(instance == null) {
@@ -70,18 +70,18 @@ public class tracerengine {
 			instance = new tracerengine();
 		}
 		return instance;
-		
+
 	}
 	public void close() { 
 		if(txtFile != null) {
 			try {
 				txtFile.close();
 			} catch (Exception e) {}
-			
+
 			txtFile = null;
 		}
 	}
-	
+
 	public void d(String tag, String msg) {
 		if(Debug)
 			choose_log(0,tag,msg);
@@ -109,7 +109,7 @@ public class tracerengine {
 	public static void set_profile( SharedPreferences params) {
 		settings = params;
 		get_settings();
-		
+
 	}
 	public static void refresh_settings() {
 		if(settings != null ) {
@@ -119,15 +119,15 @@ public class tracerengine {
 			to_txtFile = settings.getBoolean("TEXTLOG", false);
 			to_screen = settings.getBoolean("SCREENLOG", false);
 			txtappend = settings.getBoolean("LOGAPPEND", false);
-			
+
 			Debug = settings.getBoolean("LOG_DEBUG", true);
 			Info = settings.getBoolean("LOG_INFO", true);
 			Error = settings.getBoolean("LOG_ERROR", true);
 			Verbose = settings.getBoolean("LOG_VERBOSE", true);
 			Warning = settings.getBoolean("LOG_WARNING", true);
-			
+
 		}
-		
+
 	}
 	private static void get_settings() {
 		if(settings != null) {
@@ -142,7 +142,7 @@ public class tracerengine {
 						// If no filename given, no log to file, nor in append !
 						to_txtFile = false;
 						txtappend=false;
-						
+
 					} else {
 						// file path given : try to open it....
 						try {
@@ -153,14 +153,14 @@ public class tracerengine {
 							to_txtFile = false;
 							txtappend=false;
 						}
-						
+
 					}
 				} 
 				prefEditor=settings.edit();
 				prefEditor.putBoolean("LOGCHANGED", false);
 				prefEditor.putBoolean("TEXTLOG", to_txtFile);	//In case open fails.... don't retry till next change !
 				prefEditor.commit();
-				
+
 			}
 			// Nothing changed
 		}
@@ -169,7 +169,7 @@ public class tracerengine {
 	 * all modes use this common method, to decide wich kind of logging is configured
 	 */
 	private static void choose_log(int type, String tag, String msg) {
-		
+
 		// if needed, log to Android
 		if(to_Android)
 			syslog(type,tag,msg);
@@ -184,7 +184,7 @@ public class tracerengine {
 	 * TODO Method writing messages to screen view
 	 */
 	private static void screenlog(int type,String tag,String msg) {
-		
+
 	}
 	/*
 	 * Method writing messages to text file
@@ -195,10 +195,10 @@ public class tracerengine {
 			String typeC = " ";
 			String dateS = sdf.format(now);
 			String tagS = String.format("%-26s", tag);
-			
-			 int tid = android.os.Process.myTid();
-			 String tids = Integer.toString(tid);
-			 /*
+
+			int tid = android.os.Process.myTid();
+			String tids = Integer.toString(tid);
+			/*
 			 int pid = android.os.Process.myPid();
 			 String pids = Integer.toString(pid);
 			 */ 

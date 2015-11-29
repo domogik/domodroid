@@ -137,7 +137,7 @@ public class Color_HueBar extends View {
 		mPaint.setStrokeWidth(0);
 		canvas.drawText("Color Selector", 12, 15, mPaint);
 
-		
+
 		int translatedHue = 255-(int)(mCurrentHue*255/360);
 		// Display all the colors of the hue bar with lines
 		for (int x=0; x<256; x++)

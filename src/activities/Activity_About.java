@@ -23,6 +23,7 @@ package activities;
 
 
 import misc.changelog;
+import misc.tracerengine;
 
 import org.domogik.domodroid13.R;
 import android.app.Activity;
@@ -41,22 +42,23 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class Activity_About extends Activity implements OnClickListener{
-    protected PowerManager.WakeLock mWakeLock;
-    private String pn = "";
-    private String mytag="Activity_About";
-    private Button showchangelog;
-	
+	protected PowerManager.WakeLock mWakeLock;
+	private String pn = "";
+	private String mytag="Activity_About";
+	private Button showchangelog;
+	private tracerengine Tracer = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pn = getPackageName();
-		
+
 		setContentView(R.layout.activity_about);
 		//display domogik version
 		TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
-		
+
 		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
-		
+		Tracer = tracerengine.getInstance(SP_params);
 		TV_domogikversionText.setText("Domogik version: "+SP_params.getString("DOMOGIK-VERSION", ""));
 		//display domodroid version
 		TextView TV_versionText = (TextView) findViewById(R.id.versionText);
@@ -70,26 +72,26 @@ public class Activity_About extends Activity implements OnClickListener{
 				vcs=Integer.toString(vc);
 			TV_versionText.setText(pn+" "+vns+" "+getString(R.string.version)+"_"+vcs);
 		}
-		
+
 		//titlebar
 		final FrameLayout FL_titlebar = (FrameLayout) findViewById(R.id.TitleBar);
 		FL_titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
 		showchangelog = (Button) findViewById(R.id.showchangelog);
 		showchangelog.setTag("showchangelog");
 		showchangelog.setOnClickListener(this);
-		
+
 		//power management
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-        this.mWakeLock.acquire();
-    }
-	
-	@Override
-    public void onDestroy() {
-            this.mWakeLock.release();
-            super.onDestroy();
+		this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+		this.mWakeLock.acquire();
 	}
-	
+
+	@Override
+	public void onDestroy() {
+		this.mWakeLock.release();
+		super.onDestroy();
+	}
+
 	private String getVersionName() {
 		//set a fake version
 		String version = "??";
@@ -121,6 +123,10 @@ public class Activity_About extends Activity implements OnClickListener{
 		changelog changelog = new changelog(this);
 		/** When OK Button is clicked, dismiss the dialog */
 		if (v == showchangelog)
-			changelog.getFullLogDialog().show();
+			try{
+				changelog.getFullLogDialog().show();
+			} catch (Exception e) {
+				Tracer.d(mytag,e.toString());
+			}
 	}
 }

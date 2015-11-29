@@ -93,7 +93,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Animation animation2;
 	private TextView menu_white;
 	private TextView menu_green;
-	
+
 	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
 	private File f = null;
@@ -106,7 +106,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private String owner = "Map";
 	private Boolean dont_freeze = false;
 	private String mytag="Activity_Map";
-	
+
 	private static final int PICK_IMAGE = 1;
 	/*
 	 * WARNING : this class does'nt access anymore directly the database
@@ -120,7 +120,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		//params = getSharedPreferences("PREFS",MODE_PRIVATE);
 		//TODO add normal menu
 		params = PreferenceManager.getDefaultSharedPreferences(this);
-				
+
 		Tracer = tracerengine.getInstance(params);
 		prefEditor=params.edit();
 		mapView = new MapView(Tracer, this, params);
@@ -146,7 +146,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		animation2.setDuration(500);
 
 		//read files from SDCARD + create directory
-		
+
 		createDirIfNotExists();
 		f=new File(Environment.getExternalStorageDirectory()+"/domodroid/"); 
 		if(f.isDirectory()){ 
@@ -158,11 +158,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 			Collections.sort(words);
 			files=words.toArray(new String[words.size()]);
-			
+
 		}
 
 		build_maps_list();
-				
+
 		//sliding drawer
 		topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
 		panel.setOnPanelListener(this);
@@ -171,7 +171,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				return true;
 			}
 		});
-		
+
 		bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
 		panel.setOnPanelListener(this);
 		mapView.setTopDrawer(topPanel);
@@ -193,7 +193,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		add.setTag("add");
 		add.setBackgroundColor(Color.parseColor("#00000000"));
 		add.setOnClickListener(this);
-		
+
 		help = new Button(this);
 		help.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		help.setPadding(10, 13, 10, 13);
@@ -203,7 +203,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		help.setTag("help");
 		help.setBackgroundColor(Color.parseColor("#00000000"));
 		help.setOnClickListener(this);
-		
+
 		remove = new Button(this);
 		remove.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		remove.setPadding(10, 13, 10, 13);
@@ -213,7 +213,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		remove.setTag("remove");
 		remove.setBackgroundColor(Color.parseColor("#00000000"));
 		remove.setOnClickListener(this);
-		
+
 		remove_all = new Button(this);
 		remove_all.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		remove_all.setPadding(10, 13, 10, 13);
@@ -223,7 +223,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		remove_all.setTag("remove_all");
 		remove_all.setBackgroundColor(Color.parseColor("#00000000"));
 		remove_all.setOnClickListener(this);
-		
+
 		move = new Button(this);
 		move.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		move.setPadding(10, 13, 10, 13);
@@ -233,8 +233,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		move.setTag("move");
 		move.setBackgroundColor(Color.parseColor("#00000000"));
 		move.setOnClickListener(this);
-		
-		
+
+
 		panel_button.addView(add);
 		panel_button.addView(help);
 		panel_button.addView(remove);
@@ -253,11 +253,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 		startCacheEngine();		//Get reference to WidgetUpdate engine
 		//When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
-		
-		
+
+
 		//get feature list
 		listFeature = widgetUpdate.requestFeatures();
-		
+
 		//listview feature
 		ListView listview_feature = new ListView(this);
 		ArrayList<HashMap<String,String>> listItem1=new ArrayList<HashMap<String,String>>();
@@ -266,7 +266,13 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				if(feature != null) {
 					map=new HashMap<String,String>();
 					map.put("name",feature.getName());
-					map.put("type",feature.getValue_type());
+					if(feature.getParameters().contains("command")){
+						//TODO Use R.STRING
+						map.put("type","COMMAND-"+feature.getValue_type());
+					}else{
+						//TODO Use R.STRING
+						map.put("type",feature.getValue_type());
+					}
 					map.put("state_key", feature.getState_key());
 					map.put("icon", Integer.toString(feature.getRessources()));
 					listItem1.add(map);
@@ -297,8 +303,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					} else {
 						//It's a map switch element
 						mapView.temp_id = -1;
-						mapView.map_id = (position - listFeature.length)+9999;
-						Tracer.e(mytag,"map_id = <"+mapView.map_id+"> , map selected <"+list_usable_files.elementAt(mapView.map_id -9999)+">");
+						mapView.map_id = (position - listFeature.length)+99999;
+						Tracer.e(mytag,"map_id = <"+mapView.map_id+"> , map selected <"+list_usable_files.elementAt(mapView.map_id -99999)+">");
 					}
 					mapView.setAddMode(true);
 					dialog_feature.dismiss();
@@ -331,7 +337,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				}else if(msg.what==3){
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
 				}
-				*/
+				 */
 			}	
 		};
 
@@ -343,31 +349,31 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 
 	}
-	
+
 	private void startCacheEngine() {
-		
+
 		if(widgetUpdate == null) {
 			Tracer.w(mytag, "Starting WidgetUpdate engine !");
 			widgetUpdate = WidgetUpdate.getInstance();
 			//Map is'nt the first caller, so init is'nt required (already done by View)
 			widgetUpdate.set_handler(sbanim, 1);	//Put our main handler to cache engine (as Map)
-			
+
 			widgetUpdate.wakeup();
 		}  
 		Tracer.set_engine(widgetUpdate);
 		Tracer.w(mytag, "WidgetUpdate engine connected !");
-		
+
 	}
-	
+
 	private void build_maps_list() {
-		
+
 		if(listeMap != null)
 			listeMap = null;
 		if(listItem != null)
 			listItem = null;
 		if(list_usable_files != null)
 			list_usable_files = null;
-		
+
 		//list Map
 		listeMap = (ListView)findViewById(R.id.listeMap);
 		listItem=new ArrayList<HashMap<String,String>>();
@@ -379,11 +385,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					.endsWith(".jpg")||files[i].toLowerCase().endsWith(".jpeg")||files[i].toLowerCase()
 					.endsWith(".svg"))){
 				try{
-				list_usable_files.add(files[i]);
-				map=new HashMap<String,String>();
-				map.put("name",files[i].substring(0, files[i].lastIndexOf('.')));
-				map.put("position",String.valueOf(i));
-				listItem.add(map);
+					list_usable_files.add(files[i]);
+					map=new HashMap<String,String>();
+					map.put("name",files[i].substring(0, files[i].lastIndexOf('.')));
+					map.put("position",String.valueOf(i));
+					listItem.add(map);
 				}
 				catch (Exception badfileformat){
 					Tracer.d(mytag,"Good extension but can't load file");
@@ -392,7 +398,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		}
 		if(mapView != null)
 			mapView.setFiles(list_usable_files);
-		
+
 		if((Tracer != null) && (Tracer.Map_as_main )) {
 			// Add possibility to invoke Main activity
 			map=new HashMap<String,String>();
@@ -407,7 +413,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		map.put("position",String.valueOf(i));
 		listItem.add(map);
 		i++;
-		
+
 		SimpleAdapter adapter_map=new SimpleAdapter(getBaseContext(),listItem,
 				R.layout.item_map,new String[] {"name"},new int[] {R.id.name});
 		listeMap.setAdapter(adapter_map);
@@ -438,16 +444,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			}
 		});
 		listeMap.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				 Tracer.e(mytag, " longclic on a map");
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				Tracer.e(mytag, " longclic on a map");
 				//switch to select maps
-				 int last_map = list_usable_files.size() - 1;
-					if((position <= last_map) && (position > -1) ) {
-						mapView.setCurrentFile(position);
-					}
-					else{
-						return false;
-					}
+				int last_map = list_usable_files.size() - 1;
+				if((position <= last_map) && (position > -1) ) {
+					mapView.setCurrentFile(position);
+				}
+				else{
+					return false;
+				}
 				// On long click on a map ask if we want to remove this map we just selected
 				// prepare an AlertDialog and display it
 				final AlertDialog.Builder alert = new AlertDialog.Builder(Activity_Map.this);
@@ -467,17 +473,17 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				alert.setNegativeButton(R.string.delete_map__NO, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog_customname, int whichButton) {
 						Tracer.d(mytag," User cancel remove a map");
-						}
+					}
 				});
 				alert.show();
-				
+
 				return false;
 			}
 		});
-		
-		}
-		
-	
+
+	}
+
+
 	//Wait result of pickup image
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -486,67 +492,67 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			if(requestCode == PICK_IMAGE && data != null && data.getData() != null) {
-	        Uri _uri = data.getData();
-	        //User had pick an image.
-	        Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
-	        cursor.moveToFirst();
-	        //Copy the select picture to Domodroid directory
-		    selectFile = new File (cursor.getString(0));
-		    fileName = selectFile.getName();
-		    //filter for extension if not png or svg say it to user
-		    String filenameArray[] = fileName.split("\\.");
-		    //get file extension
-			extension = filenameArray[filenameArray.length-1];
-		    //put extension in lower case
-		    extension=extension.toLowerCase();
-		    if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
-		    	// if jpg convert and save it to domodroid dir
-		    	if (extension.equals("jpeg")||extension.equals("jpg")) {
-		    		try {
-		    			//FileOutputStream out = new FileOutputStream(fileName);
-		    			fileName=fileName.substring(0, fileName.length()-extension.length()-1)+".png";
-		    			extension="png";
-		    			FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
-		    			Bitmap bmp= mapView.decodeFile (selectFile);
-						bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
-		    			out.close();
-		    			Tracer.e(mytag,"On activity reslut convert image to png !");
-		    			} catch (Exception e) {
-		    				e.printStackTrace();
-		    		}
-		    		//else just copy svg or png to domodroid dir
-		    	}else {
-		    		File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
-			    	CopyFile.copyDirectory(selectFile,destFile);
-		    	}
-	        	cursor.close();
-	        	Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_SHORT).show();
-	        	Tracer.e(mytag,"On activity result No error adding new file in map !");
-	        	//ask user if he want to rename the file before copy
-		    	AlertDialog.Builder rename = new AlertDialog.Builder(this);
-		    		rename.setTitle(R.string.Rename_file_title);
-		    		rename.setMessage(R.string.Rename_file_message);
-				// Set an EditText view to get user input 
-				final EditText input = new EditText(Activity_Map.this);
+				Uri _uri = data.getData();
+				//User had pick an image.
+				Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
+				cursor.moveToFirst();
+				//Copy the select picture to Domodroid directory
+				selectFile = new File (cursor.getString(0));
+				fileName = selectFile.getName();
+				//filter for extension if not png or svg say it to user
+				String filenameArray[] = fileName.split("\\.");
+				//get file extension
+				extension = filenameArray[filenameArray.length-1];
+				//put extension in lower case
+				extension=extension.toLowerCase();
+				if(extension.equals("png")||extension.equals("svg")||extension.equals("jpeg")||extension.equals("jpg")) {
+					// if jpg convert and save it to domodroid dir
+					if (extension.equals("jpeg")||extension.equals("jpg")) {
+						try {
+							//FileOutputStream out = new FileOutputStream(fileName);
+							fileName=fileName.substring(0, fileName.length()-extension.length()-1)+".png";
+							extension="png";
+							FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
+							Bitmap bmp= mapView.decodeFile (selectFile);
+							bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
+							out.close();
+							Tracer.e(mytag,"On activity reslut convert image to png !");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						//else just copy svg or png to domodroid dir
+					}else {
+						File destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName);
+						CopyFile.copyDirectory(selectFile,destFile);
+					}
+					cursor.close();
+					Toast.makeText(this,  R.string.map_add_file_ok, Toast.LENGTH_SHORT).show();
+					Tracer.e(mytag,"On activity result No error adding new file in map !");
+					//ask user if he want to rename the file before copy
+					AlertDialog.Builder rename = new AlertDialog.Builder(this);
+					rename.setTitle(R.string.Rename_file_title);
+					rename.setMessage(R.string.Rename_file_message);
+					// Set an EditText view to get user input 
+					final EditText input = new EditText(Activity_Map.this);
 					input.setText(fileName.substring(0, fileName.length()-extension.length()-1));
 					rename.setView(input);
 					rename.setPositiveButton(R.string.Rename_file_OK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						String renamefileName= input.getText().toString(); 
-						Tracer.e(mytag, "new fileName: "+renamefileName);
-						destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension);
-						if(destFile.exists()) {
-							//TODO need improvement if the new "file+1" also exists!
-							new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"1."+extension));
-						}else{
-							new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension));
-						}
-						//Restart the activity to save change 
-						restartactivity();
+						public void onClick(DialogInterface dialog_customname, int whichButton) {
+							String renamefileName= input.getText().toString(); 
+							Tracer.e(mytag, "new fileName: "+renamefileName);
+							destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension);
+							if(destFile.exists()) {
+								//TODO need improvement if the new "file+1" also exists!
+								new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"1."+extension));
+							}else{
+								new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension));
+							}
+							//Restart the activity to save change 
+							restartactivity();
 						}
 					});
 					rename.setNegativeButton(R.string.Rename_file_NO, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
+						public void onClick(DialogInterface dialog_customname, int whichButton) {
 							Tracer.e(mytag, "renamefile Canceled.");
 							//Restart the activity to save change 
 							restartactivity();
@@ -554,24 +560,24 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 					});
 					rename.show();
 					//just need to store the new name with his extension to "fileName"
-				
-	        }
-	        else {
-	        	Toast.makeText(this,  R.string.map_add_file_type_nok, Toast.LENGTH_LONG).show();
-	        	Tracer.e(mytag,"File type is not supported !");
-	        	return;
-	        }
-	    }
-	    super.onActivityResult(requestCode, resultCode, data);
-	    
-	  } catch (Exception e) {
+
+				}
+				else {
+					Toast.makeText(this,  R.string.map_add_file_type_nok, Toast.LENGTH_LONG).show();
+					Tracer.e(mytag,"File type is not supported !");
+					return;
+				}
+			}
+			super.onActivityResult(requestCode, resultCode, data);
+
+		} catch (Exception e) {
 			Tracer.e(mytag,"Error adding file in map !");
 			Toast.makeText(this,  R.string.map_add_file_nok, Toast.LENGTH_LONG).show();
-	    	e.printStackTrace();
+			e.printStackTrace();
 		}
 
 	}
-	
+
 	@Override
 	public void onPause(){
 		super.onPause();
@@ -582,16 +588,16 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				widgetUpdate.set_sleeping();	//We act as main screen : if going to pause, freeze cache engine
 			}
 		}
-		
+
 	}
-	
+
 	public void onResume() {
 		super.onResume();
 		if(Tracer == null) {
 			Tracer = tracerengine.getInstance(params);
 		}
 		Tracer.e(mytag,"Onresume Try to connect on cache engine !");
-		
+
 		if(widgetUpdate == null) {
 			startCacheEngine();
 		} else {
@@ -601,32 +607,32 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				mapView.refreshMap();
 			}
 		}
-		
-		
-		
+
+
+
 	}
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		if(Tracer != null)
 			Tracer.e(mytag,"Ondestroy Leaving Map_Activity : disconnect from engines");
-		
+
 		if(widgetUpdate != null) {
 			widgetUpdate.Disconnect(2);	//That'll purge all connected widgets for MapView
 		}
-	
+
 		if(mapView != null)
 			mapView.purge();
-			mapView=null;
-		
+		mapView=null;
+
 		if(Tracer != null) {
 			Tracer.close();		//To eventually flush and close txt log file
 			Tracer = null;		//Stop own Tracer engine
 		}
-		
+
 		System.gc();
 	}
-	
+
 	public void onPanelClosed(Sliding_Drawer panel) {
 		if(Tracer != null)
 			Tracer.e(mytag,"Onpanelclosepanel request to close");
@@ -651,13 +657,13 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public void onClick(View v) {
 		if(v.getTag().equals("menu")){
 			//disable menu if set in option
-			
+
 			if(!topPanel.isOpen()){
 				bottomPanel.setOpen(true, true);
 				panel_button.setVisibility(View.VISIBLE);
 				if(params.getBoolean("map_menu_disable",false)==false)
 					topPanel.setOpen(true, true);
-				
+
 			} else if(topPanel.isOpen() && !bottomPanel.isOpen()){
 				panel_widget.setVisibility(View.GONE);
 				panel_button.setVisibility(View.VISIBLE);
@@ -667,7 +673,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				topPanel.setOpen(false, true);
 			}			
 
-		
+
 		} else if(v.getTag().equals("add")){
 			//Add a widget
 			panel.setOpen(false, true);
@@ -680,7 +686,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				mapView.setRemoveMode(false);
 				mapView.setMoveMode(false);
 			}
-			
+
 		}else if(v.getTag().equals("remove")){
 			//case when user want to remove only one widget
 			if(list_usable_files.isEmpty()){
@@ -698,9 +704,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				}
 				panel.setOpen(false, true);
 				topPanel.setOpen(false, true);
-				
+
 			}
-			
+
 		}else if(v.getTag().equals("move")){
 			//case when user want to move one widget
 			// first step remove, second add the removed widget
@@ -722,20 +728,20 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				}
 				panel.setOpen(false, true);
 				topPanel.setOpen(false, true);
-				
+
 			}
-			
+
 		} else if(v.getTag().equals("remove_all")){
 			//case when user select remove all from menu
-				if(list_usable_files.isEmpty()){
-					Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-				}else{
-					panel.setOpen(false, true);
-					topPanel.setOpen(false, true);
-					Tracer.e(mytag,"request to clear widgets");
-					mapView.clear_Widgets();
-					mapView.setRemoveMode(false);					
-				}
+			if(list_usable_files.isEmpty()){
+				Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+			}else{
+				panel.setOpen(false, true);
+				topPanel.setOpen(false, true);
+				Tracer.e(mytag,"request to clear widgets");
+				mapView.clear_Widgets();
+				mapView.setRemoveMode(false);					
+			}
 		}else if(v.getTag().equals("help")){
 			Dialog_Help dialog_help = new Dialog_Help(this);
 			dialog_help.show();
@@ -749,25 +755,25 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		//disable menu if set in option
 		Tracer.d(mytag,"onKeyDown keyCode = "+keyCode);
-			if(keyCode==82 && !topPanel.isOpen()){
-				bottomPanel.setOpen(true, true);
-				panel_button.setVisibility(View.VISIBLE);
-				if(params.getBoolean("map_menu_disable",false)==false){ 
-					topPanel.setOpen(true, true);
-				}
-				return false;
-
-			}else if(keyCode==82 && topPanel.isOpen() && !bottomPanel.isOpen()){
-				panel_widget.setVisibility(View.GONE);
-				panel_button.setVisibility(View.VISIBLE);
-				bottomPanel.setOpen(true, true);
-				return false;
-
-			}else if((keyCode==82 || keyCode == 4) && topPanel.isOpen()){
-				bottomPanel.setOpen(false, true);
-				topPanel.setOpen(false, true);
-				return false;
+		if(keyCode==82 && !topPanel.isOpen()){
+			bottomPanel.setOpen(true, true);
+			panel_button.setVisibility(View.VISIBLE);
+			if(params.getBoolean("map_menu_disable",false)==false){ 
+				topPanel.setOpen(true, true);
 			}
+			return false;
+
+		}else if(keyCode==82 && topPanel.isOpen() && !bottomPanel.isOpen()){
+			panel_widget.setVisibility(View.GONE);
+			panel_button.setVisibility(View.VISIBLE);
+			bottomPanel.setOpen(true, true);
+			return false;
+
+		}else if((keyCode==82 || keyCode == 4) && topPanel.isOpen()){
+			bottomPanel.setOpen(false, true);
+			topPanel.setOpen(false, true);
+			return false;
+		}
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -812,14 +818,14 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	//this is called when the screen rotates.
 	// (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
 	{
-	    super.onConfigurationChanged(newConfig);
-	    mapView.initMap();
+		super.onConfigurationChanged(newConfig);
+		mapView.initMap();
 
 	}
 	private Boolean restartactivity(){
 		Intent intent = getIntent();
-	    finish();
-	    startActivity(intent);
+		finish();
+		startActivity(intent);
 		return true;
 	}
 }

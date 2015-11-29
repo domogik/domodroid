@@ -6,7 +6,7 @@ public class Rinor_event {
 	public int device_id;
 	public String key;
 	public String Value;
-	
+
 	public Rinor_event ( int ticket, int item, int dev_id, String key, String value) {
 		this.ticket_id = ticket;
 		this.item = item;
@@ -14,5 +14,5 @@ public class Rinor_event {
 		this.key = key;
 		this.Value = value;
 	}
-	
+
 }

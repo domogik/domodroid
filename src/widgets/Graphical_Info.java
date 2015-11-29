@@ -107,14 +107,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 	private String login;
 	private String password;
 	private float api_version;
-	
+
 	private SharedPreferences params;
 	private int dpiClassification;
 	private DisplayMetrics metrics;
 	private float size10;
 	private float size5;	
 	private String usage;
-	
+
 	@SuppressLint("HandlerLeak")
 	public Graphical_Info(tracerengine Trac,final Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,final String usage, int update, 
@@ -136,7 +136,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		this.place_type= place_type;
 		this.params=params;
 		setOnClickListener(this);
-				
+
 		mytag="Graphical_Info ("+dev_id+")";
 		metrics = getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
@@ -145,14 +145,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
 		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
-		
+
 		//value
 		value = new TextView(context);
 		value.setTextSize(28);
@@ -161,7 +161,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		animation.setDuration(1000);
 
 		if(with_graph) {
-			
+
 			//feature panel 2 which will contain graphic
 			featurePan2=new LinearLayout(context);
 			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
@@ -174,43 +174,43 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 			canvas.state_key = state_key;
 			canvas.url = url;
 			canvas.update = update;
-			
+
 			LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
 			View v=null;
-			
+
 			v=featurePan2_buttons.findViewById(R.id.bt_prev);
 			if(v != null)
 				v.setOnClickListener(canvas);
-			
+
 			v=featurePan2_buttons.findViewById(R.id.bt_next);
 			if(v != null)
 				v.setOnClickListener(canvas);
-			
+
 			v=featurePan2_buttons.findViewById(R.id.bt_year);
 			if(v != null)
 				v.setOnClickListener(canvas);
-			
+
 			v=featurePan2_buttons.findViewById(R.id.bt_month);
 			if(v != null)
 				v.setOnClickListener(canvas);
-			
+
 			v=featurePan2_buttons.findViewById(R.id.bt_week);
 			if(v != null)
 				v.setOnClickListener(canvas);
-			
+
 			v=featurePan2_buttons.findViewById(R.id.bt_day);
 			if(v != null)
 				v.setOnClickListener(canvas);
-			
+
 			v = featurePan2_buttons.findViewById(R.id.period);
 			if(v != null)
 				canvas.dates=(TextView)v;
-			
+
 			//background_stats.addView(canvas);
 			featurePan2.addView(canvas);
 		}
-		
+
 		LL_featurePan.addView(value);
 		LL_infoPan.addView(state_key_view);
 
@@ -218,11 +218,11 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 			@Override
 			public void handleMessage(Message msg) {
 				if(msg.what == 9999) {
-						//Message from widgetupdate
-						//state_engine send us a signal to notify value changed
+					//Message from widgetupdate
+					//state_engine send us a signal to notify value changed
 					if(session == null)
 						return;
-					
+
 					String loc_Value = session.getValue();
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
 					try {
@@ -235,28 +235,28 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 							String test_unite = jparam.getString("unit");
 							value.setText(formatedValue+ " "+test_unite);
 							//TODO #30 add Scale value if too big
-//							if (test_unite.equals("b") == true){
-//								value.setText(android.text.format.Formatter.formatFileSize(context,(long)formatedValue));
-//							}else{
-//								value.setText(formatedValue+ " "+test_unite);
-//							}
+							//							if (test_unite.equals("b") == true){
+							//								value.setText(android.text.format.Formatter.formatFileSize(context,(long)formatedValue));
+							//							}else{
+							//								value.setText(formatedValue+ " "+test_unite);
+							//							}
 						} catch (JSONException e) {							
-						if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
-						else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-						else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
-						else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
-						else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-						else if(state_key.equalsIgnoreCase("condition-code") == true)
-							//Add try catch to avoid other case that make #1794
-							try {
-								value.setText(Graphics_Manager.Names_conditioncodes(getContext(),(int)formatedValue));
-							}catch (Exception e1) {
-								value.setText(loc_Value);
-							}
-						else value.setText(loc_Value);
+							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
+							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
+							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
+							else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
+							else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
+							else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
+							else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
+							else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
+							else if(state_key.equalsIgnoreCase("condition-code") == true)
+								//Add try catch to avoid other case that make #1794
+								try {
+									value.setText(Graphics_Manager.Names_conditioncodes(getContext(),(int)formatedValue));
+								}catch (Exception e1) {
+									value.setText(loc_Value);
+								}
+							else value.setText(loc_Value);
 						}
 						value.setAnimation(animation);
 					} catch (Exception e) {
@@ -267,7 +267,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 							value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
 						}catch (Exception e1) {
 							Tracer.d(mytag,"Nothing in R.STRING for "+loc_Value );
-						value.setText(loc_Value);
+							value.setText(loc_Value);
 							if(state_key.equalsIgnoreCase("current_sunset") == true){
 								Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
 								value.setTypeface(typeface, Typeface.NORMAL); 
@@ -280,7 +280,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 						}
 					}
 					//To have the icon colored as it has no state
-			    	IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
 					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
@@ -296,10 +296,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 						finalize(); 
 					} catch (Throwable t) {}	//kill the handler thread itself
 				}
-				}
-			
+			}
+
 		};
-		
+
 		//================================================================================
 		/*
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -309,15 +309,15 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
@@ -333,9 +333,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 				try {
 					LL_background.removeView(featurePan2_buttons);
 					LL_background.removeView(featurePan2);
-					
+
 				} catch (Exception e) {}
-				
+
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 				LL_background.addView(featurePan2_buttons);
 				LL_background.addView(featurePan2);
@@ -352,29 +352,29 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		}
 		return ;
 	}
-	
+
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			
+
 		}
 	}
-	
-	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    BigDecimal bd = new BigDecimal(value);
-	    bd = bd.setScale(places, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
+	public static double round(double value, int places) {
+		if (places < 0) throw new IllegalArgumentException();
+
+		BigDecimal bd = new BigDecimal(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
-	
+
 	public static float Round(float Rval, int Rpl) {
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
 		return (float)tmp/p;
 	}
-		
+
 }
 
 

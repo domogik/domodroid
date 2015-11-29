@@ -59,7 +59,7 @@ import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Boolean extends Basic_Graphical_widget{
-	
+
 	private TextView state;
 	private String value0;
 	private String value1;
@@ -74,11 +74,11 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 	private String stateS = "";
 	private float api_version;
 	private SharedPreferences params;
-	
+
 	public static FrameLayout container = null;
 	private static FrameLayout myself = null;
 	private tracerengine Tracer = null;
-	
+
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
@@ -86,7 +86,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 	private int place_id;
 	private Activity context;
 	private String usage;
-	
+
 	@SuppressLint("HandlerLeak")
 	public Graphical_Boolean(tracerengine Trac, Activity context, 
 			String address, final String name, 
@@ -109,7 +109,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		this.place_type= place_type;
 		this.params = params;
 		api_version=params.getFloat("API_VERSION", 0);
-		
+
 		try {
 			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 			value0 = jparam.getString("value0");
@@ -118,7 +118,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 			value0 = "0";
 			value1 = "1";
 		}		
-		
+
 		if (usage.equals("light")){
 			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
 			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
@@ -129,9 +129,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 			this.Value_0 = value0;
 			this.Value_1 = value1;		
 		}
-		
+
 		mytag="Graphical_Boolean("+dev_id+")";
-		
+
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
@@ -140,10 +140,10 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		//boolean on/off
 		bool = new ImageView(context);
 		bool.setImageResource(R.drawable.boolean_off);
-		
+
 		super.LL_infoPan.addView(state);
 		super.LL_featurePan.addView(bool);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
@@ -154,15 +154,15 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 					status = session.getValue();
 					if(status != null)   {
 						Tracer.d(mytag,"Handler receives a new status <"+status+">" );
-						
+
 						try {
-							if(status.equals(value0)){
+							if(status.equals(value0)||status.equals("0")){
 								bool.setImageResource(R.drawable.boolean_off);
 								//change color if statue=low to (usage, o) means off
 								//note sure if it must be kept as set previously as default color.
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								state.setText(stateS+Value_0);
-							}else if(status.equals(value1)){
+							}else if(status.equals(value1)||status.equals("1")){
 								bool.setImageResource(R.drawable.boolean_on);
 								//change color if statue=high to (usage, 2) means on
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
@@ -188,9 +188,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 						finalize(); 
 					} catch (Throwable t) {}	//kill the handler thread itself
 				}
-				
+
 			}
-			
+
 		};
 		//================================================================================
 		/*
@@ -201,20 +201,20 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
 	}
-	
+
 }
 
 

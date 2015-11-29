@@ -59,14 +59,14 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		this.setPadding(5, 5, 5, 5);
 		this.widgetHandler=handler;
 		setOnClickListener(this);
-		
+
 		//panel with border	
 		LL_background = new LinearLayout(context);
 		if(widgetSize==0)
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		else 
 			LL_background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		
+
 		LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("black",LL_background.getHeight()));
 
 		//panel to set img with padding left
@@ -117,7 +117,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		Message msg = new Message();
 		msg.setData(b);
 		widgetHandler.sendMessage(msg);
-	return;
+		return;
 
 	}
 }

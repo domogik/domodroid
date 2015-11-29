@@ -11,12 +11,15 @@ The following features are already available on the latest version of Domodroid:
 - Technologies supported: Onewire, PLCBus, IPX800, Mirror, Teleinfo, X10, WakeOnLan, Ping, Zibase, RFXCom, YahooWather (Theorycally, all that are supported by Domogik)
 - All screen size supported Smartphone/Tablet
 - Power management control
-- Startup dirctley in map mode.
+- Startup directly in map mode.
 
 http:/domogik.org
 
 Documentation is here:
-http://doc.domogik.org/domodroid/dev/en/
+http://domodroid.readthedocs.org/
+
+Translation can be done by you too here:
+https://www.transifex.com/projects/p/domodroid/
 
 Nightly builds are available here:
 http://repo.domogik.org/domodroid-nightly/

@@ -38,122 +38,122 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import misc.tracerengine;
 
-  
+
 public class Rest_com {
 	private SharedPreferences params;
 	private static String mytag = "Rest_com";
-	
+
 	private static String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
- 
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
- 
-    @SuppressWarnings("null")
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
+	}
+
+	@SuppressWarnings("null")
 	public static JSONObject connect_jsonobject(String url,String login, String password)
-    {
-    	
-    	tracerengine Tracer = null;
-    	JSONObject json = null;
-    		try {
-    		DefaultHttpClient httpclient = new DefaultHttpClient();
-    		httpclient.getCredentialsProvider().setCredentials( new AuthScope(null, -1),new UsernamePasswordCredentials(login+":"+password));
-    		// TODO Set timeout
-    		// this doesn't work
-    		//httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
-    		HttpGet httpget = new HttpGet(url);    		
-    		HttpResponse response;
-    		String result = null;
-            response = httpclient.execute(httpget);
-            if(response.getStatusLine().getStatusCode() == 200)
+	{
+
+		tracerengine Tracer = null;
+		JSONObject json = null;
+		try {
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+			httpclient.getCredentialsProvider().setCredentials( new AuthScope(null, -1),new UsernamePasswordCredentials(login+":"+password));
+			// TODO Set timeout
+			// this doesn't work
+			//httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
+			HttpGet httpget = new HttpGet(url);    		
+			HttpResponse response;
+			String result = null;
+			response = httpclient.execute(httpget);
+			if(response.getStatusLine().getStatusCode() == 200)
 			{
-            	HttpEntity entity = response.getEntity();
-			    if (entity != null) {
-			    	InputStream instream = entity.getContent();
-			    	result= convertStreamToString(instream);
-			    	json= new JSONObject(result);
-			    	instream.close();
-			    }
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					InputStream instream = entity.getContent();
+					result= convertStreamToString(instream);
+					json= new JSONObject(result);
+					instream.close();
+				}
 			}else if(response.getStatusLine().getStatusCode() == 204){
 				//TODO need to adapt for 0.4 since rest answer now with standard code
 				//204,400,404 and else
 				json= new JSONObject();
 				json.put("status", "204 NO CONTENT");
 			}else{
-            	Tracer.d(mytag, "Resource not available>");
+				Tracer.d(mytag, "Resource not available>");
 			}
- 
- 
-        } catch (HttpHostConnectException e) {
-        	//e.printStackTrace();
-        } catch (ClientProtocolException e) {
-        	e.printStackTrace();
-        } catch (IOException e) {
-        	e.printStackTrace();
-        } catch (JSONException e) {
-        	e.printStackTrace();
-        }
-        return json;
-    }
-    @SuppressWarnings("null")
+
+
+		} catch (HttpHostConnectException e) {
+			//e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	@SuppressWarnings("null")
 	public static JSONArray connect_jsonarray(String url,String login, String password)
-    {
-    	
-    	tracerengine Tracer = null;
-    	JSONArray json = null;
-    		try {
-    		DefaultHttpClient httpclient = new DefaultHttpClient();
-    		httpclient.getCredentialsProvider().setCredentials( new AuthScope(null, -1),new UsernamePasswordCredentials(login+":"+password));
-    		// TODO Set timeout
-    		// this doesn't work
-    		//httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
-    		HttpGet httpget = new HttpGet(url);    		
-    		HttpResponse response;
-    		String result = null;
-            response = httpclient.execute(httpget);
-            if(response.getStatusLine().getStatusCode() == 200)
+	{
+
+		tracerengine Tracer = null;
+		JSONArray json = null;
+		try {
+			DefaultHttpClient httpclient = new DefaultHttpClient();
+			httpclient.getCredentialsProvider().setCredentials( new AuthScope(null, -1),new UsernamePasswordCredentials(login+":"+password));
+			// TODO Set timeout
+			// this doesn't work
+			//httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
+			HttpGet httpget = new HttpGet(url);    		
+			HttpResponse response;
+			String result = null;
+			response = httpclient.execute(httpget);
+			if(response.getStatusLine().getStatusCode() == 200)
 			{
-            	HttpEntity entity = response.getEntity();
-			    if (entity != null) {
-			    	InputStream instream = entity.getContent();
-			    	result= convertStreamToString(instream);
-			    	json= new JSONArray(result);
-			    	instream.close();
-			    }
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					InputStream instream = entity.getContent();
+					result= convertStreamToString(instream);
+					json= new JSONArray(result);
+					instream.close();
+				}
 			}
-            else
+			else
 			{
-            	Tracer.d(mytag, "Resource not available>");
+				Tracer.d(mytag, "Resource not available>");
 			}
- 
- 
-        } catch (HttpHostConnectException e) {
-        	//e.printStackTrace();
-        } catch (ClientProtocolException e) {
-        	e.printStackTrace();
-        } catch (IOException e) {
-        	e.printStackTrace();
-        } catch (JSONException e) {
-        	e.printStackTrace();
-        }
-        return json;
-    }
-    public void setParams(SharedPreferences params) {
+
+
+		} catch (HttpHostConnectException e) {
+			//e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+	public void setParams(SharedPreferences params) {
 		this.params = params;
 	}
 }

@@ -375,7 +375,7 @@ public class Sliding_Drawer extends LinearLayout {
 		}
 		public void onLongPress(MotionEvent e) {
 		}
-		
+
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 			mState = State.TRACKING;
 			float tmpY = 0, tmpX = 0;

@@ -13,7 +13,7 @@ public class Cache_management {
 	private static SharedPreferences sharedparams;
 	private static Activity context;
 	private static float api_version;
-		
+
 	public static void checkcache(tracerengine Trac, Activity Context){
 		// Change UrlAccess to make cache more light.
 		// 1st need to change when this urlupdate his create.
@@ -41,7 +41,7 @@ public class Cache_management {
 							compteur=compteur+1;
 						}
 					}
-					
+
 				}			
 			}
 			Tracer.v(mytag,"prepare UPDATE_URL items="+String.valueOf(compteur));
@@ -69,6 +69,6 @@ public class Cache_management {
 		}
 
 		Tracer.v(mytag,"UPDATE_URL = "+urlUpdate);
-		
+
 	}
 }

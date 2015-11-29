@@ -38,6 +38,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import misc.List_Icon_Adapter;
@@ -54,7 +55,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Trigger extends Basic_Graphical_widget implements Runnable, OnClickListener {
+public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
 	private TextView unusable;
 	private Graphical_Trigger_Button trigger;
@@ -83,7 +84,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 	private String usage;
 	private String command_id;
 	private String command_type;
-	
+
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name,String state_key, int id,int dev_id,String stat_key, 
 			String url, String usage, String parameters, 
@@ -103,41 +104,41 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 		mytag="Graphical_Trigger("+dev_id+")";
 		this.params=params;
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
-		//get parameters
-        JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-        
-        if(jparam != null ) {
-        	if (api_version>=0.7f) {
-        		try{
-        			command_id=jparam.getString("command_id");
-		    		command_type=jparam.getString("command_type");
-		    		usable=true;
-    		    	} catch (Exception e) {
-    		    		usable=false;
-    		    		Tracer.d(mytag, "Error with this widgets command");
-    		    		Tracer.d(mytag, "jparam= "+jparam.toString());
-    		    		Tracer.d(mytag, e.toString());
-    		    	}
-        	}else{
-		    	try{
-		    	command = jparam.getString("command");
-		    	usable=true;
-		    	} catch (Exception e) {
-		    		usable=false;
-		    		Tracer.d(mytag, "Error with this widgets command");
-		    		Tracer.d(mytag, "jparam= "+jparam.toString());
-		    		Tracer.d(mytag, e.toString());
-		    	}
-        	}
-        }
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
 
-        String[] model = model_id.split("\\.");
-        type = model[0];
- 
-		//first seekbar on/off
+		//get parameters
+		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+
+		if(jparam != null ) {
+			if (api_version>=0.7f) {
+				try{
+					command_id=jparam.getString("command_id");
+					command_type=jparam.getString("command_type");
+					usable=true;
+				} catch (Exception e) {
+					usable=false;
+					Tracer.d(mytag, "Error with this widgets command");
+					Tracer.d(mytag, "jparam= "+jparam.toString());
+					Tracer.d(mytag, e.toString());
+				}
+			}else{
+				try{
+					command = jparam.getString("command");
+					usable=true;
+				} catch (Exception e) {
+					usable=false;
+					Tracer.d(mytag, "Error with this widgets command");
+					Tracer.d(mytag, "jparam= "+jparam.toString());
+					Tracer.d(mytag, e.toString());
+				}
+			}
+		}
+
+		String[] model = model_id.split("\\.");
+		type = model[0];
+
+		//button animated
 		trigger = new Graphical_Trigger_Button(context);
 		trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		trigger.setOnClickListener(this);
@@ -155,44 +156,53 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements Runnabl
 		}else{
 			LL_featurePan.addView(unusable);
 		}
-		
-		
+
+
 	}
 
 
-	public void run() {
-		JSONObject json_Ack = null;
-		if (api_version>=0.7f) {
-			try {
-				//TODO adapt for 0.4
-				Tracer.i(mytag, "Sending command to : "+url+"cmd/id/"+command_id+"?"+command_type+"=1");
-				json_Ack = Rest_com.connect_jsonobject(url+"cmd/id/"+command_id+"?"+command_type+"=1"+command,login,password);
-			} catch (Exception e) {
-				Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
+	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Handler temphandler =  new Handler(context.getMainLooper());
+			temphandler.post( new Runnable(){
+				public void run(){
+					String Url2send;
+					if(api_version>=0.7f){
+						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"=1";
+					}else{
+						Url2send = url+"command/"+type+"/"+address+"/"+command;
+					}
+					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+					JSONObject json_Ack = null;
+					try {
+						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
+					} catch (Exception e) {
+						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
+					}
+					try {
+						Boolean ack = JSONParser.Ack(json_Ack);
+						if(ack==false){
+							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
+							handler.sendEmptyMessage(2);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
-		}else{
-			try {
-				Tracer.i(mytag, "Sending command to : "+url+"command/"+type+"/"+address+"/"+command);
-				json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command,login,password);
-			} catch (Exception e) {
-				Tracer.e(mytag, "Exception Rest getting command <"+e.getMessage()+">");
-			}	
+					);
+			return null;
+
 		}
-		try {
-			Boolean ack = JSONParser.Ack(json_Ack);
-			if(ack==false){
-				handler.sendEmptyMessage(2);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
 	}
 
-	
 	public void onClick(View arg0) {
 		trigger.startAnim();
-		threadCommande = new Thread(this);
-		threadCommande.start();	
+		new CommandeThread().execute();
 	}
 
 }

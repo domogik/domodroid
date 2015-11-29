@@ -79,7 +79,7 @@ import android.widget.LinearLayout;
 @SuppressWarnings({ "static-access" })
 public class Activity_Main extends Activity implements OnClickListener{
 
-	
+
 	protected PowerManager.WakeLock PM_WakeLock;
 	private SharedPreferences SP_params;
 	private SharedPreferences.Editor SP_prefEditor;
@@ -93,7 +93,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Intent INTENT_map = null;
 	private Dialog_House DIALOG_house_set = null;
 	private ImageView appname;
-	
+
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private ViewGroup VG_parent;
@@ -105,12 +105,12 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private LinearLayout LL_house_map;
 	private Basic_Graphical_zone house;
 	private Basic_Graphical_zone map;
-	
+
 	private Boolean reload = false;
 	DialogInterface.OnClickListener reload_listener = null;
 	DialogInterface.OnDismissListener sync_listener = null;
 	DialogInterface.OnDismissListener house_listener = null;
-	
+
 	private static Boolean by_usage = false;
 	private Boolean init_done = false;
 	private File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
@@ -128,23 +128,23 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Boolean end_of_init_requested = true;
 	private String mytag="Activity_Main";
 	private Menu menu;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		myself=this;
-		   if(android.os.Build.VERSION.SDK_INT == 8) // FROYO (8)
-		    {
-		        java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
-		        java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
-		    }
-		   setContentView(R.layout.activity_home);
-		
+		if(android.os.Build.VERSION.SDK_INT == 8) // FROYO (8)
+		{
+			java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
+			java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
+		}
+		setContentView(R.layout.activity_home);
+
 		SP_params = PreferenceManager.getDefaultSharedPreferences(this);
 		SP_prefEditor=SP_params.edit();
 		Tracer = tracerengine.getInstance(SP_params);
-		
+
 		//Added by Doume
 		File storage = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/");
 		if(! storage.exists())
@@ -153,7 +153,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		File logpath = new File(Environment.getExternalStorageDirectory()+"/domodroid/.log/");
 		if(! logpath.exists())
 			logpath.mkdirs();
-		
+
 		String currlogpath = SP_params.getString("LOGNAME", "");
 		if(currlogpath.equals("")) {
 			//Not yet existing prefs : Configure debugging by default, to configure Tracer
@@ -172,41 +172,41 @@ public class Activity_Main extends Activity implements OnClickListener{
 		SP_prefEditor.putBoolean("SYSTEMLOG", true);		// For tests : with system logs....
 
 		SP_prefEditor.commit();
-		
+
 		Tracer.set_profile(SP_params);
 		// Create .nomedia file, that will prevent Android image gallery from showing domodroid file
 		String nomedia = Environment.getExternalStorageDirectory()+"/domodroid/.nomedia";
-			try {
-				if (! (new File(nomedia).exists())) {
-					new FileOutputStream(nomedia).close();
-				}
+		try {
+			if (! (new File(nomedia).exists())) {
+				new FileOutputStream(nomedia).close();
 			}
-				catch(Exception e) {
-			}
-		
+		}
+		catch(Exception e) {
+		}
+
 		appname = (ImageView)findViewById(R.id.app_name);
-		
+
 		LoadSelections();
-		
+
 		// Prepare a listener to know when the house organization dialog is closed...
-				if( house_listener == null){
-					house_listener= new DialogInterface.OnDismissListener() {
-						public void onDismiss(DialogInterface dialog) {
-							//TODO Try to redraw after house dialog closed.
-							loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
-							
-						}
-					};
+		if( house_listener == null){
+			house_listener= new DialogInterface.OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					//TODO Try to redraw after house dialog closed.
+					loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);
+
 				}
-		
+			};
+		}
+
 		// Prepare a listener to know when a sync dialog is closed...
 		if( sync_listener == null){
 			sync_listener = new DialogInterface.OnDismissListener() {
 
 				public void onDismiss(DialogInterface dialog) {
-					
+
 					Tracer.d(mytag,"sync dialog has been closed !");
-					
+
 					// Is it success or fail ?
 					if(((Dialog_Synchronize)dialog).need_refresh) {
 						// Sync has been successful : Force to refresh current main view
@@ -221,9 +221,9 @@ public class Activity_Main extends Activity implements OnClickListener{
 						//Notify sync complete to parent Dialog
 						b.putInt("id", 0);
 						b.putString("type", "root");
-					    Message msg = new Message();
-					    msg.setData(b);
-					    if(widgetHandler != null)
+						Message msg = new Message();
+						msg.setData(b);
+						if(widgetHandler != null)
 							widgetHandler.sendMessage(msg); 	// That should force to refresh Views
 						/* */
 						if(WU_widgetUpdate != null) {
@@ -234,13 +234,13 @@ public class Activity_Main extends Activity implements OnClickListener{
 						onResume();
 					} else {
 						Tracer.d(mytag,"sync dialog end with no refresh !");
-						
+
 					}
 					((Dialog_Synchronize)dialog).need_refresh = false;					
 				}
 			};
 		}
-		
+
 		//update thread
 		sbanim = new Handler() {
 			@Override
@@ -261,8 +261,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 					}
 					dialog_message.setMessage("Starting cache engine...");
 					dialog_message.show();
-					
-					*/
+
+					 */
 				} else if(msg.what==8999){
 					//Cache engine is ready for use....
 					if(Tracer != null)
@@ -275,7 +275,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			}	
 		};
 
-		
+
 		//power management
 		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		this.PM_WakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
@@ -287,12 +287,12 @@ public class Activity_Main extends Activity implements OnClickListener{
 
 		//Parent view
 		VG_parent = (ViewGroup) findViewById(R.id.home_container);
-		
+
 		LL_house_map = new LinearLayout(this);
 		LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
 		LL_house_map.setPadding(5, 5, 5, 5);
-		
+
 		house = new Basic_Graphical_zone(getApplicationContext(),0,
 				Graphics_Manager.Names_Agent(this, "House"),
 				"",
@@ -305,10 +305,10 @@ public class Activity_Main extends Activity implements OnClickListener{
 				"map",
 				0,"",null);
 		map.setPadding(5, 0, 0, 0);
-		
+
 		LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT, 1.0f);
 
-		
+
 		house.setLayoutParams(param);
 		house.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -323,7 +323,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 				}		
 			}
 		});
-		
+
 		map.setLayoutParams(param);
 		map.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
@@ -346,71 +346,75 @@ public class Activity_Main extends Activity implements OnClickListener{
 				}
 			}
 		});
-		
+
 		LL_house_map.addView(house);
 		LL_house_map.addView(map);
-		
+
 		init_done = false;
 		// Detect if it's the 1st use after installation...
-			if(!SP_params.getBoolean("SPLASH", false)){
-				// Yes, 1st use !
-				init_done = false;
-				reload = false;
-				if(backupprefs.exists()) {
-					// A backup exists : Ask if reload it
-					Tracer.v(mytag,"settings backup found after a fresh install...");
-					
-					DialogInterface.OnClickListener reload_listener = new DialogInterface.OnClickListener() {
+		if(!SP_params.getBoolean("SPLASH", false)){
+			// Yes, 1st use !
+			init_done = false;
+			reload = false;
+			if(backupprefs.exists()) {
+				// A backup exists : Ask if reload it
+				Tracer.v(mytag,"settings backup found after a fresh install...");
 
-						public void onClick(DialogInterface dialog, int which) {
-							Tracer.e(mytag,"Reload dialog returns : "+which);
-							if(which == dialog.BUTTON_POSITIVE) {
-								reload = true;
-							}
-							else if(which == dialog.BUTTON_NEGATIVE) {
-								reload = false;
-							}
-							check_answer();
-							dialog.dismiss();						
+				DialogInterface.OnClickListener reload_listener = new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						Tracer.e(mytag,"Reload dialog returns : "+which);
+						if(which == dialog.BUTTON_POSITIVE) {
+							reload = true;
 						}
-					};
-					dialog_reload = new AlertDialog.Builder(this);
-					dialog_reload.setMessage(getText(R.string.home_reload));
-					dialog_reload.setTitle(getText(R.string.reload_title));
-					dialog_reload.setPositiveButton(getText(R.string.reloadOK), reload_listener);
-					dialog_reload.setNegativeButton(getText(R.string.reloadNO), reload_listener);
-					dialog_reload.show();
-					init_done=false;	//A choice is pending : Rest of init has to be completed...
-				} else {
-					//No settings backup found
-					Tracer.v(mytag,"no settings backup found after fresh install...");
-					end_of_init_requested = true;
-					// open server config view
-					Intent helpI = new Intent(Activity_Main.this,Preference.class);
-					startActivity(helpI);					
-				}
+						else if(which == dialog.BUTTON_NEGATIVE) {
+							reload = false;
+						}
+						check_answer();
+						dialog.dismiss();						
+					}
+				};
+				dialog_reload = new AlertDialog.Builder(this);
+				dialog_reload.setMessage(getText(R.string.home_reload));
+				dialog_reload.setTitle(getText(R.string.reload_title));
+				dialog_reload.setPositiveButton(getText(R.string.reloadOK), reload_listener);
+				dialog_reload.setNegativeButton(getText(R.string.reloadNO), reload_listener);
+				dialog_reload.show();
+				init_done=false;	//A choice is pending : Rest of init has to be completed...
 			} else {
-				// It's not the 1st use after fresh install
-				// This method will be followed by 'onResume()'
+				//No settings backup found
+				Tracer.v(mytag,"no settings backup found after fresh install...");
 				end_of_init_requested = true;
+				// open server config view
+				Intent helpI = new Intent(Activity_Main.this,Preference.class);
+				startActivity(helpI);					
 			}
-			if(SP_params.getBoolean("SYNC", false)){
-				//A config exists and a sync as been done by past.
-				if(WU_widgetUpdate == null) {
-					Tracer.i(mytag,"OnCreate Params splach is false and WidgetUpdate is null startCacheengine!");
-					startCacheEngine();
-				}
+		} else {
+			// It's not the 1st use after fresh install
+			// This method will be followed by 'onResume()'
+			end_of_init_requested = true;
+		}
+		if(SP_params.getBoolean("SYNC", false)){
+			//A config exists and a sync as been done by past.
+			if(WU_widgetUpdate == null) {
+				Tracer.i(mytag,"OnCreate Params splach is false and WidgetUpdate is null startCacheengine!");
+				startCacheEngine();
+			}
 
+		}
+		// Changelog view
+		changelog changelog = new changelog(this);
+		if (changelog.firstRun())
+			try{
+				changelog.getLogDialog().show();
+			}catch (Exception e) {
+				Tracer.d(mytag,e.toString());
 			}
-			// Changelog view
-			changelog cl = new changelog(this);
-			  if (cl.firstRun())
-			    cl.getLogDialog().show();
-			  
-			Tracer.e(mytag,"OnCreate() complete !");
-			// End of onCreate (UIThread)
+
+		Tracer.e(mytag,"OnCreate() complete !");
+		// End of onCreate (UIThread)
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -428,16 +432,16 @@ public class Activity_Main extends Activity implements OnClickListener{
 		}
 		else {
 			Tracer.i(mytag+".onResume","Init done!");
-				end_of_init_requested=true;
-				if(WU_widgetUpdate != null) {
-					Tracer.i(mytag+".onResume","Widget update is not null so wakeup widget engine!");
-					WU_widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
-				}
+			end_of_init_requested=true;
+			if(WU_widgetUpdate != null) {
+				Tracer.i(mytag+".onResume","Widget update is not null so wakeup widget engine!");
+				WU_widgetUpdate.wakeup();		//If cache ready, that'll execute end_of_init()
 			}
+		}
 		if(end_of_init_requested)
 			end_of_init();
-		}
-	
+	}
+
 	@Override
 	public void onPause(){
 		super.onPause();
@@ -448,9 +452,9 @@ public class Activity_Main extends Activity implements OnClickListener{
 				WU_widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
 			}
 		}
-			
+
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -463,18 +467,18 @@ public class Activity_Main extends Activity implements OnClickListener{
 				Tracer.w(mytag+".onDestroy","cache engine set to sleeping !");
 				this.PM_WakeLock.release();	// We allow screen shut, now...
 				WU_widgetUpdate.set_sleeping();	//Don't cancel the cache engine : only freeze it
-												// only if we are the main initial activity
+				// only if we are the main initial activity
 			}
-			
+
 		}
 		/*
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
 			Tracer = null;
 		}
-		*/
+		 */
 	}
-	
+
 	private void Create_message_box() {
 		if(PG_dialog_message != null)
 			return;
@@ -483,25 +487,25 @@ public class Activity_Main extends Activity implements OnClickListener{
 		//dialog_reload.setPositiveButton("OK", message_listener);
 		PG_dialog_message.setTitle(getText(R.string.please_wait));
 	}
-	
+
 	public void force_DB_update() {
 		if(WU_widgetUpdate != null) {
 			WU_widgetUpdate.refreshNow();
 		}
 	}
-	
+
 	private void createAlert() {
 		AD_notSyncAlert = new AlertDialog.Builder(this);
 		AD_notSyncAlert.setMessage(getText(R.string.not_sync)).setTitle("Warning!");
 		AD_notSyncAlert.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();						
-				}
 			}
-		);
+		}
+				);
 
 	}
-	
+
 	private void end_of_init() {
 		// Finalize screen appearence
 		if(Tracer == null)
@@ -511,7 +515,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			//alertDialog not sync splash
 			if(AD_notSyncAlert == null)
 				createAlert();
-			}
+		}
 		//splash
 		if(!SP_params.getBoolean("SPLASH", false)){
 			Dialog_Splash dialog_splash = new Dialog_Splash(this);
@@ -522,19 +526,19 @@ public class Activity_Main extends Activity implements OnClickListener{
 			return;
 		}
 		end_of_init_requested = false;
-		
+
 		if(history != null)
 			history = null;		//Free resource
 		history = new Vector<String[]>();
 		historyPosition = 0;
-		
+
 		//load widgets
 		if(widgetHandler == null) {
 			Tracer.i(mytag, "Starting WidgetHandler thread !");
 			widgetHandler = new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
-					
+
 					try {
 						historyPosition++;
 						loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
@@ -559,14 +563,14 @@ public class Activity_Main extends Activity implements OnClickListener{
 			T_starting.show();
 		}
 		init_done = true;
-		
+
 		if((SP_params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
 			//Solve #2029
 			if(SP_params.getBoolean("SYNC", false)){
-			Tracer.e(mytag, "Direct start on Map requested...");
-			Tracer.Map_as_main = true;		//Memorize that Map is now the main screen
-			INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
-			startActivity(INTENT_map);
+				Tracer.e(mytag, "Direct start on Map requested...");
+				Tracer.Map_as_main = true;		//Memorize that Map is now the main screen
+				INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
+				startActivity(INTENT_map);
 			}else{
 				if(AD_notSyncAlert == null)
 					createAlert();
@@ -581,7 +585,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		init_done = true;
 		dont_kill = false;	//By default, the onDestroy activity will also kill engines
 	}
-	
+
 	/*
 	 * Check the answer after the proposal to reload existing settings (fresh install)
 	 */
@@ -592,7 +596,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			Tracer.e(mytag,"reload settings..");
 			loadSharedPreferencesFromFile(backupprefs);
 			run_sync_dialog();
-			
+
 		} else {
 			Tracer.v(mytag,"Settings not reloaded : clear database..");
 			File database = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/domodroid.db");
@@ -612,48 +616,48 @@ public class Activity_Main extends Activity implements OnClickListener{
 
 	@SuppressWarnings({ "unchecked" })
 	private boolean loadSharedPreferencesFromFile(File src) {
-	    boolean res = false;
-	    ObjectInputStream input = null;
-	    try {
-	        input = new ObjectInputStream(new FileInputStream(src));
-	            SP_prefEditor.clear();
-	            Map<String, ?> entries = (Map<String, ?>) input.readObject();
-	            for (Entry<String, ?> entry : entries.entrySet()) {
-	                Object v = entry.getValue();
-	                String key = entry.getKey();
-	                Tracer.v(mytag,"Loading pref : "+key+" -> "+v.toString());
-	                if (v instanceof Boolean)
-	                	SP_prefEditor.putBoolean(key, ((Boolean) v).booleanValue());
-	                else if (v instanceof Float)
-	                	SP_prefEditor.putFloat(key, ((Float) v).floatValue());
-	                else if (v instanceof Integer)
-	                	SP_prefEditor.putInt(key, ((Integer) v).intValue());
-	                else if (v instanceof Long)
-	                	SP_prefEditor.putLong(key, ((Long) v).longValue());
-	                else if (v instanceof String)
-	                	SP_prefEditor.putString(key, ((String) v));
-	            }
-	            SP_prefEditor.commit();
-	            this.LoadSelections();	// to set panel with known values
-	        res = true;         
-	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } catch (ClassNotFoundException e) {
-	        e.printStackTrace();
-	    }finally {
-	        try {
-	            if (input != null) {
-	                input.close();
-	            }
-	        } catch (IOException ex) {
-	            ex.printStackTrace();
-	        }
-	    }
-	    return res;
+		boolean res = false;
+		ObjectInputStream input = null;
+		try {
+			input = new ObjectInputStream(new FileInputStream(src));
+			SP_prefEditor.clear();
+			Map<String, ?> entries = (Map<String, ?>) input.readObject();
+			for (Entry<String, ?> entry : entries.entrySet()) {
+				Object v = entry.getValue();
+				String key = entry.getKey();
+				Tracer.v(mytag,"Loading pref : "+key+" -> "+v.toString());
+				if (v instanceof Boolean)
+					SP_prefEditor.putBoolean(key, ((Boolean) v).booleanValue());
+				else if (v instanceof Float)
+					SP_prefEditor.putFloat(key, ((Float) v).floatValue());
+				else if (v instanceof Integer)
+					SP_prefEditor.putInt(key, ((Integer) v).intValue());
+				else if (v instanceof Long)
+					SP_prefEditor.putLong(key, ((Long) v).longValue());
+				else if (v instanceof String)
+					SP_prefEditor.putString(key, ((String) v));
+			}
+			SP_prefEditor.commit();
+			this.LoadSelections();	// to set panel with known values
+			res = true;         
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (input != null) {
+					input.close();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return res;
 	}
-	
+
 	public void loadWigets(int id, String type){
 		Tracer.d(mytag+".loadWidgets","Construct main View id="+id+" type="+type);
 		VG_parent.removeAllViews();
@@ -663,11 +667,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 		LL_room.setOrientation(LinearLayout.VERTICAL);
 		LL_activ = new LinearLayout(this);
 		LL_activ.setOrientation(LinearLayout.VERTICAL);
-		
+
 		LL_house_map.removeAllViews();
 		LL_house_map.addView(house);
 		LL_house_map.addView(map);
-		
+
 		try {
 			if(type.equals("root")){
 				LL_area.removeAllViews();
@@ -687,7 +691,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 					LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ,SP_params, mytype);//add widgets in area 1
 				}
 				VG_parent.addView(LL_activ);
-			/*Should never arrive in this type.	
+				/*Should never arrive in this type.	
 			}else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				LL_area.removeAllViews();
@@ -697,14 +701,14 @@ public class Activity_Main extends Activity implements OnClickListener{
 				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
-			*/	
+				 */	
 			}else if(type.equals("statistics")) {
 				//Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
 				LL_area.removeAllViews();
 				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
-				
+
 			} else 	if(type.equals("area")) {
 				//Only possible if Version 0.2 or un-force by_usage (the area 'usage' is never proposed to be clicked)
 				if(! by_usage){
@@ -716,22 +720,22 @@ public class Activity_Main extends Activity implements OnClickListener{
 				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);//add widgets in this area
 				VG_parent.addView(LL_activ);
-				
+
 			} else 	if(type.equals("room")) {
 				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);//add widgets in this room
 				VG_parent.addView(LL_activ);
 			}
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void LoadSelections() {
 		by_usage = SP_params.getBoolean("BY_USAGE", false);
 	}
-	
+
 	private void run_sync_dialog() {
 		//change sync parameter in case it fail.
 		SP_prefEditor.putBoolean("SYNC", false);
@@ -756,17 +760,17 @@ public class Activity_Main extends Activity implements OnClickListener{
 			reload = false;
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
-	        }
+			}
 			return;
 		}  else if(v.getTag().equals("reload_ok")) {
 			Tracer.v(mytag,"Choosing settings reload");
 			reload=true;
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
-	        }
+			}
 		}
 	}
-	
+
 	private Boolean startCacheEngine() {
 		Cache_management.checkcache(Tracer, myself);
 		if(WU_widgetUpdate == null) {
@@ -785,42 +789,42 @@ public class Activity_Main extends Activity implements OnClickListener{
 		Tracer.set_engine(WU_widgetUpdate);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-	    super.onPrepareOptionsMenu(menu);
-	    
-	    if (SP_params.getBoolean("SYNC", false)){
-	    	float api_version=SP_params.getFloat("API_VERSION",0);
-	    	if(api_version < 0.7f){
-	    		menu.findItem(R.id.menu_butler).setVisible(false);
-	    	}
-	    }
-	    
-	    return true;
-	}
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu){
-		MenuInflater inflater = getMenuInflater();
-	        inflater.inflate(R.menu.activity_main, menu);
-	        return super.onCreateOptionsMenu(menu);
-    }
-	 
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-    	//TODO prepare a normal menu call. 
-		 
-        switch (item.getItemId())
-        {
-        case R.id.menu_butler:
-        	Intent intent = new Intent(this,Main.class);
-			this.startActivity(intent);
-        	return true;
+		super.onPrepareOptionsMenu(menu);
 
-        case R.id.menu_exit:
-        	//Disconnect all opened sessions....
+		if (SP_params.getBoolean("SYNC", false)){
+			float api_version=SP_params.getFloat("API_VERSION",0);
+			if(api_version < 0.7f){
+				menu.findItem(R.id.menu_butler).setVisible(false);
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		//TODO prepare a normal menu call. 
+
+		switch (item.getItemId())
+		{
+		case R.id.menu_butler:
+			Intent intent = new Intent(this,Main.class);
+			this.startActivity(intent);
+			return true;
+
+		case R.id.menu_exit:
+			//Disconnect all opened sessions....
 			Tracer.v(mytag+"Exit","Stopping WidgetUpdate thread !");
 			this.WM_Agent=null;
 			widgetHandler=null;
@@ -833,25 +837,25 @@ public class Activity_Main extends Activity implements OnClickListener{
 			this.finish();
 			return true;
 
-        case R.id.menu_house_config:
+		case R.id.menu_house_config:
 			Tracer.v(mytag+".onclick()","Call to House settings screen");
 			DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
 			DIALOG_house_set.show();
 			DIALOG_house_set.setOnDismissListener(house_listener);
 			return true;
 
-        case R.id.menu_preferences:
-        	//Prepare a normal preferences activity. 
+		case R.id.menu_preferences:
+			//Prepare a normal preferences activity. 
 			Intent helpI = new Intent(Activity_Main.this,Preference.class);
 			startActivity(helpI);
 			return true;
 
-        case R.id.menu_about:
+		case R.id.menu_about:
 			dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 			Intent helpI1 = new Intent(Activity_Main.this,Activity_About.class);
 			startActivity(helpI1);
 			return true;
-			
+
 		case R.id.menu_stats:
 			if(SP_params.getBoolean("SYNC", false)){
 				loadWigets(0, "statistics");
@@ -863,17 +867,17 @@ public class Activity_Main extends Activity implements OnClickListener{
 				AD_notSyncAlert.show();
 			}
 			return true;
-			
-        case R.id.menu_sync:
-        	// click on 'sync' button into Sliding_Drawer View
+
+		case R.id.menu_sync:
+			// click on 'sync' button into Sliding_Drawer View
 			run_sync_dialog();		// And run a resync with Rinor server
 			return true;
-			        	
+
 		default:
-            return super.onOptionsItemSelected(item);
-        }
-    }  
-	
+			return super.onOptionsItemSelected(item);
+		}
+	}  
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if((keyCode == 4) && historyPosition > 0){
@@ -904,19 +908,19 @@ public class Activity_Main extends Activity implements OnClickListener{
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	//this is called when the screen rotates.
 	// (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
 	{
-	    //Check if sync as been done by past to avoid crash
+		//Check if sync as been done by past to avoid crash
 		//on orientation change when user have to reload saved parameters.
 		super.onConfigurationChanged(newConfig);
 		if(SP_params.getBoolean("SYNC", false))
 			refresh();
 	}
-	
+
 	public void refresh()
 	{
 		loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]),history.elementAt(historyPosition)[1]);

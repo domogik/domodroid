@@ -41,5 +41,5 @@ public class Entity_Icon {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 }

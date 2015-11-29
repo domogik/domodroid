@@ -26,7 +26,7 @@ public class Color_Result extends View {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		setMeasuredDimension(100, 120);
 	}
-	
+
 	public void refresh(){
 		invalidate();
 	}

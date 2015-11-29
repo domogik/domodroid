@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		Log.e("DatabaseHelper","DATABASE_NAME = "+DATABASE_NAME);
-		
+
 	}
 
 
@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
+				+ newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS table_area");
 		db.execSQL("DROP TABLE IF EXISTS table_room");
 		db.execSQL("DROP TABLE IF EXISTS table_icon");
@@ -62,21 +62,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS table_feature_association");
 		db.execSQL("DROP TABLE IF EXISTS table_feature_state");
 		db.execSQL("DROP TABLE IF EXISTS table_feature_map");
-        onCreate(db);
-	}
-	
-	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS table_area");
-		db.execSQL("DROP TABLE IF EXISTS table_room");
-		db.execSQL("DROP TABLE IF EXISTS table_icon");
-		db.execSQL("DROP TABLE IF EXISTS table_feature");
-		db.execSQL("DROP TABLE IF EXISTS table_feature_association");
-		db.execSQL("DROP TABLE IF EXISTS table_feature_state");
-		db.execSQL("DROP TABLE IF EXISTS table_feature_map");
-        onCreate(db);
+		onCreate(db);
 	}
 
-	
+	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
+				+ newVersion + ", which will destroy all old data");
+		db.execSQL("DROP TABLE IF EXISTS table_area");
+		db.execSQL("DROP TABLE IF EXISTS table_room");
+		db.execSQL("DROP TABLE IF EXISTS table_icon");
+		db.execSQL("DROP TABLE IF EXISTS table_feature");
+		db.execSQL("DROP TABLE IF EXISTS table_feature_association");
+		db.execSQL("DROP TABLE IF EXISTS table_feature_state");
+		db.execSQL("DROP TABLE IF EXISTS table_feature_map");
+		onCreate(db);
+	}
+
+
 }

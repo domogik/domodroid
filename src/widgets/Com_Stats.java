@@ -82,7 +82,7 @@ public class Com_Stats extends FrameLayout  {
 	public FrameLayout container = null;
 	public FrameLayout myself = null;
 	private tracerengine Tracer = null;
-	
+
 	private Stats_Com stats = null;
 	private static Timer timer=null;
 	private TextView elapsed_period;
@@ -95,7 +95,7 @@ public class Com_Stats extends FrameLayout  {
 	private TextView cum_eventsBR;
 	private TextView cum_eventsPS;
 	private TextView cum_eventsBS;
-	
+
 	private TextView period_statsPR;
 	private TextView period_statsBR;
 	private TextView period_statsPS;
@@ -104,19 +104,19 @@ public class Com_Stats extends FrameLayout  {
 	private TextView period_eventsBR;
 	private TextView period_eventsPS;
 	private TextView period_eventsBS;
-	
+
 	@SuppressLint("HandlerLeak")
 	public Com_Stats(tracerengine Trac,Activity context, int widgetSize) {
 		super(context);
 		this.Tracer = Trac;
 		this.context = context;
 		this.myself = this;
-		
+
 		mytag="Com_Stats";
 		this.setPadding(5, 5, 5, 5);
 		Tracer.e(mytag,"New instance");
 		stats = Stats_Com.getInstance();
-		
+
 		//panel with border
 		background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
@@ -134,10 +134,10 @@ public class Com_Stats extends FrameLayout  {
 
 		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = layoutInflater.inflate(R.layout.com_stats_2,null);
-		
+
 		topPan.addView(view);
 		background.addView(topPan);
-		
+
 		this.addView(background);
 		elapsed_period = (TextView) findViewById(R.id.textPeriodValue);
 		cumul_period = (TextView) findViewById(R.id.textCumulValue);
@@ -149,7 +149,7 @@ public class Com_Stats extends FrameLayout  {
 		cum_eventsBR = (TextView) findViewById(R.id.eventsBR);
 		cum_eventsPS = (TextView) findViewById(R.id.eventsPS);
 		cum_eventsBS = (TextView) findViewById(R.id.eventsBS);
-		
+
 		period_statsPR = (TextView) findViewById(R.id.PstatsPR);
 		period_statsBR = (TextView) findViewById(R.id.PstatsBR);
 		period_statsPS = (TextView) findViewById(R.id.PstatsPS);
@@ -158,7 +158,7 @@ public class Com_Stats extends FrameLayout  {
 		period_eventsBR = (TextView) findViewById(R.id.PeventsBR);
 		period_eventsPS = (TextView) findViewById(R.id.PeventsPS);
 		period_eventsBS = (TextView) findViewById(R.id.PeventsBS);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -175,7 +175,7 @@ public class Com_Stats extends FrameLayout  {
 						cum_eventsBR.setText(Integer.toString(stats.cumul_events_recv_bytes));
 						cum_eventsPS.setText(Integer.toString(stats.cumul_events_sent_packets));
 						cum_eventsBS.setText(Integer.toString(stats.cumul_events_sent_bytes));
-						
+
 						period_statsPR.setText(Integer.toString(stats.periodic_stats_recv_packets));
 						period_statsBR.setText(Integer.toString(stats.periodic_stats_recv_bytes));
 						period_statsPS.setText(Integer.toString(stats.periodic_stats_sent_packets));
@@ -187,44 +187,44 @@ public class Com_Stats extends FrameLayout  {
 					}
 				} 
 			}
-			
+
 		};
 		Tracer.e(mytag,"Instance created");
 		Timer();	
-		
+
 
 	}
 	private void Timer() {
 		timer = new Timer();
-		
+
 		TimerTask doAsynchronousTask = new TimerTask() {
-		
+
 			@Override
 			public void run() {
 				try {
 					//Tracer.e(mytag,"Update statistics.."+stats.elapsed_period);
 					handler.sendEmptyMessage(0);
-					
+
 				} catch (Exception e) {
 					//e.printStackTrace();
 				}
 			};
-			
+
 		};
 		if(timer != null) {
 			timer.schedule(doAsynchronousTask, 0, 5000);	// Once per 5 seconds	
 			doAsynchronousTask.run();
 		}
 	}
-	
+
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			
+
 		}
 	}
-	
-	
+
+
 }
 
 

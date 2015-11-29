@@ -32,8 +32,8 @@ public class Activity_Cam extends Activity{
 	private String url;
 	private ImageView IV_img;
 	private FrameLayout FL_imgPan;
-    
-	
+
+
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		Bundle b=getIntent().getExtras();
@@ -51,7 +51,7 @@ public class Activity_Cam extends Activity{
 		FL_title.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,(int) (40*scale)));
 		FL_title.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",(int) (40*scale)));
 		LL_activity.addView(FL_title);
-		
+
 		//panel to set img with padding left
 		FL_imgPan = new FrameLayout(this);
 		FL_imgPan.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,Gravity.RIGHT));
@@ -62,7 +62,7 @@ public class Activity_Cam extends Activity{
 		IV_img.setBackgroundResource(R.drawable.app_name);
 		FL_imgPan.addView(IV_img);
 		FL_title.addView(FL_imgPan);
-		
+
 		//video panel
 		FL_viewPan = new FrameLayout(this);
 		FL_viewPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
@@ -87,18 +87,18 @@ public class Activity_Cam extends Activity{
 		TV_frameRate.setPadding(15, 0, 0, 0);
 		TV_frameRate.setText("Frame Rate: 0 Fps");
 
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		mv = new MjpegViewAsync(this);
 		mv.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-		
+
 		LL_infoPan.addView(TV_name);
 		LL_infoPan.addView(TV_frameRate);
 		FL_viewPan.addView(mv);
 		FL_viewPan.addView(LL_infoPan);
 		LL_activity.addView(FL_viewPan);
-		
+
 		setContentView(LL_activity);        
 		try {
 			mv.setSource(MjpegInputStream.read(url));
@@ -108,7 +108,7 @@ public class Activity_Cam extends Activity{
 		}
 		mv.setDisplayMode(MjpegView.SIZE_BEST_FIT);
 		mv.showFps(true);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -124,5 +124,5 @@ public class Activity_Cam extends Activity{
 		mv.stopPlayback();
 		finish();
 	}
-	
+
 }

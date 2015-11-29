@@ -118,7 +118,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 	private float api_version;
 	private SharedPreferences params;
 	private String usage;
-		
+
 	@SuppressLint("HandlerLeak")
 	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			String type, String address,
@@ -147,12 +147,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		this.parameters = parameters;
 		setOnLongClickListener(this);
 		setOnClickListener(this);
-		
+
 		mytag="Graphical_List ("+dev_id+")";
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
@@ -164,7 +164,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		value.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
-		
+
 		if(with_list) {
 			//Exploit parameters
 			JSONObject jparam = null;
@@ -179,13 +179,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 				command = "";
 				commandValues = null;
 				Tracer.e(mytag, "Json command error "+e.toString());
-				
+
 			}
 			if(commandValues != null) {
 				if(commandValues.length() > 0) {
 					if(known_values != null)
 						known_values = null;
-					
+
 					known_values = new String[commandValues.length()];
 					for(int i=0; i < commandValues.length(); i++) {
 						try {
@@ -195,22 +195,22 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 						}
 					}
 				}
-					
+
 			}
 			//list of choices
 			listeChoices = new ListView(context);
-			
+
 			listItem=new ArrayList<HashMap<String,String>>();
 			list_usable_choices = new Vector<String>();
 			for (int i=0;i<known_values.length;i++) {
 				list_usable_choices.add(getStringResourceByName(known_values[i]));
 				HashMap<String,String> map=new HashMap<String,String>();
-					map.put("choice",getStringResourceByName( known_values[i]));
-					map.put("cmd_to_send",known_values[i]);
-					listItem.add(map);
-				
+				map.put("choice",getStringResourceByName( known_values[i]));
+				map.put("cmd_to_send",known_values[i]);
+				listItem.add(map);
+
 			}
-			
+
 
 			SimpleAdapter adapter_map=new SimpleAdapter(getContext(),listItem,
 					R.layout.item_choice,new String[] {"choice", "cmd_to_send"},new int[] {R.id.choice, R.id.cmd_to_send});
@@ -235,31 +235,31 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
 			featurePan2.setPadding(5, 10, 5, 10);
 			featurePan2.addView(listeChoices);
-			
+
 		}
-		
+
 		LL_featurePan.addView(value);
-				
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				
+
 				if(msg.what == 2) {
 					Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
-					
+
 				} else if(msg.what == 9999) {
-				
+
 					//Message from cache engine
 					//state_engine send us a signal to notify value changed
 					if(session == null)
 						return;
-					
+
 					String loc_Value = session.getValue();
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
 					value.setText(getStringResourceByName(loc_Value));
 					//To have the icon colored as it has no state
-			    	IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-			    	
+					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
 					Tracer.d(mytag,"cache engine disappeared ===> Harakiri !" );
@@ -276,9 +276,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 					} catch (Throwable t) {}	//kill the handler thread itself
 				}
 			}	
-			
+
 		};	//End of handler
-		
+
 		//================================================================================
 		/*
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -288,15 +288,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
@@ -329,30 +329,30 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		}
 	}
 
-	
+
 	private String getStringResourceByName(String stringName) {
-	      String packageName = context.getPackageName();
-	      String search =  stringName.toLowerCase();
-	      int resId = 0;
-	   
-	      resId = getResources().getIdentifier(search, "string", packageName);
-	      String result = "";
-	      try {
-	    	  result = context.getString(resId);
-	      } catch (Exception e) {
-	    	  result = stringName;
-	      }
-	      return result;
-	    }
-	
-	
+		String packageName = context.getPackageName();
+		String search =  stringName.toLowerCase();
+		int resId = 0;
+
+		resId = getResources().getIdentifier(search, "string", packageName);
+		String result = "";
+		try {
+			result = context.getString(resId);
+		} catch (Exception e) {
+			result = stringName;
+		}
+		return result;
+	}
+
+
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){
-			
+
 		}
 	}
-	
+
 	public static float Round(float Rval, int Rpl) {
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
@@ -366,21 +366,21 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
 			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
 			int sizeint=(int)size;
-				if(LL_background.getHeight() != sizeint){
-					Tracer.d(mytag,"on click");
-					try {
-						LL_background.removeView(featurePan2);
-						Tracer.d(mytag,"removeView(featurePan2)");
-						
-					} catch (Exception e) {}
-					LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-					Tracer.d(mytag,"addView(featurePan2)");
-					LL_background.addView(featurePan2);
-				}
-				else{
+			if(LL_background.getHeight() != sizeint){
+				Tracer.d(mytag,"on click");
+				try {
 					LL_background.removeView(featurePan2);
-					LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-				}
+					Tracer.d(mytag,"removeView(featurePan2)");
+
+				} catch (Exception e) {}
+				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
+				Tracer.d(mytag,"addView(featurePan2)");
+				LL_background.addView(featurePan2);
+			}
+			else{
+				LL_background.removeView(featurePan2);
+				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+			}
 		}
 		return;
 	}

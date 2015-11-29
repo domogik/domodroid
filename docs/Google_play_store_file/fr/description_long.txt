@@ -1,12 +1,12 @@
-Domodroid est une application de contrôle à  distance qui vous permet de contrôler votre systà¨me domotique  via Domogki.
+Domodroid est une application de contrôle à distance qui vous permet de contrôler votre système domotique  via Domogik.
 
-Les fonctions suivante sont déjà  disponibles dans cette version de Domodroid:
+Les fonctions suivantes sont déjà disponibles dans cette version de Domodroid:
 
 - Courbe avec un moteur de tracé interne (par défaut)
 - Courbe avec le moteur Achartengine (en cours de développement)
 - Visualisation des caméras
 - Widgets On/Off ( deux versions disponibles), variateur, état et données, envoie de commande
-- Mise à  jour automatique des widgets
+- Mise à jour automatique des widgets
 - De nombreuses icônes
 - Technologie supportée: Onewire, PLCBus, IPX800, Mirror, Teleinfo, X10, WakeOnLan, Ping, Zibase, RFXCom, YahooWather. (Toutes celles supportées par Domogik en théorie)
 - Toutes tailles d'écrans téléphones et tablettes
@@ -16,7 +16,10 @@ Les fonctions suivante sont déjà  disponibles dans cette version de Domodroid:
 http:/domogik.org/
 
 La documentation se trouve ici:
-http://doc.domogik.org/domodroid/dev/en/
+http://domodroid.readthedocs.org/
+
+Vous pouvez participer à la traduction ici:
+https://www.transifex.com/projects/p/domodroid/
 
 Les versions de développement sont compilés tous les jours ici:
 http://repo.domogik.org/domodroid-nightly/

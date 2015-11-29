@@ -76,8 +76,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 	private final String state_key;
 	private int range;
 	private int scale;
-	private int valueMin;
-	private int valueMax;
+	private int valueMin=0;
+	private int valueMax=100;
 	private int CustomMax;
 	private String type; 
 	private String command;
@@ -95,7 +95,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 	private static String mytag;
 	private tracerengine Tracer = null;
 	private Message msg;
-	
+
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
@@ -106,7 +106,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 	private SharedPreferences params;
 	private String test_unite;
 	private Activity context;
-	
+	private String command_id = null;
+	private String command_type = null;
+
 	public Graphical_Range(tracerengine Trac, Activity context, String address, String name,int id,int dev_id,
 			String state_key, String url, String usage, 
 			String parameters, String model_id, int update, 
@@ -131,16 +133,26 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		mytag="Graphical_Range("+dev_id+")";
 		this.params=params;
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-		command = jparam.getString("command");
-		valueMin = jparam.getInt("valueMin");
-		valueMax = jparam.getInt("valueMax");
-		range = valueMax-valueMin;
-		scale = 100/range;
+		if (api_version>=0.7f){
+			try {
+				command_id = jparam.getString("command_id");
+				command_type= jparam.getString("command_type");
+			} catch (JSONException e) {
+				Tracer.i(mytag, "No parameters for command");
+				seekBarVaria.setEnabled(false);
+			}	
+		}else{
+			command = jparam.getString("command");
+			valueMin = jparam.getInt("valueMin");
+			valueMax = jparam.getInt("valueMax");
+			range = valueMax-valueMin;
+			scale = 100/range;
+		}
 		try {
 			test_unite = jparam.getString("unit");
 		} catch (JSONException e) {	
@@ -178,7 +190,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		//first seekbar variator
 		seekBarVaria=new SeekBar(context);
 		seekBarVaria.setProgress(0);
-		seekBarVaria.setMax(valueMax-valueMin);
+		if(api_version<0.7f)
+			seekBarVaria.setMax(valueMax-valueMin);
 		seekBarVaria.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER_HORIZONTAL));
 		seekBarVaria.setProgressDrawable(getResources().getDrawable(R.drawable.bgseekbarvaria));
 		seekBarVaria.setThumb(getResources().getDrawable(R.drawable.buttonseekbar));
@@ -231,7 +244,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 						}
 						state.setAnimation(animation);
 						new SBAnim(seekBarVaria.getProgress(),new_val-valueMin).execute();
-						
+
 					} else if(msg.what == 9998) {
 						// state_engine send us a signal to notify it'll die !
 						Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
@@ -247,8 +260,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 							finalize(); 
 						} catch (Throwable t) {}	//kill the handler thread itself
 					}
-					
-					
+
+
 				}
 			}	
 		};
@@ -261,15 +274,15 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....			
@@ -306,25 +319,43 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		new CommandeThread().execute();
 		touching=false;
 	}
-	
-	
+
+
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			updating=3;
-			JSONObject json_Ack = null;
-			try {
-				json_Ack = Rest_com.connect_jsonobject(url+"command/"+type+"/"+address+"/"+command+"/"+state_progress,login,password);
-			} catch (Exception e) {
-				Tracer.e(mytag, "Rest exception getting state : <"+e.getMessage()+">");
+			Handler temphandler =  new Handler(context.getMainLooper());
+			temphandler.post( new Runnable(){
+				public void run(){
+					updating=3;
+					String Url2send;
+					if(api_version>=0.7f){
+						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
+					}else{
+						Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
+					}
+					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+					JSONObject json_Ack = null;
+					try {
+						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
+					} catch (Exception e) {
+						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
+					}
+					try {
+						Boolean ack = JSONParser.Ack(json_Ack);
+						if(ack==false){
+							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
+							handler.sendEmptyMessage(2);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
-			try {
-				@SuppressWarnings("unused")
-				Boolean ack = JSONParser.Ack(json_Ack);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+					);
 			return null;
 		}
 	}

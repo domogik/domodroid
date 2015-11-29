@@ -66,9 +66,9 @@ public class DmdContentProvider extends ContentProvider {
 	public static final int UPDATE_AREA_NAME=302;
 	public static final int UPDATE_ROOM_NAME=303;
 	public static final int UPDATE_ICON_NAME=304;
-	
+
 	public static final int UPGRADE_FEATURE_STATE = 400;
-	
+
 	private static final String DOMODROID_BASE_PATH = "domodroid";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH);
 	public static final Uri CONTENT_URI_REQUEST_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_AREA");
@@ -82,7 +82,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION_ALL");
 	public static final Uri CONTENT_URI_REQUEST_FEATURE_MAP_ALL = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP_ALL");
-	
+
 	public static final Uri CONTENT_URI_INSERT_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_AREA");
 	public static final Uri CONTENT_URI_INSERT_ROOM = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_ROOM");
 	public static final Uri CONTENT_URI_INSERT_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/INSERT_ICON");
@@ -98,7 +98,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_CLEAR_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_ASSOCIATION");
 	public static final Uri CONTENT_URI_CLEAR_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_FEATURE_STATE");
-	
+
 	public static final Uri CONTENT_URI_CLEAR_one_AREA = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_AREA");
 	public static final Uri CONTENT_URI_CLEAR_one_ROOM = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_ROOM");
 	public static final Uri CONTENT_URI_CLEAR_one_ICON = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_ICON");
@@ -109,7 +109,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final Uri CONTENT_URI_CLEAR_one_feature_in_FEATURE_MAP = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP");
 	public static final Uri CONTENT_URI_CLEAR_one_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE");
 	public static final Uri CONTENT_URI_CLEAR_one_place_type_in_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/CLEAR_one_place_type_in_FEATURE_ASSOCIATION");
-	
+
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
 	public static final Uri CONTENT_URI_UPDATE_FEATURE_NAME = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME");
 	public static final Uri CONTENT_URI_UPDATE_AREA_NAME = Uri.parse("content://" + AUTHORITY+ "/" + DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME");
@@ -122,7 +122,7 @@ public class DmdContentProvider extends ContentProvider {
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/domodroid";
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-	
+
 	static {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_AREA", REQUEST_AREA);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_ROOM", REQUEST_ROOM);
@@ -135,7 +135,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION", REQUEST_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION_ALL", REQUEST_FEATURE_ASSOCIATION_ALL);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP_ALL", REQUEST_FEATURE_MAP_ALL);
-		
+
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_AREA", INSERT_AREA);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_ROOM", INSERT_ROOM);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_ICON", INSERT_ICON);
@@ -143,7 +143,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_ASSOCIATION", INSERT_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_MAP", INSERT_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_FEATURE_STATE", INSERT_FEATURE_STATE);
-		
+
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_AREA", CLEAR_AREA);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_ROOM", CLEAR_ROOM);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE", CLEAR_FEATURE);
@@ -151,7 +151,7 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_ASSOCIATION", CLEAR_FEATURE_ASSOCIATION);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_MAP", CLEAR_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_FEATURE_STATE",CLEAR_FEATURE_STATE);
-		
+
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_AREA", CLEAR_one_AREA);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_ROOM", CLEAR_one_ROOM);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_ICON", CLEAR_one_ICON);
@@ -162,34 +162,34 @@ public class DmdContentProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_MAP", CLEAR_one_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP", CLEAR_one_feature_in_FEATURE_MAP);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE", CLEAR_one_FEATURE_STATE);
-		
+
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME", UPDATE_FEATURE_NAME);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME", UPDATE_AREA_NAME);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME", UPDATE_ROOM_NAME);
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME", UPDATE_ICON_NAME);
-		
+
 		sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPGRADE_FEATURE_STATE", UPGRADE_FEATURE_STATE);
-		
+
 	}
 
 	@Override
 	public boolean onCreate() {
 		mDB = new DatabaseHelper(getContext());
 		return true;
-		
+
 	}
-	
+
 	public void close() {
 		mDB.close();
 		mDB=null;
 		try{
 			finalize();
 		} catch (Throwable e) {
-			
+
 		}
 	}
-	
+
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		// To erase all table contents
@@ -206,12 +206,12 @@ public class DmdContentProvider extends ContentProvider {
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public String getType(Uri uri) {
 		return null;
 	}
-	
+
 	public Uri clear(Uri uri) {
 		int uriType = sURIMatcher.match(uri);
 		long id = 0;
@@ -221,17 +221,17 @@ public class DmdContentProvider extends ContentProvider {
 			bdd.execSQL("delete from table_area where 1=1");
 			break;
 		}
-		
+
 		return Uri.parse(DOMODROID_BASE_PATH + "/" + id);
 	}
-	
+
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		long id = 0;
 		long rowid = 0;
 		switch (uriType) {
-		
+
 		case INSERT_AREA:
 			bdd = mDB.getWritableDatabase();
 			bdd.insert("table_area", null, values);
@@ -256,7 +256,7 @@ public class DmdContentProvider extends ContentProvider {
 		case INSERT_FEATURE_STATE:
 			mDB.getWritableDatabase().insert("table_feature_state", null, values);
 			break;
-		
+
 		case CLEAR_AREA:
 			mDB.getWritableDatabase().execSQL("delete from table_area where 1=1");
 			break;
@@ -287,65 +287,65 @@ public class DmdContentProvider extends ContentProvider {
 			//Log.e(mytag,"Clear feature_state table");
 			mDB.getWritableDatabase().execSQL("delete from table_feature_state where 1=1");
 			break;
-		
+
 		case CLEAR_one_AREA:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_area WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting area: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_ROOM:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_room WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting room: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_ICON:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_icon WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'");
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting icon: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_FEATURE:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting feature: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_FEATURE_ASSOCIATION:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting feature_association: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_unique_FEATURE_ASSOCIATION:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id="+values.getAsString("id")+" AND place_id="+values.getAsString("place_id")+" AND place_type='"+values.getAsString("place_type")+"'" );
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting one_unique_feature_association: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_place_type_in_FEATURE_ASSOCIATION:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE place_id="+values.getAsString("place_id")+" AND place_type='"+values.getAsString("place_type")+"'" );
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting one_place_type_in_FEATURE_ASSOCIATION: "+e.toString());
-				}
+			}
 			break;
-		//Add a new select case to remove only one widget on map
-		//careful to avoid problem it must be call with id, posx, posy and map
+			//Add a new select case to remove only one widget on map
+			//careful to avoid problem it must be call with id, posx, posy and map
 		case CLEAR_one_FEATURE_MAP:
 			//Tracer.e(mytag,"Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
 			try{
@@ -356,70 +356,70 @@ public class DmdContentProvider extends ContentProvider {
 				int posyhigh=values.getAsInteger("posy")+20;
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
 				//Tracer.d(mytag, "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting widget: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_feature_in_FEATURE_MAP:
 			try{
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error deleting feature_map: "+e.toString());
-				}
+			}
 			break;
 		case CLEAR_one_FEATURE_STATE:
 			break;
-		
+
 		case UPDATE_FEATURE_NAME:
 			//Rename the description of a device because it's what is first display if exist in a widget
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error modifiying the description of feature: "+e.toString());
-				}
+			}
 			break;
 		case UPDATE_AREA_NAME:
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_area SET name='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error modifiying the description of area: "+e.toString());
-				}
+			}
 			break;
 		case UPDATE_ROOM_NAME:
 			try{
 				mDB.getWritableDatabase().execSQL("UPDATE table_room SET name='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
 				//Tracer.d(mytag, "Doing sql, UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id="+values.getAsString("id"));
-				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error modifiying the description of room: "+e.toString());
-				}
+			}
 			break;
 		case UPDATE_ICON_NAME:
 			try{
 				Cursor cursor=null;
 				cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_icon WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'",null);
-		        if (cursor == null || !cursor.moveToFirst()) {
-		        	mDB.getWritableDatabase().insert("table_icon", null, values);
-					} else {
+				if (cursor == null || !cursor.moveToFirst()) {
+					mDB.getWritableDatabase().insert("table_icon", null, values);
+				} else {
 					mDB.getWritableDatabase().execSQL("UPDATE table_icon SET value='" + values.getAsString("value") + "' WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'");
 					//Log.d(mytag, "Doing sql, UPDATE table_feature SET value='" + values.getAsString("value") + "' WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'");
-					}
-		        }
+				}
+			}
 			catch (SQLException e) {
 				Log.e(mytag, "Error modifiying the description of icon: "+e.toString());
-				}
+			}
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI= "+uri);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
-		
+
 		return Uri.parse(DOMODROID_BASE_PATH + "/" + id);
 	}
 
@@ -441,7 +441,7 @@ public class DmdContentProvider extends ContentProvider {
 		case REQUEST_ROOM:
 			queryBuilder.setTables("table_room");
 			cursor = queryBuilder.query(mDB.getReadableDatabase(),projection, selection, selectionArgs, null, null, sortOrder);
-			
+
 			//Log.d(mytag,"Query on table_room return "+cursor.getCount()+" rows for area_id :"+selectionArgs[0]);
 			break;
 		case REQUEST_ICON:
@@ -474,16 +474,16 @@ public class DmdContentProvider extends ContentProvider {
 			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id",null);
 			cursor=mDB.getReadableDatabase().rawQuery(
 					"SELECT * FROM table_feature " +
-					"INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id" +
-					" WHERE table_feature_map.map = "+selectionArgs[0]
-							,null);
+							"INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id" +
+							" WHERE table_feature_map.map = "+selectionArgs[0]
+									,null);
 			break;
 		case REQUEST_MAP_SWITCHES:
 			//cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_map ON table_feature.id = table_feature_map.id",null);
 			cursor=mDB.getReadableDatabase().rawQuery(
 					"SELECT * FROM table_feature_map " +
-					" WHERE table_feature_map.map = "+selectionArgs[0]+
-					" AND table_feature_map.id > 9998"
+							" WHERE table_feature_map.map = "+selectionArgs[0]+
+							" AND table_feature_map.id > 99998"
 							,null);
 			break;
 		case REQUEST_FEATURE_ID:
@@ -523,5 +523,5 @@ public class DmdContentProvider extends ContentProvider {
 		getContext().getContentResolver().notifyChange(uri, null);
 		return items;
 	}
-	
+
 }

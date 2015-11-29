@@ -91,7 +91,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
 	private tracerengine Tracer = null;
-	
+
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
@@ -100,7 +100,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 	private Activity context;
 	private String usage;
 	private Animation animation;
-	
+
 	@SuppressLint("HandlerLeak")
 	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name, 
 			final String state_key, String url,final String usage, int update, 
@@ -121,13 +121,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		this.place_id= place_id;
 		this.place_type= place_type;
 		setOnClickListener(this);
-		
+
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-				
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		mytag="Graphical_History("+dev_id+")";
-		
+
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
@@ -139,10 +139,10 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		value.setTextColor(Color.BLACK);
 		animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
-		
+
 		super.LL_featurePan.addView(value);
 		super.LL_infoPan.addView(state_key_view);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {	
@@ -153,11 +153,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 					status = session.getValue();
 					String loc_Value = session.getValue();
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
-						value.setAnimation(animation);
-						value.setText(loc_Value);
-						//To have the icon colored as it has no state
-				    	IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-				    	
+					value.setAnimation(animation);
+					value.setText(loc_Value);
+					//To have the icon colored as it has no state
+					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
 					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
@@ -173,9 +173,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 						finalize(); 
 					} catch (Throwable t) {}	//kill the handler thread itself
 				}
-				
+
 			}
-			
+
 		};
 		//================================================================================
 		/*
@@ -186,26 +186,26 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
 	}
-	
-	
+
+
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		
+
 	}
-	
+
 	private void getlastvalue() {
 		//TODO add something in the view
 		//add last 5 values with their dates
@@ -218,51 +218,63 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 			if(api_version<=0.6f){
 				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
 				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
-			}else if(api_version==0.7f){
+			}else if(api_version>=0.7f){
 				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/last/5");
 				//Don't forget old "dev_id"+"state_key" is replaced by "id"
 				JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url+"sensorhistory/id/"+id+"/last/5",login,password);
 				json_LastValues=new JSONObject();
 				json_LastValues.put("stats", json_LastValues_0_4);
-				
+
 			}
 			itemArray = json_LastValues.getJSONArray("stats");
-			for (int i =itemArray.length(); i >= 0; i--){
-				try {
-					HashMap<String,String> map=new HashMap<String,String>();
-					if(api_version<=0.6f){
+			if(api_version<=0.6f){
+				for (int i =itemArray.length(); i >= 0; i--){
+					try {
+						HashMap<String,String> map=new HashMap<String,String>();
 						map.put("value",itemArray.getJSONObject(i).getString("value"));
-					}else if(api_version==0.7f){
 						map.put("value",itemArray.getJSONObject(i).getString("value_str"));
+						map.put("date",itemArray.getJSONObject(i).getString("date"));
+						listItem.add(map);
+						Tracer.d(mytag, map.toString());
+					}catch (Exception e) {
+						Tracer.e(mytag,"Error getting json value");
 					}
-					map.put("date",itemArray.getJSONObject(i).getString("date"));
-					listItem.add(map);
-					Tracer.d(mytag, map.toString());
-				}catch (Exception e) {
-					Tracer.e(mytag,"Error getting json value");
+				}
+			}else if(api_version>=0.7f){
+				for (int i=0; i <itemArray.length(); i++){
+					try {
+						HashMap<String,String> map=new HashMap<String,String>();
+						map.put("value",itemArray.getJSONObject(i).getString("value_str"));
+						map.put("date",itemArray.getJSONObject(i).getString("date"));
+						listItem.add(map);
+						Tracer.d(mytag, map.toString());
+					}catch (Exception e) {
+						Tracer.e(mytag,"Error getting json value");
+					}
 				}
 			}
+
 		} catch (Exception e) {
 			//return null;
 			Tracer.e(mytag,"Error getting json object");
 		}
-		
+
 		SimpleAdapter adapter_feature=new SimpleAdapter(this.context,listItem,
 				R.layout.item_phone,new String[] {"value","date"},new int[] {R.id.phone_value,R.id.phone_date});
 		listeChoices.setAdapter(adapter_feature);
 		listeChoices.setScrollingCacheEnabled(false);
-		}
-	
+	}
+
 	public void onClick(View arg0) {
-	//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-	float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
-	int sizeint=(int)size;
+		//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+		float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+		int sizeint=(int)size;
 		if(LL_background.getHeight() != sizeint){
 			Tracer.d(mytag,"on click");
 			try {
 				LL_background.removeView(listeChoices);
 				Tracer.d(mytag,"removeView(listeChoices)");
-				
+
 			} catch (Exception e) {}
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
 			getlastvalue();
@@ -273,10 +285,10 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
 		return ;
-		
+
 	}
-	
-	
+
+
 }
 
 

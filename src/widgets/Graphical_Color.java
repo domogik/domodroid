@@ -80,7 +80,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	private boolean touching;
 	private int updating=0;
 	private int state_progress;
-	
+
 	private int argb = 0;
 	private String argbS = "";
 	private Message msg;
@@ -94,8 +94,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	public static FrameLayout myself = null;
 	private Boolean switch_state = false;
 	private TimerTask doAsynchronousTask;
-	
-	
+
+
 	private int widgetSize;
 	private Color currentColor;
 	private SeekBar seekBarOnOff;
@@ -104,7 +104,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	public int rgbHue = 0;
 	public int rgbX = 0;
 	public int rgbY = 0;
-	
+
 	private TextView title7;
 	private TextView title8;
 	private TextView title9;
@@ -155,15 +155,15 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		this.place_type= place_type;
 		mytag="Graphical_Color("+dev_id+")";
 		setOnClickListener(this);
-		
+
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
-		
+
 		//state key
 		state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
@@ -195,7 +195,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		//color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
 		color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,1));
 		color_LeftPan.setPadding(0, 0, 0, 10);
-		
+
 		TextView title1 = new TextView(context);
 		title1.setText(context.getString(R.string.Hue));
 		title1.setTextSize(10);
@@ -236,7 +236,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		title9.setTextSize(10);
 		title9.setTextColor(Color.parseColor("#333333"));
 
-		
+
 		//seekbar huebar
 		seekBarHueBar=new Color_Progress(Tracer, context,0,0);
 		seekBarHueBar.setProgress(0);
@@ -285,7 +285,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
 		LL_featurePan.addView(seekBarOnOff);
 		LL_infoPan.addView(state_key_view);
-		
+
 		color_LeftPan.addView(title1);
 		color_LeftPan.addView(seekBarHueBar);
 		color_LeftPan.addView(title2);
@@ -315,27 +315,27 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				argbS = "?";
 				if(msg.what == 2) {
 					Toast.makeText(getContext(), "Command to server rejected", Toast.LENGTH_SHORT).show();
-					
+
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
 					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
 					session = null;
 					realtime = false;
 					removeView(LL_background);
-					
+
 					myself.setVisibility(GONE);
-					
+
 					try { 
 						finalize(); 
 					} catch (Throwable t) {}	//kill the handler thread itself	
-					
+
 				} else 	if(msg.what == 9999) {
 					if(session != null)
 						argbS = session.getValue();
 					else
 						return;
 					Tracer.d(mytag,"Handler receives a new value from state engine <"+argbS+">" );
-					
+
 				}
 				if(argbS.equals("off")) {
 					switch_state=false;
@@ -345,9 +345,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 					seekBarOnOff.setProgress(100);
 					switch_state=true;
 					LoadSelections();	//Recall last values known from shared preferences
-										// argb and argbS will be set when seekBars will be changed
+					// argb and argbS will be set when seekBars will be changed
 					return;
-					
+
 				} else {
 					try {
 						argbS = argbS.substring(1);	//It's the form #RRGGBB : ignore the #
@@ -363,8 +363,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				r=((argb>>16)&0xFF);
 				g=((argb>>8)&0xFF);
 				b=((argb)&0xFF);
-				
-				
+
+
 				if (argb == 0){
 					seekBarOnOff.setProgress(0);
 					switch_state=false;
@@ -373,26 +373,26 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				}
 				//Convert RGB to HSV color, and set sliders
 				float hsv[] = new float[3];
-				
+
 				Color.colorToHSV(value_save, hsv);
 				//Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
 				//Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
-				
+
 				//Seekbars are in range 0-255 : convert HSV values
 				//Hue is an angle : convert it to linear
 				seekBarHueBar.setProgress((int) ( 255f -(hsv[0]*255f/360)) );
 				seekBarRGBXBar.setProgress((int) (hsv[1]*255f));
 				seekBarRGBYBar.setProgress((int) (hsv[2]*255f));
-				
+
 				title7.setText(t7s+" : "+r);
 				title8.setText(t8s+" : "+g);
 				title9.setText(t9s+" : "+b);
 				if( (r != 0) || (g != 0) || (b != 0)) {
 					SaveSelections();
 				}
-										
+
 			}
-			
+
 		};	
 		updating = 0;
 		//================================================================================
@@ -404,22 +404,22 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....		
 	}
 
 
-	
+
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 		if(arg0.getTag().equals("onoff")) {
 			//User is moving on/off object....
@@ -428,21 +428,21 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			mCurrentHue = (255-arg0.getProgress())*360/255;
 			rgbView.mCurrentHue = mCurrentHue;
 			rgbView.invalidate();
-			
+
 			//rgb X
 			float[] hsv0 = {0,0,(float)rgbY/255f};
 			float[] hsv1 = {mCurrentHue,1,(float)rgbY/255f};
 			seekBarRGBXBar.hsv0 = hsv0;
 			seekBarRGBXBar.hsv1 = hsv1;
 			seekBarRGBXBar.invalidate();
-			
+
 			//rgb Y
 			float[] hsv2 = {0,0,0};
 			float[] hsv3 = {mCurrentHue,(float)rgbX/255f,1};
 			seekBarRGBYBar.hsv2 = hsv2;
 			seekBarRGBYBar.hsv3 = hsv3;
 			seekBarRGBYBar.invalidate();
-			
+
 		} else if(arg0.getTag().equals("rgbx")){
 			rgbX = arg0.getProgress();
 			float[] hsv2 = {0,0,0};
@@ -450,7 +450,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			seekBarRGBYBar.hsv2 = hsv2;
 			seekBarRGBYBar.hsv3 = hsv3;
 			seekBarRGBYBar.invalidate();
-			
+
 			rgbView.mCurrentX = arg0.getProgress();
 			seekBarRGBYBar.invalidate();
 			rgbView.invalidate();
@@ -465,7 +465,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			seekBarRGBXBar.invalidate();
 			rgbView.invalidate();
 		}
-		
+
 		float[] hsvCurrent = {mCurrentHue,(float)rgbX/255f,(float)rgbY/255f};
 		argb = Color.HSVToColor(hsvCurrent);
 		resultView.hsvCurrent = hsvCurrent;
@@ -475,16 +475,16 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		title9.setText(t9s+" : "+((argb)&0xFF));
 		resultView.invalidate();
 	}
-	
 
-	
+
+
 	public void onStartTrackingTouch(SeekBar seekBar) {
 		touching=true;
 		updating=3;
 	}
 
 
-	
+
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		String tag = (String )seekBar.getTag();
 		if(tag.equals("onoff")) {
@@ -501,7 +501,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				Tracer.i(mytag,"Change switch to ON" );
 			}
 			new CommandeThread().execute();		//And send switch_state to Domogik
-			
+
 		} else {
 			state_progress = seekBar.getProgress();
 			SaveSelections();
@@ -511,17 +511,17 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 					new CommandeThread().execute();		//send new color
 		}
 		touching=false;
-		
+
 	}
-	
+
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			String Url2send = url+"command/"+type+"/"+address+"/setcolor/";
-			
+
 			if( ( argb != 0) && switch_state) {
-				
+
 				String srgb = Integer.toHexString(argb);
 				if(srgb.length() > 6)
 					srgb = srgb.substring(2);
@@ -530,7 +530,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				String State="";
 				if(switch_state) {
 					State="on";
-					
+
 				} else {
 					State="off";
 					seekBarHueBar.setProgress(255);
@@ -539,9 +539,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				}
 				Url2send+=State;
 			}
-				
+
 			updating=1;
-			
+
 			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 			JSONObject json_Ack = null;
 			try {
@@ -571,7 +571,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	 * only notify 'on' state (without any RGB parameters)
 	 * We've to know which was the last one, kept by Domogik
 	 */
-	
+
 	private void SaveSelections() {
 		SharedPreferences.Editor prefEditor=params.edit();
 		prefEditor.putInt("COLORHUE",seekBarHueBar.getProgress());
@@ -584,7 +584,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
 		Tracer.i(mytag,"Sat    = "+params.getInt("COLORSATURATION",0));
 		Tracer.i(mytag,"Bright = "+params.getInt("COLORBRIGHTNESS",0));
-		*/
+		 */
 	}
 
 	private void LoadSelections() {
@@ -596,9 +596,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
 		Tracer.i(mytag,"Sat    = "+params.getInt("COLORSATURATION",0));
 		Tracer.i(mytag,"Bright = "+params.getInt("COLORBRIGHTNESS",0));
-		*/
+		 */
 	}
-	
+
 	public void onClick(View arg0) {
 		Tracer.i(mytag, "Touch....");
 		if(featurePan2.getVisibility()== INVISIBLE){

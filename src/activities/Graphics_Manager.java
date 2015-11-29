@@ -191,7 +191,7 @@ public class Graphics_Manager {
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else return R.drawable.usage_default_on;
-		
+
 		case 3: //For undefined
 			//reorder by usage name for easy update
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_undefined;}
@@ -249,29 +249,29 @@ public class Graphics_Manager {
 		return R.drawable.icon;
 	}
 
-	
+
 	public static String Names_Agent(Context context, String usage){
 		//Use to translate value in current language
 		//For example if an a room is named kitchen,
 		//in French The text display will be cuisine
-			int resId;
-			String result = usage;
-		    String packageName = context.getPackageName();
-		    String search = usage;
-		    if(search.equals("air conditioning"))
-		    	search = "conditioning";
-		      
-		      resId = context.getResources().getIdentifier(search, "string", packageName);
-		      if(resId != 0) {
-		    	  try {
-		    		  result = context.getString(resId);
-		    	  } catch (Exception e) {
-		    		  result = usage;
-		    	  }
-		      }
-		      return result;
+		int resId;
+		String result = usage;
+		String packageName = context.getPackageName();
+		String search = usage;
+		if(search.equals("air conditioning"))
+			search = "conditioning";
+
+		resId = context.getResources().getIdentifier(search, "string", packageName);
+		if(resId != 0) {
+			try {
+				result = context.getString(resId);
+			} catch (Exception e) {
+				result = usage;
+			}
+		}
+		return result;
 	}
-	
+
 	public static int Names_conditioncodes(Context context,int code){
 		//used to get the translate text from yahoo weather infocode.
 		try{
@@ -280,7 +280,7 @@ public class Graphics_Manager {
 			return R.string.info48;
 		}
 	}
-	
+
 	public static int Map_Agent(String usage, int state){
 		usage=adapt_usage(usage);
 		switch(state){
@@ -298,14 +298,14 @@ public class Graphics_Manager {
 			 * shutter
 			 * water
 			 * window
-			*/
+			 */
 			/*
 			try{
 				return context.getResources().getIdentifier("map_usage_"+usage+"_off", "drawable", context.getPackageName());
 			} catch (Exception e){
 				return R.drawable.map_led_off;
 			}
-			*/
+			 */
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
@@ -322,7 +322,7 @@ public class Graphics_Manager {
 			else if(usage.equals("ventilation")){return R.drawable.map_usage_ventilation_off;}
 			else if(usage.equals("water_tank")){return R.drawable.map_usage_water_tank;}
 			else return R.drawable.map_led_off;
-			
+
 		case 1:
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
@@ -353,13 +353,13 @@ public class Graphics_Manager {
 		//To get a string from R.String
 		return context.getResources().getIdentifier(name, "string", context.getPackageName());
 	}
-	
+
 	public static String adapt_usage(String usage) {
 		//TODO adapt for 0.4
 		//information are in json device_types of each plugin
 		//BLUEZ "available"
 		//CID "callerid"
-		if (usage.equals("callerid"))
+		if (usage.contains("callerid"))
 			usage="telephony";
 		//DAIKCODE "set_power", "set_setpoint", "set_mode", "set_vertical_swing", "set_horizontal_swing",
 		//"set_speedfan", "set_powerfull", "set_silent", "set_home_leave", "set_sensor", 
@@ -368,27 +368,37 @@ public class Graphics_Manager {
 		if (usage.contains("swing")||usage.contains("fan"))
 			usage="ventilation";
 		//DISKFREE "get_total_space", "get_percent_used", "get_free_space", "get_used_space"
-		if (usage.equals("get_total_space")||usage.equals("get_percent_used")
+		if (usage.contains("diskfree")||usage.equals("get_total_space")||usage.equals("get_percent_used")
 				||usage.equals("get_free_space")||usage.equals("get_used_space"))
 			usage="server";
 		//GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
 		//GEOLOC "position_degrees"
 		//IPX800 "state", "input", "count"
 		//IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
+		//K8056 "sensor_switch_relay", "cmd_switch_relay"
+		//MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
+		//"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
+		//"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current", 
+		if (usage.contains("power")||usage.contains("energy")||usage.contains("voltage")||usage.equals("sensor_current"))
+			usage="electricity";
+		if (usage.equals("sensor_rainfall")||usage.equals("sensor_water"))
+			usage="water";
 		//NOTIFY "msg_status", "error_send"
 		//NUTSERVE "test_battery_start", "test_battery_start_deep", "ups_status", "ups_event", "input_voltage", "output_voltage"
 		//"battery_voltage", "battery_charge", "ack_command",
 		//ONEWIRE "temperature", "humidity", "serial", "gpio", 
+		if (usage.contains("thermometer"))
+			usage="temperature";
 		//PING "ping"
-		if (usage.equals("ping"))
+		if (usage.contains("ping"))
 			usage="computer";
-		//SCRIPT "sensor_script_action", "sensor_script_info", 
-		if (usage.equals("sensor_script_action")||usage.equals("sensor_script_info"))
+		//SCRIPT "sensor_script_action", "sensor_script_info", "run_script_action", "run_script_info"
+		if (usage.contains("script"))
 			usage="scene";		
 		//TELEINFO "adco", "optarif", "isousc", "base", "iinst", "imax", "motdetat", "hchc", "hchp"
 		//"ptec", "papp", "hhphc", "iinst1", "iinst2", "iinst3", "imax1", "imax2", "imax3", "adps"
 		//"ejphn", "ejphpm", "pejp", "bbrhcjb", "bbrhpjb", "bbrhcjw", "bbrhpjw", "bbrhcjr", "bbrhpjr"
-		if (usage.equals("adco")||usage.equals("optarif")||usage.equals("isousc")||usage.equals("base")
+		if (usage.contains("teleinfo")||usage.equals("adco")||usage.equals("optarif")||usage.equals("isousc")||usage.equals("base")
 				||usage.equals("iinst")||usage.equals("imax")||usage.equals("motdetat")
 				||usage.equals("hchc")||usage.equals("hchp")||usage.equals("ptec")
 				||usage.equals("papp")||usage.equals("hhphc")||usage.equals("iinst1")
@@ -399,7 +409,11 @@ public class Graphics_Manager {
 				||usage.equals("bbrhpjw")||usage.equals("bbrhcjr")||usage.equals("bbrhpjr")
 				)
 			usage="electricity";
-		//RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting2", "rssi_lighting2","open_close", "rssi_open_close"
+		//RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close"
+		if (usage.contains("lighting"))
+			usage="light";
+		if (usage.contains("open_close"))
+			usage="door";
 		//VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
 		if (usage.equals("temp"))
 			usage="temperature";
@@ -413,7 +427,7 @@ public class Graphics_Manager {
 		if (usage.contains("temperature")||usage.equals("current_feels_like"))
 			usage="temperature";
 		if (usage.contains("humidity"))
-			usage="water";		
+			usage="water";
 		//TODO change this on with a sun up and down icon
 		if (usage.contains("current_sunrise")||usage.equals("current_sunset"))
 			usage="cron";
@@ -423,10 +437,12 @@ public class Graphics_Manager {
 		//ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power", 
 		//"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
 		//"level", "motion_sensor_level", "luminance", "sensor_alarm","low_battery", "thermostat_setpoint"
-		if (usage.equals("temperature_c")||usage.equals("thermostat_setpoint"))
+		if (usage.contains("thermostat"))
 			usage="temperature";
+		if (usage.contains("opening_sensor"))
+			usage="door";
 		return usage;		
-		
+
 	}
 
 }

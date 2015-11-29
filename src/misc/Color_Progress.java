@@ -20,25 +20,25 @@ public class Color_Progress extends SeekBar{
 	private final int[] mHueBarColors = new int[258];
 	public int widgetSize;
 	public int mode;
-	
+
 	public float[] hsv0 = {0,0,0};
 	public float[] hsv1 = {0,0,0};
-	
+
 	public float[] hsv2 = {0,0,0};
 	public float[] hsv3 = {0,0,1};
-	
+
 	public float[] hsv5 = {0,0,0};
 	public float[] hsv6 = {0,0,1};
-	
+
 	int dpiClassification;
 	private tracerengine Tracer = null;
-	
+
 
 	public Color_Progress(tracerengine Trac, Context context, int mode, int color) {
 		super(context);
 		this.mode = mode;
 		this.Tracer = Trac;
-		
+
 		DisplayMetrics dm = new DisplayMetrics();
 		((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
 		dpiClassification = dm.densityDpi;
@@ -49,7 +49,7 @@ public class Color_Progress extends SeekBar{
 		}else{
 			setLayoutParams(new LayoutParams(272,40,Gravity.CENTER_HORIZONTAL));
 		}
-		
+
 
 		float[] hsv = new float[3];
 		Color.colorToHSV(color, hsv);
@@ -104,7 +104,7 @@ public class Color_Progress extends SeekBar{
 
 	@Override
 	protected synchronized void onDraw(Canvas canvas) {
-		
+
 		int translatedHue = 255-(int)(mCurrentHue*255/360);
 		if(mode == 0){
 			for (int x=0; x<256; x++){
@@ -119,7 +119,7 @@ public class Color_Progress extends SeekBar{
 				}else{
 					canvas.drawLine(x+12, 10, x+12, 36, mPaint);
 				}
-				
+
 			}
 		}else if(mode == 1){
 			int[] colors = new int[2];

@@ -30,8 +30,8 @@ public class Entity_client{
 	private String client_name;			// To have a clear debugging !
 	private Boolean miniwidget;
 	private Handler client_handler = null;
-	
-	
+
+
 	public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
 		//super();
 		this.devId = devId;
@@ -100,10 +100,10 @@ public class Entity_client{
 	public Boolean is_Miniwidget() {
 		return miniwidget;
 	}
-	
+
 	public Handler getClientHandler() {
 		return client_handler;
 	}
-	
-	
+
+
 }

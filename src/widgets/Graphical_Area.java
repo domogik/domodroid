@@ -52,7 +52,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 	private String mytag="Graphical_Area";
 	private String icon;
 	private Activity Activity;
-	
+
 	public Graphical_Area(tracerengine Trac, Context context, int id,String name_area, String description_area, String icon, int widgetSize, Handler handler) {
 		super(context, id, name_area, description_area, icon, widgetSize, "area", handler);
 		this.myself = this;
@@ -62,32 +62,32 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 		this.context = context;
 		this.Activity = (android.app.Activity) context;
 		setOnLongClickListener(this);
-		
+
 		mytag="Graphical_Area("+id_area+")";
 		//Log.d("Graphical_Area("+id+")","creating view for "+name_area+" "+description_area);
-		
-		
+
+
 	}
 
 	public boolean onLongClick(View v) {
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();
-			list_choice.add("Rename");
-			list_choice.add("Change_icon");
-			list_choice.add("Delete");
+		list_choice.add("Rename");
+		list_choice.add("Change_icon");
+		list_choice.add("Delete");
 		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
 		//list_type_choice.setTitle(R.string.What_to_do_message);
 		list_type_choice.setSingleChoiceItems(char_list, -1,
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					ListView lw = ((AlertDialog)dialog).getListView();
-					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-					do_action(checkedItem.toString());
-					dialog.cancel();
-				}
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				ListView lw = ((AlertDialog)dialog).getListView();
+				Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+				do_action(checkedItem.toString());
+				dialog.cancel();
 			}
-		);
-	
+		}
+				);
+
 		list_type_choice.show();
 		return false;
 	}
@@ -103,13 +103,13 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 					domodb.owner="Widgets_Manager.loadRoomWidgets";
 					Tracer.e(mytag, "load widgets for area "+id_area);
 					Entity_Room[] listRoom = domodb.requestRoom(id_area);
-					
+
 					for (Entity_Room room : listRoom) {
 						Tracer.get_engine().remove_one_things(room.getId(),"room");
 						Tracer.get_engine().remove_one_place_type_in_Featureassociation(room.getId(),"room");
 						Tracer.get_engine().remove_one_icon(room.getId(),"room");
-						}
-					
+					}
+
 					Tracer.get_engine().remove_one_things(id_area,"area");
 					Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area,"area");
 					Tracer.get_engine().remove_one_icon(id_area,"area");
@@ -135,20 +135,20 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 			alert.setMessage(R.string.Rename_message);
 			// Set an EditText view to get user input 
 			final EditText input = new EditText(getContext());
-				alert.setView(input);
-				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						String result= input.getText().toString(); 
-						Tracer.get_engine().descUpdate(id_area,result,"area");
-						TV_name.setText(result);
-					}
-				});
-				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e(mytag, "Customname Canceled.");
-					}
-				});
-				alert.show();
+			alert.setView(input);
+			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					String result= input.getText().toString(); 
+					Tracer.get_engine().descUpdate(id_area,result,"area");
+					TV_name.setText(result);
+				}
+			});
+			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.e(mytag, "Customname Canceled.");
+				}
+			});
+			alert.show();
 		}else if (action.equals("Change_icon")){
 			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
 			List<String> list_icon = new ArrayList<String>();
@@ -162,31 +162,31 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
 			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						ListView lw = ((AlertDialog)dialog).getListView();
-						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-						icon = checkedItem.toString();
-						ContentValues values = new ContentValues();
-						//type = area, room, feature
-						values.put("name", "area");
-						//icon is the name of the icon wich will be select 
-						values.put("value", icon);
-						//reference is the id of the area, room, or feature
-						int reference = 0;
-						reference=id_area;
-						values.put("reference", reference);
-						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-						IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					icon = checkedItem.toString();
+					ContentValues values = new ContentValues();
+					//type = area, room, feature
+					values.put("name", "area");
+					//icon is the name of the icon wich will be select 
+					values.put("value", icon);
+					//reference is the id of the area, room, or feature
+					int reference = 0;
+					reference=id_area;
+					values.put("reference", reference);
+					context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
 
-						dialog.cancel();
-					}
+					dialog.cancel();
 				}
-			);	
+			}
+					);	
 			AlertDialog alert_list_icon = list_icon_choice.create();
 			alert_list_icon.show();
 		}
 	}
-	}
+}
 
 

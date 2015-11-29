@@ -13,12 +13,12 @@ public class Base_Device_Feature{
 			"relayboard.relay.switch",
 			"zwave.switch.switch",
 			"knx.switch.switch"
-	);
+			);
 
 	public List<String> id_dimmer = Arrays.asList(
 			"plcbus.dimmer.dim",
 			"zwave.dimmer.change"
-	);
+			);
 
 	public List<String> id_info = Arrays.asList(
 			"onewire.thermometer.temperature",
@@ -77,6 +77,6 @@ public class Base_Device_Feature{
 			"rfxcom.digimax.temperature",
 			"rfxcom.digimax.setpoint",
 			"rfxcom.remote.keys"
-	);
+			);
 }
 

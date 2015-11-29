@@ -72,7 +72,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 	private String mytag;
 	private String name;
 	private String state_key;
-	
+
 	public Basic_Graphical_widget(Activity context, tracerengine Trac,int id,String name, String state_key, String icon, int widgetSize, int session_type,int place_id, String place_type, String mytag, FrameLayout container) {
 		super(context);
 		this.Tracer=Trac;
@@ -98,7 +98,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		else 
 			LL_background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
 		LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",LL_background.getHeight()));
-		
+
 		//panel with border
 		LL_topPan = new LinearLayout(context);
 		LL_topPan.setOrientation(LinearLayout.HORIZONTAL);
@@ -108,7 +108,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		FL_imgPan = new FrameLayout(context);
 		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
 		FL_imgPan.setPadding(5, 8, 10, 10);
-		
+
 		//icon
 		IV_img = new ImageView(context);
 		IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,Gravity.CENTER));
@@ -133,37 +133,37 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		TV_name.setTextSize(14);
 		TV_name.setTextColor(Color.BLACK);
 		TV_name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-		
+
 		LL_infoPan.addView(TV_name);
 		FL_imgPan.addView(IV_img);
-		
+
 		LL_topPan.addView(FL_imgPan);
 		LL_topPan.addView(LL_infoPan);
 		LL_topPan.addView(LL_featurePan);
-		
+
 		LL_background.addView(LL_topPan);
 		this.addView(LL_background);
 	}
-	
+
 	public boolean onLongClick(View v) {
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();
-			list_choice.add("Rename");
-			list_choice.add("Change_icon");
-			list_choice.add("Delete");
+		list_choice.add("Rename");
+		list_choice.add("Change_icon");
+		list_choice.add("Delete");
 		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
 		//list_type_choice.setTitle(R.string.What_to_do_message);
 		list_type_choice.setSingleChoiceItems(char_list, -1,
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					ListView lw = ((AlertDialog)dialog).getListView();
-					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-					do_action(checkedItem.toString());
-					dialog.cancel();
-				}
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				ListView lw = ((AlertDialog)dialog).getListView();
+				Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+				do_action(checkedItem.toString());
+				dialog.cancel();
 			}
-		);
-	
+		}
+				);
+
 		list_type_choice.show();
 		return false;
 	}
@@ -175,20 +175,20 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 			alert.setMessage(R.string.Rename_message);
 			// Set an EditText view to get user input 
 			final EditText input = new EditText(getContext());
-				alert.setView(input);
-				alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						String result= input.getText().toString(); 
-						Tracer.get_engine().descUpdate(id,result,"feature");
-						TV_name.setText(result);
-					}
-				});
-				alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog_customname, int whichButton) {
-						Tracer.e(mytag, "Customname Canceled.");
-					}
-				});
-				alert.show();
+			alert.setView(input);
+			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					String result= input.getText().toString(); 
+					Tracer.get_engine().descUpdate(id,result,"feature");
+					TV_name.setText(result);
+				}
+			});
+			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog_customname, int whichButton) {
+					Tracer.e(mytag, "Customname Canceled.");
+				}
+			});
+			alert.show();
 		}else if (action.equals("Delete")){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(context.getString(R.string.Delete_feature_title)+" "+name+"-"+state_key);
@@ -196,7 +196,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					Tracer.d(mytag,"deleting widget id= "+id+" place_id= "+place_id+" placetype= "+place_type);
-					
+
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
 					//recheck cache element to remove those no more need.
 					Cache_management.checkcache(Tracer,context);
@@ -206,7 +206,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 						removeAllViews();
 						recomputeViewAttributes(myself);
 						Tracer.d(mytag, "removing a view");
-						
+
 					}
 				}
 			});
@@ -229,31 +229,31 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 			List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
 			list_icon_choice.setAdapter(adapter,null );
 			list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						ListView lw = ((AlertDialog)dialog).getListView();
-						Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-						icon = checkedItem.toString();
-						ContentValues values = new ContentValues();
-						//type = area, room, feature
-						values.put("name", "feature");
-						//icon is the name of the icon wich will be select 
-						values.put("value", icon);
-						//reference is the id of the area, room, or feature
-						int reference = 0;
-						reference=id;
-						values.put("reference", reference);
-						context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-						//TODO need to select good icon in function of his state
-						//Redraw it for this.
-						IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
-						dialog.cancel();
-					}
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					ListView lw = ((AlertDialog)dialog).getListView();
+					Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+					icon = checkedItem.toString();
+					ContentValues values = new ContentValues();
+					//type = area, room, feature
+					values.put("name", "feature");
+					//icon is the name of the icon wich will be select 
+					values.put("value", icon);
+					//reference is the id of the area, room, or feature
+					int reference = 0;
+					reference=id;
+					values.put("reference", reference);
+					context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+					//TODO need to select good icon in function of his state
+					//Redraw it for this.
+					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+					dialog.cancel();
 				}
-			);	
+			}
+					);	
 			AlertDialog alert_list_icon = list_icon_choice.create();
 			alert_list_icon.show();
-			
+
 		}		
 	}
 }

@@ -29,7 +29,7 @@ public class Graphical_Trigger_Button extends LinearLayout{
 		animation = new RotateAnimation(0.0f, 360.0f,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,0.5f);
 		animation.setDuration(2000);
 		this.addView(sign);
-		
+
 
 		handler = new Handler() {
 			@Override
@@ -68,7 +68,7 @@ public class Graphical_Trigger_Button extends LinearLayout{
 			return null;
 		}
 	}
-	
+
 	public void startAnim(){
 		new SBAnim().execute();
 		sign.startAnimation(animation);

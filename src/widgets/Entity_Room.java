@@ -23,7 +23,7 @@ public class Entity_Room{
 	private String description;
 	private int id;
 	private String name;
-	
+
 
 	public Entity_Room(int area_id, String description, int id, String name){
 		this.area_id = area_id;

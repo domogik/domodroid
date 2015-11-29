@@ -26,20 +26,20 @@ public class DomodroidDB {
 	public String owner = "";
 	private tracerengine Tracer = null;
 	//////////////////////////////////////
-	
+
 	public DomodroidDB(tracerengine Trac, Activity context){
 		this.context = context;
 		this.Tracer = Trac;
 		Tracer.refresh_settings();
 		Tracer.i(mytag, "Instance started...");
-		
+
 	}
 
 	public void updateDb(){
 		//That should clear all tables, except feature_map
 		context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);
 	}
-	
+
 	public void closeDb(){
 		try {
 			context.getContentResolver().cancelSync(null);
@@ -47,7 +47,7 @@ public class DomodroidDB {
 	}
 
 	////////////////// INSERT
-	
+
 	public void insertArea(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("area");
@@ -58,7 +58,7 @@ public class DomodroidDB {
 			values.put("id", itemArray.getJSONObject(i).getInt("id"));
 			values.put("name", itemArray.getJSONObject(i).getString("name").toString());
 			Tracer.d(mytag,"Inserting Area "+itemArray.getJSONObject(i).getString("name").toString());
-			
+
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
 		}
 	}
@@ -99,45 +99,45 @@ public class DomodroidDB {
 		JSONArray itemArray = json.getJSONArray("feature");
 		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
 		for (int i =0; i < itemArray.length(); i++){
-		try {
-			values.put("device_feature_model_id", itemArray.getJSONObject(i).getString("device_feature_model_id").toString());
-			values.put("id", itemArray.getJSONObject(i).getInt("id"));
-			values.put("device_id", itemArray.getJSONObject(i).getJSONObject("device").getInt("id"));
-			values.put("device_usage_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_usage_id").toString());
-			values.put("address", itemArray.getJSONObject(i).getJSONObject("device").getString("address").toString());
-			values.put("device_type_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id").toString());
-			values.put("description", itemArray.getJSONObject(i).getJSONObject("device").getString("description").toString());
-			values.put("name", itemArray.getJSONObject(i).getJSONObject("device").getString("name").toString());
-			values.put("state_key", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("stat_key"));
-			values.put("parameters", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("parameters"));
-			values.put("value_type", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("value_type"));
-			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
-		} catch (Exception e) {
-			// Cannot parse JSON Array or JSONObject
-			 Tracer.d(mytag,"Exception inserting Features list in bdd ("+i+")");
-		}
+			try {
+				values.put("device_feature_model_id", itemArray.getJSONObject(i).getString("device_feature_model_id").toString());
+				values.put("id", itemArray.getJSONObject(i).getInt("id"));
+				values.put("device_id", itemArray.getJSONObject(i).getJSONObject("device").getInt("id"));
+				values.put("device_usage_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_usage_id").toString());
+				values.put("address", itemArray.getJSONObject(i).getJSONObject("device").getString("address").toString());
+				values.put("device_type_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id").toString());
+				values.put("description", itemArray.getJSONObject(i).getJSONObject("device").getString("description").toString());
+				values.put("name", itemArray.getJSONObject(i).getJSONObject("device").getString("name").toString());
+				values.put("state_key", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("stat_key"));
+				values.put("parameters", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("parameters"));
+				values.put("value_type", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("value_type"));
+				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
+			} catch (Exception e) {
+				// Cannot parse JSON Array or JSONObject
+				Tracer.d(mytag,"Exception inserting Features list in bdd ("+i+")");
+			}
 		}
 	}
 	public void insertFeature_0_4(JSONObject itemArray) throws JSONException{
 		ContentValues values = new ContentValues();
 		try {
-				values.put("device_feature_model_id", itemArray.getString("device_feature_model_id").toString());
-				values.put("id", itemArray.getInt("id"));
-				values.put("device_id", itemArray.getInt("device_id"));
-				values.put("device_usage_id", itemArray.getString("device_usage_id").toString());
-				values.put("address", itemArray.getString("adress").toString());
-				values.put("device_type_id", itemArray.getString("device_type_id").toString());
-				values.put("description", itemArray.getString("description").toString());
-				values.put("name", itemArray.getString("name").toString());
-				values.put("state_key", itemArray.getString("stat_key"));
-				values.put("parameters", itemArray.getString("parameters").toString());
-				values.put("value_type", itemArray.getString("value_type"));
-				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
-			} catch (Exception e) {
-				// Cannot parse JSON Array or JSONObject
-				 Tracer.d(mytag,"Exception inserting Features list in bdd");
-				 Tracer.d(mytag,e.toString());
-			}
+			values.put("device_feature_model_id", itemArray.getString("device_feature_model_id").toString());
+			values.put("id", itemArray.getInt("id"));
+			values.put("device_id", itemArray.getInt("device_id"));
+			values.put("device_usage_id", itemArray.getString("device_usage_id").toString());
+			values.put("address", itemArray.getString("adress").toString());
+			values.put("device_type_id", itemArray.getString("device_type_id").toString());
+			values.put("description", itemArray.getString("description").toString());
+			values.put("name", itemArray.getString("name").toString());
+			values.put("state_key", itemArray.getString("stat_key"));
+			values.put("parameters", itemArray.getString("parameters").toString());
+			values.put("value_type", itemArray.getString("value_type"));
+			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
+		} catch (Exception e) {
+			// Cannot parse JSON Array or JSONObject
+			Tracer.d(mytag,"Exception inserting Features list in bdd");
+			Tracer.d(mytag,e.toString());
+		}
 	}
 
 	public void insertFeatureAssociation(JSONObject json) throws JSONException{
@@ -154,7 +154,7 @@ public class DomodroidDB {
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
 		}
 	}
-	
+
 	public void insertFeatureState(JSONObject json) throws JSONException{
 		String skey = null;
 		String Val = null;
@@ -162,7 +162,7 @@ public class DomodroidDB {
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("stats");
 		String[] projection = {"COUNT(*)"};
-		
+
 		for (int i =0; i < itemArray.length(); i++){
 			try {
 				dev_id = itemArray.getJSONObject(i).getInt("device_id");
@@ -183,7 +183,7 @@ public class DomodroidDB {
 				Tracer.e(mytag+"("+owner+")", "Database feature No Value for id : "+dev_id+" "+skey);
 				Val = "0";
 			}
-			
+
 			Cursor curs=null;
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?", 
 					new String [] {Integer.toString(dev_id)+" ",skey}, null);
@@ -194,7 +194,7 @@ public class DomodroidDB {
 			if(curs.getInt(0)==0){
 				Tracer.e(mytag+"("+owner+")","Insert for : "+dev_id+" ("+skey+") ("+Val+")");
 				context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_STATE, values);
-				
+
 			}else{
 				Tracer.e(mytag+"("+owner+")","Update for : "+dev_id+" ("+skey+") ("+Val+")");
 				context.getContentResolver().update(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_STATE, values, "device_id = ? AND key = ?", 
@@ -204,14 +204,14 @@ public class DomodroidDB {
 		}
 	}
 
-/*
+	/*
 	public void insertFeatureState(JSONObject json) throws JSONException{
 		ContentValues values = new ContentValues();
 		JSONArray itemArray = json.getJSONArray("stats");
 		String skey = null;
 		String Val = null;
 		Boolean exists = false;
-		
+
 		//Tracer.e(mytag+"("+owner+")", "Processing FeatureState Array : <"+itemArray.toString()+">");
 		// First, erase all old content
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE_STATE, null);
@@ -245,12 +245,12 @@ public class DomodroidDB {
 			//} else {
 				//Tracer.d(mytag+"("+owner+")", "Device : "+itemArray.getJSONObject(i).getInt("device_id")+" does'nt exist anymore....");
 			//}
-			
+
 		}
 	}
 
-*/
-	
+	 */
+
 	public void insertFeatureMap(int id, int posx, int posy, String map){
 		//send value to database to add a widget on map
 		ContentValues values = new ContentValues();
@@ -260,27 +260,27 @@ public class DomodroidDB {
 		values.put("map", map);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_MAP, values);
 	}
-	
+
 	////////////////// REMOVE ONE but be careful it's by id and can delete more that just one
-	
+
 	public void remove_one_area(int id){
 		ContentValues values = new ContentValues();
 		values.put("id", id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_AREA, values);
 	}
-	
+
 	public void remove_one_room(int id){
 		ContentValues values = new ContentValues();
 		values.put("id", id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_ROOM, values);
 	}
-	
+
 	public void remove_one_icon(int id){
 		ContentValues values = new ContentValues();
 		values.put("reference", id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_ICON, values);
 	}
-	
+
 	public void remove_one_icon(int id,String type){
 		ContentValues values = new ContentValues();
 		values.put("reference", id);
@@ -292,7 +292,7 @@ public class DomodroidDB {
 		values.put("id", id);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE, values);
 	}
-		
+
 	public void remove_one_feature_association(int id){
 		ContentValues values = new ContentValues();
 		values.put("id", id);
@@ -325,10 +325,10 @@ public class DomodroidDB {
 		values.put("place_type", place_type);
 		context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_place_type_in_FEATURE_ASSOCIATION, values);
 	}
-	
-	
+
+
 	////////////////// REMOVE ALL
-	
+
 	public void cleanFeatureMap(String map){
 		//send map_name to DmdContentProvider to remove all widget on this map in database
 		ContentValues values = new ContentValues();
@@ -337,7 +337,7 @@ public class DomodroidDB {
 	}
 
 	////////////////// UPDATE
-	
+
 	//Send custom name to DmdContentProvder so that it could be write in DB
 	public void update_name(int id,String name, String type){
 		if (type.equals("feature")){
@@ -393,7 +393,7 @@ public class DomodroidDB {
 			curs.close();
 		return areas;
 	}
-	
+
 	public int requestlastidArea() {
 		String[] projection = {"description", "id", "name"};
 		Cursor curs=null;
@@ -409,7 +409,7 @@ public class DomodroidDB {
 			curs.close();
 		return lastid;
 	}
-	
+
 	public Entity_Room[] requestallRoom() {
 		Entity_Room[] rooms=null;
 		String[] projection = { "area_id", "description", "id", "name"};
@@ -447,7 +447,7 @@ public class DomodroidDB {
 					null,
 					"id Asc");
 			lastid=curs.getCount();
-			
+
 		} catch (Exception e) {
 			Tracer.v(mytag+"("+owner+")","request last room error");
 			e.printStackTrace();
@@ -455,43 +455,43 @@ public class DomodroidDB {
 		curs.close();
 		return lastid;
 	}
-	
+
 	//Add a request for all device_feature_id in feature_association and feature_map
 	//It's used to be sure that the url always contains all associated devices
 	//to grab information if they're displayed somewhere.
 	public int[] requestAllFeatures_association() {
-			Cursor curs1=null;
-			Cursor curs2=null;
-			int[] dev_id = null;
-			
-			try {
-				Tracer.v(mytag+"("+owner+")","requesting features list");
-			
-				curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
-				curs2 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP_ALL, null, null, null, null);
-				
-				dev_id=new int[curs1.getCount()+curs2.getCount()];
-				
-				int count=curs1.getCount();
-				for(int i=0;i<count;i++) {
-					curs1.moveToPosition(i);
-					//We need only the device_feature_id in 3rd columns of table feature_association
-					dev_id[i]=curs1.getInt(2);
-				}
-				count=curs2.getCount()+curs1.getCount();
-				for(int i=curs1.getCount();i<count;i++) {
-					curs2.moveToPosition(i-curs1.getCount());
-					//We need only the device_feature_id in 1st columns of table feature_map
-					dev_id[i]=curs2.getInt(0);
-				}
-				
-			} catch (Exception e) {
-				Tracer.e(mytag+"("+owner+")","request feature_association error");
-				e.printStackTrace();
+		Cursor curs1=null;
+		Cursor curs2=null;
+		int[] dev_id = null;
+
+		try {
+			Tracer.v(mytag+"("+owner+")","requesting features list");
+
+			curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
+			curs2 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP_ALL, null, null, null, null);
+
+			dev_id=new int[curs1.getCount()+curs2.getCount()];
+
+			int count=curs1.getCount();
+			for(int i=0;i<count;i++) {
+				curs1.moveToPosition(i);
+				//We need only the device_feature_id in 3rd columns of table feature_association
+				dev_id[i]=curs1.getInt(2);
 			}
-			curs1.close();
-			curs2.close();
-			return dev_id;		
+			count=curs2.getCount()+curs1.getCount();
+			for(int i=curs1.getCount();i<count;i++) {
+				curs2.moveToPosition(i-curs1.getCount());
+				//We need only the device_feature_id in 1st columns of table feature_map
+				dev_id[i]=curs2.getInt(0);
+			}
+
+		} catch (Exception e) {
+			Tracer.e(mytag+"("+owner+")","request feature_association error");
+			e.printStackTrace();
+		}
+		curs1.close();
+		curs2.close();
+		return dev_id;		
 	}
 
 	public int requestidlastFeature_association() {
@@ -505,7 +505,7 @@ public class DomodroidDB {
 					null,
 					null);
 			lastid=curs.getCount();
-			
+
 		} catch (Exception e) {
 			Tracer.v(mytag+"("+owner+")","request last room error");
 			e.printStackTrace();
@@ -614,10 +614,10 @@ public class DomodroidDB {
 			features=new Entity_Map[curs.getCount()];
 			int count=curs.getCount();
 			Tracer.v(mytag+"("+owner+")",count+" Entities_Map returned for map : "+map);
-			
+
 			for(int i=0;i<count;i++) {
-			//create the Entity_Map with all parameter needed on map for each widget present in the current map
-			//careful has it his an innerjoin there is one more column.
+				//create the Entity_Map with all parameter needed on map for each widget present in the current map
+				//careful has it his an innerjoin there is one more column.
 				curs.moveToPosition(i);
 				int Id=curs.getInt(1);
 				String device_usage_id=curs.getString(3);
@@ -631,10 +631,10 @@ public class DomodroidDB {
 				}
 				if (iconName=="unknow")
 					iconName=device_usage_id;
-				
+
 				features[i]=new Entity_Map(curs.getString(0),Id,curs.getInt(2),iconName,curs.getString(4),curs.getString(5),
 						curs.getString(6),curs.getString(7),curs.getString(8),curs.getString(9),curs.getString(10),curs.getInt(12),curs.getInt(13),curs.getString(14));
-				}
+			}
 		} catch (Exception e) {
 			Tracer.e(mytag+"("+owner+")","request feature_map error");
 			e.printStackTrace();
@@ -658,15 +658,15 @@ public class DomodroidDB {
 			features=new Entity_Map[curs.getCount()];
 			int count=curs.getCount();
 			Tracer.v(mytag+"("+owner+")",count+" Entities_Map returned for map switches : "+map);
-			
+
 			for(int i=0;i<count;i++) {
-			//create the pseudo Entity_Map with all parameters present in table_feature_map : id, posx, posy and map_name
-			
+				//create the pseudo Entity_Map with all parameters present in table_feature_map : id, posx, posy and map_name
+
 				curs.moveToPosition(i);
 				features[i]=new Entity_Map("",curs.getInt(0),0,"","","",
 						"","","","","",
 						curs.getInt(1), curs.getInt(2),curs.getString(3));
-				}
+			}
 		} catch (Exception e) {
 			Tracer.e(mytag+"("+owner+")","request map_switches error");
 			e.printStackTrace();
@@ -678,11 +678,11 @@ public class DomodroidDB {
 	public Entity_Feature[] requestFeatures(){
 		Cursor curs=null;
 		String[] projection = {"value"};
-		
+
 		Entity_Feature[] features=null;
 		try {
 			Tracer.v(mytag+"("+owner+")","requesting features list");
-			
+
 			curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ALL, null, null, null, null);
 			features=new Entity_Feature[curs.getCount()];
 			int count=curs.getCount();
@@ -714,7 +714,7 @@ public class DomodroidDB {
 				state=curs.getString(0);
 				curs.close();
 				Tracer.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" value : "+state);
-				
+
 			} else {
 				Tracer.v(mytag+"("+owner+")","Database query feature : "+ device_id+ " "+key+" not found ");
 				return null;
@@ -722,7 +722,7 @@ public class DomodroidDB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 
 		return state;
 	}	

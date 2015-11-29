@@ -21,32 +21,32 @@ public class Stats_Com {
 	public static int cumul_events_recv_packets = 0;
 	public static int cumul_events_sent_bytes = 0;
 	public static int cumul_events_recv_bytes = 0;
-	
+
 	public static int cumul_stats_sent_packets = 0;
 	public static int cumul_stats_recv_packets = 0;
 	public static int cumul_stats_sent_bytes = 0;
 	public static int cumul_stats_recv_bytes = 0;
-	
+
 	//periodic counters
 	public static int periodic_events_sent_packets = 0;
 	public static int periodic_events_recv_packets = 0;
 	public static int periodic_events_sent_bytes = 0;
 	public static int periodic_events_recv_bytes = 0;
-	
+
 	public static int periodic_stats_sent_packets = 0;
 	public static int periodic_stats_recv_packets = 0;
 	public static int periodic_stats_sent_bytes = 0;
 	public static int periodic_stats_recv_bytes = 0;
-	
+
 	public static int elapsed_period = 0;
 	public static int cumul_period = 0;
 	public static int period;				// Number of seconds between periodic clears
 	private static Timer timer=null;
 	private static Boolean sleeping = false;
-	
+
 	/*******************************************************************************
-	*		Internal Constructor
-	*******************************************************************************/
+	 *		Internal Constructor
+	 *******************************************************************************/
 	private Stats_Com()
 	{
 		super();
@@ -60,37 +60,37 @@ public class Stats_Com {
 		if(instance == null) {
 			instance = new Stats_Com();
 		}
-		
+
 		return instance;
-		
+
 	}
-	
+
 	public void add(int type, int count) {
 		switch(type) {
-			case EVENTS_SEND :
-				periodic_events_sent_packets++;	//1 packet more
-				cumul_events_sent_packets++;
-				periodic_events_sent_bytes += count;	//And N bytes more
-				cumul_events_sent_bytes += count;
-				break;
-			case EVENTS_RCV :
-				periodic_events_recv_packets++;	//1 packet more
-				cumul_events_recv_packets++;
-				periodic_events_recv_bytes += count;	//And N bytes more
-				cumul_events_recv_bytes += count;
-				break;
-			case STATS_SEND :
-				periodic_stats_sent_packets++;	//1 packet more
-				cumul_stats_sent_packets++;
-				periodic_stats_sent_bytes += count;	//And N bytes more
-				cumul_stats_sent_bytes += count;
-				break;
-			case STATS_RCV :
-				periodic_stats_recv_packets++;	//1 packet more
-				cumul_stats_recv_packets++;
-				periodic_stats_recv_bytes += count;	//And N bytes more
-				cumul_stats_recv_bytes += count;
-				break;
+		case EVENTS_SEND :
+			periodic_events_sent_packets++;	//1 packet more
+			cumul_events_sent_packets++;
+			periodic_events_sent_bytes += count;	//And N bytes more
+			cumul_events_sent_bytes += count;
+			break;
+		case EVENTS_RCV :
+			periodic_events_recv_packets++;	//1 packet more
+			cumul_events_recv_packets++;
+			periodic_events_recv_bytes += count;	//And N bytes more
+			cumul_events_recv_bytes += count;
+			break;
+		case STATS_SEND :
+			periodic_stats_sent_packets++;	//1 packet more
+			cumul_stats_sent_packets++;
+			periodic_stats_sent_bytes += count;	//And N bytes more
+			cumul_stats_sent_bytes += count;
+			break;
+		case STATS_RCV :
+			periodic_stats_recv_packets++;	//1 packet more
+			cumul_stats_recv_packets++;
+			periodic_stats_recv_bytes += count;	//And N bytes more
+			cumul_stats_recv_bytes += count;
+			break;
 		}
 	}
 	public void clear() {
@@ -98,7 +98,7 @@ public class Stats_Com {
 		periodic_events_recv_packets = 0;
 		periodic_events_sent_bytes = 0;
 		periodic_events_recv_bytes = 0;
-		
+
 		periodic_stats_sent_packets = 0;
 		periodic_stats_recv_packets = 0;
 		periodic_stats_sent_bytes = 0;
@@ -110,9 +110,9 @@ public class Stats_Com {
 		int hours=0;
 		int minutes=0;
 		int reste = 0;
-		
+
 		if(seconds != 0) {
-			
+
 			if(seconds <= 60) {
 				result = seconds+" secs";
 			} else if (seconds > 3600) {
@@ -148,7 +148,7 @@ public class Stats_Com {
 	}
 	public void cancel() {
 		Log.w("Stats","cancel requested !");
-		
+
 		if(timer != null)
 			timer.cancel();
 		try {
@@ -157,28 +157,28 @@ public class Stats_Com {
 	}
 	private void Timer() {
 		timer = new Timer();
-		
+
 		TimerTask doAsynchronousTask = new TimerTask() {
-		
+
 			@Override
 			public void run() {
-						try {
-							elapsed_period++;
-							if(! sleeping) 
-								cumul_period++;
-							
-							if(elapsed_period >= period) {
-								clear();
-							}
-						} catch (Exception e) {
-							//e.printStackTrace();
-						}
-					
+				try {
+					elapsed_period++;
+					if(! sleeping) 
+						cumul_period++;
+
+					if(elapsed_period >= period) {
+						clear();
+					}
+				} catch (Exception e) {
+					//e.printStackTrace();
+				}
+
 			};
 		};
 		if(timer != null) {
 			timer.schedule(doAsynchronousTask, 0, 1000);	// Once per second	
-			
+
 		}
 	}
 }

@@ -199,6 +199,8 @@
 	<string name="light_stat_1">On</string>
 	<string name="shutter_stat_0">Close</string>
 	<string name="shutter_stat_1">Open</string>
+	<string name="close">Close</string>
+	<string name="open">Open</string>
 	<string name="seconds">Seconds</string>
 	<string name="pixels">Pixels</string>
 	

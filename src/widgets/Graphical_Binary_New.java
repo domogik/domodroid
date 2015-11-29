@@ -103,13 +103,16 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 	private String login;
 	private String password;
 	private float api_version;
-	
+	private JSONObject jparam;
+	private String command_id = null;
+	private String command_type = null;
+
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 	private int session_type;
 	private SharedPreferences params;
-	
-	
+
+
 	public Graphical_Binary_New(tracerengine Trac, 
 			Activity context, String address, String name, int id,int dev_id,String state_key, String url, final String usage, 
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
@@ -131,23 +134,33 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		this.place_id= place_id;
 		this.place_type= place_type;
 		this.params=params;
-		
+
 		login = params.getString("http_auth_username",null);
-    	password = params.getString("http_auth_password",null);
-    	api_version=params.getFloat("API_VERSION", 0);
-		
+		password = params.getString("http_auth_password",null);
+		api_version=params.getFloat("API_VERSION", 0);
+
 		mytag = "Graphical_Binary_New("+dev_id+")";
 		//get parameters		
-		
+
 		try {
-			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-			value0 = jparam.getString("value0");
+			jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 			value1 = jparam.getString("value1");
+			value0 = jparam.getString("value0");
 		} catch (Exception e) {
 			value0 = "0";
 			value1 = "1";
 		}
-		
+		if (api_version>=0.7f){
+			try {
+				command_id = jparam.getString("command_id");
+				command_type= jparam.getString("command_type");
+			} catch (JSONException e) {
+				Tracer.d(mytag, "No command_id for this device");
+				ON.setEnabled(false);
+				OFF.setEnabled(false);
+			}	
+		}
+
 		if (usage.equals("light")){
 			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
 			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
@@ -158,16 +171,18 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 			this.Value_0 = value0;
 			this.Value_1 = value1;		
 		}
-		
+
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
-		
+
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
 		state.setText("State :"+this.Value_0);
-
+		if(api_version>=0.7f)
+				state.setVisibility(INVISIBLE);
+		
 		final float scale = getContext().getResources().getDisplayMetrics().density;
 		float dps = 40;
 		int pixels = (int) (dps * scale + 0.5f);
@@ -181,7 +196,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		ON.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
 		//ON.setBackgroundResource(R.drawable.boolean_on);
 		//ON.setPadding(10, 0, 10, 0);
-		
+
 		OFF=new Button(context);
 		OFF.setOnClickListener(this);
 		OFF.setTag("OFF");
@@ -191,11 +206,11 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		//OFF.setBackgroundResource(R.drawable.boolean_off);
 		OFF.setText(this.Value_0); 
 		//OFF.setPadding(0,10,0,10);
-		
+
 		super.LL_featurePan.addView(ON);
 		super.LL_featurePan.addView(OFF);
 		super.LL_infoPan.addView(state);
-		
+
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -262,7 +277,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 								} catch (Throwable t) {}	//kill the handler thread itself
 							}
 						}
-						
+
 					} catch (Exception e) {
 						Tracer.e(mytag, "Handler error for device "+wname);
 						e.printStackTrace();
@@ -279,15 +294,15 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		if(cache_engine != null) {
 			if (api_version<=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version==0.7f){
+			}else if (api_version>=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
 				realtime = true;		//we're connected to engine
-										//each time our value change, the engine will call handler
+				//each time our value change, the engine will call handler
 				handler.sendEmptyMessage(9999);	//Force to consider current value in session
 			}
-			
+
 		}
 		//================================================================================
 		//updateTimer();	//Don't use anymore cyclic refresh....	
@@ -296,44 +311,66 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
 	public void onClick(View v) {
 		if(v.getTag().equals("OFF")) {
-		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-		state.setText(stateS+Value_0);
-		state_progress = value0;
+			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+			state.setText(stateS+Value_0);
+			if(api_version>=0.7f){
+				state_progress = "0";
+			}else{
+				state_progress = value0;
+			}
 		} else if(v.getTag().equals("ON")) {
-		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-		state.setText(stateS+Value_1);
-		state_progress = value1;
+			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+			state.setText(stateS+Value_1);
+			if(api_version>=0.7f){
+				state_progress = "1";
+			}else{
+				state_progress = value1;
+			}
 		}
 		new CommandeThread().execute();
 	}
-	
+
 	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			updating=3;
-			String Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
-			Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
-			JSONObject json_Ack = null;
-			try {
-				json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
-			} catch (Exception e) {
-				Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-			}
-			try {
-				Boolean ack = JSONParser.Ack(json_Ack);
-				if(ack==false){
-					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
-					handler.sendEmptyMessage(2);
+			Handler temphandler =  new Handler(context.getMainLooper());
+			temphandler.post( new Runnable(){
+				public void run(){
+					updating=3;
+					String Url2send;
+					if(api_version>=0.7f){
+						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
+					}else{
+						Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
+					}
+					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
+					JSONObject json_Ack = null;
+					try {
+						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
+					} catch (Exception e) {
+						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
+					}
+					try {
+						Boolean ack = JSONParser.Ack(json_Ack);
+						if(ack==false){
+							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
+							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
+							handler.sendEmptyMessage(2);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+					);
 			return null;
+
 		}
 	}
 
-	
+
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
 		if(visibility==0){

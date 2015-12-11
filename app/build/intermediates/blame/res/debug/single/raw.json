@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\raw\\domodroid.sqlite",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\raw\\domodroid.sqlite"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\raw\\changelog.txt",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\raw\\changelog.txt"
+    }
+]

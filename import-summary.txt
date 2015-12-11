@@ -1,0 +1,448 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .gitignore
+* .hgignore
+* .idea\
+* .idea\.name
+* .idea\compiler.xml
+* .idea\copyright\
+* .idea\copyright\profiles_settings.xml
+* .idea\libraries\
+* .idea\libraries\android_support_v4.xml
+* .idea\libraries\libs.xml
+* .idea\misc.xml
+* .idea\modules.xml
+* .idea\vcs.xml
+* .idea\workspace.xml
+* README.md
+* custom_rules.xml
+* docs\
+* docs\Google_play_store_file\
+* docs\Google_play_store_file\en\
+* docs\Google_play_store_file\en\description_long.txt
+* docs\Google_play_store_file\en\description_short.txt
+* docs\Google_play_store_file\en\title.txt
+* docs\Google_play_store_file\fr\
+* docs\Google_play_store_file\fr\Icon_HD\
+* docs\Google_play_store_file\fr\Icon_HD\icon_hd.png
+* docs\Google_play_store_file\fr\Image\
+* docs\Google_play_store_file\fr\Image\ic_launcher-web.PNG
+* docs\Google_play_store_file\fr\Phone_image\
+* docs\Google_play_store_file\fr\Phone_image\map.png
+* docs\Google_play_store_file\fr\Phone_image\map1.png
+* docs\Google_play_store_file\fr\Phone_image\room.png
+* docs\Google_play_store_file\fr\Phone_image\screen1.png
+* docs\Google_play_store_file\fr\Phone_image\screen2.jpeg
+* docs\Google_play_store_file\fr\Phone_image\server_config.png
+* docs\Google_play_store_file\fr\Phone_image\usage.png
+* docs\Google_play_store_file\fr\Phone_image\webcam.jpeg
+* docs\Google_play_store_file\fr\Phone_image\widget.png
+* docs\Google_play_store_file\fr\description_long.txt
+* docs\Google_play_store_file\fr\description_short.txt
+* docs\Google_play_store_file\fr\title.txt
+* docs\Google_play_store_file\ru\
+* docs\Google_play_store_file\ru\description_long.txt
+* docs\Google_play_store_file\ru\description_short.txt
+* docs\Google_play_store_file\ru\title.txt
+* docs\Makefile
+* docs\_theme\
+* docs\_theme\domogikdoc\
+* docs\_theme\domogikdoc\genindex.html
+* docs\_theme\domogikdoc\layout.html
+* docs\_theme\domogikdoc\search.html
+* docs\_theme\domogikdoc\static\
+* docs\_theme\domogikdoc\static\default.css
+* docs\_theme\domogikdoc\static\domogikdoc.css
+* docs\_theme\domogikdoc\static\homepage.css
+* docs\_theme\domogikdoc\static\icons-note.png
+* docs\_theme\domogikdoc\static\icons-todo.png
+* docs\_theme\domogikdoc\static\icons-warning.png
+* docs\_theme\domogikdoc\static\reset-fonts-grids.css
+* docs\_theme\domogikdoc\theme.conf
+* docs\_theme\domogiksite\
+* docs\_theme\domogiksite\genindex.html
+* docs\_theme\domogiksite\layout.html
+* docs\_theme\domogiksite\search.html
+* docs\_theme\domogiksite\static\
+* docs\_theme\domogiksite\static\default.css
+* docs\_theme\domogiksite\static\dmg-logo-en.png
+* docs\_theme\domogiksite\static\dmg-logo-fr.png
+* docs\_theme\domogiksite\static\dmgnavbar.css
+* docs\_theme\domogiksite\static\domogikdoc.css
+* docs\_theme\domogiksite\static\favicon.png
+* docs\_theme\domogiksite\static\homepage.css
+* docs\_theme\domogiksite\static\icons-note.png
+* docs\_theme\domogiksite\static\icons-todo.png
+* docs\_theme\domogiksite\static\icons-warning.png
+* docs\_theme\domogiksite\static\reset-fonts-grids.css
+* docs\_theme\domogiksite\theme.conf
+* docs\conf.py
+* docs\contents.txt
+* docs\end_user\
+* docs\end_user\Config_house.txt
+* docs\end_user\Options.txt
+* docs\end_user\about.txt
+* docs\end_user\configuration.txt
+* docs\end_user\image\
+* docs\end_user\image\About.png
+* docs\end_user\image\Change_icon.png
+* docs\end_user\image\Color picker.png
+* docs\end_user\image\Config_debug1.png
+* docs\end_user\image\Config_debug2.png
+* docs\end_user\image\Config_house.png
+* docs\end_user\image\Config_map.png
+* docs\end_user\image\Config_server.png
+* docs\end_user\image\Config_widget.png
+* docs\end_user\image\Map_help.png
+* docs\end_user\image\Stats_view.png
+* docs\end_user\image\Usage light binary.png
+* docs\end_user\image\Usage nanoztag boolean.png
+* docs\end_user\image\Usage view.png
+* docs\end_user\image\Usage water info widget.png
+* docs\end_user\image\color_picker.png
+* docs\end_user\image\graph1.png
+* docs\end_user\image\home_v2.1.png
+* docs\end_user\image\home_v2.png
+* docs\end_user\image\map1.png
+* docs\end_user\image\menu_open.png
+* docs\end_user\image\one day graph.png
+* docs\end_user\image\portrait_graph.png
+* docs\end_user\image\widgets2.png
+* docs\end_user\installation.txt
+* docs\end_user\nightly_builds.txt
+* docs\end_user\stats.txt
+* docs\end_user\sync.txt
+* docs\end_user\usage.txt
+* docs\index.txt
+* docs\overview\
+* docs\overview\Camera1.png
+* docs\overview\Menu_open_in_map.png
+* docs\overview\Widgets.png
+* docs\overview\detailed.txt
+* docs\overview\index.txt
+* docs\overview\map1.png
+* docs\overview\map_add_list.png
+* docs\overview\map_add_list2.png
+* docs\package_development\
+* docs\package_development\Database_model_png\
+* docs\package_development\Database_model_png\table_area.png
+* docs\package_development\Database_model_png\table_feature.png
+* docs\package_development\Database_model_png\table_feature_association.png
+* docs\package_development\Database_model_png\table_feature_exemple.png
+* docs\package_development\Database_model_png\table_feature_map.png
+* docs\package_development\Database_model_png\table_feature_state.png
+* docs\package_development\Database_model_png\table_icon.png
+* docs\package_development\Database_model_png\table_room.png
+* docs\package_development\developers_documentation.txt
+* docs\package_development\developers_environment.txt
+* docs\package_development\image\
+* docs\package_development\image\table_area.png
+* docs\package_development\image\table_feature.png
+* docs\package_development\image\table_feature_association.png
+* docs\package_development\image\table_feature_exemple.png
+* docs\package_development\image\table_feature_map.png
+* docs\package_development\image\table_feature_state.png
+* docs\package_development\image\table_icon.png
+* docs\package_development\image\table_room.png
+* docs\package_development\index.txt
+* domodroid.iml
+* ic_launcher-web.png
+* out\
+* out\production\
+* out\production\domodroid\
+* out\production\domodroid\activities\
+* out\production\domodroid\activities\Activity_About.class
+* out\production\domodroid\activities\Activity_Cam$1.class
+* out\production\domodroid\activities\Activity_Cam.class
+* out\production\domodroid\activities\Activity_Main$1.class
+* out\production\domodroid\activities\Activity_Main$10.class
+* out\production\domodroid\activities\Activity_Main$2.class
+* out\production\domodroid\activities\Activity_Main$3.class
+* out\production\domodroid\activities\Activity_Main$4.class
+* out\production\domodroid\activities\Activity_Main$5.class
+* out\production\domodroid\activities\Activity_Main$6.class
+* out\production\domodroid\activities\Activity_Main$7.class
+* out\production\domodroid\activities\Activity_Main$8.class
+* out\production\domodroid\activities\Activity_Main$9.class
+* out\production\domodroid\activities\Activity_Main$SBAnim$1.class
+* out\production\domodroid\activities\Activity_Main$SBAnim.class
+* out\production\domodroid\activities\Activity_Main.class
+* out\production\domodroid\activities\Activity_Map$1.class
+* out\production\domodroid\activities\Activity_Map$2.class
+* out\production\domodroid\activities\Activity_Map$3.class
+* out\production\domodroid\activities\Activity_Map$4.class
+* out\production\domodroid\activities\Activity_Map$5$1.class
+* out\production\domodroid\activities\Activity_Map$5$2.class
+* out\production\domodroid\activities\Activity_Map$5.class
+* out\production\domodroid\activities\Activity_Map$6.class
+* out\production\domodroid\activities\Activity_Map$7.class
+* out\production\domodroid\activities\Activity_Map.class
+* out\production\domodroid\activities\Dialog_House$1.class
+* out\production\domodroid\activities\Dialog_House$10.class
+* out\production\domodroid\activities\Dialog_House$11.class
+* out\production\domodroid\activities\Dialog_House$12.class
+* out\production\domodroid\activities\Dialog_House$13.class
+* out\production\domodroid\activities\Dialog_House$2.class
+* out\production\domodroid\activities\Dialog_House$3.class
+* out\production\domodroid\activities\Dialog_House$4.class
+* out\production\domodroid\activities\Dialog_House$5.class
+* out\production\domodroid\activities\Dialog_House$6.class
+* out\production\domodroid\activities\Dialog_House$7.class
+* out\production\domodroid\activities\Dialog_House$8.class
+* out\production\domodroid\activities\Dialog_House$9.class
+* out\production\domodroid\activities\Dialog_House.class
+* out\production\domodroid\activities\Dialog_Splash.class
+* out\production\domodroid\activities\Dialog_Synchronize$1.class
+* out\production\domodroid\activities\Dialog_Synchronize$LoadConfig.class
+* out\production\domodroid\activities\Dialog_Synchronize.class
+* out\production\domodroid\activities\Gradients_Manager$1.class
+* out\production\domodroid\activities\Gradients_Manager.class
+* out\production\domodroid\activities\Graphics_Manager.class
+* out\production\domodroid\activities\Preference.class
+* out\production\domodroid\activities\Sliding_Drawer$1.class
+* out\production\domodroid\activities\Sliding_Drawer$2.class
+* out\production\domodroid\activities\Sliding_Drawer$3.class
+* out\production\domodroid\activities\Sliding_Drawer$OnPanelListener.class
+* out\production\domodroid\activities\Sliding_Drawer$PanelOnGestureListener.class
+* out\production\domodroid\activities\Sliding_Drawer$State.class
+* out\production\domodroid\activities\Sliding_Drawer.class
+* out\production\domodroid\activities\Widgets_Manager.class
+* out\production\domodroid\database\
+* out\production\domodroid\database\Cache_Feature_Element.class
+* out\production\domodroid\database\Cache_management.class
+* out\production\domodroid\database\DatabaseHelper.class
+* out\production\domodroid\database\DmdContentProvider.class
+* out\production\domodroid\database\DomodroidDB.class
+* out\production\domodroid\database\JSONParser.class
+* out\production\domodroid\database\WidgetUpdate$1.class
+* out\production\domodroid\database\WidgetUpdate$2$1.class
+* out\production\domodroid\database\WidgetUpdate$2.class
+* out\production\domodroid\database\WidgetUpdate$UpdateThread.class
+* out\production\domodroid\database\WidgetUpdate$waitingThread.class
+* out\production\domodroid\database\WidgetUpdate.class
+* out\production\domodroid\domodroid.apk
+* out\production\domodroid\domodroid.unaligned.apk
+* out\production\domodroid\map\
+* out\production\domodroid\map\Dialog_Help.class
+* out\production\domodroid\map\Dialog_Move.class
+* out\production\domodroid\map\MapView$1.class
+* out\production\domodroid\map\MapView$2$1.class
+* out\production\domodroid\map\MapView$2.class
+* out\production\domodroid\map\MapView$3.class
+* out\production\domodroid\map\MapView$CommandeThread$1.class
+* out\production\domodroid\map\MapView$CommandeThread.class
+* out\production\domodroid\map\MapView.class
+* out\production\domodroid\map\ParserHelper.class
+* out\production\domodroid\map\SVG.class
+* out\production\domodroid\map\SVGParseException.class
+* out\production\domodroid\map\SVGParser$1.class
+* out\production\domodroid\map\SVGParser$Gradient.class
+* out\production\domodroid\map\SVGParser$NumberParse.class
+* out\production\domodroid\map\SVGParser$Properties.class
+* out\production\domodroid\map\SVGParser$SVGHandler.class
+* out\production\domodroid\map\SVGParser$StyleSet.class
+* out\production\domodroid\map\SVGParser.class
+* out\production\domodroid\map\TransformManager.class
+* out\production\domodroid\misc\
+* out\production\domodroid\misc\BounceInterpolator.class
+* out\production\domodroid\misc\Color_HueBar.class
+* out\production\domodroid\misc\Color_PowerBar.class
+* out\production\domodroid\misc\Color_Progress.class
+* out\production\domodroid\misc\Color_RGBField.class
+* out\production\domodroid\misc\Color_Result.class
+* out\production\domodroid\misc\CopyFile.class
+* out\production\domodroid\misc\EasingType$Type.class
+* out\production\domodroid\misc\EasingType.class
+* out\production\domodroid\misc\List_Icon_Adapter.class
+* out\production\domodroid\misc\changelog$1.class
+* out\production\domodroid\misc\changelog$2.class
+* out\production\domodroid\misc\changelog$Listmode.class
+* out\production\domodroid\misc\changelog.class
+* out\production\domodroid\misc\tracerengine.class
+* out\production\domodroid\mq\
+* out\production\domodroid\mq\MQMessage.class
+* out\production\domodroid\mq\Main$ZMQSubMessageReceiver.class
+* out\production\domodroid\mq\Main.class
+* out\production\domodroid\mq\Speaker.class
+* out\production\domodroid\mq\ZMQMessage$1.class
+* out\production\domodroid\mq\ZMQMessage.class
+* out\production\domodroid\mq\ZMQPubMessage.class
+* out\production\domodroid\mq\ZMQService.class
+* out\production\domodroid\mq\ZMQTask.class
+* out\production\domodroid\org\
+* out\production\domodroid\org\domogik\
+* out\production\domodroid\org\domogik\domodroid13\
+* out\production\domodroid\org\domogik\domodroid13\BuildConfig.class
+* out\production\domodroid\org\domogik\domodroid13\R$array.class
+* out\production\domodroid\org\domogik\domodroid13\R$attr.class
+* out\production\domodroid\org\domogik\domodroid13\R$drawable.class
+* out\production\domodroid\org\domogik\domodroid13\R$id.class
+* out\production\domodroid\org\domogik\domodroid13\R$layout.class
+* out\production\domodroid\org\domogik\domodroid13\R$menu.class
+* out\production\domodroid\org\domogik\domodroid13\R$raw.class
+* out\production\domodroid\org\domogik\domodroid13\R$string.class
+* out\production\domodroid\org\domogik\domodroid13\R$style.class
+* out\production\domodroid\org\domogik\domodroid13\R$styleable.class
+* out\production\domodroid\org\domogik\domodroid13\R$xml.class
+* out\production\domodroid\org\domogik\domodroid13\R.class
+* out\production\domodroid\rinor\
+* out\production\domodroid\rinor\Events_manager$1.class
+* out\production\domodroid\rinor\Events_manager$2.class
+* out\production\domodroid\rinor\Events_manager$ListenerThread.class
+* out\production\domodroid\rinor\Events_manager.class
+* out\production\domodroid\rinor\Rest_com.class
+* out\production\domodroid\rinor\Rinor_event.class
+* out\production\domodroid\rinor\Stats_Com$1.class
+* out\production\domodroid\rinor\Stats_Com.class
+* out\production\domodroid\video\
+* out\production\domodroid\video\MjpegInputStream.class
+* out\production\domodroid\video\MjpegView$MjpegViewThread.class
+* out\production\domodroid\video\MjpegView.class
+* out\production\domodroid\video\MjpegViewAsync$MjpegViewThread.class
+* out\production\domodroid\video\MjpegViewAsync.class
+* out\production\domodroid\widgets\
+* out\production\domodroid\widgets\Base_Device_Feature.class
+* out\production\domodroid\widgets\Basic_Graphical_widget$1.class
+* out\production\domodroid\widgets\Basic_Graphical_widget$2.class
+* out\production\domodroid\widgets\Basic_Graphical_widget$3.class
+* out\production\domodroid\widgets\Basic_Graphical_widget$4.class
+* out\production\domodroid\widgets\Basic_Graphical_widget$5.class
+* out\production\domodroid\widgets\Basic_Graphical_widget$6.class
+* out\production\domodroid\widgets\Basic_Graphical_widget.class
+* out\production\domodroid\widgets\Basic_Graphical_zone.class
+* out\production\domodroid\widgets\Com_Stats$1.class
+* out\production\domodroid\widgets\Com_Stats$2.class
+* out\production\domodroid\widgets\Com_Stats.class
+* out\production\domodroid\widgets\Entity_Area.class
+* out\production\domodroid\widgets\Entity_Feature.class
+* out\production\domodroid\widgets\Entity_Feature_Association.class
+* out\production\domodroid\widgets\Entity_Icon.class
+* out\production\domodroid\widgets\Entity_Map.class
+* out\production\domodroid\widgets\Entity_Room.class
+* out\production\domodroid\widgets\Entity_client.class
+* out\production\domodroid\widgets\Graphical_Area$1.class
+* out\production\domodroid\widgets\Graphical_Area$2.class
+* out\production\domodroid\widgets\Graphical_Area$3.class
+* out\production\domodroid\widgets\Graphical_Area$4.class
+* out\production\domodroid\widgets\Graphical_Area$5.class
+* out\production\domodroid\widgets\Graphical_Area$6.class
+* out\production\domodroid\widgets\Graphical_Area.class
+* out\production\domodroid\widgets\Graphical_Binary$1.class
+* out\production\domodroid\widgets\Graphical_Binary$CommandeThread$1.class
+* out\production\domodroid\widgets\Graphical_Binary$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_Binary$SBAnim$1.class
+* out\production\domodroid\widgets\Graphical_Binary$SBAnim.class
+* out\production\domodroid\widgets\Graphical_Binary.class
+* out\production\domodroid\widgets\Graphical_Binary_New$1.class
+* out\production\domodroid\widgets\Graphical_Binary_New$CommandeThread$1.class
+* out\production\domodroid\widgets\Graphical_Binary_New$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_Binary_New.class
+* out\production\domodroid\widgets\Graphical_Boolean$1.class
+* out\production\domodroid\widgets\Graphical_Boolean.class
+* out\production\domodroid\widgets\Graphical_Cam.class
+* out\production\domodroid\widgets\Graphical_Color$1.class
+* out\production\domodroid\widgets\Graphical_Color$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_Color.class
+* out\production\domodroid\widgets\Graphical_History$1.class
+* out\production\domodroid\widgets\Graphical_History.class
+* out\production\domodroid\widgets\Graphical_Info$1.class
+* out\production\domodroid\widgets\Graphical_Info.class
+* out\production\domodroid\widgets\Graphical_Info_View$1.class
+* out\production\domodroid\widgets\Graphical_Info_View$2$1.class
+* out\production\domodroid\widgets\Graphical_Info_View$2.class
+* out\production\domodroid\widgets\Graphical_Info_View$UpdateThread.class
+* out\production\domodroid\widgets\Graphical_Info_View.class
+* out\production\domodroid\widgets\Graphical_Info_commands$1.class
+* out\production\domodroid\widgets\Graphical_Info_commands$CommandeThread$1.class
+* out\production\domodroid\widgets\Graphical_Info_commands$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_Info_commands.class
+* out\production\domodroid\widgets\Graphical_Info_with_achartengine$1.class
+* out\production\domodroid\widgets\Graphical_Info_with_achartengine$2.class
+* out\production\domodroid\widgets\Graphical_Info_with_achartengine.class
+* out\production\domodroid\widgets\Graphical_List$1.class
+* out\production\domodroid\widgets\Graphical_List$2.class
+* out\production\domodroid\widgets\Graphical_List$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_List.class
+* out\production\domodroid\widgets\Graphical_Range$1.class
+* out\production\domodroid\widgets\Graphical_Range$CommandeThread$1.class
+* out\production\domodroid\widgets\Graphical_Range$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_Range$SBAnim$1.class
+* out\production\domodroid\widgets\Graphical_Range$SBAnim.class
+* out\production\domodroid\widgets\Graphical_Range.class
+* out\production\domodroid\widgets\Graphical_Room$1.class
+* out\production\domodroid\widgets\Graphical_Room$2.class
+* out\production\domodroid\widgets\Graphical_Room$3.class
+* out\production\domodroid\widgets\Graphical_Room$4.class
+* out\production\domodroid\widgets\Graphical_Room$5.class
+* out\production\domodroid\widgets\Graphical_Room$6.class
+* out\production\domodroid\widgets\Graphical_Room.class
+* out\production\domodroid\widgets\Graphical_Trigger$CommandeThread$1.class
+* out\production\domodroid\widgets\Graphical_Trigger$CommandeThread.class
+* out\production\domodroid\widgets\Graphical_Trigger.class
+* out\production\domodroid\widgets\Graphical_Trigger_Button$1.class
+* out\production\domodroid\widgets\Graphical_Trigger_Button$SBAnim$1.class
+* out\production\domodroid\widgets\Graphical_Trigger_Button$SBAnim.class
+* out\production\domodroid\widgets\Graphical_Trigger_Button.class
+* out\production\domodroid\widgets\Graphical_butler.class
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:18.+
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app\src\main\AndroidManifest.xml
+* assets\ => app\src\main\assets\
+* libs\achartengine-1.2.0.jar => app\libs\achartengine-1.2.0.jar
+* libs\jeromq-0.3.4.jar => app\libs\jeromq-0.3.4.jar
+* lint.xml => app\lint.xml
+* res\ => app\src\main\res\
+* src\ => app\src\main\java\
+
+Missing Android Support Repository:
+-----------------------------------
+Some useful libraries, such as the Android Support Library, are
+installed from a special Maven repository, which should be installed
+via the SDK manager.
+
+It looks like this library is missing from your SDK installation at:
+D:\adt-bundle-windows-x86-20140702\adt-bundle-windows-x86-20140702\sdk
+
+To install it, open the SDK manager, and in the Extras category,
+select "Android Support Repository". You may also want to install the
+"Google Repository" if you want to use libraries like Google Play
+Services.
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

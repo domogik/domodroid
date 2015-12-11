@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Search / will display always -->
+    
+     
+    <!-- menu_house_config -->
+    <item android:id="@+id/menu_house_config"
+          android:icon="@drawable/icon_menu_house"
+          android:title="@string/house_settings"
+          />
+     <!-- menu_butler -->
+    <item android:id="@+id/menu_butler"
+          android:icon="@drawable/icon_menu_butler"
+          android:title="@string/butler"
+          />
+    <!-- menu_preferences -->
+    <item android:id="@+id/menu_preferences"
+          android:icon="@drawable/icon_menu_options"
+          android:title="@string/home_button2"
+          />
+     
+    <!-- menu_sync -->
+    <item android:id="@+id/menu_sync"
+          android:icon="@drawable/icon_menu_sync"
+          android:title="@string/home_button3"
+          />
+    
+    <!-- menu_stats -->
+    <item android:id="@+id/menu_stats"
+          android:icon="@drawable/icon_menu_statistics"
+          android:title="@string/statistics"
+          />
+    
+    <!-- menu_about -->
+	<item android:id="@+id/menu_about"
+		android:title="@string/button4"
+        android:icon="@drawable/icon_menu_about"
+        />
+    
+    <!-- menu_exit -->
+	<item android:id="@+id/menu_exit"
+        android:icon="@drawable/icon_menu_exit"
+        android:title="@string/Exit_Program" />
+          
+
+</menu>

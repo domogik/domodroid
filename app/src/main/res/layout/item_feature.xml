@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * This file is part of Domodroid.
+ * 
+ * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
+ * 
+ * Domodroid is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * Domodroid. If not, see <http://www.gnu.org/licenses/>.
+ -->
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+	android:paddingLeft="10dp" android:layout_weight="1" android:background="#00000000">
+
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="0dip"
+		android:layout_weight="1">
+
+		<ImageView
+        	android:id="@+id/icon"
+        	android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:layout_marginTop="1dp"
+        	android:src="@drawable/ic_launcher"/>
+		
+		<TextView android:id="@+id/name" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="16sp"
+			android:textColor="#FFFFFF" android:paddingBottom="3dip" />
+		
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="16sp"
+			android:textColor="#FFFFFF" android:paddingBottom="3dip" android:text="  -  "/>
+
+		<TextView android:id="@+id/state_key" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="16sp"
+			android:textColor="#FFFFFF"
+			android:paddingBottom="3dip" />
+	</LinearLayout>
+
+	<TextView android:id="@+id/description" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:textSize="15sp"
+		android:textColor="#AFAFAF" android:paddingLeft="10dip" />
+
+</LinearLayout>

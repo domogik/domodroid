@@ -1,0 +1,94 @@
+[
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_tts.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\activity_tts.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_synchronize.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_synchronize.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_house.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_house.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\com_stats_2.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\com_stats_2.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\row_layout_list_icon.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\row_layout_list_icon.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_move.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_move.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\activity_about.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_choice.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\item_choice.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_phone.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\item_phone.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_feature_house.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\item_feature_house.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\layout_seekbar_background.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\layout_seekbar_background.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_customname.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_customname.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_splash.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_splash.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\graph_buttons.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\graph_buttons.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_home.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\activity_home.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\list_view_theme.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\list_view_theme.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_feature.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\item_feature.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\navigation_drawer_item.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\navigation_drawer_item.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_items.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_items.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog_help.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog_help.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\item_map.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\item_map.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_map.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\activity_map.xml"
+    },
+    {
+        "merged": "D:\\Android\\domodroid_studio\\app\\build\\intermediates\\res\\merged\\debug\\layout\\dialog.xml",
+        "source": "D:\\Android\\domodroid_studio\\app\\src\\main\\res\\layout\\dialog.xml"
+    }
+]

@@ -1,0 +1,142 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:1:1-60:12
+	package
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:1:11-44
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:3:5-34
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+	android:versionCode
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:2:5-29
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:4:5-63
+uses-permission#android.permission.INTERNET
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:6:2-64
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:6:19-61
+uses-permission#android.permission.WAKE_LOCK
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:7:2-65
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:7:19-62
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:8:2-78
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:8:19-75
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:9:5-79
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:9:22-76
+uses-sdk
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:11:5-13:11
+	android:targetSdkVersion
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:12:9-34
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml
+supports-screens
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:14:5-162
+	android:largeScreens
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:14:105-132
+	android:smallScreens
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:14:133-160
+	android:normalScreens
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:14:23-51
+	android:resizeable
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:14:78-103
+	android:anyDensity
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:14:52-77
+application
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:16:2-58:19
+	android:label
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:19:9-41
+	android:allowBackup
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:17:6-32
+	android:icon
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:18:9-45
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:20:9-40
+activity#activities.Activity_Main
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:22:3-29:14
+	android:label
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:23:4-36
+	android:configChanges
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:24:5-55
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:22:53-100
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:22:13-52
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:25:4-28:20
+action#android.intent.action.MAIN
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:26:5-57
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:26:13-54
+category#android.intent.category.LAUNCHER
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:27:5-65
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:27:15-62
+activity#activities.Activity_About
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:31:3-32:51
+	android:configChanges
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:32:4-39
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:31:54-101
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:31:13-53
+activity#activities.Preference
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:33:3-34:51
+	android:configChanges
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:34:4-39
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:33:50-97
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:33:13-49
+activity#activities.Activity_Cam
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:35:3-37:51
+	android:configChanges
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:37:4-39
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:36:4-62
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:35:13-51
+activity#mq.Main
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:38:3-40:51
+	android:configChanges
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:40:4-39
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:39:4-62
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:38:13-35
+activity#activities.Activity_Map
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:41:3-43:51
+	android:configChanges
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:43:4-39
+	android:theme
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:42:4-62
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:41:13-51
+service#mq.ZMQService
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:44:4-49:19
+	android:process
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:48:13-43
+	class
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:46:13-34
+	android:exported
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:47:13-37
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:45:13-41
+provider#database.DmdContentProvider
+ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:51:3-55:9
+	android:authorities
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:52:7-56
+	android:multiprocess
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:53:7-34
+	android:name
+		ADDED from D:\Android\domodroid_studio\app\src\main\AndroidManifest.xml:54:7-49

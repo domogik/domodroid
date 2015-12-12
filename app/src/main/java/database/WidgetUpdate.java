@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
@@ -108,7 +107,6 @@ public class WidgetUpdate  {
 
 	}
 
-	@SuppressLint("HandlerLeak")
 	public Boolean init(tracerengine Trac, Activity context, SharedPreferences params){
 		Boolean result = false;
 		if(init_done) {
@@ -298,7 +296,7 @@ public class WidgetUpdate  {
 			//Somebody else is updating list...
 			try{
 				Thread.sleep(10);		//Standby 10 milliseconds
-			} catch (Exception e) {};
+			} catch (Exception e) {}
 		}
 		locked=true;
 
@@ -355,7 +353,6 @@ public class WidgetUpdate  {
 		} // End of loop on cache items
 		locked=false;
 		//dump_cache();	//During development, help to debug !
-		return;
 	}
 	public void dump_cache() {
 		String[] name = new String[]{ "Main   ","Map    ","MapView", "???    "};
@@ -366,7 +363,7 @@ public class WidgetUpdate  {
 			//Somebody else is updating list...
 			try{
 				Thread.sleep(10);		//Standby 10 milliseconds
-			} catch (Exception e) {};
+			} catch (Exception e) {}
 		}
 		locked=true;
 
@@ -449,7 +446,7 @@ public class WidgetUpdate  {
 					// 10 seconds elapsed
 					//finalize();
 				}
-			} catch (Exception e) {};
+			} catch (Exception e) {}
 		}
 		Tracer.d(mytag,"cache engine ready after resync !");
 		locked=false;
@@ -540,7 +537,7 @@ public class WidgetUpdate  {
 			}
 		} catch (Exception e){
 			Tracer.e(mytag, "Crash cause by: "+e.toString());
-		};
+		}
 	}
 	public class waitingThread extends AsyncTask<Void, Integer, Void>{
 		@Override
@@ -559,7 +556,7 @@ public class WidgetUpdate  {
 						said = false;
 						counter = 0;
 					}
-				} catch (Exception e) {};
+				} catch (Exception e) {}
 			}
 			if(myselfHandler != null) {
 				//Tracer.d(mytag,"cache engine ready  ! Notify it....");
@@ -754,7 +751,7 @@ public class WidgetUpdate  {
 			//Tracer.i(mytag, "cache engine locked : wait !");
 			try{
 				Thread.sleep(100);		//Standby 10 milliseconds
-			} catch (Exception e) {};
+			} catch (Exception e) {}
 		}
 		locked=true;	//Take the lock
 		Boolean result = false;
@@ -864,7 +861,7 @@ public class WidgetUpdate  {
 			Tracer.i(mytag, "cache engine locked : wait !");
 			try{
 				Thread.sleep(100);		//Standby 10 milliseconds
-			} catch (Exception e) {};
+			} catch (Exception e) {}
 		}
 		locked=true;	//Take the lock
 
@@ -901,7 +898,7 @@ public class WidgetUpdate  {
 			//Somebody else is updating list...
 			try{
 				Thread.sleep(10);		//Standby 10 milliseconds
-			} catch (Exception e) {};
+			} catch (Exception e) {}
 		}
 		locked=true;
 		for(int i = 0; i < cache.size(); i++) {

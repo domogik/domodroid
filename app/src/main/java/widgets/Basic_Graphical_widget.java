@@ -53,7 +53,6 @@ import android.widget.FrameLayout.LayoutParams;
 
 public class Basic_Graphical_widget extends FrameLayout implements OnLongClickListener{
 
-	private final FrameLayout FL_imgPan;
 	final LinearLayout LL_background;
 	final LinearLayout LL_infoPan;
 	final LinearLayout LL_featurePan;
@@ -61,7 +60,6 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 	final ImageView IV_img;
 	private final TextView TV_name;
 	private final int id;
-	private final int session_type;
 	private final FrameLayout container;
 	private final FrameLayout myself;
 	private tracerengine Tracer = null;
@@ -79,7 +77,6 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		this.context = context;
 		this.icon=icon;
 		this.id = id;
-		this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
 		this.place_id= place_id;
 		this.place_type= place_type;
@@ -105,8 +102,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 		LL_topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 
 		//panel to set icon with padding left
-		FL_imgPan = new FrameLayout(context);
-		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
+		FrameLayout FL_imgPan = new FrameLayout(context);
+		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 		FL_imgPan.setPadding(5, 8, 10, 10);
 
 		//icon
@@ -222,7 +219,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 			String[] fiilliste;
 			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
 			for (int i=0; i < fiilliste.length ; i++){
-				list_icon.add(fiilliste[i].toString());
+				list_icon.add(fiilliste[i]);
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 			list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+name+"-"+state_key);

@@ -155,7 +155,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 			String[] fiilliste;
 			fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
 			for (int i=0; i < fiilliste.length ; i++){
-				list_icon.add(fiilliste[i].toString());
+				list_icon.add(fiilliste[i]);
 			}
 			final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 			list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+name);

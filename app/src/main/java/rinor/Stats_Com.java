@@ -174,7 +174,7 @@ public class Stats_Com {
 					//e.printStackTrace();
 				}
 
-			};
+			}
 		};
 		if(timer != null) {
 			timer.schedule(doAsynchronousTask, 0, 1000);	// Once per second	

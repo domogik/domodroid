@@ -27,7 +27,6 @@ public class tracerengine {
 	private static Boolean	Warning = false;
 	private static Context context;
 	private static SharedPreferences settings = null;
-	private static SharedPreferences.Editor prefEditor;
 
 	/*
 	 * It's not elegant, but Tracer will store the reference to widgetupdate instance,
@@ -158,8 +157,8 @@ public class tracerengine {
 						}
 
 					}
-				} 
-				prefEditor=settings.edit();
+				}
+				SharedPreferences.Editor prefEditor = settings.edit();
 				prefEditor.putBoolean("LOGCHANGED", false);
 				prefEditor.putBoolean("TEXTLOG", to_txtFile);	//In case open fails.... don't retry till next change !
 				prefEditor.commit();

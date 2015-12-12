@@ -101,15 +101,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Handler sbanim;
 	private static Handler widgetHandler;
 	private Intent INTENT_map = null;
-	private Dialog_House DIALOG_house_set = null;
 	private ImageView appname;
 
 	private int dayOffset = 1;
 	private int secondeOffset = 5;
 	private ViewGroup VG_parent;
-	private LinearLayout LL_area;
-	private LinearLayout LL_room;
-	private LinearLayout LL_activ;
 	private Vector<String[]> history;
 	private int historyPosition;
 	private LinearLayout LL_house_map;
@@ -125,13 +121,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Boolean init_done = false;
 	private final File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
 	private Boolean dont_freeze = false;
-	private AlertDialog.Builder dialog_reload;
 	private final Thread waiting_thread = null;
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
 	private String tracer_state = "false";
 	private Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
-	private final int mytype = 0;		// All objects will be 'Main" type
 	//private AlertDialog.Builder AD_dialog_message;
 	private ProgressDialog PG_dialog_message;
 	private Boolean cache_ready = false;
@@ -197,11 +191,10 @@ public class Activity_Main extends Activity implements OnClickListener{
 				DomodroidDB domodb = new DomodroidDB(Tracer, myself);
 				listRoom = domodb.requestallRoom();
 				String type="room";
-				int checkedid=pos;
 				historyPosition++;
-				Tracer.v(mytag+".widgetHandler", "add history "+listRoom[checkedid].getId()+" room");
-				history.add(historyPosition,new String [] {listRoom[checkedid].getId()+"","room"});
-				loadWigets(listRoom[checkedid].getId(), type);
+				Tracer.v(mytag+".widgetHandler", "add history "+listRoom[pos].getId()+" room");
+				history.add(historyPosition,new String [] {listRoom[pos].getId()+"","room"});
+				loadWigets(listRoom[pos].getId(), type);
 				LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
 			}
 
@@ -436,7 +429,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 						dialog.dismiss();						
 					}
 				};
-				dialog_reload = new AlertDialog.Builder(this);
+				AlertDialog.Builder dialog_reload = new AlertDialog.Builder(this);
 				dialog_reload.setMessage(getText(R.string.home_reload));
 				dialog_reload.setTitle(getText(R.string.reload_title));
 				dialog_reload.setPositiveButton(getText(R.string.reloadOK), reload_listener);
@@ -723,11 +716,11 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private void loadWigets(int id, String type){
 		Tracer.i(mytag+".loadWidgets","Construct main View id="+id+" type="+type);
 		VG_parent.removeAllViews();
-		LL_area = new LinearLayout(this);
+		LinearLayout LL_area = new LinearLayout(this);
 		LL_area.setOrientation(LinearLayout.VERTICAL);
-		LL_room = new LinearLayout(this);
+		LinearLayout LL_room = new LinearLayout(this);
 		LL_room.setOrientation(LinearLayout.VERTICAL);
-		LL_activ = new LinearLayout(this);
+		LinearLayout LL_activ = new LinearLayout(this);
 		LL_activ.setOrientation(LinearLayout.VERTICAL);
 
 		LL_house_map.removeAllViews();
@@ -735,6 +728,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		LL_house_map.addView(map);
 
 		try {
+			int mytype = 0;
 			if(type.equals("root")){
 				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
@@ -768,7 +762,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 				//Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
 				LL_area.removeAllViews();
 				LL_activ.removeAllViews();
-				LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ ,SP_params, mytype);
+				LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
 
 			} else 	if(type.equals("area")) {
@@ -823,7 +817,6 @@ public class Activity_Main extends Activity implements OnClickListener{
 			synchronized(waiting_thread){
 				waiting_thread.notifyAll();
 			}
-			return;
 		}  else if(v.getTag().equals("reload_ok")) {
 			Tracer.v(mytag,"Choosing settings reload");
 			reload=true;
@@ -901,7 +894,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 
 		case R.id.menu_house_config:
 			Tracer.v(mytag+".onclick()","Call to House settings screen");
-			DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
+			Dialog_House DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
 			DIALOG_house_set.show();
 			DIALOG_house_set.setOnDismissListener(house_listener);
 			return true;
@@ -946,7 +939,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		if (LV_My_Navigation_Drawer.getVisibility()==View.VISIBLE){
 			LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
 			return false;
-		}else if((keyCode == 4) && historyPosition > 0 && LV_My_Navigation_Drawer.getVisibility()==4){
+		}else if((keyCode == 4) && historyPosition > 0 && LV_My_Navigation_Drawer.getVisibility()==View.INVISIBLE){
 			historyPosition--;
 			refresh();
 			return false;

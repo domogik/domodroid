@@ -17,13 +17,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+@SuppressWarnings("ALL")
 public class MjpegInputStream extends DataInputStream {
 	private final byte[] SOI_MARKER = { (byte) 0xFF, (byte) 0xD8 };
 	private final byte[] EOF_MARKER = { (byte) 0xFF, (byte) 0xD9 };
-	private final String CONTENT_LENGTH = "Content-Length";
 	private final static int HEADER_MAX_LENGTH = 100;
 	private final static int FRAME_MAX_LENGTH = 40000 + HEADER_MAX_LENGTH;
-	private int mContentLength = -1;
 
 	public static MjpegInputStream read(String url) {
 		HttpResponse res;
@@ -68,7 +67,8 @@ public class MjpegInputStream extends DataInputStream {
 		ByteArrayInputStream headerIn = new ByteArrayInputStream(headerBytes);
 		Properties props = new Properties();
 		props.load(headerIn);
-		return Integer.parseInt(props.getProperty(CONTENT_LENGTH));
+				String CONTENT_LENGTH = "Content-Length";
+				return Integer.parseInt(props.getProperty(CONTENT_LENGTH));
 			}	
 
 	public Bitmap readMjpegFrame() throws IOException {
@@ -77,6 +77,7 @@ public class MjpegInputStream extends DataInputStream {
 		reset();
 		byte[] header = new byte[headerLen];
 		readFully(header);
+		int mContentLength = -1;
 		try {
 			mContentLength = parseContentLength(header);
 		} catch (NumberFormatException nfe) { 

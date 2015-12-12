@@ -54,10 +54,10 @@ public class DomodroidDB {
 		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_AREA, null);
 
 		for (int i =0; i < itemArray.length(); i++){
-			values.put("description", itemArray.getJSONObject(i).getString("description").toString());
+			values.put("description", itemArray.getJSONObject(i).getString("description"));
 			values.put("id", itemArray.getJSONObject(i).getInt("id"));
-			values.put("name", itemArray.getJSONObject(i).getString("name").toString());
-			Tracer.d(mytag,"Inserting Area "+itemArray.getJSONObject(i).getString("name").toString());
+			values.put("name", itemArray.getJSONObject(i).getString("name"));
+			Tracer.d(mytag,"Inserting Area "+ itemArray.getJSONObject(i).getString("name"));
 
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
 		}
@@ -73,10 +73,10 @@ public class DomodroidDB {
 			if(itemArray.getJSONObject(i).getString("area_id").equals(""))area_id=0;
 			else area_id=itemArray.getJSONObject(i).getInt("area_id");
 			values.put("area_id", area_id);
-			values.put("description", itemArray.getJSONObject(i).getString("description").toString());
+			values.put("description", itemArray.getJSONObject(i).getString("description"));
 			values.put("id", itemArray.getJSONObject(i).getInt("id"));
-			values.put("name", itemArray.getJSONObject(i).getString("name").toString());
-			Tracer.d(mytag,"Inserting Room "+itemArray.getJSONObject(i).getString("name").toString());
+			values.put("name", itemArray.getJSONObject(i).getString("name"));
+			Tracer.d(mytag,"Inserting Room "+ itemArray.getJSONObject(i).getString("name"));
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
 		}
 	}
@@ -87,8 +87,8 @@ public class DomodroidDB {
 		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_ICON, null);
 
 		for (int i =0; i < itemArray.length(); i++){
-			values.put("name", itemArray.getJSONObject(i).getString("name").toString());
-			values.put("value", itemArray.getJSONObject(i).getString("value").toString());
+			values.put("name", itemArray.getJSONObject(i).getString("name"));
+			values.put("value", itemArray.getJSONObject(i).getString("value"));
 			values.put("reference", itemArray.getJSONObject(i).getInt("reference"));
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ICON, values);
 		}
@@ -100,14 +100,14 @@ public class DomodroidDB {
 		//context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
 		for (int i =0; i < itemArray.length(); i++){
 			try {
-				values.put("device_feature_model_id", itemArray.getJSONObject(i).getString("device_feature_model_id").toString());
+				values.put("device_feature_model_id", itemArray.getJSONObject(i).getString("device_feature_model_id"));
 				values.put("id", itemArray.getJSONObject(i).getInt("id"));
 				values.put("device_id", itemArray.getJSONObject(i).getJSONObject("device").getInt("id"));
-				values.put("device_usage_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_usage_id").toString());
-				values.put("address", itemArray.getJSONObject(i).getJSONObject("device").getString("address").toString());
-				values.put("device_type_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id").toString());
-				values.put("description", itemArray.getJSONObject(i).getJSONObject("device").getString("description").toString());
-				values.put("name", itemArray.getJSONObject(i).getJSONObject("device").getString("name").toString());
+				values.put("device_usage_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_usage_id"));
+				values.put("address", itemArray.getJSONObject(i).getJSONObject("device").getString("address"));
+				values.put("device_type_id", itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id"));
+				values.put("description", itemArray.getJSONObject(i).getJSONObject("device").getString("description"));
+				values.put("name", itemArray.getJSONObject(i).getJSONObject("device").getString("name"));
 				values.put("state_key", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("stat_key"));
 				values.put("parameters", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("parameters"));
 				values.put("value_type", itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("value_type"));
@@ -121,16 +121,16 @@ public class DomodroidDB {
 	public void insertFeature_0_4(JSONObject itemArray) {
 		ContentValues values = new ContentValues();
 		try {
-			values.put("device_feature_model_id", itemArray.getString("device_feature_model_id").toString());
+			values.put("device_feature_model_id", itemArray.getString("device_feature_model_id"));
 			values.put("id", itemArray.getInt("id"));
 			values.put("device_id", itemArray.getInt("device_id"));
-			values.put("device_usage_id", itemArray.getString("device_usage_id").toString());
-			values.put("address", itemArray.getString("adress").toString());
-			values.put("device_type_id", itemArray.getString("device_type_id").toString());
-			values.put("description", itemArray.getString("description").toString());
-			values.put("name", itemArray.getString("name").toString());
+			values.put("device_usage_id", itemArray.getString("device_usage_id"));
+			values.put("address", itemArray.getString("adress"));
+			values.put("device_type_id", itemArray.getString("device_type_id"));
+			values.put("description", itemArray.getString("description"));
+			values.put("name", itemArray.getString("name"));
 			values.put("state_key", itemArray.getString("stat_key"));
-			values.put("parameters", itemArray.getString("parameters").toString());
+			values.put("parameters", itemArray.getString("parameters"));
 			values.put("value_type", itemArray.getString("value_type"));
 			context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
 		} catch (Exception e) {
@@ -622,13 +622,13 @@ public class DomodroidDB {
 				String device_usage_id=curs.getString(3);
 				String iconName = "unknow";
 				try {
-					iconName = this.requestIcons(Id, "feature").getValue().toString();
+					iconName = this.requestIcons(Id, "feature").getValue();
 					Tracer.i(mytag, "icon " + iconName );
 				} catch (Exception e) {
 					//e.printStackTrace();
 					Tracer.i(mytag, "NO icon for device id" + Id );
 				}
-				if (iconName=="unknow")
+				if (iconName.equals("unknow"))
 					iconName=device_usage_id;
 
 				features[i]=new Entity_Map(curs.getString(0),Id,curs.getInt(2),iconName,curs.getString(4),curs.getString(5),
@@ -676,7 +676,6 @@ public class DomodroidDB {
 
 	public Entity_Feature[] requestFeatures(){
 		Cursor curs=null;
-		String[] projection = {"value"};
 
 		Entity_Feature[] features=null;
 		try {

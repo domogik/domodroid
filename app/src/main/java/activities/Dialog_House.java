@@ -39,17 +39,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Spinner;
 
 class Dialog_House extends Dialog implements OnClickListener {
-	private final Button cancelButton;
-	private final Button OKButton;
-	private final Button add_area_Button;
-	private final Button add_room_Button;
-	private final Button add_widget_Button;
-	private final Button add_icon_Button;
 	private final Spinner spinner_area;
 	private final Spinner spinner_room;
 	private final Spinner spinner_feature;
 	private final Spinner spinner_icon;
-	private SharedPreferences.Editor prefEditor;
 	private final SharedPreferences params;
 	private final Activity context;
 	private tracerengine Tracer = null;
@@ -60,13 +53,11 @@ class Dialog_House extends Dialog implements OnClickListener {
 	private String type=null;
 	private String icon=null;
 	private WidgetUpdate widgetUpdate;
-	private HashMap<String,String> map;
 	private Dialog dialog_feature;
 	private DomodroidDB domodb;
 	private Entity_Area[] listArea;
 	private Entity_Room[] listRoom;
 	private Entity_Feature[] listFeature;
-	private Entity_Icon[] listIcon;
 	private final String mytag;
 
 	public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
@@ -77,27 +68,27 @@ class Dialog_House extends Dialog implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_house);
 		mytag="Dialog_House";
-		cancelButton = (Button) findViewById(R.id.house_Cancel);
+		Button cancelButton = (Button) findViewById(R.id.house_Cancel);
 		cancelButton.setTag("house_cancel");
 		cancelButton.setOnClickListener(this);
 
-		OKButton = (Button) findViewById(R.id.house_OK);
+		Button OKButton = (Button) findViewById(R.id.house_OK);
 		OKButton.setTag("house_ok");
 		OKButton.setOnClickListener(this);
 
-		add_area_Button = (Button) findViewById(R.id.house_add_area);
+		Button add_area_Button = (Button) findViewById(R.id.house_add_area);
 		add_area_Button.setTag("add_area");
 		add_area_Button.setOnClickListener(this);
 
-		add_room_Button = (Button) findViewById(R.id.house_add_room);
+		Button add_room_Button = (Button) findViewById(R.id.house_add_room);
 		add_room_Button.setTag("add_room");
 		add_room_Button.setOnClickListener(this);
 
-		add_widget_Button = (Button) findViewById(R.id.house_add_widget);
+		Button add_widget_Button = (Button) findViewById(R.id.house_add_widget);
 		add_widget_Button.setTag("add_widget");
 		add_widget_Button.setOnClickListener(this);
 
-		add_icon_Button = (Button) findViewById(R.id.house_add_icon);
+		Button add_icon_Button = (Button) findViewById(R.id.house_add_icon);
 		add_icon_Button.setTag("add_icon");
 		add_icon_Button.setOnClickListener(this);
 
@@ -184,7 +175,7 @@ class Dialog_House extends Dialog implements OnClickListener {
 		String[] fiilliste;
 		fiilliste = context.getResources().getStringArray(R.array.icon_area_array); 
 		for (int i=0; i < fiilliste.length ; i++){
-			list_icon.add(fiilliste[i].toString());
+			list_icon.add(fiilliste[i]);
 		}
 		final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 		list_icon_choice.setTitle(R.string.Wich_ICON_message);
@@ -359,9 +350,9 @@ class Dialog_House extends Dialog implements OnClickListener {
 		if (tag.equals("house_cancel"))
 			dismiss();
 		else if (tag.equals("house_ok")) {
-			prefEditor=params.edit();
+			SharedPreferences.Editor prefEditor = params.edit();
 			try{
-				prefEditor=params.edit();
+				prefEditor =params.edit();
 				//To allow the area view we have to remove by usage option
 				prefEditor.putBoolean("BY_USAGE", false);
 				prefEditor.commit();
@@ -429,20 +420,21 @@ class Dialog_House extends Dialog implements OnClickListener {
 		listArea = domodb.requestArea();
 		listRoom = domodb.requestallRoom();
 		listFeature = domodb.requestFeatures();
-		listIcon = domodb.requestallIcon();
+		Entity_Icon[] listIcon = domodb.requestallIcon();
 
 		//1st list area where to put room
 		ArrayList<HashMap<String,String>> list_Area = new ArrayList<HashMap<String,String>>();
+		HashMap<String, String> map;
 		for (Entity_Area area : listArea) {
-			map=new HashMap<String,String>();
-			map.put("name",area.getName());
+			map =new HashMap<String,String>();
+			map.put("name", area.getName());
 			String iconName = "unknow";
 			try {
-				iconName = domodb.requestIcons(area.getId(), "area").getValue().toString();
+				iconName = domodb.requestIcons(area.getId(), "area").getValue();
 			} catch (Exception e) {
 				Tracer.e(mytag,e.toString());
 			}
-			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName,1)));
+			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
 			list_Area.add(map);
 		}
 //		ArrayAdapter<String> area_adapter =
@@ -457,15 +449,15 @@ class Dialog_House extends Dialog implements OnClickListener {
 		//widget could be place in an area or a room.
 		ArrayList<HashMap<String,String>> list_Room = new ArrayList<HashMap<String,String>>();
 		for (Entity_Room room : listRoom) {
-			map=new HashMap<String,String>();
-			map.put("name",room.getName());
+			map =new HashMap<String,String>();
+			map.put("name", room.getName());
 			String iconName = "unknow";
 			try {
-				iconName = domodb.requestIcons(room.getId(), "room").getValue().toString();
+				iconName = domodb.requestIcons(room.getId(), "room").getValue();
 			} catch (Exception e) {
 				Tracer.e(mytag,e.toString());
 			}
-			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName,1)));
+			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
 			list_Room.add(map);
 		}
 //		ArrayAdapter<String> room_adapter =
@@ -479,24 +471,24 @@ class Dialog_House extends Dialog implements OnClickListener {
 		//3rd list feature to put somewhere
 		ArrayList<HashMap<String,String>> list_Feature= new ArrayList<HashMap<String,String>>();
 		for (Entity_Feature feature : listFeature) {
-			map=new HashMap<String,String>();
+			map =new HashMap<String,String>();
 			if(feature.getParameters().contains("command")){
 				//TODO Use R.STRING for state_key
-				map.put("name",feature.getName()+" "+context.getString(R.string.command)+"-"+feature.getValue_type());
+				map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getValue_type());
 			}else{
 				//TODO Use R.STRING for state_key
-				map.put("name",feature.getName()+"-"+feature.getValue_type());
+				map.put("name", feature.getName() + "-" + feature.getValue_type());
 			}
 			String iconName = "unknow";
 			try {
-				iconName = domodb.requestIcons(feature.getId(), "feature").getValue().toString();
+				iconName = domodb.requestIcons(feature.getId(), "feature").getValue();
 			} catch (Exception e) {
 				Tracer.e(mytag, "error in db getting icon for this id");
 			}
-			if (iconName=="unknow")
+			if (iconName.equals("unknow"))
 				iconName=feature.getDevice_usage_id();
 
-			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName,1)));
+			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
 			list_Feature.add(map);
 		}
 //		ArrayAdapter<String> feature_adapter =

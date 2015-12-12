@@ -31,13 +31,11 @@ public class Color_Progress extends SeekBar{
 	private final float[] hsv6 = {0,0,1};
 
 	private final int dpiClassification;
-	private tracerengine Tracer = null;
 
 
 	public Color_Progress(tracerengine Trac, Context context, int mode, int color) {
 		super(context);
 		this.mode = mode;
-		this.Tracer = Trac;
 
 		DisplayMetrics dm = new DisplayMetrics();
 		((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);

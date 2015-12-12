@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.domogik.domodroid13.*;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -40,9 +39,6 @@ import android.widget.TextView;
 public class Graphical_Info_View extends View implements OnClickListener {
 
 	private int width;
-	private int height;
-	private Bitmap buffer;
-	private Bitmap text;
 	private Canvas can;
 	private Canvas can2;
 	private final Vector<Vector<Float>> values;
@@ -71,7 +67,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	private final String mytag="Graphical_Info_View";
 	public final FrameLayout container = null;
 	public View myself = null;
-	@SuppressLint("SimpleDateFormat")
 	private Calendar calendar = Calendar.getInstance();
 	final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	private final Date time_start=new Date();
@@ -92,24 +87,18 @@ public class Graphical_Info_View extends View implements OnClickListener {
 
 	private String step="hour";
 	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
-	private long currentTimestamp = 0;
-	private long startTimestamp = 0; 
 	private   OnClickListener listener = null;
 	private tracerengine Tracer = null;
 	private final String login;
 	private final String password;
-	private final SharedPreferences params;
-	private final DisplayMetrics metrics;
 	private final float size15;
 	private final float size10;
 	private final float api_version;
 
-	@SuppressLint("HandlerLeak")
 	public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params){
 		super(context);
 		invalidate();
 		this.Tracer=Trac;
-		this.params = params;
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
 		api_version=params.getFloat("API_VERSION", 0);
@@ -125,7 +114,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		//width= metrics.widthPixels;
 		//height= metrics.heightPixels;
 		//fixed 15 float text size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
-		metrics = getContext().getResources().getDisplayMetrics();
+		DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
 		size15 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
 		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
@@ -222,15 +211,15 @@ public class Graphical_Info_View extends View implements OnClickListener {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		width = getMeasuredWidth();
-		height = getMeasuredHeight();
-		gridStartY = height-size15;
+		int height = getMeasuredHeight();
+		gridStartY = height -size15;
 		gridStopY = size15;
 		gridOffset = size15;
 		valueOffset = size10;
 
 
-		buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-		text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);		
+		Bitmap buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+		Bitmap text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
 		can=new Canvas(buffer);
 		can2=new Canvas(text);
 
@@ -561,8 +550,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
 			try {
 				avgf=0;
 				values.clear();
-				currentTimestamp=time_end.getTime()/1000;
-				startTimestamp=time_start.getTime()/1000;
+				long currentTimestamp = time_end.getTime() / 1000;
+				long startTimestamp = time_start.getTime() / 1000;
 
 				JSONObject json_GraphValues = null;
 				try {
@@ -571,18 +560,18 @@ public class Graphical_Info_View extends View implements OnClickListener {
 						json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+
 								state_key+
 								"/from/"+
-								startTimestamp+
+								startTimestamp +
 								"/to/"+
-								currentTimestamp+
+								currentTimestamp +
 								"/interval/"+step+"/selector/avg",login,password);
 					}else if(api_version>=0.7f){
 						//Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 						//Don't forget old "dev_id"+"state_key" is replaced by "id"
 						json_GraphValues = Rest_com.connect_jsonobject(url+"sensorhistory/id/"+id+
 								"/from/"+
-								startTimestamp+
+								startTimestamp +
 								"/to/"+
-								currentTimestamp+
+								currentTimestamp +
 								"/interval/"+step+"/selector/avg",login,password);
 					}
 				} catch (Exception e) {
@@ -595,7 +584,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 				//TODO
 				//replace json_GraphValues.getJSONArray("stats") != null by somthing else as it may crash on a 0.4.
 				//if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
-				if(! (json_GraphValues != null)) {
+				if(json_GraphValues == null) {
 					//That seems to be a zombie
 					loaded=false;
 					handler.sendEmptyMessage(0);	// To force a close of this instance
@@ -632,7 +621,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 						for (int j=0; j < 4; j++){
 							vect.addElement((float)valueArray.getJSONArray(i).getDouble(j));
 						}
-						vect.addElement((float)0f);	//null hour
+						vect.addElement(0f);	//null hour
 						vect.addElement(real_val.floatValue());
 					} else  {
 						// stats per week return [ year,  week, value ]
@@ -647,7 +636,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 						vect.addElement((float)loc_date.getMonth());	// month
 						vect.addElement((float)valueArray.getJSONArray(i).getDouble(1));	//week
 						vect.addElement((float)loc_date.getDay());	// day
-						vect.addElement((float)0f);	//null hour
+						vect.addElement(0f);	//null hour
 						vect.addElement(real_val.floatValue());
 					}
 					// each vector contains 6  floats
@@ -808,7 +797,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 										vect2.addElement((float)(loc_week+k));	//week
 										vect2.addElement((float)loc_day);	//day
 										vect2.addElement(0f);	//hour
-										vect2.addElement((float)loc_value);	//value
+										vect2.addElement(loc_value);	//value
 										values.add(vect2);
 										avgf+=loc_value;	//value
 									}
@@ -824,7 +813,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 									vect2.addElement((float)k);	//week
 									vect2.addElement((float)loc_day);	//day
 									vect2.addElement(0f);	//hour
-									vect2.addElement((float)loc_value);	//value
+									vect2.addElement(loc_value);	//value
 									values.add(vect2);
 									avgf+=valueArray.getJSONArray(i).getDouble(limit-1);	//value
 								}
@@ -930,7 +919,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
-		return (float)tmp/p;
+		return tmp /p;
 	}
 
 

@@ -45,31 +45,12 @@ import android.widget.Toast;
 
 public class Widgets_Manager {
 
-	private Graphical_Binary onoff;
-	private Graphical_Binary_New onoff_New;
-	private Graphical_Boolean bool;
-	private Graphical_Range variator;
-	private Graphical_History info_with_history;
-	private Graphical_Info info;
-	private Graphical_Info_commands info_commands;
-	private Graphical_Info_with_achartengine info_with_achartengine;
-	private Graphical_List list;
-	private Graphical_Trigger trigger;
-	private Graphical_Cam cam;
-	private Graphical_Color color;
-	private Graphical_Area graph_area;
-	private Graphical_Room graph_room;
 	private int widgetSize;
-	private final int maxSize=700;
-	private int width;
-	private int height;
-	private boolean landscape;
 	private boolean columns=false;
 	private final Handler widgetHandler;
 	public WidgetUpdate widgetupdate = null;
 	private tracerengine Tracer = null;
 	private final String mytag="Widgets_Manager";
-	private HashMap<String,String> map;
 
 	public Widgets_Manager(tracerengine Trac, Handler handler) {
 		super();
@@ -81,7 +62,6 @@ public class Widgets_Manager {
 			String zone, LinearLayout ll, SharedPreferences params, int session_type) throws JSONException
 			{
 
-		int mytype = session_type;
 		DomodroidDB domodb = new DomodroidDB(Tracer, context);
 		domodb.owner="Widgets_Manager.loadActivWidgets";
 		Entity_Feature[] listFeature = domodb.requestFeatures(id, zone);
@@ -136,15 +116,15 @@ public class Widgets_Manager {
 			int Id = feature.getId();
 			String iconName = "unknow";
 			try {
-				iconName = domodb.requestIcons(Id, "feature").getValue().toString();
+				iconName = domodb.requestIcons(Id, "feature").getValue();
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
-			if (iconName=="unknow")
+			if (iconName.equals("unknow"))
 				iconName=feature.getDevice_usage_id();
 
 			//add debug option to change label adding its Id
-			if (params.getBoolean("DEV",false)==true) 
+			if (params.getBoolean("DEV", false))
 				label = label+" ("+Id+")";
 
 			String[] model = device_type_id.split("\\.");
@@ -168,14 +148,18 @@ public class Widgets_Manager {
 			//HVACHeat
 			//UPSEvent
 			//UPSState
+			Graphical_Binary onoff;
+			Graphical_Binary_New onoff_New;
+			Graphical_Info info;
+			Graphical_Info_commands info_commands;
 			if (Value_type.equals("binary")) {
 				if(type.equals("rgb_leds") && (State_key.equals("command"))) {
 					//ignore it : it'll have another device for Color, displaying the switch !)
 				} else {
-					if (params.getBoolean("WIDGET_CHOICE",false)==false) {
+					if (!params.getBoolean("WIDGET_CHOICE", false)) {
 						onoff = new Graphical_Binary(Tracer, context,Address,label,
 								Id,DevId,State_key,URL,iconName,parameters,device_type_id,
-								update_timer,widgetSize, mytype,id,zone,params);
+								update_timer,widgetSize, session_type,id,zone,params);
 						onoff.container=tmpPan;
 						tmpPan.addView(onoff);
 						Tracer.i(mytag,"   ==> Graphical_Binary");
@@ -183,7 +167,7 @@ public class Widgets_Manager {
 					else {
 						onoff_New = new Graphical_Binary_New(Tracer, context,Address,label,
 								Id,DevId,State_key,URL,iconName,parameters,device_type_id,
-								update_timer,widgetSize, mytype,id,zone,params);
+								update_timer,widgetSize, session_type,id,zone,params);
 						onoff_New.container=tmpPan;
 						tmpPan.addView(onoff_New);
 						Tracer.i(mytag,"   ==> Graphical_Binary");
@@ -191,10 +175,10 @@ public class Widgets_Manager {
 				}
 			} else if (Value_type.equals("boolean")||Value_type.equals("bool")) {
 				if (parameters.contains("command")) {
-					if (params.getBoolean("WIDGET_CHOICE",false)==false) {
+					if (!params.getBoolean("WIDGET_CHOICE", false)) {
 						onoff = new Graphical_Binary(Tracer, context,Address,label,
 								Id,DevId,State_key,URL,iconName,parameters,device_type_id,
-								update_timer,widgetSize, mytype,id,zone,params);
+								update_timer,widgetSize, session_type,id,zone,params);
 						onoff.container=tmpPan;
 						tmpPan.addView(onoff);
 						Tracer.i(mytag,"   ==> Graphical_Binary");
@@ -202,40 +186,40 @@ public class Widgets_Manager {
 					else {
 						onoff_New = new Graphical_Binary_New(Tracer, context,Address,label,
 								Id,DevId,State_key,URL,iconName,parameters,device_type_id,
-								update_timer,widgetSize, mytype,id,zone,params);
+								update_timer,widgetSize, session_type,id,zone,params);
 						onoff_New.container=tmpPan;
 						tmpPan.addView(onoff_New);
 						Tracer.i(mytag,"   ==> Graphical_Binary");
 					}
 				}
 				else {
-					bool = new Graphical_Boolean(Tracer, context,Address,label,
-							Id,DevId,State_key,iconName,parameters,device_type_id,
-							update_timer,widgetSize, mytype,id,zone,params);
+					Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address, label,
+							Id, DevId, State_key, iconName, parameters, device_type_id,
+							update_timer, widgetSize, session_type, id, zone, params);
 					bool.container=tmpPan;
 					tmpPan.addView(bool);
 					Tracer.i(mytag,"   ==> Graphical_Boolean");
 				}
 			} else if (Value_type.equals("range")||((parameters.contains("command"))&&(feature.getDevice_feature_model_id().startsWith("DT_Scaling")))){
-				variator = new Graphical_Range(Tracer,context,Address,label,
-						Id,DevId,State_key,URL,iconName,parameters,device_type_id,
-						update_timer,widgetSize, mytype,id,zone,params);
+				Graphical_Range variator = new Graphical_Range(Tracer, context, Address, label,
+						Id, DevId, State_key, URL, iconName, parameters, device_type_id,
+						update_timer, widgetSize, session_type, id, zone, params);
 				variator.container=tmpPan;
 				tmpPan.addView(variator);
 				Tracer.i(mytag,"   ==> Graphical_Range");
 			} else if (Value_type.equals("trigger")) {
 				//#51 change widget for 0.4 if it's not a command
 				if (parameters.contains("command")){
-					trigger = new Graphical_Trigger(Tracer, context,Address,label,
-							State_key,Id,DevId,State_key,URL,iconName,parameters,device_type_id,
-							widgetSize, mytype,id,zone,params);
+					Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, Address, label,
+							State_key, Id, DevId, State_key, URL, iconName, parameters, device_type_id,
+							widgetSize, session_type, id, zone, params);
 					trigger.container=tmpPan;
 					tmpPan.addView(trigger);
 					Tracer.i(mytag,"   ==> Graphical_Trigger");
 				}else{
 					info = new Graphical_Info(Tracer, context,Id,DevId,label,
 							State_key,URL,iconName,update_timer,
-							widgetSize, mytype, parameters,id,zone,params);
+							widgetSize, session_type, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					info.container=tmpPan;
@@ -244,12 +228,12 @@ public class Widgets_Manager {
 				}
 			} else if(State_key.equals("color")){
 				Tracer.d(mytag,"add Graphical_Color for "+label+" ("+DevId+") key="+State_key);
-				color = new Graphical_Color(Tracer, context, 
-						params,Id,DevId,label,
-						device_type_id,	//Added by Doume to know the 'techno'
+				Graphical_Color color = new Graphical_Color(Tracer, context,
+						params, Id, DevId, label,
+						device_type_id,    //Added by Doume to know the 'techno'
 						Address,//  idem to know the address
-						State_key,URL,iconName,update_timer,
-						widgetSize, mytype,id,zone);
+						State_key, URL, iconName, update_timer,
+						widgetSize, session_type, id, zone);
 				color.container=tmpPan;
 				tmpPan.addView(color);
 				Tracer.i(mytag,"   ==> Graphical_Color");
@@ -257,16 +241,16 @@ public class Widgets_Manager {
 				if(feature.getParameters().contains("command_type")) {
 					info_commands = new Graphical_Info_commands(Tracer, context,Id,DevId,label,
 							State_key,URL,iconName,update_timer,
-							widgetSize, mytype, parameters,id,zone,params,Value_type);
+							widgetSize, session_type, parameters,id,zone,params,Value_type);
 					info_commands.setLayoutParams(layout_param);
 					info_commands.container=tmpPan;
 					tmpPan.addView(info_commands);
 					Tracer.i(mytag,"   ==> Graphical_Info_commands !!!");
-				}else if (params.getBoolean("Graph_CHOICE",false)==true) {
+				}else if (params.getBoolean("Graph_CHOICE", false)) {
 					Tracer.d(mytag,"add Graphical_Info_with_achartengine for "+label+" ("+DevId+") key="+State_key);
-					info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context,
-							Id,DevId, label,State_key,URL,iconName,Graph,
-							update_timer,widgetSize, mytype, parameters,id,zone,params);
+					Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context,
+							Id, DevId, label, State_key, URL, iconName, Graph,
+							update_timer, widgetSize, session_type, parameters, id, zone, params);
 					info_with_achartengine.setLayoutParams(layout_param);
 					info_with_achartengine.container=tmpPan;
 					tmpPan.addView(info_with_achartengine);
@@ -275,7 +259,7 @@ public class Widgets_Manager {
 					Tracer.d(mytag,"add Graphical_Info for "+label+" ("+DevId+") key="+State_key);
 					info = new Graphical_Info(Tracer, context,Id,DevId, label,
 							State_key,URL,iconName,update_timer,
-							widgetSize, mytype, parameters,id,zone,params);
+							widgetSize, session_type, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.with_graph=true;
 					info.container=tmpPan;
@@ -284,11 +268,11 @@ public class Widgets_Manager {
 				}
 			} else if (Value_type.equals("list")) {
 				Tracer.d(mytag,"add Graphical_List for "+label+" ("+DevId+") key="+State_key);
-				list = new Graphical_List(Tracer, context,Id,DevId, label,
-						device_type_id,	//Added by Doume to know the 'techno'
-						Address,			//  idem to know the address
-						State_key,URL,iconName,Graph,
-						update_timer,widgetSize, mytype, parameters,device_type_id,id,zone,params);
+				Graphical_List list = new Graphical_List(Tracer, context, Id, DevId, label,
+						device_type_id,    //Added by Doume to know the 'techno'
+						Address,            //  idem to know the address
+						State_key, URL, iconName, Graph,
+						update_timer, widgetSize, session_type, parameters, device_type_id, id, zone, params);
 				list.setLayoutParams(layout_param);
 				list.container=tmpPan;
 				tmpPan.addView(list);
@@ -296,23 +280,23 @@ public class Widgets_Manager {
 			} else if(Value_type.equals("string")||Value_type.equals("datetime")){
 				//New widget for callerID
 				if(feature.getDevice_feature_model_id().contains("call")) {
-					info_with_history = new Graphical_History(Tracer, context,Id,DevId,label,
-							State_key,URL,iconName,update_timer,
-							widgetSize, mytype, parameters,id,zone,params);
+					Graphical_History info_with_history = new Graphical_History(Tracer, context, Id, DevId, label,
+							State_key, URL, iconName, update_timer,
+							widgetSize, session_type, parameters, id, zone, params);
 					info_with_history.setLayoutParams(layout_param);
 					info_with_history.container=tmpPan;
 					tmpPan.addView(info_with_history);
 					Tracer.i(mytag,"   ==> Graphical_history");
 				}else if(feature.getDevice_feature_model_id().contains("camera")) {
-					cam = new Graphical_Cam(Tracer, context,Id,DevId,label,
-							State_key,Address,iconName,widgetSize, mytype,id,zone);
+					Graphical_Cam cam = new Graphical_Cam(Tracer, context, Id, DevId, label,
+							State_key, Address, iconName, widgetSize, session_type, id, zone);
 					cam.container=tmpPan;
 					tmpPan.addView(cam);
 					Tracer.i(mytag,"   ==> Graphical_Cam");
 				}else if(feature.getParameters().contains("command_type")) {
 					info_commands = new Graphical_Info_commands(Tracer, context,Id,DevId,label,
 							State_key,URL,iconName,update_timer,
-							widgetSize, mytype, parameters,id,zone,params,Value_type);
+							widgetSize, session_type, parameters,id,zone,params,Value_type);
 					info_commands.setLayoutParams(layout_param);
 					info_commands.container=tmpPan;
 					tmpPan.addView(info_commands);
@@ -320,7 +304,7 @@ public class Widgets_Manager {
 				}else {
 					info = new Graphical_Info(Tracer, context,Id,DevId,label,
 							State_key,URL,iconName,update_timer,
-							widgetSize, mytype, parameters,id,zone,params);
+							widgetSize, session_type, parameters,id,zone,params);
 					info.setLayoutParams(layout_param);
 					info.with_graph=false;
 					info.container=tmpPan;
@@ -381,7 +365,7 @@ public class Widgets_Manager {
 				int Id = area.getId();
 				String iconId = "unknown";
 				try {
-					iconId = domodb.requestIcons(Id, "area").getValue().toString();
+					iconId = domodb.requestIcons(Id, "area").getValue();
 				} catch (Exception e) {
 					//e.printStackTrace();
 				}
@@ -402,7 +386,7 @@ public class Widgets_Manager {
 //				map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName,1)));
 //				Activity_Main.Navigation_drawer_ItemsList.add(map);
 
-				graph_area = new Graphical_Area(Tracer, context,Id,name,area.getDescription(),iconId,widgetSize,widgetHandler);
+				Graphical_Area graph_area = new Graphical_Area(Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
 				tmpPan.addView(graph_area);
 				if(columns){	
 					if(counter==0){
@@ -454,8 +438,8 @@ public class Widgets_Manager {
 			int Id = room.getId();
 			String iconId = "unknown";
 			try{
-				iconId = domodb.requestIcons(Id,"room").getValue().toString();
-			}catch(Exception e){};
+				iconId = domodb.requestIcons(Id, "room").getValue();
+			}catch(Exception e){}
 			if(iconId.equals("unknown")) {
 				//iconId="usage";
 				iconId=room.getName();
@@ -470,12 +454,12 @@ public class Widgets_Manager {
 			name = Graphics_Manager.Names_Agent(context, name);
 			
 			//populate the NAvigationDrawer list
-			map=new HashMap<String,String>();
+			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("name", name);
-			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconId,0)));
+			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconId, 0)));
 			Activity_Main.Navigation_drawer_ItemsList.add(map);
 
-			graph_room = new Graphical_Room(Tracer, context,Id,name,room.getDescription(),iconId,widgetSize,widgetHandler);
+			Graphical_Room graph_room = new Graphical_Room(Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
 			tmpPan.addView(graph_room);
 
 			if(columns){	
@@ -498,24 +482,22 @@ public class Widgets_Manager {
 	public void colonnes(Activity context, LinearLayout ll,LinearLayout mainPan, LinearLayout leftPan,LinearLayout rightPan, SharedPreferences params){
 		DisplayMetrics metrics = new DisplayMetrics();
 		context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		width= metrics.widthPixels;
-		height= metrics.heightPixels;
+		int width = metrics.widthPixels;
+		int height = metrics.heightPixels;
 
-		if(width>height){
-			landscape=true;
-		}else{
-			landscape=false;
-		}
+		boolean landscape;
+		landscape = width > height;
 
-		if(width>maxSize){
-			if(landscape && params.getBoolean("twocol_lanscape",false)==false){
+		int maxSize = 700;
+		if(width > maxSize){
+			if(landscape && !params.getBoolean("twocol_lanscape", false)){
 				Tracer.v(mytag, "params.getBoolean twocol_lanscape "+params.getBoolean("twocol_lanscape",false));
 
 				columns=true;
 				mainPan.addView(leftPan);
 				mainPan.addView(rightPan);
 				ll.addView(mainPan);
-			}else if(!landscape && params.getBoolean("twocol_portrait",false)==false){
+			}else if(!landscape && !params.getBoolean("twocol_portrait", false)){
 				Tracer.v(mytag, "params.getBoolean twocol_portrait "+params.getBoolean("twocol_portrait",false));
 
 				columns=true;

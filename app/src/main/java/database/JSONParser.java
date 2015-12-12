@@ -31,24 +31,19 @@ import widgets.Entity_Icon;
 import widgets.Entity_Room;
 
 public class JSONParser{
-	private static Entity_Area[] listArea = null;
-	private static Entity_Room[] listRoom = null;
-	private static Entity_Feature[] listFeature = null;
-	private static Entity_Feature_Association[] listFeatureAssociation=null;
-	private static Entity_Icon[] listIcon=null;
 
 
 	//Parse JSON object and create list of AREA----------------------
 	public static Entity_Area[] ListArea(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("area");
-		listArea = new Entity_Area[itemArray.length()];
+		Entity_Area[] listArea = new Entity_Area[itemArray.length()];
 
 		//parsing JSON area list
 		for (int i =0; i < itemArray.length(); i++){
 			listArea[i] = new Entity_Area(
-					itemArray.getJSONObject(i).getString("description").toString(),
+					itemArray.getJSONObject(i).getString("description"),
 					itemArray.getJSONObject(i).getInt("id"),
-					itemArray.getJSONObject(i).getString("name").toString());
+					itemArray.getJSONObject(i).getString("name"));
 		}
 		return listArea;
 	}
@@ -58,7 +53,7 @@ public class JSONParser{
 	//Parse JSON object and create list of ROOM----------------------
 	public static Entity_Room[] ListRoom(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("room");
-		listRoom = new Entity_Room[itemArray.length()];
+		Entity_Room[] listRoom = new Entity_Room[itemArray.length()];
 		int area_id;
 
 		//parsing JSON room list
@@ -67,9 +62,9 @@ public class JSONParser{
 			else area_id=itemArray.getJSONObject(i).getInt("area_id");
 			listRoom[i] = new Entity_Room(
 					area_id,
-					itemArray.getJSONObject(i).getString("description").toString(),
+					itemArray.getJSONObject(i).getString("description"),
 					itemArray.getJSONObject(i).getInt("id"),
-					itemArray.getJSONObject(i).getString("name").toString());
+					itemArray.getJSONObject(i).getString("name"));
 		}
 		return listRoom;
 	}
@@ -78,19 +73,19 @@ public class JSONParser{
 	//Parse JSON object and create list of FEATURE-------------------------
 	public static Entity_Feature[] ListFeature(JSONObject json) throws JSONException{
 		JSONArray itemArray = json.getJSONArray("feature");
-		listFeature = new Entity_Feature[itemArray.length()];
+		Entity_Feature[] listFeature = new Entity_Feature[itemArray.length()];
 
 		//parsing JSON feature list
 		for (int i =0; i < itemArray.length(); i++){
 			listFeature[i] = new Entity_Feature(
-					itemArray.getJSONObject(i).getString("device_feature_model_id").toString(),
+					itemArray.getJSONObject(i).getString("device_feature_model_id"),
 					itemArray.getJSONObject(i).getInt("id"),
 					itemArray.getJSONObject(i).getJSONObject("device").getInt("id"),
-					itemArray.getJSONObject(i).getJSONObject("device").getString("device_usage_id").toString(),
-					itemArray.getJSONObject(i).getJSONObject("device").getString("address").toString(),
-					itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id").toString(),
-					itemArray.getJSONObject(i).getJSONObject("device").getString("description").toString(),
-					itemArray.getJSONObject(i).getJSONObject("device").getString("name").toString(),
+					itemArray.getJSONObject(i).getJSONObject("device").getString("device_usage_id"),
+					itemArray.getJSONObject(i).getJSONObject("device").getString("address"),
+					itemArray.getJSONObject(i).getJSONObject("device").getString("device_type_id"),
+					itemArray.getJSONObject(i).getJSONObject("device").getString("description"),
+					itemArray.getJSONObject(i).getJSONObject("device").getString("name"),
 					itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("stat_key"),
 					itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("parameters"),
 					itemArray.getJSONObject(i).getJSONObject("device_feature_model").getString("value_type"));
@@ -101,7 +96,7 @@ public class JSONParser{
 	//Parse JSON object and create list of FEATURE ASSOCIATION-------------------------
 	public static Entity_Feature_Association[] ListFeatureAssociation(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("feature_association");
-		listFeatureAssociation = new Entity_Feature_Association[itemArray.length()];
+		Entity_Feature_Association[] listFeatureAssociation = new Entity_Feature_Association[itemArray.length()];
 
 		//parsing JSON feature list
 		for (int i =0; i < itemArray.length(); i++){
@@ -136,14 +131,12 @@ public class JSONParser{
 
 	public static int StateValueINT(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("stats");
-		int temp = itemArray.getJSONObject(0).getInt("value");
-		return temp;
+		return  itemArray.getJSONObject(0).getInt("value");
 	}
 
 	public static String StateValueSTRING(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("stats");
-		String temp = itemArray.getJSONObject(0).getString("value").toString();
-		return temp;
+		return itemArray.getJSONObject(0).getString("value");
 	}
 
 
@@ -151,13 +144,13 @@ public class JSONParser{
 	//Parse JSON object and create list of ICON-------------------------
 	public static Entity_Icon[] ListIcon(JSONObject json) throws JSONException {
 		JSONArray itemArray = json.getJSONArray("ui_config");
-		listIcon = new Entity_Icon[itemArray.length()];
+		Entity_Icon[] listIcon = new Entity_Icon[itemArray.length()];
 
 		//parsing JSON feature list
 		for (int i =0; i < itemArray.length(); i++){
 			listIcon[i] = new Entity_Icon(
-					itemArray.getJSONObject(i).getString("name").toString(),
-					itemArray.getJSONObject(i).getString("value").toString(),
+					itemArray.getJSONObject(i).getString("name"),
+					itemArray.getJSONObject(i).getString("value"),
 					itemArray.getJSONObject(i).getInt("reference"));
 		}
 		return listIcon;

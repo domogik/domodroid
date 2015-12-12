@@ -30,7 +30,6 @@ import rinor.Stats_Com;
 import database.WidgetUpdate;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -67,24 +66,17 @@ public class Com_Stats extends FrameLayout  {
 
 
 	private FrameLayout imgPan;
-	private final LinearLayout background;
 	private LinearLayout featurePan;
 	private LinearLayout featurePan2;
 	private View		  featurePan2_buttons;
 	private LinearLayout infoPan;
-	private final LinearLayout topPan;
 	private ImageView img;
 	private int id;
 	private final Handler handler;
-	private final Activity context;
 	private Message msg;
-	private final String mytag;
 	public FrameLayout container = null;
-	private FrameLayout myself = null;
-	private tracerengine Tracer = null;
 
 	private Stats_Com stats = null;
-	private static Timer timer=null;
 	private final TextView elapsed_period;
 	private final TextView cumul_period;
 	private final TextView cum_statsPR;
@@ -105,30 +97,27 @@ public class Com_Stats extends FrameLayout  {
 	private final TextView period_eventsPS;
 	private final TextView period_eventsBS;
 
-	@SuppressLint("HandlerLeak")
 	public Com_Stats(tracerengine Trac,Activity context, int widgetSize) {
 		super(context);
-		this.Tracer = Trac;
-		this.context = context;
-		this.myself = this;
+		FrameLayout myself = this;
 
-		mytag="Com_Stats";
+		String mytag = "Com_Stats";
 		this.setPadding(5, 5, 5, 5);
-		Tracer.e(mytag,"New instance");
+		Trac.e(mytag, "New instance");
 
 		//panel with border
-		background = new LinearLayout(context);
+		LinearLayout background = new LinearLayout(context);
 		background.setOrientation(LinearLayout.VERTICAL);
 		if(widgetSize==0)
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		else 
-			background.setLayoutParams(new LayoutParams(widgetSize,LayoutParams.WRAP_CONTENT));
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white",background.getHeight()));
+			background.setLayoutParams(new LayoutParams(widgetSize, LayoutParams.WRAP_CONTENT));
+		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", background.getHeight()));
 
 		//panel with border
-		topPan = new LinearLayout(context);
+		LinearLayout topPan = new LinearLayout(context);
 		topPan.setOrientation(LinearLayout.HORIZONTAL);
-		topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+		topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 		//topPan.setTextColor(Color.parseColor("#333333"));
 
 		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -188,13 +177,13 @@ public class Com_Stats extends FrameLayout  {
 			}
 
 		};
-		Tracer.e(mytag,"Instance created");
+		Trac.e(mytag, "Instance created");
 		Timer();	
 
 
 	}
 	private void Timer() {
-		timer = new Timer();
+		Timer timer = new Timer();
 
 		TimerTask doAsynchronousTask = new TimerTask() {
 
@@ -207,7 +196,7 @@ public class Com_Stats extends FrameLayout  {
 				} catch (Exception e) {
 					//e.printStackTrace();
 				}
-			};
+			}
 
 		};
 		if(timer != null) {
@@ -218,7 +207,7 @@ public class Com_Stats extends FrameLayout  {
 
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==0){
+		if(visibility==View.VISIBLE){
 
 		}
 	}

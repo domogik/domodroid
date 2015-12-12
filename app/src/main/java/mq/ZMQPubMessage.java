@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 //TODO add Tracer engine to log message
 
 public class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
-	private ZMQ.Context context = null;
 	private ZMQ.Socket pub = null;
 
 	public static String getHostName() {
@@ -33,7 +32,7 @@ public class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
 
 	public ZMQPubMessage () {
 		try {
-			this.context = ZMQ.context(1);
+			ZMQ.Context context = ZMQ.context(1);
 			this.pub = context.socket(ZMQ.PUB);
 		} catch (Exception e) {
 			Log.d(this.getClass().getSimpleName(), "error:" + e);

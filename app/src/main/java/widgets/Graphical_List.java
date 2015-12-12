@@ -38,7 +38,6 @@ import database.JSONParser;
 import database.WidgetUpdate;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -77,84 +76,56 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout.LayoutParams;
 
+@SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
 
 
 	private LinearLayout featurePan2;
 	private final TextView value;
-	private final int dev_id;
-	private final int id;
 	private final Handler handler;
-	private final String state_key;
-	private final TextView state_key_view;
-	private final int update;
-	private final Animation animation;
 	private final Context context;
 	private Message msg;
-	private final String wname;
 	private static String mytag="Graphical_List";
 	private String url = null;
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
 	public final Boolean with_list = true;
 	private tracerengine Tracer = null;
-	private final String parameters;
-	private Entity_client session = null; 
+	private Entity_client session = null;
 	private Boolean realtime = false;
-	private final int session_type;
 	private String[] known_values;
 	private ArrayList<HashMap<String,String>> listItem;
-	private Vector<String> list_usable_choices;
-	private ListView listeChoices;
 	private TextView cmd_to_send = null;
 	private String cmd_requested = null;
 	private final String address;
 	private final String type;
-	private final String packageName ;
-	private final String place_type;
-	private final int place_id;
 	private final String login;
 	private final String password;
-	private final float api_version;
-	private final SharedPreferences params;
-	private final String usage;
 
-	@SuppressLint("HandlerLeak")
-	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+	public Graphical_List(tracerengine Trac,Activity context, int id,int dev_id, String name,
 			String type, String address,
 			final String state_key, String url,final String usage, int period, int update, 
 			int widgetSize, int session_type, final String parameters,String model_id,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
 		this.context = context;
-		this.dev_id = dev_id;
-		this.id = id;
-		this.usage=usage;
 		this.address = address;
 		//this.type = type;
-		this.state_key = state_key;
-		this.update=update;
-		this.wname = name;
 		this.url = url;
 		String[] model = model_id.split("\\.");
 		this.type = model[0];
-		this.place_id= place_id;
-		this.place_type= place_type;
-		this.params=params;
-		packageName = context.getPackageName();
+		String packageName = context.getPackageName();
 		this.myself = this;
-		this.session_type = session_type;
-		this.parameters = parameters;
 		setOnLongClickListener(this);
 		setOnClickListener(this);
 
 		mytag="Graphical_List ("+dev_id+")";
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
-		api_version=params.getFloat("API_VERSION", 0);
+		float api_version = params.getFloat("API_VERSION", 0);
 
 		//state key
-		state_key_view = new TextView(context);
+		TextView state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -162,7 +133,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		value = new TextView(context);
 		value.setTextSize(28);
 		value.setTextColor(Color.BLACK);
-		animation = new AlphaAnimation(0.0f, 1.0f);
+		Animation animation = new AlphaAnimation(0.0f, 1.0f);
 		animation.setDuration(1000);
 
 		if(with_list) {
@@ -198,12 +169,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
 			}
 			//list of choices
-			listeChoices = new ListView(context);
+			ListView listeChoices = new ListView(context);
 
 			listItem=new ArrayList<HashMap<String,String>>();
-			list_usable_choices = new Vector<String>();
+			//list_usable_choices = new Vector<String>();
 			for (int i=0;i<known_values.length;i++) {
-				list_usable_choices.add(getStringResourceByName(known_values[i]));
+				//list_usable_choices.add(getStringResourceByName(known_values[i]));
 				HashMap<String,String> map=new HashMap<String,String>();
 				map.put("choice",getStringResourceByName( known_values[i]));
 				map.put("cmd_to_send",known_values[i]);
@@ -217,12 +188,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 			listeChoices.setAdapter(adapter_map);
 			listeChoices.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					if((position < listItem.size()) && (position > -1) ) {
+					if ((position < listItem.size()) && (position > -1)) {
 						//process selected command
-						HashMap<String,String> map=new HashMap<String,String>();
+						HashMap<String, String> map = new HashMap<String, String>();
 						map = listItem.get(position);
 						cmd_requested = map.get("cmd_to_send");
-						Tracer.d(mytag,"command selected at Position = "+position+"  Commande = "+cmd_requested);
+						Tracer.d(mytag, "command selected at Position = " + position + "  Commande = " + cmd_requested);
 						new CommandeThread().execute();
 					}
 				}
@@ -286,9 +257,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			if (api_version<=0.6f){
+			if (api_version <=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version>=0.7f){
+			}else if (api_version >=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
@@ -317,7 +288,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 				}
 				try {
 					Boolean ack = JSONParser.Ack(json_Ack);
-					if(ack==false){
+					if(!ack){
 						Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 						handler.sendEmptyMessage(2);
 					}
@@ -348,7 +319,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==0){
+		if(visibility==View.VISIBLE){
 
 		}
 	}
@@ -357,7 +328,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
-		return (float)tmp/p;
+		return tmp /p;
 	}
 
 
@@ -382,7 +353,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			}
 		}
-		return;
 	}
 
 }

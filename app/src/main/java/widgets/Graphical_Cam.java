@@ -54,13 +54,11 @@ import android.widget.Toast;
 
 public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener{
 
-	private final int dev_id;
 	private final String url;
 	private final Context context;
 	private static String mytag;
 	private tracerengine Tracer = null;
 	public static FrameLayout container = null;
-	private static FrameLayout myself = null;
 	private static String state_key;
 	private final String name_cam;
 
@@ -68,10 +66,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.context = context;
 		this.Tracer = Trac;
-		this.dev_id = dev_id;
 		this.name_cam=name;
 		this.url = url;
-		this.myself = this;
+		FrameLayout myself = this;
 		setOnClickListener(this);
 		mytag="Graphical_Cam("+dev_id+")";
 
@@ -91,6 +88,5 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 			intent.putExtras(b);
 			context.startActivity(intent);
 		}
-		return;
 	}
 }

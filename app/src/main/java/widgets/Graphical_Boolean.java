@@ -31,7 +31,6 @@ import org.domogik.domodroid13.R;
 
 import database.DmdContentProvider;
 import database.WidgetUpdate;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -58,6 +57,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
+@SuppressWarnings("ALL")
 public class Graphical_Boolean extends Basic_Graphical_widget{
 
 	private final TextView state;
@@ -66,14 +66,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 	private final String Value_0;
 	private final String Value_1;
 	private final ImageView bool;
-	private final Handler handler;
-	private final String state_key;
-	private final int update;
 	private static String mytag;
 	private Message msg;
 	private String stateS = "";
-	private final float api_version;
-	private final SharedPreferences params;
 
 	public static FrameLayout container = null;
 	private static FrameLayout myself = null;
@@ -81,14 +76,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	private final int session_type;
-	private final String place_type;
-	private final int place_id;
-	private final Activity context;
-	private final String usage;
 
-	@SuppressLint("HandlerLeak")
-	public Graphical_Boolean(tracerengine Trac, Activity context, 
+	public Graphical_Boolean(tracerengine Trac, Activity context,
 			String address, final String name, 
 			int id,int dev_id, 
 			String state_key, final String usage,
@@ -98,22 +87,14 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 			int session_type,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.myself=this;
-		this.context = context;
 		this.Tracer = Trac;
-		this.state_key = state_key;
-		this.usage=usage;
-		this.update = update;
-		this.session_type = session_type;
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+state_key);
 			this.stateS= state_key;
 		}
-		this.place_id= place_id;
-		this.place_type= place_type;
-		this.params = params;
-		api_version=params.getFloat("API_VERSION", 0);
+		float api_version = params.getFloat("API_VERSION", 0);
 
 		try {
 			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -149,49 +130,50 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		super.LL_infoPan.addView(state);
 		super.LL_featurePan.addView(bool);
 
-		handler = new Handler() {
+		Handler handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg) {	
+			public void handleMessage(Message msg) {
 				String status;
-				if(msg.what == 9999) {
-					if(session == null)
+				if (msg.what == 9999) {
+					if (session == null)
 						return;
 					status = session.getValue();
-					if(status != null)   {
-						Tracer.d(mytag,"Handler receives a new status <"+status+">" );
+					if (status != null) {
+						Tracer.d(mytag, "Handler receives a new status <" + status + ">");
 
 						try {
-							if(status.equals(value0)||status.equals("0")){
+							if (status.equals(value0) || status.equals("0")) {
 								bool.setImageResource(R.drawable.boolean_off);
 								//change color if statue=low to (usage, o) means off
 								//note sure if it must be kept as set previously as default color.
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-								state.setText(stateS+" : "+Value_0);
-							}else if(status.equals(value1)||status.equals("1")){
+								state.setText(stateS + " : " + Value_0);
+							} else if (status.equals(value1) || status.equals("1")) {
 								bool.setImageResource(R.drawable.boolean_on);
 								//change color if statue=high to (usage, 2) means on
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-								state.setText(stateS+" : "+Value_1);
+								state.setText(stateS + " : " + Value_1);
 							}
 						} catch (Exception e) {
-							Tracer.e(mytag, "handler error device "+name);
+							Tracer.e(mytag, "handler error device " + name);
 							e.printStackTrace();
 						}
 					}
-				} else if(msg.what == 9998) {
+				} else if (msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
-					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
 					session = null;
 					realtime = false;
 					removeView(LL_background);
 					myself.setVisibility(GONE);
-					if(container != null) {
+					if (container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
 					}
-					try { 
-						finalize(); 
-					} catch (Throwable t) {}	//kill the handler thread itself
+					try {
+						finalize();
+					} catch (Throwable t) {
+					}    //kill the handler thread itself
 				}
 
 			}
@@ -204,9 +186,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			if (api_version<=0.6f){
+			if (api_version <=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version>=0.7f){
+			}else if (api_version >=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {

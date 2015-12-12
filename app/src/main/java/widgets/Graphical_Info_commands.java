@@ -39,7 +39,6 @@ import database.JSONParser;
 import database.WidgetUpdate;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -90,77 +89,47 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 	LinearLayout featurePan2;
 	private View		  featurePan2_buttons;
 	private final EditText value;
-	private final Button button_send;
-	private final int dev_id;
-	private final int id;
-	private final String state_key;
-	private final TextView state_key_view;
-	private final int update;
 	private final Activity context;
 	private Message msg;
-	private final String wname;
 	private static String mytag;
-	private final String place_type;
-	private final int place_id;
 	private String url = null;
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
 	private tracerengine Tracer = null;
-	private final String parameters;
 	private Entity_client session = null;
 	private Boolean realtime = false;
-	private final int session_type;
 	private final String login;
 	private final String password;
 	private final float api_version;
 
-	private final SharedPreferences params;
 	private int dpiClassification;
-	private final DisplayMetrics metrics;
-	private final float size60;
-	private final float size70;
-	private final String usage;
 	private JSONObject jparam;
 	private String command_id = null;
 	private String command_type = null;
-	private final String value_type;
-	private String stateS;
 
-	@SuppressLint("HandlerLeak")
-	public Graphical_Info_commands(tracerengine Trac,final Activity context, int id,int dev_id, String name, 
+	public Graphical_Info_commands(tracerengine Trac,final Activity context, int id,int dev_id, String name,
 			final String state_key, String url,final String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params, String value_type) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
 		this.context = context;
-		this.dev_id = dev_id;
-		this.id = id;
-		this.usage=usage;
-		this.state_key = state_key;
+		String stateS;
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+state_key);
-			this.stateS= state_key;
+			stateS = state_key;
 		}
-		this.update=update;
-		this.wname = name;
 		this.url = url;
 		this.myself = this;
-		this.session_type = session_type;
-		this.parameters = parameters;
-		this.place_id= place_id;
-		this.place_type= place_type;
-		this.params=params;
-		this.value_type=value_type;
 
 		mytag="Graphical_Info_commands ("+dev_id+")";
-		metrics = getResources().getDisplayMetrics();
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
-		size60 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);
-		size70 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, metrics);
+		float size60 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);
+		float size70 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, metrics);
 
-		Tracer.e(mytag,"New instance for name = "+wname+" state_key = "+state_key);
+		Tracer.e(mytag,"New instance for name = "+ name +" state_key = "+state_key);
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
 		api_version=params.getFloat("API_VERSION", 0);
@@ -177,7 +146,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 		}
 
 		//state key
-		state_key_view = new TextView(context);
+		TextView state_key_view = new TextView(context);
 		state_key_view.setText(stateS);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -193,16 +162,16 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 		value.setMinWidth((int) (size70));
 		value.setMaxWidth((int) (size70));
 
-		button_send= new Button(context);
+		Button button_send = new Button(context);
 		//TODO translation
 		button_send.setMinWidth((int) (size60));
 		button_send.setText("Send");
 		button_send.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				new CommandeThread().execute();
-			}
-		}
-				);
+										   public void onClick(View v) {
+											   new CommandeThread().execute();
+										   }
+									   }
+		);
 
 		LL_featurePan.addView(value);
 		LL_featurePan.addView(button_send);
@@ -231,7 +200,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 						}
 						try {
 							Boolean ack = JSONParser.Ack(json_Ack);
-							if(ack==false){
+							if(!ack){
 								try{
 									Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 									Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show(); 

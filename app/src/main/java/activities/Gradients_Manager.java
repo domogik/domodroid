@@ -65,6 +65,6 @@ public class Gradients_Manager {
 		p.setShape(new RectShape());
 		if(profile.equals("white") || profile.equals("black") || profile.equals("ltblack")) p.setCornerRadius(5);
 		p.setShaderFactory(sf);
-		return (Drawable)p;
+		return p;
 	}
 }

@@ -71,11 +71,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private Sliding_Drawer panel;
 	private Sliding_Drawer topPanel;
 	private Sliding_Drawer bottomPanel;
-	private Button add;
-	private Button help;
-	private Button remove;
-	private Button move;
-	private Button remove_all;
 	public static Dialog dialog_feature;
 	private Entity_Feature[] listFeature;
 	private HashMap<String,String> map;
@@ -91,14 +86,11 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 	private ArrayList<HashMap<String,String>> listItem;
 	private Animation animation1;
 	private Animation animation2;
-	private TextView menu_white;
 	private TextView menu_green;
 
 	private WidgetUpdate widgetUpdate;
 	private Handler sbanim;
-	private File f = null;
 	private String[] files = null;
-	private File selectFile = null;
 	private File destFile = null;
 	private String extension ;
 	private String fileName;
@@ -133,7 +125,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
 
 		//menu button
-		menu_white = (TextView) findViewById(R.id.menu_button1);
+		TextView menu_white = (TextView) findViewById(R.id.menu_button1);
 		menu_white.setOnClickListener(this);
 		menu_white.setTag("menu");
 		menu_green = (TextView) findViewById(R.id.menu_button2);
@@ -147,7 +139,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		//read files from SDCARD + create directory
 
 		createDirIfNotExists();
-		f=new File(Environment.getExternalStorageDirectory()+"/domodroid/"); 
+		File f = new File(Environment.getExternalStorageDirectory() + "/domodroid/");
 		if(f.isDirectory()){ 
 			files= f.list();
 			//Reorder method
@@ -183,8 +175,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		mapView.setPanel_button(panel_button);
 
 		//add remove buttonObject engine = (Object)widgetUpdate;
-		add = new Button(this);
-		add.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		Button add = new Button(this);
+		add.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
 		add.setPadding(10, 13, 10, 13);
 		add.setText(R.string.map_button1);
 		add.setTextColor(Color.parseColor("#cfD1D1"));
@@ -193,8 +185,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		add.setBackgroundColor(Color.parseColor("#00000000"));
 		add.setOnClickListener(this);
 
-		help = new Button(this);
-		help.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		Button help = new Button(this);
+		help.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
 		help.setPadding(10, 13, 10, 13);
 		help.setText(R.string.map_button3);
 		help.setTextColor(Color.parseColor("#cfD1D1"));
@@ -203,8 +195,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		help.setBackgroundColor(Color.parseColor("#00000000"));
 		help.setOnClickListener(this);
 
-		remove = new Button(this);
-		remove.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		Button remove = new Button(this);
+		remove.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
 		remove.setPadding(10, 13, 10, 13);
 		remove.setText(R.string.map_button2);
 		remove.setTextColor(Color.parseColor("#cfD1D1"));
@@ -213,8 +205,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		remove.setBackgroundColor(Color.parseColor("#00000000"));
 		remove.setOnClickListener(this);
 
-		remove_all = new Button(this);
-		remove_all.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		Button remove_all = new Button(this);
+		remove_all.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
 		remove_all.setPadding(10, 13, 10, 13);
 		remove_all.setText(R.string.map_button2b);
 		remove_all.setTextColor(Color.parseColor("#cfD1D1"));
@@ -223,8 +215,8 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		remove_all.setBackgroundColor(Color.parseColor("#00000000"));
 		remove_all.setOnClickListener(this);
 
-		move = new Button(this);
-		move.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
+		Button move = new Button(this);
+		move.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
 		move.setPadding(10, 13, 10, 13);
 		move.setText(R.string.map_button2c);
 		move.setTextColor(Color.parseColor("#cfD1D1"));
@@ -253,7 +245,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		startCacheEngine();		//Get reference to WidgetUpdate engine
 		//When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
 
-
+		//TODO solve #66 here.
 		//get feature list
 		listFeature = widgetUpdate.requestFeatures();
 
@@ -496,7 +488,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				Cursor cursor = getContentResolver().query(_uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
 				cursor.moveToFirst();
 				//Copy the select picture to Domodroid directory
-				selectFile = new File (cursor.getString(0));
+				File selectFile = new File(cursor.getString(0));
 				fileName = selectFile.getName();
 				//filter for extension if not png or svg say it to user
 				String filenameArray[] = fileName.split("\\.");
@@ -644,7 +636,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 
 	public void onPanelOpened(Sliding_Drawer panel) {
 		//disable menu if set in option
-		if(params.getBoolean("map_menu_disable",false)==false){ 
+		if(!params.getBoolean("map_menu_disable", false)){
 			if(Tracer != null)
 				Tracer.v(mytag,"onPanelOpened panel request to be displayed");
 			menu_green.setVisibility(View.VISIBLE);
@@ -661,7 +653,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			if(!topPanel.isOpen()){
 				bottomPanel.setOpen(true, true);
 				panel_button.setVisibility(View.VISIBLE);
-				if(params.getBoolean("map_menu_disable",false)==false)
+				if(!params.getBoolean("map_menu_disable", false))
 					topPanel.setOpen(true, true);
 
 			} else if(topPanel.isOpen() && !bottomPanel.isOpen()){
@@ -692,7 +684,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 			if(list_usable_files.isEmpty()){
 				Toast.makeText(this,  getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
 			}else{
-				if(mapView.isRemoveMode()==false){
+				if(!mapView.isRemoveMode()){
 					//if remove mode is select for the first time
 					//say Mapview.java to turn on remove mode
 					mapView.setMoveMode(false);
@@ -716,7 +708,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 				//Show the move dialog box to help user
 				Dialog_Move dialog_move = new Dialog_Move(this);
 				dialog_move.show();
-				if(mapView.isMoveMode()==false){
+				if(!mapView.isMoveMode()){
 					//if remove mode is select for the first time
 					//say Mapview.java to turn on remove mode
 					mapView.setRemoveMode(false);
@@ -758,7 +750,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		if(keyCode==82 && !topPanel.isOpen()){
 			bottomPanel.setOpen(true, true);
 			panel_button.setVisibility(View.VISIBLE);
-			if(params.getBoolean("map_menu_disable",false)==false){ 
+			if(!params.getBoolean("map_menu_disable", false)){
 				topPanel.setOpen(true, true);
 			}
 			return false;

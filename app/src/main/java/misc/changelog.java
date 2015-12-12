@@ -195,7 +195,7 @@ public class changelog {
 	/** modes for HTML-Lists (bullet, numbered) */
 	private enum Listmode {
 		NONE, ORDERED, UNORDERED,
-	};
+	}
 
 	private Listmode listMode = Listmode.NONE;
 	private StringBuffer sb = null;

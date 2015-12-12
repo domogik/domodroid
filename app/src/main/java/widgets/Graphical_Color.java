@@ -21,7 +21,6 @@ import database.DmdContentProvider;
 import database.JSONParser;
 import database.WidgetUpdate;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -60,33 +59,22 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	private int mInitialColor, mDefaultColor;
 	private String mKey;
 
-	private final LinearLayout color_LeftPan;
-	private final LinearLayout color_RightPan;
 	private final LinearLayout featurePan2;
-	private final int dev_id;
-	private final int id;
 	private final Handler handler;
-	private final String state_key;
 	private final Color_Progress seekBarHueBar;
-	private final Color_Progress seekBarPowerBar;
 	private final Color_Progress seekBarRGBXBar;
 	private final Color_Progress seekBarRGBYBar;
 	private final Color_RGBField rgbView;
 	private final Color_Result resultView;
-	private final TextView state_key_view;
 	private final String url;
-	private final int update;
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
-	private int state_progress;
 
 	private int argb = 0;
 	private String argbS = "";
 	private Message msg;
 	private static String mytag;
-	private final String name;
-	private final String wname;
 	private final String type;
 	private final String address;
 	private Activity mycontext;
@@ -96,7 +84,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	private TimerTask doAsynchronousTask;
 
 
-	private final int widgetSize;
 	private Color currentColor;
 	private final SeekBar seekBarOnOff;
 	private int[] mMainColors = new int[65536];
@@ -115,17 +102,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	private tracerengine Tracer = null;
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	private final int session_type;
-	private final String place_type;
-	private final int place_id;
 	private final String login;
 	private final String password;
-	private final float api_version;
-	private final String usage;
-	private final Context context;
 
-	@SuppressLint("HandlerLeak")
-	public Graphical_Color(tracerengine Trac, Activity context, 
+	public Graphical_Color(tracerengine Trac, Activity context,
 			SharedPreferences params, 
 			int id,int dev_id, 
 			String name,
@@ -138,36 +118,24 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			int widgetSize,
 			int session_type,int place_id,String place_type) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.context=context;
 		this.Tracer = Trac;
-		this.dev_id = dev_id;
-		this.id = id;
-		this.usage=usage;
-		this.state_key = state_key;
-		this.name=name;
-		this.wname=name;
 		this.address=address;
 		this.url = url;
-		this.update=update;
-		this.widgetSize=widgetSize;
 		this.params = params;
 		this.myself = this;
-		this.session_type = session_type;
-		this.place_id= place_id;
-		this.place_type= place_type;
 		mytag="Graphical_Color("+dev_id+")";
 		setOnClickListener(this);
 
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
-		api_version=params.getFloat("API_VERSION", 0);
+		float api_version = params.getFloat("API_VERSION", 0);
 
 		String[] model = model_id.split("\\.");
 		type = model[0];
 		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+">" );
 
 		//state key
-		state_key_view = new TextView(context);
+		TextView state_key_view = new TextView(context);
 		state_key_view.setText(state_key);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -192,10 +160,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		featurePan2.setPadding(20, 0, 0, 10);
 
 		//left panel
-		color_LeftPan = new LinearLayout(context);
+		LinearLayout color_LeftPan = new LinearLayout(context);
 		color_LeftPan.setOrientation(LinearLayout.VERTICAL);
 		//color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
-		color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,1));
+		color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
 		color_LeftPan.setPadding(0, 0, 0, 10);
 
 		TextView title1 = new TextView(context);
@@ -264,7 +232,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		seekBarRGBYBar.setTag("rgby");
 
 		//seekbar powerbar
-		seekBarPowerBar=new Color_Progress(Tracer, context,3,0);
+		Color_Progress seekBarPowerBar = new Color_Progress(Tracer, context, 3, 0);
 		seekBarPowerBar.setProgress(0);
 		seekBarPowerBar.setMax(255);
 		seekBarPowerBar.setProgressDrawable(null);
@@ -277,9 +245,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		//rgbView.drawRGBField();
 
 		//right panel
-		color_RightPan = new LinearLayout(context);
+		LinearLayout color_RightPan = new LinearLayout(context);
 		color_RightPan.setOrientation(LinearLayout.VERTICAL);
-		color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,Gravity.RIGHT));
+		color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.RIGHT));
 		color_RightPan.setPadding(20, 0, 0, 10);
 
 		//Color result
@@ -404,9 +372,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		 */
 		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
 		if(cache_engine != null) {
-			if (api_version<=0.6f){
+			if (api_version <=0.6f){
 				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version>=0.7f){
+			}else if (api_version >=0.7f){
 				session = new Entity_client(id, "", mytag, handler, session_type);
 			}
 			if(Tracer.get_engine().subscribe(session)) {
@@ -505,7 +473,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			new CommandeThread().execute();		//And send switch_state to Domogik
 
 		} else {
-			state_progress = seekBar.getProgress();
+			int state_progress = seekBar.getProgress();
 			SaveSelections();
 			Tracer.i(mytag,"End of change : new rgb value =  #"+argbS );
 			if(seekBarOnOff.getProgress() > 50)
@@ -559,7 +527,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if(ack==false){
+				if(!ack){
 					Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 					handler.sendEmptyMessage(2);
 				} 
@@ -613,6 +581,5 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 			featurePan2.setVisibility(INVISIBLE);
 			Tracer.i(mytag, "FeaturePan2 set to INVISIBLE");
 		}
-		return;
 	}
 }

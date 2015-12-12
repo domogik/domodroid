@@ -32,10 +32,8 @@ import android.webkit.ValueCallback;
 public class Events_manager {
 	private static Events_manager instance;
 	private tracerengine Tracer;
-	private SharedPreferences params;
 	private Handler state_engine_handler;
 	private Handler events_engine_handler;
-	private WidgetUpdate father = null;
 	private ArrayList<Cache_Feature_Element> engine_cache;
 	private int stack_in = -1;
 	private int stack_out = -1;
@@ -89,8 +87,6 @@ public class Events_manager {
 
 		this.Tracer = Trac;
 		this.engine_cache =  engine_cache;
-		this.params = params;
-		this.father = caller;
 		//setOwner(owner, state_engine_handler);
 		mytag="Events";
 		urlAccess = params.getString("URL","1.1.1.1");
@@ -123,7 +119,7 @@ public class Events_manager {
 
 					}
 				}
-			};
+			}
 		};
 		Tracer.w(mytag,"Events Manager ready");
 		init_done = true;
@@ -201,7 +197,7 @@ public class Events_manager {
 					if (!MQaddress.equals("") && !MQsubport.equals("")){
 						//TODO find a way to know when ZeroMQ didn't response anymore.
 						ZMQ.Context zmqContext = ZMQ.context(1);
-						ZMQ.Socket subscriber=zmqContext.socket(ZMQ.SUB);;
+						ZMQ.Socket subscriber=zmqContext.socket(ZMQ.SUB);
 						Tracer.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
 						subscriber.setIdentity("domodroid".getBytes());
 						Tracer.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
@@ -343,7 +339,7 @@ public class Events_manager {
 						} catch (Exception e) {
 							ack=false;
 						}
-						if(ack==false){
+						if(!ack){
 							// The server's response is'nt "OK"
 							Tracer.w(mytag,"Event ERROR <"+event.toString()+"> : ignored !");
 

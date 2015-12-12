@@ -61,35 +61,23 @@ import android.widget.Toast;
 
 public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.OnSeekBarChangeListener {
 
-	private FrameLayout rightPan;
-	private LinearLayout bodyPanHorizontal;
-	private LinearLayout leftPan;
 	private TextView state;
 	private SeekBar seekBarVaria;
 	private final String address;
 	private int state_progress;
 	private final String usage;
 	private final String url;
-	private final int dev_id;
-	private final int id;
 	private Handler handler;
-	private final String state_key;
-	private int range;
 	private int scale;
 	private int valueMin=0;
 	private int valueMax=100;
 	private int CustomMax;
-	private String type; 
-	private String command;
+	private String type;
 	public static int stateThread;
-	private final int update;
 	public final boolean activate=false;
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
-	private final String wname;
-	private final String place_type;
-	private final int place_id;
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
 	private static String mytag;
@@ -98,12 +86,10 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	private final int session_type;
 	private String stateS = "";
 	private final String login;
 	private final String password;
 	private final float api_version;
-	private final SharedPreferences params;
 	private String test_unite;
 	private final Activity context;
 	private String command_id = null;
@@ -117,26 +103,17 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		this.Tracer = Trac;
 		this.address = address;
 		this.url = url;
-		this.dev_id=dev_id;
-		this.id=id;
-		this.state_key=state_key;
 		this.usage = usage;
-		this.update = update;
-		this.wname = name;
 		this.myself=this;
-		this.session_type = session_type;
-		this.place_id= place_id;
-		this.place_type= place_type;
 		this.context=context;
 		stateThread = 1;
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+state_key);
 			this.stateS= state_key;
 		}
 		mytag="Graphical_Range("+dev_id+")";
-		this.params=params;
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
 		api_version=params.getFloat("API_VERSION", 0);
@@ -152,11 +129,11 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 				seekBarVaria.setEnabled(false);
 			}	
 		}else{
-			command = jparam.getString("command");
+			String command = jparam.getString("command");
 			valueMin = jparam.getInt("valueMin");
 			valueMax = jparam.getInt("valueMax");
-			range = valueMax-valueMin;
-			scale = 100/range;
+			int range = valueMax - valueMin;
+			scale = 100/ range;
 		}
 		try {
 			test_unite = jparam.getString("unit");
@@ -170,18 +147,18 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		type = model[0];
 
 		//linearlayout horizontal body		
-		bodyPanHorizontal=new LinearLayout(context);
-		bodyPanHorizontal.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,Gravity.CENTER_VERTICAL));
+		LinearLayout bodyPanHorizontal = new LinearLayout(context);
+		bodyPanHorizontal.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.CENTER_VERTICAL));
 		bodyPanHorizontal.setOrientation(LinearLayout.HORIZONTAL);
 
 		//right panel with different info and seekbars		
-		rightPan=new FrameLayout(context);
-		rightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		FrameLayout rightPan = new FrameLayout(context);
+		rightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		rightPan.setPadding(0, 0, 10, 0);
 
 		// panel
-		leftPan = new LinearLayout(context);
-		leftPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,Gravity.BOTTOM));
+		LinearLayout leftPan = new LinearLayout(context);
+		leftPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.BOTTOM));
 		leftPan.setOrientation(LinearLayout.VERTICAL);
 		leftPan.setGravity(Gravity.CENTER_VERTICAL);
 		leftPan.setPadding(4, 5, 0, 0);
@@ -320,7 +297,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
 	public void onStopTrackingTouch(SeekBar arg0) {
 		//send the correct value by replacing it with a converted one.
-		state_progress=(int)(arg0.getProgress()+valueMin);
+		state_progress= arg0.getProgress()+valueMin;
 		new CommandeThread().execute();
 		touching=false;
 	}
@@ -350,7 +327,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 					}
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
-						if(ack==false){
+						if(!ack){
 							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
 							handler.sendEmptyMessage(2);
@@ -399,7 +376,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==0){
+		if(visibility==View.VISIBLE){
 			//activate=true;
 		}
 	}

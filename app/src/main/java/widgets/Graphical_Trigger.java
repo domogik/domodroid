@@ -57,9 +57,7 @@ import android.widget.Toast;
 
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
-	private TextView unusable;
 	private Graphical_Trigger_Button trigger;
-	private TextView state;
 	private final String address;
 	private final String url;
 	private Handler handler;
@@ -68,25 +66,15 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 	private String command; 
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
-	private final int dev_id;
-	private final int id;
-	private final String place_type;
-	private final int place_id;
 	private tracerengine Tracer = null;
-	private final int session_type;
-	private boolean usable=false;
 	private static String mytag;
 	private Message msg;
-	private final SharedPreferences params;
 	private final String login;
 	private final String password;
 	private final float api_version;
 	private final Activity context;
-	private final String usage;
 	private String command_id;
 	private String command_type;
-	private String stateS;
-	private final String state_key;
 
 	public Graphical_Trigger(tracerengine Trac, Activity context, 
 			String address, String name,String state_key, int id,int dev_id,String stat_key, 
@@ -96,23 +84,16 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 		this.address = address;
 		this.Tracer = Trac;
 		this.url = url;
-		this.id=id;
-		this.state_key = state_key;
 		this.context=context;
-		this.usage=usage;
 		this.myself=this;
-		this.session_type = session_type;
-		this.dev_id = dev_id;
-		this.place_id= place_id;
-		this.place_type= place_type;
+		String stateS;
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+stat_key);
-			this.stateS= state_key;
+			stateS = state_key;
 		}
 		mytag="Graphical_Trigger("+dev_id+")";
-		this.params=params;
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
 		api_version=params.getFloat("API_VERSION", 0);
@@ -120,14 +101,15 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 		//get parameters
 		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 
+		boolean usable = false;
 		if(jparam != null ) {
 			if (api_version>=0.7f) {
 				try{
 					command_id=jparam.getString("command_id");
 					command_type=jparam.getString("command_type");
-					usable=true;
+					usable =true;
 				} catch (Exception e) {
-					usable=false;
+					usable =false;
 					Tracer.d(mytag, "Error with this widgets command");
 					Tracer.d(mytag, "jparam= "+jparam.toString());
 					Tracer.d(mytag, e.toString());
@@ -135,9 +117,9 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 			}else{
 				try{
 					command = jparam.getString("command");
-					usable=true;
+					usable =true;
 				} catch (Exception e) {
-					usable=false;
+					usable =false;
 					Tracer.d(mytag, "Error with this widgets command");
 					Tracer.d(mytag, "jparam= "+jparam.toString());
 					Tracer.d(mytag, e.toString());
@@ -148,7 +130,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 		String[] model = model_id.split("\\.");
 		type = model[0];
 
-		state=new TextView(context);
+		TextView state = new TextView(context);
 		state.setTextColor(Color.BLACK);
 		state.setText(stateS);
 		LL_infoPan.addView(state);
@@ -159,14 +141,14 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 		trigger.setOnClickListener(this);
 
 		//unusable
-		unusable=new TextView(context);
+		TextView unusable = new TextView(context);
 		unusable.setText(R.string.unusable);
 		unusable.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
 		unusable.setTextColor(Color.BLACK);
 		unusable.setTextSize(14);
 		unusable.setPadding(0, 0, 15, 0);
 
-		if (usable==true){
+		if (usable){
 			LL_featurePan.addView(trigger);
 		}else{
 			LL_featurePan.addView(unusable);
@@ -199,7 +181,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 					}
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
-						if(ack==false){
+						if(!ack){
 							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
 							handler.sendEmptyMessage(2);

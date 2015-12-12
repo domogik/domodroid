@@ -52,7 +52,6 @@ import database.WidgetUpdate;
 
 import rinor.Rest_com;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -80,32 +79,23 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	private final TextView value;
 	private final int dev_id;
 	private final int id;
-	private final Handler handler;
 	private final String state_key;
-	private final TextView state_key_view;
 
-	private final int update;
 	private final Animation animation;
 	private final Activity context;
 	private Message msg;
-	private final String name;
 	private static String mytag="";
 	private String url = null;
-	private final String place_type;
-	private final int place_id;
 
 	public static FrameLayout container = null;
 	public static FrameLayout myself = null;
 	public final Boolean with_graph = true;
 	private tracerengine Tracer = null;
-	private final String parameters;
-	private Entity_client session = null; 
+	private Entity_client session = null;
 	private Boolean realtime = false;
-	private final int session_type;
 	private GraphicalView mChart;
 	private final String login;
 	private final String password;
-	private final SharedPreferences params;
 
 	private String step="hour";
 	private int limit = 6;		// items returned by Rinor on stats arrays when 'hour' average
@@ -113,11 +103,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	private long startTimestamp = 0; 
 	private final Date time_start=new Date();
 	private final Date time_end=new Date();
-	private Vector<Vector<Float>> values;
-	private float minf;
-	private float maxf;
-	private float avgf;
-	private Double real_val;	
 	private int period_type = 0;		// 0 = period defined by settings
 	// 1 = 1 day
 	// 8 = 1 week
@@ -125,24 +110,17 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 	// 365 = 1 year
 	private int sav_period;
 
-	private final DisplayMetrics metrics;
-	private final float size12;
 	private final float size10;
 	private final float size5;
-	private final float size2;
 	private final XYMultipleSeriesRenderer multiRenderer;
 	private final XYSeriesRenderer incomeRenderer;
 	private final XYSeriesRenderer emptyRenderer;
 	private final XYMultipleSeriesDataset dataset;
 	private final XYSeries nameSeries;
 	private final XYSeries EmptySeries;
-	private int j;
-	private final String usage;
 	private final float api_version;
-	private String stateS;
 
-	@SuppressLint("HandlerLeak")
-	public Graphical_Info_with_achartengine(tracerengine Trac,final Activity context, int id,int dev_id, String name, 
+	public Graphical_Info_with_achartengine(tracerengine Trac,final Activity context, int id,int dev_id, String name,
 			final String state_key, String url,final String usage, int period, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
@@ -150,31 +128,24 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		this.context = context;
 		this.dev_id = dev_id;
 		this.id = id;
-		this.usage=usage;
 		this.state_key = state_key;
+		String stateS;
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+state_key);
-			this.stateS= state_key;
+			stateS = state_key;
 		}
-		this.update=update;
-		this.name = name;
 		this.url = url;
 		this.myself = this;
-		this.session_type = session_type;
-		this.parameters = parameters;
-		this.place_id= place_id;
-		this.place_type= place_type;
-		this.params=params;
 		setOnClickListener(this);
 
-		metrics = getResources().getDisplayMetrics();
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		//Label Text size according to the screen size
-		size12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
+		float size12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, metrics);
 		size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
 		size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
-		size2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 2, metrics);
+		float size2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 2, metrics);
 
 		//Design the graph
 		//Creating a XYMultipleSeriesRenderer to customize the whole chart
@@ -252,7 +223,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		Tracer.e(mytag,"New instance for name = "+name+" state_key = "+state_key);
 
 		//state key
-		state_key_view = new TextView(context);
+		TextView state_key_view = new TextView(context);
 		state_key_view.setText(stateS);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -266,50 +237,58 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		super.LL_featurePan.addView(value);
 		super.LL_infoPan.addView(state_key_view);
 
-		handler = new Handler() {
+		Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if(msg.what == 9999) {
+				if (msg.what == 9999) {
 					//Message from widgetupdate
 					//state_engine send us a signal to notify value changed
-					if(session == null)
+					if (session == null)
 						return;
 
 					String loc_Value = session.getValue();
-					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
+					Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
 					try {
 						float formatedValue = 0;
-						if(loc_Value != null){
-							formatedValue = Round(Float.parseFloat(loc_Value),2);
-							Tracer.v(mytag, " Round the value"+loc_Value+" to "+formatedValue);
+						if (loc_Value != null) {
+							formatedValue = Round(Float.parseFloat(loc_Value), 2);
+							Tracer.v(mytag, " Round the value" + loc_Value + " to " + formatedValue);
 						}
 						try {
 							//Basilic add, number feature has a unit parameter
 							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 							String test_unite = jparam.getString("unit");
 							//#30 add Scale value if too big for byte only
-							if (test_unite.equals("b") == true){
-								value.setText(android.text.format.Formatter.formatFileSize(context,Long.parseLong(loc_Value)));
-							}else if (test_unite.equals("ko") == true){
-								value.setText(android.text.format.Formatter.formatFileSize(context,Long.parseLong(loc_Value)*1024));
-							}else{
-								value.setText(formatedValue+ " "+test_unite);
+							if (test_unite.equals("b")) {
+								value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
+							} else if (test_unite.equals("ko")) {
+								value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
+							} else {
+								value.setText(formatedValue + " " + test_unite);
 							}
-						} catch (JSONException e) {							
-							if(state_key.equalsIgnoreCase("temperature") == true) value.setText(formatedValue+" °C");
-							else if(state_key.equalsIgnoreCase("pressure") == true) value.setText(formatedValue+" hPa");
-							else if(state_key.equalsIgnoreCase("humidity") == true) value.setText(formatedValue+" %");
-							else if(state_key.equalsIgnoreCase("percent") == true) value.setText(formatedValue+" %");
-							else if(state_key.equalsIgnoreCase("visibility") == true) value.setText(formatedValue+" km");
-							else if(state_key.equalsIgnoreCase("chill") == true) value.setText(formatedValue+" °C");
-							else if(state_key.equalsIgnoreCase("speed") == true) value.setText(formatedValue+" km/h");
-							else if(state_key.equalsIgnoreCase("drewpoint") == true) value.setText(formatedValue+" °C");
-							else if(state_key.equalsIgnoreCase("condition-code") == true)
+						} catch (JSONException e) {
+							if (state_key.equalsIgnoreCase("temperature"))
+								value.setText(formatedValue + " °C");
+							else if (state_key.equalsIgnoreCase("pressure"))
+								value.setText(formatedValue + " hPa");
+							else if (state_key.equalsIgnoreCase("humidity"))
+								value.setText(formatedValue + " %");
+							else if (state_key.equalsIgnoreCase("percent"))
+								value.setText(formatedValue + " %");
+							else if (state_key.equalsIgnoreCase("visibility"))
+								value.setText(formatedValue + " km");
+							else if (state_key.equalsIgnoreCase("chill"))
+								value.setText(formatedValue + " °C");
+							else if (state_key.equalsIgnoreCase("speed"))
+								value.setText(formatedValue + " km/h");
+							else if (state_key.equalsIgnoreCase("drewpoint"))
+								value.setText(formatedValue + " °C");
+							else if (state_key.equalsIgnoreCase("condition-code"))
 								//Add try catch to avoid other case that make #1794
 								try {
 
-									value.setText(Graphics_Manager.Names_conditioncodes(getContext(),(int)formatedValue));
-								}catch (Exception e1) {
+									value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
+								} catch (Exception e1) {
 									value.setText(loc_Value);
 								}
 							else value.setText(loc_Value);
@@ -317,26 +296,27 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 						value.setAnimation(animation);
 					} catch (Exception e) {
 						// It's probably a String that could'nt be converted to a float
-						Tracer.d(mytag,"Handler exception : new value <"+loc_Value+"> not numeric !" );
+						Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
 						value.setText(loc_Value);
 					}
 					//To have the icon colored as it has no state
 					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 
-				} else if(msg.what == 9998) {
+				} else if (msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
-					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
 					session = null;
 					realtime = false;
 					removeView(LL_background);
 					myself.setVisibility(GONE);
-					if(container != null) {
+					if (container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
 					}
-					try { 
-						finalize(); 
-					} catch (Throwable t) {}	//kill the handler thread itself
+					try {
+						finalize();
+					} catch (Throwable t) {
+					}    //kill the handler thread itself
 				}
 			}
 
@@ -369,7 +349,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==0){
+		if(visibility==View.VISIBLE){
 
 		}
 	}
@@ -442,9 +422,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
 
 	private void drawgraph() throws JSONException {
-		minf=0;
-		maxf=0;
-		avgf=0;
+		float minf = 0;
+		float maxf = 0;
+		float avgf = 0;
 		//Clear to avoid crash on multiple redraw
 		EmptySeries.clear();
 		nameSeries.clear();
@@ -466,7 +446,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		multiRenderer.addSeriesRenderer(incomeRenderer);
 		multiRenderer.addSeriesRenderer(emptyRenderer);
 
-		values = new Vector<Vector<Float>>();
+		Vector<Vector<Float>> values = new Vector<Vector<Float>>();
 		chartContainer = new LinearLayout(context);
 		// Getting a reference to LinearLayout of the MainActivity Layout
 		chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
@@ -490,7 +470,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		}
 
 		JSONArray itemArray=null;
-		JSONArray valueArray=new JSONArray();;
+		JSONArray valueArray=new JSONArray();
 		if(api_version<=0.6f){
 			itemArray = json_GraphValues.getJSONArray("stats");
 			valueArray = itemArray.getJSONObject(0).getJSONArray("values");
@@ -503,13 +483,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 			}
 		}
 
-		j=0;
+		int j = 0;
 		Boolean ruptur=false;
+		Double real_val;
 		if(limit == 6) {
 			// range between 1 to 8 days (average per hour)
 			for (int i =0; i < valueArray.length()-1; i++){
 				real_val = valueArray.getJSONArray(i).getDouble(limit-1);
-				real_val=round(real_val, 2);
+				real_val =round(real_val, 2);
 				int year=valueArray.getJSONArray(i).getInt(0);
 				int month=valueArray.getJSONArray(i).getInt(1);
 				int week=valueArray.getJSONArray(i).getInt(2);
@@ -525,7 +506,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 							+String.valueOf(day)+" "
 							+String.valueOf(hour)+":00");
 					Tracer.d(mytag, "date1="+date1);
-					Tracer.d(mytag, "Value="+real_val);
+					Tracer.d(mytag, "Value="+ real_val);
 				} catch (ParseException e) {
 					Tracer.d(mytag, "Error converting date");
 					Tracer.d (mytag,e.toString());
@@ -534,17 +515,17 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					//no day change
 					if((hour+1) != hour_next) {
 						//ruptur : simulate next missing steps
-						EmptySeries.add(date1.getTime(),real_val );
-						nameSeries.add(date1.getTime(),real_val );
+						EmptySeries.add(date1.getTime(), real_val);
+						nameSeries.add(date1.getTime(), real_val);
 						for (int k=1 ; k < (hour_next - hour); k++){
 							nameSeries.add(date1.getTime(), MathHelper.NULL_VALUE);
-							EmptySeries.add(date1.getTime(),real_val );
+							EmptySeries.add(date1.getTime(), real_val);
 						}
 						j = j + (hour_next - hour);
 						ruptur=true;
 					} else{
 						if (ruptur){
-							EmptySeries.add(date1.getTime(),real_val);
+							EmptySeries.add(date1.getTime(), real_val);
 						}else{
 							EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 						}
@@ -554,7 +535,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					}
 				} else if (hour == 23){
 					if (ruptur){
-						EmptySeries.add(date1.getTime(),real_val);
+						EmptySeries.add(date1.getTime(), real_val);
 					}else{
 						EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 					}
@@ -563,8 +544,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					j++;
 				}
 				if(minf == 0)
-					minf=real_val.floatValue();
-				avgf+=real_val;	// Get the real 'value'
+					minf = real_val.floatValue();
+				avgf += real_val;	// Get the real 'value'
 
 				if(real_val > maxf){  
 					maxf = real_val.floatValue();  
@@ -579,7 +560,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 			// range between 9 to 32 days (average per day)
 			for (int i =0; i < valueArray.length()-1; i++){
 				real_val = valueArray.getJSONArray(i).getDouble(limit-1);
-				real_val=round(real_val, 2);
+				real_val =round(real_val, 2);
 				int year=valueArray.getJSONArray(i).getInt(0);
 				int month=valueArray.getJSONArray(i).getInt(1);
 				int day=valueArray.getJSONArray(i).getInt(3);
@@ -600,31 +581,31 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				date1 = calendar.getTime();
 				if((day+1) != day_next) {
 					//ruptur : simulate next missing steps
-					EmptySeries.add(date1.getTime(),real_val );
-					nameSeries.add(date1.getTime(),real_val );
+					EmptySeries.add(date1.getTime(), real_val);
+					nameSeries.add(date1.getTime(), real_val);
 					for (int k=1 ; k < (day_next - day); k++){
 						nameSeries.add(date1.getTime(), MathHelper.NULL_VALUE);
-						EmptySeries.add(date1.getTime(),real_val );
+						EmptySeries.add(date1.getTime(), real_val);
 					}
 					j = j + (day_next - day);
 					ruptur=true;
 				} else{
 					if (ruptur){
-						EmptySeries.add(date1.getTime(),real_val);
+						EmptySeries.add(date1.getTime(), real_val);
 						Tracer.d(mytag, "date1="+date1);
-						Tracer.d(mytag, "Value="+real_val); 
+						Tracer.d(mytag, "Value="+ real_val);
 					}else{
 						EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 						Tracer.d(mytag, "date1="+date1);
-						Tracer.d(mytag, "Value="+real_val); 
+						Tracer.d(mytag, "Value="+ real_val);
 					}
 					ruptur=false;
 					nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
 					j++;
 				}
 				if(minf == 0)
-					minf=real_val.floatValue();
-				avgf+=real_val;	// Get the real 'value'
+					minf = real_val.floatValue();
+				avgf += real_val;	// Get the real 'value'
 
 				if(real_val > maxf){  
 					maxf = real_val.floatValue();  
@@ -639,7 +620,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 			// (average per week)
 			for (int i =0; i < valueArray.length()-1; i++){
 				real_val = valueArray.getJSONArray(i).getDouble(limit-1);
-				real_val=round(real_val, 2);
+				real_val =round(real_val, 2);
 				int year=valueArray.getJSONArray(i).getInt(0);
 				int week=valueArray.getJSONArray(i).getInt(1);
 				int week_next=valueArray.getJSONArray(i+1).getInt(1);
@@ -657,23 +638,23 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					//no day change
 					if((week+1) != week_next) {
 						//ruptur : simulate next missing steps
-						EmptySeries.add(date1.getTime(),real_val );
-						nameSeries.add(date1.getTime(),real_val );
+						EmptySeries.add(date1.getTime(), real_val);
+						nameSeries.add(date1.getTime(), real_val);
 						for (int k=1 ; k < (week_next - week); k++){
 							nameSeries.add(date1.getTime(), MathHelper.NULL_VALUE);
-							EmptySeries.add(date1.getTime(),real_val );
+							EmptySeries.add(date1.getTime(), real_val);
 						}
 						j = j + (week_next - week);
 						ruptur=true;
 					} else{
 						if (ruptur){
-							EmptySeries.add(date1.getTime(),real_val);
+							EmptySeries.add(date1.getTime(), real_val);
 							Tracer.d(mytag, "date1="+date1);
-							Tracer.d(mytag, "Value="+real_val);
+							Tracer.d(mytag, "Value="+ real_val);
 						}else{
 							EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 							Tracer.d(mytag, "date1="+date1);
-							Tracer.d(mytag, "Value="+real_val);
+							Tracer.d(mytag, "Value="+ real_val);
 						}
 						ruptur=false;
 						nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
@@ -681,7 +662,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					}
 				} else if (week == 52){
 					if (ruptur){
-						EmptySeries.add(date1.getTime(),real_val);
+						EmptySeries.add(date1.getTime(), real_val);
 					}else{
 						EmptySeries.add(date1.getTime(),MathHelper.NULL_VALUE);
 					}
@@ -690,8 +671,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 					j++;
 				}
 				if(minf == 0)
-					minf=real_val.floatValue();
-				avgf+=real_val;	// Get the real 'value'
+					minf = real_val.floatValue();
+				avgf += real_val;	// Get the real 'value'
 
 				if(real_val > maxf){  
 					maxf = real_val.floatValue();  
@@ -703,16 +684,16 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				}
 			}
 		}
-		avgf=avgf/values.size();
-		multiRenderer.addYTextLabel(((double)minf)-1, (""+minf));
-		multiRenderer.addYTextLabel(((double)avgf),(""+avgf));
-		multiRenderer.addYTextLabel(((double)maxf),(""+maxf));
+		avgf = avgf / values.size();
+		multiRenderer.addYTextLabel(((double) minf)-1, (""+ minf));
+		multiRenderer.addYTextLabel(((double) avgf),(""+ avgf));
+		multiRenderer.addYTextLabel(((double) maxf),(""+ maxf));
 		//SET limit up and down on Y axis
-		multiRenderer.setYAxisMin(minf-1);
-		multiRenderer.setYAxisMax(maxf+1);
-		Tracer.d(mytag,"minf ("+dev_id+")="+minf);
-		Tracer.d(mytag,"maxf ("+dev_id+")="+maxf);
-		Tracer.d(mytag,"avgf ("+dev_id+")="+avgf);
+		multiRenderer.setYAxisMin(minf -1);
+		multiRenderer.setYAxisMax(maxf +1);
+		Tracer.d(mytag,"minf ("+dev_id+")="+ minf);
+		Tracer.d(mytag,"maxf ("+dev_id+")="+ maxf);
+		Tracer.d(mytag,"avgf ("+dev_id+")="+ avgf);
 		Tracer.d(mytag,"UpdateThread ("+dev_id+") Refreshing graph");
 
 		// Specifying chart types to be drawn in the graph
@@ -720,7 +701,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		// Order of data series and chart type will be same
 		String types = "dd-MM HH:mm";
 		// Creating a Timed chart with the chart types specified in types array
-		mChart = (GraphicalView) ChartFactory.getTimeChartView(context, dataset, multiRenderer, types);
+		mChart = ChartFactory.getTimeChartView(context, dataset, multiRenderer, types);
 		mChart.setOnClickListener(new OnClickListener() {
 			//on click is called when pan or zoom movement id ended
 			public void onClick(View v) {
@@ -774,7 +755,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		float p = (float)Math.pow(10,Rpl);
 		Rval = Rval * p;
 		float tmp = Math.round(Rval);
-		return (float)tmp/p;
+		return tmp /p;
 	}
 
 	public void onClick(View arg0) {
@@ -807,6 +788,5 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			}
 		}
-		return;
 	}
 }

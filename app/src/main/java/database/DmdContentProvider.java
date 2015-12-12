@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 public class DmdContentProvider extends ContentProvider {
@@ -22,7 +23,6 @@ public class DmdContentProvider extends ContentProvider {
 	private DatabaseHelper mDB;
 	private SQLiteDatabase bdd;
 
-	private static Context context;
 	private tracerengine Tracer = null;
 
 	private static final String AUTHORITY = "database.DmdContentProvider";
@@ -177,9 +177,9 @@ public class DmdContentProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		mDB = new DatabaseHelper(getContext());
-		this.context=getContext();
+		Context context = getContext();
 		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
-		Tracer = tracerengine.getInstance(SP_params,context);
+		Tracer = tracerengine.getInstance(SP_params, context);
 		return true;
 
 	}
@@ -195,7 +195,7 @@ public class DmdContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+	public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		// To erase all table contents
 		int uriType = sURIMatcher.match(uri);
 		if(uriType == UPGRADE_FEATURE_STATE){
@@ -212,7 +212,7 @@ public class DmdContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public String getType(Uri uri) {
+	public String getType(@NonNull Uri uri) {
 		return null;
 	}
 
@@ -230,7 +230,7 @@ public class DmdContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+	public Uri insert(@NonNull Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		long id = 0;
 		long rowid = 0;
@@ -429,7 +429,7 @@ public class DmdContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+	public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		Cursor cursor=null;
@@ -511,7 +511,7 @@ public class DmdContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+	public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		int uriType = sURIMatcher.match(uri);
 		int items = 0;
 		switch (uriType) {

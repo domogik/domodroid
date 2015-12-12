@@ -8,13 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.view.View;
 
+@SuppressWarnings("ALL")
 public class Color_RGBField extends View {
 	private final Paint mPaint;
 	public float mCurrentHue = 0;
 	public int mCurrentX = 0;
 	public int mCurrentY = 255;
-	private int mCurrentColor;
-	private final int mDefaultColor;
 	public final int[] mHueBarColors = new int[258];
 	private final int[] mMainColors = new int[65536];
 	public int widgetSize;
@@ -26,7 +25,7 @@ public class Color_RGBField extends View {
 
 	public Color_RGBField(Context context, int color, int defaultColor) {
 		super(context);
-		mDefaultColor = defaultColor;
+		int mDefaultColor = defaultColor;
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	}
 
@@ -54,7 +53,7 @@ public class Color_RGBField extends View {
 		mPaint.setColor(Color.BLACK);
 		canvas.drawCircle(mCurrentX+8, mCurrentY/2, 6, mPaint);
 
-		mCurrentColor = mMainColors[index];
+		int mCurrentColor = mMainColors[index];
 
 	}
 

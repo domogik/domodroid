@@ -43,7 +43,6 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 	private tracerengine Tracer = null;
 	private final String login;
 	private final String password;
-	private final String mytag="Dialog_Synchronize";
 
 	public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
 		super(context);
@@ -132,7 +131,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 			urlAccess = urlAccess.replaceAll(" ", "%20");
 			String format_urlAccess;
 			//add a '/' at the end of the IP address
-			if(urlAccess.lastIndexOf("/")==urlAccess.toString().length()-1)
+			if(urlAccess.lastIndexOf("/")== urlAccess.length()-1)
 				format_urlAccess = urlAccess;
 			else
 				format_urlAccess = urlAccess.concat("/");
@@ -174,6 +173,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 			// if API rinor >0.5 génération auto sinon classic
 			JSONObject json_rinor = null;
+			String mytag = "Dialog_Synchronize";
 			try {
 				json_rinor = Rest_com.connect_jsonobject(urlAccess,login,password);
 			} catch (Exception e) {
@@ -190,7 +190,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 				handler.sendMessage(msg);
 				return null;
 			}
-			String Rinor_Api_ver=new String();
+			String Rinor_Api_ver= "";
 			try {
 				Rinor_Api_ver = json_rinor.getJSONObject("info").getString("REST_API_version");
 			} catch (Exception e){
@@ -202,7 +202,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 			}
 			Tracer.i(mytag, "RinorAPI= "+Rinor_Api_ver);
 			Float Rinor_Api_Version =Float.valueOf(Rinor_Api_ver);
-			String domogik_Version =new String();
+			String domogik_Version = "";
 			try{
 				domogik_Version = json_rinor.getJSONObject("info").getString("Domogik_version");
 			}catch (Exception e){
@@ -323,7 +323,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 				JSONArray rooms = new JSONArray();
 				JSONArray ListFeature = new JSONArray();
 				//Create string
-				String usage = new String();
+				String usage = "";
 				//Create an ArrayList
 				ArrayList<String> list_usage = new ArrayList<String>();
 
@@ -521,7 +521,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 				JSONArray icons= new JSONArray();
 				JSONArray ListFeature = new JSONArray();
 				//Create string
-				String usage = new String();
+				String usage = "";
 				//Create an ArrayList
 				ArrayList<String> list_usage = new ArrayList<String>();
 
@@ -1008,7 +1008,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 			}
 
 			//refresh cache address
-			Cache_management.checkcache(Tracer,(android.app.Activity) context);
+			Cache_management.checkcache(Tracer, context);
 			need_refresh = true;	// To notify main activity that screen must be refreshed
 			prefEditor.commit();
 			/*

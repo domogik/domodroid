@@ -50,8 +50,6 @@ OnSharedPreferenceChangeListener {
 
 	private static tracerengine Tracer = null;
 	private final File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
-	private SharedPreferences.Editor prefEditor;
-	private SharedPreferences params;
 	private String mytag="Preference";
 
 	@Override
@@ -89,32 +87,33 @@ OnSharedPreferenceChangeListener {
 			saveSharedPreferencesToFile(backupprefs);	// Store settings to SDcard
 
 		//Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
-		params = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
 		String temp = params.getString("rinorIP", "");
+		SharedPreferences.Editor prefEditor;
 		if (!temp.toUpperCase().startsWith("HTTP://")){
 			PreferenceManager.getDefaultSharedPreferences(this).edit();
-			prefEditor=params.edit();
-			prefEditor.putString("rinor_IP", "http://"+temp);
+			prefEditor = params.edit();
+			prefEditor.putString("rinor_IP", "http://" + temp);
 			prefEditor.commit();
 		}else if (temp.toUpperCase().startsWith("HTTP://")){
 			PreferenceManager.getDefaultSharedPreferences(this).edit();
-			prefEditor=params.edit();
+			prefEditor = params.edit();
 			prefEditor.putString("rinorIP", temp.replace("http://", ""));
 			prefEditor.commit();
 		}
 		//refresh URL address
-		prefEditor=params.edit();
-		String urlAccess = params.getString("rinor_IP","1.1.1.1")+":"+params.getString("rinorPort","40405")+params.getString("rinorPath","/");
+		prefEditor = params.edit();
+		String urlAccess = params.getString("rinor_IP", "1.1.1.1")+":"+ params.getString("rinorPort", "40405")+ params.getString("rinorPath", "/");
 		urlAccess = urlAccess.replaceAll("[\r\n]+", "");
 		urlAccess = urlAccess.replaceAll(" ", "%20");
 		String format_urlAccess;
-		if(urlAccess.lastIndexOf("/")==urlAccess.toString().length()-1)
+		if(urlAccess.lastIndexOf("/")== urlAccess.length()-1)
 			format_urlAccess = urlAccess;
 		else
 			format_urlAccess = urlAccess.concat("/");
-		prefEditor.putString("URL",format_urlAccess);
+		prefEditor.putString("URL", format_urlAccess);
 		prefEditor.commit();
-		urlAccess = params.getString("URL","1.1.1.1");
+		urlAccess = params.getString("URL", "1.1.1.1");
 		//refresh cache address.
 		Cache_management.checkcache(Tracer,myself);
 		//this.onContentChanged();

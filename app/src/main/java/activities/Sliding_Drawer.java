@@ -38,9 +38,9 @@ public class Sliding_Drawer extends LinearLayout {
 
 	@SuppressWarnings("unused")
 	private static final String TAG = "Panel";
-	public static interface OnPanelListener {
-		public void onPanelClosed(Sliding_Drawer panel);
-		public void onPanelOpened(Sliding_Drawer panel);
+	public interface OnPanelListener {
+		void onPanelClosed(Sliding_Drawer panel);
+		void onPanelOpened(Sliding_Drawer panel);
 	}
 
 	private boolean mIsShrinking;
@@ -68,7 +68,8 @@ public class Sliding_Drawer extends LinearLayout {
 		READY,
 		TRACKING,
 		FLYING,
-	};
+	}
+
 	private State mState;
 	private Interpolator mInterpolator;
 	private final GestureDetector mGestureDetector;

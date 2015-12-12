@@ -32,7 +32,6 @@ import org.w3c.dom.Text;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import org.domogik.domodroid13.R;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -65,7 +64,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("HandlerLeak")
 public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener{
 
 	private Button ON;
@@ -75,20 +73,15 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 	private String state_progress;
 	private final String url;
 	private final String usage;
-	private final int dev_id;
-	private final int id;
 	private final Handler handler;
-	private final String state_key;
 	private String value0;
 	private String value1;
 	private final String type;
-	private final int update;
 	public final boolean activate=false;
 	private Animation animation;
 	private boolean touching;
 	private int updating=0;
 	private Message msg;
-	private final String name;
 	private final String wname;
 	public static FrameLayout container = null;
 	private static FrameLayout myself = null;
@@ -98,8 +91,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 	private String stateS = "";
 	private String Value_0 = "0";
 	private String Value_1 = "1";
-	private final String place_type;
-	private final int place_id;
 	private final String login;
 	private final String password;
 	private final float api_version;
@@ -109,8 +100,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	private final int session_type;
-	private final SharedPreferences params;
 
 
 	public Graphical_Binary_New(tracerengine Trac, 
@@ -121,24 +110,15 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		this.context = context;
 		this.address = address;
 		this.url = url;
-		this.state_key = state_key;
-		this.dev_id = dev_id;
-		this.id = id;
 		this.usage = usage;
-		this.update = update;
-		this.name = name;
 		this.wname = name;
 		this.myself = this;
-		this.session_type = session_type;
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+state_key);
 			this.stateS= state_key;
 		}
-		this.place_id= place_id;
-		this.place_type= place_type;
-		this.params=params;
 
 		login = params.getString("http_auth_username",null);
 		password = params.getString("http_auth_password",null);
@@ -359,7 +339,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 					}
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
-						if(ack==false){
+						if(!ack){
 							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
 							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
 							handler.sendEmptyMessage(2);
@@ -378,7 +358,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
 	@Override
 	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==0){
+		if(visibility==View.VISIBLE){
 			//activate=true;
 		}
 	}

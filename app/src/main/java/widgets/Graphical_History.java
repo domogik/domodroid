@@ -36,7 +36,6 @@ import rinor.Rest_com;
 
 import database.DmdContentProvider;
 import database.WidgetUpdate;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -73,16 +72,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 	private ListView listeChoices;
 	private final TextView value;
 	private TextView state;
-	private final TextView state_key_view;
 	private final int dev_id;
 	private final int id;
-	private final Handler handler;
 	private final String state_key;
-	private final int update;
 	private static String mytag;
 	private Message msg;
-	private final String wname;
-	private String stateS = "";
 	private String url = null;
 	private final String login;
 	private final String password;
@@ -94,15 +88,10 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
 	private Entity_client session = null; 
 	private Boolean realtime = false;
-	private final int session_type;
-	private final String place_type;
-	private final int place_id;
 	private final Activity context;
-	private final String usage;
 	private final Animation animation;
 
-	@SuppressLint("HandlerLeak")
-	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name, 
+	public Graphical_History(tracerengine Trac,Activity context, int id,int dev_id, String name,
 			final String state_key, String url,final String usage, int update, 
 			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
@@ -112,19 +101,14 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		this.dev_id = dev_id;
 		this.id = id;
 		this.url = url;
-		this.usage=usage;
-		this.update = update;
-		this.wname = name;
 		this.myself=this;
-		this.session_type = session_type;
+		String stateS = "";
 		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
 			Tracer.d(mytag, "no translation for this state:"+state_key);
-			this.stateS= state_key;
+			stateS = state_key;
 		}
-		this.place_id= place_id;
-		this.place_type= place_type;
 		setOnClickListener(this);
 
 		login = params.getString("http_auth_username",null);
@@ -134,7 +118,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		mytag="Graphical_History("+dev_id+")";
 
 		//state key
-		state_key_view = new TextView(context);
+		TextView state_key_view = new TextView(context);
 		state_key_view.setText(stateS);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -148,35 +132,36 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		super.LL_featurePan.addView(value);
 		super.LL_infoPan.addView(state_key_view);
 
-		handler = new Handler() {
+		Handler handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg) {	
+			public void handleMessage(Message msg) {
 				String status;
-				if(msg.what == 9999) {
-					if(session == null)
+				if (msg.what == 9999) {
+					if (session == null)
 						return;
 					status = session.getValue();
 					String loc_Value = session.getValue();
-					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
+					Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
 					value.setAnimation(animation);
 					value.setText(loc_Value);
 					//To have the icon colored as it has no state
 					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 
-				} else if(msg.what == 9998) {
+				} else if (msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
-					Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
+					Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
 					session = null;
 					realtime = false;
 					removeView(LL_background);
 					myself.setVisibility(GONE);
-					if(container != null) {
+					if (container != null) {
 						container.removeView(myself);
 						container.recomputeViewAttributes(myself);
 					}
-					try { 
-						finalize(); 
-					} catch (Throwable t) {}	//kill the handler thread itself
+					try {
+						finalize();
+					} catch (Throwable t) {
+					}    //kill the handler thread itself
 				}
 
 			}
@@ -289,7 +274,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 			LL_background.removeView(listeChoices);
 			LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		}
-		return ;
 
 	}
 

@@ -40,7 +40,6 @@ import misc.tracerengine;
 
 
 public class Rest_com {
-	private SharedPreferences params;
 	private static final String mytag = "Rest_com";
 
 	private static String convertStreamToString(InputStream is) {
@@ -152,6 +151,5 @@ public class Rest_com {
 		return json;
 	}
 	public void setParams(SharedPreferences params) {
-		this.params = params;
 	}
 }

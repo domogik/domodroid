@@ -35,16 +35,12 @@ import android.view.View.OnClickListener;
 
 public class Basic_Graphical_zone extends FrameLayout implements OnClickListener{
 
-	private final FrameLayout FL_imgPan;
 	final LinearLayout LL_background;
-	private final LinearLayout LL_infoPan;
 	final ImageView IV_img;
 	final TextView TV_name;
-	private final TextView TV_description;
 	private final int id;
 	//private int session_type;
 	final String name;
-	private final String description;
 	private final Handler widgetHandler;
 	private final String type;
 
@@ -53,7 +49,6 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		super(context);
 		this.id = id;
 		this.name = name;
-		this.description = description;
 		this.type = type;
 		//this.session_type = session_type;
 		this.setPadding(5, 5, 5, 5);
@@ -70,8 +65,8 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("black",LL_background.getHeight()));
 
 		//panel to set img with padding left
-		FL_imgPan = new FrameLayout(context);
-		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
+		FrameLayout FL_imgPan = new FrameLayout(context);
+		FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 		FL_imgPan.setPadding(5, 8, 10, 10);
 		//img
 		IV_img = new ImageView(context);
@@ -79,9 +74,9 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
 
 		//info panel
-		LL_infoPan=new LinearLayout(context);
+		LinearLayout LL_infoPan = new LinearLayout(context);
 		LL_infoPan.setOrientation(LinearLayout.VERTICAL);
-		LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+		LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		LL_infoPan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
 		LL_infoPan.setPadding(0, 0, 10, 0);
 
@@ -94,7 +89,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		TV_name.setGravity(Gravity.RIGHT);
 
 		//description
-		TV_description=new TextView(context);
+		TextView TV_description = new TextView(context);
 		TV_description.setText(description);
 		TV_name.setTextSize(17);
 		TV_description.setGravity(Gravity.RIGHT);
@@ -117,7 +112,6 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 		Message msg = new Message();
 		msg.setData(b);
 		widgetHandler.sendMessage(msg);
-		return;
 
 	}
 }

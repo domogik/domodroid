@@ -11,17 +11,13 @@ import android.view.View;
 public class Color_PowerBar extends View {
 	private final Paint mPaint;
 	private float mCurrentHue = 0;
-	private final int mCurrentX = 0;
-	private final int mCurrentY = 0;
 	private int mCurrentColor;
-	private final int mDefaultColor;
 	private final int[] mHueBarColors = new int[258];
 	private final int[] mMainColors = new int[65536];
 	public int widgetSize;
 
 	public Color_PowerBar(Context context, int color, int defaultColor) {
 		super(context);
-		mDefaultColor = defaultColor;
 
 		// Get the current hue from the current color and update the main color field
 		float[] hsv = new float[3];
@@ -154,11 +150,11 @@ public class Color_PowerBar extends View {
 			updateMainColors();
 
 			// Update the current selected color
-			int transX = mCurrentX;
-			int transY = mCurrentY-60;
-			int index = 256*(transY-1)+transX;
+			int mCurrentY = 0;
+			int transY = mCurrentY -60;
+			int index = 256*(transY-1)+ 0;
 			if (index > 0 && index < mMainColors.length)
-				mCurrentColor = mMainColors[256*(transY-1)+transX];
+				mCurrentColor = mMainColors[256*(transY-1)+ 0];
 
 			// Force the redraw of the dialog
 			invalidate();

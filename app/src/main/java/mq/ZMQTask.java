@@ -12,9 +12,6 @@ import misc.tracerengine;
 import org.zeromq.ZMQ;
 
 public class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
-	private ZMQ.Context context;
-	private ZMQ.Socket sub;
-	private ZMQService service;
 	private tracerengine Tracer = null;
 
 	private ZMQService theContext = null;
@@ -28,10 +25,10 @@ public class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
 
 	protected Void doInBackground(ZMQService... params) {
 		Tracer.d(this.getClass().getSimpleName(), "Task started");
-		service = params[0];
+		ZMQService service = params[0];
 		// Prepare our context and subscriber
-		context = ZMQ.context(1);
-		sub = context.socket(ZMQ.SUB);
+		ZMQ.Context context = ZMQ.context(1);
+		ZMQ.Socket sub = context.socket(ZMQ.SUB);
 
 		SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(theContext);
 		String ip = SP.getString("MQaddress", "");    // TODO : use a R. for the default value

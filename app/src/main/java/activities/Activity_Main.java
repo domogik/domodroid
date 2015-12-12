@@ -199,8 +199,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 				String type="room";
 				int checkedid=pos;
 				historyPosition++;
-				Tracer.v(mytag+".widgetHandler", "add history "+pos+" room");
-				history.add(historyPosition,new String [] {pos+"","room"});
+				Tracer.v(mytag+".widgetHandler", "add history "+listRoom[checkedid].getId()+" room");
+				history.add(historyPosition,new String [] {listRoom[checkedid].getId()+"","room"});
 				loadWigets(listRoom[checkedid].getId(), type);
 				LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
 			}

@@ -31,7 +31,7 @@
   <string name="Ok">OK</string>
   <string name="help_Title">Domodroid</string>
   <string name="help_Text1">Domodroid бесплатное приложение для Android под лицензией GNU GPLv3 разработано Pierre Lainé\n Модифицировано Dominique DAMBRAIN</string>
-  <string name="help_Text2">Управление освещением, получение информации о температуре и влажности внутри или снаружи - все с одного крана на вашем Android устройстве. Требуется система домашней автоматизации и сервер Domogik. Domodroid предлагает Вам контроль над вашей системой домашней автоматизации Domogik с большим разнообразием поддерживаемых устройств</string>
+  <string name="help_Text2">Управление освещением, получение информации о температуре и влажности внутри или снаружи - все с одного экрана на вашем Android устройстве. Требуется система домашней автоматизации и сервер Domogik. Domodroid предлагает Вам контроль над вашей системой домашней автоматизации Domogik с большим разнообразием поддерживаемых устройств</string>
   <string name="help_Text3">Проект Domogik : http://www.domogik.org/</string>
   <string name="help_Text4">Документация Domodroid доступна: http://domodroid.readthedocs.org/en/1.4-dev/</string>
   <string name="help_Text5">Связь через:\n domogik-developers@lists.labs.libre-entreprise.org</string>
@@ -212,6 +212,16 @@
   <string name="bedroom">Спальня</string>
   <string name="garage">Гараж</string>
   <string name="office">Кабинет</string>
+  <string name="basement">Подвал</string>
+  <string name="garden">Сад</string>
+  <string name="groundfloor">Первый этаж</string>
+  <string name="firstfloor">Второй этаж</string>
+  <string name="secondfloor">Третий этаж</string>
+  <string name="groundfloor2">Первый этаж 2</string>
+  <string name="firstfloor2">Второй этаж 2</string>
+  <string name="secondfloor2">Третий этаж 2</string>
+  <string name="basement2">Подвал 2</string>
+  <string name="area">Зона</string>
   <string name="tvlounge">Зал</string>
   <string name="Map">Карта</string>
   <string name="House">Дом</string>
@@ -296,4 +306,12 @@
   <string name="get_free_space">Свободно</string>
   <string name="get_used_space">Занято</string>
   <string name="get_percent_used">Использованный процент</string>
+  <string name="sun">Вос.</string>
+  <string name="mon">Пон.</string>
+  <string name="tue">Вто.</string>
+  <string name="thu">Чет.</string>
+  <string name="wed">Сре.</string>
+  <string name="sat">Суб.</string>
+  <string name="fri">Пят.</string>
 </resources>
+

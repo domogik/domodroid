@@ -274,7 +274,9 @@
 	<string name="map_option_start">Start directly on Map view</string>
 	    								
 	<string name="info0">Tornado</string>
+	<string name="tornado">Tornado</string>
 	<string name="info1">Tropical storm</string>
+	<string name="tropical">Tropical storm</string>
 	<string name="info2">Hurricane</string>
 	<string name="info3">Severe thunderstorms</string>
 	<string name="info4">Thunderstorms</string>

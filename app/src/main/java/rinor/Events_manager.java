@@ -206,28 +206,30 @@ public class Events_manager {
 						subscriber.subscribe("device-stats".getBytes());
 						Tracer.d(mytag, "subscriber.subscribe(device-stats)");
 
-						while (!sleeping) {
-							String result = subscriber.recvStr(0);
-							Log.d(mytag, "MQ information receive: "+result);
-							if (result.contains("stored_value")) {
-								try {
-									JSONObject json_stats_04=new JSONObject(result);
-									Tracer.d(mytag, "MQ Parsing result to jsonobject");
-									//Tracer.d(mytag, json_stats_04.toString());
-									String ticket="1";
-									String device_id=json_stats_04.get("sensor_id").toString();
-									String New_Value=json_stats_04.get("stored_value").toString();
-									//TODO find a way to get the state_key of the feature by id=sensorid here!!
-									String New_Key="";
-									Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
-									put_event(to_stack);	//Put in stack, and notify cache engine
-								} catch (JSONException e) {
-									Tracer.e(mytag, "Error making the json from MQ result");
-									Tracer.e(mytag, e.toString());
+						while(alive) {
+							while (!sleeping) {
+								String result = subscriber.recvStr(0);
+								Log.d(mytag, "MQ information receive: " + result);
+								if (result.contains("stored_value")) {
+									try {
+										JSONObject json_stats_04 = new JSONObject(result);
+										Tracer.d(mytag, "MQ Parsing result to jsonobject");
+										//Tracer.d(mytag, json_stats_04.toString());
+										String ticket = "1";
+										String device_id = json_stats_04.get("sensor_id").toString();
+										String New_Value = json_stats_04.get("stored_value").toString();
+										//TODO find a way to get the state_key of the feature by id=sensorid here!!
+										String New_Key = "";
+										Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
+										put_event(to_stack);    //Put in stack, and notify cache engine
+									} catch (JSONException e) {
+										Tracer.e(mytag, "Error making the json from MQ result");
+										Tracer.e(mytag, e.toString());
+									}
 								}
-							}
-							if (subscriber.getReceiveTimeOut()==1){
-								break;
+								if (subscriber.getReceiveTimeOut() == 1) {
+									break;
+								}
 							}
 						}
 						subscriber.close();

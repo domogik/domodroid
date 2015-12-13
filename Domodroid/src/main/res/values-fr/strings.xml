@@ -377,4 +377,13 @@
     <string name="forecast_1_day">Prévision 1 jour</string>
     <string name="forecast_3_day">Prévision 3 jour</string>
     <string name="forecast_4_day">Prévision 4 jour</string>
+    <string name="humidity">Humidité</string>
+    <string name="brightness">Brillance</string>
+    <string name="motion">Mouvement</string>
+    <string name="state">Etat</string>
+    <string name="active">Actif</string>
+    <string name="inactive">Inactif</string>
+    <string name="ok">Ok</string>
+    <string name="opening_sensor">Capteur d\'ouverture</string>
+    <string name="none">Aucun</string>
 </resources>

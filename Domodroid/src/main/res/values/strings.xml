@@ -455,7 +455,7 @@
 	<string name="motion">Motion</string>
 	<string name="state">State</string>
 	<string name="set_state">Set state</string>
-	<string name="callerid">callerid</string>
+	<string name="callerid">Caller id</string>
 	<string name="error_send">Error send</string>
 	<string name="msg_status">Msg status</string>
 	<string name="send_a_message">Send a message</string>

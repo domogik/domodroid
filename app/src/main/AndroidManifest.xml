@@ -29,18 +29,18 @@
 		</activity>
 		
 		<activity android:name="activities.Activity_About" android:theme="@android:style/Theme.NoTitleBar"
-			android:configChanges="orientation"></activity>
+			android:configChanges="orientation"/>
 		<activity android:name="activities.Preference" android:theme="@android:style/Theme.NoTitleBar"
-			android:configChanges="orientation"></activity>
+			android:configChanges="orientation"/>
 		<activity android:name="activities.Activity_Cam"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-			android:configChanges="orientation"></activity>
+			android:configChanges="orientation"/>
 		<activity android:name="mq.Main"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-			android:configChanges="orientation"></activity>
+			android:configChanges="orientation"/>
 		<activity android:name="activities.Activity_Map"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-			android:configChanges="orientation"></activity>
+			android:configChanges="orientation"/>
 		 <service
             android:name="mq.ZMQService"
             class="mq.ZMQService"

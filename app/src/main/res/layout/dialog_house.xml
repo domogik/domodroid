@@ -89,7 +89,7 @@
 
 					<Spinner
 					    android:id="@+id/spin_list_area"
-					    android:layout_width="wrap_content"
+					    android:layout_width="0dp"
 					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
 
@@ -110,7 +110,7 @@
                         android:text="@string/house_add_room" />
 					<Spinner
 					    android:id="@+id/spin_list_room"
-					    android:layout_width="wrap_content"
+					    android:layout_width="0dp"
 					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>
@@ -128,7 +128,7 @@
                         android:text="@string/house_add_widget" />
 					<Spinner
 					    android:id="@+id/spin_list_feature"
-					    android:layout_width="wrap_content"
+					    android:layout_width="0dp"
 					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>
@@ -146,7 +146,7 @@
                         android:text="@string/house_add_icon" />
 					<Spinner
 					    android:id="@+id/spin_list_icon"
-					    android:layout_width="wrap_content"
+					    android:layout_width="0dp"
 					    android:layout_height="fill_parent"
 					    android:layout_weight="1" />
                </LinearLayout>

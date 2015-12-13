@@ -77,7 +77,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 	private Entity_client session = null; 
 	private Boolean realtime = false;
 
-	public Graphical_Boolean(tracerengine Trac, Activity context,
+	public Graphical_Boolean(tracerengine Trac, final Activity context,
 			String address, final String name, 
 			int id,int dev_id, 
 			String state_key, final String usage,
@@ -121,7 +121,13 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		//state
 		state=new TextView(context);
 		state.setTextColor(Color.BLACK);
-		state.setText(stateS+" : "+Value_0);
+		try {
+			Tracer.d(mytag,"Try to get value translate from R.STRING" );
+			state.setText(stateS+" : "+context.getString((Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase()))));
+		}catch (Exception e1) {
+			Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+			state.setText(stateS + " : " + Value_0);
+		}
 
 		//boolean on/off
 		bool = new ImageView(context);
@@ -147,12 +153,24 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 								//change color if statue=low to (usage, o) means off
 								//note sure if it must be kept as set previously as default color.
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-								state.setText(stateS + " : " + Value_0);
+								try {
+									Tracer.d(mytag,"Try to get value translate from R.STRING" );
+									state.setText(stateS+" : "+context.getString((Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase()))));
+								}catch (Exception e1) {
+									Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+									state.setText(stateS + " : " + Value_0);
+								}
 							} else if (status.equals(value1) || status.equals("1")) {
 								bool.setImageResource(R.drawable.boolean_on);
 								//change color if statue=high to (usage, 2) means on
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-								state.setText(stateS + " : " + Value_1);
+								try {
+									Tracer.d(mytag,"Try to get value translate from R.STRING" );
+									state.setText(stateS+" : "+context.getString((Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase()))));
+								}catch (Exception e1) {
+									Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+									state.setText(stateS + " : " + Value_1);
+								}
 							}
 						} catch (Exception e) {
 							Tracer.e(mytag, "handler error device " + name);

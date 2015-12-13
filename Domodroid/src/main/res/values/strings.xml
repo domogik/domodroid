@@ -403,5 +403,30 @@
 	<string name="wed">Wed</string>
 	<string name="sat">Sat</string>
 	<string name="fri">Fri</string>
+	<string name="forecast_0_day">Forecast 0 day</string>
+	<string name="forecast_2_condition_code">Forecast 2 condition code</string>
+	<string name="forecast_2_day">Forecast 2 day</string>
+	<string name="forecast_4_condition_code">Forecast 4 condition code</string>
+	<string name="forecast_1_day">Forecast 1 day</string>
+	<string name="forecast_3_day">Forecast 3 day</string>
+	<string name="forecast_0_condition_code">Forecast 0 condition code</string>
+	<string name="forecast_1_condition_code">Forecast 1 condition code</string>
+	<string name="forecast_3_condition_code">Forecast 3 condition code</string>
+	<string name="forecast_4_day">Forecast 4 day</string>
+	<string name="forecast_0_condition_text">Forecast 0 condition text</string>
+	<string name="forecast_1_condition_text">Forecast 1 condition text</string>
+	<string name="forecast_2_condition_text">Forecast 2 condition text</string>
+	<string name="forecast_3_condition_text">Forecast 3 condition text</string>
+	<string name="forecast_4_condition_text">Forecast 4 condition text</string>
+	<string name="forecast_4_temperature_low">Forecast 4 temperature low</string>
+	<string name="forecast_3_temperature_low">Forecast 3 temperature low</string>
+	<string name="forecast_2_temperature_low">Forecast 2 temperature low</string>
+	<string name="forecast_1_temperature_low">Forecast 1 temperature low</string>
+	<string name="forecast_0_temperature_low">Forecast 0 temperature low</string>
+	<string name="forecast_0_temperature_high">Forecast 0 temperature high</string>
+	<string name="forecast_1_temperature_high">Forecast 1 temperature high</string>
+	<string name="forecast_2_temperature_high">Forecast 2 temperature high</string>
+	<string name="forecast_3_temperature_high">Forecast 3 temperature high</string>
+	<string name="forecast_4_temperature_high">Forecast 4 temperature high</string>
 
 </resources>

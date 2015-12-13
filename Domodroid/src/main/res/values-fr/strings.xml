@@ -372,4 +372,10 @@
     <string name="wed">Mer.</string>
     <string name="sat">Sam.</string>
     <string name="fri">Ven</string>
+    <string name="forecast_0_day">Prévision 0 jour</string>
+    <string name="forecast_2_day">Prévision 2 jour</string>
+    <string name="forecast_1_day">Prévision 1 jour</string>
+    <string name="forecast_3_day">Prévision 3 jour</string>
+    <string name="forecast_4_condition_code"></string>
+    <string name="forecast_4_day">Prévision 4 jour</string>
 </resources>

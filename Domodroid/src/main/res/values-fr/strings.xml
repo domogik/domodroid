@@ -17,7 +17,6 @@
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-
     <string name="app_name">Domodroid</string>
     <string name="button1">Synchroniser</string>
     <string name="button2">Réseau</string>
@@ -34,7 +33,7 @@
     <string name="help_Text1">Domodroid : Application gratuite Android sous GNU GPLv3 Licence et développée par Pierre Lainé\n Modifiée par Dominique DAMBRAIN</string>
     <string name="help_Text2">Contrôler les éclairages, Afficher les informations de temperature ou d\'humidité, par de simples commandes sur votre terminal Android. Nécessite l\'accès à votre système domotique Domogik . Domodroid vous facilite le contrôle de votre domotique sous Domogik, avec une grande variété de dispositifs supportés</string>
     <string name="help_Text3">Projet Domogik : http://www.domogik.org/</string>
-    <string name="help_Text4">La documentation de Domodroid est disponible ici : http://domodroid.readthedocs.org/en/1.4-dev/</string>
+    <string name="help_Text4">La documentation de Domodroid est disponible ici : http://domodroid.readthedocs.org/</string>
     <string name="help_Text5">Nous contacter par liste de diffusion :\n domogik-developers@lists.labs.libre-entreprise.org</string>
     <string name="splash_title">Bienvenue dans Domodroid 1.3 !</string>
     <string name="home_splash">Cette nouvelle version de Domodroid apporte de nombreuses nouvelles fonctionnalités qui n\'ont pas toutes été testées sur les multiples versions de terminaux Android. En cas de dysfonctionnements, contacter l\'équipe de développement : http://wiki.domogik.org/Contact+and+support.</string>
@@ -139,15 +138,15 @@
     <string name="OPTION_server_IP_Title">IP ou Adresse</string>
     <string name="OPTION_server_IP_Hint">http://addresse-rinor</string>
     <string name="OPTION_server_PORT">Port du serveur Rinor Domogik</string>
-    <string name="OPTION_server_PORT_Title">Saisir le port de Domogik</string>
+    <string name="OPTION_server_PORT_Title">Saisir le port utilisé par domogik</string>
     <string name="OPTION_server_PORT_Hint">40405</string>
-    <string name="OPTION_server_Path">Chemin d\'accès</string>
-    <string name="OPTION_server_Path_Title">Définir le chemin d\'àccès</string>
+    <string name="OPTION_server_Path">Chemin d\\'accès</string>
+    <string name="OPTION_server_Path_Title">Saisir le chemin utilisé par domogik</string>
     <string name="OPTION_server_Path_Hint">/</string>
     <string name="OPTION_server_Text2">Tempo. de mise à jour données:</string>
     <string name="OPTION_server_Text3">2 Secondes</string>
-    <string name="OPTION_server_http_user">Nom d\'utilisateur</string>
-    <string name="OPTION_server_http_user_Title">Saisir un nom d\'utilisateur</string>
+    <string name="OPTION_server_http_user">Nom d\\'utilisateur</string>
+    <string name="OPTION_server_http_user_Title">Saisir un nom d\\'utilisateur</string>
     <string name="OPTION_server_http_password">Mot de passe http auth</string>
     <string name="OPTION_server_http_password_Title">Saisir le mot de passe http auth</string>
     <string name="OPTION_butler_settings">Configurer Majordome</string>
@@ -177,8 +176,8 @@
     <string name="light_stat_1">Allumé</string>
     <string name="shutter_stat_0">Fermé</string>
     <string name="shutter_stat_1">Ouvert</string>
-    <string name="close">Fermé</string>
-    <string name="open">Ouvert</string>
+    <string name="close">Ouvert</string>
+    <string name="open">Fermé</string>
     <string name="seconds">Secondes</string>
     <string name="pixels">Pixels</string>
     <string name="stats_title">Echanges avec serveur Domogik</string>
@@ -220,8 +219,6 @@
     <string name="bedroom">Chambre</string>
     <string name="garage">Garage</string>
     <string name="office">Bureau</string>
-    <string name="tvlounge">Salon TV</string>
-    <string name="usage">Par usage</string>
     <string name="basement">Sous sol</string>
     <string name="garden">Jardin</string>
     <string name="groundfloor">Rez de chaussée</string>
@@ -232,6 +229,8 @@
     <string name="secondfloor2">2ème étage 2</string>
     <string name="basement2">Sous sol 2</string>
     <string name="area">Zone</string>
+    <string name="tvlounge">Salon TV</string>
+    <string name="usage">Par usage</string>
     <string name="Map">Plans</string>
     <string name="House">Maison</string>
     <string name="statistics">Statistiques Serveur</string>
@@ -271,7 +270,7 @@
     <string name="showers">Averses</string>
     <string name="info12">Averses</string>
     <string name="info13">Averses de neige</string>
-    <string name="snow_flurries">Averses de neig</string>
+    <string name="snow_flurries">Averses de neige</string>
     <string name="info14">Faibles averses de neige</string>
     <string name="light_snow_showers">Faibles averses de neige</string>
     <string name="info15">Rafales de neige</string>
@@ -309,10 +308,12 @@
     <string name="info32">Ensoleillé</string>
     <string name="sunny">Ensoleillé</string>
     <string name="info33">Belle nuit</string>
+    <string name="fair_night">Belle nuit</string>
     <string name="info34">Belle journée</string>
+    <string name="fair_day">Belle journée</string>
     <string name="fair">Beau</string>
     <string name="info35">Pluie et grêle mêlés</string>
-    <string name="mixed_rain_and_hail">Pluie et grêle mêlés</string>
+    <string name="mixed_rain_and_hail"></string>
     <string name="info36">Chaud</string>
     <string name="hot">Chaud</string>
     <string name="info37">Orages locaux</string>
@@ -321,29 +322,33 @@
     <string name="scattered_thunderstorms">Orages épars</string>
     <string name="info39">Orages épars</string>
     <string name="info40">Averses éparses</string>
-    <string name="scattered_showers">Averses éparses</string>
+    <string name="scattered_showers">Orages épars</string>
     <string name="info41">Fortes chutes de neige</string>
     <string name="heavy_Snow">Fortes chutes de neige</string>
     <string name="info42">Averses de neige éparses</string>
+    <string name="scattered_snow_showers">Averses de neige éparses</string>
     <string name="info43">Fortes chutes de neige</string>
     <string name="heavy_snow">Fortes chutes de neige</string>
     <string name="info44">Partiellement couvert</string>
     <string name="party_cloudy">Partiellement couvert</string>
     <string name="info45">Pluies d\'orage</string>
-    <string name="thundershowers">Pluies d\'orage</string>
+    <string name="thundershowers">Pluies d\\'orage</string>
     <string name="info46">Averses de neige</string>
     <string name="snow_showers">Averses de neige</string>
     <string name="info47">Pluies d\'orages locales</string>
-    <string name="isolated_thundershower">Pluies d\'orages locales</string>
+    <string name="isolated_thundershower">Pluies d\\'orages locales</string>
     <string name="info3200">Non disponible</string>
+    <string name="not_available">Non disponible</string>
     <string name="info48">--</string>
     <string name="butler">Majordome</string>
     <string name="action_settings">Paramètres</string>
     <string name="title_activity_main">Domogik Majordome</string>
+    <string name="title_activity_home">Activité principale</string>
     <string name="title_activity_settings">Paramètres</string>
     <string name="pref_header_mq">MQ</string>
     <string name="butler_default_name">Majordome</string>
     <string name="you_default_name">Vous</string>
+    <string name="changelog_full_title">Révision</string>
     <string name="changelog_title">Quoi de nouveau</string>
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">plus...</string>
@@ -352,7 +357,19 @@
     <string name="present">Présent</string>
     <string name="activated">Activé</string>
     <string name="ping">Ping</string>
-    <string name="free_space">Espace Libre</string>
-    <string name="used_space">Espace Occupé</string>
-
+    <string name="total_space">Espace total</string>
+    <string name="free_space">Espace libre</string>
+    <string name="used_space">Espace occupé</string>
+    <string name="percent_used">Pourcentage occupé</string>
+    <string name="get_total_space">Espace total</string>
+    <string name="get_free_space">Espace libre</string>
+    <string name="get_used_space">Espace occupé</string>
+    <string name="get_percent_used">Pourcentage occupé</string>
+    <string name="sun">Dim.</string>
+    <string name="mon">Lun.</string>
+    <string name="tue">Mar</string>
+    <string name="thu">Jeu.</string>
+    <string name="wed">Mer.</string>
+    <string name="sat">Sam.</string>
+    <string name="fri">Ven</string>
 </resources>

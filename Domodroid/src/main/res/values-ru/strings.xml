@@ -54,7 +54,7 @@
   <string name="map_button2c">Переместить виджеты</string>
   <string name="map_nothing">Нет загруженных карт, нажмите \"Помощь\"</string>
   <string name="map_button3">Помощь</string>
-  <string name="map_help_text">Папка \"domodroid\" должна быть создана в корне внешнего устройства хранения (или внутреннего для некоторых устройств). Карта должна быть помещена в эту папку, иметь формат PNG или SVG и созданна в Illustrator (basic shapes supported).</string>
+  <string name="map_help_text">Папка \"domodroid\" должна быть создана в корне внешнего устройства хранения ( для некоторых устройств внутреннего). Карта должна быть помещена в эту папку, иметь формат PNG или SVG и создана в Illustrator (basic shapes supported).</string>
   <string name="map_move_text1">Выберите виджет, он исчезнет. Затем коснитесь где вы хотите поместить его снова.</string>
   <string name="map_move_text2">Выбрать виджет и заменить</string>
   <string name="map_moveTitle">Переместить виджет</string>
@@ -166,6 +166,7 @@
   <string name="house_add_room">Добавить комнату</string>
   <string name="house_add_widget">Добавить виджет</string>
   <string name="house_add_icon">Выберите значок</string>
+  <string name="State">Состояние:</string>
   <string name="light_stat_0">Выкл.</string>
   <string name="light_stat_1">Вкл.</string>
   <string name="shutter_stat_0">Закр.</string>
@@ -196,7 +197,7 @@
   <string name="camera">Камера</string>
   <string name="security_camera">Камера наблюдения</string>
   <string name="server">Сервер</string>
-  <string name="socket">Socket</string>
+  <string name="socket">Розетка</string>
   <string name="shutter">Ролеты</string>
   <string name="telephony">Телефония</string>
   <string name="temperature">Температура</string>
@@ -211,6 +212,7 @@
   <string name="bedroom">Спальня</string>
   <string name="garage">Гараж</string>
   <string name="office">Кабинет</string>
+  <string name="tvlounge">Зал</string>
   <string name="Map">Карта</string>
   <string name="House">Дом</string>
   <string name="statistics">Статистика сервера</string>
@@ -219,6 +221,7 @@
   <string name="init_in_process">Инициализация в процессе ....</string>
   <string name="please_wait">Пож. подождите....</string>
   <string name="loading_cache">Загрузка кеша с сервера Domogik ....</string>
+  <string name="go_Main">Показать главный экран</string>
   <string name="go_to_Map">Перейти к карте</string>
   <string name="map_option_start">Старт в режиме карты.</string>
   <string name="info0">Торнадо</string>
@@ -273,6 +276,7 @@
   <string name="info48">--</string>
   <string name="butler">Дворецкий</string>
   <string name="action_settings">Настройки</string>
+  <string name="title_activity_main">Дворецкий Domogik</string>
   <string name="title_activity_settings">Настройки</string>
   <string name="pref_header_mq">MQ</string>
   <string name="butler_default_name">Дворецкий</string>
@@ -283,4 +287,13 @@
   <string name="changelog_show_full">больше...</string>
   <string name="background_color">черный</string>
   <string name="command">Команда</string>
+  <string name="ping">Ping</string>
+  <string name="total_space">Общий объем</string>
+  <string name="free_space">Свободно</string>
+  <string name="used_space">Занято</string>
+  <string name="percent_used">Использованный процент</string>
+  <string name="get_total_space">Общий объем</string>
+  <string name="get_free_space">Свободно</string>
+  <string name="get_used_space">Занято</string>
+  <string name="get_percent_used">Использованный процент</string>
 </resources>

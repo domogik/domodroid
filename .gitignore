@@ -1,12 +1,12 @@
 *.iml
 *.iws
 *.ipr
-.idea/
-.gradle/
+.idea/*
+.gradle/*
 /.idea
 local.properties
 
-*/build/
+/build/*
 
 *~
 *.swp

@@ -17,46 +17,32 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import rinor.Rest_com;
-import database.DmdContentProvider;
 import database.JSONParser;
 import database.WidgetUpdate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import activities.Gradients_Manager;
+
 import activities.Graphics_Manager;
 import org.domogik.domodroid13.R;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import misc.List_Icon_Adapter;
+
 import misc.tracerengine;
-import android.view.Gravity;
+
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.View.OnLongClickListener;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +83,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
 
 	public Graphical_Binary(tracerengine Trac, 
-			Activity context, String address, final String name, int id,int dev_id,String state_key, String url, String usage, 
+			final Activity context, String address, final String name, int id,int dev_id,String state_key, String url, String usage,
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
@@ -202,10 +188,22 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 						Bundle b = msg.getData();
 						if(( b != null) && (b.getString("message") != null)) {
 							if (b.getString("message").equals(value0)){
-								state.setText(stateS+" : "+Value_0);
+								try {
+									Tracer.d(mytag,"Try to get value translate from R.STRING" );
+									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
+								}catch (Exception e1) {
+									Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+									state.setText(stateS + " : " + Value_0);
+								}
 								new SBAnim(seekBarOnOff.getProgress(),0).execute();
 							}else if(b.getString("message").equals(value1)){
-								state.setText(stateS+" : "+Value_1);
+								try {
+									Tracer.d(mytag,"Try to get value translate from R.STRING" );
+									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
+								}catch (Exception e1) {
+									Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+									state.setText(stateS+" : "+Value_1);
+								}
 								new SBAnim(seekBarOnOff.getProgress(),40).execute();
 							}
 							state.setAnimation(animation);
@@ -219,13 +217,31 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 								String new_val = session.getValue();
 								Tracer.d(mytag,"Handler receives a new value <"+new_val+">" );
 								if(new_val.equals(value0)) {
-									state.setText(stateS+" : "+Value_0);
+									try {
+										Tracer.d(mytag,"Try to get value translate from R.STRING" );
+										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
+									}catch (Exception e1) {
+										Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+										state.setText(stateS + " : " + Value_0);
+									}
 									new SBAnim(seekBarOnOff.getProgress(),0).execute();
 								}else if(new_val.equals(value1)){
-									state.setText(stateS+" : "+Value_1);
+									try {
+										Tracer.d(mytag,"Try to get value translate from R.STRING" );
+										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
+									}catch (Exception e1) {
+										Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+										state.setText(stateS+" : "+Value_1);
+									}
 									new SBAnim(seekBarOnOff.getProgress(),40).execute();
 								} else {
-									state.setText(stateS+new_val);
+									try {
+										Tracer.d(mytag,"Try to get value translate from R.STRING" );
+										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),new_val.toLowerCase())));
+									}catch (Exception e1) {
+										Tracer.d(mytag,"Nothing in R.STRING for "+new_val);
+										state.setText(stateS+" : "+new_val);
+									}
 									new SBAnim(seekBarOnOff.getProgress(),0).execute();
 								}
 							} else if(msg.what == 9998) {
@@ -281,11 +297,23 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		switch(progress) {
 		case 0:
 			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-			state.setText(stateS+" : "+Value_0);
+			try {
+				Tracer.d(mytag,"Try to get value translate from R.STRING" );
+				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
+			}catch (Exception e1) {
+				Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+				state.setText(stateS + " : " + Value_0);
+			}
 			break;
 		case 40:
 			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-			state.setText(stateS+" : "+Value_1);
+			try {
+				Tracer.d(mytag,"Try to get value translate from R.STRING" );
+				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
+			}catch (Exception e1) {
+				Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+				state.setText(stateS+" : "+Value_1);
+			}
 			break;
 		}
 	}
@@ -312,11 +340,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 			}
 			arg0.setProgress(40);
 		}
-		new CommandeThread().execute();
+		new CommandThread().execute();
 		touching=false;
 	}
 
-	private class CommandeThread extends AsyncTask<Void, Integer, Void>{
+	private class CommandThread extends AsyncTask<Void, Integer, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {

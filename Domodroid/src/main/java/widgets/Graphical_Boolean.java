@@ -123,7 +123,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 		state.setTextColor(Color.BLACK);
 		try {
 			Tracer.d(mytag,"Try to get value translate from R.STRING" );
-			state.setText(stateS+" : "+context.getString((Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase()))));
+			state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
 		}catch (Exception e1) {
 			Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
 			state.setText(stateS + " : " + Value_0);
@@ -155,7 +155,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								try {
 									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString((Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase()))));
+									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
 								}catch (Exception e1) {
 									Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
 									state.setText(stateS + " : " + Value_0);
@@ -166,7 +166,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 								try {
 									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString((Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase()))));
+									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
 								}catch (Exception e1) {
 									Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
 									state.setText(stateS + " : " + Value_1);

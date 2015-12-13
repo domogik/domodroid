@@ -103,7 +103,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
 
 	public Graphical_Binary_New(tracerengine Trac, 
-			Activity context, String address, String name, int id,int dev_id,String state_key, String url, final String usage, 
+			final Activity context, String address, String name, int id,int dev_id,String state_key, String url, final String usage,
 			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) {
 		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
 		this.Tracer = Trac;
@@ -177,7 +177,13 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		ON.setHeight(pixels);
 		//ON.setWidth(60);
 		ON.setTag("ON");
-		ON.setText(this.Value_1);
+		try {
+			Tracer.d(mytag,"Try to get value translate from R.STRING" );
+			ON.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(),this.Value_1.toLowerCase())));
+		}catch (Exception e1) {
+			Tracer.d(mytag,"Nothing in R.STRING for "+this.Value_1);
+			ON.setText(this.Value_1);
+		}
 		ON.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
 		//ON.setBackgroundResource(R.drawable.boolean_on);
 		//ON.setPadding(10, 0, 10, 0);
@@ -187,9 +193,15 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 		OFF.setTag("OFF");
 		OFF.setHeight(pixels);
 		//OFF.setWidth(60);
-		OFF.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
+		OFF.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
 		//OFF.setBackgroundResource(R.drawable.boolean_off);
-		OFF.setText(this.Value_0); 
+		try {
+			Tracer.d(mytag,"Try to get value translate from R.STRING" );
+			OFF.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(),this.Value_0.toLowerCase())));
+		}catch (Exception e1) {
+			Tracer.d(mytag,"Nothing in R.STRING for "+this.Value_0);
+			OFF.setText(this.Value_0);
+		}
 		//OFF.setPadding(0,10,0,10);
 
 		super.LL_featurePan.addView(ON);
@@ -220,11 +232,23 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 						if(( b != null) && (b.getString("message") != null)) {
 							if (b.getString("message").equals(value0)){
 								//state.setText(stateS+value0);
-								state.setText(stateS+" : "+Value_0);
+								try {
+									Tracer.d(mytag,"Try to get value translate from R.STRING" );
+									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
+								}catch (Exception e1) {
+									Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+									state.setText(stateS + " : " + Value_0);
+								}
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 							}else if(b.getString("message").equals(value1)){
 								//state.setText(stateS+value1);
-								state.setText(stateS+" : "+Value_1);
+								try {
+									Tracer.d(mytag,"Try to get value translate from R.STRING" );
+									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
+								}catch (Exception e1) {
+									Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+									state.setText(stateS+" : "+Value_1);
+								}
 								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 							}
 							state.setAnimation(animation);
@@ -238,13 +262,31 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 								String new_val = session.getValue();
 								Tracer.d(mytag,"Handler receives a new value <"+new_val+">" );
 								if(new_val.equals(value0)) {
-									state.setText(stateS+" : "+Value_0);
+									try {
+										Tracer.d(mytag,"Try to get value translate from R.STRING" );
+										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
+									}catch (Exception e1) {
+										Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+										state.setText(stateS + " : " + Value_0);
+									}
 									IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
 								}else if(new_val.equals(value1)){
-									state.setText(stateS+" : "+Value_1);
+									try {
+										Tracer.d(mytag,"Try to get value translate from R.STRING" );
+										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
+									}catch (Exception e1) {
+										Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+										state.setText(stateS+" : "+Value_1);
+									}
 									IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 								} else {
-									state.setText(stateS+" : "+new_val);
+									try {
+										Tracer.d(mytag,"Try to get value translate from R.STRING" );
+										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),new_val.toLowerCase())));
+									}catch (Exception e1) {
+										Tracer.d(mytag,"Nothing in R.STRING for "+new_val);
+										state.setText(stateS+" : "+new_val);
+									}
 								}
 							} else if(msg.what == 9998) {
 								// state_engine send us a signal to notify it'll die !
@@ -297,7 +339,13 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 	public void onClick(View v) {
 		if(v.getTag().equals("OFF")) {
 			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-			state.setText(stateS+" : "+Value_0);
+			try {
+				Tracer.d(mytag,"Try to get value translate from R.STRING" );
+				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
+			}catch (Exception e1) {
+				Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+				state.setText(stateS + " : " + Value_0);
+			}
 			if(api_version>=0.7f){
 				state_progress = "0";
 			}else{
@@ -305,7 +353,13 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 			}
 		} else if(v.getTag().equals("ON")) {
 			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-			state.setText(stateS+" : "+Value_1);
+			try {
+				Tracer.d(mytag,"Try to get value translate from R.STRING" );
+				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
+			}catch (Exception e1) {
+				Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+				state.setText(stateS+" : "+Value_1);
+			}
 			if(api_version>=0.7f){
 				state_progress = "1";
 			}else{

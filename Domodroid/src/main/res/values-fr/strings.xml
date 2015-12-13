@@ -140,13 +140,13 @@
     <string name="OPTION_server_PORT">Port du serveur Rinor Domogik</string>
     <string name="OPTION_server_PORT_Title">Saisir le port utilisé par domogik</string>
     <string name="OPTION_server_PORT_Hint">40405</string>
-    <string name="OPTION_server_Path">Chemin d\\'accès</string>
+    <string name="OPTION_server_Path">Chemin d\'accès</string>
     <string name="OPTION_server_Path_Title">Saisir le chemin utilisé par domogik</string>
     <string name="OPTION_server_Path_Hint">/</string>
     <string name="OPTION_server_Text2">Tempo. de mise à jour données:</string>
     <string name="OPTION_server_Text3">2 Secondes</string>
-    <string name="OPTION_server_http_user">Nom d\\'utilisateur</string>
-    <string name="OPTION_server_http_user_Title">Saisir un nom d\\'utilisateur</string>
+    <string name="OPTION_server_http_user">Nom d\'utilisateur</string>
+    <string name="OPTION_server_http_user_Title">Saisir un nom d\'utilisateur</string>
     <string name="OPTION_server_http_password">Mot de passe http auth</string>
     <string name="OPTION_server_http_password_Title">Saisir le mot de passe http auth</string>
     <string name="OPTION_butler_settings">Configurer Majordome</string>

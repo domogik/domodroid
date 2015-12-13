@@ -467,10 +467,19 @@
 	<string name="ctrl_status">Ctrl status</string>
 	<string name="switch_state">Switch state</string>
 	<string name="power_failure">Power failure</string>
-	<string name="switch_on-off">Switch On-Off</string>
+	<string name="switch_on_off">Switch On-Off</string>
 	<string name="tamper_event">Tamper event</string>
 	<string name="low_battery">Low battery</string>
 	<string name="power_applied">Power applied</string>
 	<string name="opening_sensor">Opening sensor</string>
+	<string name="none">None</string>
+	<string name="on">On</string>
+	<string name="off">Off</string>
+	<string name="low">Low</string>
+	<string name="fog">Fog</string>
+	<string name="inactive">Inactive</string>
+	<string name="active">Active</string>
+	<string name="sms_sended">SMS sended</string>
+	<string name="ok">Ok</string>
 
 </resources>

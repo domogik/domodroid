@@ -176,8 +176,8 @@
     <string name="light_stat_1">Allumé</string>
     <string name="shutter_stat_0">Fermé</string>
     <string name="shutter_stat_1">Ouvert</string>
-    <string name="close">Ouvert</string>
-    <string name="open">Fermé</string>
+    <string name="close">Fermé</string>
+    <string name="open">Ouvert</string>
     <string name="seconds">Secondes</string>
     <string name="pixels">Pixels</string>
     <string name="stats_title">Echanges avec serveur Domogik</string>

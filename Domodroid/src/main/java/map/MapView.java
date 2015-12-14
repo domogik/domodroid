@@ -1127,7 +1127,7 @@ public class MapView extends View {
 					boolean widgetActiv=false;
 					//Switch if it's a map
 					for (Entity_Map switchesMap : listMapSwitches) {
-						//TODO correct +20 by dip
+						//Correct +20 by dip
 						if((int)((event.getX()-value[2])/currentScale)>switchesMap.getPosx()-dip20 && (int)((event.getX()-value[2])/currentScale)<switchesMap.getPosx()+dip20 && 
 								(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-dip20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+dip20){
 							//That seems to be this switch map widget clicked !
@@ -1150,7 +1150,7 @@ public class MapView extends View {
 					widgetActiv=false;
 					//get widgets
 					for (Entity_Map featureMap : listFeatureMap) {
-						//TODO correct +20 by dip
+						//Correct +20 by dip
 						if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-dip20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+dip20 && 
 								(int)((event.getY()-value[5])/currentScale)>featureMap.getPosy()-dip20 && (int)((event.getY()-value[5])/currentScale)<featureMap.getPosy()+dip20){
 							//Launch directly the command
@@ -1273,6 +1273,7 @@ public class MapView extends View {
 				Builder list_type_choice = new Builder(getContext());
 				List<String> list_choice = new ArrayList<String>();
 				//TODO translate his menu
+				//be careful this value is used by do_action
 				list_choice.add("Add");
 				//TODO remove entry if not on a widget
 				list_choice.add("Move");
@@ -1299,7 +1300,6 @@ public class MapView extends View {
 		}   
 	};
 
-	@SuppressWarnings("RedundantStringToString")
 	private void do_action(String action,MotionEvent event, float[] value) {
 		if(action.equals("Change icon")) {
 			Tracer.d(mytag, "Change icon");

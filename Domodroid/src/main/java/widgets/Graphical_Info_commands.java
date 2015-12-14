@@ -163,9 +163,8 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 		value.setMaxWidth((int) (size70));
 
 		Button button_send = new Button(context);
-		//TODO translation
 		button_send.setMinWidth((int) (size60));
-		button_send.setText("Send");
+		button_send.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(), "send")));
 		button_send.setOnClickListener(new OnClickListener() {
 										   public void onClick(View v) {
 											   new CommandeThread().execute();

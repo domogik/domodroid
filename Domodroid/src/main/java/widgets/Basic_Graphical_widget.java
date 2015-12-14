@@ -197,7 +197,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 					Tracer.get_engine().remove_one_feature_association(id,place_id,place_type);
 					//recheck cache element to remove those no more need.
 					Cache_management.checkcache(Tracer,context);
-					//TODO refresh the view
+					//Refresh the view
 					if(container != null) {
 						removeView(myself);
 						removeAllViews();

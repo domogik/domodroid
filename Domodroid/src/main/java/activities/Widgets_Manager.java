@@ -355,7 +355,7 @@ public class Widgets_Manager {
 		int size = listArea.length;
 		Entity_Area area;
 
-		//TODO iprove navigation drawer
+		//TODO improve navigation drawer
 		Activity_Main.Navigation_drawer_ItemsList=new ArrayList<HashMap<String,String>>();
 
 

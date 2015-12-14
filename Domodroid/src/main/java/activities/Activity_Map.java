@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 import database.WidgetUpdate;
@@ -245,8 +246,6 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		startCacheEngine();		//Get reference to WidgetUpdate engine
 		//When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
 
-		//TODO solve #66 here.
-		//get feature list
 		listFeature = widgetUpdate.requestFeatures();
 
 		//listview feature
@@ -533,8 +532,9 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 							Tracer.i(mytag, "new fileName: "+renamefileName);
 							destFile= new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension);
 							if(destFile.exists()) {
-								//TODO need improvement if the new "file+1" also exists!
-								new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"1."+extension));
+								//Need improvement if the new "file+random" also exists!
+								Random randomInt = new Random();
+								new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+(randomInt.nextInt(100))+"."+extension));
 							}else{
 								new File (Environment.getExternalStorageDirectory()+"/domodroid/"+fileName).renameTo(new File (Environment.getExternalStorageDirectory()+"/domodroid/"+renamefileName+"."+extension));
 							}

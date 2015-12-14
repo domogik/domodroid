@@ -483,5 +483,5 @@
 	<string name="ok">Ok</string>
 	<string name="sensor_script_info_binary">Sensor script info binary</string>
 	<string name="sensor_script_info_number">Sensor script info number</string>
-
+	<string name="send">Send</string>
 </resources>

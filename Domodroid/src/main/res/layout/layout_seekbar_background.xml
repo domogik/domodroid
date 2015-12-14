@@ -20,9 +20,7 @@
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle" 
-    android:useLevel="false" >
-    <corners 
-       android:radius="4dip" />
-    <solid
-       android:color="#FF282828" />
+    android:useLevel="false"
+    android:layout_height="0dp"
+    android:layout_width="0dp">
 </shape>

@@ -91,9 +91,7 @@ public class Entity_client{
 	public String getskey() {
 		return skey;
 	}
-	public String getValue() {
-		return currentState;
-	}
+	public String getValue() {	return currentState; }
 	public String getName() {
 		return client_name;
 	}

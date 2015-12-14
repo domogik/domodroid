@@ -43,7 +43,6 @@
 			android:configChanges="orientation"/>
 		 <service
             android:name="mq.ZMQService"
-            class="mq.ZMQService"
             android:exported="false"
             android:process=":zmq_service" >
         </service>

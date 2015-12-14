@@ -94,7 +94,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private SharedPreferences SP_params;
 	private SharedPreferences.Editor SP_prefEditor;
 	private AlertDialog.Builder AD_notSyncAlert;
-	private Toast T_starting;
+	//private Toast T_starting;
 	private Widgets_Manager WM_Agent;
 	private Dialog_Synchronize DIALOG_dialog_sync;
 	private WidgetUpdate WU_widgetUpdate;
@@ -103,8 +103,8 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Intent INTENT_map = null;
 	private ImageView appname;
 
-	private int dayOffset = 1;
-	private int secondeOffset = 5;
+	//private int dayOffset = 1;
+	//private int secondeOffset = 5;
 	private ViewGroup VG_parent;
 	private Vector<String[]> history;
 	private int historyPosition;
@@ -113,28 +113,28 @@ public class Activity_Main extends Activity implements OnClickListener{
 	private Basic_Graphical_zone map;
 
 	private Boolean reload = false;
-	DialogInterface.OnClickListener reload_listener = null;
+	//DialogInterface.OnClickListener reload_listener = null;
 	private DialogInterface.OnDismissListener sync_listener = null;
 	private DialogInterface.OnDismissListener house_listener = null;
 
 	private static Boolean by_usage = false;
 	private Boolean init_done = false;
 	private final File backupprefs = new File(Environment.getExternalStorageDirectory()+"/domodroid/.conf/settings");
-	private Boolean dont_freeze = false;
+	//private Boolean dont_freeze = false;
 	private final Thread waiting_thread = null;
 	private Activity_Main myself = null;
 	private tracerengine Tracer = null;
-	private String tracer_state = "false";
-	private Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
+	//private String tracer_state = "false";
+	//private Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
 	//private AlertDialog.Builder AD_dialog_message;
 	private ProgressDialog PG_dialog_message;
-	private Boolean cache_ready = false;
+	//private Boolean cache_ready = false;
 	private Boolean end_of_init_requested = true;
 	private final String mytag="Activity_Main";
-	private Menu menu;
+	//private Menu menu;
 	public static ArrayList<HashMap<String,String>> Navigation_drawer_ItemsList;
 	private static ListView LV_My_Navigation_Drawer;
-	public static CharSequence[]  char_list;
+	//public static CharSequence[]  char_list;
 	private Entity_Room[] listRoom;
 
 	/** Called when the activity is first created. */
@@ -284,7 +284,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 						if(WU_widgetUpdate != null) {
 							WU_widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
 							//widgetUpdate.dump_cache();	//For debug
-							dont_kill = true;	// to avoid engines kill when onDestroy()
+							//dont_kill = true;	// to avoid engines kill when onDestroy()
 						}
 						onResume();
 					} else {
@@ -322,7 +322,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 					//Cache engine is ready for use....
 					if(Tracer != null)
 						Tracer.i(mytag,"Cache engine has notified it's ready !");
-					cache_ready=true;
+					//cache_ready=true;
 					if(end_of_init_requested)
 						end_of_init();
 					PG_dialog_message.dismiss();
@@ -388,7 +388,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 					if(WU_widgetUpdate != null) {
 						WU_widgetUpdate.Disconnect(0);	//That should disconnect all opened widgets from cache engine
 						//widgetUpdate.dump_cache();	//For debug
-						dont_kill = true;	// to avoid engines kill when onDestroy()
+						//dont_kill = true;	// to avoid engines kill when onDestroy()
 					}
 					INTENT_map = new Intent(Activity_Main.this,Activity_Map.class);
 					Tracer.i(mytag,"Call to Map, run it now !");
@@ -478,7 +478,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			Tracer.v(mytag+".onResume","Init not done!");
 			if(SP_params.getBoolean("SPLASH", false)){
 				Tracer.v(mytag+".onResume","params Splash is false !");
-				cache_ready = false;
+				//cache_ready = false;
 				//try to solve 1rst launch and orientation problem
 				Tracer.v(mytag+".onresume","Init not done! and params Splash is false startCacheengine!");
 				//startCacheEngine();
@@ -543,11 +543,13 @@ public class Activity_Main extends Activity implements OnClickListener{
 		PG_dialog_message.setTitle(getText(R.string.please_wait));
 	}
 
+	/*
 	public void force_DB_update() {
 		if(WU_widgetUpdate != null) {
 			WU_widgetUpdate.refreshNow();
 		}
 	}
+	*/
 
 	private void createAlert() {
 		AD_notSyncAlert = new AlertDialog.Builder(this);
@@ -611,12 +613,14 @@ public class Activity_Main extends Activity implements OnClickListener{
 			WM_Agent=new Widgets_Manager(Tracer, widgetHandler);
 			WM_Agent.widgetupdate = WU_widgetUpdate;
 		}
+		/*
 		if(T_starting != null) {
 			T_starting.cancel();
 			T_starting.setText("Creating widgets....");
 			T_starting.setDuration(Toast.LENGTH_SHORT);
 			T_starting.show();
 		}
+		*/
 		init_done = true;
 
 		if((SP_params.getBoolean("START_ON_MAP", false) && ( ! Tracer.force_Main) ) ) {
@@ -638,7 +642,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			history.add(historyPosition,new String [] {"0","root"});
 		}
 		init_done = true;
-		dont_kill = false;	//By default, the onDestroy activity will also kill engines
+		//dont_kill = false;	//By default, the onDestroy activity will also kill engines
 	}
 
 	/*
@@ -809,7 +813,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 	}
 
 	public void onClick(View v) {
-		dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
+		//dont_freeze = false;		// By default, onPause() will stop WidgetUpdate engine...
 		//ALL other that are not explicitly used
 		if(v.getTag().equals("reload_cancel")) {
 			Tracer.v(mytag,"Choosing no reload settings");
@@ -887,7 +891,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			if (!(WU_widgetUpdate == null)) {
 				WU_widgetUpdate.Disconnect(0);	//Disconnect all widgets owned by Main
 			}
-			dont_kill = false;		//To force OnDestroy() to also kill engines
+			//dont_kill = false;		//To force OnDestroy() to also kill engines
 			//And stop main program
 			this.finish();
 			return true;
@@ -906,7 +910,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			return true;
 
 		case R.id.menu_about:
-			dont_freeze=true;		//To avoid WidgetUpdate engine freeze
+			//dont_freeze=true;		//To avoid WidgetUpdate engine freeze
 			Intent helpI1 = new Intent(Activity_Main.this,Activity_About.class);
 			startActivity(helpI1);
 			return true;
@@ -947,6 +951,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 		return super.onKeyDown(keyCode, event);
 	}
 
+	/*
 	private class SBAnim extends AsyncTask<Void, Void, Void>{
 
 		@Override
@@ -967,6 +972,7 @@ public class Activity_Main extends Activity implements OnClickListener{
 			return null;
 		}
 	}
+	*/
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)

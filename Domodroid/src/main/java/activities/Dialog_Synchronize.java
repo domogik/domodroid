@@ -67,36 +67,36 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 						dismiss();
 						return;
 					}else if(loc_Value.equals("conn_error")) {
-						message.setText("Rinor connection error. Check your configuration");
+						message.setText(R.string.sync_rinor_error);
 						return;
 					}else if(loc_Value.equals("2_area")) {
-						message.setText("Domogik 2 can't load /base/area/list/");
+						message.setText(R.string.sync_2_error_area);
 						return;
 					}else if(loc_Value.equals("2_room")) {
-						message.setText("Domogik 2 can't load /base/room/list/");
+						message.setText(R.string.sync_2_error_room);
 						return;
 					}else if(loc_Value.equals("2_feature")) {
-						message.setText("Domogik 2 can't load base/feature/list");
+						message.setText(R.string.sync_2_error_feature);
 						return;
 					}else if(loc_Value.equals("2_feature_association")) {
-						message.setText("Domogik 2 can't load base/feature_association/list");
+						message.setText(R.string.sync_2_error_feature);
 						return;
 					}else if(loc_Value.equals("2_ui_config")) {
-						message.setText("Domogik 2 can't load base/ui_config/list");
+						message.setText(R.string.sync_2_error_ui);
 						return;
 					}else if(loc_Value.equals("3_feature")) {
-						message.setText("Domogik 3 can't load base/feature/list");
+						message.setText(R.string.sync_3_error_feature);
 						return;
 					}else if(loc_Value.equals("device")) {
-						message.setText("Domogik 4 can't load device json. Check your configuration");
+						message.setText(R.string.sync_4_error_device);
 						return;
 					}else if(loc_Value.equals("datatype")) {
-						message.setText("Domogik 4 can't load datatype json. Check your configuration");
+						message.setText(R.string.sync_4_error_datatype);
 						return;
 					}
 
 				} catch (Exception e) {}
-				message.setText("Connection error");
+				message.setText(R.string.connection_error);
 
 			}
 		};		
@@ -144,7 +144,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 		@Override
 		protected void onPreExecute() {
-			message.setText("Loading Configuration... 0%");
+			message.setText(R.string.sync_0);
 			super.onPreExecute();
 		}
 
@@ -159,7 +159,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-			message.setText("Loading Configuration... "+values[0]+"%");
+			message.setText(R.string.sync_load+" "+values[0]+"%");
 			super.onProgressUpdate(values);
 		}
 

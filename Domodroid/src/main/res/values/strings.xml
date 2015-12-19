@@ -488,4 +488,16 @@
 	<string name="frame_rate_default">Frame Rate: 0 Fps</string>
 	<string name="frame_rate">Frame Rate</string>
 	<string name="fps">Fps</string>
+	<string name="sync_rinor_error">Rinor connection error. Check your configuration</string>
+	<string name="sync_2_error_area">Domogik 2 can\'t load /base/area/list/</string>
+	<string name="sync_2_error_room">Domogik 2 can\'t load /base/room/list/</string>
+	<string name="sync_2_error_feature">Domogik 2 can\'t load base/feature/list</string>
+	<string name="sync_2_error_assoc">Domogik 2 can\'t load base/feature_association/list</string>
+	<string name="sync_2_error_ui">Domogik 2 can\'t load base/ui_config/list</string>
+	<string name="sync_3_error_feature">Domogik 3 can\'t load base/feature/list</string>
+	<string name="sync_4_error_device">Domogik 4 can\'t load device json. Check your configuration</string>
+	<string name="sync_4_error_datatype">"Domogik 4 can\'t load datatype json. Check your configuration"</string>
+	<string name="connection_error">Connection error</string>
+	<string name="sync_0">Loading Configuration... 0%</string>
+	<string name="sync_load">Loading Configuration...</string>
 </resources>

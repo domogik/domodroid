@@ -114,7 +114,7 @@ public class Activity_Map extends Activity implements OnPanelListener,OnClickLis
 		params = PreferenceManager.getDefaultSharedPreferences(this);
 
 		Tracer = tracerengine.getInstance(params,this);
-		//prefEditor=params.edit();
+		prefEditor=params.edit();
 		mapView = new MapView(Tracer, this, params);
 		mapView.setParams(params);
 		mapView.setUpdate(params.getInt("UPDATE_TIMER",300));

@@ -61,7 +61,8 @@
 	    android:layout_height="32dp"
 	    android:ems="10"
 	    android:gravity="center"
-	    android:textSize="6sp" >
+	    android:textSize="6sp"
+		android:inputType="text">
 	   
 	</EditText>
 	

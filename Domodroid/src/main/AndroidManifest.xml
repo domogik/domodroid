@@ -10,6 +10,7 @@
 	
     <uses-sdk
         android:minSdkVersion="8"
+		android:targetSdkVersion="21"
         />
     <supports-screens android:normalScreens="true" android:anyDensity="true" android:resizeable="true"  android:largeScreens="true" android:smallScreens="true"/>
     

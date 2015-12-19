@@ -406,8 +406,8 @@ public class DmdContentProvider extends ContentProvider {
 			}
 			break;
 		case UPDATE_ICON_NAME:
+			Cursor cursor=null;
 			try{
-				Cursor cursor=null;
 				cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_icon WHERE reference="+values.getAsString("reference")+" AND name='"+values.getAsString("name")+"'",null);
 				if (cursor == null || !cursor.moveToFirst()) {
 					mDB.getWritableDatabase().insert("table_icon", null, values);
@@ -419,12 +419,12 @@ public class DmdContentProvider extends ContentProvider {
 			catch (SQLException e) {
 				Tracer.e(mytag, "Error modifiying the description of icon: "+e.toString());
 			}
+			cursor.close();
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI= "+uri);
 		}
 		getContext().getContentResolver().notifyChange(uri, null);
-
 		return Uri.parse(DOMODROID_BASE_PATH + "/" + id);
 	}
 

@@ -45,7 +45,8 @@
 	<string name="home_reload">Click \"Yes\" if you wish to reload it,\nor    \"No\" to start with a new setting\n        WARNING : maps will be lost  !</string>
 	<string name="reloadOK">Yes</string>
 	<string name="reloadNO">No</string>
-	
+
+	<string name="warning">Warning !</string>
 	<string name="not_sync">Domodroid isn\'t synchronized with a server !</string>
 	<string name="syncing">Synchronization</string>
 	
@@ -518,4 +519,12 @@
 	<string name="run">Run</string>
 	<string name="level">Level</string>
 	<string name="illuminance">Illuminance</string>
+	<string name="stats">Stats</string>
+	<string name="start">Start</string>
+	<string name="stop">Stop</string>
+	<string name="rename">Rename</string>
+	<string name="change_icon">Change icon</string>
+	<string name="delete">Delete</string>
+	<string name="high">High</string>
+	<string name="move">Move</string>
 </resources>

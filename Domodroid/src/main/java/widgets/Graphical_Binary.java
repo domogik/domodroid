@@ -209,7 +209,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 							state.setAnimation(animation);
 						} else {
 							if(msg.what == 2) {
-								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+								Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
 							} else if(msg.what == 9999) {
 								//state_engine send us a signal to notify value changed
 								if(session == null)

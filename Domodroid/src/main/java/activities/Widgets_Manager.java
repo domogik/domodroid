@@ -56,9 +56,12 @@ public class Widgets_Manager {
 		super();
 		this.widgetHandler=handler;
 		this.Tracer = Trac;
+		//populate the NAvigationDrawer list
+		HashMap<String, String> map = new HashMap<String, String>();
+
 	}
 
-	public LinearLayout loadActivWidgets(Activity context, int id, 
+	public LinearLayout loadActivWidgets(Activity context, int id,
 			String zone, LinearLayout ll, SharedPreferences params, int session_type) throws JSONException
 			{
 
@@ -314,7 +317,7 @@ public class Widgets_Manager {
 				//used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
 			}
 
-			if(columns){	
+			if(columns){
 				if(counter==0){
 					leftPan.addView(tmpPan);
 				}
@@ -375,20 +378,22 @@ public class Widgets_Manager {
 				String name = area.getName();
 				name = Graphics_Manager.Names_Agent(context, name);
 
-//				map=new HashMap<String,String>();
-//				map.put("name",area.getName());
-//				String iconName = "unknow";
-//				try {
-//					iconName = domodb.requestIcons(area.getId(), "area").getValue().toString();
-//				} catch (Exception e) {
-//					Tracer.e(mytag,e.toString());
-//				}
-//				map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName,1)));
-//				Activity_Main.Navigation_drawer_ItemsList.add(map);
+				//populate the NAvigationDrawer list
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("name",area.getName());
+				String iconName = "unknow";
+				try {
+					iconName = domodb.requestIcons(area.getId(), "area").getValue().toString();
+				} catch (Exception e) {
+					Tracer.e(mytag,e.toString());
+				}
+				map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName,1)));
+				map.put("type", "area");
+				Activity_Main.Navigation_drawer_ItemsList.add(map);
 
 				Graphical_Area graph_area = new Graphical_Area(Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
 				tmpPan.addView(graph_area);
-				if(columns){	
+				if(columns){
 					if(counter==0){
 						leftPan.addView(tmpPan);
 					}
@@ -452,17 +457,18 @@ public class Widgets_Manager {
 			Tracer.d(mytag+" loadRoomWidgets","Adding room : "+ref);
 			String name = room.getName();
 			name = Graphics_Manager.Names_Agent(context, name);
-			
+
 			//populate the NAvigationDrawer list
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("name", name);
 			map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconId, 0)));
+			map.put("type", "room");
 			Activity_Main.Navigation_drawer_ItemsList.add(map);
 
 			Graphical_Room graph_room = new Graphical_Room(Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
 			tmpPan.addView(graph_room);
 
-			if(columns){	
+			if(columns){
 				if(counter==0){
 					leftPan.addView(tmpPan);
 				}

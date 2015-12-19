@@ -512,4 +512,10 @@
 	<string name="rising">Rising</string>
 	<string name="visibility">Visibility</string>
 	<string name="pressure">Pressure</string>
+	<string name="state:">State:</string>
+	<string name="phone">Phone</string>
+	<string name="states">States</string>
+	<string name="run">Run</string>
+	<string name="level">Level</string>
+	<string name="illuminance">Illuminance</string>
 </resources>

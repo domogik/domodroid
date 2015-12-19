@@ -72,9 +72,9 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 	public boolean onLongClick(View v) {
 		final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
 		List<String> list_choice = new ArrayList<String>();
-		list_choice.add("Rename");
-		list_choice.add("Change_icon");
-		list_choice.add("Delete");
+		list_choice.add(context.getString(R.string.change_icon));
+		list_choice.add(context.getString(R.string.rename));
+		list_choice.add(context.getString(R.string.delete));
 		final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
 		//list_type_choice.setTitle(R.string.What_to_do_message);
 		list_type_choice.setSingleChoiceItems(char_list, -1,
@@ -93,7 +93,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 	}
 
 	private void do_action(String action) {
-		if(action.equals("Delete")) {
+		if(action.equals(context.getString(R.string.delete))) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(context.getString(R.string.Delete_feature_title)+" "+name);
 			alert.setMessage(R.string.Delete_feature_message);
@@ -129,7 +129,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 				}
 			});
 			alert.show();
-		}else if (action.equals("Rename")){
+		}else if (action.equals(context.getString(R.string.rename))){
 			AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 			alert.setTitle(context.getString(R.string.Rename_title)+" "+name);
 			alert.setMessage(R.string.Rename_message);
@@ -149,7 +149,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 				}
 			});
 			alert.show();
-		}else if (action.equals("Change_icon")){
+		}else if (action.equals(context.getString(R.string.change_icon))){
 			final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
 			List<String> list_icon = new ArrayList<String>();
 			String[] fiilliste;

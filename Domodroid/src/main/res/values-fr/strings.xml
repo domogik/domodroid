@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Domodroid</string>
     <string name="button1">Synchroniser</string>
     <string name="button2">Réseau</string>
@@ -390,6 +390,8 @@
     <string name="current_visibility">Visibilité courante</string>
     <string name="current_temperature">Température courante</string>
     <string name="current_wind_direction">Sens du vent courant</string>
+    <string name="rgb_color">Couleur RGB</string>
+    <string name="rgb_command">Commande RGB</string>
     <string name="humidity">Humidité</string>
     <string name="send_text">Envoyé du texte</string>
     <string name="brightness">Brillance</string>
@@ -400,6 +402,8 @@
     <string name="msg_status">État du message</string>
     <string name="send_a_message">Envoyé un message</string>
     <string name="position_degrees">Position en degrés</string>
+    <string name="sensor_script_action">Script capteur action</string>
+    <string name="cmd_script_action">Script commande action</string>
     <string name="battery_level">Niveau de batterie</string>
     <string name="thermostat_setpoint">Consigne de thermostat</string>
     <string name="ctrl_status">État du contrôleur</string>
@@ -416,10 +420,36 @@
     <string name="inactive">Inactif</string>
     <string name="active">Actif</string>
     <string name="sms_sended">SMS envoyé</string>
-    <string name="ok">Ok</string>
+    <string name="ok" tools:ignore="ButtonCase">Ok</string>
     <string name="sensor_script_info_binary">Script capteur binaire</string>
     <string name="sensor_script_info_number">Script capteur numérique</string>
     <string name="send">Envoyer</string>
-    <string name="sensor_script_action">Script capteur action</string>
-    <string name="cmd_script_action">Script commande action</string>
+    <string name="domogik_version">Domogik version:</string>
+    <string name="fps">Ips</string>
+    <string name="sync_rinor_error">Erreur de connexion à rinor. Vérifier votre configuration.</string>
+    <string name="sync_2_error_area">Domogik 2 ne peut pas charger /base/area/list/</string>
+    <string name="sync_2_error_room">Domogik 2 ne peut pas charger /base/room/list/</string>
+    <string name="sync_2_error_feature">Domogik 2 ne peut pas charger base/feature/list</string>
+    <string name="sync_2_error_assoc">Domogik 2 ne peut pas charger base/feature_association/list</string>
+    <string name="sync_2_error_ui">Domogik 2 ne peut pas charger base/ui_config/list</string>
+    <string name="sync_3_error_feature">Domogik 3 ne peut pas charger base/feature/list</string>
+    <string name="sync_4_error_device">Domogik 4 ne peut pas charger la listes des devices. Vérifier votre configuration.</string>
+    <string name="sync_4_error_datatype">Domogik 4 ne peut pas charger la listes des datatype. Vérifier votre configuration.</string>
+    <string name="connection_error">Erreur de connexion.</string>
+    <string name="sync_0">Chargement de la configuration... 0%</string>
+    <string name="sync_load">Chargement de la configuration... </string>
+    <string name="command_failed">Commande échoué</string>
+    <string name="drewpoint">Point de rosée</string>
+    <string name="rainfall">Précipitations</string>
+    <string name="uv">Uv</string>
+    <string name="speed">Vitesse</string>
+    <string name="direction">Direction</string>
+    <string name="visibility">Visibilité</string>
+    <string name="pressure">Pression</string>
+    <string name="state:">Etat:</string>
+    <string name="phone">Téléphone</string>
+    <string name="states">Etats</string>
+    <string name="run">Marche</string>
+    <string name="level">Niveau</string>
+    <string name="illuminance">Éclairement</string>
 </resources>

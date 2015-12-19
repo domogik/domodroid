@@ -500,4 +500,16 @@
 	<string name="connection_error">Connection error</string>
 	<string name="sync_0">Loading Configuration... 0%</string>
 	<string name="sync_load">Loading Configuration...</string>
+	<string name="command_failed">Command Failed</string>
+	<string name="condition_code">Condition code</string>
+	<string name="drewpoint">Drewpoint</string>
+	<string name="rainfall">Rainfall</string>
+	<string name="uv">Uv</string>
+	<string name="condition_text">Condition text</string>
+	<string name="speed">Speed</string>
+	<string name="direction">Direction</string>
+	<string name="chill">Chill</string>
+	<string name="rising">Rising</string>
+	<string name="visibility">Visibility</string>
+	<string name="pressure">Pressure</string>
 </resources>

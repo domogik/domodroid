@@ -315,9 +315,9 @@ public class MapView extends View {
 		map_autozoom=params.getBoolean("map_autozoom", false);
 		origin = new Matrix();
 		mat = new TransformManager();
+		//TODO try to solve drag and zoom problem.
 		//mat.setZoom(params.getBoolean("ZOOM", false));
 		//mat.setDrag(params.getBoolean("DRAG", false));
-		//TODO try to solve drag and zoom problem.
 		mat.setZoom(false);
 		mat.setDrag(false);
 

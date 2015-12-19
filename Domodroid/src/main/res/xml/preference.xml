@@ -55,12 +55,15 @@ android:title="Préférences">
  
 </PreferenceCategory>
     <PreferenceCategory android:title="@string/map_settings"><Preference android:summary="@string/map_explain" android:selectable="false" android:shouldDisableView="false" android:enabled="false"/>
-    <CheckBoxPreference android:summaryOn="Allow drag on map" android:summaryOff="Drag in map not allowed" android:key="DRAG" android:title="@string/map_option_drag" android:defaultValue="true"/>
-    <CheckBoxPreference android:summaryOn="Allow zoom in map" android:summaryOff="Map not zoomable" android:key="ZOOM" android:title="@string/map_option_zoom" android:defaultValue="true"/>
+
+    <CheckBoxPreference android:summaryOn="Allow drag on map" android:summaryOff="Drag in map not allowed" android:key="DRAG" android:title="@string/map_option_drag" android:defaultValue="false"/>
+    <CheckBoxPreference android:summaryOn="Allow zoom in map" android:summaryOff="Map not zoomable" android:key="ZOOM" android:title="@string/map_option_zoom" android:defaultValue="false"/>
+
     <CheckBoxPreference android:summaryOn="Hide text on map" android:summaryOff="Show text in map" android:key="HIDE" android:title="HIDE"/>
     <CheckBoxPreference android:summaryOn="Menu not available in map" android:summaryOff="Menu available in map" android:key="map_menu_disable" android:title="@string/map_option_menu_disable"/>
     
-    <CheckBoxPreference android:summaryOn="Image set to screen size" android:summaryOff="Image set to normal size" android:key="map_autozoom" android:title="@string/map_autozoom"/><CheckBoxPreference android:summaryOn="Domodroid start in map mode" android:summaryOff="Domodroid start in house mode" android:key="START_ON_MAP" android:title="@string/map_option_start" />
+    <CheckBoxPreference android:summaryOn="Image set to screen size" android:summaryOff="Image set to normal size" android:key="map_autozoom" android:title="@string/map_autozoom"  android:defaultValue="true"/>
+    <CheckBoxPreference android:summaryOn="Domodroid start in map mode" android:summaryOff="Domodroid start in house mode" android:key="START_ON_MAP" android:title="@string/map_option_start" />
     <Preference android:title="@string/map_option_size" android:defaultValue="800" android:key="SIZE"/>
     
 </PreferenceCategory>

@@ -1272,13 +1272,11 @@ public class MapView extends View {
 				Tracer.v(mytag, "Long press :)");
 				Builder list_type_choice = new Builder(getContext());
 				List<String> list_choice = new ArrayList<String>();
-				//TODO translate his menu
-				//be careful this value is used by do_action
-				list_choice.add("Add");
+				list_choice.add(context.getString(R.string.add));
 				//TODO remove entry if not on a widget
-				list_choice.add("Move");
-				list_choice.add("Delete");
-				list_choice.add("Change icon");
+				list_choice.add(context.getString(R.string.move));
+				list_choice.add(context.getString(R.string.change_icon));
+				list_choice.add(context.getString(R.string.delete));
 				final CharSequence[] char_list =list_choice.toArray(new String[list_choice.size()]);
 				//list_type_choice.setTitle(R.string.What_to_do_message);
 				list_type_choice.setSingleChoiceItems(char_list, -1,
@@ -1301,7 +1299,7 @@ public class MapView extends View {
 	};
 
 	private void do_action(String action,MotionEvent event, float[] value) {
-		if(action.equals("Change icon")) {
+		if(action.equals(context.getString(R.string.change_icon))) {
 			Tracer.d(mytag, "Change icon");
 			for (final Entity_Map featureMap : listFeatureMap) {
 				if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-dip20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+dip20 && 
@@ -1344,7 +1342,7 @@ public class MapView extends View {
 
 				}
 			}
-		} else if(action.equals("Move")) {
+		} else if(action.equals(context.getString(R.string.move))) {
 			Tracer.d(mytag, "Move");
 			for (Entity_Map featureMap : listFeatureMap) {
 				if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-dip20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+dip20 && 
@@ -1381,7 +1379,7 @@ public class MapView extends View {
 					addMode=true;
 				}
 			}
-		}else if (action.equals("Delete")){
+		}else if (action.equals(context.getString(R.string.delete))){
 			Tracer.d(mytag, "Delete");
 			for (Entity_Map featureMap : listFeatureMap) {
 				if((int)((event.getX()-value[2])/currentScale)>featureMap.getPosx()-dip20 && (int)((event.getX()-value[2])/currentScale)<featureMap.getPosx()+dip20 && 
@@ -1405,8 +1403,8 @@ public class MapView extends View {
 						(int)((event.getY()-value[5])/currentScale)>switchesMap.getPosy()-20 && (int)((event.getY()-value[5])/currentScale)<switchesMap.getPosy()+20){
 					//remove entry
 					Tracer.get_engine().remove_one_FeatureMap(switchesMap.getId(),
-							(int)((event.getX()-value[2])/currentScale), 
-							(int)((event.getY()-value[5])/currentScale),
+							(int) ((event.getX() - value[2]) / currentScale),
+							(int) ((event.getY() - value[5]) / currentScale),
 							files.elementAt(currentFile));
 					removeMode=false;
 					//new UpdateThread().execute();
@@ -1414,7 +1412,7 @@ public class MapView extends View {
 					initMap();
 				}
 			}		
-		}else if (action.equals("Add")){
+		}else if (action.equals(context.getString(R.string.add))){
 			int db_id = 0;
 			if(temp_id != -1) {
 				//insert in the database feature map the device id, its position and map name. 

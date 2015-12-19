@@ -452,4 +452,7 @@
     <string name="run">Marche</string>
     <string name="level">Niveau</string>
     <string name="illuminance">Éclairement</string>
+    <string name="delete">Supprimer</string>
+    <string name="rename">Renommer</string>
+    <string name="change_icon">Remplacer l\'icone</string>
 </resources>

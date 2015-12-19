@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 	<string name="app_name">Domodroid</string>
 	<string name="button1">Synchronize</string>
 	<string name="button2">Network</string>
@@ -480,8 +480,12 @@
 	<string name="inactive">Inactive</string>
 	<string name="active">Active</string>
 	<string name="sms_sended">SMS sended</string>
-	<string name="ok">Ok</string>
+	<string name="ok" tools:ignore="ButtonCase">Ok</string>
 	<string name="sensor_script_info_binary">Sensor script info binary</string>
 	<string name="sensor_script_info_number">Sensor script info number</string>
 	<string name="send">Send</string>
+	<string name="domogik_version">Domogik version:</string>
+	<string name="frame_rate_default">Frame Rate: 0 Fps</string>
+	<string name="frame_rate">Frame Rate</string>
+	<string name="fps">Fps</string>
 </resources>

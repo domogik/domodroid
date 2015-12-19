@@ -66,7 +66,7 @@ public class Activity_Cam extends Activity{
 
 		//name of room
 		TextView TV_name = new TextView(this);
-		TV_name.setText("Camera: " + name_cam);
+		TV_name.setText(getText(R.string.camera)+": " + name_cam);
 		TV_name.setTextSize(15);
 		TV_name.setTextColor(Color.WHITE);
 		TV_name.setPadding(0, 0, 15, 0);
@@ -75,7 +75,7 @@ public class Activity_Cam extends Activity{
 		//description
 		TV_frameRate=new TextView(this);
 		TV_frameRate.setPadding(15, 0, 0, 0);
-		TV_frameRate.setText("Frame Rate: 0 Fps");
+		TV_frameRate.setText(getText(R.string.frame_rate_default));
 
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -102,7 +102,7 @@ public class Activity_Cam extends Activity{
 		Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				TV_frameRate.setText("Frame Rate: " + msg.what + " Fps");
+				TV_frameRate.setText(getText(R.string.frame_rate)+": " + msg.what + " "+getText(R.string.fps));
 			}
 		};
 		mv.setHandler(handler);

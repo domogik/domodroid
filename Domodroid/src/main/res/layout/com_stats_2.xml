@@ -63,8 +63,7 @@
 			        android:layout_weight="0.5"
 	        	    android:gravity="center"
 			        android:textColor="@android:color/black"
-			        android:textSize="14sp"
-			        android:text="1 h 10 m 0 sec"  />
+			        android:textSize="14sp" />
 			</LinearLayout>
             <View
 			    android:layout_width="fill_parent"
@@ -86,7 +85,7 @@
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
-            	
+
 	                <TextView
 	                    android:layout_width="match_parent"
 	                    android:layout_height="wrap_content"
@@ -138,7 +137,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="left"
 	                    android:textColor="@android:color/black"
-				        android:text="STATS"
+				        android:text="@string/stats"
 	                    android:textSize="14sp"/>
 					<TextView
 	                    android:layout_width="match_parent"
@@ -155,7 +154,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1235"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -165,7 +164,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1236"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  of cumul STATS packets  -->
@@ -183,7 +182,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="left"
 	                    android:textColor="@android:color/black"
-				        android:text=" "
+				        android:text=""
 	                    android:textSize="14sp"/>
 					<TextView
 	                    android:layout_width="match_parent"
@@ -200,7 +199,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12350"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -210,7 +209,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12360"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  cumuls STATS bytes  -->
@@ -234,7 +233,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="left"
 	                    android:textColor="@android:color/black"
-				        android:text="EVENTS"
+				        android:text="@string/events"
 	                    android:textSize="14sp"/>
 					<TextView
 	                    android:layout_width="match_parent"
@@ -251,7 +250,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1235"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -261,7 +260,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1236"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  of cumul Events packets  -->
@@ -295,7 +294,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12350"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -305,8 +304,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12360"
-	                    android:textSize="12sp" />
+						android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  cumuls EVENTS bytes  -->
             	<View
@@ -358,8 +356,7 @@
 			        android:layout_weight="0.5"
 	        	    android:gravity="center"
 			        android:textColor="@android:color/black"
-			        android:textSize="14sp"
-			        android:text="10 m 0 sec"  />
+			        android:textSize="14sp"  />
 			</LinearLayout>
             <View
 			    android:layout_width="fill_parent"
@@ -432,7 +429,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="left"
 	                    android:textColor="@android:color/black"
-				        android:text="STATS"
+				        android:text="@string/stats"
 	                    android:textSize="14sp"/>
 					<TextView
 	                    android:layout_width="match_parent"
@@ -449,7 +446,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1235"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -459,7 +456,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1236"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  of periodic STATS packets  -->
@@ -477,7 +474,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="left"
 	                    android:textColor="@android:color/black"
-				        android:text=" "
+				        android:text=""
 	                    android:textSize="14sp"/>
 					<TextView
 	                    android:layout_width="match_parent"
@@ -494,7 +491,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12350"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -504,7 +501,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12360"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  periodic STATS bytes  -->
@@ -528,7 +525,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="left"
 	                    android:textColor="@android:color/black"
-				        android:text="EVENTS"
+				        android:text="@string/events"
 	                    android:textSize="14sp"/>
 					<TextView
 	                    android:layout_width="match_parent"
@@ -545,7 +542,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1235"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -555,7 +552,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="1236"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  of periodic Events packets  -->
@@ -589,7 +586,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12350"
+				        android:text=""
 	                    android:textSize="12sp" />
 	
 	                <TextView
@@ -599,7 +596,7 @@
 	                    android:layout_weight="0.25"
 	                    android:gravity="center"
 	                    android:textColor="@android:color/black"
-				        android:text="12360"
+				        android:text=""
 	                    android:textSize="12sp" />
 					
 	           </LinearLayout> <!--  periodic EVENTS bytes  -->

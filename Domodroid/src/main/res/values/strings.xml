@@ -128,10 +128,33 @@
 	
 	<string name="debug_settings">Debug configuration</string>
 	<string name="debug_explain">This screen allow debugging configuration</string>
+	<string name="debug_log_debug">Debug</string>
+	<string name="debug_log_debug_on">Debug log on</string>
+	<string name="debug_log_debug_off">Debug log off</string>
+	<string name="debug_log_error">Error</string>
+	<string name="debug_log_error_on">Error log on</string>
+	<string name="debug_log_error_off">Error log off</string>
+	<string name="debug_log_info">Info</string>
+	<string name="debug_log_info_on">Info log on</string>
+	<string name="debug_log_info_off">Info log off</string>
+	<string name="debug_log_verbose">Verbose</string>
+	<string name="debug_log_verbose_on">Verbose log on</string>
+	<string name="debug_log_verbose_off">Verbose log off</string>
+	<string name="debug_log_warning">Warning</string>
+	<string name="debug_log_warning_on">Warning log on</string>
+	<string name="debug_log_warning_off">Warning log off</string>
+
+
 	<string name="debug_system">Log to system (Catlog)</string>
+	<string name="debug_system_on">Catlog on</string>
+	<string name="debug_system_off">Catlog off</string>
 	<string name="debug_screen">Log to screen</string>
+	<string name="debug_screen_on">Screen logging on</string>
+	<string name="debug_screen_off">Screen logging off</string>
 	<string name="debug_file">Log to text file</string>
-	<string name="debug_dirpath">Target directory for text file</string>
+    <string name="debug_file_on">Logging in text file</string>
+    <string name="debug_file_off">No logging to file</string>
+    <string name="debug_dirpath">Target directory for text file</string>
 	<string name="debug_filename">Log text filename</string>
 	<string name="debug_bt_apply">Apply changes</string>
 	<string name="debug_bt_cancel">Cancel</string>
@@ -143,13 +166,24 @@
 	<string name="map_bt_cancel">Cancel</string>
 	<string name="map_menu_explain">Map Multitouch Features :</string>
 	<string name="map_option_drag">Drag:</string>
+	<string name="map_option_drag_on">Allow drag on map</string>
+	<string name="map_option_drag_off">Drag in map not allowed</string>
     <string name="map_option_zoom">Zoom:</string>
-    <string name="map_option_max_size">Maximum Map Size:</string>	
+	<string name="map_option_zoom_on">Allow zoom in map</string>
+	<string name="map_option_zoom_off">Map not zoomable</string>
+	<string name="map_option_hide">Hide:</string>
+	<string name="map_option_hide_on">Hide text in map</string>
+	<string name="map_option_hide_off">Show text in map</string>
+	<string name="map_option_max_size">Maximum Map Size:</string>
     <string name="map_option_size">300 px</string>
     <string name="map_option_advert">Activating multitouch or setting the maximum map size value to high might cause memory crashes.</string>	
     <string name="map_option_hide_text">Hide text</string>
     <string name="map_option_menu_disable">Disallow editing map</string>
-   	<string name="map_autozoom">Zoom auto in map mode:</string>	
+	<string name="map_option_menu_disable_on">Menu not available in map</string>
+	<string name="map_option_menu_disable_off">Menu available in map</string>
+   	<string name="map_autozoom">Zoom auto in map mode:</string>
+	<string name="map_autozoom_on">Image set to screen size</string>
+	<string name="map_autozoom_off">Image set to normal size</string>
     
     <string name="OPTION_server_settings">Server configuration</string>
 	<string name="OPTION_server_bt_apply">Apply changes</string>
@@ -172,7 +206,9 @@
 	<string name="OPTION_server_http_password_Title">Type your http auth password</string>
     <string name="OPTION_butler_settings">Butler configuration</string>
 	<string name="OPTION_butler_name">Butler name</string>
+    <string name="OPTION_butler_name_desc">Set the Domogik Butler name</string>
 	<string name="OPTION_your_name">Your name</string>
+    <string name="OPTION_your_name_desc">Set your name</string>
 	<string name="OPTION_butler_explain">This screen allow butler configuration</string>
 	   
 	<string name="usage_settings">Widget configuration</string>
@@ -181,9 +217,28 @@
 	<string name="usage_explain">This screen allow widget configuration</string>
 	<string name="widget_choice">Alternative Widget:</string>
 	<string name="graph_choice">Alternative Graph:</string>
-	<string name="twocollandscapecheckbox">Nb of columns in landcape:</string>
+	<string name="twocollandscapecheckbox">Nb of columns in landscape:</string>
+	<string name="twocollandscape_1">1 column in landscape</string>
+	<string name="twocollandscape_2">2 columns in Landscape</string>
+
 	<string name="twocolportraitcheckbox">Nb of columns in portrait:</string>
+	<string name="twocolportrait_1">1 column in portrait</string>
+	<string name="twocolportrait_2">2 columns in portrait</string>
+
+	<string name="Navigation_drawer">Navigation drawer</string>
+	<string name="Navigation_drawer_on">Navigation drawer enable</string>
+	<string name="Navigation_drawer_off">Navigation drawer disable</string>
+
+	<string name="UPDATE_TIMER">Update Timer if no events or mq</string>
+	<string name="UPDATE_URL">Url used by update method</string>
+	<string name="Rinor_URL">Url used by contact rest</string>
+	<string name="MQ_address">MQ address</string>
+	<string name="Mq_sub_port">MQ sub port</string>
+	<string name="Mq_pub_port">MQ pub port</string>
+
 	<string name="usage_byusagecheckbox">Force by usage for 0.3:</string>
+	<string name="usage_byusage">Usage organisation</string>
+	<string name="usage_byhouse">House organisation</string>
 	<string name="unusable">Not available</string>
 	
 	<string name="house_settings">House configuration</string>
@@ -273,7 +328,9 @@
 	<string name="go_Main">Display Main screen (views)</string>
 	<string name="go_to_Map">Switch to map </string>
 	<string name="map_option_start">Start directly on Map view</string>
-	    								
+	<string name="map_option_start_on">Domodroid start in map mode</string>
+	<string name="map_option_start_off">Domodroid start in house mode</string>
+
 	<string name="info0">Tornado</string>
 	<string name="tornado">Tornado</string>
 	<string name="info1">Tropical storm</string>
@@ -528,4 +585,9 @@
 	<string name="high">High</string>
 	<string name="move">Move</string>
 	<string name="add">Add</string>
+	<string name="events">Events</string>
+	<string name="Graph_achartengine">AChartengine Graph</string>
+	<string name="Graph_normal">Normal Graph</string>
+	<string name="widgets_alternative">Alternative on/off</string>
+	<string name="widget_normal">Normal on/off</string>
 </resources>

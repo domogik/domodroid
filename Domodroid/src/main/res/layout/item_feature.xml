@@ -33,13 +33,17 @@
         	android:layout_marginTop="1dp"
         	android:src="@drawable/ic_launcher"/>
 		
-		<TextView android:id="@+id/name" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:textSize="16sp"
-			android:textColor="#FFFFFF" android:paddingBottom="3dip" />
+		<TextView android:id="@+id/name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:textColor="#FFFFFF"
+			android:paddingBottom="3dip" />
 		
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="16sp"
-			android:textColor="#FFFFFF" android:paddingBottom="3dip" android:text="  -  "/>
+			android:textColor="#FFFFFF" android:paddingBottom="3dip"
+			android:text="  -  "/>
 
 		<TextView android:id="@+id/state_key" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="16sp"

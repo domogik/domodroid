@@ -46,7 +46,7 @@
 					<ImageView
 					    android:layout_width="120dip"
 						android:layout_height="120dip"
-						android:id="@+id/imageView2"
+						android:id="@+id/imageView1"
 						android:src="@drawable/one_finger_tap_gestureworks"
 						android:paddingRight="20dip"
 						android:paddingLeft="20dip" />
@@ -54,7 +54,7 @@
 					<ImageView
 					    android:layout_width="120dip"
 						android:layout_height="120dip"
-						android:id="@+id/imageView3"
+						android:id="@+id/imageView2"
 						android:src="@drawable/one_finger_move_gestureworks"
 						android:paddingRight="20dip"
 						android:paddingLeft="20dip" />
@@ -94,7 +94,7 @@
 					<ImageView
 					    android:layout_width="120dip"
 						android:layout_height="120dip"
-						android:id="@+id/imageView2"
+						android:id="@+id/imageView3"
 						android:src="@drawable/two_finger_scale_gestureworks_custom"
 						android:paddingRight="20dip"
 						android:paddingLeft="20dip" />
@@ -102,7 +102,7 @@
 					<ImageView
 					    android:layout_width="120dip"
 						android:layout_height="120dip"
-						android:id="@+id/imageView3"
+						android:id="@+id/imageView4"
 						android:src="@drawable/two_finger_drag_gestureworks_custom"
 						android:paddingRight="20dip"
 						android:paddingLeft="20dip" />

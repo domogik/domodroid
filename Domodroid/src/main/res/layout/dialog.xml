@@ -12,8 +12,7 @@
 		android:textStyle="bold" 
 		android:textColor="#ffffffff"	
 		android:maxLines="1"
-		android:text="Custom Dialog" 
-		android:gravity="center"/>	    
+		android:gravity="center"/>
 	
 	<LinearLayout android:orientation="horizontal"
 	    android:layout_width="fill_parent"
@@ -67,12 +66,12 @@
 	        android:layout_height="60dip"
 	        android:layout_weight="1"
 	        android:text="@string/debug_bt_cancel"
-	        android:textSize="25dp" />
+	        android:textSize="25sp" />
 
 	    <Button android:id="@+id/ok"
      		android:layout_width="fill_parent"
      		android:layout_weight="1"
-			android:textSize="25dp"
+			android:textSize="25sp"
 			android:layout_height="60dip"		        
 			android:text="@string/Ok"/>
 

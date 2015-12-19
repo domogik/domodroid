@@ -144,7 +144,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 		@Override
 		protected void onPreExecute() {
-			message.setText(R.string.sync_0);
+			message.setText(context.getString(R.string.sync_0));
 			super.onPreExecute();
 		}
 
@@ -159,7 +159,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-			message.setText(R.string.sync_load+" "+values[0]+"%");
+			message.setText(context.getString(R.string.sync_load)+" "+values[0]+"%");
 			super.onProgressUpdate(values);
 		}
 

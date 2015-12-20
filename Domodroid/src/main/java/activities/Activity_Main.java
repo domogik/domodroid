@@ -191,20 +191,19 @@ public class Activity_Main extends Activity implements OnClickListener {
 
             public void onItemClick(AdapterView<?> adapter, View v, int pos,
                                     long id) {
-                //String type=(String) adapter.getAdapter().getItem(pos);
                 DomodroidDB domodb = new DomodroidDB(Tracer, myself);
                 listRoom = domodb.requestallRoom();
                 listArea = domodb.requestArea();
-                String type = "room";
+                String type = (history.elementAt(historyPosition)[1]);
                 historyPosition++;
-                if (type.equals("room")) {
-                    Tracer.v(mytag + ".widgetHandler", "add history " + listRoom[pos].getId() + " room");
-                    history.add(historyPosition, new String[]{listRoom[pos].getId() + "", "room"});
-                    loadWigets(listRoom[pos].getId(), "room");
-                } else if (type.equals("area")) {
+                if (type.equals("root")) {
                     Tracer.v(mytag + ".widgetHandler", "add history " + listArea[pos].getId() + " area");
                     history.add(historyPosition, new String[]{listArea[pos].getId() + "", "area"});
                     loadWigets(listArea[pos].getId(), "area");
+                } else {
+                    Tracer.v(mytag + ".widgetHandler", "add history " + listRoom[pos].getId() + " room");
+                    history.add(historyPosition, new String[]{listRoom[pos].getId() + "", "room"});
+                    loadWigets(listRoom[pos].getId(), "room");
                 }
                 LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
             }
@@ -247,8 +246,8 @@ public class Activity_Main extends Activity implements OnClickListener {
                 new FileOutputStream(nomedia).close();
             }
         } catch (Exception e) {
-            Tracer.d(mytag,"nomedia part");
-            Tracer.d(mytag,e.toString());
+            Tracer.d(mytag, "nomedia part");
+            Tracer.d(mytag, e.toString());
         }
 
         appname = (ImageView) findViewById(R.id.app_name);
@@ -323,7 +322,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 } else if (msg.what == 8000) {
                     Tracer.e(mytag, "Request to display message : 8000");
                     /*
-					if(dialog_message == null) {
+                    if(dialog_message == null) {
 						Create_message_box();
 					}
 					dialog_message.setMessage("Starting cache engine...");

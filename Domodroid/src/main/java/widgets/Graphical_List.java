@@ -126,7 +126,14 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
 		//state key
 		TextView state_key_view = new TextView(context);
-		state_key_view.setText(state_key);
+		String stateS;
+		try{
+			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+		}catch (Exception e){
+			Tracer.d(mytag, "no translation for: "+state_key);
+			stateS = state_key;
+		}
+		state_key_view.setText(stateS);
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
 		//value

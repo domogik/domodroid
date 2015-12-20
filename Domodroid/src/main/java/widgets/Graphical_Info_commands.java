@@ -117,7 +117,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 		try{
 			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+state_key);
+			Tracer.d(mytag, "no translation for: "+state_key);
 			stateS = state_key;
 		}
 		this.url = url;

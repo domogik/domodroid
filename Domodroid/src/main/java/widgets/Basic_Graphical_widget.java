@@ -126,7 +126,13 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
 		//name of room
 		TV_name=new TextView(context);
-		TV_name.setText(name);
+		try{
+			TV_name.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), name.toLowerCase())).toString());
+		}catch (Exception e){
+			Tracer.d(mytag, "no translation for: "+name);
+			TV_name.setText(name);
+		}
+
 		TV_name.setTextSize(14);
 		TV_name.setTextColor(Color.BLACK);
 		TV_name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -177,7 +183,12 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
 					Tracer.get_engine().descUpdate(id,result,"feature");
-					TV_name.setText(result);
+                    try{
+                        TV_name.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), result.toLowerCase())).toString());
+                    }catch (Exception e){
+                        Tracer.d(mytag, "no translation for: "+result);
+                        TV_name.setText(result);
+                    }
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

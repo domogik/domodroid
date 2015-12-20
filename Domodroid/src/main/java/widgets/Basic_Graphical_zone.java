@@ -83,15 +83,27 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 
 		//name of room
 		TV_name=new TextView(context);
-		TV_name.setText(name);
+		try{
+			TV_name.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), name.toLowerCase())).toString());
+		}catch (Exception e){
+			//TODO add tracer
+			// Tracer.d(mytag, "no translation for: "+name);
+			TV_name.setText(name);
+		}
 		TV_name.setTextSize(18);
 		TV_name.setTextColor(Color.WHITE);
 		TV_name.setGravity(Gravity.RIGHT);
 
 		//description
 		TextView TV_description = new TextView(context);
-		TV_description.setText(description);
-		TV_name.setTextSize(17);
+        try{
+            TV_description.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), description.toLowerCase())).toString());
+        }catch (Exception e){
+            //TODO add tracer
+            // Tracer.d(mytag, "no translation for: "+name);
+            TV_description.setText(description);
+        }
+        TV_description.setTextSize(17);
 		TV_description.setGravity(Gravity.RIGHT);
 
 		LL_infoPan.addView(TV_name);

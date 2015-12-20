@@ -602,7 +602,7 @@ public class MapView extends View {
 					value=context.getString((Graphics_Manager.getStringIdentifier(getContext(),
 							value.toLowerCase())));
 				}catch (Exception e1) {
-					Tracer.d(mytag,"Nothing in R.STRING for "+value );
+					Tracer.d(mytag,"no translation for: "+value );
 				}
 				if (value.equals("????"))
 					value="";

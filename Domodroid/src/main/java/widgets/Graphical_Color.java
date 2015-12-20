@@ -136,7 +136,12 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
 		//state key
 		TextView state_key_view = new TextView(context);
-		state_key_view.setText(state_key);
+		try{
+			state_key_view.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString());
+		}catch (Exception e){
+			Tracer.d(mytag, "no translation for: "+state_key);
+			state_key_view.setText(state_key);
+		}
 		state_key_view.setTextColor(Color.parseColor("#333333"));
 
 		//first seekbar on/off

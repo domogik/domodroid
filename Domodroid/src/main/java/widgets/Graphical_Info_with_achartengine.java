@@ -133,7 +133,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		try{
 			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+state_key);
+			Tracer.d(mytag, "no translation for: "+state_key);
 			stateS = state_key;
 		}
 		this.url = url;
@@ -289,15 +289,25 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
 									value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
 								} catch (Exception e1) {
-									value.setText(loc_Value);
+                                    Tracer.d(mytag, "no translation for: " + loc_Value);
+                                    value.setText(loc_Value);
 								}
-							else value.setText(loc_Value);
+							else{
+                                Tracer.d(mytag, "no translation for: " + loc_Value);
+                                value.setText(loc_Value);
+                            }
 						}
 						value.setAnimation(animation);
 					} catch (Exception e) {
 						// It's probably a String that could'nt be converted to a float
 						Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
-						value.setText(loc_Value);
+						try {
+							Tracer.d(mytag, "Try to get value translate from R.STRING");
+							value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
+						} catch (Exception e1) {
+							Tracer.d(mytag, "no translation for: " + loc_Value);
+							value.setText(loc_Value);
+						}
 					}
 					//To have the icon colored as it has no state
 					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
@@ -459,7 +469,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				json_GraphValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
 			}else if(api_version>=0.7f){
-				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+dev_id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
+				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 				//Don't forget old "dev_id"+"state_key" is replaced by "id"
 				json_GraphValues = Rest_com.connect_jsonobject(url+"sensorhistory/id/"+id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg",login,password);
 			}

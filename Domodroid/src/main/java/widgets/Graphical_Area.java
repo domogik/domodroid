@@ -139,8 +139,13 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 			alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog_customname, int whichButton) {
 					String result= input.getText().toString(); 
-					Tracer.get_engine().descUpdate(id_area,result,"area");
-					TV_name.setText(result);
+					Tracer.get_engine().descUpdate(id_area, result, "area");
+					try{
+						TV_name.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), result.toLowerCase())).toString());
+					}catch (Exception e){
+						Tracer.d(mytag, "no translation for: "+result);
+						TV_name.setText(result);
+					}
 				}
 			});
 			alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

@@ -41,7 +41,15 @@ public class List_Icon_Adapter extends ArrayAdapter<String> {
 		View rowView = inflater.inflate(R.layout.row_layout_list_icon, parent, false);
 		TextView textView = (TextView) rowView.findViewById(R.id.label);
 		ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-		textView.setText(values[position]);
+
+		try{
+			textView.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), values[position].toLowerCase())).toString());
+		}catch (Exception e){
+			//TODO add tracer
+			// /Tracer.d(mytag, "no translation for: "+state_key);
+			textView.setText(values[position]);
+		}
+
 		// change the icon for Windows and iPhone
 		String s = values[position];
 		if (bool_type_List=false)//Will be used to change icon grabber method.

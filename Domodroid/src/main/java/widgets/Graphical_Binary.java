@@ -95,7 +95,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		try{
 			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+state_key);
+			Tracer.d(mytag, "no translation for: "+state_key);
 			this.stateS= state_key;
 		}
 
@@ -192,7 +192,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 									Tracer.d(mytag,"Try to get value translate from R.STRING" );
 									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
 								}catch (Exception e1) {
-									Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+									Tracer.d(mytag,"no translation for: "+Value_0);
 									state.setText(stateS + " : " + Value_0);
 								}
 								new SBAnim(seekBarOnOff.getProgress(),0).execute();
@@ -201,7 +201,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 									Tracer.d(mytag,"Try to get value translate from R.STRING" );
 									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
 								}catch (Exception e1) {
-									Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+									Tracer.d(mytag,"no translation for: "+Value_1);
 									state.setText(stateS+" : "+Value_1);
 								}
 								new SBAnim(seekBarOnOff.getProgress(),40).execute();
@@ -221,7 +221,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 										Tracer.d(mytag,"Try to get value translate from R.STRING" );
 										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
 									}catch (Exception e1) {
-										Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+										Tracer.d(mytag,"no translation for: "+Value_0);
 										state.setText(stateS + " : " + Value_0);
 									}
 									new SBAnim(seekBarOnOff.getProgress(),0).execute();
@@ -230,7 +230,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 										Tracer.d(mytag,"Try to get value translate from R.STRING" );
 										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
 									}catch (Exception e1) {
-										Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+										Tracer.d(mytag,"no translation for: "+Value_1);
 										state.setText(stateS+" : "+Value_1);
 									}
 									new SBAnim(seekBarOnOff.getProgress(),40).execute();
@@ -239,7 +239,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 										Tracer.d(mytag,"Try to get value translate from R.STRING" );
 										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),new_val.toLowerCase())));
 									}catch (Exception e1) {
-										Tracer.d(mytag,"Nothing in R.STRING for "+new_val);
+										Tracer.d(mytag,"no translation for: "+new_val);
 										state.setText(stateS+" : "+new_val);
 									}
 									new SBAnim(seekBarOnOff.getProgress(),0).execute();
@@ -301,7 +301,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 				Tracer.d(mytag,"Try to get value translate from R.STRING" );
 				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
 			}catch (Exception e1) {
-				Tracer.d(mytag,"Nothing in R.STRING for "+Value_0);
+				Tracer.d(mytag,"no translation for: "+Value_0);
 				state.setText(stateS + " : " + Value_0);
 			}
 			break;
@@ -311,7 +311,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 				Tracer.d(mytag,"Try to get value translate from R.STRING" );
 				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
 			}catch (Exception e1) {
-				Tracer.d(mytag,"Nothing in R.STRING for "+Value_1);
+				Tracer.d(mytag,"no translation for: "+Value_1);
 				state.setText(stateS+" : "+Value_1);
 			}
 			break;

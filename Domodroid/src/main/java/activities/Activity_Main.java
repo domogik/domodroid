@@ -196,7 +196,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 listArea = domodb.requestArea();
                 String type = (history.elementAt(historyPosition)[1]);
                 historyPosition++;
-                if (type.equals("root")) {
+                if (type.equals("root")&&!(by_usage)) {
                     Tracer.v(mytag + ".widgetHandler", "add history " + listArea[pos].getId() + " area");
                     history.add(historyPosition, new String[]{listArea[pos].getId() + "", "area"});
                     loadWigets(listArea[pos].getId(), "area");

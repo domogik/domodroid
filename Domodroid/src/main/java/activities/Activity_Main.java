@@ -247,6 +247,8 @@ public class Activity_Main extends Activity implements OnClickListener {
                 new FileOutputStream(nomedia).close();
             }
         } catch (Exception e) {
+            Tracer.d(mytag,"nomedia part");
+            Tracer.d(mytag,e.toString());
         }
 
         appname = (ImageView) findViewById(R.id.app_name);

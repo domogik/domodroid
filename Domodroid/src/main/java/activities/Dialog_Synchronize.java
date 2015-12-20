@@ -43,6 +43,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 	private tracerengine Tracer = null;
 	private final String login;
 	private final String password;
+	private String mytag="Dialog_Synchronize";
 
 	public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
 		super(context);
@@ -95,7 +96,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 						return;
 					}
 
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					Tracer.d(mytag,e.toString());
+				}
 				message.setText(R.string.connection_error);
 
 			}

@@ -603,4 +603,6 @@
 	<string name="rssi_lighting2">Rssi lighting2</string>
 	<string name="about_maintain">Maintain by new.domodroid@gmail.com</string>
 	<string name="about_traduction">Translate by transifex here:\nhttps://www.transifex.com/tikismoke-domodroid/</string>
+	<string name="blacklisted">Blacklisted</string>
+	<string name="blacklist_a_number">Blacklist a number</string>
 </resources>

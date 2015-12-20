@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string name="app_name">Domodroid</string>
   <string name="button1">Синхронизировать</string>
   <string name="button2">Сеть</string>
@@ -156,8 +156,10 @@
   <string name="usage_explain">Экран настроек виджетов</string>
   <string name="widget_choice">Альтернативный виджет:</string>
   <string name="graph_choice">Альтернативный график:</string>
-  <string name="twocollandscapecheckbox">№ колонок в ладшафт:</string>
   <string name="twocolportraitcheckbox">№ колонок в потрет:</string>
+  <string name="MQ_address">MQ адрес</string>
+  <string name="Mq_sub_port">MQ sub порт</string>
+  <string name="Mq_pub_port">MQ pub порт</string>
   <string name="usage_byusagecheckbox">Принудительно 0.3</string>
   <string name="unusable">Не доступен</string>
   <string name="house_settings">Конфигурация дома</string>
@@ -429,5 +431,27 @@
   <string name="inactive">Неактивно</string>
   <string name="active">Активно</string>
   <string name="sms_sended">SMS отправлено</string>
+  <string name="ok" tools:ignore="ButtonCase">Ok</string>
   <string name="send">Отправить</string>
+  <string name="domogik_version">Версия Domogik:</string>
+  <string name="frame_rate_default">Частота кадров: 0 Кад./сек.</string>
+  <string name="frame_rate">Частота кадров</string>
+  <string name="fps">Кад./сек.</string>
+  <string name="sync_rinor_error">Rinor ошибка соединения. Проверте настройки</string>
+  <string name="connection_error">Ошибка соединения</string>
+  <string name="drewpoint">Точка росы</string>
+  <string name="uv">Ультрафиолет</string>
+  <string name="speed">Скорость</string>
+  <string name="direction">Направление</string>
+  <string name="visibility">Видимость</string>
+  <string name="pressure">Давление</string>
+  <string name="state:">Состояние:</string>
+  <string name="phone">Телефон</string>
+  <string name="states">Состояния</string>
+  <string name="illuminance">Освещённость</string>
+  <string name="stop">Стоп</string>
+  <string name="rename">Переименовать</string>
+  <string name="delete">Удалить</string>
+  <string name="Graph_achartengine">AChartengine график</string>
+  <string name="Graph_normal">Нормальный график</string>
 </resources>

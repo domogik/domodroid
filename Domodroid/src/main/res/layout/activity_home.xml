@@ -40,7 +40,7 @@
         </LinearLayout>
     </ScrollView>    
 <ListView
-        android:id="@+id/my_drawer"
+    android:id="@+id/my_drawer"
         android:layout_width="240dp"
         android:paddingTop="40dip"
         android:layout_height="match_parent"

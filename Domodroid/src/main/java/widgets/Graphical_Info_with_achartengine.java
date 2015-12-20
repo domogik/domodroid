@@ -293,7 +293,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                     value.setText(loc_Value);
 								}
 							else{
-                                Tracer.d(mytag, "no translation for: " + loc_Value);
                                 value.setText(loc_Value);
                             }
 						}

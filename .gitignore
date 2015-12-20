@@ -1,10 +1,23 @@
-/bin
-/gen
-/history.txt
-/script.sh
-/local.properties
-/build.xml
-/.classpath
+# Android Studio
+.idea/
+.gradle
+!build.gradle
+build/
+/*/local.properties
+/*/out
+/*/*/build
+/*/*/production
+*.iml
+*.iws
+*.ipr
+*~
+*.swp
+
+# Windows thumbnail db
 Thumbs.db
-/.settings
-/.pydevproject
+
+
+# Additionnal files
+gradlew
+gradlew.bat
+local.properties

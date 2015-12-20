@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <style type='text/css'>
+      a            { color:#a0a0e0 }
+      div.title    {
+        color:#C0F0C0;
+        font-size:1.2em;
+        font-weight:bold;
+        margin-top:1em;
+        margin-bottom:0.5em;
+        text-align:center }
+      div.subtitle {
+        color:#C0F0C0;
+        font-size:0.8em;
+        margin-bottom:1em;
+        text-align:center }
+      div.freetext { color:#F0F0F0 }
+      div.list     { color:#C0C0F0 }
+    </style>
+  </head>
+  <body>
+    $ 1.4-DEV
+      % Version 12
+      _ 2015-12-20
+      * Working with non xpl plugin and 0.5
+      * #24 start working on navigation drawer
+      * #30 Solved disk space converted (no more 1.4e7)
+      * Translate command (for display in list and widget)
+      * Update RU translation (nearly finished)
+      * Solved MqListener never shutdown (draining battery)
+      * Solved Sync error if no xplstat in device json
+      * Solved Map crash (memory leak)
+      * #23 Solved Map AutoZoom working (3 years old bug)
+      * #58 Start passing all log level in apps
+      * Make log to screen works. (Old TODO)
+      * Now dev with Android Studio
+      % Version 11
+      _ 2015-11-29
+      * Update translation RU/FR/NL
+	  * Solved #57 free_command widget for number limit to number keyboard but allow float value with a "."
+	  * Change api version check to allow sync with 0.8
+	  * Close #54 invert order of callerId if in 0.4 
+      * Avoid refresh screen when changing a value #40 
+      * Close #50 Bug for command in map due to DB request error
+      * Add "command" in house and Map widget list to distinct command from sensor #56  
+      * URL missing in command of type string #50 
+      * Close #48 Mapview widget name for 0.4
+      * Command for boolean type and correct a bug for 0.3 always off #48
+	  * Add command info in map widget and translation of states if in R.STRING #48
+	  * Change display name/description like not in map mode #48 
+      * Close #51 Sensor for DT_Trigger not displaying last value
+      * Bug for DT_Trigger command not correctly send #51
+      * Add toast when a command failed
+      * Force alternative on/off widget because of separation of sensor/command in 0.4
+      * Separate command and sensor in DB (need to sync) for 0.4
+      * Close #47 Correct a bug in map not showing the right state icon
+      * Correct a bug between 0/1 and on/off #47
+      * New widget for command in 0.4 (notify/generic osd/rgb) a simple one with keyboard InputType based on data_type
+	  * Make a toast when command (0.4 widget) are sent or when a problem occurs #46
+      * Command in 0.4 for DT_Switch is working at least for knx
+      * Command range in 0.4 for DT_Scale is working at least for knx
+      * Close #45 icon change from house menu bug
+      * Update house view to add icon in list of area/room/widget
+      * Avoid a crash in map too if devicetype doesn't contains a "."
+      * Avoid a crash if device type does not contains plugin name
+      * Lots of other correction...
+      % Version 10
+      _ 2015-11-13
+      * Add the Changelog (also in about view)
+      * Close #43 old problem when re-sync make domodroid freeze
+      * Close #42 Change Icon also work for map widgets
+      * Close #41 Achartengine Crash if no value in db
+      * Correct some bugs (map modifiable by longclic but disable in option)
+      * Command working in 0.4 for DT_Trigger with wake on lan at least
+      * Add name of current element in alert title box
+      * Improve MQ option by getting settings from rest at sync
+      * Close #2090 bug with MQ address
+      % Version 9
+      _ 2015-09-02
+      * Add the butler part if in 0.4
+      * Add boolean to be activated (on/off) directly from map
+      * Longlic on map to modify it
+      *	Device are now sorted by name in house organization menu
+      * Boolean command for 0.4 should work
+      % Version 8
+      _ 2015-05-09
+      * 1st domogik 0.4 compatible version.
+	  * Only sensor are working for the moment (no commands in this version).
+	  % Version 7
+      _ 2014-10-17
+      * Preview icon in add list from map mode
+	  * New menu
+	  * New icons
+	  * New preferences
+	  * New language NL start
+	  * Fix a bug in start on map when never sync
+	  * Fix Some Bug on 1st Launch
+	  % Version 5
+      _ 2014-09-27
+      * Fix a bug with 2 colons options.
+      * Allow user to add a widget on root house.
+      * Allow widgets in usage area to be seen even if by_usage is force
+	  % Version 4
+      _ 2014-09-26
+      * Icon are now visible when you want to change it.
+      * Correction of a bug in device as no usage in domogik 0.3
+      * Continue working new widget forCallerID
+	  % Version 3
+      _ 2014-09-14
+      * Correction of a bug when deleting widget
+	  * Starting a new widget forCallerID
+	  % Version 2
+      _ 2014-09-10
+      * Menu improve to change name,icon or delete area and room.
+      * Advance in house configuration.
+	  % Version 1
+      _ 2014-09-06
+      * Change to 1.3 version since lost of android dev key :(
+    $ END_OF_CHANGE_LOG
+  </body>
+</html>

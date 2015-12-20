@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+android:title="Preferences">
+ 
+ <PreferenceCategory
+     android:title="@string/OPTION_server_settings">
+     <Preference
+         android:selectable="false"
+         android:shouldDisableView="false"
+         android:enabled="false"
+         android:summary="@string/OPTION_server_explain"/>
+     <EditTextPreference
+         android:title="@string/OPTION_server_IP"
+         android:dialogTitle="@string/OPTION_server_IP_Title"
+         android:inputType = "textUri"
+         android:key="rinorIP"/>
+     <EditTextPreference
+         android:title="@string/OPTION_server_PORT"
+         android:defaultValue="40405"
+         android:dialogTitle="@string/OPTION_server_PORT_Title"
+         android:inputType = "number"
+         android:key="rinorPort"/>
+     <EditTextPreference
+         android:title="@string/OPTION_server_Path"
+         android:dialogTitle="@string/OPTION_server_Path_Title"
+         android:key="rinorPath"/>
+     <EditTextPreference
+         android:title="@string/OPTION_server_http_user"
+         android:dialogTitle="@string/OPTION_server_http_user_Title"
+         android:key="http_auth_username"/>
+     <EditTextPreference
+         android:title="@string/OPTION_server_http_password"
+         android:dialogTitle="@string/OPTION_server_http_password_Title"
+         android:key="http_auth_password"
+         android:inputType="textPassword"
+         android:password="true"
+         />
+     <Preference
+         android:title="@string/UPDATE_TIMER"
+         android:key="UPDATE_TIMER"
+         android:selectable="false"
+         android:enabled="false"
+         android:shouldDisableView="true"/>
+     <EditTextPreference
+         android:key="UPDATE_URL"
+         android:title="@string/UPDATE_URL"
+         android:shouldDisableView="true"
+         android:enabled="false"
+         android:selectable="false"
+         />
+     <EditTextPreference
+         android:key="URL"
+         android:title="@string/Rinor_URL"
+         android:shouldDisableView="true"
+         android:enabled="false" android:selectable="false"
+         />
+     <EditTextPreference
+         android:key="MQaddress"
+         android:inputType = "textUri"
+         android:title="@string/MQ_address"
+         android:selectable="true"
+         android:enabled="true"
+         />
+     <EditTextPreference
+         android:key="MQsubport"
+         android:title="@string/Mq_sub_port"
+         android:inputType = "number"
+         android:defaultValue="40412"
+         />
+     <EditTextPreference
+         android:key="MQpubport"
+         android:title="@string/Mq_pub_port"
+         android:inputType = "number"
+         android:defaultValue="40411"
+         />
+ </PreferenceCategory>
+
+<PreferenceCategory
+    android:title="@string/usage_settings">
+    <Preference
+        android:summary="@string/usage_explain"
+        android:selectable="false"
+        android:shouldDisableView="false"
+        android:enabled="false"/>
+    <CheckBoxPreference
+        android:summaryOn="@string/widgets_alternative"
+        android:summaryOff="@string/widget_normal"
+        android:key="WIDGET_CHOICE"
+        android:title="@string/widget_choice" />
+ <CheckBoxPreference
+     android:summaryOn="@string/Graph_achartengine"
+     android:summaryOff="@string/Graph_normal"
+     android:key="Graph_CHOICE"
+     android:title="@string/graph_choice"/>
+ <CheckBoxPreference
+     android:summaryOn="@string/twocollandscape_1"
+     android:summaryOff="@string/twocollandscape_2"
+     android:key="twocol_lanscape"
+     android:title="@string/twocollandscapecheckbox"
+     android:defaultValue="true"/>
+ <CheckBoxPreference
+     android:summaryOn="@string/twocolportrait_1"
+     android:summaryOff="@string/twocolportrait_2"
+     android:key="twocol_portrait"
+     android:title="@string/twocolportraitcheckbox"
+     android:defaultValue="true"/>
+ <CheckBoxPreference
+     android:summaryOn="@string/usage_byusage"
+     android:summaryOff="@string/usage_byhouse"
+     android:key="BY_USAGE"
+     android:title="@string/usage_byusagecheckbox"/>
+ <CheckBoxPreference
+     android:summaryOn="@string/Navigation_drawer_on"
+     android:summaryOff="@string/Navigation_drawer_off"
+     android:key="Navigation_drawer"
+     android:title="@string/Navigation_drawer"/>
+ 
+ 
+</PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/map_settings">
+        <Preference
+            android:summary="@string/map_explain"
+            android:selectable="false"
+            android:shouldDisableView="false"
+            android:enabled="false"/>
+
+    <CheckBoxPreference
+        android:summaryOn="@string/map_option_drag_on"
+        android:summaryOff="@string/map_option_drag_off"
+        android:key="DRAG"
+        android:title="@string/map_option_drag"
+        android:defaultValue="false"/>
+    <CheckBoxPreference
+        android:summaryOn="@string/map_option_zoom_on"
+        android:summaryOff="@string/map_option_zoom_off"
+        android:key="ZOOM"
+        android:title="@string/map_option_zoom"
+        android:defaultValue="false"/>
+
+    <CheckBoxPreference
+        android:summaryOn="@string/map_option_hide_on"
+        android:summaryOff="@string/map_option_hide_off"
+        android:key="HIDE"
+        android:title="@string/map_option_hide"
+        />
+    <CheckBoxPreference
+        android:summaryOn="@string/map_option_menu_disable_on"
+        android:summaryOff="@string/map_option_menu_disable_off"
+        android:key="map_menu_disable"
+        android:title="@string/map_option_menu_disable"
+        />
+    
+    <CheckBoxPreference
+        android:summaryOn="@string/map_autozoom_on"
+        android:summaryOff="@string/map_autozoom_off"
+        android:key="map_autozoom"
+        android:title="@string/map_autozoom"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:summaryOn="@string/map_option_start_on"
+        android:summaryOff="@string/map_option_start_off"
+        android:key="START_ON_MAP"
+        android:title="@string/map_option_start"
+        />
+    <Preference android:title="@string/map_option_size" android:defaultValue="800" android:key="SIZE"/>
+    
+</PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/debug_settings">
+    <Preference
+        android:summary="@string/debug_explain"
+        android:selectable="false"
+        android:shouldDisableView="false"
+        android:enabled="false"/>
+
+        <CheckBoxPreference
+            android:summaryOn="@string/debug_log_debug_on"
+            android:summaryOff="@string/debug_log_debug_off"
+            android:key="LOG_DEBUG"
+            android:title="@string/debug_log_debug"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_log_error_on"
+        android:summaryOff="@string/debug_log_error_off"
+        android:key="LOG_ERROR"
+        android:title="@string/debug_log_error"
+        android:defaultValue="true"
+        />
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_log_info_on"
+        android:summaryOff="@string/debug_log_info_off"
+        android:key="LOG_INFO"
+        android:title="@string/debug_log_info"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_log_verbose_off"
+        android:summaryOff="@string/debug_log_verbose_off"
+        android:key="LOG_VERBOSE"
+        android:title="@string/debug_log_verbose"
+        android:defaultValue="true"
+        />
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_log_warning_on"
+        android:summaryOff="@string/debug_log_warning_off"
+        android:key="LOG_WARNING"
+        android:title="@string/debug_log_warning"
+        android:defaultValue="true"
+        />
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_system_on"
+        android:summaryOff="@string/debug_system_off"
+        android:key="SYSTEMLOG"
+        android:title="@string/debug_system"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_screen_on"
+        android:summaryOff="@string/debug_screen_off"
+        android:key="SCREENLOG"
+        android:title="@string/debug_screen"
+        />
+    <CheckBoxPreference
+        android:summaryOn="@string/debug_file_on"
+        android:summaryOff="@string/debug_file_off"
+        android:key="TEXTLOG"
+        android:title="@string/debug_file"
+        android:defaultValue="true"
+        />
+    <EditTextPreference
+        android:title="@string/debug_dirpath"
+        android:dialogTitle="LOGPATH"
+        android:key="LOGPATH"/>
+    <EditTextPreference
+        android:title="@string/debug_filename"
+        android:dialogTitle="LOGNAME"
+        android:key="LOGNAME"/>
+    <CheckBoxPreference
+        android:summaryOn="Device id show"
+        android:summaryOff="Device id hide"
+        android:key="DEV"
+        android:title="@string/network_Text18"/>
+    
+</PreferenceCategory>
+
+
+<PreferenceCategory
+    android:title="@string/house_settings"
+    android:summary="Soon......">
+    <Preference
+        android:summary="@string/house_explain"
+        android:selectable="false"
+        android:shouldDisableView="false"
+        android:enabled="false"/>
+</PreferenceCategory>
+
+<PreferenceCategory
+    android:title="@string/OPTION_butler_settings">
+    <Preference
+        android:selectable="false"
+        android:shouldDisableView="false"
+        android:enabled="false"
+        android:summary="@string/OPTION_butler_explain"/>
+    <EditTextPreference
+        android:title="@string/OPTION_butler_name"
+        android:key="dmg_butler_name"
+        android:summary="@string/OPTION_butler_name_desc"/>
+    <EditTextPreference
+        android:title="@string/OPTION_your_name"
+        android:key="dmg_your_name"
+        android:summary="@string/OPTION_your_name_desc"/>
+</PreferenceCategory>
+ 
+  
+    
+    
+    
+    
+ 
+ 
+ 
+</PreferenceScreen>

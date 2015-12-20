@@ -21,7 +21,9 @@
   <body>
     $ 1.4-DEV
       % Version 12
-      _ 201x-xx-xx
+      _ 2015-12-20
+      * Working with non xpl plugin and 0.5
+      * #24 start working on navigation drawer
       * #30 Solved disk space converted (no more 1.4e7)
       * Translate command (for display in list and widget)
       * Update RU translation (nearly finished)
@@ -31,6 +33,7 @@
       * #23 Solved Map AutoZoom working (3 years old bug)
       * #58 Start passing all log level in apps
       * Make log to screen works. (Old TODO)
+      * Now dev with Android Studio
       % Version 11
       _ 2015-11-29
       * Update translation RU/FR/NL

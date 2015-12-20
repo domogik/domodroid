@@ -69,7 +69,13 @@
 	        android:text="@string/help_Text1"
 	        android:textColor="#FFFFFF" />
 
-	    <TextView
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/about_maintain"
+			android:textColor="#FFFFFF" />
+
+		<TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:paddingTop="10dip"
@@ -92,16 +98,24 @@
 	        android:paddingTop="10dip"
 	        android:text="@string/help_Text4"
 	        android:textColor="#FFFFFF" />
-		
+
 		<TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:autoLink="web|email"
-	        android:paddingTop="10dip"
-	        android:text="@string/help_Text5"
-	        android:textColor="#FFFFFF" />
-		
-	    <TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:autoLink="web|email"
+			android:paddingTop="10dip"
+			android:text="@string/help_Text5"
+			android:textColor="#FFFFFF" />
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:autoLink="web|email"
+			android:paddingTop="10dip"
+			android:text="@string/about_traduction"
+			android:textColor="#FFFFFF" />
+
+		<TextView
 	        android:id="@+id/versionText"
 	     	android:layout_width="wrap_content"
 	        android:layout_height="wrap_content" />
@@ -116,7 +130,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/changelog_title"
 			android:id="@+id/showchangelog"
-			android:layout_marginTop="20dip" />
+			android:layout_marginTop="10dip" />
 	    
 	</LinearLayout>
 </ScrollView>

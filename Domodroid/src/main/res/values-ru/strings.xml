@@ -30,11 +30,11 @@
   <string name="bt_day">За день</string>
   <string name="Ok">OK</string>
   <string name="help_Title">Domodroid</string>
-  <string name="help_Text1">Domodroid бесплатное приложение для Android под лицензией GNU GPLv3 разработано Pierre Lainé\n Модифицировано Dominique DAMBRAIN</string>
+  <string name="help_Text1">Domodroid бесплатное приложение для Android под лицензией GNU GPLv3 разработано Pierre Lainé\nМодифицировано Dominique DAMBRAIN</string>
   <string name="help_Text2">Управление освещением, получение информации о температуре и влажности внутри или снаружи - все с одного экрана на вашем Android устройстве. Требуется система домашней автоматизации и сервер Domogik. Domodroid предлагает Вам контроль над вашей системой домашней автоматизации Domogik с большим разнообразием поддерживаемых устройств</string>
   <string name="help_Text3">Проект Domogik : http://www.domogik.org/</string>
-  <string name="help_Text4">Документация Domodroid доступна: http://domodroid.readthedocs.org/</string>
-  <string name="help_Text5">Связь через:\n domogik-developers@lists.labs.libre-entreprise.org</string>
+  <string name="help_Text4">Документация Domodroid доступна:\nhttp://domodroid.readthedocs.org/</string>
+  <string name="help_Text5">Связь через:\ndomogik-developers@lists.labs.libre-entreprise.org</string>
   <string name="splash_title">Милости просим в Domodroid 1.3 !</string>
   <string name="home_splash">В новой версии Domodroid включено много новых функций и улучшений, которые не были проверены по всем видам устройств Android. Если что-нибудь пойдет не так, вы можете связаться с разработчиком по адресу: http://wiki.domogik.org/Contact+and+support .</string>
   <string name="home_splash2">Пожалуйста, удалите данные кэша Domodroid из панели \"Управление приложениями\"  перед использованием новой версии.</string>

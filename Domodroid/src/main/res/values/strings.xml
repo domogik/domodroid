@@ -590,4 +590,15 @@
 	<string name="Graph_normal">Normal Graph</string>
 	<string name="widgets_alternative">Alternative on/off</string>
 	<string name="widget_normal">Normal on/off</string>
+	<string name="name">Name</string>
+	<string name="luminance">Luminance</string>
+	<string name="motion_sensor_level">Motion sensor level</string>
+	<string name="temperature_c">Temperature °C</string>
+	<string name="battery">Battery</string>
+	<string name="rssi">Rssi</string>
+	<string name="smoke">Smoke</string>
+	<string name="open_close">Open close</string>
+	<string name="rssi_open_close">Rssi open close</string>
+	<string name="available">Available</string>
+	<string name="rssi_lighting2">Rssi lighting2</string>
 </resources>

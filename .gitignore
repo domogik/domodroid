@@ -21,7 +21,7 @@ build/
 # Windows thumbnail db
 Thumbs.db
 
-
+/captures
 # Additionnal files
 gradlew
 gradlew.bat

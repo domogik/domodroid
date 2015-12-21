@@ -161,7 +161,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             }
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer,getContext(), fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {
@@ -179,8 +179,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_area;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 3));
-
+                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
                             dialog.cancel();
                         }
                     }

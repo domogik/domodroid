@@ -35,7 +35,8 @@ public class Graphics_Manager {
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_off;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
 			else if(usage.equals("battery")){return R.drawable.usage_battery_off;}
-			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
+            else if(usage.equals("bluetooth")){return R.drawable.usage_bluetooth_off;}
+            else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_off;}
 			else if(usage.equals("door")){return R.drawable.usage_door_off;}
@@ -90,7 +91,8 @@ public class Graphics_Manager {
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_50;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_50;}
 			else if(usage.equals("battery")){return R.drawable.usage_battery_50;}
-			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
+            //Todo add bluetooth 50
+            else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_50;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_50;}
 			else if(usage.equals("door")){return R.drawable.usage_door_50;}
@@ -145,7 +147,8 @@ public class Graphics_Manager {
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_on;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_on;}
 			else if(usage.equals("battery")){return R.drawable.usage_battery_on;}
-			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
+            else if(usage.equals("bluetooth")){return R.drawable.usage_bluetooth_on;}
+            else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_on;}
 			else if(usage.equals("door")){return R.drawable.usage_door_on;}
@@ -200,6 +203,7 @@ public class Graphics_Manager {
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_undefined;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_undefined;}
             else if(usage.equals("battery")){return R.drawable.usage_battery_undefnied;}
+            else if(usage.equals("bluetooth")){return R.drawable.usage_bluetooth_undefined;}
             else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_undefined;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_undefined;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_undefined;}
@@ -366,7 +370,9 @@ public class Graphics_Manager {
 		//TODO adapt for 0.4
 		//information are in json device_types of each plugin
 		//BLUEZ "available"
-		//CID "callerid"
+        if (usage.equals("available")||usage.contains("bluez"))
+            usage="bluetooth";
+        //CID "callerid"
 		if (usage.contains("callerid"))
 			usage="telephony";
 		//DAIKCODE "set_power", "set_setpoint", "set_mode", "set_vertical_swing", "set_horizontal_swing",
@@ -455,7 +461,7 @@ public class Graphics_Manager {
             usage="battery";
         if (usage.contains("thermostat"))
 			usage="temperature";
-		if (usage.contains("opening_sensor"))
+		if (usage.contains("opening_sensor")||usage.contains("opening.sensor"))
 			usage="door";
 		return usage;
 

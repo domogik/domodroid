@@ -116,7 +116,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         final CharSequence[] char_list_zone = list_area.toArray(new String[list_area.size()]);
         list_area_choice.setTitle(R.string.Wich_AREA_message);
         //TODO display icon in list
-        List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer,getContext(), list_area);
+        List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), list_area);
         list_area_choice.setAdapter(adapter, null);
         list_area_choice.setSingleChoiceItems(char_list_zone, -1,
                 new DialogInterface.OnClickListener() {
@@ -136,7 +136,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         final CharSequence[] char_list_room = list_room.toArray(new String[list_room.size()]);
         list_room_choice.setTitle(R.string.Wich_ROOM_message);
         //TODO display icon in list
-        List_Icon_Adapter adapter2 = new List_Icon_Adapter(Tracer,getContext(), list_room);
+        List_Icon_Adapter adapter2 = new List_Icon_Adapter(Tracer, getContext(), list_room);
         list_room_choice.setAdapter(adapter2, null);
         list_room_choice.setSingleChoiceItems(char_list_room, -1,
                 new DialogInterface.OnClickListener() {
@@ -160,17 +160,17 @@ class Dialog_House extends Dialog implements OnClickListener {
                 }
             } else {
                 try {
-                    list_feature.add(feature.getName() + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())).toString());
+                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())).toString());
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
-                    list_feature.add(feature.getName() + "-" + feature.getState_key());
+                    list_feature.add(feature.getName() + " " + feature.getState_key());
                 }
             }
         }
         final CharSequence[] char_list_feature = list_feature.toArray(new String[list_feature.size()]);
         list_feature_choice.setTitle(R.string.Wich_feature_message);
         //TODO display icon in list
-        List_Icon_Adapter adapter1 = new List_Icon_Adapter(Tracer,getContext(), list_feature);
+        List_Icon_Adapter adapter1 = new List_Icon_Adapter(Tracer, getContext(), list_feature);
         list_feature_choice.setAdapter(adapter1, null);
         list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
                 new DialogInterface.OnClickListener() {
@@ -190,7 +190,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         }
         final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
         list_icon_choice.setTitle(R.string.Wich_ICON_message);
-        List_Icon_Adapter adapter11 = new List_Icon_Adapter(Tracer,getContext(), fiilliste);
+        List_Icon_Adapter adapter11 = new List_Icon_Adapter(Tracer, getContext(), fiilliste);
         list_icon_choice.setAdapter(adapter11, null);
         list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                 new DialogInterface.OnClickListener() {
@@ -215,7 +215,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         final CharSequence[] char_list_type = list_type.toArray(new String[list_type.size()]);
         list_type_choice.setTitle(R.string.Wich_TYPE_message);
         //TODO display icon in list
-        List_Icon_Adapter adapter111 = new List_Icon_Adapter(Tracer,getContext(), list_type);
+        List_Icon_Adapter adapter111 = new List_Icon_Adapter(Tracer, getContext(), list_type);
         list_type_choice.setAdapter(adapter111, null);
         list_type_choice.setSingleChoiceItems(char_list_type, -1,
                 new DialogInterface.OnClickListener() {
@@ -300,7 +300,6 @@ class Dialog_House extends Dialog implements OnClickListener {
         //ADD a feature
         AlertDialog.Builder alert_Feature = new AlertDialog.Builder(getContext());
         //set a title
-        //TODO Not the good text
         alert_Feature.setTitle(R.string.Confirm_title);
         //set a message
         alert_Feature.setMessage(R.string.Confirm_message);
@@ -342,7 +341,6 @@ class Dialog_House extends Dialog implements OnClickListener {
         //ADD an icon
         AlertDialog.Builder alert_Icon = new AlertDialog.Builder(getContext());
         //set a title
-        //TODO Not the good text
         alert_Icon.setTitle(R.string.Confirm_title);
         //set a message
         alert_Icon.setMessage(R.string.Confirm_message);
@@ -506,12 +504,21 @@ class Dialog_House extends Dialog implements OnClickListener {
         for (Entity_Feature feature : listFeature) {
             map = new HashMap<String, String>();
             if (feature.getParameters().contains("command")) {
-                //TODO Use R.STRING for state_key
-                map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getValue_type());
+                try {
+                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
+                } catch (Exception e) {
+                    Tracer.d(mytag, "no translation for: " + feature.getState_key());
+                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
+                }
             } else {
-                //TODO Use R.STRING for state_key
-                map.put("name", feature.getName() + "-" + feature.getValue_type());
+                try {
+                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
+                } catch (Exception e) {
+                    Tracer.d(mytag, "no translation for: " + feature.getState_key());
+                    map.put("name", feature.getName() + " " + feature.getState_key());
+                }
             }
+
             String iconName = "unknow";
             try {
                 iconName = domodb.requestIcons(feature.getId(), "feature").getValue();

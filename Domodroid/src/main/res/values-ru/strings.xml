@@ -445,7 +445,7 @@
   <string name="direction">Направление</string>
   <string name="visibility">Видимость</string>
   <string name="pressure">Давление</string>
-  <string name="state:">Состояние:</string>
+  <string name="state_">Состояние:</string>
   <string name="phone">Телефон</string>
   <string name="states">Состояния</string>
   <string name="illuminance">Освещённость</string>

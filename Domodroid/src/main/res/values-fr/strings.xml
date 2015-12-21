@@ -497,7 +497,7 @@
     <string name="direction">Direction</string>
     <string name="visibility">Visibilité</string>
     <string name="pressure">Pression</string>
-    <string name="state:">Etat:</string>
+    <string name="state_">Etat:</string>
     <string name="phone">Téléphone</string>
     <string name="states">Etats</string>
     <string name="run">Marche</string>

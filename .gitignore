@@ -1,6 +1,8 @@
 # Android Studio
 .idea/
 .gradle
+/.gradle
+/.idea
 !build.gradle
 build/
 /*/local.properties

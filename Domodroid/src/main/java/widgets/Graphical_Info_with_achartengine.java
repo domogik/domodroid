@@ -309,6 +309,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             value.setText(loc_Value);
                         }
                     }
+                    //Todo change icon if in %
                     //To have the icon colored as it has no state
                     IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 

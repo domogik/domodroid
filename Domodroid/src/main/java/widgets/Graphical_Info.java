@@ -264,7 +264,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 							}
 						}
 					}
-					//To have the icon colored as it has no state
+					// Todo change icon if in %
+					// To have the icon colored as it has no state
 					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
 				} else if (msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !

@@ -34,6 +34,7 @@ public class Graphics_Manager {
 			//reorder by usage name for easy update
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_off;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_off;}
+			else if(usage.equals("battery")){return R.drawable.usage_battery_off;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_off;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_off;}
@@ -88,6 +89,7 @@ public class Graphics_Manager {
 			//reorder by usage name for easy update
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_50;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_50;}
+			else if(usage.equals("battery")){return R.drawable.usage_battery_50;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_50;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_50;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_50;}
@@ -142,6 +144,7 @@ public class Graphics_Manager {
 			//reorder by usage name for easy update
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_on;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_on;}
+			else if(usage.equals("battery")){return R.drawable.usage_battery_on;}
 			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_on;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_on;}
@@ -196,7 +199,8 @@ public class Graphics_Manager {
 			//reorder by usage name for easy update
 			if(usage.equals("air_conditionning")){return R.drawable.usage_air_undefined;}
 			else if(usage.equals("appliance")){return R.drawable.usage_appliance_undefined;}
-			else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_undefined;}
+            else if(usage.equals("battery")){return R.drawable.usage_battery_undefnied;}
+            else if(usage.equals("christmas_tree")){return R.drawable.usage_christmas_tree_undefined;}
 			else if(usage.equals("computer")){return R.drawable.usage_computer_undefined;}
 			else if(usage.equals("cron")){return R.drawable.usage_cron_undefined;}
 			else if(usage.equals("door")){return R.drawable.usage_door_undefined;}
@@ -245,7 +249,7 @@ public class Graphics_Manager {
 			else if(usage.equals("house")){return R.drawable.house;}
 			else if(usage.equals("map")){return R.drawable.map;}
 			else return R.drawable.usage_default_undefined;
-		}	
+		}
 		return R.drawable.icon;
 	}
 
@@ -307,7 +311,8 @@ public class Graphics_Manager {
 			}
 			 */
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_off;}
-			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
+            else if(usage.equals("battery")){return R.drawable.map_usage_battery_off;}
+            else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_off;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_off;}
 			else if(usage.equals("cron")){return R.drawable.map_usage_cron_off;}
 			else if(usage.equals("door")){return R.drawable.map_usage_door_off;}
@@ -326,7 +331,8 @@ public class Graphics_Manager {
 		case 1:
 			//reorder by usage name for easy update
 			if(usage.equals("appliance")){return R.drawable.map_usage_appliance_on;}
-			else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_on;}
+            else if(usage.equals("battery")){return R.drawable.map_usage_battery_on;}
+            else if(usage.equals("christmas_tree")){return R.drawable.map_usage_christmas_tree_on;}
 			else if(usage.equals("computer")){return R.drawable.map_usage_computer_on;}
 			else if(usage.equals("cron")){return R.drawable.map_usage_cron_on;}
 			else if(usage.equals("door")){return R.drawable.map_usage_door_on;}
@@ -364,7 +370,7 @@ public class Graphics_Manager {
 		if (usage.contains("callerid"))
 			usage="telephony";
 		//DAIKCODE "set_power", "set_setpoint", "set_mode", "set_vertical_swing", "set_horizontal_swing",
-		//"set_speedfan", "set_powerfull", "set_silent", "set_home_leave", "set_sensor", 
+		//"set_speedfan", "set_powerfull", "set_silent", "set_home_leave", "set_sensor",
 		//"set_start_time", "set_stop_time", "power", "vertical_swing", "horizontal_swing", "powerfull"
 		//"silent", "home_leave", "sensor", "setpoint", "setmode", "speedfan", "starttime", "stoptime"
 		if (usage.contains("swing")||usage.contains("fan"))
@@ -380,23 +386,25 @@ public class Graphics_Manager {
 		//K8056 "sensor_switch_relay", "cmd_switch_relay"
 		//MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
 		//"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
-		//"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current", 
-		if (usage.contains("power")||usage.contains("energy")||usage.contains("voltage")||usage.equals("sensor_current"))
+		//"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current",
+        if (usage.contains("battery"))
+            usage="battery";
+        if (usage.contains("power")||usage.contains("energy")||usage.contains("voltage")||usage.equals("sensor_current"))
 			usage="electricity";
 		if (usage.equals("sensor_rainfall")||usage.equals("sensor_water"))
 			usage="water";
 		//NOTIFY "msg_status", "error_send"
 		//NUTSERVE "test_battery_start", "test_battery_start_deep", "ups_status", "ups_event", "input_voltage", "output_voltage"
 		//"battery_voltage", "battery_charge", "ack_command",
-		//ONEWIRE "temperature", "humidity", "serial", "gpio", 
-		if (usage.contains("thermometer"))
+		//ONEWIRE "temperature", "humidity", "serial", "gpio",
+        if (usage.contains("thermometer"))
 			usage="temperature";
 		//PING "ping"
 		if (usage.contains("ping"))
 			usage="computer";
 		//SCRIPT "sensor_script_action", "sensor_script_info", "run_script_action", "run_script_info"
 		if (usage.contains("script"))
-			usage="scene";		
+			usage="scene";
 		//TELEINFO "adco", "optarif", "isousc", "base", "iinst", "imax", "motdetat", "hchc", "hchp"
 		//"ptec", "papp", "hhphc", "iinst1", "iinst2", "iinst3", "imax1", "imax2", "imax3", "adps"
 		//"ejphn", "ejphpm", "pejp", "bbrhcjb", "bbrhpjb", "bbrhcjw", "bbrhpjw", "bbrhcjr", "bbrhpjr"
@@ -436,14 +444,14 @@ public class Graphics_Manager {
 		//WOL "wol"
 		if (usage.equals("wol"))
 			usage="computer";
-		//ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power", 
+		//ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
 		//"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
 		//"level", "motion_sensor_level", "luminance", "sensor_alarm","low_battery", "thermostat_setpoint"
 		if (usage.contains("thermostat"))
 			usage="temperature";
 		if (usage.contains("opening_sensor"))
 			usage="door";
-		return usage;		
+		return usage;
 
 	}
 

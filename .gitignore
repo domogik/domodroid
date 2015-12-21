@@ -12,6 +12,7 @@ build/
 *.ipr
 *~
 *.swp
+/Domodroid/src/main/gen
 
 # Windows thumbnail db
 Thumbs.db

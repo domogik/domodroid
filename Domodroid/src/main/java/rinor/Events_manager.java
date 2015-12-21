@@ -221,9 +221,11 @@ public class Events_manager {
                                         String ticket = "1";
                                         String device_id = json_stats_04.get("sensor_id").toString();
                                         String New_Value = json_stats_04.get("stored_value").toString();
+                                        String Timestamp= json_stats_04.get("timestamp").toString();
                                         //TODO find a way to get the state_key of the feature by id=sensorid here!!
                                         String New_Key = "";
-                                        Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
+                                        Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value +" Timestamp = " + Timestamp);
+                                        Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                         put_event(to_stack);    //Put in stack, and notify cache engine
                                         stats_com.add(Stats_Com.EVENTS_RCV, result.toString().length());
                                     } catch (JSONException e) {
@@ -402,9 +404,10 @@ public class Events_manager {
                                         try {
                                             String New_Key = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
                                             String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
-                                            Tracer.w(mytag, "event ready : Ticket = " + ticket + " Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value);
+                                            String Timestamp = event.getJSONArray("event").getJSONObject(i).getString("timestamp");
+                                            Tracer.v(mytag, "event ready : Ticket = " + ticket + " Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value +" Timestamp = " + Timestamp);
                                             event_item++;
-                                            Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value);
+                                            Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                             put_event(to_stack);    //Put in stack, and notify cache engine
                                         } catch (Exception e) {
                                             Tracer.e(mytag, "Malformed data entry ?????????????????");

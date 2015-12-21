@@ -387,7 +387,7 @@ public class Graphics_Manager {
 		//MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
 		//"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
 		//"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current",
-        if (usage.contains("battery"))
+        if (usage.equals("sensor_battery"))
             usage="battery";
         if (usage.contains("power")||usage.contains("energy")||usage.contains("voltage")||usage.equals("sensor_current"))
 			usage="electricity";
@@ -397,6 +397,8 @@ public class Graphics_Manager {
 		//NUTSERVE "test_battery_start", "test_battery_start_deep", "ups_status", "ups_event", "input_voltage", "output_voltage"
 		//"battery_voltage", "battery_charge", "ack_command",
 		//ONEWIRE "temperature", "humidity", "serial", "gpio",
+        if (usage.equals("test_battery_start")||usage.equals("test_battery_start_deep")||usage.equals("battery_voltage")||usage.equals("battery_charge"))
+            usage="battery";
         if (usage.contains("thermometer"))
 			usage="temperature";
 		//PING "ping"
@@ -420,7 +422,9 @@ public class Graphics_Manager {
 				)
 			usage="electricity";
 		//RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close"
-		if (usage.contains("lighting"))
+        if (usage.equals("battery"))
+            usage="battery";
+        if (usage.contains("lighting"))
 			usage="light";
 		if (usage.contains("open_close"))
 			usage="door";
@@ -446,8 +450,10 @@ public class Graphics_Manager {
 			usage="computer";
 		//ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
 		//"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
-		//"level", "motion_sensor_level", "luminance", "sensor_alarm","low_battery", "thermostat_setpoint"
-		if (usage.contains("thermostat"))
+		//"level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
+        if (usage.equals("battery_level")||usage.equals("low_battery")||usage.equals("battery_level"))
+            usage="battery";
+        if (usage.contains("thermostat"))
 			usage="temperature";
 		if (usage.contains("opening_sensor"))
 			usage="door";

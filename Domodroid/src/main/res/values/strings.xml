@@ -605,4 +605,7 @@
 	<string name="about_traduction">Translate by transifex here:\nhttps://www.transifex.com/tikismoke-domodroid/</string>
 	<string name="blacklisted">Blacklisted</string>
 	<string name="blacklist_a_number">Blacklist a number</string>
+	<string name="place_root">Root</string>
+	<string name="place_room">Room</string>
+	<string name="place_widget">Widget</string>
 </resources>

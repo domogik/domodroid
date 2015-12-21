@@ -346,8 +346,10 @@ public class Graphics_Manager {
 	}
 
 	public static int getStringIdentifier(Context context, String name) {
-		//To avoid space in name in strings.xml
+		//To avoid space or - in name in strings.xml
 		name=name.replace(" ", "_");
+		name=name.replace("-", "_");
+		name=name.replace(":", "_");
 		//To get a drawable R.Drawable
 		//context.getResources().getIdentifier(name, "drawable", context.getPackageName());
 		//To get a string from R.String

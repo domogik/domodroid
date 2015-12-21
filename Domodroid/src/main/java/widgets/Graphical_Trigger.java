@@ -90,7 +90,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 		try{
 			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+stat_key);
+			Tracer.d(mytag, "no translation for: "+stat_key);
 			stateS = state_key;
 		}
 		mytag="Graphical_Trigger("+dev_id+")";

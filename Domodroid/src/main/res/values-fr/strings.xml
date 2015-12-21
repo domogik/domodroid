@@ -497,7 +497,7 @@
     <string name="direction">Direction</string>
     <string name="visibility">Visibilité</string>
     <string name="pressure">Pression</string>
-    <string name="state:">Etat:</string>
+    <string name="state_">Etat:</string>
     <string name="phone">Téléphone</string>
     <string name="states">Etats</string>
     <string name="run">Marche</string>
@@ -525,4 +525,8 @@
     <string name="smoke">Fumée</string>
     <string name="open_close">Ouvert fermé</string>
     <string name="available">Disponible</string>
+    <string name="place_area">Zone</string>
+    <string name="place_room">Pièce</string>
+    <string name="place_root">Racine</string>
+    <string name="place_feature">Fonction</string>
 </resources>

@@ -110,7 +110,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		try{
 			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+state_key);
+			Tracer.d(mytag, "no translation for: "+state_key);
 			this.stateS= state_key;
 		}
 		mytag="Graphical_Range("+dev_id+")";

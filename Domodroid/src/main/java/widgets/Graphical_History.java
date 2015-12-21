@@ -17,9 +17,12 @@
  */
 package widgets;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -106,7 +109,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		try{
 			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+state_key);
+			Tracer.d(mytag, "no translation for: "+state_key);
 			stateS = state_key;
 		}
 		setOnClickListener(this);
@@ -206,7 +209,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String,String>>();
 		try {
 			if(api_version<=0.6f){
-				//Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
+				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
 				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
 			}else if(api_version>=0.7f){
 				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/last/5");
@@ -230,7 +233,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 						Tracer.e(mytag,"Error getting json value");
 					}
 				}
-			}else if(api_version>=0.7f){
+			}else if(api_version==0.7f){
 				for (int i=0; i <itemArray.length(); i++){
 					try {
 						HashMap<String,String> map=new HashMap<String,String>();
@@ -242,11 +245,30 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 						Tracer.e(mytag,"Error getting json value");
 					}
 				}
+			}else if(api_version>=0.8f){
+				//Prepare timestamp conversion
+                Calendar calendar = Calendar.getInstance();
+                TimeZone tz = TimeZone.getDefault();
+                calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                java.util.Date currenTimeZone;
+                for (int i=0; i <itemArray.length(); i++){
+					try {
+						HashMap<String,String> map=new HashMap<String,String>();
+						map.put("value",itemArray.getJSONObject(i).getString("value_str"));
+						currenTimeZone=new java.util.Date((long)(itemArray.getJSONObject(i).getInt("timestamp"))*1000);
+						map.put("date",sdf.format(currenTimeZone).toString());
+						listItem.add(map);
+						Tracer.d(mytag, map.toString());
+					}catch (Exception e) {
+						Tracer.e(mytag,"Error getting json value");
+					}
+				}
 			}
 
 		} catch (Exception e) {
 			//return null;
-			Tracer.e(mytag,"Error getting json object");
+			Tracer.e(mytag,"Error fetching json object");
 		}
 
 		SimpleAdapter adapter_feature=new SimpleAdapter(this.context,listItem,

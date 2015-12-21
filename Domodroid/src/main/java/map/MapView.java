@@ -602,7 +602,7 @@ public class MapView extends View {
 					value=context.getString((Graphics_Manager.getStringIdentifier(getContext(),
 							value.toLowerCase())));
 				}catch (Exception e1) {
-					Tracer.d(mytag,"Nothing in R.STRING for "+value );
+					Tracer.d(mytag,"no translation for: "+value );
 				}
 				if (value.equals("????"))
 					value="";
@@ -1089,12 +1089,12 @@ public class MapView extends View {
 			//save to pos_X1 where was release the press
 			float pos_X1 = event.getX();
 			//Select what action to do
-			if (addMode){
-				do_action("Add", event, value);
+				if (addMode){
+				do_action(context.getString(R.string.add), event, value);
 			}else if(removeMode){
-				do_action("Delete", event, value);
+				do_action(context.getString(R.string.delete), event, value);
 			}else if(moveMode){
-				do_action("Move", event, value);
+				do_action(context.getString(R.string.move), event, value);
 			}else{
 				//Move to left
 				if(pos_X1 - pos_X0 > screen_width/2){
@@ -1284,7 +1284,7 @@ public class MapView extends View {
 							public void onClick(DialogInterface dialog, int item) {
 								ListView lw = ((AlertDialog) dialog).getListView();
 								Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-								if (checkedItem.toString().equals("Add")) {
+								if (checkedItem.toString().equals(context.getString(R.string.add))) {
 									Activity_Map.dialog_feature.show();
 								}
 								do_action(checkedItem.toString(), event1, valuelongclic);
@@ -1314,7 +1314,7 @@ public class MapView extends View {
 					}
 					final CharSequence[] char_list_icon =list_icon.toArray(new String[list_icon.size()]);
 					list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message)+" "+featureMap.getName()+"-"+featureMap.getState_key());
-					List_Icon_Adapter adapter=new List_Icon_Adapter(getContext(), fiilliste);
+					List_Icon_Adapter adapter=new List_Icon_Adapter(Tracer,getContext(), fiilliste);
 					list_icon_choice.setAdapter(adapter,null );
 					list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
 							new DialogInterface.OnClickListener() {

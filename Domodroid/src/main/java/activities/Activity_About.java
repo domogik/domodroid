@@ -59,7 +59,7 @@ public class Activity_About extends Activity implements OnClickListener{
 
 		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
 		Tracer = tracerengine.getInstance(SP_params,this);
-		TV_domogikversionText.setText("Domogik version: "+SP_params.getString("DOMOGIK-VERSION", ""));
+		TV_domogikversionText.setText(getText(R.string.domogik_version)+SP_params.getString("DOMOGIK-VERSION", ""));
 		//display domodroid version
 		TextView TV_versionText = (TextView) findViewById(R.id.versionText);
 		if (TV_versionText != null) {

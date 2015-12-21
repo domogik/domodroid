@@ -104,7 +104,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		try{
 			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
 		}catch (Exception e){
-			Tracer.d(mytag, "no translation for this state:"+state_key);
+			Tracer.d(mytag, "no translation for: "+state_key);
 			stateS = state_key;
 		}
 		this.myself = this;
@@ -238,6 +238,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 								try {
 									value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
 								} catch (Exception e1) {
+									Tracer.d(mytag, "no translation for: " + loc_Value);
 									value.setText(loc_Value);
 								}
 							else value.setText(loc_Value);
@@ -250,7 +251,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 							Tracer.d(mytag, "Try to get value translate from R.STRING");
 							value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
 						} catch (Exception e1) {
-							Tracer.d(mytag, "Nothing in R.STRING for " + loc_Value);
+							Tracer.d(mytag, "no translation for: " + loc_Value);
 							value.setText(loc_Value);
 							if (state_key.equalsIgnoreCase("current_sunset")) {
 								Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");

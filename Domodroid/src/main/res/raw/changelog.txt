@@ -21,8 +21,11 @@
   <body>
     $ 1.4-DEV
       % Version 13
-      _ 2016-xx-xx
-
+      _ 2015-12-21
+      * Correct Map no more editable
+      * Correct history for callerid in 0.5
+      * Add lot of translation again
+      * Correct a crash with navigation drawer if by usage
       % Version 12
       _ 2015-12-20
       * Working with non xpl plugin and 0.5

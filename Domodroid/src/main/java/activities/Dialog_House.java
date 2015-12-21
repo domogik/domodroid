@@ -205,11 +205,13 @@ class Dialog_House extends Dialog implements OnClickListener {
         //list type area,room, widget
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
         List<String> list_type = new ArrayList<String>();
-        list_type.add(context.getString(R.string.place_root));
+        if (!v.getTag().equals("add_icon"))
+            list_type.add(context.getString(R.string.place_root));
         list_type.add(context.getString(R.string.area));
         list_type.add(context.getString(R.string.place_room));
         if (!v.getTag().equals("add_widget"))
             list_type.add(context.getString(R.string.place_widget));
+
         final CharSequence[] char_list_type = list_type.toArray(new String[list_type.size()]);
         list_type_choice.setTitle(R.string.Wich_TYPE_message);
         //TODO display icon in list
@@ -221,10 +223,21 @@ class Dialog_House extends Dialog implements OnClickListener {
                         ListView lw = ((AlertDialog) dialog).getListView();
                         Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
                         type = checkedItem.toString();
-                        if (v.getTag().equals("add_widget"))
-                            v.setTag("add_widget_" + type);
-                        else if (v.getTag().equals("add_icon"))
-                            v.setTag("add_icon_" + type);
+                        if (v.getTag().equals("add_widget")) {
+                            if (type.equals(context.getString(R.string.place_root)))
+                                v.setTag("add_widget_root");
+                            if (type.equals(context.getString(R.string.area)))
+                                v.setTag("add_widget_area");
+                            if (type.equals(context.getString(R.string.place_room)))
+                                v.setTag("add_widget_room");
+                        } else if (v.getTag().equals("add_icon")) {
+                            if (type.equals(context.getString(R.string.area)))
+                                v.setTag("add_icon_area");
+                            if (type.equals(context.getString(R.string.place_room)))
+                                v.setTag("add_icon_room");
+                            if (type.equals(context.getString(R.string.place_widget)))
+                                v.setTag("add_icon_widget");
+                        }
                         dialog.dismiss();
                         Dialog_House.this.onClick(v);
                     }
@@ -298,13 +311,18 @@ class Dialog_House extends Dialog implements OnClickListener {
             public void onClick(DialogInterface dialog_customname, int whichButton) {
                 lastid = domodb.requestidlastFeature_association();
                 ContentValues values = new ContentValues();
-                if (type.equals(context.getString(R.string.place_root)))
+                if (type.equals(context.getString(R.string.place_root))) {
+                    values.put("place_type", "root");
                     values.put("place_id", ("1"));
-                if (type.equals(context.getString(R.string.area)))
+                }
+                if (type.equals(context.getString(R.string.area))) {
+                    values.put("place_type", "area");
                     values.put("place_id", (area_id));
-                if (type.equals(context.getString(R.string.place_room)))
+                }
+                if (type.equals(context.getString(R.string.place_room))) {
                     values.put("place_id", (room_id));
-                values.put("place_type", type);
+                    values.put("place_type", "room");
+                }
                 //device_feature_id must come from the selected  one in list
                 values.put("device_feature_id", (feature_id));
                 values.put("id", (lastid + 1));
@@ -335,17 +353,22 @@ class Dialog_House extends Dialog implements OnClickListener {
             public void onClick(DialogInterface dialog_customname, int whichButton) {
                 ContentValues values = new ContentValues();
                 //type = area, room, feature
-                values.put("name", type);
                 //icon is the name of the icon wich will be select
                 values.put("value", icon);
                 //reference is the id of the area, room, or feature
                 int reference = 0;
-                if (type.equals(context.getString(R.string.area)))
+                if (type.equals(context.getString(R.string.area))) {
+                    values.put("name", "area");
                     reference = area_id;
-                if (type.equals(context.getString(R.string.place_room)))
+                }
+                if (type.equals(context.getString(R.string.place_room))) {
+                    values.put("name", "room");
                     reference = room_id;
-                if (type.equals(context.getString(R.string.place_widget)))
+                }
+                if (type.equals(context.getString(R.string.place_widget))) {
+                    values.put("name", "feature");
                     reference = feature_id;
+                }
                 values.put("reference", reference);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                 loadSpinnerData();
@@ -374,29 +397,29 @@ class Dialog_House extends Dialog implements OnClickListener {
             prefEditor.commit();
 
             dismiss();
-        } else if (tag.equals("add_" + context.getString(R.string.area))) {
+        } else if (tag.equals("add_area")) {
             alert_Area.show();
-        } else if (tag.equals("add_" + context.getString(R.string.place_room))) {
+        } else if (tag.equals("add_room")) {
             alert_Room.show();
             AlertDialog alert_list_area = list_area_choice.create();
             alert_list_area.show();
-        } else if (tag.equals("add_" + context.getString(R.string.place_widget))) {
+        } else if (tag.equals("add_widget")) {
             list_type_choice.show();
             AlertDialog alert_list_feature = list_feature_choice.create();
             alert_list_feature.show();
-        } else if (tag.equals("add_widget_" + context.getString(R.string.place_root))) {
+        } else if (tag.equals("add_widget_root")) {
             alert_Feature.show();
-            v.setTag("add_" + context.getString(R.string.place_widget));
-        } else if (tag.equals("add_widget_" + context.getString(R.string.area))) {
+            v.setTag("add_widget");
+        } else if (tag.equals("add_widget_area")) {
             alert_Feature.show();
             AlertDialog alert_list_area = list_area_choice.create();
             alert_list_area.show();
-            v.setTag("add_" + context.getString(R.string.place_widget));
-        } else if (tag.equals("add_widget_" + context.getString(R.string.place_room))) {
+            v.setTag("add_widget");
+        } else if (tag.equals("add_widget_room")) {
             alert_Feature.show();
             AlertDialog alert_list_room = list_room_choice.create();
             alert_list_room.show();
-            v.setTag("add_" + context.getString(R.string.place_widget));
+            v.setTag("add_widget");
         } else if (tag.equals("add_icon")) {
             list_type_choice.show();
             AlertDialog alert_list_icon = list_icon_choice.create();
@@ -405,17 +428,17 @@ class Dialog_House extends Dialog implements OnClickListener {
             //in function display
             //display list of all icons
             //and change the tag for onclic() method
-        } else if (tag.equals("add_icon_" + context.getString(R.string.area))) {
+        } else if (tag.equals("add_icon_area")) {
             alert_Icon.show();
             AlertDialog alert_list_area = list_area_choice.create();
             alert_list_area.show();
             v.setTag("add_icon");
-        } else if (tag.equals("add_icon_" + context.getString(R.string.place_room))) {
+        } else if (tag.equals("add_icon_room")) {
             alert_Icon.show();
             AlertDialog alert_list_room = list_room_choice.create();
             alert_list_room.show();
             v.setTag("add_icon");
-        } else if (tag.equals("add_icon_" + context.getString(R.string.place_widget))) {
+        } else if (tag.equals("add_icon_widget")) {
             alert_Icon.show();
             AlertDialog alert_list_feature = list_feature_choice.create();
             alert_list_feature.show();

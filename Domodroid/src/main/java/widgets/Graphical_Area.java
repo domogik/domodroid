@@ -179,7 +179,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_area;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 3));
 
                             dialog.cancel();
                         }

@@ -249,6 +249,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
+                    String test_unite="";
                     try {
                         float formatedValue = 0;
                         if (loc_Value != null) {
@@ -258,7 +259,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         try {
                             //Basilic add, number feature has a unit parameter
                             JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                            String test_unite = jparam.getString("unit");
+                            test_unite = jparam.getString("unit");
                             //#30 add Scale value if too big for byte only
                             if (test_unite.equals("b")) {
                                 value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
@@ -310,8 +311,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         }
                     }
                     //Todo change icon if in %
-                    //To have the icon colored as it has no state
-                    IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                    if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+                        if (Float.parseFloat(loc_Value) >= 60) {
+                            //To have the icon colored if value beetwen 30 and 60
+                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                        } else if (Float.parseFloat(loc_Value) >= 30) {
+                            //To have the icon colored if value >30
+                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 1));
+                        } else {
+                            //To have the icon colored if value <30
+                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+                        }
+                    } else {
+                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                    }
 
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !

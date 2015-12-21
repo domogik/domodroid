@@ -525,8 +525,9 @@
     <string name="smoke">Fumée</string>
     <string name="open_close">Ouvert fermé</string>
     <string name="available">Disponible</string>
-    <string name="place_area">Zone</string>
+    <string name="about_maintain">Maintenu par new.domodroid@gmail.com</string>
+    <string name="about_traduction">Traduit par Transifex ici:\nhttps://www.transifex.com/tikismoke-domodroid/</string>
+    <string name="place_root">Base</string>
     <string name="place_room">Pièce</string>
-    <string name="place_root">Racine</string>
-    <string name="place_feature">Fonction</string>
+    <string name="place_widget">Widget</string>
 </resources>

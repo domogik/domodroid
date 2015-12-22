@@ -165,9 +165,8 @@ public class MapView extends View {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         screen_width = metrics.widthPixels;
         scale = getContext().getResources().getDisplayMetrics().density;
-        Resources r = getResources();
-        dip20 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 17, r.getDisplayMetrics());
-        text_Offset_X = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
+        dip20 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 17, metrics);
+        text_Offset_X = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics);
 
         startCacheEngine();
         /*
@@ -1287,10 +1286,22 @@ public class MapView extends View {
                 Builder list_type_choice = new Builder(getContext());
                 List<String> list_choice = new ArrayList<String>();
                 list_choice.add(context.getString(R.string.add));
-                //TODO remove entry if not on a widget
+                //Check if clicked on a widget
                 for (final Entity_Map featureMap : listFeatureMap) {
                     if ((int) ((event1.getX() - valuelongclic[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event1.getX() - valuelongclic[2]) / currentScale) < featureMap.getPosx() + dip20 &&
                             (int) ((event1.getY() - valuelongclic[5]) / currentScale) > featureMap.getPosy() - dip20 && (int) ((event1.getY() - valuelongclic[5]) / currentScale) < featureMap.getPosy() + dip20) {
+                        //Clear list and add new item
+                        list_choice.clear();
+                        list_choice.add(context.getString(R.string.move));
+                        list_choice.add(context.getString(R.string.change_icon));
+                        list_choice.add(context.getString(R.string.delete));
+                    }
+                }
+                //Check if clicked on a map shortcut
+                for (final Entity_Map switchesMap : listMapSwitches) {
+                    if ((int) ((event1.getX() - valuelongclic[2]) / currentScale) > switchesMap.getPosx() - dip20 && (int) ((event1.getX() - valuelongclic[2]) / currentScale) < switchesMap.getPosx() + dip20 &&
+                            (int) ((event1.getY() - valuelongclic[5]) / currentScale) > switchesMap.getPosy() - dip20 && (int) ((event1.getY() - valuelongclic[5]) / currentScale) < switchesMap.getPosy() + dip20) {
+                        //Clear list and add new item
                         list_choice.clear();
                         list_choice.add(context.getString(R.string.move));
                         list_choice.add(context.getString(R.string.change_icon));
@@ -1382,7 +1393,7 @@ public class MapView extends View {
                     addMode = true;
                 }
             }
-            for (Entity_Map switchesMap : listMapSwitches) {
+            for (final Entity_Map switchesMap : listMapSwitches) {
                 if ((int) ((event.getX() - value[2]) / currentScale) > switchesMap.getPosx() - dip20 && (int) ((event.getX() - value[2]) / currentScale) < switchesMap.getPosx() + dip20 &&
                         (int) ((event.getY() - value[5]) / currentScale) > switchesMap.getPosy() - dip20 && (int) ((event.getY() - value[5]) / currentScale) < switchesMap.getPosy() + dip20) {
                     //remove entry
@@ -1401,7 +1412,7 @@ public class MapView extends View {
             }
         } else if (action.equals(context.getString(R.string.delete))) {
             Tracer.d(mytag, "Delete");
-            for (Entity_Map featureMap : listFeatureMap) {
+            for (final Entity_Map featureMap : listFeatureMap) {
                 if ((int) ((event.getX() - value[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event.getX() - value[2]) / currentScale) < featureMap.getPosx() + dip20 &&
                         (int) ((event.getY() - value[5]) / currentScale) > featureMap.getPosy() - dip20 && (int) ((event.getY() - value[5]) / currentScale) < featureMap.getPosy() + dip20) {
                     //remove entry
@@ -1418,7 +1429,7 @@ public class MapView extends View {
                     initMap();
                 }
             }
-            for (Entity_Map switchesMap : listMapSwitches) {
+            for (final Entity_Map switchesMap : listMapSwitches) {
                 if ((int) ((event.getX() - value[2]) / currentScale) > switchesMap.getPosx() - 20 && (int) ((event.getX() - value[2]) / currentScale) < switchesMap.getPosx() + 20 &&
                         (int) ((event.getY() - value[5]) / currentScale) > switchesMap.getPosy() - 20 && (int) ((event.getY() - value[5]) / currentScale) < switchesMap.getPosy() + 20) {
                     //remove entry
@@ -1586,7 +1597,7 @@ public class MapView extends View {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
+                                         json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();

@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.UriMatcher;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.TypedValue;
 
 public class DmdContentProvider extends ContentProvider {
 	private final String mytag = "DmdContentProvider";
@@ -353,11 +355,13 @@ public class DmdContentProvider extends ContentProvider {
 		case CLEAR_one_FEATURE_MAP:
 			//Tracer.e(mytag,"Remove one widgets from map : "+values.getAsString("map")+" posx:"+values.getAsString("posx")+" posy:"+values.getAsString("posy")+" id:"+values.getAsString("id")+" id_name:"+id_name[0]);
 			try{
+				Resources r = getContext().getResources();
+				int dip20 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 17, r.getDisplayMetrics());
 				//Get a min and max value to be sure not needing a precise click.
-				int posxlow=values.getAsInteger("posx")-20;
-				int posxhigh=values.getAsInteger("posx")+20;
-				int posylow=values.getAsInteger("posy")-20;
-				int posyhigh=values.getAsInteger("posy")+20;
+				int posxlow=values.getAsInteger("posx")-dip20;
+				int posxhigh=values.getAsInteger("posx")+dip20;
+				int posylow=values.getAsInteger("posy")-dip20;
+				int posyhigh=values.getAsInteger("posy")+dip20;
 				mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
 				//Tracer.d(mytag, "Doing sql, DELETE FROM table_feature_map WHERE id="+values.getAsString("id") +" AND map='"+values.getAsString("map")+"' AND posx BETWEEN "+posxlow +" AND "+posxhigh+" AND posy BETWEEN "+posylow +" AND "+posyhigh);
 			}

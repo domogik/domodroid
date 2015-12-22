@@ -5,6 +5,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import org.domogik.domodroid13.R;
 import org.zeromq.ZMQ;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import activities.Activity_Main;
 
 import android.R.string;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.FeatureInfo;
@@ -29,6 +31,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.webkit.ValueCallback;
+import android.widget.Toast;
 
 public class Events_manager {
     private static Events_manager instance;
@@ -241,7 +244,9 @@ public class Events_manager {
                         subscriber.close();
                         zmqContext.term();
                     } else {
-                        //TODO Say user Mq conf as a problem
+                        // TOdo Say user Mq conf as a problem
+                        // This make crash
+                        // Toast.makeText(null, R.string.events_error_mq,Toast.LENGTH_LONG).show();
                         Tracer.d(mytag, "error in MQ config");
                         //To avoid crash on multiple launch of dmd
                         try {
@@ -253,7 +258,8 @@ public class Events_manager {
                         return null;
                     }
                 } else {
-                    //TODO say user MQ adress or port is empty
+                    //todo say user MQ adress or port is empty
+                    //Toast.makeText(null, R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
                     Tracer.d(mytag, "MQ adress or port is empty");
                 }
             } else if (api_version <= 0.6f) {

@@ -55,7 +55,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private final Activity Activity;
 
     public Graphical_Room(tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
-        super(context, id, name_room, description_room, icon, widgetSize, "room", handler);
+        super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
         this.myself = this;
         this.Tracer = Trac;
         this.id_room = id;
@@ -164,7 +164,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_room;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+                            change_this_icon(0);
                             dialog.cancel();
                         }
                     }

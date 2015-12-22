@@ -296,7 +296,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 	public void onProgressChanged(SeekBar seekBarOnOff,int progress,boolean fromTouch) {
 		switch(progress) {
 		case 0:
-			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+			change_this_icon(0);
 			try {
 				Tracer.d(mytag,"Try to get value translate from R.STRING" );
 				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
@@ -306,7 +306,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 			}
 			break;
 		case 40:
-			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+			change_this_icon(2);
 			try {
 				Tracer.d(mytag,"Try to get value translate from R.STRING" );
 				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));

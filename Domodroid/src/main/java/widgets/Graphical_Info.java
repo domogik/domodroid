@@ -268,21 +268,21 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             }
                         }
                     }
-                    //Todo change icon if in %
+                    //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
                         if (Float.parseFloat(loc_Value) >= 60) {
                             //To have the icon colored if value beetwen 30 and 60
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                            change_this_icon(2);
                         } else if (Float.parseFloat(loc_Value) >= 30) {
                             //To have the icon colored if value >30
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 1));
+                            change_this_icon(1);
                         } else {
                             //To have the icon colored if value <30
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+                            change_this_icon(0);
                         }
                     } else {
                         //To have the icon colored as it has no state
-                        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                        change_this_icon(2);
                     }
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
@@ -344,7 +344,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
                 LL_background.addView(featurePan2_buttons);
                 LL_background.addView(featurePan2);
-                //TODO get value and draw graph in async-task to Avoid ANR.
                 canvas.activate = true;
                 canvas.updateTimer();
             } else {

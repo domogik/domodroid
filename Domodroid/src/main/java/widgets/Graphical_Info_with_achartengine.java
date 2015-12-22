@@ -44,6 +44,7 @@ import org.achartengine.tools.PanListener;
 import org.achartengine.tools.ZoomEvent;
 import org.achartengine.tools.ZoomListener;
 import org.achartengine.util.MathHelper;
+import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -158,8 +159,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         dataset = new XYMultipleSeriesDataset();
         //Creating an  XYSeries for Income
         nameSeries = new TimeSeries(name);
-        //TODO translate
-        EmptySeries = new TimeSeries("NO VALUE");
+        EmptySeries = new TimeSeries(getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), "no_value")));
         incomeRenderer.setColor(0xff0B909A);
         emptyRenderer.setColor(0xffff0000);
         incomeRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -176,9 +176,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //incomeRenderer.setStroke(BasicStroke.DASHED);
         //Remove default X axis label
         //multiRenderer.setXLabels(0);
-        //TODO translate
         //Set X title
-        multiRenderer.setXTitle("Time");
+        multiRenderer.setXTitle(getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), "time")));
         //Remove default Y axis label
         multiRenderer.setYLabels(0);
         //Set X label text color
@@ -310,21 +309,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             value.setText(loc_Value);
                         }
                     }
-                    //Todo change icon if in %
+                    //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
                         if (Float.parseFloat(loc_Value) >= 60) {
                             //To have the icon colored if value beetwen 30 and 60
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                            change_this_icon(2);
                         } else if (Float.parseFloat(loc_Value) >= 30) {
                             //To have the icon colored if value >30
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 1));
+                            change_this_icon(1);
                         } else {
                             //To have the icon colored if value <30
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+                            change_this_icon(0);
                         }
                     } else {
                         //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                        change_this_icon(2);
                     }
 
                 } else if (msg.what == 9998) {
@@ -482,11 +481,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password,3000);
+                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password,10000);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password,3000);
+                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password,10000);
             }
 
         } catch (Exception e) {

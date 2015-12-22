@@ -73,8 +73,7 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
 		mytag="Graphical_butler("+dev_id+")";
 
 		//To have the icon colored as it has no state
-		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-
+		change_this_icon(2);
 
 	}
 

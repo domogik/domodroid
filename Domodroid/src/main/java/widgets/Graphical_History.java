@@ -148,7 +148,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 					value.setAnimation(animation);
 					value.setText(loc_Value);
 					//To have the icon colored as it has no state
-					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+					change_this_icon(2);
 
 				} else if (msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !
@@ -200,9 +200,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 	}
 
 	private void getlastvalue() {
-		//TODO add something in the view
-		//add last 5 values with their dates
-		//featurePan2.addView();
 		JSONObject json_LastValues = null;
 		JSONArray itemArray=null; 
 		listeChoices = new ListView(context);
@@ -210,11 +207,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		try {
 			if(api_version<=0.6f){
 				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
-				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password,3000);
+				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password,10000);
 			}else if(api_version>=0.7f){
 				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/last/5");
 				//Don't forget old "dev_id"+"state_key" is replaced by "id"
-				JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url+"sensorhistory/id/"+id+"/last/5",login,password,3000);
+				JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url+"sensorhistory/id/"+id+"/last/5",login,password,10000);
 				json_LastValues=new JSONObject();
 				json_LastValues.put("stats", json_LastValues_0_4);
 

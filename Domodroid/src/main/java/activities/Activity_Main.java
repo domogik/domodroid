@@ -359,13 +359,13 @@ public class Activity_Main extends Activity implements OnClickListener {
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
 
-        house = new Basic_Graphical_zone(getApplicationContext(), 0,
+        house = new Basic_Graphical_zone(Tracer,getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "House"),
                 "",
                 "house",
                 0, "", null);
         house.setPadding(0, 0, 5, 0);
-        map = new Basic_Graphical_zone(getApplicationContext(), 0,
+        map = new Basic_Graphical_zone(Tracer,getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "Map"),
                 "",
                 "map",

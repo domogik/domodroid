@@ -152,7 +152,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 								bool.setImageResource(R.drawable.boolean_off);
 								//change color if statue=low to (usage, o) means off
 								//note sure if it must be kept as set previously as default color.
-								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
+								change_this_icon(0);
 								try {
 									Tracer.d(mytag,"Try to get value translate from R.STRING" );
 									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
@@ -163,7 +163,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget{
 							} else if (status.equals(value1) || status.equals("1")) {
 								bool.setImageResource(R.drawable.boolean_on);
 								//change color if statue=high to (usage, 2) means on
-								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+								change_this_icon(2);
 								try {
 									Tracer.d(mytag,"Try to get value translate from R.STRING" );
 									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));

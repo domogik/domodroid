@@ -19,6 +19,7 @@ package widgets;
 
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
+import misc.tracerengine;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -43,16 +44,21 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
     final String name;
     private final Handler widgetHandler;
     private final String type;
+    private tracerengine Tracer;
+    private String mytag = "Basic_Graphical_zone";
+    private String icon;
 
     //public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
-    public Basic_Graphical_zone(Context context, int id, String name, String description, String icon, int widgetSize, String type, Handler handler) {
+    public Basic_Graphical_zone(tracerengine Trac, Context context, int id, String name, String description, String icon, int widgetSize, String type, Handler handler) {
         super(context);
         this.id = id;
         this.name = name;
         this.type = type;
+        this.icon = icon;
         //this.session_type = session_type;
         this.setPadding(5, 5, 5, 5);
         this.widgetHandler = handler;
+        this.Tracer = Trac;
         setOnClickListener(this);
 
         //panel with border
@@ -71,7 +77,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //img
         IV_img = new ImageView(context);
         IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+        change_this_icon(0);
 
         //info panel
         LinearLayout LL_infoPan = new LinearLayout(context);
@@ -93,8 +99,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         try {
             TV_description.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), description.toLowerCase())).toString());
         } catch (Exception e) {
-            //TODO add tracer
-            // Tracer.d(mytag, "no translation for: "+name);
+            Tracer.d(mytag, "no translation for: " + name);
             TV_description.setText(description);
         }
         TV_description.setTextSize(17);
@@ -119,6 +124,11 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         msg.setData(b);
         widgetHandler.sendMessage(msg);
 
+    }
+
+    public boolean change_this_icon(int icon_status) {
+        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
+        return true;
     }
 }
 

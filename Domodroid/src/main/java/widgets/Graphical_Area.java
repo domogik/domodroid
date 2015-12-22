@@ -56,7 +56,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private final Activity Activity;
 
     public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
-        super(context, id, name_area, description_area, icon, widgetSize, "area", handler);
+        super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
         this.myself = this;
         this.Tracer = Trac;
         this.icon = icon;
@@ -179,7 +179,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_area;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+                            change_this_icon(0);
                             dialog.cancel();
                         }
                     }

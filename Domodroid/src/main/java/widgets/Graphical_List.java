@@ -236,7 +236,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 					Tracer.d(mytag,"Handler receives a new value <"+loc_Value+">" );
 					value.setText(getStringResourceByName(loc_Value));
 					//To have the icon colored as it has no state
-					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+					change_this_icon(2);
 
 				} else if(msg.what == 9998) {
 					// state_engine send us a signal to notify it'll die !

@@ -70,6 +70,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final String mytag;
     private final String name;
     private final String state_key;
+    private int icon_status;
 
     Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int session_type, int place_id, String place_type, String mytag, FrameLayout container) {
         super(context);
@@ -241,9 +242,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             reference = id;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            //TODO need to select good icon in function of his state
-                            //Redraw it for this.
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+                            change_this_icon(icon_status);
                             dialog.cancel();
                         }
                     }
@@ -252,6 +251,15 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             alert_list_icon.show();
 
         }
+    }
+    public boolean change_this_icon(int icon_status){
+        set_this_icon_status(icon_status);
+        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
+        return true;
+    }
+    public boolean set_this_icon_status(int icon_status){
+        this.icon_status=icon_status;
+        return true;
     }
 }
 

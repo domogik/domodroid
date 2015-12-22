@@ -120,11 +120,12 @@ public class Rest_com {
         tracerengine Tracer = null;
         JSONArray json = null;
         try {
-            DefaultHttpClient httpclient = new DefaultHttpClient();
+            // Set timeout
+            HttpParams httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+            HttpConnectionParams.setSoTimeout(httpParameters, 3000);
+            DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
             httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-            // TODO Set timeout
-            // this doesn't work
-            //httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10000);
             HttpGet httpget = new HttpGet(url);
             HttpResponse response;
             String result = null;

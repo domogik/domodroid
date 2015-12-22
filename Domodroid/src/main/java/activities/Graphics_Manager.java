@@ -112,7 +112,7 @@ public class Graphics_Manager {
 			else if(usage.equals("temperature")){return R.drawable.usage_temperature_50;}
 			else if(usage.equals("tv")){return R.drawable.usage_tv_50;}
 			else if(usage.equals("ventilation")){return R.drawable.usage_ventilation_50;}
-			else if(usage.equals("water")){return R.drawable.usage_heating_50;}
+			else if(usage.equals("water")){return R.drawable.usage_water_50;}
 			else if(usage.equals("water_tank")){return R.drawable.usage_water_tank_50;}
 			else if(usage.equals("window")){return R.drawable.usage_window_50;}
 			//room

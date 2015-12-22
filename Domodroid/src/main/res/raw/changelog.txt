@@ -22,6 +22,9 @@
     $ 1.4-DEV
       % Version 14
       _ 2016-xx-xx
+      * Correct ANR by adding timeout in http connection
+      * Add icon for bluetooth and battery
+      * Correct maps widget state
       % Version 13
       _ 2015-12-21
       * Correct Map no more editable
@@ -40,7 +43,7 @@
       * Solved Map crash (memory leak)
       * #23 Solved Map AutoZoom working (3 years old bug)
       * #58 Start passing all log level in apps
-      * Make log to screen works. (Old TODO)
+      * Make log to screen works.
       * Now dev with Android Studio
       % Version 11
       _ 2015-11-29

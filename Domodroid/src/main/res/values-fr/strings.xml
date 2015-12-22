@@ -554,4 +554,6 @@
     <string name="place_root">Base</string>
     <string name="place_room">Pièce</string>
     <string name="place_widget">Widget</string>
+    <string name="no_value">Sans valeur</string>
+    <string name="time">Temps</string>
 </resources>

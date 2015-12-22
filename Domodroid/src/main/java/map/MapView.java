@@ -600,7 +600,7 @@ public class MapView extends View {
                 //HVACHeat
                 //UPSEvent
                 //UPSState
-                //TODO #48 grab label from diverse place:
+                //#48 grab label from diverse place:
                 String label = featureMap.getDescription();
                 if (label.length() < 1 || label.equalsIgnoreCase("null"))
                     label = featureMap.getName();
@@ -1288,9 +1288,15 @@ public class MapView extends View {
                 List<String> list_choice = new ArrayList<String>();
                 list_choice.add(context.getString(R.string.add));
                 //TODO remove entry if not on a widget
-                list_choice.add(context.getString(R.string.move));
-                list_choice.add(context.getString(R.string.change_icon));
-                list_choice.add(context.getString(R.string.delete));
+                for (final Entity_Map featureMap : listFeatureMap) {
+                    if ((int) ((event1.getX() - valuelongclic[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event1.getX() - valuelongclic[2]) / currentScale) < featureMap.getPosx() + dip20 &&
+                            (int) ((event1.getY() - valuelongclic[5]) / currentScale) > featureMap.getPosy() - dip20 && (int) ((event1.getY() - valuelongclic[5]) / currentScale) < featureMap.getPosy() + dip20) {
+                        list_choice.clear();
+                        list_choice.add(context.getString(R.string.move));
+                        list_choice.add(context.getString(R.string.change_icon));
+                        list_choice.add(context.getString(R.string.delete));
+                    }
+                }
                 final CharSequence[] char_list = list_choice.toArray(new String[list_choice.size()]);
                 //list_type_choice.setTitle(R.string.What_to_do_message);
                 list_type_choice.setSingleChoiceItems(char_list, -1,
@@ -1318,7 +1324,7 @@ public class MapView extends View {
             for (final Entity_Map featureMap : listFeatureMap) {
                 if ((int) ((event.getX() - value[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event.getX() - value[2]) / currentScale) < featureMap.getPosx() + dip20 &&
                         (int) ((event.getY() - value[5]) / currentScale) > featureMap.getPosy() - dip20 && (int) ((event.getY() - value[5]) / currentScale) < featureMap.getPosy() + dip20) {
-                    Tracer.d(mytag, "Change ison of a feature");
+                    Tracer.d(mytag, "Change icon of a feature");
                     final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
                     List<String> list_icon = new ArrayList<String>();
                     String[] fiilliste;

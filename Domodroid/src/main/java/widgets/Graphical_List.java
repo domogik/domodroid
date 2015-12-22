@@ -289,7 +289,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 				Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 				JSONObject json_Ack = null;
 				try {
-					json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
+					json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
 				} catch (Exception e) {
 					Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
 				}

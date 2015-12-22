@@ -563,7 +563,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 								startTimestamp +
 								"/to/"+
 								currentTimestamp +
-								"/interval/"+step+"/selector/avg",login,password);
+								"/interval/"+step+"/selector/avg",login,password,3000);
 					}else if(api_version>=0.7f){
 						Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/from/"+startTimestamp+"/to/"+currentTimestamp+"/interval/"+step+"/selector/avg");
 						//Don't forget old "dev_id"+"state_key" is replaced by "id"
@@ -572,7 +572,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 								startTimestamp +
 								"/to/"+
 								currentTimestamp +
-								"/interval/"+step+"/selector/avg",login,password);
+								"/interval/"+step+"/selector/avg",login,password,3000);
 					}
 				} catch (Exception e) {
 					Tracer.d(mytag, "Could not get sensor history.");

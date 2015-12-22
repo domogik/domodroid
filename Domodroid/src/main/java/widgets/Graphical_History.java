@@ -210,11 +210,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 		try {
 			if(api_version<=0.6f){
 				Tracer.i(mytag,"UpdateThread ("+dev_id+") : "+url+"stats/"+dev_id+"/"+state_key+"/last/5/");
-				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password);
+				json_LastValues = Rest_com.connect_jsonobject(url+"stats/"+dev_id+"/"+state_key+"/last/5/",login,password,3000);
 			}else if(api_version>=0.7f){
 				Tracer.i(mytag, "UpdateThread ("+id+") : "+url+"sensorhistory/id/"+id+"/last/5");
 				//Don't forget old "dev_id"+"state_key" is replaced by "id"
-				JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url+"sensorhistory/id/"+id+"/last/5",login,password);
+				JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url+"sensorhistory/id/"+id+"/last/5",login,password,3000);
 				json_LastValues=new JSONObject();
 				json_LastValues.put("stats", json_LastValues_0_4);
 

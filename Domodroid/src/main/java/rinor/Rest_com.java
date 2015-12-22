@@ -70,15 +70,15 @@ public class Rest_com {
     }
 
     @SuppressWarnings("null")
-    public static JSONObject connect_jsonobject(String url, String login, String password) {
+    public static JSONObject connect_jsonobject(String url, String login, String password, int timeout) {
 
         tracerengine Tracer = null;
         JSONObject json = null;
         try {
             // Set timeout
             HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-            HttpConnectionParams.setSoTimeout(httpParameters, 3000);
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeout);
             DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
             httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
 
@@ -115,15 +115,15 @@ public class Rest_com {
     }
 
     @SuppressWarnings("null")
-    public static JSONArray connect_jsonarray(String url, String login, String password) {
+    public static JSONArray connect_jsonarray(String url, String login, String password,int timeout) {
 
         tracerengine Tracer = null;
         JSONArray json = null;
         try {
             // Set timeout
             HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-            HttpConnectionParams.setSoTimeout(httpParameters, 3000);
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeout);
             DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
             httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
             HttpGet httpget = new HttpGet(url);

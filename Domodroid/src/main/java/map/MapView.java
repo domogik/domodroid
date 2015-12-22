@@ -1580,7 +1580,7 @@ public class MapView extends View {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         json_Ack = Rest_com.connect_jsonobject(Url2send, login, password);
+                                         json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();

@@ -178,7 +178,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 			JSONObject json_rinor = null;
 			String mytag = "Dialog_Synchronize";
 			try {
-				json_rinor = Rest_com.connect_jsonobject(urlAccess,login,password);
+				json_rinor = Rest_com.connect_jsonobject(urlAccess,login,password,3000);
 			} catch (Exception e) {
 				Tracer.e(mytag, "Error connceting to rinor");
 				json_rinor = null;
@@ -231,7 +231,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 			db.updateDb();		//Erase all tables contents EXCEPT maps coordinates !
 
 			if(Rinor_Api_Version <=0.5f){
-				json_AreaList = Rest_com.connect_jsonobject(urlAccess+"base/area/list/",login,password);
+				json_AreaList = Rest_com.connect_jsonobject(urlAccess+"base/area/list/",login,password,3000);
 				if(json_AreaList == null) {
 					//Cannot connect to server...
 					Bundle b = new Bundle();
@@ -242,10 +242,10 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 					handler.sendMessage(msg);
 					return null;
 				}
-				Tracer.d(mytag, "AreaList = <"+json_AreaList.toString()+">");
+				Tracer.d(mytag, "AreaList = <" + json_AreaList.toString() + ">");
 
 				publishProgress(20);
-				json_RoomList = Rest_com.connect_jsonobject(urlAccess+"base/room/list/",login,password);
+				json_RoomList = Rest_com.connect_jsonobject(urlAccess+"base/room/list/",login,password,3000);
 				if(json_RoomList == null) {
 					//Cannot connect to server...
 					Bundle b = new Bundle();
@@ -259,7 +259,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 				Tracer.d(mytag, "RoomList = <"+json_RoomList.toString()+">");
 
 				publishProgress(40);
-				json_FeatureList = Rest_com.connect_jsonobject(urlAccess+"base/feature/list",login,password);
+				json_FeatureList = Rest_com.connect_jsonobject(urlAccess+"base/feature/list",login,password,3000);
 				if(json_FeatureList == null) {
 					//Cannot connect to server...
 					Bundle b = new Bundle();
@@ -272,7 +272,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 				}
 
 				publishProgress(60);
-				json_FeatureAssociationList = Rest_com.connect_jsonobject(urlAccess+"base/feature_association/list/",login,password);
+				json_FeatureAssociationList = Rest_com.connect_jsonobject(urlAccess+"base/feature_association/list/",login,password,3000);
 				if(json_FeatureAssociationList == null) {
 					//Cannot connect to server...
 					Bundle b = new Bundle();
@@ -284,7 +284,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 					return null;
 				}
 				publishProgress(80);
-				json_IconList = Rest_com.connect_jsonobject(urlAccess+"base/ui_config/list/",login,password);
+				json_IconList = Rest_com.connect_jsonobject(urlAccess+"base/ui_config/list/",login,password,3000);
 				if(json_IconList == null) {
 					//Cannot connect to server...
 					Bundle b = new Bundle();
@@ -299,7 +299,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 			}else if (Rinor_Api_Version <= 0.6f){
 				// Function special Basilic domogik 0.3
-				json_FeatureList = Rest_com.connect_jsonobject(urlAccess+"base/feature/list",login,password);
+				json_FeatureList = Rest_com.connect_jsonobject(urlAccess+"base/feature/list",login,password,3000);
 				if(json_FeatureList == null) {
 					// Cannot connect to Rinor server.....
 					Bundle b = new Bundle();
@@ -480,9 +480,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 					Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
 					Tracer.e(mytag, "ERROR getting MQ information");
 				}
-				json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess+"device",login,password);
+				json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess+"device",login,password,3000);
 				JSONObject Json_data_type = new JSONObject();
-				Json_data_type = Rest_com.connect_jsonobject(urlAccess+"datatype",login,password);
+				Json_data_type = Rest_com.connect_jsonobject(urlAccess+"datatype",login,password,3000);
 				if(json_FeatureList1 == null) {
 					// Cannot connect to Rinor server.....
 					Tracer.e(mytag, "Cannot connect to to grab device list");

@@ -77,7 +77,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //img
         IV_img = new ImageView(context);
         IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        change_this_icon(0);
+        change_this_icon(0,icon);
 
         //info panel
         LinearLayout LL_infoPan = new LinearLayout(context);
@@ -126,7 +126,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 
     }
 
-    public boolean change_this_icon(int icon_status) {
+    public boolean change_this_icon(int icon_status,String icon) {
         IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
         return true;
     }

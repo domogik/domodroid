@@ -610,4 +610,6 @@
 	<string name="place_widget">Widget</string>
 	<string name="no_value">No value</string>
 	<string name="time">Time</string>
+	<string name="events_error_mq_config">Error MQ is not configured</string>
+	<string name="events_error_mq">Error with MQ</string>
 </resources>

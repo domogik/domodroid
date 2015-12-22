@@ -484,7 +484,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
 
     //Wait result of pickup image
     /* (non-Javadoc)
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -630,6 +630,12 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         }
 
         System.gc();
+    }
+
+    public void onStop() {
+        System.gc();
+        super.onStop();
+        onDestroy();
     }
 
     public void onPanelClosed(Sliding_Drawer panel) {

@@ -171,7 +171,7 @@ public class MapView extends View {
 
         startCacheEngine();
         /*
-		 * This view has only one handler for all mini widgets displayed on map
+         * This view has only one handler for all mini widgets displayed on map
 		 * It'll receive a unique notification from WidgetUpdate when one or more values have changed
 		 */
         handler = new Handler() {
@@ -227,8 +227,8 @@ public class MapView extends View {
 
     public void onWindowVisibilityChanged(int visibility) {
         Tracer.i(mytag, "Visibility changed to : " + visibility);
-		/*
-		if(visibility == View.VISIBLE)
+        /*
+        if(visibility == View.VISIBLE)
 			//this.activated = true;
 		else
 			//activated=false;
@@ -564,9 +564,6 @@ public class MapView extends View {
                         } else {
                             intstate = 0;
                         }
-                    } else {
-                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        intstate = 1;
                     }
                     featureMap.setState(intstate);
                 }
@@ -842,6 +839,7 @@ public class MapView extends View {
             }
 
         }
+
         locked = false;
 
     }
@@ -1602,6 +1600,7 @@ public class MapView extends View {
             );
             return null;
         }
+
     }
 
     public static float Round(float Rval, int Rpl) {

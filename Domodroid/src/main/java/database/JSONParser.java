@@ -115,6 +115,8 @@ public class JSONParser {
         try {
             if (json.getString("status").equals("ERROR")) {
                 //TODO need to say this to user and log it.
+                //add tracer access
+                // tracer.d(mytag,"json status erro");
                 Toast toast = Toast.makeText(null, "ERROR sending command", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
                 toast.show();
@@ -123,7 +125,8 @@ public class JSONParser {
                 return true;
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            //Todo add tracer
+            //Tracer.d (mytag,""+ e.toString());
             return false;
         }
 

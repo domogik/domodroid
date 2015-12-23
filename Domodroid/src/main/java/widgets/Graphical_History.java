@@ -222,7 +222,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 					try {
 						HashMap<String,String> map=new HashMap<String,String>();
 						map.put("value",itemArray.getJSONObject(i).getString("value"));
-						map.put("value",itemArray.getJSONObject(i).getString("value_str"));
 						map.put("date",itemArray.getJSONObject(i).getString("date"));
 						listItem.add(map);
 						Tracer.d(mytag, map.toString());

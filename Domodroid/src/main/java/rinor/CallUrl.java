@@ -49,7 +49,11 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 out.close();
             } else {
                 //Closes the connection.
-                response.getEntity().getContent().close();
+                try{
+                    response.getEntity().getContent().close();
+                }catch (Exception e1){
+                    //TODO Handle problems..
+                }
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {

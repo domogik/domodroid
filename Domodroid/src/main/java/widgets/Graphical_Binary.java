@@ -17,6 +17,7 @@
  */
 package widgets;
 
+import rinor.CallUrl;
 import rinor.Rest_com;
 import database.JSONParser;
 import database.WidgetUpdate;
@@ -25,7 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import activities.Graphics_Manager;
+
 import org.domogik.domodroid13.R;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -47,325 +50,331 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBarChangeListener{
+public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBarChangeListener {
 
-	private final TextView state;
-	private final SeekBar seekBarOnOff;
-	private final String address;
-	private String state_progress;
-	private final String url;
-	private final String usage;
-	private final Handler handler;
-	private String value0;
-	private String value1;
-	private final String type;
-	private final boolean activate=false;
-	private final Animation animation;
-	private boolean touching;
-	private int updating=0;
-	private Message msg;
-	public static FrameLayout container = null;
-	private static FrameLayout myself = null;
-	private static String mytag = "";
-	private tracerengine Tracer = null;
-	private Activity context = null;
-	private String stateS = "";
-	private String Value_0 = "0";
-	private String Value_1 = "1";
-	private final String login;
-	private final String password;
-	private final float api_version;
-	private JSONObject jparam;
-	private Entity_client session = null; 
-	private Boolean realtime = false;
-	private String command_id = null;
-	private String command_type = null;
-
-
-	public Graphical_Binary(tracerengine Trac, 
-			final Activity context, String address, final String name, int id,int dev_id,String state_key, String url, String usage,
-			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.Tracer = Trac;
-		this.context = context;
-		this.address = address;
-		this.url = url;
-		this.usage = usage;
-		this.myself = this;
-		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
-		}catch (Exception e){
-			Tracer.d(mytag, "no translation for: "+state_key);
-			this.stateS= state_key;
-		}
-
-		mytag = "Graphical_Binary("+dev_id+")";
-		//get parameters		
-
-		try {
-			jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-			value1 = jparam.getString("value1");
-			value0 = jparam.getString("value0");
-
-		} catch (Exception e) {
-			value0 = "0";
-			value1 = "1";
-		}
-
-		if (usage.equals("light")){
-			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
-			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
-		}else if (usage.equals("shutter")){
-			this.Value_0 =  getResources().getText(R.string.shutter_stat_0).toString();
-			this.Value_1 =  getResources().getText(R.string.shutter_stat_1).toString();
-		}else{
-			this.Value_0 = value0;
-			this.Value_1 = value1;		
-		}
-
-		String[] model = model_id.split("\\.");
-		type = model[0];
-		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
-
-		//state
-		state=new TextView(context);
-		state.setTextColor(Color.BLACK);
-		state.setText(stateS);
-		
-		animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(1000);
-		//		if(api_version>=0.7f)
-		//			state.setVisibility(INVISIBLE);
+    private final TextView state;
+    private final SeekBar seekBarOnOff;
+    private final String address;
+    private String state_progress;
+    private final String url;
+    private final String usage;
+    private final Handler handler;
+    private String value0;
+    private String value1;
+    private final String type;
+    private final boolean activate = false;
+    private final Animation animation;
+    private boolean touching;
+    private int updating = 0;
+    private Message msg;
+    public static FrameLayout container = null;
+    private static FrameLayout myself = null;
+    private static String mytag = "";
+    private tracerengine Tracer = null;
+    private Activity context = null;
+    private String stateS = "";
+    private String Value_0 = "0";
+    private String Value_1 = "1";
+    private final String login;
+    private final String password;
+    private final float api_version;
+    private JSONObject jparam;
+    private Entity_client session = null;
+    private Boolean realtime = false;
+    private String command_id = null;
+    private String command_type = null;
 
 
-		//first seekbar on/off
-		seekBarOnOff=new SeekBar(context);
-		seekBarOnOff.setProgress(0);
-		seekBarOnOff.setMax(40);
-		Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.bgseekbaronoff);
-		seekBarOnOff.setLayoutParams(new LayoutParams(bMap.getWidth(),bMap.getHeight()));
-		seekBarOnOff.setProgressDrawable(getResources().getDrawable(R.drawable.bgseekbaronoff));
-		seekBarOnOff.setThumb(getResources().getDrawable(R.drawable.buttonseekbar));
-		seekBarOnOff.setThumbOffset(0);
-		seekBarOnOff.setOnSeekBarChangeListener(this);
-		seekBarOnOff.setTag("0");
+    public Graphical_Binary(tracerengine Trac,
+                            final Activity context, String address, final String name, int id, int dev_id, String state_key, String url, String usage,
+                            String parameters, String model_id, int update, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) {
+        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
+        this.Tracer = Trac;
+        this.context = context;
+        this.address = address;
+        this.url = url;
+        this.usage = usage;
+        this.myself = this;
+        try {
+            this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+        } catch (Exception e) {
+            Tracer.d(mytag, "no translation for: " + state_key);
+            this.stateS = state_key;
+        }
 
-		super.LL_infoPan.addView(state);
-		super.LL_featurePan.addView(seekBarOnOff);
+        mytag = "Graphical_Binary(" + dev_id + ")";
+        //get parameters
 
-		login = params.getString("http_auth_username",null);
-		password = params.getString("http_auth_password",null);
-		api_version=params.getFloat("API_VERSION", 0);
-		if (api_version>=0.7f){
-			try {
-				command_id = jparam.getString("command_id");
-				command_type= jparam.getString("command_type");
-			} catch (JSONException e) {
-				Tracer.d(mytag, "No command_id for this device");
-				seekBarOnOff.setEnabled(false);
-			}	
-		}
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				if(activate) {
-					Tracer.d(mytag,"Handler receives a request to die " );
-					if(realtime) {
-						Tracer.get_engine().unsubscribe(session);
-						session = null;
-						realtime = false;
-					}
-					//That seems to be a zombie
-					//removeView(background);
-					myself.setVisibility(GONE);
-					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
-				} else {
-					try {
-						Bundle b = msg.getData();
-						if(( b != null) && (b.getString("message") != null)) {
-							if (b.getString("message").equals(value0)){
-								try {
-									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-								}catch (Exception e1) {
-									Tracer.d(mytag,"no translation for: "+Value_0);
-									state.setText(stateS + " : " + Value_0);
-								}
-								new SBAnim(seekBarOnOff.getProgress(),0).execute();
-							}else if(b.getString("message").equals(value1)){
-								try {
-									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-								}catch (Exception e1) {
-									Tracer.d(mytag,"no translation for: "+Value_1);
-									state.setText(stateS+" : "+Value_1);
-								}
-								new SBAnim(seekBarOnOff.getProgress(),40).execute();
-							}
-							state.setAnimation(animation);
-						} else {
-							if(msg.what == 2) {
-								Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
-							} else if(msg.what == 9999) {
-								//state_engine send us a signal to notify value changed
-								if(session == null)
-									return;
-								String new_val = session.getValue();
-								Tracer.d(mytag,"Handler receives a new value <"+new_val+">" );
-								if(new_val.equals(value0)) {
-									try {
-										Tracer.d(mytag,"Try to get value translate from R.STRING" );
-										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-									}catch (Exception e1) {
-										Tracer.d(mytag,"no translation for: "+Value_0);
-										state.setText(stateS + " : " + Value_0);
-									}
-									new SBAnim(seekBarOnOff.getProgress(),0).execute();
-								}else if(new_val.equals(value1)){
-									try {
-										Tracer.d(mytag,"Try to get value translate from R.STRING" );
-										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-									}catch (Exception e1) {
-										Tracer.d(mytag,"no translation for: "+Value_1);
-										state.setText(stateS+" : "+Value_1);
-									}
-									new SBAnim(seekBarOnOff.getProgress(),40).execute();
-								} else {
-									try {
-										Tracer.d(mytag,"Try to get value translate from R.STRING" );
-										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),new_val.toLowerCase())));
-									}catch (Exception e1) {
-										Tracer.d(mytag,"no translation for: "+new_val);
-										state.setText(stateS+" : "+new_val);
-									}
-									new SBAnim(seekBarOnOff.getProgress(),0).execute();
-								}
-							} else if(msg.what == 9998) {
-								// state_engine send us a signal to notify it'll die !
-								Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
-								session = null;
-								realtime = false;
-								//removeView(background);
-								myself.setVisibility(GONE);
-								if(container != null) {
-									container.removeView(myself);
-									container.recomputeViewAttributes(myself);
-								}
-								try { 
-									finalize(); 
-								} catch (Throwable t) {}	//kill the handler thread itself
-							}
-						}
+        try {
+            jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            value1 = jparam.getString("value1");
+            value0 = jparam.getString("value0");
 
-					} catch (Exception e) {
-						Tracer.e(mytag, "Handler error for device "+name);
-						e.printStackTrace();
-					}
-				}
-			}	
-		};
-		//================================================================================
-		/*
+        } catch (Exception e) {
+            value0 = "0";
+            value1 = "1";
+        }
+
+        if (usage.equals("light")) {
+            this.Value_0 = getResources().getText(R.string.light_stat_0).toString();
+            this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
+        } else if (usage.equals("shutter")) {
+            this.Value_0 = getResources().getText(R.string.shutter_stat_0).toString();
+            this.Value_1 = getResources().getText(R.string.shutter_stat_1).toString();
+        } else {
+            this.Value_0 = value0;
+            this.Value_1 = value1;
+        }
+
+        String[] model = model_id.split("\\.");
+        type = model[0];
+        Tracer.d(mytag, "model_id = <" + model_id + "> type = <" + type + "> value0 = " + value0 + "  value1 = " + value1);
+
+        //state
+        state = new TextView(context);
+        state.setTextColor(Color.BLACK);
+        state.setText(stateS);
+
+        animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(1000);
+        //		if(api_version>=0.7f)
+        //			state.setVisibility(INVISIBLE);
+
+
+        //first seekbar on/off
+        seekBarOnOff = new SeekBar(context);
+        seekBarOnOff.setProgress(0);
+        seekBarOnOff.setMax(40);
+        Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.bgseekbaronoff);
+        seekBarOnOff.setLayoutParams(new LayoutParams(bMap.getWidth(), bMap.getHeight()));
+        seekBarOnOff.setProgressDrawable(getResources().getDrawable(R.drawable.bgseekbaronoff));
+        seekBarOnOff.setThumb(getResources().getDrawable(R.drawable.buttonseekbar));
+        seekBarOnOff.setThumbOffset(0);
+        seekBarOnOff.setOnSeekBarChangeListener(this);
+        seekBarOnOff.setTag("0");
+
+        super.LL_infoPan.addView(state);
+        super.LL_featurePan.addView(seekBarOnOff);
+
+        login = params.getString("http_auth_username", null);
+        password = params.getString("http_auth_password", null);
+        api_version = params.getFloat("API_VERSION", 0);
+        if (api_version >= 0.7f) {
+            try {
+                command_id = jparam.getString("command_id");
+                command_type = jparam.getString("command_type");
+            } catch (JSONException e) {
+                Tracer.d(mytag, "No command_id for this device");
+                seekBarOnOff.setEnabled(false);
+            }
+        }
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (activate) {
+                    Tracer.d(mytag, "Handler receives a request to die ");
+                    if (realtime) {
+                        Tracer.get_engine().unsubscribe(session);
+                        session = null;
+                        realtime = false;
+                    }
+                    //That seems to be a zombie
+                    //removeView(background);
+                    myself.setVisibility(GONE);
+                    if (container != null) {
+                        container.removeView(myself);
+                        container.recomputeViewAttributes(myself);
+                    }
+                    try {
+                        finalize();
+                    } catch (Throwable t) {
+                    }    //kill the handler thread itself
+                } else {
+                    try {
+                        Bundle b = msg.getData();
+                        if ((b != null) && (b.getString("message") != null)) {
+                            if (b.getString("message").equals(value0)) {
+                                try {
+                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + Value_0);
+                                    state.setText(stateS + " : " + Value_0);
+                                }
+                                new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+                            } else if (b.getString("message").equals(value1)) {
+                                try {
+                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + Value_1);
+                                    state.setText(stateS + " : " + Value_1);
+                                }
+                                new SBAnim(seekBarOnOff.getProgress(), 40).execute();
+                            }
+                            state.setAnimation(animation);
+                        } else {
+                            if (msg.what == 2) {
+                                Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
+                            } else if (msg.what == 9999) {
+                                //state_engine send us a signal to notify value changed
+                                if (session == null)
+                                    return;
+                                String new_val = session.getValue();
+                                Tracer.d(mytag, "Handler receives a new value <" + new_val + ">");
+                                if (new_val.equals(value0)) {
+                                    try {
+                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                    } catch (Exception e1) {
+                                        Tracer.d(mytag, "no translation for: " + Value_0);
+                                        state.setText(stateS + " : " + Value_0);
+                                    }
+                                    new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+                                } else if (new_val.equals(value1)) {
+                                    try {
+                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                    } catch (Exception e1) {
+                                        Tracer.d(mytag, "no translation for: " + Value_1);
+                                        state.setText(stateS + " : " + Value_1);
+                                    }
+                                    new SBAnim(seekBarOnOff.getProgress(), 40).execute();
+                                } else {
+                                    try {
+                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), new_val.toLowerCase())));
+                                    } catch (Exception e1) {
+                                        Tracer.d(mytag, "no translation for: " + new_val);
+                                        state.setText(stateS + " : " + new_val);
+                                    }
+                                    new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+                                }
+                            } else if (msg.what == 9998) {
+                                // state_engine send us a signal to notify it'll die !
+                                Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
+                                session = null;
+                                realtime = false;
+                                //removeView(background);
+                                myself.setVisibility(GONE);
+                                if (container != null) {
+                                    container.removeView(myself);
+                                    container.recomputeViewAttributes(myself);
+                                }
+                                try {
+                                    finalize();
+                                } catch (Throwable t) {
+                                }    //kill the handler thread itself
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Handler error for device " + name);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        //================================================================================
+        /*
 		 * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-		if(cache_engine != null) {
-			if (api_version<=0.6f){
-				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version>=0.7f){
-				session = new Entity_client(id, "", mytag, handler, session_type);
-			}
-			if(Tracer.get_engine().subscribe(session)) {
-				realtime = true;		//we're connected to engine
-				//each time our value change, the engine will call handler
-				handler.sendEmptyMessage(9999);	//Force to consider current value in session
-			}
+        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+        if (cache_engine != null) {
+            if (api_version <= 0.6f) {
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            } else if (api_version >= 0.7f) {
+                session = new Entity_client(id, "", mytag, handler, session_type);
+            }
+            if (Tracer.get_engine().subscribe(session)) {
+                realtime = true;        //we're connected to engine
+                //each time our value change, the engine will call handler
+                handler.sendEmptyMessage(9999);    //Force to consider current value in session
+            }
 
-		}
-		//================================================================================
-		//updateTimer();	//Don't use anymore cyclic refresh....	
+        }
+        //================================================================================
+        //updateTimer();	//Don't use anymore cyclic refresh....
 
-	}
-
-
-	public void onProgressChanged(SeekBar seekBarOnOff,int progress,boolean fromTouch) {
-		switch(progress) {
-		case 0:
-			change_this_icon(0);
-			try {
-				Tracer.d(mytag,"Try to get value translate from R.STRING" );
-				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-			}catch (Exception e1) {
-				Tracer.d(mytag,"no translation for: "+Value_0);
-				state.setText(stateS + " : " + Value_0);
-			}
-			break;
-		case 40:
-			change_this_icon(2);
-			try {
-				Tracer.d(mytag,"Try to get value translate from R.STRING" );
-				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-			}catch (Exception e1) {
-				Tracer.d(mytag,"no translation for: "+Value_1);
-				state.setText(stateS+" : "+Value_1);
-			}
-			break;
-		}
-	}
+    }
 
 
-	public void onStartTrackingTouch(SeekBar arg0) {
-		touching=true;
-		updating=3;
-	}
+    public void onProgressChanged(SeekBar seekBarOnOff, int progress, boolean fromTouch) {
+        switch (progress) {
+            case 0:
+                change_this_icon(0);
+                try {
+                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                } catch (Exception e1) {
+                    Tracer.d(mytag, "no translation for: " + Value_0);
+                    state.setText(stateS + " : " + Value_0);
+                }
+                break;
+            case 40:
+                change_this_icon(2);
+                try {
+                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                } catch (Exception e1) {
+                    Tracer.d(mytag, "no translation for: " + Value_1);
+                    state.setText(stateS + " : " + Value_1);
+                }
+                break;
+        }
+    }
 
-	public void onStopTrackingTouch(SeekBar arg0) {
-		if(arg0.getProgress()<20){
-			if(api_version>=0.7f){
-				state_progress = "0";
-			}else{
-				state_progress = value0;
-			}
-			arg0.setProgress(0);
-		}else{
-			if(api_version>=0.7f){
-				state_progress = "1";
-			}else{
-				state_progress = value1;
-			}
-			arg0.setProgress(40);
-		}
-		new CommandThread().execute();
-		touching=false;
-	}
 
-	private class CommandThread extends AsyncTask<Void, Integer, Void>{
+    public void onStartTrackingTouch(SeekBar arg0) {
+        touching = true;
+        updating = 3;
+    }
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			Handler temphandler =  new Handler(context.getMainLooper());
-			temphandler.post( new Runnable(){
-				public void run(){
-					updating=3;
-					String Url2send;
-					if(api_version>=0.7f){
-						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
-					}else{
-						Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
-					}
-					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
-					JSONObject json_Ack = null;
-					try {
-						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
-					} catch (Exception e) {
-						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
-					}
+    public void onStopTrackingTouch(SeekBar arg0) {
+        if (arg0.getProgress() < 20) {
+            if (api_version >= 0.7f) {
+                state_progress = "0";
+            } else {
+                state_progress = value0;
+            }
+            arg0.setProgress(0);
+        } else {
+            if (api_version >= 0.7f) {
+                state_progress = "1";
+            } else {
+                state_progress = value1;
+            }
+            arg0.setProgress(40);
+        }
+        new CommandThread().execute();
+        touching = false;
+    }
+
+    private class CommandThread extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Handler temphandler = new Handler(context.getMainLooper());
+            temphandler.post(new Runnable() {
+                                 public void run() {
+                                     updating = 3;
+                                     String Url2send;
+                                     if (api_version >= 0.7f) {
+                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
+                                     } else {
+                                         Url2send = url + "command/" + type + "/" + address + "/" + state_progress;
+                                     }
+                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
+                                     JSONObject json_Ack = null;
+                                     try {
+                                         new CallUrl().execute(Url2send,login,password,"3000");
+                                         //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
+                                     } catch (Exception e) {
+                                         Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
+                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                     }
+					/*
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
 						if(!ack){
@@ -376,51 +385,52 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}
-			}
-					);
-			return null;
+					*/
+                                 }
+                             }
+            );
+            return null;
 
-		}
-	}
+        }
+    }
 
-	public class SBAnim extends AsyncTask<Void, Integer, Void>{
-		private final int begin;
-		private final int end;
+    public class SBAnim extends AsyncTask<Void, Integer, Void> {
+        private final int begin;
+        private final int end;
 
-		public SBAnim(int begin, int end){
-			this.begin=begin;
-			this.end=end;
-		}
+        public SBAnim(int begin, int end) {
+            this.begin = begin;
+            this.end = end;
+        }
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			final int steps = java.lang.Math.abs(end-begin);
-			new Thread(new Runnable() {
-				public synchronized void run() {
-					for(int i=0;i<=steps;i++){
-						try {
-							this.wait(5);
-							if(!touching){
-								if(end-begin>0)seekBarOnOff.setProgress(begin+i);
-								else seekBarOnOff.setProgress(begin-i);
-							}
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}).start();
-			return null;
-		}
-	}
+        @Override
+        protected Void doInBackground(Void... params) {
+            final int steps = java.lang.Math.abs(end - begin);
+            new Thread(new Runnable() {
+                public synchronized void run() {
+                    for (int i = 0; i <= steps; i++) {
+                        try {
+                            this.wait(5);
+                            if (!touching) {
+                                if (end - begin > 0) seekBarOnOff.setProgress(begin + i);
+                                else seekBarOnOff.setProgress(begin - i);
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+            return null;
+        }
+    }
 
-	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==View.VISIBLE){
-			//activate=true;
-		}
-	}
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (visibility == View.VISIBLE) {
+            //activate=true;
+        }
+    }
 
 }
 

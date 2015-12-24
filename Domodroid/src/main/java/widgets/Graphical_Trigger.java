@@ -20,6 +20,7 @@ package widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import rinor.CallUrl;
 import rinor.Rest_com;
 import database.DmdContentProvider;
 import database.JSONParser;
@@ -174,11 +175,13 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
 					JSONObject json_Ack = null;
 					try {
-						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
+						new CallUrl().execute(Url2send,login,password,"3000");
+						//json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
 					} catch (Exception e) {
-						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
+						Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
 						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
 					}
+					/*
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
 						if(!ack){
@@ -189,6 +192,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					*/
 				}
 			}
 					);

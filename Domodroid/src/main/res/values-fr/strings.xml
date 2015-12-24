@@ -200,6 +200,9 @@
     <string name="twocolportraitcheckbox">Nb de colonnes en portrait:</string>
     <string name="twocolportrait_1">Une colonne en portrait</string>
     <string name="twocolportrait_2">Deux colonnes en portrait</string>
+    <string name="Navigation_drawer">Menu de Navigation</string>
+    <string name="Navigation_drawer_on">Menu de Navigation activé</string>
+    <string name="Navigation_drawer_off">Menu de Navigation désactivé</string>
     <string name="UPDATE_TIMER">Temps de mise à jour sans événements ni message de la MQ</string>
     <string name="UPDATE_URL">Url utilisé par le processus d\'update</string>
     <string name="Rinor_URL">Url utilisé pour joindre Rest</string>
@@ -556,4 +559,6 @@
     <string name="place_widget">Widget</string>
     <string name="no_value">Sans valeur</string>
     <string name="time">Temps</string>
+    <string name="events_error_mq_config">Erreur de configuration de MQ</string>
+    <string name="events_error_mq">Erreur avec MQ</string>
 </resources>

@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.domogik.domodroid13.R;
 
+import rinor.CallUrl;
 import rinor.Rest_com;
 
 import database.Cache_management;
@@ -1597,11 +1598,13 @@ public class MapView extends View {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
+                                         new CallUrl().execute(Url2send, login, password, "3000");
+                                         //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
                                      }
+                                     /*
                                      try {
                                          Boolean ack = JSONParser.Ack(json_Ack);
                                          if (!ack) {
@@ -1612,6 +1615,7 @@ public class MapView extends View {
                                      } catch (Exception e) {
                                          e.printStackTrace();
                                      }
+                                     */
                                  }
                              }
             );

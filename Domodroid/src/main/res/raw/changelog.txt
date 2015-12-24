@@ -22,9 +22,12 @@
     $ 1.4-DEV
       % Version 14
       _ 2016-xx-xx
+      * Correct history for callerid in 0.3
+      * Adding a new method from fritz to callurl in background (for command)
       * Correct ANR by adding timeout in http connection
       * Add icon for bluetooth and battery
       * Correct maps widget state
+      * Still more translation ;)
       % Version 13
       _ 2015-12-21
       * Correct Map no more editable

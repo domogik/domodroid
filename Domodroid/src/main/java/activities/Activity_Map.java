@@ -52,6 +52,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
@@ -116,6 +117,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         super.onCreate(savedInstanceState);
         //TODO add normal menu
         params = PreferenceManager.getDefaultSharedPreferences(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Tracer = tracerengine.getInstance(params, this);
         prefEditor = params.edit();

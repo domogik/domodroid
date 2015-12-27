@@ -64,7 +64,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
+//import android.os.PowerManager;
 
 import android.preference.PreferenceManager;
 
@@ -76,6 +76,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -91,7 +92,7 @@ import android.widget.LinearLayout;
 public class Activity_Main extends Activity implements OnClickListener {
 
 
-    private PowerManager.WakeLock PM_WakeLock;
+    //private PowerManager.WakeLock PM_WakeLock;
     private SharedPreferences SP_params;
     private SharedPreferences.Editor SP_prefEditor;
     private AlertDialog.Builder AD_notSyncAlert;
@@ -343,9 +344,11 @@ public class Activity_Main extends Activity implements OnClickListener {
 
 
         //power management
-        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.PM_WakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
-        this.PM_WakeLock.acquire();
+        //final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        //this.PM_WakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
+        //this.PM_WakeLock.acquire();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 
         //titlebar
         final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
@@ -529,7 +532,7 @@ public class Activity_Main extends Activity implements OnClickListener {
             if (!Tracer.Map_as_main) {
                 // We're the main initial activity
                 Tracer.v(mytag + ".onDestroy", "cache engine set to sleeping !");
-                this.PM_WakeLock.release();    // We allow screen shut, now...
+                //PM_WakeLock.release();    // We allow screen shut, now...
                 WU_widgetUpdate.set_sleeping();    //Don't cancel the cache engine : only freeze it
                 // only if we are the main initial activity
             }

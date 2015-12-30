@@ -499,7 +499,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             Handler temphandler = new Handler(context.getMainLooper());
             temphandler.post(new Runnable() {
                                  public void run() {
-                                     String Url2send="";
+                                     String Url2send = "";
                                      //TODO change for 0.4
                                      if (api_version >= 0.7f) {
                                          //Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
@@ -570,7 +570,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         prefEditor.putString("COLORRGB", "#" + argbS);
         prefEditor.commit();
         /*
-		Tracer.i(mytag, "SaveSelections()");
+        Tracer.i(mytag, "SaveSelections()");
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
 		Tracer.i(mytag,"Sat    = "+params.getInt("COLORSATURATION",0));
 		Tracer.i(mytag,"Bright = "+params.getInt("COLORBRIGHTNESS",0));

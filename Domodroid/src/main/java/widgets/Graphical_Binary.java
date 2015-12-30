@@ -378,7 +378,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
                                      }
                     /*
-					try {
+                    try {
 						Boolean ack = JSONParser.Ack(json_Ack);
 						if(!ack){
 							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");

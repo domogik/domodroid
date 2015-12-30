@@ -115,7 +115,7 @@ public class Rest_com {
     }
 
     @SuppressWarnings("null")
-    public static JSONArray connect_jsonarray(String url, String login, String password,int timeout) {
+    public static JSONArray connect_jsonarray(String url, String login, String password, int timeout) {
 
         tracerengine Tracer = null;
         JSONArray json = null;

@@ -296,7 +296,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             temphandler.post(new Runnable() {
                                  public void run() {
                                      if (cmd_requested != null) {
-                                         String Url2send="";
+                                         String Url2send = "";
                                          //TODO change for 0.4
                                          if (api_version >= 0.7f) {
                                              //Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;

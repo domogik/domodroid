@@ -936,7 +936,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                     String command_type = command_parameter.getJSONObject(nb_parameters).getString("key");
                                     if (command_type != null) {
                                         Tracer.d(mytag, "Json command_type=" + command_type);
-                                        parameters.putOpt("command_type" + (nb_parameters+1), command_type);
+                                        parameters.putOpt("command_type" + (nb_parameters + 1), command_type);
                                     }
                                     String command_data_type = command_parameter.getJSONObject(nb_parameters).getString("data_type");
                                     if (command_data_type != null) {
@@ -951,7 +951,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                                 parent_again = true;
                                             }
                                         }
-                                        parameters.putOpt("command_data_type" + (nb_parameters+1), parent_type);
+                                        parameters.putOpt("command_data_type" + (nb_parameters + 1), parent_type);
                                     }
                                 }
                             } catch (JSONException e) {

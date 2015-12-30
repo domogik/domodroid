@@ -224,7 +224,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             }
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name + "-" + state_key);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer,getContext(), fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {
@@ -252,13 +252,15 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
         }
     }
-    public boolean change_this_icon(int icon_status){
+
+    public boolean change_this_icon(int icon_status) {
         set_this_icon_status(icon_status);
         IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
         return true;
     }
-    public boolean set_this_icon_status(int icon_status){
-        this.icon_status=icon_status;
+
+    public boolean set_this_icon_status(int icon_status) {
+        this.icon_status = icon_status;
         return true;
     }
 }

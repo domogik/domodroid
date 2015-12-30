@@ -38,9 +38,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Message;
+
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 import mq.Main;
+
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,39 +55,39 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_butler extends Basic_Graphical_widget implements OnClickListener{
+public class Graphical_butler extends Basic_Graphical_widget implements OnClickListener {
 
-	private final String url;
-	private final Context context;
-	private static String mytag;
-	private tracerengine Tracer = null;
-	public static final FrameLayout container = null;
-	private final String name_butler;
+    private final String url;
+    private final Context context;
+    private static String mytag;
+    private tracerengine Tracer = null;
+    public static final FrameLayout container = null;
+    private final String name_butler;
 
-	public Graphical_butler(tracerengine Trac, Activity context,int id,int dev_id,String name,String state_key, String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.context = context;
-		this.Tracer = Trac;
-		this.name_butler=name;
-		this.url = url;
-		FrameLayout myself = this;
-		setOnClickListener(this);
-		mytag="Graphical_butler("+dev_id+")";
+    public Graphical_butler(tracerengine Trac, Activity context, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type) {
+        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
+        this.context = context;
+        this.Tracer = Trac;
+        this.name_butler = name;
+        this.url = url;
+        FrameLayout myself = this;
+        setOnClickListener(this);
+        mytag = "Graphical_butler(" + dev_id + ")";
 
-		//To have the icon colored as it has no state
-		change_this_icon(2);
+        //To have the icon colored as it has no state
+        change_this_icon(2);
 
-	}
+    }
 
-	public void onClick(View v) {
-		if(!url.equals(null)){
-			Intent intent = new Intent(context,Main.class);
-			Bundle b = new Bundle();
-			b.putString("url", url);
-			Tracer.e(mytag,""+url);
-			b.putString("name",name_butler);
-			intent.putExtras(b);
-			context.startActivity(intent);
-		}
-	}
+    public void onClick(View v) {
+        if (!url.equals(null)) {
+            Intent intent = new Intent(context, Main.class);
+            Bundle b = new Bundle();
+            b.putString("url", url);
+            Tracer.e(mytag, "" + url);
+            b.putString("name", name_butler);
+            intent.putExtras(b);
+            context.startActivity(intent);
+        }
+    }
 }

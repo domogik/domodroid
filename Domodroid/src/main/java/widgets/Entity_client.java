@@ -20,88 +20,106 @@ package widgets;
 import android.os.Handler;
 
 
-public class Entity_client{
-	private int client_type = -1;		// 0= Main , 1 = Map, 2 = MapView
-	private int client_id = -1;		//unique ID for client 
-	private int cache_id;				// pointer into cache list
-	private int devId;					// Reference to feature
-	private String skey;				// 	//
-	private String currentState;		// last value exchanged with client
-	private String client_name;			// To have a clear debugging !
-	private Boolean miniwidget;
-	private Handler client_handler = null;
+public class Entity_client {
+    private int client_type = -1;        // 0= Main , 1 = Map, 2 = MapView
+    private int client_id = -1;        //unique ID for client
+    private int cache_id;                // pointer into cache list
+    private int devId;                    // Reference to feature
+    private String skey;                // 	//
+    private String currentState;        // last value exchanged with client
+    private String client_name;            // To have a clear debugging !
+    private Boolean miniwidget;
+    private Handler client_handler = null;
 
 
-	public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
-		//super();
-		this.devId = devId;
-		this.skey = skey;
-		this.client_name = Name;
-		this.client_handler = handler;
-		this.client_id = -1;	//Initially not connected
-		this.client_type = session_type;
-		this.miniwidget = false;	//By default, it's not a map widget
-	}
-	/*
-	 * Methods to set content
-	 */
-	public void setClientType(int type) {
-		this.client_type = type;
-	}
-	public void setClientId(int id) {
-		this.client_id = id;
-	}
-	public void setcacheId(int Id) {
-		this.cache_id = Id;
-	}
-	public void setDevId(int devId) {
-		this.devId = devId;
-	}
-	public void setSkey(String skey) {
-		this.skey = skey;
-	}
-	public void setValue(String Value) {
-		this.currentState = Value;
-	}
-	public void setName(String Name) {
-		this.client_name =Name;
-	}
-	public void setType(Boolean type) {
-		this.miniwidget =type;
-	}
-	public void setHandler(Handler handler) {
-		this.client_handler = handler;
-	}
+    public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
+        //super();
+        this.devId = devId;
+        this.skey = skey;
+        this.client_name = Name;
+        this.client_handler = handler;
+        this.client_id = -1;    //Initially not connected
+        this.client_type = session_type;
+        this.miniwidget = false;    //By default, it's not a map widget
+    }
 
-	/*
-	 * Public methods to get content
-	 */
-	public int getClientType() {
-		return client_type;
-	}
-	public int getClientId() {
-		return client_id;
-	}
-	public int getcacheId() {
-		return cache_id;
-	}
-	public int getDevId() {
-		return devId;
-	}
-	public String getskey() {
-		return skey;
-	}
-	public String getValue() {	return currentState; }
-	public String getName() {
-		return client_name;
-	}
-	public Boolean is_Miniwidget() {
-		return miniwidget;
-	}
+    /*
+     * Methods to set content
+     */
+    public void setClientType(int type) {
+        this.client_type = type;
+    }
 
-	public Handler getClientHandler() {
-		return client_handler;
-	}
+    public void setClientId(int id) {
+        this.client_id = id;
+    }
+
+    public void setcacheId(int Id) {
+        this.cache_id = Id;
+    }
+
+    public void setDevId(int devId) {
+        this.devId = devId;
+    }
+
+    public void setSkey(String skey) {
+        this.skey = skey;
+    }
+
+    public void setValue(String Value) {
+        this.currentState = Value;
+    }
+
+    public void setName(String Name) {
+        this.client_name = Name;
+    }
+
+    public void setType(Boolean type) {
+        this.miniwidget = type;
+    }
+
+    public void setHandler(Handler handler) {
+        this.client_handler = handler;
+    }
+
+    /*
+     * Public methods to get content
+     */
+    public int getClientType() {
+        return client_type;
+    }
+
+    public int getClientId() {
+        return client_id;
+    }
+
+    public int getcacheId() {
+        return cache_id;
+    }
+
+    public int getDevId() {
+        return devId;
+    }
+
+    public String getskey() {
+        return skey;
+    }
+
+    public String getValue() {
+        return currentState;
+    }
+
+    public String getName() {
+        return client_name;
+    }
+
+    public Boolean is_Miniwidget() {
+        return miniwidget;
+    }
+
+    public Handler getClientHandler() {
+        return client_handler;
+    }
 
 
 }

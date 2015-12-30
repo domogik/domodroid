@@ -197,7 +197,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 listArea = domodb.requestArea();
                 String type = (history.elementAt(historyPosition)[1]);
                 historyPosition++;
-                if (type.equals("root")&&!(by_usage)) {
+                if (type.equals("root") && !(by_usage)) {
                     Tracer.v(mytag + ".widgetHandler", "add history " + listArea[pos].getId() + " area");
                     history.add(historyPosition, new String[]{listArea[pos].getId() + "", "area"});
                     loadWigets(listArea[pos].getId(), "area");
@@ -362,13 +362,13 @@ public class Activity_Main extends Activity implements OnClickListener {
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
 
-        house = new Basic_Graphical_zone(Tracer,getApplicationContext(), 0,
+        house = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "House"),
                 "",
                 "house",
                 0, "", null);
         house.setPadding(0, 0, 5, 0);
-        map = new Basic_Graphical_zone(Tracer,getApplicationContext(), 0,
+        map = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "Map"),
                 "",
                 "map",
@@ -538,7 +538,7 @@ public class Activity_Main extends Activity implements OnClickListener {
             }
 
         }
-		/*
+        /*
 		if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
 			Tracer = null;

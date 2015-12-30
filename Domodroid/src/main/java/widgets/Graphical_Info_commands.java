@@ -198,7 +198,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send,login,password,"3000");
+                                         new CallUrl().execute(Url2send, login, password, "3000");
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          value.setText("");
                                      } catch (Exception e) {

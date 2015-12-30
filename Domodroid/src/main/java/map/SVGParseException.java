@@ -1,4 +1,5 @@
 package map;
+
 /**
  * Runtime exception thrown when there is a problem parsing an SVG.
  *

@@ -80,7 +80,7 @@ public class WidgetUpdate {
 	 *     but each timer is ignored (no more requests to server...)
 	 * When variable 'activated' is true, each timer generates a database update with server's response
 	 */
-	/*
+    /*
 	 * New concept introduced by Doume at 2013/02/15
 	 * This engine will maintain a cache of state values
 	 * This cache will be updated after each request to server (in parallel to database during transition phase)

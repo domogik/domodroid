@@ -306,7 +306,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
         //================================================================================
         /*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();

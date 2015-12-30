@@ -164,7 +164,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_room;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            change_this_icon(0,icon);
+                            change_this_icon(0, icon);
                             dialog.cancel();
                         }
                     }

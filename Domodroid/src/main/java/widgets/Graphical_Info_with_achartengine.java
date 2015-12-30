@@ -248,7 +248,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    String test_unite="";
+                    String test_unite = "";
                     try {
                         float formatedValue = 0;
                         if (loc_Value != null) {
@@ -348,7 +348,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         //================================================================================
         /*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
@@ -481,11 +481,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password,10000);
+                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password,10000);
+                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000);
             }
 
         } catch (Exception e) {

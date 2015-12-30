@@ -28,6 +28,7 @@ import database.JSONParser;
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
@@ -42,8 +43,10 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
+
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,133 +61,133 @@ import android.widget.Toast;
 
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
-	private Graphical_Trigger_Button trigger;
-	private final String address;
-	private final String url;
-	private Handler handler;
-	private Thread threadCommande;
-	private String type; 
-	private String command; 
-	public static FrameLayout container = null;
-	public static FrameLayout myself = null;
-	private tracerengine Tracer = null;
-	private static String mytag;
-	private Message msg;
-	private final String login;
-	private final String password;
-	private final float api_version;
-	private final Activity context;
-	private String command_id;
-	private String command_type;
+    private Graphical_Trigger_Button trigger;
+    private final String address;
+    private final String url;
+    private Handler handler;
+    private Thread threadCommande;
+    private String type;
+    private String command;
+    public static FrameLayout container = null;
+    public static FrameLayout myself = null;
+    private tracerengine Tracer = null;
+    private static String mytag;
+    private Message msg;
+    private final String login;
+    private final String password;
+    private final float api_version;
+    private final Activity context;
+    private String command_id;
+    private String command_type;
 
-	public Graphical_Trigger(tracerengine Trac, Activity context, 
-			String address, String name,String state_key, int id,int dev_id,String stat_key, 
-			String url, String usage, String parameters, 
-			String model_id, int widgetSize,int session_type,int place_id,String place_type, SharedPreferences params) throws JSONException {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.address = address;
-		this.Tracer = Trac;
-		this.url = url;
-		this.context=context;
-		this.myself=this;
-		String stateS;
-		try{
-			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
-		}catch (Exception e){
-			Tracer.d(mytag, "no translation for: "+stat_key);
-			stateS = state_key;
-		}
-		mytag="Graphical_Trigger("+dev_id+")";
-		login = params.getString("http_auth_username",null);
-		password = params.getString("http_auth_password",null);
-		api_version=params.getFloat("API_VERSION", 0);
+    public Graphical_Trigger(tracerengine Trac, Activity context,
+                             String address, String name, String state_key, int id, int dev_id, String stat_key,
+                             String url, String usage, String parameters,
+                             String model_id, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) throws JSONException {
+        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
+        this.address = address;
+        this.Tracer = Trac;
+        this.url = url;
+        this.context = context;
+        this.myself = this;
+        String stateS;
+        try {
+            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+        } catch (Exception e) {
+            Tracer.d(mytag, "no translation for: " + stat_key);
+            stateS = state_key;
+        }
+        mytag = "Graphical_Trigger(" + dev_id + ")";
+        login = params.getString("http_auth_username", null);
+        password = params.getString("http_auth_password", null);
+        api_version = params.getFloat("API_VERSION", 0);
 
-		//get parameters
-		JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+        //get parameters
+        JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
 
-		boolean usable = false;
-		if(jparam != null ) {
-			if (api_version>=0.7f) {
-				try{
-					int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
-					if (number_of_command_parameters == 1) {
-						command_id = jparam.getString("command_id");
-						command_type = jparam.getString("command_type1");
-					}
-					usable =true;
-				} catch (Exception e) {
-					usable =false;
-					Tracer.d(mytag, "Error with this widgets command");
-					Tracer.d(mytag, "jparam= "+jparam.toString());
-					Tracer.d(mytag, e.toString());
-				}
-			}else{
-				try{
-					command = jparam.getString("command");
-					usable =true;
-				} catch (Exception e) {
-					usable =false;
-					Tracer.d(mytag, "Error with this widgets command");
-					Tracer.d(mytag, "jparam= "+jparam.toString());
-					Tracer.d(mytag, e.toString());
-				}
-			}
-		}
+        boolean usable = false;
+        if (jparam != null) {
+            if (api_version >= 0.7f) {
+                try {
+                    int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+                    if (number_of_command_parameters == 1) {
+                        command_id = jparam.getString("command_id");
+                        command_type = jparam.getString("command_type1");
+                    }
+                    usable = true;
+                } catch (Exception e) {
+                    usable = false;
+                    Tracer.d(mytag, "Error with this widgets command");
+                    Tracer.d(mytag, "jparam= " + jparam.toString());
+                    Tracer.d(mytag, e.toString());
+                }
+            } else {
+                try {
+                    command = jparam.getString("command");
+                    usable = true;
+                } catch (Exception e) {
+                    usable = false;
+                    Tracer.d(mytag, "Error with this widgets command");
+                    Tracer.d(mytag, "jparam= " + jparam.toString());
+                    Tracer.d(mytag, e.toString());
+                }
+            }
+        }
 
-		String[] model = model_id.split("\\.");
-		type = model[0];
+        String[] model = model_id.split("\\.");
+        type = model[0];
 
-		TextView state = new TextView(context);
-		state.setTextColor(Color.BLACK);
-		state.setText(stateS);
-		LL_infoPan.addView(state);
+        TextView state = new TextView(context);
+        state.setTextColor(Color.BLACK);
+        state.setText(stateS);
+        LL_infoPan.addView(state);
 
-		//button animated
-		trigger = new Graphical_Trigger_Button(context);
-		trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT));
-		trigger.setOnClickListener(this);
+        //button animated
+        trigger = new Graphical_Trigger_Button(context);
+        trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+        trigger.setOnClickListener(this);
 
-		//unusable
-		TextView unusable = new TextView(context);
-		unusable.setText(R.string.unusable);
-		unusable.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
-		unusable.setTextColor(Color.BLACK);
-		unusable.setTextSize(14);
-		unusable.setPadding(0, 0, 15, 0);
+        //unusable
+        TextView unusable = new TextView(context);
+        unusable.setText(R.string.unusable);
+        unusable.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+        unusable.setTextColor(Color.BLACK);
+        unusable.setTextSize(14);
+        unusable.setPadding(0, 0, 15, 0);
 
-		if (usable){
-			LL_featurePan.addView(trigger);
-		}else{
-			LL_featurePan.addView(unusable);
-		}
-
-
-	}
+        if (usable) {
+            LL_featurePan.addView(trigger);
+        } else {
+            LL_featurePan.addView(unusable);
+        }
 
 
-	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
+    }
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			Handler temphandler =  new Handler(context.getMainLooper());
-			temphandler.post( new Runnable(){
-				public void run(){
-					String Url2send;
-					if(api_version>=0.7f){
-						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"=1";
-					}else{
-						Url2send = url+"command/"+type+"/"+address+"/"+command;
-					}
-					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
-					JSONObject json_Ack = null;
-					try {
-						new CallUrl().execute(Url2send,login,password,"3000");
-						//json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
-					} catch (Exception e) {
-						Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
-					}
-					/*
+
+    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Handler temphandler = new Handler(context.getMainLooper());
+            temphandler.post(new Runnable() {
+                                 public void run() {
+                                     String Url2send;
+                                     if (api_version >= 0.7f) {
+                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=1";
+                                     } else {
+                                         Url2send = url + "command/" + type + "/" + address + "/" + command;
+                                     }
+                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
+                                     JSONObject json_Ack = null;
+                                     try {
+                                         new CallUrl().execute(Url2send, login, password, "3000");
+                                         //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
+                                     } catch (Exception e) {
+                                         Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
+                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                     }
+                    /*
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
 						if(!ack){
@@ -196,18 +199,18 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 						e.printStackTrace();
 					}
 					*/
-				}
-			}
-					);
-			return null;
+                                 }
+                             }
+            );
+            return null;
 
-		}
-	}
+        }
+    }
 
-	public void onClick(View arg0) {
-		trigger.startAnim();
-		new CommandeThread().execute();
-	}
+    public void onClick(View arg0) {
+        trigger.startAnim();
+        new CommandeThread().execute();
+    }
 
 }
 

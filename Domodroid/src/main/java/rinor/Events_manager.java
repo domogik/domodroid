@@ -133,7 +133,7 @@ public class Events_manager {
         Tracer.d(mytag, "Pause requested...");
         sleeping = true;
         /*
-		if(stats_com != null)		//Already done by cache engine !
+        if(stats_com != null)		//Already done by cache engine !
 			stats_com.set_sleeping();
 		 */
     }
@@ -224,10 +224,10 @@ public class Events_manager {
                                         String ticket = "1";
                                         String device_id = json_stats_04.get("sensor_id").toString();
                                         String New_Value = json_stats_04.get("stored_value").toString();
-                                        String Timestamp= json_stats_04.get("timestamp").toString();
+                                        String Timestamp = json_stats_04.get("timestamp").toString();
                                         //TODO find a way to get the state_key of the feature by id=sensorid here!!
                                         String New_Key = "";
-                                        Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value +" Timestamp = " + Timestamp);
+                                        Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                         Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                         put_event(to_stack);    //Put in stack, and notify cache engine
                                         stats_com.add(Stats_Com.EVENTS_RCV, result.toString().length());
@@ -327,7 +327,7 @@ public class Events_manager {
                     Tracer.w(mytag, "Requesting server <" + request + ">");
                     try {
                         //Set timeout very high as tickets is a long process
-                        event = Rest_com.connect_jsonobject(request, login, password,30000); //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(request, login, password, 30000); //Blocking request : we must have an answer to continue...
                         error = 0;
                     } catch (Exception e) {
                         error = 1;
@@ -412,7 +412,7 @@ public class Events_manager {
                                             String New_Key = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
                                             String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
                                             String Timestamp = event.getJSONArray("event").getJSONObject(i).getString("timestamp");
-                                            Tracer.v(mytag, "event ready : Ticket = " + ticket + " Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value +" Timestamp = " + Timestamp);
+                                            Tracer.v(mytag, "event ready : Ticket = " + ticket + " Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                             event_item++;
                                             Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                             put_event(to_stack);    //Put in stack, and notify cache engine
@@ -433,7 +433,7 @@ public class Events_manager {
                     try {
                         Tracer.w(mytag, "Freeing ticket <" + request + ">");
                         stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-                        event = Rest_com.connect_jsonobject(request, login, password,3000);        //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(request, login, password, 3000);        //Blocking request : we must have an answer to continue...
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {

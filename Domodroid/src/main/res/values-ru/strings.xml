@@ -462,6 +462,7 @@
     <string name="motion">Движение</string>
     <string name="state">Состояниe</string>
     <string name="set_state">Установить состояние</string>
+    <string name="error_send">Ошибка отправки</string>
     <string name="send_a_message">Отправить сообщение</string>
     <string name="position_degrees">Положение в градусах</string>
     <string name="battery_level">Заряд батареи</string>
@@ -521,4 +522,6 @@
     <string name="place_widget">Виджет</string>
     <string name="no_value">Нет значения</string>
     <string name="time">Время</string>
+    <string name="events_error_mq_config">Ошибка MQ не настроен</string>
+    <string name="events_error_mq">Ошибка MQ</string>
 </resources>

@@ -143,8 +143,11 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             Tracer.d(mytag, "no param for this device");
         }
         try {
-            command_id = jparam.getString("command_id");
-            command_type = jparam.getString("command_type");
+            int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+            if (number_of_command_parameters == 1) {
+                command_id = jparam.getString("command_id");
+                command_type = jparam.getString("command_type1");
+            }
         } catch (JSONException e) {
             Tracer.d(mytag, "No command_id for this device");
         }

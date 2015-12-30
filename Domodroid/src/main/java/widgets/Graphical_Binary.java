@@ -161,8 +161,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         api_version = params.getFloat("API_VERSION", 0);
         if (api_version >= 0.7f) {
             try {
-                command_id = jparam.getString("command_id");
-                command_type = jparam.getString("command_type");
+                int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+                if (number_of_command_parameters == 1) {
+                    command_id = jparam.getString("command_id");
+                    command_type = jparam.getString("command_type1");
+                }
             } catch (JSONException e) {
                 Tracer.d(mytag, "No command_id for this device");
                 seekBarOnOff.setEnabled(false);
@@ -277,7 +280,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         };
         //================================================================================
         /*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
@@ -368,13 +371,13 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send,login,password,"3000");
+                                         new CallUrl().execute(Url2send, login, password, "3000");
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
                                      }
-					/*
+                    /*
 					try {
 						Boolean ack = JSONParser.Ack(json_Ack);
 						if(!ack){

@@ -106,8 +106,11 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 		if(jparam != null ) {
 			if (api_version>=0.7f) {
 				try{
-					command_id=jparam.getString("command_id");
-					command_type=jparam.getString("command_type");
+					int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+					if (number_of_command_parameters == 1) {
+						command_id = jparam.getString("command_id");
+						command_type = jparam.getString("command_type1");
+					}
 					usable =true;
 				} catch (Exception e) {
 					usable =false;

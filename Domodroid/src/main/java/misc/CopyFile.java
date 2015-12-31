@@ -37,6 +37,7 @@ public class CopyFile {
             }
             in.close();
             out.close();
+            System.gc();
         }
     }
 

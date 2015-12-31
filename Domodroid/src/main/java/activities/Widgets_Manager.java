@@ -230,7 +230,7 @@ public class Widgets_Manager {
             } else if (State_key.equals("color")) {
                 Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                 Graphical_Color color = new Graphical_Color(Tracer, context,
-                        params, Id, DevId, label,
+                        params, Id, DevId, parameters, label,
                         device_type_id,    //Added by Doume to know the 'techno'
                         Address,//  idem to know the address
                         State_key, URL, iconName, update_timer,
@@ -295,13 +295,26 @@ public class Widgets_Manager {
                     tmpPan.addView(cam);
                     Tracer.i(mytag, "   ==> Graphical_Cam");
                 } else if (feature.getParameters().contains("command_type")) {
-                    info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, session_type, parameters, id, zone, params, Value_type);
-                    info_commands.setLayoutParams(layout_param);
-                    info_commands.container = tmpPan;
-                    tmpPan.addView(info_commands);
-                    Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
+                    if (State_key.equals("Set RGB color")) {
+                        Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
+                        Graphical_Color color = new Graphical_Color(Tracer, context,
+                                params, Id, DevId, parameters, label,
+                                device_type_id,    //Added by Doume to know the 'techno'
+                                Address,//  idem to know the address
+                                State_key, URL, iconName, update_timer,
+                                widgetSize, session_type, id, zone);
+                        color.container = tmpPan;
+                        tmpPan.addView(color);
+                        Tracer.i(mytag, "   ==> Graphical_Color");
+                    } else {
+                        info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
+                                State_key, URL, iconName, update_timer,
+                                widgetSize, session_type, parameters, id, zone, params, Value_type);
+                        info_commands.setLayoutParams(layout_param);
+                        info_commands.container = tmpPan;
+                        tmpPan.addView(info_commands);
+                        Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
+                    }
                 } else {
                     info = new Graphical_Info(Tracer, context, Id, DevId, label,
                             State_key, URL, iconName, update_timer,

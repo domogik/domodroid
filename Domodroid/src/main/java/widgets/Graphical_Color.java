@@ -14,6 +14,7 @@ import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import rinor.CallUrl;
@@ -108,10 +109,16 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private final String login;
     private final String password;
     private final float api_version;
+    private String value0;
+    private String value1;
+    private JSONObject jparam;
+    private String command_id = null;
+    private String command_type = null;
 
     public Graphical_Color(tracerengine Trac, Activity context,
                            SharedPreferences params,
                            int id, int dev_id,
+                           String parameters,
                            String name,
                            String model_id,
                            String address,
@@ -129,6 +136,18 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         this.myself = this;
         this.context = context;
         mytag = "Graphical_Color(" + dev_id + ")";
+
+        try {
+            jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            value1 = jparam.getString("value1");
+            value0 = jparam.getString("value0");
+
+        } catch (Exception e) {
+            Tracer.d(mytag,"no parameters for this device");
+            value0 = "0";
+            value1 = "1";
+        }
+
         setOnClickListener(this);
 
         login = params.getString("http_auth_username", null);
@@ -287,7 +306,18 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         featurePan2.addView(color_LeftPan);
         featurePan2.addView(color_RightPan);
         featurePan2.setVisibility(INVISIBLE);
-
+        if (api_version >= 0.7f) {
+            try {
+                int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+                if (number_of_command_parameters == 1) {
+                    command_id = jparam.getString("command_id");
+                    command_type = jparam.getString("command_type1");
+                }
+            } catch (JSONException e) {
+                Tracer.d(mytag, "No command_id for this device");
+                seekBarOnOff.setEnabled(false);
+            }
+        }
         //LoadSelections();
         handler = new Handler() {
             @Override
@@ -502,30 +532,46 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      String Url2send = "";
                                      //TODO change for 0.4
                                      if (api_version >= 0.7f) {
-                                         //Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
+                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=";
+                                         if ((argb != 0) && switch_state) {
+                                             String srgb = Integer.toHexString(argb);
+                                             if (srgb.length() > 6)
+                                                 srgb = srgb.substring(2);
+                                             Url2send += srgb;
+                                         } else {
+                                             String State = "";
+                                             if (switch_state) {
+                                                 //To see
+                                                 State = "000000";
+                                             } else {
+                                                 State = "000000";
+                                                 seekBarHueBar.setProgress(255);
+                                                 seekBarRGBXBar.setProgress(0);
+                                                 seekBarRGBYBar.setProgress(0);
+                                             }
+                                             Url2send += State;
+                                         }
                                      } else {
                                          Url2send = url + "command/" + type + "/" + address + "/setcolor/";
-                                     }
-                                     if ((argb != 0) && switch_state) {
-
-                                         String srgb = Integer.toHexString(argb);
-                                         if (srgb.length() > 6)
-                                             srgb = srgb.substring(2);
-                                         Url2send += "#" + srgb;
-                                     } else {
-                                         String State = "";
-                                         if (switch_state) {
-                                             State = "on";
-
+                                         if ((argb != 0) && switch_state) {
+                                             String srgb = Integer.toHexString(argb);
+                                             if (srgb.length() > 6)
+                                                 srgb = srgb.substring(2);
+                                             Url2send += "#" + srgb;
                                          } else {
-                                             State = "off";
-                                             seekBarHueBar.setProgress(255);
-                                             seekBarRGBXBar.setProgress(0);
-                                             seekBarRGBYBar.setProgress(0);
-                                         }
-                                         Url2send += State;
-                                     }
+                                             String State = "";
+                                             if (switch_state) {
+                                                 State = "000000";
 
+                                             } else {
+                                                 State = "000000";
+                                                 seekBarHueBar.setProgress(255);
+                                                 seekBarRGBXBar.setProgress(0);
+                                                 seekBarRGBYBar.setProgress(0);
+                                             }
+                                             Url2send += State;
+                                         }
+                                     }
                                      updating = 1;
 
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
@@ -581,8 +627,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         seekBarHueBar.setProgress(params.getInt("COLORHUE", 0));
         seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION", 255));
         seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS", 255));
-		/*
-		Tracer.i(mytag, "LoadSelections()");
+        /*
+        Tracer.i(mytag, "LoadSelections()");
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
 		Tracer.i(mytag,"Sat    = "+params.getInt("COLORSATURATION",0));
 		Tracer.i(mytag,"Bright = "+params.getInt("COLORBRIGHTNESS",0));

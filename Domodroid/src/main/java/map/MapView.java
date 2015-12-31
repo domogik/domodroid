@@ -621,10 +621,59 @@ public class MapView extends View {
                 }
                 if (value.equals("????"))
                     value = "";
-
+                //Tracer.d(mytag, "Draw getValue_type" + featureMap.getValue_type().toString());
+                //Tracer.d(mytag, "Draw getState_key" + featureMap.getState_key().toString());
                 if ((featureMap.getValue_type().equals("string") && (!featureMap.getState_key().equals("color")))
                         || featureMap.getValue_type().equals("datetime")) {
-                    if (!featureMap.getDevice_feature_model_id().contains("camera")) {
+                    if (featureMap.getState_key().equals("rgb_color")) {
+                        Tracer.e(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
+                        Paint paint_color = new Paint();
+                        paint_color.setPathEffect(null);
+                        paint_color.setAntiAlias(true);
+                        //paint_color.setStyle(Paint.Style.FILL_AND_STROKE);
+                        paint_color.setStyle(Paint.Style.FILL);
+                        String argbS = "#" + states;
+                        //Process RGB value
+                        if (states.equals("#off")) {
+                            argbS = "#000000";
+                        } else if (argbS.equals("on")) {
+                            argbS = params.getString("COLORRGB", "#FFFFFF");    //Restore last known color, White by default
+                        } else {
+                            //To avoid http://tracker.domogik.org/issues/1972 here
+                            argbS = "#FFFFFF";
+                        }
+                        //Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
+                        //Draw first a black background...
+                        paint_color.setColor(Color.BLACK);
+                        paint_color.setShadowLayer(1, 0, 0, Color.BLACK);
+                        //TODO adapt to screen density?
+                        int left = (int) (featureMap.getPosx() * currentScale) + text_Offset_X - (10 * (int) scale);
+                        int top = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y - (15 * (int) scale);
+                        int right = (int) (featureMap.getPosx() * currentScale) + text_Offset_X + (20 * (int) scale);
+                        int bottom = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y + (10 * (int) scale);
+                        Rect r = new Rect(left, top, right, bottom);
+                        canvasWidget.drawRect(r, paint_color);
+
+                        //And draw real color inside the 1st one
+
+                        paint_color.setColor(Color.parseColor(argbS));
+                        left += 3;
+                        top += 3;
+                        right -= 3;
+                        bottom -= 3;
+                        r = new Rect(left, top, right, bottom);
+                        canvasWidget.drawRect(r, paint_color);
+                        for (int j = 1; j < 5; j++) {
+                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                            paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                            if (!params.getBoolean("HIDE", false))
+                                canvasWidget.drawText(label,
+                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
+                                        paint_text);
+                        }
+
+                    } else if (!featureMap.getDevice_feature_model_id().contains("camera")) {
                         for (int j = 1; j < 5; j++) {
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                             paint_text.setTextSize(texsize * scale + 0.5f - 2);
@@ -650,8 +699,6 @@ public class MapView extends View {
 
                         }
                     }
-
-
                 } else if (featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")
                         || featureMap.getValue_type().equals("bool")) {
                     for (int j = 1; j < 5; j++) {
@@ -712,28 +759,27 @@ public class MapView extends View {
                                 } catch (Exception e1) {
 
                                 }
-
                         }
-                    }
-                    if (value == null)
-                        value = "";
+                        if (value == null)
+                            value = "";
 
-                    for (int j = 1; j < 5; j++) {
-                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                        paint_text.setTextSize(texsize * scale + 0.5f + 4);
-                        if (featureMap != null) {
-                            //Tracer.e(mytag,"Drawing value for "+label+"Value = "+value+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-                            canvasWidget.drawText(value,
-                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y - (10 * (int) scale),
-                                    paint_text);
-                            paint_text.setTextSize(texsize * scale + 0.5f - 1);
-                            //Tracer.e(mytag,"Drawing label "+label+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-                            if (!params.getBoolean("HIDE", false))
-                                canvasWidget.drawText(label,
+                        for (int j = 1; j < 5; j++) {
+                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                            paint_text.setTextSize(texsize * scale + 0.5f + 4);
+                            if (featureMap != null) {
+                                Tracer.e(mytag, "Drawing value for " + label + "Value = " + value + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                                canvasWidget.drawText(value,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
+                                        (featureMap.getPosy() * currentScale) + text_Offset_Y - (10 * (int) scale),
                                         paint_text);
+                                paint_text.setTextSize(texsize * scale + 0.5f - 1);
+                                Tracer.e(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                                if (!params.getBoolean("HIDE", false))
+                                    canvasWidget.drawText(label,
+                                            (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                            (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
+                                            paint_text);
+                            }
                         }
                     }
                 } else if (featureMap.getValue_type().equals("range") || ((parameters.contains("command")) && (featureMap.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
@@ -893,12 +939,14 @@ public class MapView extends View {
         Graphical_Binary_New onoff_New;
         Graphical_Info info;
         Graphical_Info_commands info_commands;
+        Graphical_Binary onoff;
+        Graphical_Color colorw;
         if (feature.getValue_type().equals("binary")) {
             if (type.equals("rgb_leds") && (State_key.equals("command"))) {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    Graphical_Binary onoff = new Graphical_Binary(Tracer, context, Address,
+                    onoff = new Graphical_Binary(Tracer, context, Address,
                             label, Id, DevId, State_key, URL, iconName,
                             parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
                     onoff.container = (FrameLayout) panel_widget;
@@ -952,7 +1000,7 @@ public class MapView extends View {
             }
         } else if (State_key.equals("color")) {
             Graphical_Color color = new Graphical_Color(Tracer, context,
-                    params, Id, DevId, label,
+                    params, Id, DevId, parameters, label,
                     device_type_id,    //Added by Doume to know the 'techno'
                     Address,//  idem to know the address
                     State_key, URL, iconName, update_timer,
@@ -990,8 +1038,8 @@ public class MapView extends View {
             list.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
-            Graphical_Color colorw = new Graphical_Color(Tracer, context,
-                    params, Id, DevId, label, feature.getDevice_feature_model_id(),
+            colorw = new Graphical_Color(Tracer, context,
+                    params, Id, DevId, parameters, label, feature.getDevice_feature_model_id(),
                     Address, State_key, URL, iconName,
                     update_timer,
                     widgetSize, mytype, 0, zone
@@ -1011,10 +1059,20 @@ public class MapView extends View {
                         State_key, Address, iconName, widgetSize, mytype, 0, zone);
                 panel_widget.addView(cam);
             } else if (parameters.contains("command")) {
-                info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
-                        State_key, URL, iconName, update_timer,
-                        widgetSize, mytype, parameters, 0, zone, params, feature.getValue_type());
-                panel_widget.addView(info_commands);
+                if (State_key.equals("Set RGB color")) {
+                    Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
+                    colorw = new Graphical_Color(Tracer, context,
+                            params, Id, DevId, parameters, label, feature.getDevice_feature_model_id(),
+                            Address, State_key, URL, iconName,
+                            update_timer,
+                            widgetSize, mytype, 0, zone);
+                    panel_widget.addView(colorw);
+                } else {
+                    info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
+                            State_key, URL, iconName, update_timer,
+                            widgetSize, mytype, parameters, 0, zone, params, feature.getValue_type());
+                    panel_widget.addView(info_commands);
+                }
             } else {
                 info = new Graphical_Info(Tracer, context, Id, DevId, label,
                         State_key, "", iconName, update_timer,

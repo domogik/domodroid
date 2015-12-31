@@ -1,11 +1,16 @@
 package misc;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
 import misc.tracerengine;
@@ -14,6 +19,8 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar;
+
+import org.domogik.domodroid13.R;
 
 public class Color_Progress extends SeekBar {
 
@@ -99,6 +106,16 @@ public class Color_Progress extends SeekBar {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(12);
+        //Todo redraw the cursor to good size
+/*
+        Bitmap bitmap= BitmapFactory.decodeResource(getResources(), R.drawable.buttonseekbar);
+        Bitmap thumb=Bitmap.createBitmap(50,50, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(thumb);
+        canvas.drawBitmap(bitmap, new Rect(20, 20, bitmap.getWidth(), bitmap.getHeight()),
+                new Rect(20, 20, thumb.getWidth(), thumb.getHeight()), null);
+        Drawable drawable = new BitmapDrawable(getResources(),thumb);
+        setThumb(drawable);
+*/
     }
 
     @Override

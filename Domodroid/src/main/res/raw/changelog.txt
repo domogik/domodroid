@@ -22,8 +22,10 @@
     $ 1.4-DEV
       % Version 14
       _ 2016-xx-xx
-      As so much new metod it's recommanded to resync with domogik.
+      ! Important due to new method for Domogik 0.4+ command, it's strongly recommended to synchronize again with Domogik.
+      * #68 Android > KitKat image picker method change
       * Add multiple parameters for 0.4 command (need a resync)
+      * Add color picker RGB for 0.4 command
       * Change power management method
       * Correct history for callerid in 0.3
       * Adding a new method from fritz to callurl in background (for command)

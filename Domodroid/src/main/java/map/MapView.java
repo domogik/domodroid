@@ -649,7 +649,7 @@ public class MapView extends View {
                         //TODO adapt to screen density?
                         int left = (int) (featureMap.getPosx() * currentScale) + text_Offset_X - (10 * (int) scale);
                         int top = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y - (15 * (int) scale);
-                        int right = (int) (featureMap.getPosx() * currentScale) + text_Offset_X + (20 * (int) scale);
+                        int right = (int) (featureMap.getPosx() * currentScale) + text_Offset_X + (85 * (int) scale);
                         int bottom = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y + (10 * (int) scale);
                         Rect r = new Rect(left, top, right, bottom);
                         canvasWidget.drawRect(r, paint_color);
@@ -1094,6 +1094,7 @@ public class MapView extends View {
         //35 is the height of the top border in dip.
         canvas.drawBitmap(map, 0, 35 * getResources().getDisplayMetrics().density, paint_map);
         canvas.drawBitmap(widget, 0, 0, paint_map);
+        System.gc();
     }
 
     public Bitmap decodeFile(File f) {

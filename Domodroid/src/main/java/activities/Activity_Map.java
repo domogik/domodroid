@@ -839,12 +839,14 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
     // (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
     {
         super.onConfigurationChanged(newConfig);
+        System.gc();
         mapView.initMap();
 
     }
 
     private Boolean restartactivity() {
         Intent intent = getIntent();
+        System.gc();
         finish();
         startActivity(intent);
         return true;

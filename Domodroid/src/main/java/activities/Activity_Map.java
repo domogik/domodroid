@@ -5,12 +5,11 @@ import org.domogik.domodroid13.R;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +27,7 @@ import widgets.Entity_Feature;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,11 +40,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 
 import misc.CopyFile;
 import misc.tracerengine;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,7 +59,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
@@ -348,12 +349,9 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void startCacheEngine() {
-
         if (widgetUpdate == null) {
             Tracer.i(mytag, "Starting WidgetUpdate engine !");
             widgetUpdate = WidgetUpdate.getInstance();
@@ -364,7 +362,6 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         }
         tracerengine.set_engine(widgetUpdate);
         Tracer.v(mytag, "WidgetUpdate engine connected !");
-
     }
 
     private void build_maps_list() {
@@ -492,15 +489,29 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             if (requestCode == PICK_IMAGE && data != null && data.getData() != null) {
+                Log.e(mytag, "onActivityResult");
                 Uri _uri = data.getData();
                 //User had pick an image.
                 Cursor cursor = getContentResolver().query(_uri, new String[]{android.provider.MediaStore.Images.ImageColumns.DATA}, null, null, null);
                 cursor.moveToFirst();
+                Log.e(mytag, "cursormove");
                 //Copy the select picture to Domodroid directory
-                File selectFile = new File(cursor.getString(0));
+                Uri uri = data.getData();
+                Tracer.i(mytag, "Uri: " + uri.toString());
+                File selectFile = null;
+                if (cursor.getString(0) != null) {
+                    Tracer.i(mytag, "Image from normal picker");
+                    selectFile = new File(cursor.getString(0));
+                } else {
+                    Tracer.i(mytag, "Image from new picker with uri that may crash");
+                    selectFile = new File(getDriveFileAbsolutePath(this, uri));
+                }
+                Tracer.e(mytag, "selectfile");
                 fileName = selectFile.getName();
+                Tracer.e(mytag, "filename");
                 //filter for extension if not png or svg say it to user
                 String filenameArray[] = fileName.split("\\.");
+                Tracer.e(mytag, "split");
                 //get file extension
                 extension = filenameArray[filenameArray.length - 1];
                 //put extension in lower case
@@ -516,9 +527,11 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             Bitmap bmp = mapView.decodeFile(selectFile);
                             bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
                             out.close();
+                            bmp.recycle();
                             Tracer.i(mytag, "On activity reslut convert image to png !");
                         } catch (Exception e) {
-                            Tracer.e(mytag, e.toString());
+                            //Tracer.e(mytag, e.toString());
+                            e.printStackTrace();
                         }
                         //else just copy svg or png to domodroid dir
                     } else {
@@ -637,7 +650,8 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
     public void onStop() {
         System.gc();
         super.onStop();
-        onDestroy();
+        Tracer.v(mytag, "onStop");
+        //onDestroy();
     }
 
     public void onPanelClosed(Sliding_Drawer panel) {
@@ -834,5 +848,55 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         finish();
         startActivity(intent);
         return true;
+    }
+
+    private static String getDriveFileAbsolutePath(Activity context, Uri uri) {
+        if (uri == null) return null;
+        ContentResolver resolver = context.getContentResolver();
+        String filename = "";
+        final String[] projection = {
+                MediaStore.MediaColumns.DISPLAY_NAME
+        };
+        ContentResolver cr = context.getApplicationContext().getContentResolver();
+        Cursor metaCursor = cr.query(uri, projection, null, null, null);
+        if (metaCursor != null) {
+            try {
+                if (metaCursor.moveToFirst()) {
+                    filename = metaCursor.getString(0);
+                    Log.e("DriveFileAbsolutePath", "filename=" + filename.toString());
+                }
+            } finally {
+                metaCursor.close();
+            }
+        }
+        FileInputStream input = null;
+        FileOutputStream output = null;
+        String outputFilePath = new File(context.getCacheDir(), filename).getAbsolutePath();
+        try {
+            ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "r");
+            FileDescriptor fd = pfd.getFileDescriptor();
+            input = new FileInputStream(fd);
+            output = new FileOutputStream(outputFilePath);
+            int read = 0;
+            byte[] bytes = new byte[4096];
+            while ((read = input.read(bytes)) != -1) {
+                output.write(bytes, 0, read);
+            }
+            System.gc();
+            return new File(outputFilePath).getAbsolutePath();
+        } catch (IOException ignored) {
+            System.gc();// nothing we can do
+        } finally {
+            try {
+                System.gc();
+                input.close();
+                output.close();
+            } catch (IOException e) {
+                System.gc();
+                e.toString();
+            }
+
+        }
+        return "";
     }
 }

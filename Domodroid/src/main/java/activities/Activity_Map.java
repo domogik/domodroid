@@ -523,12 +523,22 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             //FileOutputStream out = new FileOutputStream(fileName);
                             fileName = fileName.substring(0, fileName.length() - extension.length() - 1) + ".png";
                             extension = "png";
+                            //Todo Need improvement if the new "file+random" also exists!
+                                /*
+                                String baseFilename = "photo";
+                                File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
+                                int i = 2; // whatever increment you want to start with, I'm copying Windows' naming convention
+                                while (outputFile.exists()) {
+                                    outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + "(" + i + ")" + ".jpg");
+                                    i++;
+                                }
+                                */
                             FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
                             Bitmap bmp = mapView.decodeFile(selectFile);
                             bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
                             out.close();
                             bmp.recycle();
-                            Tracer.i(mytag, "On activity reslut convert image to png !");
+                            Tracer.i(mytag, "On activity result convert image to png !");
                         } catch (Exception e) {
                             //Tracer.e(mytag, e.toString());
                             e.printStackTrace();
@@ -536,6 +546,16 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                         //else just copy svg or png to domodroid dir
                     } else {
                         File destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
+                        //Todo Need improvement if the new "file+random" also exists!
+                                /*
+                                String baseFilename = "photo";
+                                File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
+                                int i = 2; // whatever increment you want to start with, I'm copying Windows' naming convention
+                                while (outputFile.exists()) {
+                                    outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + "(" + i + ")" + ".jpg");
+                                    i++;
+                                }
+                                */
                         CopyFile.copyDirectory(selectFile, destFile);
                     }
                     cursor.close();
@@ -555,7 +575,16 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             Tracer.i(mytag, "new fileName: " + renamefileName);
                             destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + "." + extension);
                             if (destFile.exists()) {
-                                //Need improvement if the new "file+random" also exists!
+                                //Todo Need improvement if the new "file+random" also exists!
+                                /*
+                                String baseFilename = "photo";
+                                File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
+                                int i = 2; // whatever increment you want to start with, I'm copying Windows' naming convention
+                                while (outputFile.exists()) {
+                                    outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + "(" + i + ")" + ".jpg");
+                                    i++;
+                                }
+                                */
                                 Random randomInt = new Random();
                                 new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName).renameTo(new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + (randomInt.nextInt(100)) + "." + extension));
                             } else {
@@ -567,7 +596,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                     });
                     rename.setNegativeButton(R.string.Rename_file_NO, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog_customname, int whichButton) {
-                            Tracer.i(mytag, "renamefile Canceled.");
+                            Tracer.i(mytag, "rename file Canceled.");
                             //Restart the activity to save change
                             restartactivity();
                         }

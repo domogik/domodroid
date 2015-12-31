@@ -222,7 +222,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             }
                         } catch (JSONException e) {
                             if (state_key.equalsIgnoreCase("temperature"))
-                                value.setText(formatedValue + " +°C");
+                                value.setText(formatedValue + " °C");
                             else if (state_key.equalsIgnoreCase("pressure"))
                                 value.setText(formatedValue + " hPa");
                             else if (state_key.equalsIgnoreCase("humidity"))

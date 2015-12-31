@@ -92,7 +92,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     LinearLayout featurePan2;
     private View featurePan2_buttons;
-    private final EditText value;
+    private EditText value1 = null;
     private final Activity context;
     private Message msg;
     private static String mytag;
@@ -109,7 +109,12 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private int dpiClassification;
     private JSONObject jparam;
     private String command_id = null;
-    private String command_type = null;
+    private String command_type1 = null;
+    private String command_data_type1 = null;
+    private String command_type[] = null;
+    private String command_data_type[] = null;
+    private List<EditText> allEds = null;
+    int number_of_command_parameters;
 
     public Graphical_Info_commands(tracerengine Trac, final Activity context, int id, int dev_id, String name,
                                    final String state_key, String url, final String usage, int update,
@@ -131,7 +136,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         //Label Text size according to the screen size
         float size60 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);
-        float size70 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, metrics);
+        float size120 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, metrics);
 
         Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
         login = params.getString("http_auth_username", null);
@@ -143,13 +148,46 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             Tracer.d(mytag, "no param for this device");
         }
         try {
-            int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
-            if (number_of_command_parameters == 1) {
-                command_id = jparam.getString("command_id");
-                command_type = jparam.getString("command_type1");
+            number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+            command_id = jparam.getString("command_id");
+            command_type = new String[number_of_command_parameters];
+            command_data_type = new String[number_of_command_parameters];
+            EditText ed;
+            TextView tv_edittext;
+            allEds = new ArrayList<EditText>();
+            //allEds will list references to EditTexts, so we can iterate it and get the data.
+            for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
+                command_type[current_parameter] = jparam.getString("command_type" + (current_parameter + 1));
+                command_data_type[current_parameter] = jparam.getString("command_data_type" + (current_parameter + 1));
+                Tracer.d(mytag, "command_type_" + current_parameter + "=" + command_type[current_parameter]);
+                Tracer.d(mytag, "command_data_type" + current_parameter + "=" + command_data_type[current_parameter]);
+                tv_edittext = new TextView(context);
+                tv_edittext.setTextSize(20.0f);
+                //translate this command_type
+                String command_type_display = "";
+                try {
+                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                    command_type_display = getContext().getString(Graphics_Manager.getStringIdentifier(getContext(), command_type[current_parameter].toLowerCase()));
+                } catch (Exception e1) {
+                    Tracer.d(mytag, "no translation for: " + command_type[current_parameter]);
+                    command_type_display = command_type[current_parameter];
+                }
+                command_type_display += " :";
+                tv_edittext.setText(command_type_display);
+                ed = new EditText(context);
+                allEds.add(ed);
+                ed.setTextSize(18);
+                ed.setTextColor(Color.BLACK);
+                ed.setMinWidth((int) (size120));
+                featurePan2 = new LinearLayout(context);
+                featurePan2.setPadding(5, 10, 5, 10);
+                featurePan2.addView(tv_edittext);
+                featurePan2.addView(ed);
+                LL_background.addView(featurePan2);
             }
         } catch (JSONException e) {
-            Tracer.d(mytag, "No command_id for this device");
+            Tracer.d(mytag, "No command_id/or number of commands or type or data_type for this device");
+            e.printStackTrace();
         }
 
         //state key
@@ -157,17 +195,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
-        //value
-        value = new EditText(context);
-        //#46 change keyboard type in fonction of datatype
-        if (value_type.equals("string"))
-            value.setInputType(InputType.TYPE_CLASS_TEXT);
-        if (value_type.equals("number"))
-            value.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        value.setTextSize(18);
-        value.setTextColor(Color.BLACK);
-        value.setMinWidth((int) (size70));
-        value.setMaxWidth((int) (size70));
 
         Button button_send = new Button(context);
         button_send.setMinWidth((int) (size60));
@@ -179,7 +206,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                        }
         );
 
-        LL_featurePan.addView(value);
         LL_featurePan.addView(button_send);
         LL_infoPan.addView(state_key_view);
 
@@ -192,35 +218,29 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             Handler handler = new Handler(context.getMainLooper());
             handler.post(new Runnable() {
                              public void run() {
-                                 String Url2send;
+                                 String Url2send = "";
                                  if (api_version >= 0.7f) {
-                                     Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + URLEncoder.encode(value.getText().toString());
+                                     Url2send = url + "cmd/id/" + command_id + "?";
+                                     for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
+                                         Url2send += command_type[current_parameter] + "=" + URLEncoder.encode(allEds.get(current_parameter - 1).getText().toString()) + "&";
+                                     }
+                                     //remove last &
+                                     if (Url2send.endsWith("&")) {
+                                         Url2send = Url2send.substring(0, Url2send.length() - 1);
+                                     }
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
                                          new CallUrl().execute(Url2send, login, password, "3000");
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
-                                         value.setText("");
+                                         //Clean all text from allEds
+                                         for (int i = 0; i < allEds.size(); i++) {
+                                             allEds.get(i).setText("");
+                                         }
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
                                      }
-                        /*
-                        try {
-							Boolean ack = JSONParser.Ack(json_Ack);
-							if(!ack){
-								try{
-									Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
-									Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show(); 
-								} catch (Exception e) {
-									Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-									Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show(); 
-								}
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						*/
                                  }
 
                              }

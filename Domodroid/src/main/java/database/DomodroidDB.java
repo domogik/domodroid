@@ -42,6 +42,8 @@ public class DomodroidDB {
         context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);
     }
     public void NewsyncDb() {
+        //delete all feature
+        context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
         //That should clear in all tables, only what refer to area id 1 if previous api >0.6f
         DomodroidDB domodb = new DomodroidDB(Tracer, context);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";

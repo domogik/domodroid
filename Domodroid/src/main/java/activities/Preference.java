@@ -141,13 +141,11 @@ public class Preference extends PreferenceActivity implements
         }
     }
 
-    private boolean saveSharedPreferencesToFile(File dst) {
-        boolean res = false;
+    private void saveSharedPreferencesToFile(File dst) {
         ObjectOutputStream output = null;
         try {
             output = new ObjectOutputStream(new FileOutputStream(dst));
             output.writeObject(PreferenceManager.getDefaultSharedPreferences(this).getAll());
-            res = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -162,6 +160,5 @@ public class Preference extends PreferenceActivity implements
                 ex.printStackTrace();
             }
         }
-        return res;
     }
 } 

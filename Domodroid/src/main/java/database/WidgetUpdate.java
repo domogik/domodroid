@@ -914,13 +914,13 @@ public class WidgetUpdate {
         return result;
     }
 
-    public Boolean unsubscribe(Entity_client client) {
+    public void unsubscribe(Entity_client client) {
         int device = -1;
         String skey = "";
         Boolean result = false;
 
         if (client == null)
-            return result;
+            return;
         device = client.getDevId();
         skey = client.getskey();
         Tracer.i(mytag, "cache engine release subscription requested by <" + client.getName() + "> Device (" + device + ") (" + skey + ")");
@@ -950,7 +950,6 @@ public class WidgetUpdate {
 
         client.setClientId(-1);        //subscribing not located...
         locked = false;
-        return result;
     }
 
     /*

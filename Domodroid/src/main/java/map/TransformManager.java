@@ -53,12 +53,11 @@ public class TransformManager {
         }
     }
 
-    public int[] actionUp(float evX, float evY) {
+    public void actionUp(float evX, float evY) {
         mode = NONE;
         matrix.getValues(value);
         pos[POS_X] = (int) ((evX - value[2]) / value[0]);
         pos[POS_Y] = (int) ((evY - value[5]) / value[0]);
-        return pos;
     }
 
     public int[] currentPosition(float evX, float evY) {

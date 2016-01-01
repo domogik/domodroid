@@ -253,15 +253,13 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         }
     }
 
-    public boolean change_this_icon(int icon_status) {
+    public void change_this_icon(int icon_status) {
         set_this_icon_status(icon_status);
         IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
-        return true;
     }
 
-    public boolean set_this_icon_status(int icon_status) {
+    public void set_this_icon_status(int icon_status) {
         this.icon_status = icon_status;
-        return true;
-    }
+     }
 }
 

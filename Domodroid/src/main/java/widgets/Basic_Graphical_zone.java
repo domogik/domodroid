@@ -126,9 +126,8 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 
     }
 
-    public boolean change_this_icon(int icon_status, String icon) {
+    public void change_this_icon(int icon_status, String icon) {
         IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
-        return true;
     }
 }
 

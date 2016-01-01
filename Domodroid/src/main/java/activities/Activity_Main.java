@@ -539,7 +539,7 @@ public class Activity_Main extends Activity implements OnClickListener {
 
         }
         /*
-		if(Tracer != null) {
+        if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
 			Tracer = null;
 		}
@@ -557,7 +557,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
 	/*
-	public void force_DB_update() {
+    public void force_DB_update() {
 		if(WU_widgetUpdate != null) {
 			WU_widgetUpdate.refreshNow();
 		}
@@ -687,9 +687,7 @@ public class Activity_Main extends Activity implements OnClickListener {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
-    private boolean loadSharedPreferencesFromFile(File src) {
-        boolean res = false;
+    private void loadSharedPreferencesFromFile(File src) {
         ObjectInputStream input = null;
         try {
             input = new ObjectInputStream(new FileInputStream(src));
@@ -712,7 +710,6 @@ public class Activity_Main extends Activity implements OnClickListener {
             }
             SP_prefEditor.commit();
             this.LoadSelections();    // to set panel with known values
-            res = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -728,7 +725,6 @@ public class Activity_Main extends Activity implements OnClickListener {
                 ex.printStackTrace();
             }
         }
-        return res;
     }
 
     private void loadWigets(int id, String type) {
@@ -844,7 +840,7 @@ public class Activity_Main extends Activity implements OnClickListener {
         }
     }
 
-    private Boolean startCacheEngine() {
+    private void startCacheEngine() {
         Cache_management.checkcache(Tracer, myself);
         if (WU_widgetUpdate == null) {
             this.Create_message_box();
@@ -857,10 +853,9 @@ public class Activity_Main extends Activity implements OnClickListener {
             Tracer.i(mytag, "widgetupdate_wakup");
             WU_widgetUpdate.wakeup();
             if (!result)
-                return result;
+                return;
         }
         Tracer.set_engine(WU_widgetUpdate);
-        return true;
     }
 
     @Override

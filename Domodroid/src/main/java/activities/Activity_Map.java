@@ -851,15 +851,8 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
     }
 
 
-    private static boolean createDirIfNotExists() {
-        boolean ret = true;
+    private static void createDirIfNotExists() {
         File file = new File(Environment.getExternalStorageDirectory(), "/domodroid");
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                ret = false;
-            }
-        }
-        return ret;
     }
 
     @Override
@@ -873,12 +866,11 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
 
     }
 
-    private Boolean restartactivity() {
+    private void restartactivity() {
         Intent intent = getIntent();
         System.gc();
         finish();
         startActivity(intent);
-        return true;
     }
 
     private static String getDriveFileAbsolutePath(Activity context, Uri uri) {

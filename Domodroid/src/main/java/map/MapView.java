@@ -757,6 +757,7 @@ public class MapView extends View {
                                 try {
                                     value = context.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
                                 } catch (Exception e1) {
+                                    e1.printStackTrace();
 
                                 }
                         }

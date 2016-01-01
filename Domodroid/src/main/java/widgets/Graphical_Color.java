@@ -143,7 +143,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             value0 = jparam.getString("value0");
 
         } catch (Exception e) {
-            Tracer.d(mytag,"no parameters for this device");
+            Tracer.d(mytag, "no parameters for this device");
             value0 = "0";
             value1 = "1";
         }
@@ -338,6 +338,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
 
                 } else if (msg.what == 9999) {

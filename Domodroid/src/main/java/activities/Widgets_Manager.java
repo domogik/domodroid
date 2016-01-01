@@ -454,6 +454,7 @@ public class Widgets_Manager {
             try {
                 iconId = domodb.requestIcons(Id, "room").getValue();
             } catch (Exception e) {
+                e.printStackTrace();
             }
             if (iconId.equals("unknown")) {
                 //iconId="usage";

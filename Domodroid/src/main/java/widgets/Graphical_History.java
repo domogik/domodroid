@@ -168,6 +168,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                 }
 
@@ -176,7 +177,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         };
         //================================================================================
         /*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
@@ -288,6 +289,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 Tracer.d(mytag, "removeView(listeChoices)");
 
             } catch (Exception e) {
+                e.printStackTrace();
             }
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
             getlastvalue();

@@ -42,7 +42,7 @@ public class tracerengine {
     public Boolean force_Main = false;
     public Boolean Map_as_main = false;
     /*
-	 * This class is fully static 
+     * This class is fully static
 	 * Only one instance will be started (by Main) and used by all other components
 	 */
 
@@ -81,6 +81,7 @@ public class tracerengine {
             try {
                 txtFile.close();
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
             txtFile = null;

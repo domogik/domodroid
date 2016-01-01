@@ -340,6 +340,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                 }
             }
@@ -792,6 +793,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     LL_background.removeView(chartContainer);
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 try {
 

@@ -110,6 +110,7 @@ public class MjpegViewAsync extends SurfaceView implements SurfaceHolder.Callbac
                                     }
                                 }
                             } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
                     } finally {

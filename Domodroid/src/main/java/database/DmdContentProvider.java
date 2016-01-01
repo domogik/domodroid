@@ -192,7 +192,7 @@ public class DmdContentProvider extends ContentProvider {
         try {
             finalize();
         } catch (Throwable e) {
-
+            e.printStackTrace();
         }
     }
 

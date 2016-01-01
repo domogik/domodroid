@@ -236,6 +236,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                 } else {
                     try {
@@ -311,6 +312,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                                 try {
                                     finalize();
                                 } catch (Throwable t) {
+                                    t.printStackTrace();
                                 }    //kill the handler thread itself
                             }
                         }

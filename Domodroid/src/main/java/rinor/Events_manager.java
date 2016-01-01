@@ -120,7 +120,7 @@ public class Events_manager {
                     try {
                         this.finalize();
                     } catch (Throwable t) {
-
+                        t.printStackTrace();
                     }
                 }
             }
@@ -292,6 +292,7 @@ public class Events_manager {
                         try {
                             Thread.sleep(sleep_time);    //Wait for 2s
                         } catch (Throwable t) {
+                            t.printStackTrace();
                         }
                         sleep_duration += sleep_time;
                         //TODO 0.4 try to change this to listen when MQ is no more connected.
@@ -316,6 +317,7 @@ public class Events_manager {
                         try {
                             Thread.sleep(counter_current);    //Wait for 10s, 20s, 30s, ... (max 5 minutes)
                         } catch (Throwable t) {
+                            t.printStackTrace();
                         }
                         //And try to reconnect
 
@@ -437,6 +439,7 @@ public class Events_manager {
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                 }

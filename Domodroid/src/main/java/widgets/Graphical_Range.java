@@ -212,6 +212,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                     ///////////////////////////////////////////////////////////////////
                 } else {
@@ -252,6 +253,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                         try {
                             finalize();
                         } catch (Throwable t) {
+                            t.printStackTrace();
                         }    //kill the handler thread itself
                     }
 

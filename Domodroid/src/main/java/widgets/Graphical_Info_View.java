@@ -138,6 +138,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                 } else {
                     invalidate();
@@ -239,6 +240,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             drawValue();
             drawGraph();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         if (loaded)
             canvas.drawBitmap(buffer, 0, 0, new Paint());

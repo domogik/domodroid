@@ -81,7 +81,7 @@ public class WidgetUpdate {
 	 * When variable 'activated' is true, each timer generates a database update with server's response
 	 */
     /*
-	 * New concept introduced by Doume at 2013/02/15
+     * New concept introduced by Doume at 2013/02/15
 	 * This engine will maintain a cache of state values
 	 * This cache will be updated after each request to server (in parallel to database during transition phase)
 	 * 	When a value change, this engine will notify each client having subscribed to the device
@@ -123,7 +123,7 @@ public class WidgetUpdate {
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = sharedparams.getFloat("API_VERSION", 0);
-		/*
+        /*
 		if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
 				try {
@@ -219,6 +219,7 @@ public class WidgetUpdate {
                                     Tracer.i(mytag, "Handler send a notification to MapView");
                                     mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
                                 } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
                             //event = eventsManager.get_event();		//Try to get the next...
@@ -243,6 +244,7 @@ public class WidgetUpdate {
                     try {
                         this.finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }
 
                 } else if (msg.what == 9902) {
@@ -301,6 +303,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(10);        //Standby 10 milliseconds
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         locked = true;
@@ -370,6 +373,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(10);        //Standby 10 milliseconds
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         locked = true;
@@ -456,6 +460,7 @@ public class WidgetUpdate {
                     //finalize();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         Tracer.d(mytag, "cache engine ready after resync !");
@@ -569,6 +574,7 @@ public class WidgetUpdate {
                         counter = 0;
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             if (myselfHandler != null) {
@@ -746,6 +752,7 @@ public class WidgetUpdate {
                 Tracer.i(mytag, "cache engine send a unique notification to MapView");
                 mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         mapView = null;
@@ -769,6 +776,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(100);        //Standby 10 milliseconds
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         locked = true;    //Take the lock
@@ -806,6 +814,7 @@ public class WidgetUpdate {
                                     Tracer.i(mytag, "cache engine send (" + Val + ") to client <" + cache.get(cache_position).clients_list.get(j).getName() + ">");
                                     client.sendEmptyMessage(9999);    //notify the widget a new value is ready for display
                                 } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
                         } // test of valid client handler
@@ -882,6 +891,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(100);        //Standby 10 milliseconds
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         locked = true;    //Take the lock
@@ -920,6 +930,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(10);        //Standby 10 milliseconds
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         locked = true;

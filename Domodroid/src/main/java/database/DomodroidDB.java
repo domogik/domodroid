@@ -34,13 +34,13 @@ public class DomodroidDB {
         this.Tracer = Trac;
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
-
     }
 
     public void updateDb() {
         //That should clear all tables, except feature_map
         context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);
     }
+
     public void NewsyncDb() {
         //delete all feature
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
@@ -65,6 +65,7 @@ public class DomodroidDB {
         try {
             context.getContentResolver().cancelSync(null);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

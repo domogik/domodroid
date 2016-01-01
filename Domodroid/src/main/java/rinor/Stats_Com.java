@@ -161,6 +161,7 @@ public class Stats_Com {
         try {
             this.finalize();
         } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 

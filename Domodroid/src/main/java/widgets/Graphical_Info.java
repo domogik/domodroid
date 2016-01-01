@@ -298,6 +298,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                 }
             }
@@ -339,6 +340,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     LL_background.removeView(featurePan2);
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));

@@ -45,7 +45,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class Widgets_Manager {
+class Widgets_Manager {
 
     private int widgetSize;
     private boolean columns = false;

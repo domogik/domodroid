@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  */
 //TODO add Tracer engine to log message
 
-public class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
+class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
     private ZMQ.Socket pub = null;
 
     public static String getHostName() {

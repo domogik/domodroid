@@ -6,7 +6,7 @@ package map;
  * @author Larva Labs, LLC
  */
 @SuppressWarnings("serial")
-public class SVGParseException extends RuntimeException {
+class SVGParseException extends RuntimeException {
 
     public SVGParseException(String s) {
         super(s);

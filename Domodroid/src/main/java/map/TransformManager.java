@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 /**
  * perform matrix transformations
  */
-public class TransformManager {
+class TransformManager {
     public static final int POS_X = 0;
     public static final int POS_Y = 1;
 

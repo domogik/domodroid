@@ -14,7 +14,7 @@ import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
-public class Speaker implements OnInitListener {
+class Speaker implements OnInitListener {
     private tracerengine Tracer = null;
 
     private final TextToSpeech tts;

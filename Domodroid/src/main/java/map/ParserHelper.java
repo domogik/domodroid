@@ -23,7 +23,7 @@ package map;
  *
  * @author Apache Software Foundation, Larva Labs LLC
  */
-public class ParserHelper {
+class ParserHelper {
 
     private char current;
     private final CharSequence s;

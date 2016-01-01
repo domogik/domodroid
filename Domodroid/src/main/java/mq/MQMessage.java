@@ -10,14 +10,14 @@ public abstract class MQMessage implements Parcelable {
     protected String message;
     protected String id;
 
-    public MQMessage() {
+    MQMessage() {
     }
 
     public String getMessage() {
         return message;
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 

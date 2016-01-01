@@ -51,6 +51,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final String password;
     private String mytag = "Dialog_Synchronize";
     private float previous_api_version = 0f;
+    private boolean by_usage;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
         super(context);
@@ -153,10 +154,18 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 db = new DomodroidDB(Tracer, context);
             try {
                 previous_api_version = params.getFloat("API_VERSION", 0);
-                Tracer.d(mytag, "Previous Api version exist");
+                Tracer.d(mytag, "Previous Api version value exist");
             } catch (Exception e) {
                 e.printStackTrace();
                 Tracer.d(mytag, "Can't grab previous value");
+            }
+            try {
+                by_usage = params.getBoolean("BY_USAGE", false);
+                Tracer.d(mytag, "Previous by usage value exist");
+            } catch (Exception e) {
+                by_usage = true;
+                e.printStackTrace();
+                Tracer.d(mytag, "Can't grab previous value of by usage");
             }
         }
 
@@ -248,6 +257,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             if ((previous_api_version == Rinor_Api_Version) && (Rinor_Api_Version >= 0.6f)) {
                 //Erase in tables only device/usage  list !
                 db.NewsyncDb();
+                //todo change by usage here
+                // by_usage=False
             } else {
                 //Erase all tables contents EXCEPT maps coordinates !
                 db.updateDb();
@@ -1051,10 +1062,10 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 }
                 prefEditor.putString("ICON_LIST", json_IconList.toString());
                 prefEditor.putBoolean("BY_USAGE", false);
-            } else {
+            } else if (Rinor_Api_Version >= 0.6f) {
                 if (Rinor_Api_Version >= 0.7f)
                     prefEditor.putBoolean("WIDGET_CHOICE", true);
-                prefEditor.putBoolean("BY_USAGE", true);
+                prefEditor.putBoolean("BY_USAGE", by_usage);
             }
 
             //refresh cache address

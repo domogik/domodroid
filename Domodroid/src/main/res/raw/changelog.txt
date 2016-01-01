@@ -24,7 +24,7 @@
       _ 2016-xx-xx
       ! Important due to new method for Domogik 0.4+ command, it's strongly recommended to synchronize again with Domogik.
       * #34 new sync method that deleting only area (Usage/device). At least at the 2nd next sync.
-      * #69 Widget command whit multiple parameters
+      * #69 Widget command whith multiple parameters
       * #68 Android > KitKat image picker method change
       * Add multiple parameters for 0.4 command (need a resync)
       * Add color picker RGB for 0.4 command

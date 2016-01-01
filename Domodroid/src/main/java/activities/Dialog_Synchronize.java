@@ -1066,6 +1066,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 prefEditor.putBoolean("BY_USAGE", by_usage);
             }
 
+            //Clear possible feature association with deleted device
+            db.CleanFeatures_association();
+
             //refresh cache address
             Cache_management.checkcache(Tracer, context);
             need_refresh = true;    // To notify main activity that screen must be refreshed

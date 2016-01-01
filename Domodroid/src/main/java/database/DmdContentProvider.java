@@ -325,6 +325,7 @@ public class DmdContentProvider extends ContentProvider {
             case CLEAR_one_FEATURE_ASSOCIATION:
                 try {
                     mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE device_feature_id=" + values.getAsString("id"));
+                    Tracer.v(mytag, "DELETE FROM table_feature_association WHERE id=" + values.getAsString("id"));
                 } catch (SQLException e) {
                     Tracer.e(mytag, "Error deleting feature_association: " + e.toString());
                 }

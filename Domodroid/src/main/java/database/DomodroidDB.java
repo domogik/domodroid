@@ -483,7 +483,6 @@ public class DomodroidDB {
     }
 
     //Request to remove association if no more device
-    //todo finish this.
     public void CleanFeatures_association() {
         Cursor curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ALL, null, null, null, null);
         int[] device_feature_id_associated_somewhere = requestAllFeatures_association();
@@ -494,7 +493,8 @@ public class DomodroidDB {
         for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
             found=false;
             for (int j = 0; j < curs1.getCount(); j++) {
-                if (device_feature_id_associated_somewhere[i] == j) {
+                curs1.moveToPosition(j);
+                if (device_feature_id_associated_somewhere[i] == curs1.getInt(1)) {
                     found=true;
                 }
             }

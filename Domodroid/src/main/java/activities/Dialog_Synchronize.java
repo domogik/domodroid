@@ -50,6 +50,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final String login;
     private final String password;
     private String mytag = "Dialog_Synchronize";
+    private float previous_api_version = 0f;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
         super(context);
@@ -104,6 +105,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                 } catch (Exception e) {
                     Tracer.d(mytag, e.toString());
+                    message.setText(R.string.connection_error);
                 }
                 message.setText(R.string.connection_error);
 
@@ -149,6 +151,13 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             urlAccess = params.getString("URL", "1.1.1.1");
             if (db == null)
                 db = new DomodroidDB(Tracer, context);
+            try {
+                previous_api_version = params.getFloat("API_VERSION", 0);
+                Tracer.d(mytag, "Previous Api version exist");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Tracer.d(mytag, "Can't grab previous value");
+            }
         }
 
         @Override
@@ -234,7 +243,15 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_IconList = null;
             Tracer.i(mytag, "urlAccess = <" + urlAccess + ">");
 
-            db.updateDb();        //Erase all tables contents EXCEPT maps coordinates !
+            // grab a new method if sync by past that only erase what concern area id 1 if previous api >0.6f
+            // and if syncing ith the same api version
+            if ((previous_api_version == Rinor_Api_Version) && (Rinor_Api_Version >= 0.6f)) {
+                //Erase in tables only device/usage  list !
+                db.NewsyncDb();
+            } else {
+                //Erase all tables contents EXCEPT maps coordinates !
+                db.updateDb();
+            }
 
             if (Rinor_Api_Version <= 0.5f) {
                 json_AreaList = Rest_com.connect_jsonobject(urlAccess + "base/area/list/", login, password, 3000);
@@ -550,7 +567,6 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (JSONException e1) {
                     Tracer.e(mytag, e1.toString());
                 }
-
                 try {
                     json_AreaList.put("area", list);
                 } catch (JSONException e1) {
@@ -577,7 +593,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 try {
                     area.put("description", "");
                     area.put("id", "1");
-                    area.put("name", "Usage");
+                    area.put("name", "Device");
                 } catch (JSONException e1) {
                     Tracer.e(mytag, e1.toString());
                 }

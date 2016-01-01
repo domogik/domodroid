@@ -41,6 +41,23 @@ public class DomodroidDB {
         //That should clear all tables, except feature_map
         context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);
     }
+    public void NewsyncDb() {
+        //That should clear in all tables, only what refer to area id 1 if previous api >0.6f
+        DomodroidDB domodb = new DomodroidDB(Tracer, context);
+        domodb.owner = "Widgets_Manager.loadRoomWidgets";
+        Tracer.e(mytag, "load widgets for area 1");
+        Entity_Room[] listRoom = domodb.requestRoom(1);
+
+        for (Entity_Room room : listRoom) {
+            Tracer.get_engine().remove_one_things(room.getId(), "room");
+            Tracer.get_engine().remove_one_place_type_in_Featureassociation(room.getId(), "room");
+            Tracer.get_engine().remove_one_icon(room.getId(), "room");
+        }
+
+        Tracer.get_engine().remove_one_things(1, "area");
+        Tracer.get_engine().remove_one_place_type_in_Featureassociation(1, "area");
+        Tracer.get_engine().remove_one_icon(1, "area");
+    }
 
     public void closeDb() {
         try {
@@ -403,7 +420,7 @@ public class DomodroidDB {
     public int requestlastidArea() {
         String[] projection = {"description", "id", "name"};
         Cursor curs = null;
-        int lastid = 0;
+        int lastid = 1;
         try {
             curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
             curs.moveToLast();

@@ -44,7 +44,7 @@ public class DomodroidDB {
     public void NewsyncDb() {
         //delete all feature
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
-        //That should clear in all tables, only what refer to area id 1 if previous api >0.6f
+        //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
         DomodroidDB domodb = new DomodroidDB(Tracer, context);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
         Tracer.e(mytag, "load widgets for area 1");
@@ -482,6 +482,31 @@ public class DomodroidDB {
         return lastid;
     }
 
+    //Request to remove association if no more device
+    //todo finish this.
+    public void CleanFeatures_association() {
+        Cursor curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ALL, null, null, null, null);
+        int[] device_feature_id_associated_somewhere = requestAllFeatures_association();
+        boolean found;
+        //parcourir la liste des feature avec comme device_feature_id_associated_somewhere=int[i]
+        // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated là
+        // on utilise int[i]
+        for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
+            found=false;
+            for (int j = 0; j < curs1.getCount(); j++) {
+                if (device_feature_id_associated_somewhere[i] == j) {
+                    found=true;
+                }
+            }
+            if (!found){
+                remove_one_feature_association(device_feature_id_associated_somewhere[i]);
+                remove_one_feature_in_FeatureMap(device_feature_id_associated_somewhere[i]);
+            }
+        }
+        curs1.close();
+
+    }
+
     //Add a request for all device_feature_id in feature_association and feature_map
     //It's used to be sure that the url always contains all associated devices
     //to grab information if they're displayed somewhere.
@@ -495,7 +520,6 @@ public class DomodroidDB {
 
             curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
             curs2 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP_ALL, null, null, null, null);
-
             dev_id = new int[curs1.getCount() + curs2.getCount()];
 
             int count = curs1.getCount();

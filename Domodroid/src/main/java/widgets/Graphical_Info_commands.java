@@ -222,7 +222,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                  if (api_version >= 0.7f) {
                                      Url2send = url + "cmd/id/" + command_id + "?";
                                      for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
-                                         Url2send += command_type[current_parameter] + "=" + URLEncoder.encode(allEds.get(current_parameter - 1).getText().toString()) + "&";
+                                         Url2send += command_type[current_parameter] + "=" + URLEncoder.encode(allEds.get(current_parameter).getText().toString()) + "&";
                                      }
                                      //remove last &
                                      if (Url2send.endsWith("&")) {

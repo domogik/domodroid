@@ -213,12 +213,16 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
                             test_unite = jparam.getString("unit");
                             //#30 add Scale value if too big for byte only
-                            if (test_unite.equals("b")) {
-                                value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
-                            } else if (test_unite.equals("ko")) {
-                                value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
-                            } else {
-                                value.setText(formatedValue + " " + test_unite);
+                            switch (test_unite) {
+                                case "b":
+                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
+                                    break;
+                                case "ko":
+                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
+                                    break;
+                                default:
+                                    value.setText(formatedValue + " " + test_unite);
+                                    break;
                             }
                         } catch (JSONException e) {
                             if (state_key.equalsIgnoreCase("temperature"))

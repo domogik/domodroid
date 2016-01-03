@@ -628,7 +628,7 @@ public class Activity_Main extends Activity implements OnClickListener {
             WM_Agent.widgetupdate = WU_widgetUpdate;
         }
         /*
-		if(T_starting != null) {
+        if(T_starting != null) {
 			T_starting.cancel();
 			T_starting.setText("Creating widgets....");
 			T_starting.setDuration(Toast.LENGTH_SHORT);
@@ -743,26 +743,28 @@ public class Activity_Main extends Activity implements OnClickListener {
 
         try {
             int mytype = 0;
-            if (type.equals("root")) {
-                LL_area.removeAllViews();
-                VG_parent.addView(LL_house_map);    // House & map
-                if (!by_usage) {
-                    // Version 0.2 or un-force by_usage : display house, map and areas
-                    LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
-                    VG_parent.addView(LL_area);    //and areas
-                    LL_activ.removeAllViews();
-                    LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
-                } else {
-                    // by_usage
-                    //TODO #19 change 1 in loadRoomWidgets by the right value.
-                    LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
-                    VG_parent.addView(LL_room);
-                    LL_activ.removeAllViews();
-                    LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
-                }
-                VG_parent.addView(LL_activ);
+            switch (type) {
+                case "root":
+                    LL_area.removeAllViews();
+                    VG_parent.addView(LL_house_map);    // House & map
+
+                    if (!by_usage) {
+                        // Version 0.2 or un-force by_usage : display house, map and areas
+                        LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
+                        VG_parent.addView(LL_area);    //and areas
+                        LL_activ.removeAllViews();
+                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
+                    } else {
+                        // by_usage
+                        //TODO #19 change 1 in loadRoomWidgets by the right value.
+                        LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
+                        VG_parent.addView(LL_room);
+                        LL_activ.removeAllViews();
+                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
+                    }
+                    VG_parent.addView(LL_activ);
 				/*Should never arrive in this type.
-			}else if(type.equals("house")) {
+			    }else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
@@ -772,29 +774,36 @@ public class Activity_Main extends Activity implements OnClickListener {
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
 				 */
-            } else if (type.equals("statistics")) {
-                //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
-                LL_area.removeAllViews();
-                LL_activ.removeAllViews();
-                LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
-                VG_parent.addView(LL_activ);
+                    break;
+                case "statistics":
+                    //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
+                    LL_area.removeAllViews();
+                    LL_activ.removeAllViews();
+                    LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
+                    VG_parent.addView(LL_activ);
 
-            } else if (type.equals("area")) {
-                //Only possible if Version 0.2 or un-force by_usage (the area 'usage' is never proposed to be clicked)
-                if (!by_usage) {
-                    VG_parent.addView(LL_house_map);    // House & map
-                }
-                LL_room.removeAllViews();
-                LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
-                VG_parent.addView(LL_room);
-                LL_activ.removeAllViews();
-                LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
-                VG_parent.addView(LL_activ);
+                    break;
+                case "area":
+                    //Only possible if Version 0.2 or un-force by_usage (the area 'usage' is never proposed to be clicked)
+                    if (!by_usage) {
+                        VG_parent.addView(LL_house_map);    // House & map
+                    }
+                    LL_room.removeAllViews();
+                    LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
 
-            } else if (type.equals("room")) {
-                LL_activ.removeAllViews();
-                LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
-                VG_parent.addView(LL_activ);
+                    VG_parent.addView(LL_room);
+                    LL_activ.removeAllViews();
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
+
+                    VG_parent.addView(LL_activ);
+
+                    break;
+                case "room":
+                    LL_activ.removeAllViews();
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
+
+                    VG_parent.addView(LL_activ);
+                    break;
             }
 
         } catch (JSONException e) {

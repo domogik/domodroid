@@ -46,14 +46,19 @@ public class Gradients_Manager {
                 final float[] gradient_title_params = {0, 0.85f, 0.85f, 1};
 
                 LinearGradient lg = null;
-                if (profile.equals("white")) {
-                    lg = new LinearGradient(0, 0, 0, height, gradient_white, gradient_white_params, Shader.TileMode.REPEAT);
-                } else if (profile.equals("black")) {
-                    lg = new LinearGradient(0, 0, 0, height, gradient_black, gradient_black_params, Shader.TileMode.REPEAT);
-                } else if (profile.equals("ltblack")) {
-                    lg = new LinearGradient(0, 0, 0, height, gradient_ltblack, gradient_black_params, Shader.TileMode.REPEAT);
-                } else if (profile.equals("title")) {
-                    lg = new LinearGradient(0, 0, 0, height, gradiant_title, gradient_title_params, Shader.TileMode.REPEAT);
+                switch (profile) {
+                    case "white":
+                        lg = new LinearGradient(0, 0, 0, height, gradient_white, gradient_white_params, Shader.TileMode.REPEAT);
+                        break;
+                    case "black":
+                        lg = new LinearGradient(0, 0, 0, height, gradient_black, gradient_black_params, Shader.TileMode.REPEAT);
+                        break;
+                    case "ltblack":
+                        lg = new LinearGradient(0, 0, 0, height, gradient_ltblack, gradient_black_params, Shader.TileMode.REPEAT);
+                        break;
+                    case "title":
+                        lg = new LinearGradient(0, 0, 0, height, gradiant_title, gradient_title_params, Shader.TileMode.REPEAT);
+                        break;
                 }
                 return lg;
             }

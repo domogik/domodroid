@@ -71,37 +71,38 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             public void handleMessage(Message msg) {
                 try {
                     String loc_Value = msg.getData().getString("message");
-                    if (loc_Value.equals("sync_done")) {
-                        sync.cancel(true);
-                        dismiss();
-                        return;
-                    } else if (loc_Value.equals("conn_error")) {
-                        message.setText(R.string.sync_rinor_error);
-                        return;
-                    } else if (loc_Value.equals("2_area")) {
-                        message.setText(R.string.sync_2_error_area);
-                        return;
-                    } else if (loc_Value.equals("2_room")) {
-                        message.setText(R.string.sync_2_error_room);
-                        return;
-                    } else if (loc_Value.equals("2_feature")) {
-                        message.setText(R.string.sync_2_error_feature);
-                        return;
-                    } else if (loc_Value.equals("2_feature_association")) {
-                        message.setText(R.string.sync_2_error_feature);
-                        return;
-                    } else if (loc_Value.equals("2_ui_config")) {
-                        message.setText(R.string.sync_2_error_ui);
-                        return;
-                    } else if (loc_Value.equals("3_feature")) {
-                        message.setText(R.string.sync_3_error_feature);
-                        return;
-                    } else if (loc_Value.equals("device")) {
-                        message.setText(R.string.sync_4_error_device);
-                        return;
-                    } else if (loc_Value.equals("datatype")) {
-                        message.setText(R.string.sync_4_error_datatype);
-                        return;
+                    switch (loc_Value) {
+                        case "sync_done":
+                            sync.cancel(true);
+                            dismiss();
+                            return;
+                        case "conn_error":
+                            message.setText(R.string.sync_rinor_error);
+                            return;
+                        case "2_area":
+                            message.setText(R.string.sync_2_error_area);
+                            return;
+                        case "2_room":
+                            message.setText(R.string.sync_2_error_room);
+                            return;
+                        case "2_feature":
+                            message.setText(R.string.sync_2_error_feature);
+                            return;
+                        case "2_feature_association":
+                            message.setText(R.string.sync_2_error_feature);
+                            return;
+                        case "2_ui_config":
+                            message.setText(R.string.sync_2_error_ui);
+                            return;
+                        case "3_feature":
+                            message.setText(R.string.sync_3_error_feature);
+                            return;
+                        case "device":
+                            message.setText(R.string.sync_4_error_device);
+                            return;
+                        case "datatype":
+                            message.setText(R.string.sync_4_error_datatype);
+                            return;
                     }
 
                 } catch (Exception e) {
@@ -360,7 +361,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 //Create string
                 String usage = "";
                 //Create an ArrayList
-                ArrayList<String> list_usage = new ArrayList<String>();
+                ArrayList<String> list_usage = new ArrayList<>();
 
                 try {
                     json_AreaList.put("status", "OK");
@@ -559,7 +560,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 //Create string
                 String usage = "";
                 //Create an ArrayList
-                ArrayList<String> list_usage = new ArrayList<String>();
+                ArrayList<String> list_usage = new ArrayList<>();
 
                 try {
                     json_AreaList.put("status", "OK");

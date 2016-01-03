@@ -150,24 +150,31 @@ public class Graphical_Info_View extends View implements OnClickListener {
     public void onClick(View v) {
         String tag = (String) v.getTag();
         sav_period = period_type;        //Save the current graph period
-        if (tag.equals("Prev")) {
-            Prev = (Button) v;
-            period_type = -1;
-        } else if (tag.equals("Next")) {
-            Next = (Button) v;
-            period_type = 0;
-        } else if (tag.equals("Year")) {
-            Year = (Button) v;
-            period_type = 365;
-        } else if (tag.equals("Month")) {
-            Month = (Button) v;
-            period_type = 31;
-        } else if (tag.equals("Week")) {
-            Week = (Button) v;
-            period_type = 8;
-        } else if (tag.equals("Day")) {
-            Day = (Button) v;
-            period_type = 1;
+        switch (tag) {
+            case "Prev":
+                Prev = (Button) v;
+                period_type = -1;
+                break;
+            case "Next":
+                Next = (Button) v;
+                period_type = 0;
+                break;
+            case "Year":
+                Year = (Button) v;
+                period_type = 365;
+                break;
+            case "Month":
+                Month = (Button) v;
+                period_type = 31;
+                break;
+            case "Week":
+                Week = (Button) v;
+                period_type = 8;
+                break;
+            case "Day":
+                Day = (Button) v;
+                period_type = 1;
+                break;
         }
         force_aspect(period_type);
         compute_period();

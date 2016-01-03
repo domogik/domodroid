@@ -154,15 +154,19 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             }
         }
 
-        if (usage.equals("light")) {
-            this.Value_0 = getResources().getText(R.string.light_stat_0).toString();
-            this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
-        } else if (usage.equals("shutter")) {
-            this.Value_0 = getResources().getText(R.string.shutter_stat_0).toString();
-            this.Value_1 = getResources().getText(R.string.shutter_stat_1).toString();
-        } else {
-            this.Value_0 = value0;
-            this.Value_1 = value1;
+        switch (usage) {
+            case "light":
+                this.Value_0 = getResources().getText(R.string.light_stat_0).toString();
+                this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
+                break;
+            case "shutter":
+                this.Value_0 = getResources().getText(R.string.shutter_stat_0).toString();
+                this.Value_1 = getResources().getText(R.string.shutter_stat_1).toString();
+                break;
+            default:
+                this.Value_0 = value0;
+                this.Value_1 = value1;
+                break;
         }
 
         String[] model = model_id.split("\\.");

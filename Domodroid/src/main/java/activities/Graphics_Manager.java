@@ -32,437 +32,439 @@ public class Graphics_Manager {
         switch (state) {
             case 0: //Called for Off or Room
                 //reorder by usage name for easy update
-                if (usage.equals("air_conditionning")) {
-                    return R.drawable.usage_air_off;
-                } else if (usage.equals("appliance")) {
-                    return R.drawable.usage_appliance_off;
-                } else if (usage.equals("battery")) {
-                    return R.drawable.usage_battery_off;
-                } else if (usage.equals("bluetooth")) {
-                    return R.drawable.usage_bluetooth_off;
-                } else if (usage.equals("christmas_tree")) {
-                    return R.drawable.usage_christmas_tree_off;
-                } else if (usage.equals("computer")) {
-                    return R.drawable.usage_computer_off;
-                } else if (usage.equals("cron")) {
-                    return R.drawable.usage_cron_off;
-                } else if (usage.equals("door")) {
-                    return R.drawable.usage_door_off;
-                } else if (usage.equals("electricity")) {
-                    return R.drawable.usage_electricity_off;
-                } else if (usage.equals("heating")) {
-                    return R.drawable.usage_heating_off;
-                } else if (usage.equals("light")) {
-                    return R.drawable.usage_light_off;
-                } else if (usage.equals("mirror")) {
-                    return R.drawable.usage_mirror_off;
-                } else if (usage.equals("music")) {
-                    return R.drawable.usage_music_off;
-                } else if (usage.equals("nanoztag")) {
-                    return R.drawable.usage_nanoztag_off;
-                } else if (usage.equals("portal")) {
-                    return R.drawable.usage_portal_off;
-                } else if (usage.equals("scene")) {
-                    return R.drawable.usage_scene_off;
-                } else if (usage.equals("security_camera")) {
-                    return R.drawable.usage_security_cam_off;
-                } else if (usage.equals("server")) {
-                    return R.drawable.usage_server_off;
-                } else if (usage.equals("socket")) {
-                    return R.drawable.usage_appliance_off;
-                } else if (usage.equals("shutter")) {
-                    return R.drawable.usage_shutter_off;
-                } else if (usage.equals("telephony")) {
-                    return R.drawable.usage_telephony_off;
-                } else if (usage.equals("temperature")) {
-                    return R.drawable.usage_temperature_off;
-                } else if (usage.equals("tv")) {
-                    return R.drawable.usage_tv_off;
-                } else if (usage.equals("ventilation")) {
-                    return R.drawable.usage_ventilation_off;
-                } else if (usage.equals("water")) {
-                    return R.drawable.usage_water_off;
-                } else if (usage.equals("water_tank")) {
-                    return R.drawable.usage_water_tank_off;
-                } else if (usage.equals("window")) {
-                    return R.drawable.usage_window_off;
+                switch (usage) {
+                    case "air_conditionning":
+                        return R.drawable.usage_air_off;
+                    case "appliance":
+                        return R.drawable.usage_appliance_off;
+                    case "battery":
+                        return R.drawable.usage_battery_off;
+                    case "bluetooth":
+                        return R.drawable.usage_bluetooth_off;
+                    case "christmas_tree":
+                        return R.drawable.usage_christmas_tree_off;
+                    case "computer":
+                        return R.drawable.usage_computer_off;
+                    case "cron":
+                        return R.drawable.usage_cron_off;
+                    case "door":
+                        return R.drawable.usage_door_off;
+                    case "electricity":
+                        return R.drawable.usage_electricity_off;
+                    case "heating":
+                        return R.drawable.usage_heating_off;
+                    case "light":
+                        return R.drawable.usage_light_off;
+                    case "mirror":
+                        return R.drawable.usage_mirror_off;
+                    case "music":
+                        return R.drawable.usage_music_off;
+                    case "nanoztag":
+                        return R.drawable.usage_nanoztag_off;
+                    case "portal":
+                        return R.drawable.usage_portal_off;
+                    case "scene":
+                        return R.drawable.usage_scene_off;
+                    case "security_camera":
+                        return R.drawable.usage_security_cam_off;
+                    case "server":
+                        return R.drawable.usage_server_off;
+                    case "socket":
+                        return R.drawable.usage_appliance_off;
+                    case "shutter":
+                        return R.drawable.usage_shutter_off;
+                    case "telephony":
+                        return R.drawable.usage_telephony_off;
+                    case "temperature":
+                        return R.drawable.usage_temperature_off;
+                    case "tv":
+                        return R.drawable.usage_tv_off;
+                    case "ventilation":
+                        return R.drawable.usage_ventilation_off;
+                    case "water":
+                        return R.drawable.usage_water_off;
+                    case "water_tank":
+                        return R.drawable.usage_water_tank_off;
+                    case "window":
+                        return R.drawable.usage_window_off;
+
+                    //room
+                    case "bathroom":
+                        return R.drawable.room_bathroom;
+                    case "bedroom":
+                        return R.drawable.room_bedroom;
+                    case "garage":
+                        return R.drawable.room_garage;
+                    case "kidsroom":
+                        return R.drawable.room_kidsroom;
+                    case "kitchen":
+                        return R.drawable.room_kitchen;
+                    case "office":
+                        return R.drawable.room_office;
+                    case "tvlounge":
+                        return R.drawable.room_tvlounge;
+                    case "usage":
+                        return R.drawable.logo;
+                    case "unknow":
+                        return R.drawable.unknown;
+
+                    //area
+                    case "area":
+                        return R.drawable.area_area;
+                    case "attic":
+                        return R.drawable.area_attic;
+                    case "basement":
+                        return R.drawable.area_basement;
+                    case "basement2":
+                        return R.drawable.area_basement2;
+                    case "garden":
+                        return R.drawable.area_garden;
+                    case "ground_floor":
+                        return R.drawable.area_ground_floor;
+                    case "ground_floor2":
+                        return R.drawable.area_ground_floor2;
+                    case "first_floor":
+                        return R.drawable.area_first_floor;
+                    case "first_floor2":
+                        return R.drawable.area_first_floor2;
+                    case "second_floor":
+                        return R.drawable.area_second_floor;
+                    case "second_floor2":
+                        return R.drawable.area_second_floor2;
+                    case "house":
+                        return R.drawable.house;
+                    case "map":
+                        return R.drawable.map;
+                    default:
+                        return R.drawable.usage_default_off;
                 }
-                //room
-                else if (usage.equals("bathroom")) {
-                    return R.drawable.room_bathroom;
-                } else if (usage.equals("bedroom")) {
-                    return R.drawable.room_bedroom;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.room_garage;
-                } else if (usage.equals("kidsroom")) {
-                    return R.drawable.room_kidsroom;
-                } else if (usage.equals("kitchen")) {
-                    return R.drawable.room_kitchen;
-                } else if (usage.equals("office")) {
-                    return R.drawable.room_office;
-                } else if (usage.equals("tvlounge")) {
-                    return R.drawable.room_tvlounge;
-                } else if (usage.equals("usage")) {
-                    return R.drawable.logo;
-                } else if (usage.equals("unknow")) {
-                    return R.drawable.unknown;
-                }
-                //area
-                else if (usage.equals("area")) {
-                    return R.drawable.area_area;
-                } else if (usage.equals("attic")) {
-                    return R.drawable.area_attic;
-                } else if (usage.equals("basement")) {
-                    return R.drawable.area_basement;
-                } else if (usage.equals("basement2")) {
-                    return R.drawable.area_basement2;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.area_garage;
-                } else if (usage.equals("garden")) {
-                    return R.drawable.area_garden;
-                } else if (usage.equals("ground_floor")) {
-                    return R.drawable.area_ground_floor;
-                } else if (usage.equals("ground_floor2")) {
-                    return R.drawable.area_ground_floor2;
-                } else if (usage.equals("first_floor")) {
-                    return R.drawable.area_first_floor;
-                } else if (usage.equals("first_floor2")) {
-                    return R.drawable.area_first_floor2;
-                } else if (usage.equals("second_floor")) {
-                    return R.drawable.area_second_floor;
-                } else if (usage.equals("second_floor2")) {
-                    return R.drawable.area_second_floor2;
-                } else if (usage.equals("house")) {
-                    return R.drawable.house;
-                } else if (usage.equals("map")) {
-                    return R.drawable.map;
-                } else return R.drawable.usage_default_off;
 
             case 1: //For median value (50%)
                 //reorder by usage name for easy update
-                if (usage.equals("air_conditionning")) {
-                    return R.drawable.usage_air_50;
-                } else if (usage.equals("appliance")) {
-                    return R.drawable.usage_appliance_50;
-                } else if (usage.equals("battery")) {
-                    return R.drawable.usage_battery_50;
+                switch (usage) {
+                    case "air_conditionning":
+                        return R.drawable.usage_air_50;
+                    case "appliance":
+                        return R.drawable.usage_appliance_50;
+                    case "battery":
+                        return R.drawable.usage_battery_50;
+
+                    //todo add bluetooth 50
+                    case "christmas_tree":
+                        return R.drawable.usage_christmas_tree_50;
+                    case "computer":
+                        return R.drawable.usage_computer_50;
+                    case "cron":
+                        return R.drawable.usage_cron_50;
+                    case "door":
+                        return R.drawable.usage_door_50;
+                    case "electricity":
+                        return R.drawable.usage_electricity_50;
+                    case "heating":
+                        return R.drawable.usage_heating_50;
+                    case "light":
+                        return R.drawable.usage_light_50;
+                    case "mirror":
+                        return R.drawable.usage_mirror_50;
+                    case "music":
+                        return R.drawable.usage_music_50;
+                    case "nanoztag":
+                        return R.drawable.usage_nanoztag_50;
+                    case "portal":
+                        return R.drawable.usage_portal_50;
+                    case "scene":
+                        return R.drawable.usage_scene_50;
+                    case "security_camera":
+                        return R.drawable.usage_security_cam_50;
+                    case "server":
+                        return R.drawable.usage_server_50;
+                    case "socket":
+                        return R.drawable.usage_appliance_50;
+                    case "shutter":
+                        return R.drawable.usage_shutter_50;
+                    case "telephony":
+                        return R.drawable.usage_telephony_50;
+                    case "temperature":
+                        return R.drawable.usage_temperature_50;
+                    case "tv":
+                        return R.drawable.usage_tv_50;
+                    case "ventilation":
+                        return R.drawable.usage_ventilation_50;
+                    case "water":
+                        return R.drawable.usage_water_50;
+                    case "water_tank":
+                        return R.drawable.usage_water_tank_50;
+                    case "window":
+                        return R.drawable.usage_window_50;
+
+                    //room
+                    case "bathroom":
+                        return R.drawable.room_bathroom;
+                    case "bedroom":
+                        return R.drawable.room_bedroom;
+                    case "garage":
+                        return R.drawable.room_garage;
+                    case "kidsroom":
+                        return R.drawable.room_kidsroom;
+                    case "kitchen":
+                        return R.drawable.room_kitchen;
+                    case "office":
+                        return R.drawable.room_office;
+                    case "tvlounge":
+                        return R.drawable.room_tvlounge;
+                    case "usage":
+                        return R.drawable.logo;
+                    case "unknow":
+                        return R.drawable.unknown;
+
+                    //area
+                    case "area":
+                        return R.drawable.area_area;
+                    case "attic":
+                        return R.drawable.area_attic;
+                    case "basement":
+                        return R.drawable.area_basement;
+                    case "basement2":
+                        return R.drawable.area_basement2;
+                    case "garden":
+                        return R.drawable.area_garden;
+                    case "ground_floor":
+                        return R.drawable.area_ground_floor;
+                    case "ground_floor2":
+                        return R.drawable.area_ground_floor2;
+                    case "first_floor":
+                        return R.drawable.area_first_floor;
+                    case "first_floor2":
+                        return R.drawable.area_first_floor2;
+                    case "second_floor":
+                        return R.drawable.area_second_floor;
+                    case "second_floor2":
+                        return R.drawable.area_second_floor2;
+                    case "house":
+                        return R.drawable.house;
+                    case "map":
+                        return R.drawable.map;
+                    default:
+                        return R.drawable.usage_default_50;
                 }
-                //todo add bluetooth 50
-                else if (usage.equals("christmas_tree")) {
-                    return R.drawable.usage_christmas_tree_50;
-                } else if (usage.equals("computer")) {
-                    return R.drawable.usage_computer_50;
-                } else if (usage.equals("cron")) {
-                    return R.drawable.usage_cron_50;
-                } else if (usage.equals("door")) {
-                    return R.drawable.usage_door_50;
-                } else if (usage.equals("electricity")) {
-                    return R.drawable.usage_electricity_50;
-                } else if (usage.equals("heating")) {
-                    return R.drawable.usage_heating_50;
-                } else if (usage.equals("light")) {
-                    return R.drawable.usage_light_50;
-                } else if (usage.equals("mirror")) {
-                    return R.drawable.usage_mirror_50;
-                } else if (usage.equals("music")) {
-                    return R.drawable.usage_music_50;
-                } else if (usage.equals("nanoztag")) {
-                    return R.drawable.usage_nanoztag_50;
-                } else if (usage.equals("portal")) {
-                    return R.drawable.usage_portal_50;
-                } else if (usage.equals("scene")) {
-                    return R.drawable.usage_scene_50;
-                } else if (usage.equals("security_camera")) {
-                    return R.drawable.usage_security_cam_50;
-                } else if (usage.equals("server")) {
-                    return R.drawable.usage_server_50;
-                } else if (usage.equals("socket")) {
-                    return R.drawable.usage_appliance_50;
-                } else if (usage.equals("shutter")) {
-                    return R.drawable.usage_shutter_50;
-                } else if (usage.equals("telephony")) {
-                    return R.drawable.usage_telephony_50;
-                } else if (usage.equals("temperature")) {
-                    return R.drawable.usage_temperature_50;
-                } else if (usage.equals("tv")) {
-                    return R.drawable.usage_tv_50;
-                } else if (usage.equals("ventilation")) {
-                    return R.drawable.usage_ventilation_50;
-                } else if (usage.equals("water")) {
-                    return R.drawable.usage_water_50;
-                } else if (usage.equals("water_tank")) {
-                    return R.drawable.usage_water_tank_50;
-                } else if (usage.equals("window")) {
-                    return R.drawable.usage_window_50;
-                }
-                //room
-                else if (usage.equals("bathroom")) {
-                    return R.drawable.room_bathroom;
-                } else if (usage.equals("bedroom")) {
-                    return R.drawable.room_bedroom;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.room_garage;
-                } else if (usage.equals("kidsroom")) {
-                    return R.drawable.room_kidsroom;
-                } else if (usage.equals("kitchen")) {
-                    return R.drawable.room_kitchen;
-                } else if (usage.equals("office")) {
-                    return R.drawable.room_office;
-                } else if (usage.equals("tvlounge")) {
-                    return R.drawable.room_tvlounge;
-                } else if (usage.equals("usage")) {
-                    return R.drawable.logo;
-                } else if (usage.equals("unknow")) {
-                    return R.drawable.unknown;
-                }
-                //area
-                else if (usage.equals("area")) {
-                    return R.drawable.area_area;
-                } else if (usage.equals("attic")) {
-                    return R.drawable.area_attic;
-                } else if (usage.equals("basement")) {
-                    return R.drawable.area_basement;
-                } else if (usage.equals("basement2")) {
-                    return R.drawable.area_basement2;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.area_garage;
-                } else if (usage.equals("garden")) {
-                    return R.drawable.area_garden;
-                } else if (usage.equals("ground_floor")) {
-                    return R.drawable.area_ground_floor;
-                } else if (usage.equals("ground_floor2")) {
-                    return R.drawable.area_ground_floor2;
-                } else if (usage.equals("first_floor")) {
-                    return R.drawable.area_first_floor;
-                } else if (usage.equals("first_floor2")) {
-                    return R.drawable.area_first_floor2;
-                } else if (usage.equals("second_floor")) {
-                    return R.drawable.area_second_floor;
-                } else if (usage.equals("second_floor2")) {
-                    return R.drawable.area_second_floor2;
-                } else if (usage.equals("house")) {
-                    return R.drawable.house;
-                } else if (usage.equals("map")) {
-                    return R.drawable.map;
-                } else return R.drawable.usage_default_50;
 
             case 2: //For on
                 //reorder by usage name for easy update
-                if (usage.equals("air_conditionning")) {
-                    return R.drawable.usage_air_on;
-                } else if (usage.equals("appliance")) {
-                    return R.drawable.usage_appliance_on;
-                } else if (usage.equals("battery")) {
-                    return R.drawable.usage_battery_on;
-                } else if (usage.equals("bluetooth")) {
-                    return R.drawable.usage_bluetooth_on;
-                } else if (usage.equals("christmas_tree")) {
-                    return R.drawable.usage_christmas_tree_on;
-                } else if (usage.equals("computer")) {
-                    return R.drawable.usage_computer_on;
-                } else if (usage.equals("cron")) {
-                    return R.drawable.usage_cron_on;
-                } else if (usage.equals("door")) {
-                    return R.drawable.usage_door_on;
-                } else if (usage.equals("electricity")) {
-                    return R.drawable.usage_electricity_on;
-                } else if (usage.equals("heating")) {
-                    return R.drawable.usage_heating_on;
-                }    //Added by Doume
-                else if (usage.equals("light")) {
-                    return R.drawable.usage_light_on;
-                } else if (usage.equals("mirror")) {
-                    return R.drawable.usage_mirror_on;
-                } else if (usage.equals("music")) {
-                    return R.drawable.usage_music_on;
-                } else if (usage.equals("nanoztag")) {
-                    return R.drawable.usage_nanoztag_on;
-                } else if (usage.equals("portal")) {
-                    return R.drawable.usage_portal_on;
-                } else if (usage.equals("scene")) {
-                    return R.drawable.usage_scene_on;
-                } else if (usage.equals("security_camera")) {
-                    return R.drawable.usage_security_cam_on;
-                } else if (usage.equals("server")) {
-                    return R.drawable.usage_server_on;
-                } else if (usage.equals("socket")) {
-                    return R.drawable.usage_appliance_on;
-                } else if (usage.equals("shutter")) {
-                    return R.drawable.usage_shutter_on;
-                } else if (usage.equals("telephony")) {
-                    return R.drawable.usage_telephony_on;
-                } else if (usage.equals("temperature")) {
-                    return R.drawable.usage_temperature_on;
-                } else if (usage.equals("tv")) {
-                    return R.drawable.usage_tv_on;
-                } else if (usage.equals("ventilation")) {
-                    return R.drawable.usage_ventilation_on;
-                } else if (usage.equals("water")) {
-                    return R.drawable.usage_water_on;
-                } else if (usage.equals("water_tank")) {
-                    return R.drawable.usage_water_tank_on;
-                } else if (usage.equals("window")) {
-                    return R.drawable.usage_window_on;
+                switch (usage) {
+                    case "air_conditionning":
+                        return R.drawable.usage_air_on;
+                    case "appliance":
+                        return R.drawable.usage_appliance_on;
+                    case "battery":
+                        return R.drawable.usage_battery_on;
+                    case "bluetooth":
+                        return R.drawable.usage_bluetooth_on;
+                    case "christmas_tree":
+                        return R.drawable.usage_christmas_tree_on;
+                    case "computer":
+                        return R.drawable.usage_computer_on;
+                    case "cron":
+                        return R.drawable.usage_cron_on;
+                    case "door":
+                        return R.drawable.usage_door_on;
+                    case "electricity":
+                        return R.drawable.usage_electricity_on;
+                    case "heating":
+                        return R.drawable.usage_heating_on;
+                    case "light":
+                        return R.drawable.usage_light_on;
+                    case "mirror":
+                        return R.drawable.usage_mirror_on;
+                    case "music":
+                        return R.drawable.usage_music_on;
+                    case "nanoztag":
+                        return R.drawable.usage_nanoztag_on;
+                    case "portal":
+                        return R.drawable.usage_portal_on;
+                    case "scene":
+                        return R.drawable.usage_scene_on;
+                    case "security_camera":
+                        return R.drawable.usage_security_cam_on;
+                    case "server":
+                        return R.drawable.usage_server_on;
+                    case "socket":
+                        return R.drawable.usage_appliance_on;
+                    case "shutter":
+                        return R.drawable.usage_shutter_on;
+                    case "telephony":
+                        return R.drawable.usage_telephony_on;
+                    case "temperature":
+                        return R.drawable.usage_temperature_on;
+                    case "tv":
+                        return R.drawable.usage_tv_on;
+                    case "ventilation":
+                        return R.drawable.usage_ventilation_on;
+                    case "water":
+                        return R.drawable.usage_water_on;
+                    case "water_tank":
+                        return R.drawable.usage_water_tank_on;
+                    case "window":
+                        return R.drawable.usage_window_on;
+
+                    //room
+                    case "bathroom":
+                        return R.drawable.room_bathroom;
+                    case "bedroom":
+                        return R.drawable.room_bedroom;
+                    case "garage":
+                        return R.drawable.room_garage;
+                    case "kidsroom":
+                        return R.drawable.room_kidsroom;
+                    case "kitchen":
+                        return R.drawable.room_kitchen;
+                    case "office":
+                        return R.drawable.room_office;
+                    case "tvlounge":
+                        return R.drawable.room_tvlounge;
+                    case "usage":
+                        return R.drawable.logo;
+                    case "unknow":
+                        return R.drawable.unknown;
+
+                    //area
+                    case "area":
+                        return R.drawable.area_area;
+                    case "attic":
+                        return R.drawable.area_attic;
+                    case "basement":
+                        return R.drawable.area_basement;
+                    case "basement2":
+                        return R.drawable.area_basement2;
+                    case "garden":
+                        return R.drawable.area_garden;
+                    case "ground_floor":
+                        return R.drawable.area_ground_floor;
+                    case "ground_floor2":
+                        return R.drawable.area_ground_floor2;
+                    case "first_floor":
+                        return R.drawable.area_first_floor;
+                    case "first_floor2":
+                        return R.drawable.area_first_floor2;
+                    case "second_floor":
+                        return R.drawable.area_second_floor;
+                    case "second_floor2":
+                        return R.drawable.area_second_floor2;
+                    case "house":
+                        return R.drawable.house;
+                    case "map":
+                        return R.drawable.map;
+                    default:
+                        return R.drawable.usage_default_on;
                 }
-                //room
-                else if (usage.equals("bathroom")) {
-                    return R.drawable.room_bathroom;
-                } else if (usage.equals("bedroom")) {
-                    return R.drawable.room_bedroom;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.room_garage;
-                } else if (usage.equals("kidsroom")) {
-                    return R.drawable.room_kidsroom;
-                } else if (usage.equals("kitchen")) {
-                    return R.drawable.room_kitchen;
-                } else if (usage.equals("office")) {
-                    return R.drawable.room_office;
-                } else if (usage.equals("tvlounge")) {
-                    return R.drawable.room_tvlounge;
-                } else if (usage.equals("usage")) {
-                    return R.drawable.logo;
-                } else if (usage.equals("unknow")) {
-                    return R.drawable.unknown;
-                }
-                //area
-                else if (usage.equals("area")) {
-                    return R.drawable.area_area;
-                } else if (usage.equals("attic")) {
-                    return R.drawable.area_attic;
-                } else if (usage.equals("basement")) {
-                    return R.drawable.area_basement;
-                } else if (usage.equals("basement2")) {
-                    return R.drawable.area_basement2;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.area_garage;
-                } else if (usage.equals("garden")) {
-                    return R.drawable.area_garden;
-                } else if (usage.equals("ground_floor")) {
-                    return R.drawable.area_ground_floor;
-                } else if (usage.equals("ground_floor2")) {
-                    return R.drawable.area_ground_floor2;
-                } else if (usage.equals("first_floor")) {
-                    return R.drawable.area_first_floor;
-                } else if (usage.equals("first_floor2")) {
-                    return R.drawable.area_first_floor2;
-                } else if (usage.equals("second_floor")) {
-                    return R.drawable.area_second_floor;
-                } else if (usage.equals("second_floor2")) {
-                    return R.drawable.area_second_floor2;
-                } else if (usage.equals("house")) {
-                    return R.drawable.house;
-                } else if (usage.equals("map")) {
-                    return R.drawable.map;
-                } else return R.drawable.usage_default_on;
 
             case 3: //For undefined
                 //reorder by usage name for easy update
-                if (usage.equals("air_conditionning")) {
-                    return R.drawable.usage_air_undefined;
-                } else if (usage.equals("appliance")) {
-                    return R.drawable.usage_appliance_undefined;
-                } else if (usage.equals("battery")) {
-                    return R.drawable.usage_battery_undefnied;
-                } else if (usage.equals("bluetooth")) {
-                    return R.drawable.usage_bluetooth_undefined;
-                } else if (usage.equals("christmas_tree")) {
-                    return R.drawable.usage_christmas_tree_undefined;
-                } else if (usage.equals("computer")) {
-                    return R.drawable.usage_computer_undefined;
-                } else if (usage.equals("cron")) {
-                    return R.drawable.usage_cron_undefined;
-                } else if (usage.equals("door")) {
-                    return R.drawable.usage_door_undefined;
-                } else if (usage.equals("electricity")) {
-                    return R.drawable.usage_electricity_undefined;
-                } else if (usage.equals("heating")) {
-                    return R.drawable.usage_heating_undefined;
-                }    //Added by Doume
-                else if (usage.equals("light")) {
-                    return R.drawable.usage_light_undefined;
-                } else if (usage.equals("mirror")) {
-                    return R.drawable.usage_mirror_undefined;
-                } else if (usage.equals("music")) {
-                    return R.drawable.usage_music_undefined;
-                } else if (usage.equals("nanoztag")) {
-                    return R.drawable.usage_nanoztag_undefined;
-                } else if (usage.equals("portal")) {
-                    return R.drawable.usage_portal_undefined;
-                } else if (usage.equals("scene")) {
-                    return R.drawable.usage_scene_undefined;
-                } else if (usage.equals("security_camera")) {
-                    return R.drawable.usage_security_cam_undefined;
-                } else if (usage.equals("server")) {
-                    return R.drawable.usage_server_undefined;
-                } else if (usage.equals("socket")) {
-                    return R.drawable.usage_appliance_undefined;
-                } else if (usage.equals("shutter")) {
-                    return R.drawable.usage_shutter_undefined;
-                } else if (usage.equals("telephony")) {
-                    return R.drawable.usage_telephony_undefined;
-                } else if (usage.equals("temperature")) {
-                    return R.drawable.usage_temperature_undefined;
-                } else if (usage.equals("tv")) {
-                    return R.drawable.usage_tv_undefined;
-                } else if (usage.equals("ventilation")) {
-                    return R.drawable.usage_ventilation_undefined;
-                } else if (usage.equals("water")) {
-                    return R.drawable.usage_water_undefined;
-                } else if (usage.equals("water_tank")) {
-                    return R.drawable.usage_water_tank_undefined;
-                } else if (usage.equals("window")) {
-                    return R.drawable.usage_window_undefined;
+                switch (usage) {
+                    case "air_conditionning":
+                        return R.drawable.usage_air_undefined;
+                    case "appliance":
+                        return R.drawable.usage_appliance_undefined;
+                    case "battery":
+                        return R.drawable.usage_battery_undefnied;
+                    case "bluetooth":
+                        return R.drawable.usage_bluetooth_undefined;
+                    case "christmas_tree":
+                        return R.drawable.usage_christmas_tree_undefined;
+                    case "computer":
+                        return R.drawable.usage_computer_undefined;
+                    case "cron":
+                        return R.drawable.usage_cron_undefined;
+                    case "door":
+                        return R.drawable.usage_door_undefined;
+                    case "electricity":
+                        return R.drawable.usage_electricity_undefined;
+                    case "heating":
+                        return R.drawable.usage_heating_undefined;
+                    case "light":
+                        return R.drawable.usage_light_undefined;
+                    case "mirror":
+                        return R.drawable.usage_mirror_undefined;
+                    case "music":
+                        return R.drawable.usage_music_undefined;
+                    case "nanoztag":
+                        return R.drawable.usage_nanoztag_undefined;
+                    case "portal":
+                        return R.drawable.usage_portal_undefined;
+                    case "scene":
+                        return R.drawable.usage_scene_undefined;
+                    case "security_camera":
+                        return R.drawable.usage_security_cam_undefined;
+                    case "server":
+                        return R.drawable.usage_server_undefined;
+                    case "socket":
+                        return R.drawable.usage_appliance_undefined;
+                    case "shutter":
+                        return R.drawable.usage_shutter_undefined;
+                    case "telephony":
+                        return R.drawable.usage_telephony_undefined;
+                    case "temperature":
+                        return R.drawable.usage_temperature_undefined;
+                    case "tv":
+                        return R.drawable.usage_tv_undefined;
+                    case "ventilation":
+                        return R.drawable.usage_ventilation_undefined;
+                    case "water":
+                        return R.drawable.usage_water_undefined;
+                    case "water_tank":
+                        return R.drawable.usage_water_tank_undefined;
+                    case "window":
+                        return R.drawable.usage_window_undefined;
+
+                    //room
+                    case "bathroom":
+                        return R.drawable.room_bathroom;
+                    case "bedroom":
+                        return R.drawable.room_bedroom;
+                    case "garage":
+                        return R.drawable.room_garage;
+                    case "kidsroom":
+                        return R.drawable.room_kidsroom;
+                    case "kitchen":
+                        return R.drawable.room_kitchen;
+                    case "office":
+                        return R.drawable.room_office;
+                    case "tvlounge":
+                        return R.drawable.room_tvlounge;
+                    case "usage":
+                        return R.drawable.logo;
+                    case "unknow":
+                        return R.drawable.unknown;
+
+                    //area
+                    case "area":
+                        return R.drawable.area_area;
+                    case "attic":
+                        return R.drawable.area_attic;
+                    case "basement":
+                        return R.drawable.area_basement;
+                    case "basement2":
+                        return R.drawable.area_basement2;
+                    case "garden":
+                        return R.drawable.area_garden;
+                    case "ground_floor":
+                        return R.drawable.area_ground_floor;
+                    case "ground_floor2":
+                        return R.drawable.area_ground_floor2;
+                    case "first_floor":
+                        return R.drawable.area_first_floor;
+                    case "first_floor2":
+                        return R.drawable.area_first_floor2;
+                    case "second_floor":
+                        return R.drawable.area_second_floor;
+                    case "second_floor2":
+                        return R.drawable.area_second_floor2;
+                    case "house":
+                        return R.drawable.house;
+                    case "map":
+                        return R.drawable.map;
+                    default:
+                        return R.drawable.usage_default_undefined;
                 }
-                //room
-                else if (usage.equals("bathroom")) {
-                    return R.drawable.room_bathroom;
-                } else if (usage.equals("bedroom")) {
-                    return R.drawable.room_bedroom;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.room_garage;
-                } else if (usage.equals("kidsroom")) {
-                    return R.drawable.room_kidsroom;
-                } else if (usage.equals("kitchen")) {
-                    return R.drawable.room_kitchen;
-                } else if (usage.equals("office")) {
-                    return R.drawable.room_office;
-                } else if (usage.equals("tvlounge")) {
-                    return R.drawable.room_tvlounge;
-                } else if (usage.equals("usage")) {
-                    return R.drawable.logo;
-                } else if (usage.equals("unknow")) {
-                    return R.drawable.unknown;
-                }
-                //area
-                else if (usage.equals("area")) {
-                    return R.drawable.area_area;
-                } else if (usage.equals("attic")) {
-                    return R.drawable.area_attic;
-                } else if (usage.equals("basement")) {
-                    return R.drawable.area_basement;
-                } else if (usage.equals("basement2")) {
-                    return R.drawable.area_basement2;
-                } else if (usage.equals("garage")) {
-                    return R.drawable.area_garage;
-                } else if (usage.equals("garden")) {
-                    return R.drawable.area_garden;
-                } else if (usage.equals("ground_floor")) {
-                    return R.drawable.area_ground_floor;
-                } else if (usage.equals("ground_floor2")) {
-                    return R.drawable.area_ground_floor2;
-                } else if (usage.equals("first_floor")) {
-                    return R.drawable.area_first_floor;
-                } else if (usage.equals("first_floor2")) {
-                    return R.drawable.area_first_floor2;
-                } else if (usage.equals("second_floor")) {
-                    return R.drawable.area_second_floor;
-                } else if (usage.equals("second_floor2")) {
-                    return R.drawable.area_second_floor2;
-                } else if (usage.equals("house")) {
-                    return R.drawable.house;
-                } else if (usage.equals("map")) {
-                    return R.drawable.map;
-                } else return R.drawable.usage_default_undefined;
         }
         return R.drawable.icon;
     }
@@ -524,77 +526,81 @@ public class Graphics_Manager {
 				return R.drawable.map_led_off;
 			}
 			 */
-                if (usage.equals("appliance")) {
-                    return R.drawable.map_usage_appliance_off;
-                } else if (usage.equals("battery")) {
-                    return R.drawable.map_usage_battery_off;
-                } else if (usage.equals("christmas_tree")) {
-                    return R.drawable.map_usage_christmas_tree_off;
-                } else if (usage.equals("computer")) {
-                    return R.drawable.map_usage_computer_off;
-                } else if (usage.equals("cron")) {
-                    return R.drawable.map_usage_cron_off;
-                } else if (usage.equals("door")) {
-                    return R.drawable.map_usage_door_off;
-                } else if (usage.equals("electricity")) {
-                    return R.drawable.map_usage_electricity_off;
-                } else if (usage.equals("light")) {
-                    return R.drawable.map_usage_light_off;
-                } else if (usage.equals("security_camera")) {
-                    return R.drawable.map_usage_security_cam_off;
-                } else if (usage.equals("server")) {
-                    return R.drawable.map_usage_server_off;
-                } else if (usage.equals("socket")) {
-                    return R.drawable.map_usage_appliance_off;
-                } else if (usage.equals("telephony")) {
-                    return R.drawable.map_usage_telephony_off;
-                }//TODO need an on/off icon
-                else if (usage.equals("temperature")) {
-                    return R.drawable.map_usage_temperature;
-                } else if (usage.equals("tv")) {
-                    return R.drawable.map_usage_tv_off;
-                } else if (usage.equals("ventilation")) {
-                    return R.drawable.map_usage_ventilation_off;
-                } else if (usage.equals("water_tank")) {
-                    return R.drawable.map_usage_water_tank;
-                } else return R.drawable.map_led_off;
+                switch (usage) {
+                    case "appliance":
+                        return R.drawable.map_usage_appliance_off;
+                    case "battery":
+                        return R.drawable.map_usage_battery_off;
+                    case "christmas_tree":
+                        return R.drawable.map_usage_christmas_tree_off;
+                    case "computer":
+                        return R.drawable.map_usage_computer_off;
+                    case "cron":
+                        return R.drawable.map_usage_cron_off;
+                    case "door":
+                        return R.drawable.map_usage_door_off;
+                    case "electricity":
+                        return R.drawable.map_usage_electricity_off;
+                    case "light":
+                        return R.drawable.map_usage_light_off;
+                    case "security_camera":
+                        return R.drawable.map_usage_security_cam_off;
+                    case "server":
+                        return R.drawable.map_usage_server_off;
+                    case "socket":
+                        return R.drawable.map_usage_appliance_off;
+                    case "telephony":
+                        return R.drawable.map_usage_telephony_off;
+                    case "temperature":
+                        return R.drawable.map_usage_temperature;
+                    case "tv":
+                        return R.drawable.map_usage_tv_off;
+                    case "ventilation":
+                        return R.drawable.map_usage_ventilation_off;
+                    case "water_tank":
+                        return R.drawable.map_usage_water_tank;
+                    default:
+                        return R.drawable.map_led_off;
+                }
 
             case 1:
                 //reorder by usage name for easy update
-                if (usage.equals("appliance")) {
-                    return R.drawable.map_usage_appliance_on;
-                } else if (usage.equals("battery")) {
-                    return R.drawable.map_usage_battery_on;
-                } else if (usage.equals("christmas_tree")) {
-                    return R.drawable.map_usage_christmas_tree_on;
-                } else if (usage.equals("computer")) {
-                    return R.drawable.map_usage_computer_on;
-                } else if (usage.equals("cron")) {
-                    return R.drawable.map_usage_cron_on;
-                } else if (usage.equals("door")) {
-                    return R.drawable.map_usage_door_on;
-                } else if (usage.equals("electricity")) {
-                    return R.drawable.map_usage_electricity_on;
-                } else if (usage.equals("light")) {
-                    return R.drawable.map_usage_light_on;
-                } else if (usage.equals("security_camera")) {
-                    return R.drawable.map_usage_security_cam_on;
-                } else if (usage.equals("server")) {
-                    return R.drawable.map_usage_server_on;
-                } else if (usage.equals("socket")) {
-                    return R.drawable.map_usage_appliance_on;
-                } else if (usage.equals("telephony")) {
-                    return R.drawable.map_usage_telephony_off;
-                }//TODO need an on/off icon
-                else if (usage.equals("temperature")) {
-                    return R.drawable.map_usage_temperature;
-                } else if (usage.equals("tv")) {
-                    return R.drawable.map_usage_tv_on;
-                } else if (usage.equals("ventilation")) {
-                    return R.drawable.map_usage_ventilation_on;
-                } else if (usage.equals("water_tank")) {
-                    return R.drawable.map_usage_water_tank;
-                } else return R.drawable.map_led_on;
+                switch (usage) {
+                    case "appliance":
+                        return R.drawable.map_usage_appliance_on;
+                    case "battery":
+                        return R.drawable.map_usage_battery_on;
+                    case "christmas_tree":
+                        return R.drawable.map_usage_christmas_tree_on;
+                    case "computer":
+                        return R.drawable.map_usage_computer_on;
+                    case "cron":
+                        return R.drawable.map_usage_cron_on;
+                    case "door":
+                        return R.drawable.map_usage_door_on;
+                    case "electricity":
+                        return R.drawable.map_usage_electricity_on;
+                    case "light":
+                        return R.drawable.map_usage_light_on;
+                    case "security_camera":
+                        return R.drawable.map_usage_security_cam_on;
+                    case "server":
+                        return R.drawable.map_usage_server_on;
+                    case "socket":
+                        return R.drawable.map_usage_appliance_on;
+                    case "telephony":
+                        return R.drawable.map_usage_telephony_off;
+                    case "temperature":
+                        return R.drawable.map_usage_temperature;
+                    case "tv":
+                        return R.drawable.map_usage_tv_on;
+                    case "ventilation":
+                        return R.drawable.map_usage_ventilation_on;
+                    case "water_tank":
+                        return R.drawable.map_usage_water_tank;
+                    default:
+                        return R.drawable.map_led_on;
+                }
         }
         return R.drawable.map_led_off;
     }
@@ -611,7 +617,7 @@ public class Graphics_Manager {
     }
 
     public static String adapt_usage(String usage) {
-        //TODO adapt for 0.4
+        //todo adapt for 0.4
         //information are in json device_types of each plugin
         //BLUEZ "available"
         if (usage.equals("available") || usage.contains("bluez"))

@@ -349,26 +349,29 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                     Tracer.d(mytag, "Handler receives a new value from state engine <" + argbS + ">");
 
                 }
-                if (argbS.equals("off")) {
-                    switch_state = false;
-                    argbS = "000000";
-                    argb = 0;
-                } else if (argbS.equals("on")) {
-                    seekBarOnOff.setProgress(100);
-                    switch_state = true;
-                    LoadSelections();    //Recall last values known from shared preferences
-                    // argb and argbS will be set when seekBars will be changed
-                    return;
+                switch (argbS) {
+                    case "off":
+                        switch_state = false;
+                        argbS = "000000";
+                        argb = 0;
+                        break;
+                    case "on":
+                        seekBarOnOff.setProgress(100);
+                        switch_state = true;
+                        LoadSelections();    //Recall last values known from shared preferences
 
-                } else {
-                    try {
-                        argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
-                        //Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
-                        argb = Integer.parseInt(argbS, 16);
-                        //Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
-                    } catch (Exception e) {
-                        argb = 1;
-                    }
+                        // argb and argbS will be set when seekBars will be changed
+                        return;
+                    default:
+                        try {
+                            argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
+                            //Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
+                            argb = Integer.parseInt(argbS, 16);
+                            //Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
+                        } catch (Exception e) {
+                            argb = 1;
+                        }
+                        break;
                 }
                 int r, g, b;
                 int value_save = argb;

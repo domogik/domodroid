@@ -1339,7 +1339,7 @@ public class MapView extends View {
                 //Code for long click
                 Tracer.v(mytag, "Long press :)");
                 Builder list_type_choice = new Builder(getContext());
-                List<String> list_choice = new ArrayList<String>();
+                List<String> list_choice = new ArrayList<>();
                 list_choice.add(context.getString(R.string.add));
                 //Check if clicked on a widget
                 for (final Entity_Map featureMap : listFeatureMap) {
@@ -1392,7 +1392,7 @@ public class MapView extends View {
                         (int) ((event.getY() - value[5]) / currentScale) > featureMap.getPosy() - dip20 && (int) ((event.getY() - value[5]) / currentScale) < featureMap.getPosy() + dip20) {
                     Tracer.d(mytag, "Change icon of a feature");
                     final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-                    List<String> list_icon = new ArrayList<String>();
+                    List<String> list_icon = new ArrayList<>();
                     String[] fiilliste;
                     fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
                     for (int i = 0; i < fiilliste.length; i++) {

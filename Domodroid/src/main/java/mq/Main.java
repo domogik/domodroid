@@ -73,9 +73,9 @@ public class Main extends Activity {
 
         // ChatHistory
         chatHistory = (ListView) findViewById(R.id.listView);
-        chatHistoryList = new ArrayList<String>();
+        chatHistoryList = new ArrayList<>();
         //chatHistoryList.add("Butler > Welcome");
-        arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_view_theme, chatHistoryList);
+        arrayAdapter = new ArrayAdapter<>(this, R.layout.list_view_theme, chatHistoryList);
         /*
         ArrayAdapter<String> arrayAdapter =
 

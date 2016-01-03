@@ -151,7 +151,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         if (f.isDirectory()) {
             files = f.list();
             //Reorder method
-            List<String> words = new ArrayList<String>();
+            List<String> words = new ArrayList<>();
             for (int i = 0; i < files.length; i++) {
                 words.add(files[i]);
             }
@@ -257,14 +257,14 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
 
         //listview feature
         ListView listview_feature = new ListView(this);
-        ArrayList<HashMap<String, String>> listItem1 = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> listItem1 = new ArrayList<>();
         if (listFeature != null) {
             int size = listFeature.length;
             Entity_Feature feature;
             for (int pos = 0; pos < size; ++pos) {
                 feature = listFeature[pos];
                 if (feature != null) {
-                    map = new HashMap<String, String>();
+                    map = new HashMap<>();
                     map.put("name", feature.getName());
                     if (feature.getParameters().contains("command")) {
                         map.put("type", getString(R.string.command) + "-" + feature.getValue_type());
@@ -285,7 +285,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         int i;
         if (list_usable_files != null) {
             for (i = 0; i < list_usable_files.size(); i++) {
-                map = new HashMap<String, String>();
+                map = new HashMap<>();
                 map.put("name", getText(R.string.go_to_Map).toString());
                 map.put("type", "");
                 map.put("state_key", list_usable_files.elementAt(i));
@@ -375,8 +375,8 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
 
         //list Map
         listeMap = (ListView) findViewById(R.id.listeMap);
-        listItem = new ArrayList<HashMap<String, String>>();
-        list_usable_files = new Vector<String>();
+        listItem = new ArrayList<>();
+        list_usable_files = new Vector<>();
         int i = 0;
         for (i = 0; i < files.length; i++) {
             //#1968 don't list file without drawable extension or hidden
@@ -385,7 +385,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                     .endsWith(".svg"))) {
                 try {
                     list_usable_files.add(files[i]);
-                    map = new HashMap<String, String>();
+                    map = new HashMap<>();
                     map.put("name", files[i].substring(0, files[i].lastIndexOf('.')));
                     map.put("position", String.valueOf(i));
                     listItem.add(map);
@@ -399,14 +399,14 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
 
         if ((Tracer != null) && (Tracer.Map_as_main)) {
             // Add possibility to invoke Main activity
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("name", getText(R.string.go_Main).toString());
             map.put("position", String.valueOf(i));
             listItem.add(map);
             i++;
         }
         //Add an element in map list to ADD a map
-        map = new HashMap<String, String>();
+        map = new HashMap<>();
         map.put("name", getText(R.string.map_select_file).toString());
         map.put("position", String.valueOf(i));
         listItem.add(map);

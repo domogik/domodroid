@@ -26,7 +26,7 @@ public class Cache_Feature_Element {
             // Ok, the good one !
             new_client.setValue(Value);
             if (clients_list == null) {
-                clients_list = new ArrayList<Entity_client>();
+                clients_list = new ArrayList<>();
                 clients_list.add(new_client);
                 new_client.setClientId(0);    //set index into caller structure
                 return 0;
@@ -65,7 +65,7 @@ public class Cache_Feature_Element {
     }
 
     public ArrayList<Entity_client> clone_clients_list() {
-        ArrayList<Entity_client> result = new ArrayList<Entity_client>();
+        ArrayList<Entity_client> result = new ArrayList<>();
         if (clients_list != null) {
             for (int i = 0; i < clients_list.size(); i++) {
                 result.add(clients_list.get(i));

@@ -143,9 +143,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.addView(LL_background);
     }
 
+    @SuppressWarnings("Convert2Diamond")
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_choice = new ArrayList<String>();
+        List<String> list_choice = new ArrayList<>();
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
         list_choice.add(context.getString(R.string.delete));
@@ -166,6 +167,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         return false;
     }
 
+    @SuppressWarnings("Convert2Diamond")
     private void do_action(String action) {
         if (action.equals(context.getString(R.string.rename))) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -216,7 +218,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             alert.show();
         } else if (action.equals(context.getString(R.string.change_icon))) {
             final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-            List<String> list_icon = new ArrayList<String>();
+            List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
             for (int i = 0; i < fiilliste.length; i++) {

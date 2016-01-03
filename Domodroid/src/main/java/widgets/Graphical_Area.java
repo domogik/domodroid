@@ -77,7 +77,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_choice = new ArrayList<String>();
+        List<String> list_choice = new ArrayList<>();
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
         list_choice.add(context.getString(R.string.delete));
@@ -157,7 +157,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             alert.show();
         } else if (action.equals(context.getString(R.string.change_icon))) {
             final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-            List<String> list_icon = new ArrayList<String>();
+            List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
             for (int i = 0; i < fiilliste.length; i++) {

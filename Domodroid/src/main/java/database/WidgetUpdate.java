@@ -47,7 +47,7 @@ public class WidgetUpdate {
     private TimerTask doAsynchronousTask;
     private tracerengine Tracer = null;
 
-    public ArrayList<Cache_Feature_Element> cache = new ArrayList<Cache_Feature_Element>();
+    public ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
     private Boolean locked = false;
     private Boolean timer_flag = false;
     public Boolean ready = false;
@@ -440,7 +440,7 @@ public class WidgetUpdate {
         Disconnect(2);
         locked = true;
         cache = null;
-        cache = new ArrayList<Cache_Feature_Element>();
+        cache = new ArrayList<>();
         ready = false;
         refreshNow();    //To reconstruct cache
         Tracer.d(mytag, "state engine resync : waiting for initial setting of cache !");

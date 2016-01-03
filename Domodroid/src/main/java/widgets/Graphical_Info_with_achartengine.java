@@ -475,7 +475,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         multiRenderer.addSeriesRenderer(incomeRenderer);
         multiRenderer.addSeriesRenderer(emptyRenderer);
 
-        Vector<Vector<Float>> values = new Vector<Vector<Float>>();
+        Vector<Vector<Float>> values = new Vector<>();
         chartContainer = new LinearLayout(context);
         // Getting a reference to LinearLayout of the MainActivity Layout
         chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));

@@ -230,7 +230,7 @@ public class SVGParser {
         //Util.debug("Parsing numbers from: '" + s + "'");
         int n = s.length();
         int p = 0;
-        ArrayList<Float> numbers = new ArrayList<Float>();
+        ArrayList<Float> numbers = new ArrayList<>();
         boolean skipChar = false;
 
         for (int i = 1; i < n; i++) {
@@ -562,8 +562,8 @@ public class SVGParser {
         boolean isLinear;
         float x1, y1, x2, y2;
         float x, y, radius;
-        ArrayList<Float> positions = new ArrayList<Float>();
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        ArrayList<Float> positions = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
         Matrix matrix = null;
 
         public Gradient createChild(Gradient g) {
@@ -595,7 +595,7 @@ public class SVGParser {
     }
 
     private static class StyleSet {
-        final HashMap<String, String> styleMap = new HashMap<String, String>();
+        final HashMap<String, String> styleMap = new HashMap<>();
 
         private StyleSet(String string) {
             String[] styles = string.split(";");
@@ -697,8 +697,8 @@ public class SVGParser {
 
         boolean pushed = false;
 
-        final HashMap<String, Shader> gradientMap = new HashMap<String, Shader>();
-        final HashMap<String, Gradient> gradientRefMap = new HashMap<String, Gradient>();
+        final HashMap<String, Shader> gradientMap = new HashMap<>();
+        final HashMap<String, Gradient> gradientRefMap = new HashMap<>();
         Gradient gradient = null;
 
         float widthScale = 1.0f;

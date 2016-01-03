@@ -87,6 +87,7 @@ import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView.OnEditorActionListener;
 
+@SuppressWarnings("Convert2Diamond")
 public class Graphical_Info_commands extends Basic_Graphical_widget {
 
 
@@ -154,7 +155,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             command_data_type = new String[number_of_command_parameters];
             EditText ed;
             TextView tv_edittext;
-            allEds = new ArrayList<EditText>();
+            allEds = new ArrayList<>();
             //allEds will list references to EditTexts, so we can iterate it and get the data.
             for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
                 command_type[current_parameter] = jparam.getString("command_type" + (current_parameter + 1));

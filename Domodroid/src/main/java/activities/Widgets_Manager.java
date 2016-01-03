@@ -59,7 +59,7 @@ class Widgets_Manager {
         this.widgetHandler = handler;
         this.Tracer = Trac;
         //populate the NAvigationDrawer list
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
 
     }
 
@@ -346,7 +346,7 @@ class Widgets_Manager {
         Entity_Area area;
 
         //TODO improve navigation drawer
-        Activity_Main.Navigation_drawer_ItemsList = new ArrayList<HashMap<String, String>>();
+        Activity_Main.Navigation_drawer_ItemsList = new ArrayList<>();
 
 
         try {
@@ -366,7 +366,7 @@ class Widgets_Manager {
                 name = Graphics_Manager.Names_Agent(context, name);
 
                 //populate the NAvigationDrawer list
-                HashMap<String, String> map = new HashMap<String, String>();
+                HashMap<String, String> map = new HashMap<>();
                 map.put("name", area.getName());
                 String iconName = "unknow";
                 try {
@@ -423,7 +423,7 @@ class Widgets_Manager {
         Entity_Room room;
 
         //TODO improve navigation drawer
-        Activity_Main.Navigation_drawer_ItemsList = new ArrayList<HashMap<String, String>>();
+        Activity_Main.Navigation_drawer_ItemsList = new ArrayList<>();
         for (int pos = 0; pos < size; ++pos) {
             room = listRoom[pos];
             int Id = room.getId();
@@ -447,7 +447,7 @@ class Widgets_Manager {
             name = Graphics_Manager.Names_Agent(context, name);
 
             //populate the NAvigationDrawer list
-            HashMap<String, String> map = new HashMap<String, String>();
+            HashMap<String, String> map = new HashMap<>();
             map.put("name", name);
             map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconId, 0)));
             map.put("type", "room");

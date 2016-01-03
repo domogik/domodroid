@@ -109,7 +109,7 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //list area where to put room
         final AlertDialog.Builder list_area_choice = new AlertDialog.Builder(getContext());
-        List<String> list_area = new ArrayList<String>();
+        List<String> list_area = new ArrayList<>();
         for (Entity_Area area : listArea) {
             list_area.add(area.getName());
         }
@@ -129,7 +129,7 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //list room where to put widget
         final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
-        List<String> list_room = new ArrayList<String>();
+        List<String> list_room = new ArrayList<>();
         for (Entity_Room room : listRoom) {
             list_room.add(room.getName());
         }
@@ -149,7 +149,7 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //list widget to put in room
         final AlertDialog.Builder list_feature_choice = new AlertDialog.Builder(getContext());
-        List<String> list_feature = new ArrayList<String>();
+        List<String> list_feature = new ArrayList<>();
         for (Entity_Feature feature : listFeature) {
             if (feature.getParameters().contains("command")) {
                 try {
@@ -182,7 +182,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         );
         //list icon from array R.array.icon_area_array
         final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-        List<String> list_icon = new ArrayList<String>();
+        List<String> list_icon = new ArrayList<>();
         String[] fiilliste;
         fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
         for (int i = 0; i < fiilliste.length; i++) {
@@ -204,7 +204,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         );
         //list type area,room, widget
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_type = new ArrayList<String>();
+        List<String> list_type = new ArrayList<>();
         if (!v.getTag().equals("add_icon"))
             list_type.add(context.getString(R.string.place_root));
         list_type.add(context.getString(R.string.area));
@@ -454,10 +454,10 @@ class Dialog_House extends Dialog implements OnClickListener {
         Entity_Icon[] listIcon = domodb.requestallIcon();
 
         //1st list area where to put room
-        ArrayList<HashMap<String, String>> list_Area = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> list_Area = new ArrayList<>();
         HashMap<String, String> map;
         for (Entity_Area area : listArea) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("name", area.getName());
             String iconName = "unknow";
             try {
@@ -478,9 +478,9 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //2nd list room where to put widget but contain also the area
         //widget could be place in an area or a room.
-        ArrayList<HashMap<String, String>> list_Room = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> list_Room = new ArrayList<>();
         for (Entity_Room room : listRoom) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("name", room.getName());
             String iconName = "unknow";
             try {
@@ -500,9 +500,9 @@ class Dialog_House extends Dialog implements OnClickListener {
 //		spinner_room.setAdapter(room_adapter);
 
         //3rd list feature to put somewhere
-        ArrayList<HashMap<String, String>> list_Feature = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> list_Feature = new ArrayList<>();
         for (Entity_Feature feature : listFeature) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             if (feature.getParameters().contains("command")) {
                 try {
                     map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
@@ -540,12 +540,12 @@ class Dialog_House extends Dialog implements OnClickListener {
         spinner_feature.setAdapter(adapter_feature);
 
         //4th list icon to associate with area, room or widget
-        ArrayList<String> list_icon = new ArrayList<String>();
+        ArrayList<String> list_icon = new ArrayList<>();
         for (Entity_Icon icon : listIcon) {
             list_icon.add(icon.getName() + "-" + icon.getReference() + "-" + icon.getValue());
         }
         ArrayAdapter<String> icon_adapter =
-                new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_icon);
+                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list_icon);
         icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_icon.setAdapter(icon_adapter);
 

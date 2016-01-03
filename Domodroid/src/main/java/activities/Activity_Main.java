@@ -600,7 +600,7 @@ public class Activity_Main extends Activity implements OnClickListener {
 
         if (history != null)
             history = null;        //Free resource
-        history = new Vector<String[]>();
+        history = new Vector<>();
         historyPosition = 0;
 
         //load widgets

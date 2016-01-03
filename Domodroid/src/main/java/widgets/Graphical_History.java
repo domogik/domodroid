@@ -208,7 +208,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(context);
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/5/");
@@ -225,7 +225,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             if (api_version <= 0.6f) {
                 for (int i = itemArray.length(); i >= 0; i--) {
                     try {
-                        HashMap<String, String> map = new HashMap<String, String>();
+                        HashMap<String, String> map = new HashMap<>();
                         map.put("value", itemArray.getJSONObject(i).getString("value"));
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
@@ -237,7 +237,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             } else if (api_version == 0.7f) {
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
-                        HashMap<String, String> map = new HashMap<String, String>();
+                        HashMap<String, String> map = new HashMap<>();
                         map.put("value", itemArray.getJSONObject(i).getString("value_str"));
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
@@ -255,7 +255,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 java.util.Date currenTimeZone;
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
-                        HashMap<String, String> map = new HashMap<String, String>();
+                        HashMap<String, String> map = new HashMap<>();
                         map.put("value", itemArray.getJSONObject(i).getString("value_str"));
                         currenTimeZone = new java.util.Date((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
                         map.put("date", sdf.format(currenTimeZone).toString());

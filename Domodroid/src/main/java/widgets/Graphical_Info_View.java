@@ -107,7 +107,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
 
-        values = new Vector<Vector<Float>>();
+        values = new Vector<>();
         activate = true;
         this.myself = this;
         period_type = 1;    //by default, display 24 hours
@@ -624,7 +624,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 for (int i = 0; i < valueArray.length(); i++) {
                     // Create a vector with all entry components
 
-                    Vector<Float> vect = new Vector<Float>();
+                    Vector<Float> vect = new Vector<>();
                     Double real_val = valueArray.getJSONArray(i).getDouble(limit - 1);    // Get the real 'value'
                     real_val = round(real_val, 2);
 
@@ -696,7 +696,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                 if ((loc_hour + 1) != loc_hour_next) {
                                     //ruptur : simulate next missing steps
                                     for (int k = 1; k < (loc_hour_next - loc_hour); k++) {
-                                        Vector<Float> vect2 = new Vector<Float>();
+                                        Vector<Float> vect2 = new Vector<>();
                                         vect2.addElement(0f);
                                         vect2.addElement((float) loc_month);    //month
                                         vect2.addElement((float) loc_week);    //week
@@ -716,7 +716,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                     //Tracer.d(mytag,"Case hour 2a ");
 
                                     for (int k = 0; k < loc_hour_next; k++) {
-                                        Vector<Float> vect2 = new Vector<Float>();
+                                        Vector<Float> vect2 = new Vector<>();
                                         vect2.addElement(0f);
                                         vect2.addElement((float) loc_month + 1);    //month
                                         vect2.addElement((float) loc_week);    //week
@@ -750,7 +750,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                     // but a hole exists : simulate missing days
                                     //Tracer.d(mytag,"Case day 1a ");
                                     for (int k = 1; k < (loc_day_next - loc_day); k++) {
-                                        Vector<Float> vect2 = new Vector<Float>();
+                                        Vector<Float> vect2 = new Vector<>();
                                         vect2.addElement(0f);
                                         vect2.addElement((float) loc_month);    //month
                                         vect2.addElement((float) loc_week);    //week
@@ -770,7 +770,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                     //Tracer.d(mytag,"Case day 2a ");
 
                                     for (int k = 0; k < loc_day_next; k++) {
-                                        Vector<Float> vect2 = new Vector<Float>();
+                                        Vector<Float> vect2 = new Vector<>();
                                         vect2.addElement(0f);
                                         vect2.addElement((float) loc_month);    //month
                                         vect2.addElement((float) loc_week);    //week
@@ -807,7 +807,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                 if ((loc_week + 1) != loc_week_next) {
                                     // Changing year
                                     for (int k = 1; k < (loc_week_next - loc_week); k++) {
-                                        Vector<Float> vect2 = new Vector<Float>();
+                                        Vector<Float> vect2 = new Vector<>();
                                         //vect2.addElement((float)loc_year);	//year
                                         vect2.addElement(0f);
                                         vect2.addElement((float) loc_month);    //month
@@ -823,7 +823,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                             if ((loc_week == 52) && (loc_week_next != 0)) {
                                 //last week of the year
                                 for (int k = 0; k < loc_week_next; k++) {
-                                    Vector<Float> vect2 = new Vector<Float>();
+                                    Vector<Float> vect2 = new Vector<>();
                                     //vect2.addElement((float)loc_year);	//year
                                     vect2.addElement(0f);
                                     vect2.addElement((float) loc_month);    //month

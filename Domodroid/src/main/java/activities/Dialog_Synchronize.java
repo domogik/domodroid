@@ -151,7 +151,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             prefEditor.commit();
             urlAccess = params.getString("URL", "1.1.1.1");
             if (db == null)
-                db = new DomodroidDB(Tracer, context);
+                db = new DomodroidDB(Tracer, context, params);
             try {
                 previous_api_version = params.getFloat("API_VERSION", 0);
                 Tracer.d(mytag, "Previous Api version value exist");

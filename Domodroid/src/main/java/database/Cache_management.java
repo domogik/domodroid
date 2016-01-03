@@ -21,7 +21,7 @@ public class Cache_management {
         float api_version = sharedparams.getFloat("API_VERSION", 0);
         String urlUpdate = "";
         if (api_version <= 0.6f) {
-            DomodroidDB db = new DomodroidDB(Trac, Context);
+            DomodroidDB db = new DomodroidDB(Trac, Context, sharedparams);
             int[] listFeature_Association = db.requestAllFeatures_association();
             Entity_Feature[] listFeature = db.requestFeatures();
             urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "stats/multi/";

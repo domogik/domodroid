@@ -147,7 +147,7 @@ public class Graphics_Manager {
                 } else if (usage.equals("battery")) {
                     return R.drawable.usage_battery_50;
                 }
-                //Todo add bluetooth 50
+                //todo add bluetooth 50
                 else if (usage.equals("christmas_tree")) {
                     return R.drawable.usage_christmas_tree_50;
                 } else if (usage.equals("computer")) {

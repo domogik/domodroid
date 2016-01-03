@@ -106,7 +106,7 @@ public class Color_Progress extends SeekBar {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(12);
-        //Todo redraw the cursor to good size
+        //todo redraw the cursor to good size
 /*
         Bitmap bitmap= BitmapFactory.decodeResource(getResources(), R.drawable.buttonseekbar);
         Bitmap thumb=Bitmap.createBitmap(50,50, Bitmap.Config.ARGB_8888);

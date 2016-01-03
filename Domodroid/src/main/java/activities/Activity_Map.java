@@ -523,7 +523,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             //FileOutputStream out = new FileOutputStream(fileName);
                             fileName = fileName.substring(0, fileName.length() - extension.length() - 1) + ".png";
                             extension = "png";
-                            //Todo Need improvement if the new "file+random" also exists!
+                            //todo Need improvement if the new "file+random" also exists!
                                 /*
                                 String baseFilename = "photo";
                                 File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
@@ -546,7 +546,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                         //else just copy svg or png to domodroid dir
                     } else {
                         File destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
-                        //Todo Need improvement if the new "file+random" also exists!
+                        //todo Need improvement if the new "file+random" also exists!
                                 /*
                                 String baseFilename = "photo";
                                 File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
@@ -575,7 +575,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             Tracer.i(mytag, "new fileName: " + renamefileName);
                             destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + "." + extension);
                             if (destFile.exists()) {
-                                //Todo Need improvement if the new "file+random" also exists!
+                                //todo Need improvement if the new "file+random" also exists!
                                 /*
                                 String baseFilename = "photo";
                                 File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");

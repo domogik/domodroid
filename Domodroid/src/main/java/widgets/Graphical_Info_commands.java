@@ -176,6 +176,11 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 tv_edittext.setText(command_type_display);
                 ed = new EditText(context);
                 allEds.add(ed);
+                //todo handle keyboard layout from data_type.
+                if (value_type.equals("string"))
+                    ed.setInputType(InputType.TYPE_CLASS_TEXT);
+                if (value_type.equals("number"))
+                    ed.setRawInputType(InputType.TYPE_CLASS_NUMBER);
                 ed.setTextSize(18);
                 ed.setTextColor(Color.BLACK);
                 ed.setMinWidth((int) (size120));

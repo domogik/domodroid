@@ -66,7 +66,7 @@ class Widgets_Manager {
     public LinearLayout loadActivWidgets(Activity context, int id,
                                          String zone, LinearLayout ll, SharedPreferences params, int session_type) throws JSONException {
 
-        DomodroidDB domodb = new DomodroidDB(Tracer, context);
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadActivWidgets";
         Entity_Feature[] listFeature = domodb.requestFeatures(id, zone);
 
@@ -106,41 +106,20 @@ class Widgets_Manager {
             tmpPan = null;
             tmpPan = new FrameLayout(context);
             String label = feature.getDescription();
-            if (label.length() < 1 || label.equalsIgnoreCase("null"))
-                label = feature.getName();
             String Value_type = feature.getValue_type();
             String Address = feature.getAddress();
-            String URL = params.getString("URL", "1.1.1.1");
             String parameters = feature.getParameters();
             String device_type_id = feature.getDevice_type_id();
             String State_key = feature.getState_key();
-            int Graph = params.getInt("GRAPH", 3);
-            int update_timer = params.getInt("UPDATE_TIMER", 300);
+            String iconName = feature.getIcon_name();
             int DevId = feature.getDevId();
             int Id = feature.getId();
-            String iconName = "unknow";
-            try {
-                iconName = domodb.requestIcons(Id, "feature").getValue();
-            } catch (Exception e) {
-                //e.printStackTrace();
-            }
-            if (iconName.equals("unknow"))
-                iconName = feature.getDevice_usage_id();
-
-            //add debug option to change label adding its Id
-            if (params.getBoolean("DEV", false))
-                label = label + " (" + Id + ")";
-
-            String[] model = device_type_id.split("\\.");
-            String type = "";
-            try {
-                type = model[1];
-            } catch (Exception e) {
-                type = model[0];
-            }
+            int Graph = params.getInt("GRAPH", 3);
+            String URL = params.getString("URL", "1.1.1.1");
+            int update_timer = params.getInt("UPDATE_TIMER", 300);
 
             Tracer.i(mytag, "Call to process device : " + DevId + " Address : " + Address + " Value_type : " + Value_type + " Label : " + label + " Key : " + State_key);
-            //TODO add missing datatype from 0.4
+            //todo add missing datatype from 0.4
             //String but carreful
             //datetime done
             //ColorCII
@@ -157,20 +136,19 @@ class Widgets_Manager {
             Graphical_Info info;
             Graphical_Info_commands info_commands;
             if (Value_type.equals("binary")) {
-                if (type.equals("rgb_leds") && (State_key.equals("command"))) {
+                if (feature.getDevice_type().equals("rgb_leds") && (State_key.equals("command"))) {
                     //ignore it : it'll have another device for Color, displaying the switch !)
                 } else {
                     if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                        onoff = new Graphical_Binary(Tracer, context, Address, label,
-                                Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                                update_timer, widgetSize, session_type, id, zone, params);
+                        onoff = new Graphical_Binary(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature);
                         onoff.container = tmpPan;
                         tmpPan.addView(onoff);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     } else {
                         onoff_New = new Graphical_Binary_New(Tracer, context, Address, label,
                                 Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                                update_timer, widgetSize, session_type, id, zone, params);
+                                widgetSize, session_type, id, zone, params);
                         onoff_New.container = tmpPan;
                         tmpPan.addView(onoff_New);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
@@ -179,16 +157,15 @@ class Widgets_Manager {
             } else if (Value_type.equals("boolean") || Value_type.equals("bool")) {
                 if (parameters.contains("command")) {
                     if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                        onoff = new Graphical_Binary(Tracer, context, Address, label,
-                                Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                                update_timer, widgetSize, session_type, id, zone, params);
+                        onoff = new Graphical_Binary(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature);
                         onoff.container = tmpPan;
                         tmpPan.addView(onoff);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     } else {
                         onoff_New = new Graphical_Binary_New(Tracer, context, Address, label,
                                 Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                                update_timer, widgetSize, session_type, id, zone, params);
+                                widgetSize, session_type, id, zone, params);
                         onoff_New.container = tmpPan;
                         tmpPan.addView(onoff_New);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
@@ -343,7 +320,7 @@ class Widgets_Manager {
 
     public LinearLayout loadAreaWidgets(Activity context, LinearLayout ll, SharedPreferences params) {
 
-        DomodroidDB domodb = new DomodroidDB(Tracer, context);
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadAreaWidgets";
         Entity_Area[] listArea = domodb.requestArea();
         Tracer.d(mytag + " loadAreaWidgets", "Areas list size : " + listArea.length);
@@ -401,7 +378,7 @@ class Widgets_Manager {
                 map.put("type", "area");
                 Activity_Main.Navigation_drawer_ItemsList.add(map);
 
-                Graphical_Area graph_area = new Graphical_Area(Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
+                Graphical_Area graph_area = new Graphical_Area(params, Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
                 tmpPan.addView(graph_area);
                 if (columns) {
                     if (counter == 0) {
@@ -422,7 +399,7 @@ class Widgets_Manager {
 
     public LinearLayout loadRoomWidgets(Activity context, int id, LinearLayout ll, SharedPreferences params) {
 
-        DomodroidDB domodb = new DomodroidDB(Tracer, context);
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
         Entity_Room[] listRoom = domodb.requestRoom(id);
         Tracer.d(mytag + " loadRoomWidgets", "Rooms list size : " + listRoom.length);

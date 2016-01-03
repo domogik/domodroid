@@ -33,6 +33,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Handler;
 
 import misc.List_Icon_Adapter;
@@ -54,8 +55,10 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Area";
     private String icon;
     private final Activity Activity;
+    private SharedPreferences params;
 
-    public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
+
+    public Graphical_Area(SharedPreferences params,tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
         this.myself = this;
         this.Tracer = Trac;
@@ -63,6 +66,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         this.id_area = id;
         this.context = context;
         this.Activity = (android.app.Activity) context;
+        this.params=params;
         setOnLongClickListener(this);
 
         mytag = "Graphical_Area(" + id_area + ")";
@@ -101,7 +105,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             alert.setMessage(R.string.Delete_feature_message);
             alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    DomodroidDB domodb = new DomodroidDB(Tracer, Activity);
+                    DomodroidDB domodb = new DomodroidDB(Tracer, Activity, params);
                     domodb.owner = "Widgets_Manager.loadRoomWidgets";
                     Tracer.e(mytag, "load widgets for area " + id_area);
                     Entity_Room[] listRoom = domodb.requestRoom(id_area);

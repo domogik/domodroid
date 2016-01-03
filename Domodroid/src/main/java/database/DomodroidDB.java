@@ -16,6 +16,7 @@ import widgets.Entity_Room;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import misc.tracerengine;
@@ -27,11 +28,14 @@ public class DomodroidDB {
     private final String mytag = "DomodroidDB";
     public String owner = "";
     private tracerengine Tracer = null;
+    private SharedPreferences params;
+
     //////////////////////////////////////
 
-    public DomodroidDB(tracerengine Trac, Activity context) {
+    public DomodroidDB(tracerengine Trac, Activity context, SharedPreferences params) {
         this.context = context;
         this.Tracer = Trac;
+        this.params = params;
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
     }
@@ -45,7 +49,7 @@ public class DomodroidDB {
         //delete all feature
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
         //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
-        DomodroidDB domodb = new DomodroidDB(Tracer, context);
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
         Tracer.e(mytag, "load widgets for area 1");
         Entity_Room[] listRoom = domodb.requestRoom(1);
@@ -491,14 +495,14 @@ public class DomodroidDB {
         // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated là
         // on utilise int[i]
         for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
-            found=false;
+            found = false;
             for (int j = 0; j < curs1.getCount(); j++) {
                 curs1.moveToPosition(j);
                 if (device_feature_id_associated_somewhere[i] == curs1.getInt(1)) {
-                    found=true;
+                    found = true;
                 }
             }
-            if (!found){
+            if (!found) {
                 remove_one_feature_association(device_feature_id_associated_somewhere[i]);
                 remove_one_feature_in_FeatureMap(device_feature_id_associated_somewhere[i]);
             }
@@ -641,7 +645,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                features[i] = new Entity_Feature(curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4),
+                features[i] = new Entity_Feature(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4),
                         curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
             }
         } catch (Exception e) {
@@ -740,7 +744,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                features[i] = new Entity_Feature(curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
+                features[i] = new Entity_Feature(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature error");

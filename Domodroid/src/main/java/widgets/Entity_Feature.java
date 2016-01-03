@@ -17,10 +17,15 @@
  */
 package widgets;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import activities.Graphics_Manager;
+import database.DomodroidDB;
+import misc.tracerengine;
 
 public class Entity_Feature {
     private int id;
@@ -37,9 +42,11 @@ public class Entity_Feature {
     private String value_type;
     private String currentState;
     private int state;
+    private final Activity context;
+    private tracerengine Tracer = null;
+    private SharedPreferences params;
 
-
-    public Entity_Feature(String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
+    public Entity_Feature(SharedPreferences params, tracerengine Trac, Activity context, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
         this.device_feature_model_id = device_feature_model_id;
         this.id = id;
         this.devId = devId;
@@ -51,6 +58,9 @@ public class Entity_Feature {
         this.state_key = state_key;
         this.parameters = parameters;
         this.value_type = value_type;
+        this.Tracer = Trac;
+        this.context = context;
+        this.params = params;
     }
 
     public int getId() {
@@ -70,7 +80,17 @@ public class Entity_Feature {
     }
 
     public String getDescription() {
-        return description;
+        String retrun_value;
+        if (description.length() < 1 || description.equalsIgnoreCase("null")) {
+            retrun_value = name;
+        } else {
+            retrun_value = description;
+        }
+        //add debug option to change label adding its Id
+        if (params.getBoolean("DEV", false))
+            retrun_value = retrun_value + " (" + id + ")";
+
+        return retrun_value;
     }
 
     public void setDescription(String description) {
@@ -153,6 +173,14 @@ public class Entity_Feature {
         this.state = state;
     }
 
+    public String getDevice_type() {
+        String[] model = device_type_id.split("\\.");
+        try {
+            return model[1];
+        } catch (Exception e) {
+            return model[0];
+        }
+    }
     public String getDevice_type_id() {
         return device_type_id;
     }
@@ -160,4 +188,19 @@ public class Entity_Feature {
     public void setDevice_type_id(String device_type_id) {
         this.device_type_id = device_type_id;
     }
+
+    public String getIcon_name() {
+        String iconName = "unknow";
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
+        domodb.owner = "entity_feature";
+        try {
+            iconName = domodb.requestIcons(id, "feature").getValue();
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        if (iconName.equals("unknow"))
+            iconName = device_usage_id;
+        return iconName;
+    }
+
 }

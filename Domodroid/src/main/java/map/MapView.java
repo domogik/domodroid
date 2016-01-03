@@ -602,9 +602,7 @@ public class MapView extends View {
                 //UPSState
                 //#48 grab label from diverse place:
                 String label = featureMap.getDescription();
-                if (label.length() < 1 || label.equalsIgnoreCase("null"))
-                    label = featureMap.getName();
-                //TODO grab value from State and translate it
+                //todo grab value from State and translate it
                 String value = featureMap.getCurrentState();
                 if (parameters.contains("command"))
                     value = "command";
@@ -894,16 +892,12 @@ public class MapView extends View {
     @SuppressWarnings("RedundantStringToString")
     public void showTopWidget(Entity_Map feature) throws JSONException {
         Tracer.d(mytag, "Show top Widget");
-        DomodroidDB domodb = new DomodroidDB(Tracer, context);
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "MapView.showTopWidgets";
         if (panel_widget.getChildCount() != 0) {
             panel_widget.removeAllViews();
         }
         String label = feature.getDescription();
-        if (label.length() < 1 || label.equalsIgnoreCase("null"))
-            label = feature.getName();
-
-
         String URL = params.getString("URL", "1.1.1.1");
         String parameters = feature.getParameters();
         String device_type_id = feature.getDevice_type_id();
@@ -947,15 +941,15 @@ public class MapView extends View {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    onoff = new Graphical_Binary(Tracer, context, Address,
-                            label, Id, DevId, State_key, URL, iconName,
-                            parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
+                    onoff = new Graphical_Binary(Tracer, context, URL, widgetSize, mytype, 0, zone, params, Address,
+                            label, Id, DevId, State_key, iconName,
+                            parameters, device_type_id);
                     onoff.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     onoff_New = new Graphical_Binary_New(Tracer, context, Address,
                             label, Id, DevId, State_key, URL, iconName,
-                            parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
+                            parameters, device_type_id, widgetSize, mytype, 0, zone, params);
                     onoff_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
@@ -965,7 +959,7 @@ public class MapView extends View {
             if (feature.getParameters().contains("command")) {
                 onoff_New = new Graphical_Binary_New(Tracer, context, Address,
                         label, Id, DevId, State_key, URL, iconName,
-                        parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
+                        parameters, device_type_id, widgetSize, mytype, 0, zone, params);
                 onoff_New.container = (FrameLayout) panel_widget;
                 panel_widget.addView(onoff_New);
             } else {

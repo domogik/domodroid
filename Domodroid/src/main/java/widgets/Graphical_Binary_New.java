@@ -109,7 +109,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
     public Graphical_Binary_New(tracerengine Trac,
                                 final Activity context, String address, String name, int id, int dev_id, String state_key, String url, final String usage,
-                                String parameters, String model_id, int update, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) {
+                                String parameters, String model_id, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) {
         super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
         this.Tracer = Trac;
         this.context = context;

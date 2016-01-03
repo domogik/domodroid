@@ -124,7 +124,7 @@ public class WidgetUpdate {
         password = params.getString("http_auth_password", null);
         api_version = sharedparams.getFloat("API_VERSION", 0);
         /*
-		if(Tracer != null) {
+        if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
 				try {
 					finalize();
@@ -134,7 +134,7 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        domodb = new DomodroidDB(Tracer, context);
+        domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
@@ -698,7 +698,7 @@ public class WidgetUpdate {
                 if (api_version <= 0.6f) {
                     dev_id = itemArray.getJSONObject(i).getInt("device_id");
                 } else if (api_version >= 0.7f) {
-                    //Todo try to avoid problem with MQ
+                    //todo try to avoid problem with MQ
                     dev_id = itemArray.getJSONObject(i).getInt("id");
                     //dev_id = itemArray.getJSONObject(i).getInt("device_id");
                 }
@@ -711,7 +711,7 @@ public class WidgetUpdate {
                 if (api_version <= 0.6f) {
                     skey = itemArray.getJSONObject(i).getString("skey");
                 } else if (api_version >= 0.7f) {
-                    //Todo try to avoid problem with MQ
+                    //todo try to avoid problem with MQ
                     skey = "";
                     //skey = itemArray.getJSONObject(i).getString("reference");
 

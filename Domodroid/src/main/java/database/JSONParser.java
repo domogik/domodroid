@@ -77,7 +77,7 @@ public class JSONParser {
 
         //parsing JSON feature list
         for (int i = 0; i < itemArray.length(); i++) {
-            listFeature[i] = new Entity_Feature(
+            listFeature[i] = new Entity_Feature(null, null, null,
                     itemArray.getJSONObject(i).getString("device_feature_model_id"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getJSONObject("device").getInt("id"),
@@ -114,7 +114,7 @@ public class JSONParser {
     public static Boolean Ack(JSONObject json) {
         try {
             if (json.getString("status").equals("ERROR")) {
-                //TODO need to say this to user and log it.
+                //todo need to say this to user and log it.
                 //add tracer access
                 // tracer.d(mytag,"json status erro");
                 Toast toast = Toast.makeText(null, "ERROR sending command", Toast.LENGTH_SHORT);
@@ -125,7 +125,7 @@ public class JSONParser {
                 return true;
             }
         } catch (Exception e) {
-            //Todo add tracer
+            //todo add tracer
             //Tracer.d (mytag,""+ e.toString());
             return false;
         }

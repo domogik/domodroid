@@ -192,7 +192,7 @@ public class Activity_Main extends Activity implements OnClickListener {
 
             public void onItemClick(AdapterView<?> adapter, View v, int pos,
                                     long id) {
-                DomodroidDB domodb = new DomodroidDB(Tracer, myself);
+                DomodroidDB domodb = new DomodroidDB(Tracer, myself, SP_params);
                 listRoom = domodb.requestallRoom();
                 listArea = domodb.requestArea();
                 String type = (history.elementAt(historyPosition)[1]);
@@ -627,7 +627,7 @@ public class Activity_Main extends Activity implements OnClickListener {
             WM_Agent = new Widgets_Manager(Tracer, widgetHandler);
             WM_Agent.widgetupdate = WU_widgetUpdate;
         }
-		/*
+        /*
 		if(T_starting != null) {
 			T_starting.cancel();
 			T_starting.setText("Creating widgets....");
@@ -709,7 +709,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     SP_prefEditor.putString(key, ((String) v));
             }
             SP_prefEditor.commit();
-            this.LoadSelections();    // to set panel with known values
+            LoadSelections();    // to set panel with known values
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -761,7 +761,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                 }
                 VG_parent.addView(LL_activ);
-				/*Should never arrive in this type.	
+				/*Should never arrive in this type.
 			}else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				LL_area.removeAllViews();

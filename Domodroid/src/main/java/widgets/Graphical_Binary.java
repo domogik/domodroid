@@ -52,18 +52,18 @@ import android.widget.Toast;
 
 public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBarChangeListener {
 
-    private final TextView state;
-    private final SeekBar seekBarOnOff;
+    private TextView state;
+    private SeekBar seekBarOnOff;
     private final String address;
     private String state_progress;
     private final String url;
     private final String usage;
-    private final Handler handler;
+    private Handler handler;
     private String value0;
     private String value1;
-    private final String type;
+    private String type;
     private final boolean activate = false;
-    private final Animation animation;
+    private Animation animation;
     private boolean touching;
     private int updating = 0;
     private Message msg;
@@ -75,26 +75,62 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String stateS = "";
     private String Value_0 = "0";
     private String Value_1 = "1";
-    private final String login;
-    private final String password;
-    private final float api_version;
+    private String login;
+    private String password;
+    private float api_version;
     private JSONObject jparam;
     private Entity_client session = null;
     private Boolean realtime = false;
     private String command_id = null;
     private String command_type = null;
-
+    private Entity_Feature feature;
+    private Entity_Map feature_map;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private int session_type;
+    private SharedPreferences params;
 
     public Graphical_Binary(tracerengine Trac,
-                            final Activity context, String address, final String name, int id, int dev_id, String state_key, String url, String usage,
-                            String parameters, String model_id, int update, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) {
+                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                            final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.Tracer = Trac;
+        this.context = context;
+        this.address = feature.getAddress();
+        this.url = url;
+        this.usage = feature.getIcon_name();
+        this.state_key = feature.getState_key();
+        this.myself = this;
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public Graphical_Binary(tracerengine Trac,
+                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                            String address, final String name, int id, int dev_id, String state_key, String usage, String parameters, String model_id) {
         super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
+        //todo pass entity_map as parameter of command to simplify
         this.Tracer = Trac;
         this.context = context;
         this.address = address;
         this.url = url;
         this.usage = usage;
+        this.state_key = state_key;
         this.myself = this;
+        this.dev_id = dev_id;
+        this.parameters = parameters;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
+
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
         } catch (Exception e) {
@@ -126,9 +162,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             this.Value_1 = value1;
         }
 
-        String[] model = model_id.split("\\.");
+        String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
-        Tracer.d(mytag, "model_id = <" + model_id + "> type = <" + type + "> value0 = " + value0 + "  value1 = " + value1);
+        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + feature.getDevice_type() + "> value0 = " + value0 + "  value1 = " + value1);
 
         //state
         state = new TextView(context);
@@ -137,9 +173,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
-        //		if(api_version>=0.7f)
-        //			state.setVisibility(INVISIBLE);
-
 
         //first seekbar on/off
         seekBarOnOff = new SeekBar(context);
@@ -274,7 +307,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                         }
 
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Handler error for device " + name);
+                        Tracer.e(mytag, "Handler error for device " + feature.getName());
                         e.printStackTrace();
                     }
                 }
@@ -283,14 +316,14 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
-		 * 
+		 *
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             if (Tracer.get_engine().subscribe(session)) {
                 realtime = true;        //we're connected to engine
@@ -303,7 +336,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         //updateTimer();	//Don't use anymore cyclic refresh....
 
     }
-
 
     public void onProgressChanged(SeekBar seekBarOnOff, int progress, boolean fromTouch) {
         switch (progress) {

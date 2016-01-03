@@ -80,6 +80,8 @@ public class Entity_Map {
     }
 
     public String getDescription() {
+        if (description.length() < 1 || description.equalsIgnoreCase("null"))
+            return name;
         return description;
     }
 

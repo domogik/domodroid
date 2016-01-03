@@ -446,7 +446,7 @@ class Dialog_House extends Dialog implements OnClickListener {
     }
 
     private void loadSpinnerData() {
-        domodb = new DomodroidDB(Tracer, context);
+        domodb = new DomodroidDB(Tracer, context, params);
 
         listArea = domodb.requestArea();
         listRoom = domodb.requestallRoom();

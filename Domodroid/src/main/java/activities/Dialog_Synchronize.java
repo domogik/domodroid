@@ -257,10 +257,19 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             // and if syncing ith the same api version
             if ((previous_api_version == Rinor_Api_Version) && (Rinor_Api_Version >= 0.6f)) {
                 //Erase in tables only device/usage  list !
-                db.NewsyncDb();
+                // surround with a try catch due to possible error in previous sync
+                try {
+                    db.NewsyncDb();
+                    Tracer.i(mytag, "Doing a sync update only, not erasing all");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    db.updateDb();
+                    Tracer.i(mytag, "Doing a full sync, erasing all !!!");
+                }
             } else {
                 //Erase all tables contents EXCEPT maps coordinates !
                 db.updateDb();
+                Tracer.i(mytag, "Doing a full sync, erasing all !!!");
             }
 
             if (Rinor_Api_Version <= 0.5f) {

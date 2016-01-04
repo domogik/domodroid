@@ -17,49 +17,25 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
 
-import database.DmdContentProvider;
 import database.WidgetUpdate;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 
 @SuppressWarnings("ALL")
 public class Graphical_Boolean extends Basic_Graphical_widget {

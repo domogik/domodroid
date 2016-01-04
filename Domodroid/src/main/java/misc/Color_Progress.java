@@ -1,16 +1,11 @@
 package misc;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
 import misc.tracerengine;
@@ -19,8 +14,6 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar;
-
-import org.domogik.domodroid13.R;
 
 public class Color_Progress extends SeekBar {
 

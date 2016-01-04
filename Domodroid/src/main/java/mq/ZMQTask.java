@@ -4,7 +4,6 @@ package mq;
  * Created by mpunie on 12/05/2015.
  */
 import android.os.AsyncTask;
-import android.widget.Toast;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import misc.tracerengine;

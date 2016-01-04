@@ -131,7 +131,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             stateS = state_key;
         }
         this.url = url;
-        this.myself = this;
+        myself = this;
 
         mytag = "Graphical_Info_commands (" + dev_id + ")";
         DisplayMetrics metrics = getResources().getDisplayMetrics();

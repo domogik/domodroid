@@ -1,16 +1,11 @@
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
@@ -18,38 +13,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import rinor.CallUrl;
-import rinor.Rest_com;
-import widgets.Graphical_Binary.SBAnim;
-import database.DmdContentProvider;
-import database.JSONParser;
 import database.WidgetUpdate;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
@@ -133,7 +112,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         this.address = address;
         this.url = url;
         this.params = params;
-        this.myself = this;
+        myself = this;
         this.context = context;
         mytag = "Graphical_Color(" + dev_id + ")";
 
@@ -161,7 +140,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //state key
         TextView state_key_view = new TextView(context);
         try {
-            state_key_view.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString());
+            state_key_view.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             state_key_view.setText(state_key);

@@ -20,7 +20,6 @@ package widgets;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import activities.Graphics_Manager;
@@ -44,7 +43,7 @@ public class Entity_Feature {
     private int state;
     private final Activity context;
     private tracerengine Tracer = null;
-    private SharedPreferences params;
+    private final SharedPreferences params;
 
     public Entity_Feature(SharedPreferences params, tracerengine Trac, Activity context, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
         this.device_feature_model_id = device_feature_model_id;

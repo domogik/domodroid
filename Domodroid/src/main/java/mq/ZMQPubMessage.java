@@ -3,8 +3,6 @@ package mq;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.webkit.WebView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +46,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             jo.put("text", params[2]);
             jo.put("media", "speech");
             jo.put("identity", "domodroid");
-            jo.put("source", "terminal-android." + this.getHostName());
+            jo.put("source", "terminal-android." + getHostName());
             String msg = jo.toString();
             this.pub.connect(url);
             // we need this timeout to let zeromq connect to the publisher
@@ -57,13 +55,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            String msgId = new StringBuilder()
-                    .append(cat)
-                    .append(".")
-                    .append(String.valueOf(System.currentTimeMillis() * 1000))
-                    .append(".")
-                    .append("0_1")
-                    .toString();
+            String msgId = cat + "." + String.valueOf(System.currentTimeMillis() * 1000) + "." + "0_1";
             if (!this.pub.sendMore(msgId)) {
                 Log.e(this.getClass().getSimpleName(), "Send of msg id not ok: " + msgId);
             }

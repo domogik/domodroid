@@ -249,10 +249,13 @@ public class Graphical_Info_View extends View implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (loaded)
+        if (loaded){
             canvas.drawBitmap(buffer, 0, 0, new Paint());
-        else
+            buffer.recycle();}
+        else {
             canvas.drawBitmap(text, 0, 0, new Paint());
+            text.recycle();
+        }
     }
 
     public void drawMessage() {

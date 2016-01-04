@@ -22,8 +22,6 @@ import org.domogik.domodroid13.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import activities.Graphics_Manager;
-
 import database.Cache_management;
 import database.DmdContentProvider;
 
@@ -141,8 +139,8 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (int i = 0; i < fiilliste.length; i++) {
-                list_icon.add(fiilliste[i]);
+            for (String aFiilliste : fiilliste) {
+                list_icon.add(aFiilliste);
             }
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);

@@ -17,48 +17,31 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import rinor.CallUrl;
-import rinor.Rest_com;
-import widgets.Graphical_Binary.SBAnim;
-import database.DmdContentProvider;
-import database.JSONParser;
 import database.WidgetUpdate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,7 +92,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         this.address = address;
         this.url = url;
         this.usage = usage;
-        this.myself = this;
+        myself = this;
         this.context = context;
         stateThread = 1;
         try {

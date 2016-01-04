@@ -17,52 +17,29 @@
  */
 package widgets;
 
-import java.lang.Thread.State;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import activities.Gradients_Manager;
-import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
 
 import rinor.Stats_Com;
 
-import database.WidgetUpdate;
-
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
 
 import misc.tracerengine;
 
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
 public class Com_Stats extends FrameLayout {
@@ -79,7 +56,7 @@ public class Com_Stats extends FrameLayout {
     private Message msg;
     public FrameLayout container = null;
 
-    private Stats_Com stats = null;
+    private final Stats_Com stats = null;
     private final TextView elapsed_period;
     private final TextView cumul_period;
     private final TextView cum_statsPR;

@@ -49,7 +49,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
     private tracerengine Tracer = null;
     private final String login;
     private final String password;
-    private String mytag = "Dialog_Synchronize";
+    private final String mytag = "Dialog_Synchronize";
     private float previous_api_version = 0f;
     private boolean by_usage;
 

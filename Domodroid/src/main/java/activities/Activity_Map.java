@@ -121,7 +121,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Tracer = tracerengine.getInstance(params, this);
-        prefEditor = params.edit();
+        //prefEditor = params.edit();
         mapView = new MapView(Tracer, this, params);
         mapView.setParams(params);
         mapView.setUpdate(params.getInt("UPDATE_TIMER", 300));
@@ -825,31 +825,6 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    public String getFileAsString(File file) {
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        DataInputStream dis = null;
-        StringBuffer sb = new StringBuffer();
-        try {
-            fis = new FileInputStream(file);
-            bis = new BufferedInputStream(fis);
-            dis = new DataInputStream(bis);
-            while (dis.available() != 0) {
-                sb.append(dis.readLine() + "\n");
-            }
-            fis.close();
-            bis.close();
-            dis.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
-    }
-
 
     private static void createDirIfNotExists() {
         File file = new File(Environment.getExternalStorageDirectory(), "/domodroid");

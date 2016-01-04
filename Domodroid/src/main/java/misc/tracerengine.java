@@ -51,7 +51,7 @@ public class tracerengine {
      *******************************************************************************/
     private tracerengine(Context context) {
         super();
-        this.context = context;
+        tracerengine.context = context;
         force_Main = false;
         Map_as_main = false;
     }

@@ -1,15 +1,12 @@
 package mq;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 import misc.tracerengine;
 
 
-import android.util.Log;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;

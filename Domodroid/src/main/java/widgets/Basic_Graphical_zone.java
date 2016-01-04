@@ -44,9 +44,9 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
     final String name;
     private final Handler widgetHandler;
     private final String type;
-    private tracerengine Tracer;
-    private String mytag = "Basic_Graphical_zone";
-    private String icon;
+    private final tracerengine Tracer;
+    private final String mytag = "Basic_Graphical_zone";
+    private final String icon;
 
     //public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
     public Basic_Graphical_zone(tracerengine Trac, Context context, int id, String name, String description, String icon, int widgetSize, String type, Handler handler) {

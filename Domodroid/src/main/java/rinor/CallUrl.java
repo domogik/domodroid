@@ -1,7 +1,6 @@
 package rinor;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -9,7 +8,6 @@ import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
@@ -56,10 +54,6 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 }
                 throw new IOException(statusLine.getReasonPhrase());
             }
-        } catch (ClientProtocolException e) {
-            //TODO Handle problems..
-            // Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-            // Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             //TODO Handle problems..
             // Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");

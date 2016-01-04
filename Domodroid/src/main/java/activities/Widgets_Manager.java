@@ -142,14 +142,14 @@ class Widgets_Manager {
                     if (!params.getBoolean("WIDGET_CHOICE", false)) {
                         onoff = new Graphical_Binary(Tracer, context, URL,
                                 widgetSize, session_type, id, zone, params, feature);
-                        onoff.container = tmpPan;
+                        Graphical_Binary.container = tmpPan;
                         tmpPan.addView(onoff);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     } else {
                         onoff_New = new Graphical_Binary_New(Tracer, context, Address, label,
                                 Id, DevId, State_key, URL, iconName, parameters, device_type_id,
                                 widgetSize, session_type, id, zone, params);
-                        onoff_New.container = tmpPan;
+                        Graphical_Binary_New.container = tmpPan;
                         tmpPan.addView(onoff_New);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     }
@@ -159,14 +159,14 @@ class Widgets_Manager {
                     if (!params.getBoolean("WIDGET_CHOICE", false)) {
                         onoff = new Graphical_Binary(Tracer, context, URL,
                                 widgetSize, session_type, id, zone, params, feature);
-                        onoff.container = tmpPan;
+                        Graphical_Binary.container = tmpPan;
                         tmpPan.addView(onoff);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     } else {
                         onoff_New = new Graphical_Binary_New(Tracer, context, Address, label,
                                 Id, DevId, State_key, URL, iconName, parameters, device_type_id,
                                 widgetSize, session_type, id, zone, params);
-                        onoff_New.container = tmpPan;
+                        Graphical_Binary_New.container = tmpPan;
                         tmpPan.addView(onoff_New);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     }
@@ -174,7 +174,7 @@ class Widgets_Manager {
                     Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address, label,
                             Id, DevId, State_key, iconName, parameters, device_type_id,
                             update_timer, widgetSize, session_type, id, zone, params);
-                    bool.container = tmpPan;
+                    Graphical_Boolean.container = tmpPan;
                     tmpPan.addView(bool);
                     Tracer.i(mytag, "   ==> Graphical_Boolean");
                 }
@@ -182,7 +182,7 @@ class Widgets_Manager {
                 Graphical_Range variator = new Graphical_Range(Tracer, context, Address, label,
                         Id, DevId, State_key, URL, iconName, parameters, device_type_id,
                         update_timer, widgetSize, session_type, id, zone, params);
-                variator.container = tmpPan;
+                Graphical_Range.container = tmpPan;
                 tmpPan.addView(variator);
                 Tracer.i(mytag, "   ==> Graphical_Range");
             } else if (Value_type.equals("trigger")) {
@@ -191,7 +191,7 @@ class Widgets_Manager {
                     Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, Address, label,
                             State_key, Id, DevId, State_key, URL, iconName, parameters, device_type_id,
                             widgetSize, session_type, id, zone, params);
-                    trigger.container = tmpPan;
+                    Graphical_Trigger.container = tmpPan;
                     tmpPan.addView(trigger);
                     Tracer.i(mytag, "   ==> Graphical_Trigger");
                 } else {
@@ -200,7 +200,7 @@ class Widgets_Manager {
                             widgetSize, session_type, parameters, id, zone, params);
                     info.setLayoutParams(layout_param);
                     info.with_graph = false;
-                    info.container = tmpPan;
+                    Graphical_Info.container = tmpPan;
                     tmpPan.addView(info);
                     Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
                 }
@@ -212,7 +212,7 @@ class Widgets_Manager {
                         Address,//  idem to know the address
                         State_key, URL, iconName, update_timer,
                         widgetSize, session_type, id, zone);
-                color.container = tmpPan;
+                Graphical_Color.container = tmpPan;
                 tmpPan.addView(color);
                 Tracer.i(mytag, "   ==> Graphical_Color");
             } else if (Value_type.equals("number")) {
@@ -221,7 +221,7 @@ class Widgets_Manager {
                             State_key, URL, iconName, update_timer,
                             widgetSize, session_type, parameters, id, zone, params, Value_type);
                     info_commands.setLayoutParams(layout_param);
-                    info_commands.container = tmpPan;
+                    Graphical_Info_commands.container = tmpPan;
                     tmpPan.addView(info_commands);
                     Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                 } else if (params.getBoolean("Graph_CHOICE", false)) {
@@ -230,7 +230,7 @@ class Widgets_Manager {
                             Id, DevId, label, State_key, URL, iconName, Graph,
                             update_timer, widgetSize, session_type, parameters, id, zone, params);
                     info_with_achartengine.setLayoutParams(layout_param);
-                    info_with_achartengine.container = tmpPan;
+                    Graphical_Info_with_achartengine.container = tmpPan;
                     tmpPan.addView(info_with_achartengine);
                     Tracer.i(mytag, "   ==> Graphical_Info_with_achartengine + Graphic");
                 } else {
@@ -240,7 +240,7 @@ class Widgets_Manager {
                             widgetSize, session_type, parameters, id, zone, params);
                     info.setLayoutParams(layout_param);
                     info.with_graph = true;
-                    info.container = tmpPan;
+                    Graphical_Info.container = tmpPan;
                     tmpPan.addView(info);
                     Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                 }
@@ -252,7 +252,7 @@ class Widgets_Manager {
                         State_key, URL, iconName, Graph,
                         update_timer, widgetSize, session_type, parameters, device_type_id, id, zone, params);
                 list.setLayoutParams(layout_param);
-                list.container = tmpPan;
+                Graphical_List.container = tmpPan;
                 tmpPan.addView(list);
                 Tracer.i(mytag, "   ==> Graphical_List");
             } else if (Value_type.equals("string") || Value_type.equals("datetime")) {
@@ -262,13 +262,13 @@ class Widgets_Manager {
                             State_key, URL, iconName, update_timer,
                             widgetSize, session_type, parameters, id, zone, params);
                     info_with_history.setLayoutParams(layout_param);
-                    info_with_history.container = tmpPan;
+                    Graphical_History.container = tmpPan;
                     tmpPan.addView(info_with_history);
                     Tracer.i(mytag, "   ==> Graphical_history");
                 } else if (feature.getDevice_feature_model_id().contains("camera")) {
                     Graphical_Cam cam = new Graphical_Cam(Tracer, context, Id, DevId, label,
                             State_key, Address, iconName, widgetSize, session_type, id, zone);
-                    cam.container = tmpPan;
+                    Graphical_Cam.container = tmpPan;
                     tmpPan.addView(cam);
                     Tracer.i(mytag, "   ==> Graphical_Cam");
                 } else if (feature.getParameters().contains("command_type")) {
@@ -280,7 +280,7 @@ class Widgets_Manager {
                                 Address,//  idem to know the address
                                 State_key, URL, iconName, update_timer,
                                 widgetSize, session_type, id, zone);
-                        color.container = tmpPan;
+                        Graphical_Color.container = tmpPan;
                         tmpPan.addView(color);
                         Tracer.i(mytag, "   ==> Graphical_Color");
                     } else {
@@ -288,7 +288,7 @@ class Widgets_Manager {
                                 State_key, URL, iconName, update_timer,
                                 widgetSize, session_type, parameters, id, zone, params, Value_type);
                         info_commands.setLayoutParams(layout_param);
-                        info_commands.container = tmpPan;
+                        Graphical_Info_commands.container = tmpPan;
                         tmpPan.addView(info_commands);
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
@@ -298,7 +298,7 @@ class Widgets_Manager {
                             widgetSize, session_type, parameters, id, zone, params);
                     info.setLayoutParams(layout_param);
                     info.with_graph = false;
-                    info.container = tmpPan;
+                    Graphical_Info.container = tmpPan;
                     tmpPan.addView(info);
                     Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
                 }

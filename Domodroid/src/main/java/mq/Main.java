@@ -7,7 +7,6 @@ import activities.Preference;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.os.Bundle;
@@ -19,13 +18,10 @@ import android.content.IntentFilter;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
@@ -104,6 +100,7 @@ public class Main extends Activity {
     }
 
     public void showConfig(View view) {
+        //todo
     }
 
     /**

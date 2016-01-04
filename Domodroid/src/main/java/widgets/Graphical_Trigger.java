@@ -17,26 +17,15 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import rinor.CallUrl;
-import rinor.Rest_com;
-import database.DmdContentProvider;
-import database.JSONParser;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -44,18 +33,11 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,7 +71,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         this.Tracer = Trac;
         this.url = url;
         this.context = context;
-        this.myself = this;
+        myself = this;
         String stateS;
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));

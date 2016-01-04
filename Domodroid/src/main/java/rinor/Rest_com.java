@@ -31,14 +31,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 
 import misc.tracerengine;
@@ -102,13 +100,9 @@ public class Rest_com {
             } else {
                 Tracer.d(mytag, "Resource not available>");
             }
-        } catch (HttpHostConnectException e) {
+        } catch (HttpHostConnectException | ClientProtocolException e) {
             Tracer.e(mytag, e.toString());
-        } catch (ClientProtocolException e) {
-            Tracer.e(mytag, e.toString());
-        } catch (IOException e) {
-            Tracer.e(mytag, e.toString());
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             Tracer.e(mytag, e.toString());
         }
         return json;
@@ -145,8 +139,6 @@ public class Rest_com {
 
         } catch (HttpHostConnectException e) {
             //e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

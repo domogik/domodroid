@@ -16,12 +16,10 @@ import org.json.JSONObject;
 import org.domogik.domodroid13.R;
 
 import rinor.CallUrl;
-import rinor.Rest_com;
 
 import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
-import database.JSONParser;
 import database.WidgetUpdate;
 import activities.Activity_Map;
 import activities.Graphics_Manager;
@@ -44,11 +42,9 @@ import widgets.Graphical_Trigger;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -217,7 +213,7 @@ public class MapView extends View {
             //MapView is'nt the first caller, so init is'nt required (already done by View)
             cache_engine.set_handler(handler, mytype);    //Put our main handler to cache engine (as MapView)
         }
-        Tracer.set_engine(cache_engine);
+        tracerengine.set_engine(cache_engine);
         Tracer.w(mytag, "WidgetUpdate engine connected !");
     }
 
@@ -300,14 +296,20 @@ public class MapView extends View {
         //put extension in lowercase
         extension = extension.toLowerCase();
 
-        if (extension.equals(".svg")) {
-            formatMode = 1;
-            //Try to allow PNG and png extension to solve #1707 on irc tracker.
-            //Could also try to put all in lowercase: files.elementAt(currentFile).substring(files.elementAt(currentFile).toLowerCase()......
-        } else if (extension.equals(".png") || extension.equals(".jpg") || extension.equals(".jepg")) {
-            formatMode = 2;
-        } else {
-            formatMode = 0;
+        switch (extension) {
+            case ".svg":
+                formatMode = 1;
+                //Try to allow PNG and png extension to solve #1707 on irc tracker.
+                //Could also try to put all in lowercase: files.elementAt(currentFile).substring(files.elementAt(currentFile).toLowerCase()......
+                break;
+            case ".png":
+            case ".jpg":
+            case ".jepg":
+                formatMode = 2;
+                break;
+            default:
+                formatMode = 0;
+                break;
         }
 
         //Load current scale if it exists.
@@ -725,39 +727,54 @@ public class MapView extends View {
                             jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
                             String test_unite = jparam.getString("unit");
                             //# 30 convert byte unit.
-                            if (test_unite.equals("b")) {
-                                value = android.text.format.Formatter.formatFileSize(context, Long.parseLong(value));
-                            } else if (test_unite.equals("ko")) {
-                                value = android.text.format.Formatter.formatFileSize(context, Long.parseLong(value) * 1024);
-                            } else {
-                                value = formatedValue + " " + test_unite;
+                            switch (test_unite) {
+                                case "b":
+                                    value = android.text.format.Formatter.formatFileSize(context, Long.parseLong(value));
+                                    break;
+                                case "ko":
+                                    value = android.text.format.Formatter.formatFileSize(context, Long.parseLong(value) * 1024);
+                                    break;
+                                default:
+                                    value = formatedValue + " " + test_unite;
+                                    break;
                             }
                         } catch (JSONException e) {
                             //Basilic : no sure that the key state was the better way to find unit
-                            if (featureMap.getState_key().equals("temperature"))
-                                value = featureMap.getCurrentState() + " °C";
-                            else if (featureMap.getState_key().equals("pressure"))
-                                value = featureMap.getCurrentState() + " hPa";
-                            else if (featureMap.getState_key().equals("humidity"))
-                                value = featureMap.getCurrentState() + " %";
-                            else if (featureMap.getState_key().equals("percent"))
-                                value = featureMap.getCurrentState() + " %";
-                            else if (featureMap.getState_key().equals("visibility"))
-                                value = featureMap.getCurrentState() + " km";
-                            else if (featureMap.getState_key().equals("chill"))
-                                value = featureMap.getCurrentState() + " °C";
-                            else if (featureMap.getState_key().equals("speed"))
-                                value = featureMap.getCurrentState() + " km/h";
-                            else if (featureMap.getState_key().equals("drewpoint"))
-                                value = featureMap.getCurrentState() + " °C";
-                            else if ((featureMap.getState_key().equals("condition-code")))
-                                //Add try catch to avoid other case that make #1794
-                                try {
-                                    value = context.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
-                                } catch (Exception e1) {
-                                    e1.printStackTrace();
+                            switch (featureMap.getState_key()) {
+                                case "temperature":
+                                    value = featureMap.getCurrentState() + " °C";
+                                    break;
+                                case "pressure":
+                                    value = featureMap.getCurrentState() + " hPa";
+                                    break;
+                                case "humidity":
+                                    value = featureMap.getCurrentState() + " %";
+                                    break;
+                                case "percent":
+                                    value = featureMap.getCurrentState() + " %";
+                                    break;
+                                case "visibility":
+                                    value = featureMap.getCurrentState() + " km";
+                                    break;
+                                case "chill":
+                                    value = featureMap.getCurrentState() + " °C";
+                                    break;
+                                case "speed":
+                                    value = featureMap.getCurrentState() + " km/h";
+                                    break;
+                                case "drewpoint":
+                                    value = featureMap.getCurrentState() + " °C";
+                                    break;
+                                case "condition-code":
+                                    //Add try catch to avoid other case that make #1794
+                                    try {
+                                        value = context.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
+                                    } catch (Exception e1) {
+                                        e1.printStackTrace();
 
-                                }
+                                    }
+                                    break;
+                            }
                         }
                         if (value == null)
                             value = "";
@@ -944,13 +961,13 @@ public class MapView extends View {
                     onoff = new Graphical_Binary(Tracer, context, URL, widgetSize, mytype, 0, zone, params, Address,
                             label, Id, DevId, State_key, iconName,
                             parameters, device_type_id);
-                    onoff.container = (FrameLayout) panel_widget;
+                    Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     onoff_New = new Graphical_Binary_New(Tracer, context, Address,
                             label, Id, DevId, State_key, URL, iconName,
                             parameters, device_type_id, widgetSize, mytype, 0, zone, params);
-                    onoff_New.container = (FrameLayout) panel_widget;
+                    Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
 
@@ -960,20 +977,20 @@ public class MapView extends View {
                 onoff_New = new Graphical_Binary_New(Tracer, context, Address,
                         label, Id, DevId, State_key, URL, iconName,
                         parameters, device_type_id, widgetSize, mytype, 0, zone, params);
-                onoff_New.container = (FrameLayout) panel_widget;
+                Graphical_Binary_New.container = (FrameLayout) panel_widget;
                 panel_widget.addView(onoff_New);
             } else {
                 Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address,
                         label, Id, DevId, State_key, iconName,
                         parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
-                bool.container = (FrameLayout) panel_widget;
+                Graphical_Boolean.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
         } else if (feature.getValue_type().equals("range")) {
             Graphical_Range variator = new Graphical_Range(Tracer, context, Address,
                     label, Id, DevId, State_key, URL, iconName,
                     parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
-            variator.container = (FrameLayout) panel_widget;
+            Graphical_Range.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
@@ -981,14 +998,14 @@ public class MapView extends View {
                 Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, Address,
                         State_key, label, Id, DevId, State_key, URL, iconName,
                         parameters, device_type_id, widgetSize, mytype, 0, zone, params);
-                trigger.container = (FrameLayout) panel_widget;
+                Graphical_Trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
                 info = new Graphical_Info(Tracer, context, Id, DevId, label,
                         State_key, "", iconName, update_timer,
                         widgetSize, mytype, parameters, 0, zone, params);
-                info.container = (FrameLayout) panel_widget;
+                Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
                 Tracer.i(mytag, "   ==> Graphical_Info");
@@ -1007,21 +1024,21 @@ public class MapView extends View {
                 info_commands = new Graphical_Info_commands(Tracer, context,
                         Id, DevId, label, State_key, URL, iconName, update_timer,
                         widgetSize, mytype, parameters, 0, zone, params, feature.getValue_type());
-                info_commands.container = (FrameLayout) panel_widget;
+                Graphical_Info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context,
                         Id, DevId, label, State_key, URL, iconName, Graph,
                         update_timer, widgetSize, mytype, parameters, 0, zone, params);
-                info1.container = (FrameLayout) panel_widget;
+                Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
                 info = new Graphical_Info(Tracer, context, Id, DevId,
                         label, State_key, URL, iconName,
                         update_timer, widgetSize, mytype, parameters, 0, zone, params);
-                info.container = (FrameLayout) panel_widget;
+                Graphical_Info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else if (feature.getValue_type().equals("list")) {
@@ -1030,7 +1047,7 @@ public class MapView extends View {
                     Address,            //  idem to know the address
                     State_key, URL, iconName, Graph,
                     update_timer, widgetSize, mytype, parameters, device_type_id, 0, zone, params);
-            list.container = (FrameLayout) panel_widget;
+            Graphical_List.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
             colorw = new Graphical_Color(Tracer, context,
@@ -1039,7 +1056,7 @@ public class MapView extends View {
                     update_timer,
                     widgetSize, mytype, 0, zone
             );
-            colorw.container = (FrameLayout) panel_widget;
+            Graphical_Color.container = (FrameLayout) panel_widget;
             panel_widget.addView(colorw);
         } else if (feature.getValue_type().equals("string")) {
             Tracer.i(mytag, "parameters=" + parameters);
@@ -1072,7 +1089,7 @@ public class MapView extends View {
                 info = new Graphical_Info(Tracer, context, Id, DevId, label,
                         State_key, "", iconName, update_timer,
                         widgetSize, mytype, parameters, 0, zone, params);
-                info.container = (FrameLayout) panel_widget;
+                Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
             }
@@ -1226,18 +1243,55 @@ public class MapView extends View {
                                     // via the asynctask new CommandeThread()
                                     //TODO 0.4 should add bool because it could also be add here
                                     // problem is to know is real state before sending it
-                                    if (featureMap.getValue_type().equals("trigger")) {
-                                        //#51 change widget for 0.4 if it's not a command
-                                        if (featureMap.getParameters().contains("command")) {
-                                            Tracer.d(mytag, "This is a Trigger launching it");
+                                    switch (featureMap.getValue_type()) {
+                                        case "trigger":
+                                            //#51 change widget for 0.4 if it's not a command
+                                            if (featureMap.getParameters().contains("command")) {
+                                                Tracer.d(mytag, "This is a Trigger launching it");
+                                                this.URL = params.getString("URL", "1.1.1.1");
+                                                this.Address = featureMap.getAddress();
+                                                if (api_version >= 0.7f) {
+                                                    try {
+                                                        JSONObject jparam = new JSONObject(featureMap.getParameters());
+                                                        command_id = jparam.getString("command_id");
+                                                        command_type = jparam.getString("command_type");
+                                                        state_progress = "1";
+                                                        new CommandeThread().execute();
+                                                    } catch (JSONException e) {
+                                                        Tracer.d(mytag, "No command_id for this device");
+                                                    }
+                                                } else {
+                                                    new CommandeThread().execute();
+                                                }
+                                            }
+                                            break;
+                                        case "binary":
+                                            Tracer.d(mytag, "This is a binary try to change is state");
+                                            Tracer.d(mytag, "State is " + featureMap.getCurrentState());
+                                            if (featureMap.getCurrentState().equals("true")) {
+                                                featureMap.setCurrentState("false");
+                                            } else if (featureMap.getCurrentState().equals("false")) {
+                                                featureMap.setCurrentState("true");
+                                            } else if (featureMap.getCurrentState().equals("on")) {
+                                                featureMap.setCurrentState("off");
+                                            } else if (featureMap.getCurrentState().equals("off")) {
+                                                featureMap.setCurrentState("on");
+                                            } else if (featureMap.getCurrentState().equals("1")) {
+                                                featureMap.setCurrentState("0");
+                                            } else if (featureMap.getCurrentState().equals("0")) {
+                                                featureMap.setCurrentState("1");
+                                            }
+
                                             this.URL = params.getString("URL", "1.1.1.1");
                                             this.Address = featureMap.getAddress();
+                                            String[] model = featureMap.getDevice_type_id().split("\\.");
+                                            this.type = model[0];
+                                            this.state_progress = featureMap.getCurrentState();
                                             if (api_version >= 0.7f) {
                                                 try {
-                                                    JSONObject jparam = new JSONObject(featureMap.getParameters());
+                                                    JSONObject jparam = new JSONObject(parameters);
                                                     command_id = jparam.getString("command_id");
                                                     command_type = jparam.getString("command_type");
-                                                    state_progress = "1";
                                                     new CommandeThread().execute();
                                                 } catch (JSONException e) {
                                                     Tracer.d(mytag, "No command_id for this device");
@@ -1245,51 +1299,19 @@ public class MapView extends View {
                                             } else {
                                                 new CommandeThread().execute();
                                             }
-                                        }
-                                    } else if (featureMap.getValue_type().equals("binary")) {
-                                        Tracer.d(mytag, "This is a binary try to change is state");
-                                        Tracer.d(mytag, "State is " + featureMap.getCurrentState());
-                                        if (featureMap.getCurrentState().equals("true")) {
-                                            featureMap.setCurrentState("false");
-                                        } else if (featureMap.getCurrentState().equals("false")) {
-                                            featureMap.setCurrentState("true");
-                                        } else if (featureMap.getCurrentState().equals("on")) {
-                                            featureMap.setCurrentState("off");
-                                        } else if (featureMap.getCurrentState().equals("off")) {
-                                            featureMap.setCurrentState("on");
-                                        } else if (featureMap.getCurrentState().equals("1")) {
-                                            featureMap.setCurrentState("0");
-                                        } else if (featureMap.getCurrentState().equals("0")) {
-                                            featureMap.setCurrentState("1");
-                                        }
-
-                                        this.URL = params.getString("URL", "1.1.1.1");
-                                        this.Address = featureMap.getAddress();
-                                        String[] model = featureMap.getDevice_type_id().split("\\.");
-                                        this.type = model[0];
-                                        this.state_progress = featureMap.getCurrentState();
-                                        if (api_version >= 0.7f) {
-                                            try {
-                                                JSONObject jparam = new JSONObject(parameters);
-                                                command_id = jparam.getString("command_id");
-                                                command_type = jparam.getString("command_type");
-                                                new CommandeThread().execute();
-                                            } catch (JSONException e) {
-                                                Tracer.d(mytag, "No command_id for this device");
-                                            }
-                                        } else {
-                                            new CommandeThread().execute();
-                                        }
-                                    } else {
-                                        //Show the top widgets
-                                        Tracer.d(mytag, "Launch showtopwidgets");
-                                        showTopWidget(featureMap);
-                                        panel_button.setVisibility(View.GONE);
-                                        panel_widget.setVisibility(View.VISIBLE);
-                                        if (!top_drawer.isOpen()) top_drawer.setOpen(true, true);
-                                        if (bottom_drawer.isOpen())
-                                            bottom_drawer.setOpen(false, true);
-                                        widgetActiv = true;
+                                            break;
+                                        default:
+                                            //Show the top widgets
+                                            Tracer.d(mytag, "Launch showtopwidgets");
+                                            showTopWidget(featureMap);
+                                            panel_button.setVisibility(View.GONE);
+                                            panel_widget.setVisibility(View.VISIBLE);
+                                            if (!top_drawer.isOpen())
+                                                top_drawer.setOpen(true, true);
+                                            if (bottom_drawer.isOpen())
+                                                bottom_drawer.setOpen(false, true);
+                                            widgetActiv = true;
+                                            break;
                                     }
                                 } catch (Exception e) {
                                     Tracer.d(mytag, "on action up crash " + e.toString());
@@ -1395,8 +1417,8 @@ public class MapView extends View {
                     List<String> list_icon = new ArrayList<>();
                     String[] fiilliste;
                     fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-                    for (int i = 0; i < fiilliste.length; i++) {
-                        list_icon.add(fiilliste[i]);
+                    for (String aFiilliste : fiilliste) {
+                        list_icon.add(aFiilliste);
                     }
                     final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
                     list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + featureMap.getName() + "-" + featureMap.getState_key());
@@ -1529,7 +1551,7 @@ public class MapView extends View {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         DataInputStream dis = null;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             fis = new FileInputStream(file);
             bis = new BufferedInputStream(fis);
@@ -1541,8 +1563,6 @@ public class MapView extends View {
             bis.close();
             dis.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

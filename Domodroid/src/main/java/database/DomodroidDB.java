@@ -28,7 +28,7 @@ public class DomodroidDB {
     private final String mytag = "DomodroidDB";
     public String owner = "";
     private tracerengine Tracer = null;
-    private SharedPreferences params;
+    private final SharedPreferences params;
 
     //////////////////////////////////////
 

@@ -139,7 +139,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             stateS = state_key;
         }
         this.url = url;
-        this.myself = this;
+        myself = this;
         setOnClickListener(this);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();

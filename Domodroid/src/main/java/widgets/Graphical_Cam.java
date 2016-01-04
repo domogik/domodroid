@@ -17,42 +17,18 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import activities.Activity_Cam;
-import activities.Gradients_Manager;
-import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.R;
-
-import database.DmdContentProvider;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Message;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener {
 

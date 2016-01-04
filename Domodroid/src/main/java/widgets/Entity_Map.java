@@ -17,7 +17,6 @@
  */
 package widgets;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import activities.Graphics_Manager;

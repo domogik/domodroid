@@ -18,8 +18,6 @@
 package widgets;
 
 import rinor.CallUrl;
-import rinor.Rest_com;
-import database.JSONParser;
 import database.WidgetUpdate;
 
 import org.json.JSONException;
@@ -85,11 +83,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String command_type = null;
     private Entity_Feature feature;
     private Entity_Map feature_map;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
-    private int session_type;
-    private SharedPreferences params;
+    private final String state_key;
+    private final String parameters;
+    private final int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
 
     public Graphical_Binary(tracerengine Trac,
                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -102,7 +100,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         this.url = url;
         this.usage = feature.getIcon_name();
         this.state_key = feature.getState_key();
-        this.myself = this;
+        myself = this;
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.session_type = session_type;
@@ -121,7 +119,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         this.url = url;
         this.usage = usage;
         this.state_key = state_key;
-        this.myself = this;
+        myself = this;
         this.dev_id = dev_id;
         this.parameters = parameters;
         this.session_type = session_type;
@@ -132,7 +130,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     public void onCreate() {
 
         try {
-            this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())).toString();
+            this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;

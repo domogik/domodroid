@@ -1,37 +1,22 @@
 package rinor;
 
-import java.io.File;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-import org.domogik.domodroid13.R;
 import org.zeromq.ZMQ;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import widgets.Entity_Feature;
-
 import database.Cache_Feature_Element;
-import database.DmdContentProvider;
-import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
 import misc.tracerengine;
-import activities.Activity_Main;
 
-import android.R.string;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.FeatureInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.webkit.ValueCallback;
-import android.widget.Toast;
 
 public class Events_manager {
     private static Events_manager instance;
@@ -176,7 +161,7 @@ public class Events_manager {
     private class ListenerThread extends AsyncTask<Void, Integer, Void> {
 
         public void cancel() {
-
+        //todo
         }
 
         @Override
@@ -230,7 +215,7 @@ public class Events_manager {
                                         Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                         Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                         put_event(to_stack);    //Put in stack, and notify cache engine
-                                        stats_com.add(Stats_Com.EVENTS_RCV, result.toString().length());
+                                        stats_com.add(Stats_Com.EVENTS_RCV, result.length());
                                     } catch (JSONException e) {
                                         Tracer.e(mytag, "Error making the json from MQ result");
                                         Tracer.e(mytag, e.toString());

@@ -26,8 +26,6 @@ import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
 
-import activities.Graphics_Manager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -55,7 +53,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Area";
     private String icon;
     private final Activity Activity;
-    private SharedPreferences params;
+    private final SharedPreferences params;
 
 
     public Graphical_Area(SharedPreferences params,tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
@@ -160,8 +158,8 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (int i = 0; i < fiilliste.length; i++) {
-                list_icon.add(fiilliste[i]);
+            for (String aFiilliste : fiilliste) {
+                list_icon.add(aFiilliste);
             }
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);

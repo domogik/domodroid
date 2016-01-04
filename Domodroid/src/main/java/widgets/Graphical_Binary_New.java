@@ -117,7 +117,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         this.url = url;
         this.usage = usage;
         this.wname = name;
-        this.myself = this;
+        myself = this;
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {

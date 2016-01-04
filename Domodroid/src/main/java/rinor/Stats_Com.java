@@ -3,11 +3,6 @@ package rinor;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import database.WidgetUpdate.UpdateThread;
-import misc.tracerengine;
-
-import android.content.SharedPreferences;
-import android.os.Handler;
 import android.util.Log;
 
 public class Stats_Com {

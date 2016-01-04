@@ -21,56 +21,35 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
 
 import rinor.Rest_com;
 
-import database.DmdContentProvider;
 import database.WidgetUpdate;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_History extends Basic_Graphical_widget implements OnClickListener {
@@ -108,7 +87,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         this.dev_id = dev_id;
         this.id = id;
         this.url = url;
-        this.myself = this;
+        myself = this;
         String stateS = "";
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -258,7 +237,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         HashMap<String, String> map = new HashMap<>();
                         map.put("value", itemArray.getJSONObject(i).getString("value_str"));
                         currenTimeZone = new java.util.Date((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                        map.put("date", sdf.format(currenTimeZone).toString());
+                        map.put("date", sdf.format(currenTimeZone));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {

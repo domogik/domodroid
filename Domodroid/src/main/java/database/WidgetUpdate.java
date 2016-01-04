@@ -270,7 +270,7 @@ public class WidgetUpdate {
     public void set_handler(Handler parent, int type) {
         //type = 0 if View , or 1 if Map
         if ((type >= 0) && (type <= 2))
-            this.parent[type] = parent;
+            WidgetUpdate.parent[type] = parent;
     }
 
     public void cancel() {

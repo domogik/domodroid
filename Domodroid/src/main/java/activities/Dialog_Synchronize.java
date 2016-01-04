@@ -1021,6 +1021,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
             // Insert results into local database
             // And sharedpref
+            //todo with new sync method should put in sharedpref all the value (including personnal one)
+            //or create a save to file and sharedparams method.
             prefEditor.putFloat("API_VERSION", Rinor_Api_Version);
             prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
             prefEditor.putBoolean("SYNC", true);

@@ -495,7 +495,9 @@ public class Graphics_Manager {
     public static int Names_conditioncodes(Context context, int code) {
         //used to get the translate text from yahoo weather infocode.
         try {
-            return context.getResources().getIdentifier("info" + code, "string", context.getPackageName());
+            //wi_yahoo_
+            return context.getResources().getIdentifier("wi_yahoo_" + code, "string", context.getPackageName());
+            //return context.getResources().getIdentifier("info" + code, "string", context.getPackageName());
         } catch (Exception e) {
             return R.string.info48;
         }

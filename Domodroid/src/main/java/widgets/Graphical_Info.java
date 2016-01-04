@@ -217,15 +217,18 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 value.setText(formatedValue + " km/h");
                             else if (state_key.equalsIgnoreCase("drewpoint"))
                                 value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code"))
+                            else if (state_key.equalsIgnoreCase("condition-code")||state_key.toLowerCase().contains("condition_code")) {
                                 //Add try catch to avoid other case that make #1794
                                 try {
+                                    //use xml and weather fonts here
+                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                    value.setTypeface(typeface, Typeface.NORMAL);
                                     value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + loc_Value);
                                     value.setText(loc_Value);
                                 }
-                            else value.setText(loc_Value);
+                            } else value.setText(loc_Value);
                         }
                         value.setAnimation(animation);
                     } catch (Exception e) {

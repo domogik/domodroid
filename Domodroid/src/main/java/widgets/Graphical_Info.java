@@ -217,7 +217,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 value.setText(formatedValue + " km/h");
                             else if (state_key.equalsIgnoreCase("drewpoint"))
                                 value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code")||state_key.toLowerCase().contains("condition_code")) {
+                            else if (state_key.equalsIgnoreCase("condition-code")||state_key.toLowerCase().contains("condition_code")||state_key.toLowerCase().contains("current_code")) {
                                 //Add try catch to avoid other case that make #1794
                                 try {
                                     //use xml and weather fonts here

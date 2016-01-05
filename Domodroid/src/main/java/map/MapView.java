@@ -53,6 +53,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Picture;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -494,14 +495,14 @@ public class MapView extends View {
                     }
 
                     //Draw the map name text
-                    for (int j = 1; j < 5; j++) {
+                    for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                        paint_text.setTextSize(texsize * scale + 0.5f);
-                        canvasWidget.drawText(mapname,
-                                (switchesMap.getPosx() * currentScale) + text_Offset_X,
-                                (switchesMap.getPosy() * currentScale) + text_Offset_Y,
-                                paint_text);
-                    }
+                    paint_text.setTextSize(texsize * scale + 0.5f);
+                    canvasWidget.drawText(mapname,
+                            (switchesMap.getPosx() * currentScale) + text_Offset_X,
+                            (switchesMap.getPosy() * currentScale) + text_Offset_Y,
+                            paint_text);
+
                 }
             }
         }
@@ -663,58 +664,69 @@ public class MapView extends View {
                         bottom -= 3;
                         r = new Rect(left, top, right, bottom);
                         canvasWidget.drawRect(r, paint_color);
-                        for (int j = 1; j < 5; j++) {
+                        for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                            paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                            if (!params.getBoolean("HIDE", false))
-                                canvasWidget.drawText(label,
-                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
-                                        paint_text);
-                        }
+                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                        if (!params.getBoolean("HIDE", false))
+                            canvasWidget.drawText(label,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
+                                    paint_text);
+
 
                     } else if (!featureMap.getDevice_feature_model_id().contains("camera")) {
-                        for (int j = 1; j < 5; j++) {
+                        if (featureMap.getState_key().equalsIgnoreCase("condition-code")||featureMap.getState_key().toLowerCase().contains("condition_code")||featureMap.getState_key().toLowerCase().contains("current_code")) {
+                            //Add try catch to avoid other case that make #1794
+                            try {
+                                //todo use xml and weather fonts here
+                                //typeface apply to canvas paint_text
+                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                paint_text.setTypeface(typeface);
+                                value = context.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        }for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                            paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                            canvasWidget.drawText(value,
-                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y,
-                                    paint_text);
-                            if (!params.getBoolean("HIDE", false))
-                                canvasWidget.drawText(label,
-                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
-                                        paint_text);
-                        }
-                    } else if (featureMap.getDevice_feature_model_id().contains("camera")) {
-                        for (int j = 1; j < 5; j++) {
-                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                            paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                            if (!params.getBoolean("HIDE", false))
-                                canvasWidget.drawText(label,
-                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
-                                        paint_text);
-
-                        }
-                    }
-                } else if (featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")
-                        || featureMap.getValue_type().equals("bool")) {
-                    for (int j = 1; j < 5; j++) {
-                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false)) {
-                            canvasWidget.drawText(value,
-                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y,
-                                    paint_text);
+                        canvasWidget.drawText(value,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                                paint_text);
+                        paint_text.setTypeface(Typeface.DEFAULT);
+                        if (!params.getBoolean("HIDE", false))
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
                                     paint_text);
-                        }
+
+                    } else if (featureMap.getDevice_feature_model_id().contains("camera")) {
+                        for (int j = 1; j < 5; j++)
+                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                        if (!params.getBoolean("HIDE", false))
+                            canvasWidget.drawText(label,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                    paint_text);
+
                     }
+                } else if (featureMap.getValue_type().equals("binary") || featureMap.getValue_type().equals("boolean")
+                        || featureMap.getValue_type().equals("bool")) {
+                    for (int j = 1; j < 5; j++)
+                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                    paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                    if (!params.getBoolean("HIDE", false)) {
+                        canvasWidget.drawText(value,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                                paint_text);
+                        canvasWidget.drawText(label,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                paint_text);
+                    }
+
 
                 } else if (featureMap.getValue_type().equals("number")) {
                     float formatedValue = 0;
@@ -740,113 +752,106 @@ public class MapView extends View {
                             }
                         } catch (JSONException e) {
                             //Basilic : no sure that the key state was the better way to find unit
-                            switch (featureMap.getState_key()) {
-                                case "temperature":
-                                    value = featureMap.getCurrentState() + " °C";
-                                    break;
-                                case "pressure":
-                                    value = featureMap.getCurrentState() + " hPa";
-                                    break;
-                                case "humidity":
-                                    value = featureMap.getCurrentState() + " %";
-                                    break;
-                                case "percent":
-                                    value = featureMap.getCurrentState() + " %";
-                                    break;
-                                case "visibility":
-                                    value = featureMap.getCurrentState() + " km";
-                                    break;
-                                case "chill":
-                                    value = featureMap.getCurrentState() + " °C";
-                                    break;
-                                case "speed":
-                                    value = featureMap.getCurrentState() + " km/h";
-                                    break;
-                                case "drewpoint":
-                                    value = featureMap.getCurrentState() + " °C";
-                                    break;
-                                case "condition-code":
-                                    //Add try catch to avoid other case that make #1794
-                                    try {
-                                        value = context.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
-                                    } catch (Exception e1) {
-                                        e1.printStackTrace();
-
-                                    }
-                                    break;
+                            if (featureMap.getState_key().equalsIgnoreCase("temperature"))
+                                value = featureMap.getCurrentState() + " °C";
+                            else if (featureMap.getState_key().equalsIgnoreCase("pressure"))
+                                value = featureMap.getCurrentState() + " hPa";
+                            else if (featureMap.getState_key().equalsIgnoreCase("humidity"))
+                                value = featureMap.getCurrentState() + " %";
+                            else if (featureMap.getState_key().equalsIgnoreCase("percent"))
+                                value = featureMap.getCurrentState() + " %";
+                            else if (featureMap.getState_key().equalsIgnoreCase("visibility"))
+                                value = featureMap.getCurrentState() + " km";
+                            else if (featureMap.getState_key().equalsIgnoreCase("chill"))
+                                value = featureMap.getCurrentState() + " °C";
+                            else if (featureMap.getState_key().equalsIgnoreCase("speed"))
+                                value = featureMap.getCurrentState() + " km/h";
+                            else if (featureMap.getState_key().equalsIgnoreCase("drewpoint"))
+                                value = featureMap.getCurrentState() + " °C";
+                            else if (featureMap.getState_key().equalsIgnoreCase("condition-code")||featureMap.getState_key().toLowerCase().contains("condition_code")||featureMap.getState_key().toLowerCase().contains("current_code")) {
+                                //Add try catch to avoid other case that make #1794
+                                try {
+                                    //todo use xml and weather fonts here
+                                    //typeface apply to canvas paint_text
+                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                    paint_text.setTypeface(typeface);
+                                    value = context.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
                             }
                         }
                         if (value == null)
                             value = "";
 
-                        for (int j = 1; j < 5; j++) {
+                        for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                            paint_text.setTextSize(texsize * scale + 0.5f + 4);
-                            if (featureMap != null) {
-                                Tracer.e(mytag, "Drawing value for " + label + "Value = " + value + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
-                                canvasWidget.drawText(value,
+                        paint_text.setTextSize(texsize * scale + 0.5f + 4);
+                        if (featureMap != null) {
+                            Tracer.e(mytag, "Drawing value for " + label + "Value = " + value + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                            canvasWidget.drawText(value,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y - (10 * (int) scale),
+                                    paint_text);
+                            paint_text.setTextSize(texsize * scale + 0.5f - 1);
+                            paint_text.setTypeface(Typeface.DEFAULT);
+                            Tracer.e(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                            if (!params.getBoolean("HIDE", false))
+                                canvasWidget.drawText(label,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                        (featureMap.getPosy() * currentScale) + text_Offset_Y - (10 * (int) scale),
+                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
                                         paint_text);
-                                paint_text.setTextSize(texsize * scale + 0.5f - 1);
-                                Tracer.e(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
-                                if (!params.getBoolean("HIDE", false))
-                                    canvasWidget.drawText(label,
-                                            (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                            (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
-                                            paint_text);
-                            }
                         }
                     }
                 } else if (featureMap.getValue_type().equals("range") || ((parameters.contains("command")) && (featureMap.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
-                    for (int j = 1; j < 5; j++) {
+                    for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false)) {
-                            //TODO see if we should not use label instead of featureMap.getDevice_usage_id()
-                            //It is not the same text displayed for this type of device
-                            canvasWidget.drawText(featureMap.getCurrentState(),
-                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y,
-                                    paint_text);
-                            canvasWidget.drawText(label,
-                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
-                                    paint_text);
-                            //Tracer.e(mytag,"Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
-                        } else {
-                            if (featureMap.getState_key().equals("light")) {
-                                if (Integer.parseInt(featureMap.getCurrentState()) > valueMin) {
-                                    canvasWidget.drawText(featureMap.getCurrentState(),
-                                            (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                            (featureMap.getPosy() * currentScale) + text_Offset_Y,
-                                            paint_text);
-                                }
-                            } else {
+                    paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                    if (!params.getBoolean("HIDE", false)) {
+                        //TODO see if we should not use label instead of featureMap.getDevice_usage_id()
+                        //It is not the same text displayed for this type of device
+                        canvasWidget.drawText(featureMap.getCurrentState(),
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                                paint_text);
+                        canvasWidget.drawText(label,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                paint_text);
+                        //Tracer.e(mytag,"Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+                    } else {
+                        if (featureMap.getState_key().equals("light")) {
+                            if (Integer.parseInt(featureMap.getCurrentState()) > valueMin) {
                                 canvasWidget.drawText(featureMap.getCurrentState(),
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                         paint_text);
                             }
-                        }
-                    }
-
-                } else if (featureMap.getValue_type().equals("trigger")) {
-                    for (int j = 1; j < 5; j++) {
-                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false)) {
-                            if (parameters.contains("command"))
-                                canvasWidget.drawText(value,
-                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                        (featureMap.getPosy() * currentScale) + text_Offset_Y,
-                                        paint_text);
-                            canvasWidget.drawText(label,
+                        } else {
+                            canvasWidget.drawText(featureMap.getCurrentState(),
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                     paint_text);
                         }
                     }
+
+
+                } else if (featureMap.getValue_type().equals("trigger")) {
+                    for (int j = 1; j < 5; j++)
+                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                    paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                    if (!params.getBoolean("HIDE", false)) {
+                        if (parameters.contains("command"))
+                            canvasWidget.drawText(value,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                                    paint_text);
+                        canvasWidget.drawText(label,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                paint_text);
+                    }
+
                 } else if (featureMap.getState_key().equals("color")) {
                     Tracer.e(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
                     Paint paint_color = new Paint();
@@ -884,22 +889,23 @@ public class MapView extends View {
                     bottom -= 3;
                     r = new Rect(left, top, right, bottom);
                     canvasWidget.drawRect(r, paint_color);
-                    for (int j = 1; j < 5; j++) {
+                    for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false))
-                            canvasWidget.drawText(label,
-                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
-                                    paint_text);
-                    }
-                }
-            } else {
-                // This widget is'nt alive anymore...
-                Tracer.e(mytag, "Could not draw " + featureMap.getId());
-                canvasWidget = null; //?????
-            }
+                    paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                    if (!params.getBoolean("HIDE", false))
+                        canvasWidget.drawText(label,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
+                                paint_text);
 
+
+                } else {
+                    // This widget is'nt alive anymore...
+                    Tracer.e(mytag, "Could not draw " + featureMap.getId());
+                    canvasWidget = null; //?????
+                }
+
+            }
         }
 
         locked = false;

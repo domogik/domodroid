@@ -57,6 +57,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 
@@ -288,16 +289,18 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                 value.setText(formatedValue + " km/h");
                             else if (state_key.equalsIgnoreCase("drewpoint"))
                                 value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code"))
+                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
                                 //Add try catch to avoid other case that make #1794
                                 try {
-
+                                    //use xml and weather fonts here
+                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                    value.setTypeface(typeface, Typeface.NORMAL);
                                     value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + loc_Value);
                                     value.setText(loc_Value);
                                 }
-                            else {
+                            } else {
                                 value.setText(loc_Value);
                             }
                         }

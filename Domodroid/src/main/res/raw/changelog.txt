@@ -25,9 +25,10 @@
       ! Important due to new method for Domogik 0.4+ command, it's strongly recommended to synchronize again with Domogik.
       * #70 new sync method that delete widget if device didn't exist.
       * #34 new sync method that deleting only area (Usage/device). At least at the 2nd next sync.
-      * #69 Widget command whith multiple parameters
-      * #68 Android > KitKat image picker method change
       * Add multiple parameters for 0.4 command (need a resync)
+      * #69 Widget command with multiple parameters
+      * #68 Android > KitKat image picker method change
+      * #35 Add icon for weather condition code.
       * Add color picker RGB for 0.4 command
       * Change power management method
       * Correct history for callerid in 0.3

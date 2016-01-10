@@ -612,4 +612,9 @@
 	<string name="time">Time</string>
 	<string name="events_error_mq_config">Error MQ is not configured</string>
 	<string name="events_error_mq">Error with MQ</string>
+	<string name="ack_command">Ack command</string>
+	<string name="battery_voltage">Battery voltage</string>
+	<string name="output_voltage">Output voltage</string>
+	<string name="battery_charge">Battery charge</string>
+	<string name="input_voltage">Input voltage</string>
 </resources>

@@ -422,7 +422,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                areas[i] = new Entity_Area(curs.getString(0), curs.getInt(1), curs.getString(2));
+                areas[i] = new Entity_Area(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getString(2));
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
@@ -464,7 +464,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                rooms[i] = new Entity_Room(curs.getInt(0), curs.getString(1),
+                rooms[i] = new Entity_Room(params, Tracer, context, curs.getInt(0), curs.getString(1),
                         curs.getInt(2), curs.getString(3));
             }
         } catch (Exception e) {
@@ -592,7 +592,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                rooms[i] = new Entity_Room(curs.getInt(0), curs.getString(1),
+                rooms[i] = new Entity_Room(params, Tracer, context, curs.getInt(0), curs.getString(1),
                         curs.getInt(2), curs.getString(3));
             }
         } catch (Exception e) {
@@ -698,7 +698,7 @@ public class DomodroidDB {
                 if (iconName.equals("unknow"))
                     iconName = device_usage_id;
 
-                features[i] = new Entity_Map(params, Tracer, context,curs.getString(0), Id, curs.getInt(2), iconName, curs.getString(4), curs.getString(5),
+                features[i] = new Entity_Map(params, Tracer, context, curs.getString(0), Id, curs.getInt(2), iconName, curs.getString(4), curs.getString(5),
                         curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10), curs.getInt(12), curs.getInt(13), curs.getString(14));
             }
         } catch (Exception e) {
@@ -729,7 +729,7 @@ public class DomodroidDB {
                 //create the pseudo Entity_Map with all parameters present in table_feature_map : id, posx, posy and map_name
 
                 curs.moveToPosition(i);
-                features[i] = new Entity_Map(params, Tracer, context,"", curs.getInt(0), 0, "", "", "",
+                features[i] = new Entity_Map(params, Tracer, context, "", curs.getInt(0), 0, "", "", "",
                         "", "", "", "", "",
                         curs.getInt(1), curs.getInt(2), curs.getString(3));
             }

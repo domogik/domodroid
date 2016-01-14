@@ -41,7 +41,7 @@ public class JSONParser {
 
         //parsing JSON area list
         for (int i = 0; i < itemArray.length(); i++) {
-            listArea[i] = new Entity_Area(
+            listArea[i] = new Entity_Area(null, null, null,
                     itemArray.getJSONObject(i).getString("description"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getString("name"));
@@ -60,7 +60,7 @@ public class JSONParser {
         for (int i = 0; i < itemArray.length(); i++) {
             if (itemArray.getJSONObject(i).getString("area_id").equals("")) area_id = 0;
             else area_id = itemArray.getJSONObject(i).getInt("area_id");
-            listRoom[i] = new Entity_Room(
+            listRoom[i] = new Entity_Room(null, null, null,
                     area_id,
                     itemArray.getJSONObject(i).getString("description"),
                     itemArray.getJSONObject(i).getInt("id"),

@@ -52,10 +52,10 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
     private TextView state;
     private SeekBar seekBarOnOff;
-    private final String address;
+    private String address;
     private String state_progress;
     private final String url;
-    private final String usage;
+    private String usage;
     private Handler handler;
     private String value0;
     private String value1;
@@ -83,9 +83,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String command_type = null;
     private Entity_Feature feature;
     private Entity_Map feature_map;
-    private final String state_key;
-    private final String parameters;
-    private final int dev_id;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
 
@@ -96,38 +96,34 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
-        this.address = feature.getAddress();
         this.url = url;
-        this.usage = feature.getIcon_name();
-        this.state_key = feature.getState_key();
-        myself = this;
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
-        this.session_type = session_type;
         this.params = params;
+        this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Binary(tracerengine Trac,
                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                            String address, final String name, int id, int dev_id, String state_key, String usage, String parameters, String model_id) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
+                            final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
         //todo pass entity_map as parameter of command to simplify
+        this.feature = feature_map;
         this.Tracer = Trac;
         this.context = context;
-        this.address = address;
         this.url = url;
-        this.usage = usage;
-        this.state_key = state_key;
-        myself = this;
-        this.dev_id = dev_id;
-        this.parameters = parameters;
         this.session_type = session_type;
         this.params = params;
         onCreate();
     }
 
     public void onCreate() {
+        myself = this;
+        this.address = feature.getAddress();
+        this.usage = feature.getIcon_name();
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));

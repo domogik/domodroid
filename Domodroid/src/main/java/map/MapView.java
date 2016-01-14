@@ -675,7 +675,7 @@ public class MapView extends View {
 
 
                     } else if (!featureMap.getDevice_feature_model_id().contains("camera")) {
-                        if (featureMap.getState_key().equalsIgnoreCase("condition-code")||featureMap.getState_key().toLowerCase().contains("condition_code")||featureMap.getState_key().toLowerCase().contains("current_code")) {
+                        if (featureMap.getState_key().equalsIgnoreCase("condition-code") || featureMap.getState_key().toLowerCase().contains("condition_code") || featureMap.getState_key().toLowerCase().contains("current_code")) {
                             //Add try catch to avoid other case that make #1794
                             try {
                                 //todo use xml and weather fonts here
@@ -686,7 +686,8 @@ public class MapView extends View {
                             } catch (Exception e1) {
                                 e1.printStackTrace();
                             }
-                        }for (int j = 1; j < 5; j++)
+                        }
+                        for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
                         canvasWidget.drawText(value,
@@ -768,7 +769,7 @@ public class MapView extends View {
                                 value = featureMap.getCurrentState() + " km/h";
                             else if (featureMap.getState_key().equalsIgnoreCase("drewpoint"))
                                 value = featureMap.getCurrentState() + " °C";
-                            else if (featureMap.getState_key().equalsIgnoreCase("condition-code")||featureMap.getState_key().toLowerCase().contains("condition_code")||featureMap.getState_key().toLowerCase().contains("current_code")) {
+                            else if (featureMap.getState_key().equalsIgnoreCase("condition-code") || featureMap.getState_key().toLowerCase().contains("condition_code") || featureMap.getState_key().toLowerCase().contains("current_code")) {
                                 //Add try catch to avoid other case that make #1794
                                 try {
                                     //todo use xml and weather fonts here
@@ -964,9 +965,8 @@ public class MapView extends View {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    onoff = new Graphical_Binary(Tracer, context, URL, widgetSize, mytype, 0, zone, params, Address,
-                            label, Id, DevId, State_key, iconName,
-                            parameters, device_type_id);
+                    onoff = new Graphical_Binary(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
@@ -980,11 +980,18 @@ public class MapView extends View {
             }
         } else if (feature.getValue_type().equals("boolean") || feature.getValue_type().equals("bool")) {
             if (feature.getParameters().contains("command")) {
-                onoff_New = new Graphical_Binary_New(Tracer, context, Address,
-                        label, Id, DevId, State_key, URL, iconName,
-                        parameters, device_type_id, widgetSize, mytype, 0, zone, params);
-                Graphical_Binary_New.container = (FrameLayout) panel_widget;
-                panel_widget.addView(onoff_New);
+                if (!params.getBoolean("WIDGET_CHOICE", false)) {
+                    onoff = new Graphical_Binary(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature);
+                    Graphical_Binary.container = (FrameLayout) panel_widget;
+                    panel_widget.addView(onoff);
+                } else {
+                    onoff_New = new Graphical_Binary_New(Tracer, context, Address,
+                            label, Id, DevId, State_key, URL, iconName,
+                            parameters, device_type_id, widgetSize, mytype, 0, zone, params);
+                    Graphical_Binary_New.container = (FrameLayout) panel_widget;
+                    panel_widget.addView(onoff_New);
+                }
             } else {
                 Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address,
                         label, Id, DevId, State_key, iconName,
@@ -1309,7 +1316,11 @@ public class MapView extends View {
                                         default:
                                             //Show the top widgets
                                             Tracer.d(mytag, "Launch showtopwidgets");
-                                            showTopWidget(featureMap);
+                                            try {
+                                                showTopWidget(featureMap);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
                                             panel_button.setVisibility(View.GONE);
                                             panel_widget.setVisibility(View.VISIBLE);
                                             if (!top_drawer.isOpen())

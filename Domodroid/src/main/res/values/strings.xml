@@ -271,8 +271,10 @@
 	
 	<string name="conditioning">Climatized air</string>
 	<string name="appliance">Appliance</string>
+	<string name="bluetooth">Bluetooth</string>
 	<string name="christmas_tree">Christmas tree</string>
 	<string name="computer">Computers</string>
+	<string name="cron">Cron</string>
 	<string name="door">Doors switches</string>
 	<string name="electricity">Electricity</string>
 	<string name="heating">Heating</string>
@@ -302,14 +304,15 @@
 	<string name="office">Office</string>
 	<string name="basement">Basement</string>
 	<string name="garden">Garden</string>
-	<string name="groundfloor">Ground floor</string>
-	<string name="firstfloor">First floor</string>
-	<string name="secondfloor">Second floor</string>
-	<string name="groundfloor2">Ground floor 2</string>
-	<string name="firstfloor2">First floor 2</string>
-	<string name="secondfloor2">Second floor 2</string>
+	<string name="ground_floor">Ground floor</string>
+	<string name="first_floor">First floor</string>
+	<string name="second_floor">Second floor</string>
+	<string name="ground_floor2">Ground floor 2</string>
+	<string name="first_floor2">First floor 2</string>
+	<string name="second_floor2">Second floor 2</string>
 	<string name="basement2">Basement 2</string>
 	<string name="area">Area</string>
+	<string name="attic">Attic</string>
 	<string name="tvlounge">Tv Lounge</string>
 	<string name="usage">Usage</string>
 	

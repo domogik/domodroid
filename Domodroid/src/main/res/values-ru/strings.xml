@@ -541,4 +541,8 @@
     <string name="time">Время</string>
     <string name="events_error_mq_config">Ошибка MQ не настроен</string>
     <string name="events_error_mq">Ошибка MQ</string>
+    <string name="battery_voltage">Напряжение батареи</string>
+    <string name="output_voltage">Выходное напряжение</string>
+    <string name="battery_charge">Заряд батареи</string>
+    <string name="input_voltage">Входное напряжение</string>
 </resources>

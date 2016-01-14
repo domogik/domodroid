@@ -31,6 +31,8 @@ import org.domogik.domodroid13.R;
 
 import database.Cache_management;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
@@ -83,10 +85,6 @@ public class Preference extends PreferenceActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         updatePreferences(findPreference(key));
-        //Save to file
-        if (backupprefs != null)
-            saveSharedPreferencesToFile(backupprefs);    // Store settings to SDcard
-
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
         String temp = params.getString("rinorIP", "");
@@ -114,6 +112,11 @@ public class Preference extends PreferenceActivity implements
             format_urlAccess = urlAccess.concat("/");
         prefEditor.putString("URL", format_urlAccess);
         prefEditor.commit();
+
+        //Save to file
+        if (backupprefs != null)
+            saveSharedPreferencesToFile(backupprefs, this);    // Store settings to SDcard
+
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
@@ -141,11 +144,11 @@ public class Preference extends PreferenceActivity implements
         }
     }
 
-    private void saveSharedPreferencesToFile(File dst) {
+    public static void saveSharedPreferencesToFile(File dst, Context context) {
         ObjectOutputStream output = null;
         try {
             output = new ObjectOutputStream(new FileOutputStream(dst));
-            output.writeObject(PreferenceManager.getDefaultSharedPreferences(this).getAll());
+            output.writeObject(PreferenceManager.getDefaultSharedPreferences(context).getAll());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

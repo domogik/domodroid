@@ -1,5 +1,6 @@
 package activities;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.domogik.domodroid13.R;
@@ -22,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
@@ -181,8 +183,11 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             if (sync) {
                 Intent reload = new Intent(context, Activity_Main.class);
                 context.startActivity(reload);
+                // Store settings to SDcard
+                Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), context.getBaseContext());
             }
             super.onPostExecute(result);
+
         }
 
         @Override

@@ -1038,19 +1038,20 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-            prefEditor.putString("AREA_LIST", json_AreaList.toString());
+            prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
             try {
                 db.insertRoom(json_RoomList);
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-            prefEditor.putString("ROOM_LIST", json_RoomList.toString());
+            prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
             if (Rinor_Api_Version >= 0.7f) {
                 try {
                     db.insertIcon(json_IconList);
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
+                //todo method to get icon from db to json
                 prefEditor.putString("ICON_LIST", json_IconList.toString());
             }
             if (Rinor_Api_Version <= 0.6f) {
@@ -1059,8 +1060,10 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
+                //todo method to get featurelist from db to json
                 prefEditor.putString("FEATURE_LIST", json_FeatureList.toString());
             } else {
+                //todo method to get featurelist1 from db to json
                 prefEditor.putString("FEATURE_LIST", json_FeatureList1.toString());
             }
             try {
@@ -1068,13 +1071,15 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
+            //todo method to get json_FeatureAssociationList from db to json
+            prefEditor.putString("FEATURE_LIST_association", json_FeatureAssociationList.toString());
             if (Rinor_Api_Version <= 0.5f) {
                 try {
                     db.insertIcon(json_IconList);
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
+                //todo method to get icon from db to json
                 prefEditor.putString("ICON_LIST", json_IconList.toString());
                 prefEditor.putBoolean("BY_USAGE", false);
             } else if (Rinor_Api_Version >= 0.6f) {

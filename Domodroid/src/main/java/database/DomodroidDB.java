@@ -433,6 +433,36 @@ public class DomodroidDB {
         return areas;
     }
 
+    public JSONObject request_json_Area() {
+        JSONObject json_AreaList = new JSONObject();
+        String[] projection = {"description", "id", "name"};
+        Cursor curs = null;
+        try {
+            json_AreaList.put("status", "OK");
+            json_AreaList.put("code", 0);
+            json_AreaList.put("description", "None");
+            JSONArray list = new JSONArray();
+            JSONObject map_area = null;
+            curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                map_area = new JSONObject();
+                map_area.put("description", curs.getString(0));
+                map_area.put("id", curs.getString(1));
+                map_area.put("name", curs.getString(2));
+                list.put(map_area);
+            }
+            json_AreaList.put("area", list);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_AreaList;
+    }
+
     public int requestlastidArea() {
         String[] projection = {"description", "id", "name"};
         Cursor curs = null;
@@ -473,6 +503,37 @@ public class DomodroidDB {
         }
         curs.close();
         return rooms;
+    }
+
+    public JSONObject request_json_Room() {
+        JSONObject json_RoomList = new JSONObject();
+        String[] projection = {"area_id", "description", "id", "name"};
+        Cursor curs = null;
+        try {
+            json_RoomList.put("status", "OK");
+            json_RoomList.put("code", 0);
+            json_RoomList.put("description", "None");
+            JSONArray rooms = new JSONArray();
+            JSONObject room = null;
+            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, "id Asc");
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                room = new JSONObject();
+                room.put("area_id", curs.getString(0));
+                room.put("description", curs.getString(1));
+                room.put("id", curs.getString(2));
+                room.put("name", curs.getString(3));
+                rooms.put(room);
+            }
+            json_RoomList.put("room", rooms);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_RoomList;
     }
 
     public int requestidlastRoom() {

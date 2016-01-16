@@ -122,6 +122,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.state_key = feature.getState_key();
+        this.address=feature.getAddress();
         mytag = "Graphical_Color(" + dev_id + ")";
 
         try {

@@ -102,6 +102,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     }
 
     public void onCreate() {
+        this.parameters = feature.getParameters();
+        this.dev_id = feature.getDevId();
+        this.state_key = feature.getState_key();
         myself = this;
         String stateS = "";
         try {

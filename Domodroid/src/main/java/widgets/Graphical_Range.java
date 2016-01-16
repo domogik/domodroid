@@ -53,7 +53,6 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private SeekBar seekBarVaria;
     private String address;
     private int state_progress;
-    private String usage;
     private final String url;
     private Handler handler;
     private int scale;
@@ -114,6 +113,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         this.state_key = feature.getState_key();
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
+        this.address=feature.getAddress();
 
         stateThread = 1;
         try {

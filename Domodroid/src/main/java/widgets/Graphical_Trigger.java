@@ -52,13 +52,11 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private String command;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
-    private tracerengine Tracer = null;
     private static String mytag;
     private Message msg;
     private String login;
     private String password;
     private float api_version;
-    private Activity context;
     private String command_id;
     private String command_type;
 
@@ -93,6 +91,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     }
 
     public void onCreate() {
+        this.address=feature.getAddress();
         this.state_key = feature.getState_key();
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();

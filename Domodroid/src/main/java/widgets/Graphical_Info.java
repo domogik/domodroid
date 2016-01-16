@@ -51,7 +51,6 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
@@ -103,6 +102,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     }
 
     public void onCreate() {
+        this.parameters=feature.getParameters();
+        this.dev_id=feature.getDevId();
+        this.state_key=feature.getState_key();
         String stateS;
 
         try {

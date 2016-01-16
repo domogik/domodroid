@@ -116,6 +116,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
+        this.address=feature.getAddress();
 
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];

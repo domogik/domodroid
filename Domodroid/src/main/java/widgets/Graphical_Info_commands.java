@@ -146,6 +146,9 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     }
 
     public void onCreate() {
+        this.parameters = feature.getParameters();
+        this.dev_id = feature.getDevId();
+        this.state_key = feature.getState_key();
         String value_type = feature.getValue_type();
         String stateS;
         try {
@@ -201,7 +204,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 tv_edittext.setText(command_type_display);
                 ed = new EditText(context);
                 allEds.add(ed);
-                //todo handle keyboard layout from data_type.
                 if (value_type.equals("string"))
                     ed.setInputType(InputType.TYPE_CLASS_TEXT);
                 if (value_type.equals("number"))

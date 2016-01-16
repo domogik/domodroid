@@ -408,7 +408,8 @@ class Widgets_Manager {
             try {
                 iconId = domodb.requestIcons(Id, "room").getValue();
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.i(mytag,"No specific icon for this room");
+                //e.printStackTrace();
             }
             if (iconId.equals("unknown")) {
                 //iconId="usage";

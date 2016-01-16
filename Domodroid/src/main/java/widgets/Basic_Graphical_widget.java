@@ -62,13 +62,13 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final int id;
     private final FrameLayout container;
     private final FrameLayout myself;
-    private tracerengine Tracer = null;
-    private final Activity context;
+    public tracerengine Tracer = null;
+    public Activity context;
     private String icon;
     private final String place_type;
     private final int place_id;
     private final String mytag;
-    private final String name;
+    public String name;
     private final String state_key;
     private int icon_status;
 

@@ -41,79 +41,87 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private int mInitialColor, mDefaultColor;
     private String mKey;
 
-    private final LinearLayout featurePan2;
-    private final Handler handler;
-    private final Color_Progress seekBarHueBar;
-    private final Color_Progress seekBarRGBXBar;
-    private final Color_Progress seekBarRGBYBar;
-    private final Color_RGBField rgbView;
-    private final Color_Result resultView;
+    private LinearLayout featurePan2;
+    private Handler handler;
+    private Color_Progress seekBarHueBar;
+    private Color_Progress seekBarRGBXBar;
+    private Color_Progress seekBarRGBYBar;
+    private Color_RGBField rgbView;
+    private Color_Result resultView;
     private final String url;
     private Animation animation;
     private boolean touching;
     private int updating = 0;
-    private Activity context = null;
 
     private int argb = 0;
     private String argbS = "";
     private Message msg;
     private static String mytag;
-    private final String type;
-    private final String address;
-    private Activity mycontext;
+    private String type;
+    private String address;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     private Boolean switch_state = false;
     private TimerTask doAsynchronousTask;
 
-
     private Color currentColor;
-    private final SeekBar seekBarOnOff;
+    private SeekBar seekBarOnOff;
     private int[] mMainColors = new int[65536];
     public float mCurrentHue = 0;
     public int rgbHue = 0;
     public int rgbX = 0;
     public int rgbY = 0;
 
-    private final TextView title7;
-    private final TextView title8;
-    private final TextView title9;
-    private final String t7s;
-    private final String t8s;
+    private TextView title7;
+    private TextView title8;
+    private TextView title9;
+    private String t7s;
+    private String t8s;
     private String t9s = "";
     private final SharedPreferences params;
-    private tracerengine Tracer = null;
     private Entity_client session = null;
     private Boolean realtime = false;
-    private final String login;
-    private final String password;
-    private final float api_version;
+    private String login;
+    private String password;
+    private float api_version;
     private String value0;
     private String value1;
     private JSONObject jparam;
+    private Entity_Feature feature;
     private String command_id = null;
     private String command_type = null;
+    private int dev_id;
+    private String parameters;
+    private String state_key;
+    private final int session_type;
 
-    public Graphical_Color(tracerengine Trac, Activity context,
-                           SharedPreferences params,
-                           int id, int dev_id,
-                           String parameters,
-                           String name,
-                           String model_id,
-                           String address,
-                           final String state_key,
-                           String url,
-                           String usage,
-                           int update,
-                           int widgetSize,
-                           int session_type, int place_id, String place_type) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.Tracer = Trac;
-        this.address = address;
+    public Graphical_Color(tracerengine Trac,
+                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
         this.url = url;
         this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_Color(tracerengine Trac,
+                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
         myself = this;
-        this.context = context;
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+        this.state_key = feature.getState_key();
         mytag = "Graphical_Color(" + dev_id + ")";
 
         try {
@@ -133,9 +141,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
 
-        String[] model = model_id.split("\\.");
+        String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
-        Tracer.d(mytag, "model_id = <" + model_id + "> type = <" + type + ">");
+        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + type + ">");
 
         //state key
         TextView state_key_view = new TextView(context);
@@ -399,7 +407,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             if (Tracer.get_engine().subscribe(session)) {
                 realtime = true;        //we're connected to engine

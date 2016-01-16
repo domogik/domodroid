@@ -56,37 +56,52 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
 
     private ListView listeChoices;
-    private final TextView value;
+    private TextView value;
     private TextView state;
-    private final int dev_id;
-    private final int id;
-    private final String state_key;
+    private int id;
     private static String mytag;
     private Message msg;
     private String url = null;
-    private final String login;
-    private final String password;
-    private final float api_version;
+    private String login;
+    private String password;
+    private float api_version;
 
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
-    private tracerengine Tracer = null;
 
     private Entity_client session = null;
     private Boolean realtime = false;
-    private final Activity context;
-    private final Animation animation;
+    private Animation animation;
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
 
-    public Graphical_History(tracerengine Trac, Activity context, int id, int dev_id, String name,
-                             final String state_key, String url, final String usage, int update,
-                             int widgetSize, int session_type, final String parameters, int place_id, String place_type, SharedPreferences params) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.context = context;
-        this.Tracer = Trac;
-        this.state_key = state_key;
-        this.dev_id = dev_id;
-        this.id = id;
+    public Graphical_History(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
         this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_History(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
         myself = this;
         String stateS = "";
         try {

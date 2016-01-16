@@ -22,6 +22,7 @@ import activities.Activity_Cam;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import misc.tracerengine;
@@ -37,19 +38,39 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private static String mytag;
     private tracerengine Tracer = null;
     public static FrameLayout container = null;
-    private static String state_key;
-    private final String name_cam;
+    private static FrameLayout myself = null;
+    private String name_cam;
+    private Entity_Feature feature;
+    private int dev_id;
 
-    public Graphical_Cam(tracerengine Trac, Activity context, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.context = context;
+    public Graphical_Cam(tracerengine Trac,
+                         final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
         this.Tracer = Trac;
-        this.name_cam = name;
+        this.context = context;
         this.url = url;
-        FrameLayout myself = this;
+        onCreate();
+    }
+
+    public Graphical_Cam(tracerengine Trac,
+                         final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.Tracer = Trac;
+        this.context = context;
+        this.url = url;
+        onCreate();
+    }
+
+    public void onCreate() {
+        myself = this;
+        this.dev_id = feature.getDevId();
+        this.name_cam = feature.getName();
         setOnClickListener(this);
         mytag = "Graphical_Cam(" + dev_id + ")";
-
         //To have the icon colored as it has no state
         change_this_icon(2);
 
@@ -60,7 +81,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
             Intent intent = new Intent(context, Activity_Cam.class);
             Bundle b = new Bundle();
             b.putString("url", url);
-            Tracer.e(mytag, "" + url);
+            Tracer.e(mytag, "Opening camera at: " + url);
             b.putString("name", name_cam);
             intent.putExtras(b);
             context.startActivity(intent);

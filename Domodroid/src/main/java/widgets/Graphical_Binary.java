@@ -68,8 +68,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     private static String mytag = "";
-    private tracerengine Tracer = null;
-    private Activity context = null;
     private String stateS = "";
     private String Value_0 = "0";
     private String Value_1 = "1";
@@ -82,7 +80,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String command_id = null;
     private String command_type = null;
     private Entity_Feature feature;
-    private Entity_Map feature_map;
     private String state_key;
     private String parameters;
     private int dev_id;
@@ -94,8 +91,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                             final Entity_Feature feature) {
         super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
         this.feature = feature;
-        this.Tracer = Trac;
-        this.context = context;
         this.url = url;
         this.params = params;
         this.session_type = session_type;
@@ -106,10 +101,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                             final Entity_Map feature_map) {
         super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
-        //todo pass entity_map as parameter of command to simplify
         this.feature = feature_map;
-        this.Tracer = Trac;
-        this.context = context;
         this.url = url;
         this.session_type = session_type;
         this.params = params;
@@ -305,7 +297,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                         }
 
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Handler error for device " + feature.getName());
+                        Tracer.e(mytag, "Handler error for device " + name);
                         e.printStackTrace();
                     }
                 }

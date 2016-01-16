@@ -970,9 +970,8 @@ public class MapView extends View {
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
-                    onoff_New = new Graphical_Binary_New(Tracer, context, Address,
-                            label, Id, DevId, State_key, URL, iconName,
-                            parameters, device_type_id, widgetSize, mytype, 0, zone, params);
+                    onoff_New = new Graphical_Binary_New(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
@@ -987,15 +986,13 @@ public class MapView extends View {
                     panel_widget.addView(onoff);
                 } else {
                     onoff_New = new Graphical_Binary_New(Tracer, context, Address,
-                            label, Id, DevId, State_key, URL, iconName,
-                            parameters, device_type_id, widgetSize, mytype, 0, zone, params);
+                            widgetSize, 0, Id, zone, params, feature);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
             } else {
                 Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address,
-                        label, Id, DevId, State_key, iconName,
-                        parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Boolean.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
@@ -1015,28 +1012,22 @@ public class MapView extends View {
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
-                info = new Graphical_Info(Tracer, context, Id, DevId, label,
-                        State_key, "", iconName, update_timer,
-                        widgetSize, mytype, parameters, 0, zone, params);
+                info = new Graphical_Info(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, update_timer, feature);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
                 Tracer.i(mytag, "   ==> Graphical_Info");
             }
         } else if (State_key.equals("color")) {
-            Graphical_Color color = new Graphical_Color(Tracer, context,
-                    params, Id, DevId, parameters, label,
-                    device_type_id,    //Added by Doume to know the 'techno'
-                    Address,//  idem to know the address
-                    State_key, URL, iconName, update_timer,
-                    widgetSize, mytype, 0, zone);
+            Graphical_Color color = new Graphical_Color(Tracer, context, URL,
+                    widgetSize, 0, Id, zone, params, feature);
             panel_widget.addView(color);
         } else if (feature.getValue_type().equals("number")) {
             Tracer.i(mytag, "Parameters for number:" + feature.getParameters());
             if (feature.getParameters().contains("command_type")) {
-                info_commands = new Graphical_Info_commands(Tracer, context,
-                        Id, DevId, label, State_key, URL, iconName, update_timer,
-                        widgetSize, mytype, parameters, 0, zone, params, feature.getValue_type());
+                info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             } else if (params.getBoolean("Graph_CHOICE", false)) {
@@ -1048,9 +1039,8 @@ public class MapView extends View {
                 panel_widget.addView(info1);
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
-                info = new Graphical_Info(Tracer, context, Id, DevId,
-                        label, State_key, URL, iconName,
-                        update_timer, widgetSize, mytype, parameters, 0, zone, params);
+                info = new Graphical_Info(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, update_timer, feature);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
@@ -1063,45 +1053,34 @@ public class MapView extends View {
             Graphical_List.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
-            colorw = new Graphical_Color(Tracer, context,
-                    params, Id, DevId, parameters, label, feature.getDevice_feature_model_id(),
-                    Address, State_key, URL, iconName,
-                    update_timer,
-                    widgetSize, mytype, 0, zone
-            );
+            colorw = new Graphical_Color(Tracer, context, URL,
+                    widgetSize, 0, Id, zone, params, feature);
             Graphical_Color.container = (FrameLayout) panel_widget;
             panel_widget.addView(colorw);
         } else if (feature.getValue_type().equals("string")) {
             Tracer.i(mytag, "parameters=" + parameters);
             if (feature.getDevice_feature_model_id().contains("call")) {
-                Graphical_History info_with_history = new Graphical_History(Tracer, context, Id, DevId, label,
-                        State_key, URL, iconName, update_timer,
-                        widgetSize, mytype, parameters, 0, zone, params);
+                Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature);
                 panel_widget.addView(info_with_history);
             } else if (feature.getDevice_feature_model_id().contains("camera")) {
-                Graphical_Cam cam = new Graphical_Cam(Tracer, context,
-                        Id, DevId, label,
-                        State_key, Address, iconName, widgetSize, mytype, 0, zone);
+                Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature);
                 panel_widget.addView(cam);
             } else if (parameters.contains("command")) {
                 if (State_key.equals("Set RGB color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
-                    colorw = new Graphical_Color(Tracer, context,
-                            params, Id, DevId, parameters, label, feature.getDevice_feature_model_id(),
-                            Address, State_key, URL, iconName,
-                            update_timer,
-                            widgetSize, mytype, 0, zone);
+                    colorw = new Graphical_Color(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature);
                     panel_widget.addView(colorw);
                 } else {
-                    info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, mytype, parameters, 0, zone, params, feature.getValue_type());
+                    info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature);
                     panel_widget.addView(info_commands);
                 }
             } else {
-                info = new Graphical_Info(Tracer, context, Id, DevId, label,
-                        State_key, "", iconName, update_timer,
-                        widgetSize, mytype, parameters, 0, zone, params);
+                info = new Graphical_Info(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, update_timer, feature);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
@@ -1439,7 +1418,7 @@ public class MapView extends View {
                     }
                     final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
                     list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + featureMap.getName() + "-" + featureMap.getState_key());
-                    List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste,fiilliste);
+                    List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
                     list_icon_choice.setAdapter(adapter, null);
                     list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                             new DialogInterface.OnClickListener() {

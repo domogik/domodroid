@@ -146,9 +146,8 @@ class Widgets_Manager {
                         tmpPan.addView(onoff);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     } else {
-                        onoff_New = new Graphical_Binary_New(Tracer, context, Address, label,
-                                Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                                widgetSize, session_type, id, zone, params);
+                        onoff_New = new Graphical_Binary_New(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature);
                         Graphical_Binary_New.container = tmpPan;
                         tmpPan.addView(onoff_New);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
@@ -163,17 +162,15 @@ class Widgets_Manager {
                         tmpPan.addView(onoff);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     } else {
-                        onoff_New = new Graphical_Binary_New(Tracer, context, Address, label,
-                                Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                                widgetSize, session_type, id, zone, params);
+                        onoff_New = new Graphical_Binary_New(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature);
                         Graphical_Binary_New.container = tmpPan;
                         tmpPan.addView(onoff_New);
                         Tracer.i(mytag, "   ==> Graphical_Binary");
                     }
                 } else {
-                    Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address, label,
-                            Id, DevId, State_key, iconName, parameters, device_type_id,
-                            update_timer, widgetSize, session_type, id, zone, params);
+                    Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature);
                     Graphical_Boolean.container = tmpPan;
                     tmpPan.addView(bool);
                     Tracer.i(mytag, "   ==> Graphical_Boolean");
@@ -195,9 +192,8 @@ class Widgets_Manager {
                     tmpPan.addView(trigger);
                     Tracer.i(mytag, "   ==> Graphical_Trigger");
                 } else {
-                    info = new Graphical_Info(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, session_type, parameters, id, zone, params);
+                    info = new Graphical_Info(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, update_timer, feature);
                     info.setLayoutParams(layout_param);
                     info.with_graph = false;
                     Graphical_Info.container = tmpPan;
@@ -206,20 +202,15 @@ class Widgets_Manager {
                 }
             } else if (State_key.equals("color")) {
                 Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
-                Graphical_Color color = new Graphical_Color(Tracer, context,
-                        params, Id, DevId, parameters, label,
-                        device_type_id,    //Added by Doume to know the 'techno'
-                        Address,//  idem to know the address
-                        State_key, URL, iconName, update_timer,
-                        widgetSize, session_type, id, zone);
+                Graphical_Color color = new Graphical_Color(Tracer, context, URL,
+                        widgetSize, session_type, id, zone, params, feature);
                 Graphical_Color.container = tmpPan;
                 tmpPan.addView(color);
                 Tracer.i(mytag, "   ==> Graphical_Color");
             } else if (Value_type.equals("number")) {
                 if (feature.getParameters().contains("command_type")) {
-                    info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, session_type, parameters, id, zone, params, Value_type);
+                    info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature);
                     info_commands.setLayoutParams(layout_param);
                     Graphical_Info_commands.container = tmpPan;
                     tmpPan.addView(info_commands);
@@ -235,9 +226,8 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info_with_achartengine + Graphic");
                 } else {
                     Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
-                    info = new Graphical_Info(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, session_type, parameters, id, zone, params);
+                    info = new Graphical_Info(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, update_timer, feature);
                     info.setLayoutParams(layout_param);
                     info.with_graph = true;
                     Graphical_Info.container = tmpPan;
@@ -258,44 +248,37 @@ class Widgets_Manager {
             } else if (Value_type.equals("string") || Value_type.equals("datetime")) {
                 //New widget for callerID
                 if (feature.getDevice_feature_model_id().contains("call")) {
-                    Graphical_History info_with_history = new Graphical_History(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, session_type, parameters, id, zone, params);
+                    Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature);
                     info_with_history.setLayoutParams(layout_param);
                     Graphical_History.container = tmpPan;
                     tmpPan.addView(info_with_history);
                     Tracer.i(mytag, "   ==> Graphical_history");
                 } else if (feature.getDevice_feature_model_id().contains("camera")) {
-                    Graphical_Cam cam = new Graphical_Cam(Tracer, context, Id, DevId, label,
-                            State_key, Address, iconName, widgetSize, session_type, id, zone);
+                    Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature);
                     Graphical_Cam.container = tmpPan;
                     tmpPan.addView(cam);
                     Tracer.i(mytag, "   ==> Graphical_Cam");
                 } else if (feature.getParameters().contains("command_type")) {
                     if (State_key.equals("Set RGB color")) {
                         Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
-                        Graphical_Color color = new Graphical_Color(Tracer, context,
-                                params, Id, DevId, parameters, label,
-                                device_type_id,    //Added by Doume to know the 'techno'
-                                Address,//  idem to know the address
-                                State_key, URL, iconName, update_timer,
-                                widgetSize, session_type, id, zone);
+                        Graphical_Color color = new Graphical_Color(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature);
                         Graphical_Color.container = tmpPan;
                         tmpPan.addView(color);
                         Tracer.i(mytag, "   ==> Graphical_Color");
                     } else {
-                        info_commands = new Graphical_Info_commands(Tracer, context, Id, DevId, label,
-                                State_key, URL, iconName, update_timer,
-                                widgetSize, session_type, parameters, id, zone, params, Value_type);
+                        info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature);
                         info_commands.setLayoutParams(layout_param);
                         Graphical_Info_commands.container = tmpPan;
                         tmpPan.addView(info_commands);
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
                 } else {
-                    info = new Graphical_Info(Tracer, context, Id, DevId, label,
-                            State_key, URL, iconName, update_timer,
-                            widgetSize, session_type, parameters, id, zone, params);
+                    info = new Graphical_Info(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, update_timer, feature);
                     info.setLayoutParams(layout_param);
                     info.with_graph = false;
                     Graphical_Info.container = tmpPan;

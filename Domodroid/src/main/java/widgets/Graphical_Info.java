@@ -58,28 +58,53 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     LinearLayout featurePan2;
     private View featurePan2_buttons;
-    private final TextView value;
+    private TextView value;
     private Graphical_Info_View canvas;
-    private final Animation animation;
-    private final Activity context;
+    private Animation animation;
     private Message msg;
     private static String mytag;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     public Boolean with_graph = true;
-    private tracerengine Tracer = null;
     private Entity_client session = null;
     private Boolean realtime = false;
-
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
+    private String url = null;
     private int dpiClassification;
+    private int update;
 
-    public Graphical_Info(tracerengine Trac, final Activity context, int id, int dev_id, String name,
-                          final String state_key, String url, final String usage, int update,
-                          int widgetSize, int session_type, final String parameters, int place_id, String place_type, SharedPreferences params) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.Tracer = Trac;
-        this.context = context;
+    public Graphical_Info(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,final int update,
+                             final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        this.update=update;
+        onCreate();
+    }
+
+    public Graphical_Info(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,final int update,
+                             final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        this.update=update;
+        onCreate();
+    }
+
+    public void onCreate() {
         String stateS;
+
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -122,7 +147,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             //canvas
             canvas = new Graphical_Info_View(Tracer, context, params);
             canvas.dev_id = dev_id;
-            canvas.id = id;
+            canvas.id = feature.getId();
             canvas.state_key = state_key;
             canvas.url = url;
             canvas.update = update;
@@ -298,7 +323,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             if (Tracer.get_engine().subscribe(session)) {
                 realtime = true;        //we're connected to engine

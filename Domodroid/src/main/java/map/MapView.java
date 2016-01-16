@@ -998,16 +998,14 @@ public class MapView extends View {
             }
         } else if (feature.getValue_type().equals("range")) {
             Graphical_Range variator = new Graphical_Range(Tracer, context, Address,
-                    label, Id, DevId, State_key, URL, iconName,
-                    parameters, device_type_id, update_timer, widgetSize, mytype, 0, zone, params);
+                    widgetSize, 0, Id, zone, params, feature);
             Graphical_Range.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
             if (parameters.contains("command")) {
                 Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, Address,
-                        State_key, label, Id, DevId, State_key, URL, iconName,
-                        parameters, device_type_id, widgetSize, mytype, 0, zone, params);
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
@@ -1032,9 +1030,8 @@ public class MapView extends View {
                 panel_widget.addView(info_commands);
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
-                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context,
-                        Id, DevId, label, State_key, URL, iconName, Graph,
-                        update_timer, widgetSize, mytype, parameters, 0, zone, params);
+                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context, Address,
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
             } else {
@@ -1045,11 +1042,8 @@ public class MapView extends View {
                 panel_widget.addView(info);
             }
         } else if (feature.getValue_type().equals("list")) {
-            Graphical_List list = new Graphical_List(Tracer, context, Id, DevId, label,
-                    device_type_id,    //Added by Doume to know the 'techno'
-                    Address,            //  idem to know the address
-                    State_key, URL, iconName, Graph,
-                    update_timer, widgetSize, mytype, parameters, device_type_id, 0, zone, params);
+            Graphical_List list = new Graphical_List(Tracer, context, URL,
+                    widgetSize, 0, Id, zone, params, feature);
             Graphical_List.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {

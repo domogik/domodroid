@@ -176,18 +176,16 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Boolean");
                 }
             } else if (Value_type.equals("range") || ((parameters.contains("command")) && (feature.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
-                Graphical_Range variator = new Graphical_Range(Tracer, context, Address, label,
-                        Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                        update_timer, widgetSize, session_type, id, zone, params);
+                Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
+                        widgetSize, session_type, id, zone, params, feature);
                 Graphical_Range.container = tmpPan;
                 tmpPan.addView(variator);
                 Tracer.i(mytag, "   ==> Graphical_Range");
             } else if (Value_type.equals("trigger")) {
                 //#51 change widget for 0.4 if it's not a command
                 if (parameters.contains("command")) {
-                    Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, Address, label,
-                            State_key, Id, DevId, State_key, URL, iconName, parameters, device_type_id,
-                            widgetSize, session_type, id, zone, params);
+                    Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature);
                     Graphical_Trigger.container = tmpPan;
                     tmpPan.addView(trigger);
                     Tracer.i(mytag, "   ==> Graphical_Trigger");
@@ -217,9 +215,8 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                 } else if (params.getBoolean("Graph_CHOICE", false)) {
                     Tracer.d(mytag, "add Graphical_Info_with_achartengine for " + label + " (" + DevId + ") key=" + State_key);
-                    Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context,
-                            Id, DevId, label, State_key, URL, iconName, Graph,
-                            update_timer, widgetSize, session_type, parameters, id, zone, params);
+                    Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature);
                     info_with_achartengine.setLayoutParams(layout_param);
                     Graphical_Info_with_achartengine.container = tmpPan;
                     tmpPan.addView(info_with_achartengine);
@@ -236,11 +233,8 @@ class Widgets_Manager {
                 }
             } else if (Value_type.equals("list")) {
                 Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
-                Graphical_List list = new Graphical_List(Tracer, context, Id, DevId, label,
-                        device_type_id,    //Added by Doume to know the 'techno'
-                        Address,            //  idem to know the address
-                        State_key, URL, iconName, Graph,
-                        update_timer, widgetSize, session_type, parameters, device_type_id, id, zone, params);
+                Graphical_List list = new Graphical_List(Tracer, context, URL,
+                        widgetSize, session_type, id, zone, params, feature);
                 list.setLayoutParams(layout_param);
                 Graphical_List.container = tmpPan;
                 tmpPan.addView(list);

@@ -79,13 +79,10 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
 
     private LinearLayout chartContainer;
-    private final TextView value;
-    private final int dev_id;
-    private final int id;
-    private final String state_key;
+    private TextView value;
+    private int id;
 
-    private final Animation animation;
-    private final Activity context;
+    private Animation animation;
     private Message msg;
     private static String mytag = "";
     private String url = null;
@@ -93,12 +90,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     public final Boolean with_graph = true;
-    private tracerengine Tracer = null;
     private Entity_client session = null;
     private Boolean realtime = false;
     private GraphicalView mChart;
-    private final String login;
-    private final String password;
+    private String login;
+    private String password;
 
     private String step = "hour";
     private int limit = 6;        // items returned by Rinor on stats arrays when 'hour' average
@@ -113,25 +109,50 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     // 365 = 1 year
     private int sav_period;
 
-    private final float size10;
-    private final float size5;
-    private final XYMultipleSeriesRenderer multiRenderer;
-    private final XYSeriesRenderer incomeRenderer;
-    private final XYSeriesRenderer emptyRenderer;
-    private final XYMultipleSeriesDataset dataset;
-    private final XYSeries nameSeries;
-    private final XYSeries EmptySeries;
-    private final float api_version;
+    private float size10;
+    private float size5;
+    private XYMultipleSeriesRenderer multiRenderer;
+    private XYSeriesRenderer incomeRenderer;
+    private XYSeriesRenderer emptyRenderer;
+    private XYMultipleSeriesDataset dataset;
+    private XYSeries nameSeries;
+    private XYSeries EmptySeries;
+    private float api_version;
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
 
-    public Graphical_Info_with_achartengine(tracerengine Trac, final Activity context, int id, int dev_id, String name,
-                                            final String state_key, String url, final String usage, int period, int update,
-                                            int widgetSize, int session_type, final String parameters, int place_id, String place_type, SharedPreferences params) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.Tracer = Trac;
-        this.context = context;
-        this.dev_id = dev_id;
-        this.id = id;
-        this.state_key = state_key;
+    public Graphical_Info_with_achartengine(tracerengine Trac,
+                                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_Info_with_achartengine(tracerengine Trac,
+                                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+        this.id=feature.getId();
+
         String stateS;
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));

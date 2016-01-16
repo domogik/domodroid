@@ -62,39 +62,62 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
 
     private LinearLayout featurePan2;
-    private final TextView value;
-    private final Handler handler;
-    private final Context context;
+    private TextView value;
+    private Handler handler;
     private Message msg;
     private static String mytag = "Graphical_List";
     private String url = null;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     public final Boolean with_list = true;
-    private tracerengine Tracer = null;
     private Entity_client session = null;
     private Boolean realtime = false;
     private String[] known_values;
     private ArrayList<HashMap<String, String>> listItem;
     private TextView cmd_to_send = null;
     private String cmd_requested = null;
-    private final String address;
-    private final String type;
-    private final String login;
-    private final String password;
-    private final float api_version;
+    private String address;
+    private String type;
+    private String login;
+    private String password;
+    private float api_version;
+    private int id;
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
 
-    public Graphical_List(tracerengine Trac, Activity context, int id, int dev_id, String name,
-                          String type, String address,
-                          final String state_key, String url, final String usage, int period, int update,
-                          int widgetSize, int session_type, final String parameters, String model_id, int place_id, String place_type, SharedPreferences params) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.Tracer = Trac;
-        this.context = context;
-        this.address = address;
-        //this.type = type;
+    public Graphical_List(tracerengine Trac,
+                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                          final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
         this.url = url;
-        String[] model = model_id.split("\\.");
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_List(tracerengine Trac,
+                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                          final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+        this.id = feature.getId();
+
+        String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
         String packageName = context.getPackageName();
         this.myself = this;

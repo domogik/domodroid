@@ -51,9 +51,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
     private TextView state;
     private SeekBar seekBarVaria;
-    private final String address;
+    private String address;
     private int state_progress;
-    private final String usage;
+    private String usage;
     private final String url;
     private Handler handler;
     private int scale;
@@ -69,31 +69,52 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     private static String mytag;
-    private tracerengine Tracer = null;
     private Message msg;
 
     private Entity_client session = null;
     private Boolean realtime = false;
     private String stateS = "";
-    private final String login;
-    private final String password;
-    private final float api_version;
+    private String login;
+    private String password;
+    private float api_version;
     private String test_unite;
-    private final Activity context;
     private String command_id = null;
     private String command_type = null;
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
+    private JSONObject jparam;
 
-    public Graphical_Range(tracerengine Trac, Activity context, String address, String name, int id, int dev_id,
-                           String state_key, String url, String usage,
-                           String parameters, String model_id, int update,
-                           int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) throws JSONException {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.Tracer = Trac;
-        this.address = address;
+    public Graphical_Range(tracerengine Trac,
+                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
         this.url = url;
-        this.usage = usage;
-        myself = this;
-        this.context = context;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_Range(tracerengine Trac,
+                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+
         stateThread = 1;
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -107,7 +128,12 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         api_version = params.getFloat("API_VERSION", 0);
 
         //get parameters
-        JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+        try {
+            jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+        } catch (JSONException e) {
+            Tracer.i(mytag, "No parameters");
+            seekBarVaria.setEnabled(false);
+        }
         if (api_version >= 0.7f) {
             try {
                 int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
@@ -120,9 +146,14 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                 seekBarVaria.setEnabled(false);
             }
         } else {
-            String command = jparam.getString("command");
-            valueMin = jparam.getInt("valueMin");
-            valueMax = jparam.getInt("valueMax");
+            try {
+                String command = jparam.getString("command");
+                valueMin = jparam.getInt("valueMin");
+                valueMax = jparam.getInt("valueMax");
+            } catch (JSONException e) {
+                Tracer.i(mytag, "No parameters for command");
+                seekBarVaria.setEnabled(false);
+            }
             int range = valueMax - valueMin;
             scale = 100 / range;
         }
@@ -134,7 +165,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         if (test_unite == null || test_unite.length() == 0) {
             test_unite = "%";
         }
-        String[] model = model_id.split("\\.");
+        String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
 
         //linearlayout horizontal body
@@ -254,7 +285,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             if (Tracer.get_engine().subscribe(session)) {
                 realtime = true;        //we're connected to engine

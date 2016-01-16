@@ -44,7 +44,7 @@ import android.widget.Toast;
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
     private Graphical_Trigger_Button trigger;
-    private final String address;
+    private String address;
     private final String url;
     private Handler handler;
     private Thread threadCommande;
@@ -55,28 +55,53 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private tracerengine Tracer = null;
     private static String mytag;
     private Message msg;
-    private final String login;
-    private final String password;
-    private final float api_version;
-    private final Activity context;
+    private String login;
+    private String password;
+    private float api_version;
+    private Activity context;
     private String command_id;
     private String command_type;
 
-    public Graphical_Trigger(tracerengine Trac, Activity context,
-                             String address, String name, String state_key, int id, int dev_id, String stat_key,
-                             String url, String usage, String parameters,
-                             String model_id, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params) throws JSONException {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.address = address;
-        this.Tracer = Trac;
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
+    private JSONObject jparam;
+
+    public Graphical_Trigger(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature;
         this.url = url;
-        this.context = context;
-        myself = this;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_Trigger(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+
         String stateS;
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + stat_key);
+            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         mytag = "Graphical_Trigger(" + dev_id + ")";
@@ -84,10 +109,15 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
 
-        //get parameters
-        JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-
         boolean usable = false;
+        //get parameters
+        try {
+            jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+        } catch (JSONException e) {
+            Tracer.i(mytag, "No parameters");
+            usable = false;
+        }
+
         if (jparam != null) {
             if (api_version >= 0.7f) {
                 try {
@@ -116,7 +146,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
             }
         }
 
-        String[] model = model_id.split("\\.");
+        String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
 
         TextView state = new TextView(context);
@@ -170,7 +200,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
                                          Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
                                      }
                     /*
-					try {
+                    try {
 						Boolean ack = JSONParser.Ack(json_Ack);
 						if(!ack){
 							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");

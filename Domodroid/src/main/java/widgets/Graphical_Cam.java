@@ -33,7 +33,7 @@ import android.widget.FrameLayout;
 
 public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener {
 
-    private final String url;
+    private String url;
     private final Context context;
     private static String mytag;
     private tracerengine Tracer = null;
@@ -50,7 +50,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
-        this.url = url;
         onCreate();
     }
 
@@ -61,12 +60,12 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.feature = feature_map;
         this.Tracer = Trac;
         this.context = context;
-        this.url = url;
         onCreate();
     }
 
     public void onCreate() {
         myself = this;
+        this.url=feature.getAddress();
         this.dev_id = feature.getDevId();
         this.name_cam = feature.getName();
         setOnClickListener(this);

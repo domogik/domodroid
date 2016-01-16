@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import widgets.Basic_Graphical_zone;
 import widgets.Entity_Area;
@@ -668,6 +669,22 @@ public class Activity_Main extends Activity implements OnClickListener {
             // If answer is 'yes', load preferences from backup
             Tracer.v(mytag, "reload settings..");
             loadSharedPreferencesFromFile(backupprefs);
+            // todo call a method to load saved preferences
+            // area/room/icon/feature_association/map_feature to db
+            // try {
+            //JSONObject json_AreaList = new JSONObject(SP_params.getString("AREA_LIST",null));
+            // db.insertArea(json_AreaList);
+            // Tracer.d(mytag, "inserting area to db");
+            //} catch (Throwable t) {
+            //  Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("AREA_LIST",null) + "\"");
+            //}
+            //   try {
+            //      JSONObject json_RoomList = new JSONObject(SP_params.getString("ROOM_LIST", null));
+            //    db.insertRoom(json_RoomList);
+            //    Tracer.d(mytag, "inserting room to db");
+            //} catch (Throwable t) {
+            //    Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ROOM_LIST",null) + "\"");
+            //}
             run_sync_dialog();
 
         } else {
@@ -763,8 +780,8 @@ public class Activity_Main extends Activity implements OnClickListener {
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                     }
                     VG_parent.addView(LL_activ);
-				/*Should never arrive in this type.
-			    }else if(type.equals("house")) {
+                /*Should never arrive in this type.
+                }else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
@@ -968,7 +985,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
 	/*
-	private class SBAnim extends AsyncTask<Void, Void, Void>{
+    private class SBAnim extends AsyncTask<Void, Void, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {

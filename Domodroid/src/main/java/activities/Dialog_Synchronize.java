@@ -259,9 +259,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             Tracer.i(mytag, "urlAccess = <" + urlAccess + ">");
 
             // grab a new method if sync by past that only erase what concern area id 1 if previous api >0.6f
-            // and if syncing ith the same api version
+            // and if syncing with the same api version
             if ((previous_api_version == Rinor_Api_Version) && (Rinor_Api_Version >= 0.6f)) {
-                //Erase in tables only device/usage  list !
+                // Erase in tables only device/usage  list !
                 // surround with a try catch due to possible error in previous sync
                 try {
                     db.NewsyncDb();
@@ -358,9 +358,6 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(25);
-
-                //TODO grab area,room,feature and feature_assotiation from previous sync if exists.
-                //Avoiding the user organization to be lost
 
                 //Create JSONObject
                 json_RoomList = new JSONObject();

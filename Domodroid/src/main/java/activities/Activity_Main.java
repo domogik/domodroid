@@ -472,7 +472,6 @@ public class Activity_Main extends Activity implements OnClickListener {
                 Tracer.i(mytag, "OnCreate Params splach is false and WidgetUpdate is null startCacheengine!");
                 startCacheEngine();
             }
-
         }
         // Changelog view
         changelog changelog = new changelog(this);
@@ -757,6 +756,11 @@ public class Activity_Main extends Activity implements OnClickListener {
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
                         VG_parent.addView(LL_area);    //and areas
                         LL_activ.removeAllViews();
+                        // todo #33 here
+                        // Crash on reload for the moment
+                        //while (!WU_widgetUpdate.ready) {
+                            //Wait the widgetupdate to be ready
+                        //}
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage

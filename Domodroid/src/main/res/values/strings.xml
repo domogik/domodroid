@@ -100,11 +100,11 @@
 	<string name="Delete_feature_message">Delete this feature.\nThis information will be lost if you make a new sync.</string>
 	
 	<string name="New_ROOM_title">Create a Room</string>
-	<string name="New_ROOM_message">Set the name of the new room.\nThis information will be lost if you make a new sync.</string>
+	<string name="New_ROOM_message">Set the name of the new room.</string>
 	<string name="Wich_ROOM_message">Select a Room</string>
 	
 	<string name="New_AREA_title">Create an Area</string>
-	<string name="New_AREA_message">Set the name of the new area.\nThis information will be lost if you make a new sync.</string>
+	<string name="New_AREA_message">Set the name of the new area.</string>
 	<string name="Wich_AREA_message">Select an Area</string>
 	
 	<string name="Add_widget_title">Select a Widget</string>

@@ -88,10 +88,10 @@
     <string name="Delete_feature_title">Удалить</string>
     <string name="Delete_feature_message">Удалить эту функцию.\nЭта информация будет утеряна при синхронизации.</string>
     <string name="New_ROOM_title">Создать комнату</string>
-    <string name="New_ROOM_message">Введите имя новой комнаты.\nЭта информация будет утеряна при синхронизации.</string>
+    <string name="New_ROOM_message">Введите имя новой комнаты.</string>
     <string name="Wich_ROOM_message">Выбрать комнату</string>
     <string name="New_AREA_title">Создать зону</string>
-    <string name="New_AREA_message">Введите имя новой зоны.\nЭта информация будет утеряна при синхронизации.</string>
+    <string name="New_AREA_message">Введите имя новой зоны.</string>
     <string name="Wich_AREA_message">Выбрать зону</string>
     <string name="Add_widget_title">Выбрать виджет</string>
     <string name="Wich_feature_message">Выбрать виджет</string>

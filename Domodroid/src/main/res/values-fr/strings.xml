@@ -88,10 +88,10 @@
     <string name="Delete_feature_title">Supprimer</string>
     <string name="Delete_feature_message">Supprimer cette fonctionnalitée.\nCette valeur sera perdue si vous faites une synchronisation.</string>
     <string name="New_ROOM_title">Créer une Pièce</string>
-    <string name="New_ROOM_message">Choisir le nom de la pièce.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+    <string name="New_ROOM_message">Choisir le nom de la pièce.</string>
     <string name="Wich_ROOM_message">Selectionner une Pièce</string>
     <string name="New_AREA_title">Créer une Zone</string>
-    <string name="New_AREA_message">Choisir le nom de la zone.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+    <string name="New_AREA_message">Choisir le nom de la zone.</string>
     <string name="Wich_AREA_message">Selectionner une Zone</string>
     <string name="Add_widget_title">Selectionner un widget</string>
     <string name="Wich_feature_message">Selectionner un widget</string>

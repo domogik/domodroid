@@ -672,37 +672,6 @@ public class Activity_Main extends Activity implements OnClickListener {
             // If answer is 'yes', load preferences from backup
             Tracer.v(mytag, "reload settings..");
             loadSharedPreferencesFromFile(backupprefs);
-            // todo call a method to load saved preferences
-            // /map_feature to db
-            DomodroidDB domodb = new DomodroidDB(Tracer, myself, SP_params);
-            try {
-                JSONObject json_AreaList = new JSONObject(SP_params.getString("AREA_LIST", null));
-                domodb.insertArea(json_AreaList);
-                Tracer.d(mytag, "inserting area to db");
-            } catch (Throwable t) {
-                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("AREA_LIST", null) + "\"");
-            }
-            try {
-                JSONObject json_RoomList = new JSONObject(SP_params.getString("ROOM_LIST", null));
-                domodb.insertRoom(json_RoomList);
-                Tracer.d(mytag, "inserting room to db");
-            } catch (Throwable t) {
-                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ROOM_LIST", null) + "\"");
-            }
-            try {
-                JSONObject json_IconList = new JSONObject(SP_params.getString("ICON_LIST", null));
-                domodb.insertIcon(json_IconList);
-                Tracer.d(mytag, "inserting icon to db");
-            } catch (Throwable t) {
-                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ICON_LIST", null) + "\"");
-            }
-            try {
-                JSONObject json_FeatureAssociationList = new JSONObject(SP_params.getString("FEATURE_LIST_association", null));
-                domodb.insertFeatureAssociation(json_FeatureAssociationList);
-                Tracer.d(mytag, "inserting FeatureAssociationList to db");
-            } catch (Throwable t) {
-                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("FEATURE_LIST_association", null) + "\"");
-            }
             run_sync_dialog();
 
         } else {

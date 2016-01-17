@@ -198,7 +198,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
          * @see android.os.AsyncTask#doInBackground(Params[])
          */
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Void... param_void) {
             //Requests
 
 
@@ -262,6 +262,40 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 // Erase in tables only device/usage  list !
                 // surround with a try catch due to possible error in previous sync
                 try {
+                    if (reload) {
+                        //Reload is defined by activity_main if user reload from previous settings
+                        //Erase all data in this case before reload value from file
+                        db.updateDb();
+                        // todo call a method to load saved preferences map_feature to db
+                        try {
+                            json_AreaList = new JSONObject(params.getString("AREA_LIST", null));
+                            db.insertArea(json_AreaList);
+                            Tracer.d(mytag, "inserting area to db");
+                        } catch (Throwable t) {
+                            Tracer.e(mytag, "Could not parse malformed area JSON: \"" + params.getString("AREA_LIST", null) + "\"");
+                        }
+                        try {
+                            json_RoomList = new JSONObject(params.getString("ROOM_LIST", null));
+                            db.insertRoom(json_RoomList);
+                            Tracer.d(mytag, "inserting room to db");
+                        } catch (Throwable t) {
+                            Tracer.e(mytag, "Could not parse malformed room JSON: \"" + params.getString("ROOM_LIST", null) + "\"");
+                        }
+                        try {
+                            json_IconList = new JSONObject(params.getString("ICON_LIST", null));
+                            db.insertIcon(json_IconList);
+                            Tracer.d(mytag, "inserting icon to db");
+                        } catch (Throwable t) {
+                            Tracer.e(mytag, "Could not parse malformed icon JSON: \"" + params.getString("ICON_LIST", null) + "\"");
+                        }
+                        try {
+                            json_FeatureAssociationList = new JSONObject(params.getString("FEATURE_LIST_association", null));
+                            db.insertFeatureAssociation(json_FeatureAssociationList);
+                            Tracer.d(mytag, "inserting FeatureAssociationList to db");
+                        } catch (Throwable t) {
+                            Tracer.e(mytag, "Could not parse malformed feature association JSON: \"" + params.getString("FEATURE_LIST_association", null) + "\"");
+                        }
+                    }
                     db.NewsyncDb();
                     Tracer.i(mytag, "Doing a sync update only, not erasing all");
                 } catch (Exception e) {

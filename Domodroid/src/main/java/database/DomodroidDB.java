@@ -448,7 +448,12 @@ public class DomodroidDB {
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
                 map_area = new JSONObject();
-                map_area.put("description", curs.getString(0));
+                if (curs.getString(0) == null) {
+                    map_area.put("description", "");
+                } else {
+                    map_area.put("description", curs.getString(0));
+                }
+
                 map_area.put("id", curs.getString(1));
                 map_area.put("name", curs.getString(2));
                 list.put(map_area);
@@ -636,7 +641,11 @@ public class DomodroidDB {
                 Widget.put("place_type", curs.getString(1));
                 Widget.put("device_feature_id", curs.getString(2));
                 Widget.put("id", curs.getString(3));
-                Widget.put("device_feature", curs.getString(4));
+                if (curs.getString(4) == null) {
+                    Widget.put("device_feature", "");
+                } else {
+                    Widget.put("device_feature", curs.getString(4));
+                }
                 ListFeature.put(Widget);
             }
             json_FeatureAssociationList.put("feature_association", ListFeature);
@@ -739,7 +748,7 @@ public class DomodroidDB {
 
     public JSONObject request_json_Icon() {
         JSONObject json_IconList = new JSONObject();
-        String[] projection = {"area_id", "description", "id", "name"};
+        String[] projection = {"name", "value", "reference"};
         Cursor curs = null;
         try {
             json_IconList.put("status", "OK");
@@ -757,7 +766,11 @@ public class DomodroidDB {
                 curs.moveToPosition(i);
                 icon = new JSONObject();
                 icon.put("name", curs.getString(0));
-                icon.put("value", curs.getString(1));
+                if (curs.getString(1) == null) {
+                    icon.put("value", "");
+                } else {
+                    icon.put("value", curs.getString(1));
+                }
                 icon.put("reference", curs.getString(2));
                 icons.put(icon);
             }

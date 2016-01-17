@@ -279,7 +279,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        Tracer.i("Preference","Saving pref to file");
+                        Tracer.i("Preference", "Saving pref to file");
                         Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
@@ -673,7 +673,7 @@ public class Activity_Main extends Activity implements OnClickListener {
             Tracer.v(mytag, "reload settings..");
             loadSharedPreferencesFromFile(backupprefs);
             // todo call a method to load saved preferences
-            // feature_association/map_feature to db
+            // /map_feature to db
             DomodroidDB domodb = new DomodroidDB(Tracer, myself, SP_params);
             try {
                 JSONObject json_AreaList = new JSONObject(SP_params.getString("AREA_LIST", null));
@@ -695,6 +695,13 @@ public class Activity_Main extends Activity implements OnClickListener {
                 Tracer.d(mytag, "inserting icon to db");
             } catch (Throwable t) {
                 Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ICON_LIST", null) + "\"");
+            }
+            try {
+                JSONObject json_FeatureAssociationList = new JSONObject(SP_params.getString("FEATURE_LIST_association", null));
+                domodb.insertFeatureAssociation(json_FeatureAssociationList);
+                Tracer.d(mytag, "inserting FeatureAssociationList to db");
+            } catch (Throwable t) {
+                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("FEATURE_LIST_association", null) + "\"");
             }
             run_sync_dialog();
 

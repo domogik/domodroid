@@ -515,7 +515,7 @@ public class DomodroidDB {
             json_RoomList.put("description", "None");
             JSONArray rooms = new JSONArray();
             JSONObject room = null;
-            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, "id Asc");
+            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, null);
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
@@ -616,6 +616,37 @@ public class DomodroidDB {
         curs1.close();
         curs2.close();
         return dev_id;
+    }
+
+    public JSONObject request_json_Features_association() {
+        JSONObject json_FeatureAssociationList = new JSONObject();
+        Cursor curs = null;
+        try {
+            json_FeatureAssociationList.put("status", "OK");
+            json_FeatureAssociationList.put("code", 0);
+            json_FeatureAssociationList.put("description", "None");
+            JSONArray ListFeature = new JSONArray();
+            JSONObject Widget = null;
+            curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                Widget = new JSONObject();
+                Widget.put("place_id", curs.getString(0));
+                Widget.put("place_type", curs.getString(1));
+                Widget.put("device_feature_id", curs.getString(2));
+                Widget.put("id", curs.getString(3));
+                Widget.put("device_feature", curs.getString(4));
+                ListFeature.put(Widget);
+            }
+            json_FeatureAssociationList.put("feature_association", ListFeature);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_FeatureAssociationList;
     }
 
     public int requestidlastFeature_association() {

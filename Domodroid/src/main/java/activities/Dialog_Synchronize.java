@@ -1021,59 +1021,55 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
             // Insert results into local database
             // And sharedpref
-            //todo with new sync method should put in sharedpref all the value (including personnal one)
-            //or create a save to file and sharedparams method.
             prefEditor.putFloat("API_VERSION", Rinor_Api_Version);
             prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
             prefEditor.putBoolean("SYNC", true);
-            prefEditor.putString("ASSOCIATION_LIST", json_FeatureAssociationList.toString());
             Tracer.v(mytag, "Updating database tables with new House configuration");
             try {
                 db.insertArea(json_AreaList);
+                prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-            prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
             try {
                 db.insertRoom(json_RoomList);
+                prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-            prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
             if (Rinor_Api_Version >= 0.7f) {
                 try {
                     db.insertIcon(json_IconList);
+                    prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-                prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
             }
             if (Rinor_Api_Version <= 0.6f) {
                 try {
                     db.insertFeature(json_FeatureList);
+                    //No need of db request method as feature only comes from rest
+                    prefEditor.putString("FEATURE_LIST", json_FeatureList.toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-                //todo method to get featurelist from db to json
-                prefEditor.putString("FEATURE_LIST", json_FeatureList.toString());
             } else {
-                //todo method to get featurelist1 from db to json
+                //No need of db request method as feature only comes from rest
                 prefEditor.putString("FEATURE_LIST", json_FeatureList1.toString());
             }
             try {
                 db.insertFeatureAssociation(json_FeatureAssociationList);
+                prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-            //todo method to get json_FeatureAssociationList from db to json
-            prefEditor.putString("FEATURE_LIST_association", json_FeatureAssociationList.toString());
             if (Rinor_Api_Version <= 0.5f) {
                 try {
                     db.insertIcon(json_IconList);
+                    prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-                prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                 prefEditor.putBoolean("BY_USAGE", false);
             } else if (Rinor_Api_Version >= 0.6f) {
                 if (Rinor_Api_Version >= 0.7f)

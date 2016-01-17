@@ -99,7 +99,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private String url = null;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
-    private tracerengine Tracer = null;
     private Entity_client session = null;
     private Boolean realtime = false;
     private String login;
@@ -109,8 +108,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private int dpiClassification;
     private JSONObject jparam;
     private String command_id = null;
-    private String command_type1 = null;
-    private String command_data_type1 = null;
     private String command_type[] = null;
     private String command_data_type[] = null;
     private List<EditText> allEds = null;

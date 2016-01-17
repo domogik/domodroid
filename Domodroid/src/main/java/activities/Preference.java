@@ -46,6 +46,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {

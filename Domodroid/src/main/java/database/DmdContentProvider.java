@@ -239,11 +239,10 @@ public class DmdContentProvider extends ContentProvider {
         switch (uriType) {
 
             case INSERT_AREA:
-                bdd = mDB.getWritableDatabase();
-                bdd.insert("table_area", null, values);
+                mDB.getWritableDatabase().insert("table_area", null, values);
                 break;
             case INSERT_ROOM:
-                rowid = mDB.getWritableDatabase().insert("table_room", null, values);
+                mDB.getWritableDatabase().insert("table_room", null, values);
                 break;
             case INSERT_ICON:
                 mDB.getWritableDatabase().insert("table_icon", null, values);

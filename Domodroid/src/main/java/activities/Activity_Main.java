@@ -278,6 +278,9 @@ public class Activity_Main extends Activity implements OnClickListener {
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
+                        // Store settings to SDcard
+                        Tracer.i("Preference","Saving pref to file");
+                        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();
@@ -670,21 +673,29 @@ public class Activity_Main extends Activity implements OnClickListener {
             Tracer.v(mytag, "reload settings..");
             loadSharedPreferencesFromFile(backupprefs);
             // todo call a method to load saved preferences
-            // area/room/icon/feature_association/map_feature to db
-            // try {
-            //JSONObject json_AreaList = new JSONObject(SP_params.getString("AREA_LIST",null));
-            // db.insertArea(json_AreaList);
-            // Tracer.d(mytag, "inserting area to db");
-            //} catch (Throwable t) {
-            //  Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("AREA_LIST",null) + "\"");
-            //}
-            //   try {
-            //      JSONObject json_RoomList = new JSONObject(SP_params.getString("ROOM_LIST", null));
-            //    db.insertRoom(json_RoomList);
-            //    Tracer.d(mytag, "inserting room to db");
-            //} catch (Throwable t) {
-            //    Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ROOM_LIST",null) + "\"");
-            //}
+            // feature_association/map_feature to db
+            DomodroidDB domodb = new DomodroidDB(Tracer, myself, SP_params);
+            try {
+                JSONObject json_AreaList = new JSONObject(SP_params.getString("AREA_LIST", null));
+                domodb.insertArea(json_AreaList);
+                Tracer.d(mytag, "inserting area to db");
+            } catch (Throwable t) {
+                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("AREA_LIST", null) + "\"");
+            }
+            try {
+                JSONObject json_RoomList = new JSONObject(SP_params.getString("ROOM_LIST", null));
+                domodb.insertRoom(json_RoomList);
+                Tracer.d(mytag, "inserting room to db");
+            } catch (Throwable t) {
+                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ROOM_LIST", null) + "\"");
+            }
+            try {
+                JSONObject json_IconList = new JSONObject(SP_params.getString("ICON_LIST", null));
+                domodb.insertIcon(json_IconList);
+                Tracer.d(mytag, "inserting icon to db");
+            } catch (Throwable t) {
+                Tracer.e(mytag, "Could not parse malformed JSON: \"" + SP_params.getString("ICON_LIST", null) + "\"");
+            }
             run_sync_dialog();
 
         } else {

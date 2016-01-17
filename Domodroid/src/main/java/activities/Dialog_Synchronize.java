@@ -183,8 +183,6 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             if (sync) {
                 Intent reload = new Intent(context, Activity_Main.class);
                 context.startActivity(reload);
-                // Store settings to SDcard
-                Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), context.getBaseContext());
             }
             super.onPostExecute(result);
 
@@ -1048,8 +1046,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-                //todo method to get icon from db to json
-                prefEditor.putString("ICON_LIST", json_IconList.toString());
+                prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
             }
             if (Rinor_Api_Version <= 0.6f) {
                 try {
@@ -1076,8 +1073,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-                //todo method to get icon from db to json
-                prefEditor.putString("ICON_LIST", json_IconList.toString());
+                prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                 prefEditor.putBoolean("BY_USAGE", false);
             } else if (Rinor_Api_Version >= 0.6f) {
                 if (Rinor_Api_Version >= 0.7f)

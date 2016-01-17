@@ -55,14 +55,14 @@ public class DomodroidDB {
         Entity_Room[] listRoom = domodb.requestRoom(1);
 
         for (Entity_Room room : listRoom) {
-            Tracer.get_engine().remove_one_things(room.getId(), "room");
-            Tracer.get_engine().remove_one_place_type_in_Featureassociation(room.getId(), "room");
-            Tracer.get_engine().remove_one_icon(room.getId(), "room");
+            domodb.remove_one_room(room.getId());
+            domodb.remove_one_place_type_in_Featureassociation(room.getId(), "room");
+            domodb.remove_one_icon(room.getId(), "room");
         }
 
-        Tracer.get_engine().remove_one_things(1, "area");
-        Tracer.get_engine().remove_one_place_type_in_Featureassociation(1, "area");
-        Tracer.get_engine().remove_one_icon(1, "area");
+        domodb.remove_one_area(1);
+        domodb.remove_one_place_type_in_Featureassociation(1, "area");
+        domodb.remove_one_icon(1, "area");
     }
 
     public void closeDb() {
@@ -704,6 +704,40 @@ public class DomodroidDB {
         }
         curs.close();
         return Icon;
+    }
+
+    public JSONObject request_json_Icon() {
+        JSONObject json_IconList = new JSONObject();
+        String[] projection = {"area_id", "description", "id", "name"};
+        Cursor curs = null;
+        try {
+            json_IconList.put("status", "OK");
+            json_IconList.put("code", 0);
+            json_IconList.put("description", "None");
+            JSONArray icons = new JSONArray();
+            JSONObject icon = null;
+            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ICON,
+                    projection,
+                    null,
+                    null,
+                    null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                icon = new JSONObject();
+                icon.put("name", curs.getString(0));
+                icon.put("value", curs.getString(1));
+                icon.put("reference", curs.getString(2));
+                icons.put(icon);
+            }
+            json_IconList.put("ui_config", icons);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_IconList;
     }
 
     public Entity_Feature[] requestFeatures(int id, String zone) {

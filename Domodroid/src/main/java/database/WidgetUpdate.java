@@ -989,10 +989,16 @@ public class WidgetUpdate {
         return domodb.requestMapSwitches(currentmap);
     }
 
+    /*
+     * Put feature at coordinates on a map
+     */
     public void insertFeatureMap(int id, int posx, int posy, String mapname) {
         domodb.insertFeatureMap(id, posx, posy, mapname);
     }
 
+    /*
+     * remove an area/room/icon or feature by id and type
+     */
     public void remove_one_things(int id, String type) {
         //Correct #209O in a better way.
         //seems domodb not create because widgetupdate not init.
@@ -1013,6 +1019,9 @@ public class WidgetUpdate {
 
     }
 
+    /*
+     * remove an icon with his id and type
+     */
     public void remove_one_icon(int id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
@@ -1022,6 +1031,9 @@ public class WidgetUpdate {
 
     }
 
+    /*
+     * remove a feature_association with his id place_id and place_type
+     */
     public void remove_one_feature_association(int id, int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
@@ -1030,6 +1042,9 @@ public class WidgetUpdate {
         domodb.remove_one_feature_association(id, place_id, place_type);
     }
 
+    /*
+     * remove a feature_map with his coordinates and mapname
+     */
     public void remove_one_FeatureMap(int id, int posx, int posy, String mapname) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
@@ -1046,12 +1061,15 @@ public class WidgetUpdate {
         domodb.remove_one_feature_in_FeatureMap(id);
     }
 
-    public void remove_one_place_type_in_Featureassociation(int id_room, String place_type) {
+    /*
+     * remove a place with his place_id and place_type
+     */
+    public void remove_one_place_type_in_Featureassociation(int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
             this.init(Tracer, context, sharedparams);
         }
-        domodb.remove_one_place_type_in_Featureassociation(id_room, place_type);
+        domodb.remove_one_place_type_in_Featureassociation(place_id, place_type);
     }
 
     public Entity_Feature[] requestFeatures() {

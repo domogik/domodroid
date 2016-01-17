@@ -334,7 +334,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     //each time our value change, the engine will call handler
                     handler.sendEmptyMessage(9999);    //Force to consider current value in session
                 }
-            } catch (Exception e) {
+            }catch (Exception e){
                 e.printStackTrace();
             }
 

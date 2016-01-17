@@ -116,7 +116,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
-        this.address=feature.getAddress();
+        this.address = feature.getAddress();
 
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
@@ -276,12 +276,16 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             } else if (api_version >= 0.7f) {
                 session = new Entity_client(id, "", mytag, handler, session_type);
             }
-            if (Tracer.get_engine().subscribe(session)) {
-                realtime = true;        //we're connected to engine
-                //each time our value change, the engine will call handler
-                handler.sendEmptyMessage(9999);    //Force to consider current value in session
-            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....

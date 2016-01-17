@@ -113,7 +113,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         this.state_key = feature.getState_key();
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
-        this.address=feature.getAddress();
+        this.address = feature.getAddress();
 
         stateThread = 1;
         try {
@@ -287,12 +287,16 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
             } else if (api_version >= 0.7f) {
                 session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
-            if (Tracer.get_engine().subscribe(session)) {
-                realtime = true;        //we're connected to engine
-                //each time our value change, the engine will call handler
-                handler.sendEmptyMessage(9999);    //Force to consider current value in session
-            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....

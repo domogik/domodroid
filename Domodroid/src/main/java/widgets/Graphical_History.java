@@ -184,12 +184,16 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             } else if (api_version >= 0.7f) {
                 session = new Entity_client(id, "", mytag, handler, session_type);
             }
-            if (Tracer.get_engine().subscribe(session)) {
-                realtime = true;        //we're connected to engine
-                //each time our value change, the engine will call handler
-                handler.sendEmptyMessage(9999);    //Force to consider current value in session
-            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....

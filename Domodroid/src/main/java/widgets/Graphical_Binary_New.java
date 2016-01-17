@@ -109,8 +109,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
 
     public Graphical_Binary_New(tracerengine Trac,
-                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                            final Entity_Feature feature) {
+                                final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                final Entity_Feature feature) {
         super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
         this.feature = feature;
         this.url = url;
@@ -120,8 +120,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     }
 
     public Graphical_Binary_New(tracerengine Trac,
-                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                            final Entity_Map feature_map) {
+                                final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                final Entity_Map feature_map) {
         super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.url = url;
@@ -360,12 +360,16 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             } else if (api_version >= 0.7f) {
                 session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
-            if (Tracer.get_engine().subscribe(session)) {
-                realtime = true;        //we're connected to engine
-                //each time our value change, the engine will call handler
-                handler.sendEmptyMessage(9999);    //Force to consider current value in session
-            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....

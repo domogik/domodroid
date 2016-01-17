@@ -19,6 +19,7 @@ package widgets;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.jar.JarEntry;
 
 import activities.Graphics_Manager;
 
@@ -78,33 +79,33 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private int update;
 
     public Graphical_Info(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,final int update,
-                             final Entity_Feature feature) {
+                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Entity_Feature feature) {
         super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
         this.feature = feature;
         this.url = url;
         this.params = params;
         this.session_type = session_type;
-        this.update=update;
+        this.update = update;
         onCreate();
     }
 
     public Graphical_Info(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,final int update,
-                             final Entity_Map feature_map) {
+                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Entity_Map feature_map) {
         super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
         this.params = params;
-        this.update=update;
+        this.update = update;
         onCreate();
     }
 
     public void onCreate() {
-        this.parameters=feature.getParameters();
-        this.dev_id=feature.getDevId();
-        this.state_key=feature.getState_key();
+        this.parameters = feature.getParameters();
+        this.dev_id = feature.getDevId();
+        this.state_key = feature.getState_key();
         String stateS;
 
         try {
@@ -244,7 +245,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 value.setText(formatedValue + " km/h");
                             else if (state_key.equalsIgnoreCase("drewpoint"))
                                 value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code")||state_key.toLowerCase().contains("condition_code")||state_key.toLowerCase().contains("current_code")) {
+                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
                                 //Add try catch to avoid other case that make #1794
                                 try {
                                     //use xml and weather fonts here
@@ -327,10 +328,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             } else if (api_version >= 0.7f) {
                 session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
-            if (Tracer.get_engine().subscribe(session)) {
-                realtime = true;        //we're connected to engine
-                //each time our value change, the engine will call handler
-                handler.sendEmptyMessage(9999);    //Force to consider current value in session
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }

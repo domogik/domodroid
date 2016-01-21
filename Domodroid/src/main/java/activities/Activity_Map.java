@@ -95,7 +95,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
     private TextView menu_green;
 
     private WidgetUpdate widgetUpdate;
-    private Handler sbanim;
+    private static Handler sbanim;
     private String[] files = null;
     private File destFile = null;
     private String extension;
@@ -152,9 +152,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
             files = f.list();
             //Reorder method
             List<String> words = new ArrayList<>();
-            for (int i = 0; i < files.length; i++) {
-                words.add(files[i]);
-            }
+            Collections.addAll(words, files);
             Collections.sort(words);
             files = words.toArray(new String[words.size()]);
 
@@ -272,7 +270,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                         map.put("type", feature.getValue_type());
                     }
                     try {
-                        map.put("state_key", getResources().getString(Graphics_Manager.getStringIdentifier(getApplicationContext(), feature.getState_key().toLowerCase())).toString());
+                        map.put("state_key", getResources().getString(Graphics_Manager.getStringIdentifier(getApplicationContext(), feature.getState_key().toLowerCase())));
                     } catch (Exception e) {
                         Tracer.d(mytag, "no translation for: " + feature.getState_key());
                         map.put("state_key", feature.getState_key());
@@ -377,7 +375,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         listeMap = (ListView) findViewById(R.id.listeMap);
         listItem = new ArrayList<>();
         list_usable_files = new Vector<>();
-        int i = 0;
+        int i;
         for (i = 0; i < files.length; i++) {
             //#1968 don't list file without drawable extension or hidden
             if (!files[i].startsWith(".") && (files[i].toLowerCase().endsWith(".png") || files[i].toLowerCase()
@@ -498,7 +496,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                 //Copy the select picture to Domodroid directory
                 Uri uri = data.getData();
                 Tracer.i(mytag, "Uri: " + uri.toString());
-                File selectFile = null;
+                File selectFile;
                 if (cursor.getString(0) != null) {
                     Tracer.i(mytag, "Image from normal picker");
                     selectFile = new File(cursor.getString(0));
@@ -861,7 +859,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
             try {
                 if (metaCursor.moveToFirst()) {
                     filename = metaCursor.getString(0);
-                    Log.e("DriveFileAbsolutePath", "filename=" + filename.toString());
+                    Log.e("DriveFileAbsolutePath", "filename=" + filename);
                 }
             } finally {
                 metaCursor.close();

@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -985,26 +986,26 @@ public class MapView extends View {
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
-                    onoff_New = new Graphical_Binary_New(Tracer, context, Address,
+                    onoff_New = new Graphical_Binary_New(Tracer, context, URL,
                             widgetSize, 0, Id, zone, params, feature);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
             } else {
-                Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, Address,
+                Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, URL,
                         widgetSize, 0, Id, zone, params, feature);
                 Graphical_Boolean.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
         } else if (feature.getValue_type().equals("range")) {
-            Graphical_Range variator = new Graphical_Range(Tracer, context, Address,
+            Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
                     widgetSize, 0, Id, zone, params, feature);
             Graphical_Range.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
             if (parameters.contains("command")) {
-                Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, Address,
+                Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, URL,
                         widgetSize, 0, Id, zone, params, feature);
                 Graphical_Trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
@@ -1030,7 +1031,7 @@ public class MapView extends View {
                 panel_widget.addView(info_commands);
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
-                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context, Address,
+                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context, URL,
                         widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
@@ -1254,18 +1255,25 @@ public class MapView extends View {
                                         case "binary":
                                             Tracer.d(mytag, "This is a binary try to change is state");
                                             Tracer.d(mytag, "State is " + featureMap.getCurrentState());
-                                            if (featureMap.getCurrentState().equals("true")) {
-                                                featureMap.setCurrentState("false");
-                                            } else if (featureMap.getCurrentState().equals("false")) {
-                                                featureMap.setCurrentState("true");
-                                            } else if (featureMap.getCurrentState().equals("on")) {
-                                                featureMap.setCurrentState("off");
-                                            } else if (featureMap.getCurrentState().equals("off")) {
-                                                featureMap.setCurrentState("on");
-                                            } else if (featureMap.getCurrentState().equals("1")) {
-                                                featureMap.setCurrentState("0");
-                                            } else if (featureMap.getCurrentState().equals("0")) {
-                                                featureMap.setCurrentState("1");
+                                            switch (featureMap.getCurrentState()) {
+                                                case "true":
+                                                    featureMap.setCurrentState("false");
+                                                    break;
+                                                case "false":
+                                                    featureMap.setCurrentState("true");
+                                                    break;
+                                                case "on":
+                                                    featureMap.setCurrentState("off");
+                                                    break;
+                                                case "off":
+                                                    featureMap.setCurrentState("on");
+                                                    break;
+                                                case "1":
+                                                    featureMap.setCurrentState("0");
+                                                    break;
+                                                case "0":
+                                                    featureMap.setCurrentState("1");
+                                                    break;
                                             }
 
                                             this.URL = params.getString("URL", "1.1.1.1");
@@ -1407,9 +1415,7 @@ public class MapView extends View {
                     List<String> list_icon = new ArrayList<>();
                     String[] fiilliste;
                     fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-                    for (String aFiilliste : fiilliste) {
-                        list_icon.add(aFiilliste);
-                    }
+                    Collections.addAll(list_icon, fiilliste);
                     final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
                     list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + featureMap.getName() + "-" + featureMap.getState_key());
                     List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
@@ -1547,7 +1553,7 @@ public class MapView extends View {
             bis = new BufferedInputStream(fis);
             dis = new DataInputStream(bis);
             while (dis.available() != 0) {
-                sb.append(dis.readLine() + "\n");
+                sb.append(dis.readLine()).append("\n");
             }
             fis.close();
             bis.close();

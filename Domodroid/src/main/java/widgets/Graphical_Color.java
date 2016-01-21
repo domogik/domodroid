@@ -87,7 +87,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String value0;
     private String value1;
     private JSONObject jparam;
-    private Entity_Feature feature;
+    private final Entity_Feature feature;
     private String command_id = null;
     private String command_type = null;
     private int dev_id;
@@ -98,7 +98,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     public Graphical_Color(tracerengine Trac,
                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -109,7 +109,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     public Graphical_Color(tracerengine Trac,
                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -117,7 +117,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         myself = this;
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
@@ -518,7 +518,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     }
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

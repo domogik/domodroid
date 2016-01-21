@@ -191,14 +191,14 @@ public class tracerengine {
         if (to_txtFile)
             txtlog(type, tag, msg);
         if (to_screen) {
-            screenlog(type, tag, msg);
+            screenlog(tag, msg);
         }
     }
 
     /*
      * Method writing messages to screen view
      */
-    private static void screenlog(int type, String tag, String msg) {
+    private static void screenlog(String tag, String msg) {
         try {
             Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
@@ -218,8 +218,8 @@ public class tracerengine {
 
             int tid = android.os.Process.myTid();
             String tids = Integer.toString(tid);
-			/*
-			 int pid = android.os.Process.myPid();
+            /*
+             int pid = android.os.Process.myPid();
 			 String pids = Integer.toString(pid);
 			 */
             switch (type) {

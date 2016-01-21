@@ -20,7 +20,7 @@ public class Cache_Feature_Element {
         clients_list = null;
     }
 
-    public int add_client(Entity_client new_client) {
+    public void add_client(Entity_client new_client) {
         // Check if it's for the good feature
         if ((new_client.getDevId() == DevId) && (new_client.getskey().equals(skey))) {
             // Ok, the good one !
@@ -29,25 +29,25 @@ public class Cache_Feature_Element {
                 clients_list = new ArrayList<>();
                 clients_list.add(new_client);
                 new_client.setClientId(0);    //set index into caller structure
-                return 0;
+                return;
             }
             // clients_list already exist
             // Check if this client_session is already connected
             for (int i = 0; i < clients_list.size(); i++) {
                 if (clients_list.get(i) == new_client) {
                     //already exist in List
-                    return i;
+                    return;
                 }
             }
             //not yet exists in list
             clients_list.add(new_client);                    // add this client at end of list
             new_client.setClientId(clients_list.size() - 1);    //set index into caller structure
-            return new_client.getClientId();
+            return;
         }
-        return -1;        //Wrong ID/Skey
+        return;        //Wrong ID/Skey
     }
 
-    public int remove_client(Entity_client client) {
+    public void remove_client(Entity_client client) {
         // Check if it's for the good feature
         if ((client.getDevId() == DevId) && client.getskey().equals(skey)) {
             // Ok, the good device !
@@ -57,11 +57,11 @@ public class Cache_Feature_Element {
                     //index is the good one : remove this client from list...
                     clients_list.remove(client.getClientId());
                     client.setClientId(-1);    //Not anymore connected to this device
-                    return -1;
+                    return;
                 }
             }
         }
-        return -1;
+        return;
     }
 
     public ArrayList<Entity_client> clone_clients_list() {

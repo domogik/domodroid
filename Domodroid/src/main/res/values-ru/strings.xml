@@ -394,7 +394,7 @@
     <string name="changelog_full_title">Журнал изменений</string>
     <string name="changelog_title">Новинки</string>
     <string name="changelog_ok_button">OK</string>
-    <string name="changelog_show_full">больше...</string>
+    <string name="changelog_show_full">больше…</string>
     <string name="background_color">черный</string>
     <string name="command">Команда</string>
     <string name="activated">Активировано</string>
@@ -498,8 +498,8 @@
     <string name="sync_4_error_device">Domogik 4 не может загрузить JSON устройств. Проверьте конфигурацию</string>
     <string name="sync_4_error_datatype">Domogik 4 не может загрузить типы данных JSON. Проверьте конфигурацию</string>
     <string name="connection_error">Ошибка соединения</string>
-    <string name="sync_0">Загрузка конфигурации... 0%</string>
-    <string name="sync_load">Загрузка конфигурации...</string>
+    <string name="sync_0">Загрузка конфигурации… 0%</string>
+    <string name="sync_load">Загрузка конфигурации…</string>
     <string name="command_failed">Команда не выполнена</string>
     <string name="drewpoint">Точка росы</string>
     <string name="rainfall">Осадки</string>

@@ -443,7 +443,7 @@
     <string name="changelog_full_title">Change Log</string>
 	<string name="changelog_title">What\'s New</string>
 	<string name="changelog_ok_button">OK</string>
-	<string name="changelog_show_full">more...</string>
+	<string name="changelog_show_full">more…</string>
 	<string name="background_color">black</string>
 	<string name="command">Command</string>
 	<string name="present">Present</string>
@@ -559,8 +559,8 @@
 	<string name="sync_4_error_device">Domogik 4 can\'t load device json. Check your configuration</string>
 	<string name="sync_4_error_datatype">"Domogik 4 can\'t load datatype json. Check your configuration"</string>
 	<string name="connection_error">Connection error</string>
-	<string name="sync_0">Loading Configuration... 0%</string>
-	<string name="sync_load">Loading Configuration...</string>
+	<string name="sync_0">Loading Configuration… 0%</string>
+	<string name="sync_load">Loading Configuration…</string>
 	<string name="command_failed">Command Failed</string>
 	<string name="condition_code">Condition code</string>
 	<string name="drewpoint">Drewpoint</string>

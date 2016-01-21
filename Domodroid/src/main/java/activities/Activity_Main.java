@@ -701,15 +701,15 @@ public class Activity_Main extends Activity implements OnClickListener {
                 String key = entry.getKey();
                 Tracer.i(mytag, "Loading pref : " + key + " -> " + v.toString());
                 if (v instanceof Boolean)
-                    SP_prefEditor.putBoolean(key, ((Boolean) v).booleanValue());
+                    SP_prefEditor.putBoolean(key, (Boolean) v);
                 else if (v instanceof Float)
-                    SP_prefEditor.putFloat(key, ((Float) v).floatValue());
+                    SP_prefEditor.putFloat(key, (Float) v);
                 else if (v instanceof Integer)
-                    SP_prefEditor.putInt(key, ((Integer) v).intValue());
+                    SP_prefEditor.putInt(key, (Integer) v);
                 else if (v instanceof Long)
-                    SP_prefEditor.putLong(key, ((Long) v).longValue());
+                    SP_prefEditor.putLong(key, (Long) v);
                 else if (v instanceof String)
-                    SP_prefEditor.putString(key, ((String) v));
+                    SP_prefEditor.putString(key, (String) v);
             }
             SP_prefEditor.commit();
             LoadSelections();    // to set panel with known values
@@ -759,7 +759,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                         // todo #33 here
                         // Crash on reload for the moment
                         //while (!WU_widgetUpdate.ready) {
-                            //Wait the widgetupdate to be ready
+                        //Wait the widgetupdate to be ready
                         //}
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {

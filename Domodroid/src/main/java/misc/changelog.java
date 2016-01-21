@@ -44,7 +44,7 @@ public class changelog {
 
     /**
      * Constructor
-     *
+     * <p/>
      * Retrieves the version names and stores the new version name in SharedPreferences
      *
      * @param context
@@ -55,12 +55,11 @@ public class changelog {
 
     /**
      * Constructor
-     *
+     * <p/>
      * Retrieves the version names and stores the new version name in SharedPreferences
      *
      * @param context
-     * @param sp
-     *            the shared preferences to store the last version name into
+     * @param sp      the shared preferences to store the last version name into
      */
     private changelog(Context context, SharedPreferences sp) {
         this.context = context;
@@ -81,9 +80,9 @@ public class changelog {
 
     /**
      * @return The version name of the last installation of this app (as described in the former
-     *         manifest). This will be the same as returned by <code>getThisVersion()</code> the
-     *         second time this version of the app is launched (more precisely: the second time
-     *         ChangeLog is instantiated).
+     * manifest). This will be the same as returned by <code>getThisVersion()</code> the
+     * second time this version of the app is launched (more precisely: the second time
+     * ChangeLog is instantiated).
      * @see AndroidManifest.xml#android:versionName
      */
     public String getLastVersion() {
@@ -107,7 +106,7 @@ public class changelog {
 
     /**
      * @return <code>true</code> if your app including ChangeLog is started the first time ever.
-     *         Also <code>true</code> if your app was deinstalled and installed again.
+     * Also <code>true</code> if your app was deinstalled and installed again.
      */
     private boolean firstRunEver() {
         return NO_VERSION.equals(this.lastVersion);
@@ -115,8 +114,8 @@ public class changelog {
 
     /**
      * @return An AlertDialog displaying the changes since the previous installed version of your
-     *         app (what's new). But when this is the first run of your app including ChangeLog then
-     *         the full log dialog is show.
+     * app (what's new). But when this is the first run of your app including ChangeLog then
+     * the full log dialog is show.
      */
     public AlertDialog getLogDialog() {
         return this.getDialog(this.firstRunEver());
@@ -179,7 +178,7 @@ public class changelog {
 
     /**
      * @return HTML displaying the changes since the previous installed version of your app (what's
-     *         new)
+     * new)
      */
     public String getLog() {
         return this.getLog(false);
@@ -192,7 +191,9 @@ public class changelog {
         return this.getLog(true);
     }
 
-    /** modes for HTML-Lists (bullet, numbered) */
+    /**
+     * modes for HTML-Lists (bullet, numbered)
+     */
     private enum Listmode {
         NONE, ORDERED, UNORDERED,
     }
@@ -208,7 +209,7 @@ public class changelog {
             InputStream ins = context.getResources().openRawResource(R.raw.changelog);
             BufferedReader br = new BufferedReader(new InputStreamReader(ins));
 
-            String line = null;
+            String line;
             boolean advanceToEOVS = false; // if true: ignore further version
             // sections
             while ((line = br.readLine()) != null) {
@@ -236,27 +237,27 @@ public class changelog {
                         case '_':
                             // line contains version title
                             this.closeList();
-                            sb.append("<div class='subtitle'>" + line.substring(1).trim() + "</div>\n");
+                            sb.append("<div class='subtitle'>").append(line.substring(1).trim()).append("</div>\n");
                             break;
                         case '!':
                             // line contains free text
                             this.closeList();
-                            sb.append("<div class='freetext'>" + line.substring(1).trim() + "</div>\n");
+                            sb.append("<div class='freetext'>").append(line.substring(1).trim()).append("</div>\n");
                             break;
                         case '#':
                             // line contains numbered list item
                             this.openList(Listmode.ORDERED);
-                            sb.append("<li>" + line.substring(1).trim() + "</li>\n");
+                            sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         case '*':
                             // line contains bullet list item
                             this.openList(Listmode.UNORDERED);
-                            sb.append("<li>" + line.substring(1).trim() + "</li>\n");
+                            sb.append("<li>").append(line.substring(1).trim()).append("</li>\n");
                             break;
                         default:
                             // no special character: just use line as is
                             this.closeList();
-                            sb.append(line + "\n");
+                            sb.append(line).append("\n");
                     }
                 }
             }

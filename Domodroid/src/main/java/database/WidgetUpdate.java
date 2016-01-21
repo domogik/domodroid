@@ -138,8 +138,8 @@ public class WidgetUpdate {
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
-		/*
-		if(parent[0] != null) {
+        /*
+        if(parent[0] != null) {
 			parent[0].sendEmptyMessage(8000);	//Ask main to display message
 		}
 		 */
@@ -147,7 +147,7 @@ public class WidgetUpdate {
         Timer();        //and initiate the cyclic timer
         new UpdateThread().execute();    //And force an immediate refresh
         this.callback_counts = 0;    //To force a refresh
-		/*
+        /*
 		Boolean said = false;
 		int max_time_for_sync = 15 * 1000;		// On initial cache initialization, return an error 
 												// if cannot connect in 15 seconds
@@ -1007,14 +1007,19 @@ public class WidgetUpdate {
             Tracer.d(mytag, "domodb is null");
             this.init(Tracer, context, sharedparams);
         }
-        if (type.equals("area")) {
-            domodb.remove_one_area(id);
-        } else if (type.equals("room")) {
-            domodb.remove_one_room(id);
-        } else if (type.equals("icon")) {
-            domodb.remove_one_icon(id);
-        } else if (type.equals("feature")) {
-            domodb.remove_one_feature(id);
+        switch (type) {
+            case "area":
+                domodb.remove_one_area(id);
+                break;
+            case "room":
+                domodb.remove_one_room(id);
+                break;
+            case "icon":
+                domodb.remove_one_icon(id);
+                break;
+            case "feature":
+                domodb.remove_one_feature(id);
+                break;
         }
 
     }

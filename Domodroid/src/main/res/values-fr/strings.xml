@@ -403,7 +403,7 @@
     <string name="changelog_full_title">Révision</string>
     <string name="changelog_title">Quoi de nouveau</string>
     <string name="changelog_ok_button">OK</string>
-    <string name="changelog_show_full">plus...</string>
+    <string name="changelog_show_full">plus…</string>
     <string name="background_color">noir</string>
     <string name="command">Commande</string>
     <string name="present">Présent</string>
@@ -510,8 +510,8 @@
     <string name="sync_4_error_device">Domogik 4 ne peut pas charger la listes des devices. Vérifier votre configuration.</string>
     <string name="sync_4_error_datatype">Domogik 4 ne peut pas charger la listes des datatype. Vérifier votre configuration.</string>
     <string name="connection_error">Erreur de connexion.</string>
-    <string name="sync_0">Chargement de la configuration... 0%</string>
-    <string name="sync_load">Chargement de la configuration... </string>
+    <string name="sync_0">Chargement de la configuration… 0%</string>
+    <string name="sync_load">Chargement de la configuration… </string>
     <string name="command_failed">Commande échoué</string>
     <string name="condition_code">Condition Code</string>
     <string name="drewpoint">Point de rosée</string>

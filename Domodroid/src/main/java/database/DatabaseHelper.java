@@ -44,9 +44,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
 
     @Override
-    protected void finalize() {
+    protected void finalize() throws Throwable {
         if (db != null)
             db.close();
+        super.finalize();
     }
 
 

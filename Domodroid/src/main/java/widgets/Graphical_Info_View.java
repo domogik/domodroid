@@ -249,10 +249,10 @@ public class Graphical_Info_View extends View implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (loaded){
+        if (loaded) {
             canvas.drawBitmap(buffer, 0, 0, new Paint());
-            buffer.recycle();}
-        else {
+            buffer.recycle();
+        } else {
             canvas.drawBitmap(text, 0, 0, new Paint());
             text.recycle();
         }
@@ -845,7 +845,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 e.printStackTrace();
             }
             avgf = avgf / values.size();
-            avgf = Round(avgf, 2);
+            avgf = round(avgf, 2);
 
             gridStartX = Float.toString(maxf).length() * 7;
             if (Float.toString(minf).length() * 7 > gridStartX)
@@ -935,7 +935,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         return bd.doubleValue();
     }
 
-    public static float Round(float Rval, int Rpl) {
+    public static float round(float Rval, int Rpl) {
         float p = (float) Math.pow(10, Rpl);
         Rval = Rval * p;
         float tmp = Math.round(Rval);

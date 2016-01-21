@@ -118,17 +118,18 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private XYSeries nameSeries;
     private XYSeries EmptySeries;
     private float api_version;
-    private Entity_Feature feature;
+    private final Entity_Feature feature;
     private String state_key;
     private String parameters;
     private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
+    private SimpleDateFormat format;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                             final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -139,7 +140,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                             final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -152,6 +153,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         String stateS;
         try {
@@ -160,7 +162,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
-        this.url = url;
         myself = this;
         setOnClickListener(this);
 
@@ -554,7 +555,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 int hour = valueArray.getJSONArray(i).getInt(4);
                 int hour_next = valueArray.getJSONArray(i + 1).getInt(4);
                 //String date=String.valueOf(hour)+"'";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date date1 = new Date();
                 try {
                     date1 = format.parse(String.valueOf(year) + "-"
@@ -622,7 +622,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 int day = valueArray.getJSONArray(i).getInt(3);
                 int day_next = valueArray.getJSONArray(i + 1).getInt(3);
                 //String date=String.valueOf(hour)+"'";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
                 calendar.set(Calendar.DAY_OF_MONTH, day);
@@ -681,7 +680,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 int week = valueArray.getJSONArray(i).getInt(1);
                 int week_next = valueArray.getJSONArray(i + 1).getInt(1);
                 //String date=String.valueOf(hour)+"'";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
                 //set to thursday because it's an average and much more nice like this.

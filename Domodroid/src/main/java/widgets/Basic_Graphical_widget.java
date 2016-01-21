@@ -18,6 +18,7 @@
 package widgets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import misc.List_Icon_Adapter;
@@ -57,7 +58,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     final LinearLayout LL_infoPan;
     final LinearLayout LL_featurePan;
     final LinearLayout LL_topPan;
-    final ImageView IV_img;
+    private final ImageView IV_img;
     private final TextView TV_name;
     private final int id;
     private final FrameLayout container;
@@ -72,7 +73,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final String state_key;
     private int icon_status;
 
-    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int session_type, int place_id, String place_type, String mytag, FrameLayout container) {
+    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container) {
         super(context);
         this.Tracer = Trac;
         this.context = context;
@@ -221,12 +222,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (int i = 0; i < fiilliste.length; i++) {
-                list_icon.add(fiilliste[i]);
-            }
+            Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name + "-" + state_key);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste,fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {
@@ -240,8 +239,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             //icon is the name of the icon wich will be select
                             values.put("value", icon);
                             //reference is the id of the area, room, or feature
-                            int reference = 0;
-                            reference = id;
+                            int reference = id;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             change_this_icon(icon_status);
@@ -260,8 +258,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
     }
 
-    public void set_this_icon_status(int icon_status) {
+    private void set_this_icon_status(int icon_status) {
         this.icon_status = icon_status;
-     }
+    }
 }
 

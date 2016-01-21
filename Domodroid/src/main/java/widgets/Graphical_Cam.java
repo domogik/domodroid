@@ -40,13 +40,13 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     private String name_cam;
-    private Entity_Feature feature;
+    private final Entity_Feature feature;
     private int dev_id;
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                          final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
@@ -56,16 +56,16 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                          final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.Tracer = Trac;
         this.context = context;
         onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         myself = this;
-        this.url=feature.getAddress();
+        this.url = feature.getAddress();
         this.dev_id = feature.getDevId();
         this.name_cam = feature.getName();
         setOnClickListener(this);

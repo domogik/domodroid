@@ -35,11 +35,11 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
     private final Context context;
     private static String mytag;
     private tracerengine Tracer = null;
-    public static final FrameLayout container = null;
+    private static final FrameLayout container = null;
     private final String name_butler;
 
     public Graphical_butler(tracerengine Trac, Activity context, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, id, name, state_key, usage, widgetSize, place_id, place_type, mytag, container);
         this.context = context;
         this.Tracer = Trac;
         this.name_butler = name;

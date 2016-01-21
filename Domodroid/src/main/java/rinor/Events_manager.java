@@ -161,7 +161,7 @@ public class Events_manager {
     private class ListenerThread extends AsyncTask<Void, Integer, Void> {
 
         public void cancel() {
-        //todo
+            //todo
         }
 
         @Override

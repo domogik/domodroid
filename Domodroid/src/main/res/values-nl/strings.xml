@@ -157,7 +157,7 @@
   <string name="hvacstop">Stop</string>
   <string name="hvaceco">Economic</string>
   <string name="hvacnormal">Comfort</string>
-  <string name="please_wait">Even geduld ...</string>
+  <string name="please_wait">Even geduld …</string>
   <string name="go_to_Map">Bekijk kaart</string>
   <string name="map_option_start">Start direct met de kaart</string>
   <string name="info0">Tornado</string>
@@ -233,7 +233,7 @@
   <string name="changelog_full_title">Veranderingen</string>
   <string name="changelog_title">Wat is nieuw</string>
   <string name="changelog_ok_button">OK</string>
-  <string name="changelog_show_full">meer...</string>
+  <string name="changelog_show_full">meer…</string>
   <string name="background_color">terug</string>
   <string name="on">Aan</string>
   <string name="off">Uit</string>

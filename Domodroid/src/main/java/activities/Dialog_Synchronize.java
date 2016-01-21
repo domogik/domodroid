@@ -203,7 +203,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 
             // if API rinor >0.5 génération auto sinon classic
-            JSONObject json_rinor = null;
+            JSONObject json_rinor;
             String mytag = "Dialog_Synchronize";
             try {
                 json_rinor = Rest_com.connect_jsonobject(urlAccess, login, password, 3000);
@@ -248,7 +248,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_AreaList = null;
             JSONObject json_RoomList = null;
             JSONObject json_FeatureList = null;
-            JSONObject device_feature1 = null;
+            JSONObject device_feature1;
             JSONArray json_FeatureList1 = null;
             JSONObject json_Sensors = null;
             JSONObject json_Commands = null;
@@ -402,7 +402,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 JSONArray rooms = new JSONArray();
                 JSONArray ListFeature = new JSONArray();
                 //Create string
-                String usage = "";
+                String usage;
                 //Create an ArrayList
                 ArrayList<String> list_usage = new ArrayList<>();
 
@@ -558,8 +558,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, "ERROR getting MQ information");
                 }
                 json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess + "device", login, password, 3000);
-                JSONObject Json_data_type = new JSONObject();
-                Json_data_type = Rest_com.connect_jsonobject(urlAccess + "datatype", login, password, 3000);
+                JSONObject Json_data_type = Rest_com.connect_jsonobject(urlAccess + "datatype", login, password, 3000);
                 if (json_FeatureList1 == null) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");
@@ -601,7 +600,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 JSONArray icons = new JSONArray();
                 JSONArray ListFeature = new JSONArray();
                 //Create string
-                String usage = "";
+                String usage;
                 //Create an ArrayList
                 ArrayList<String> list_usage = new ArrayList<>();
 

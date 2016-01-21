@@ -67,12 +67,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private float api_version;
 
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    private static FrameLayout myself = null;
 
     private Entity_client session = null;
     private Boolean realtime = false;
     private Animation animation;
-    private Entity_Feature feature;
+    private final Entity_Feature feature;
     private String state_key;
     private String parameters;
     private int dev_id;
@@ -82,7 +82,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     public Graphical_History(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -93,7 +93,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     public Graphical_History(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, session_type, place_id, place_type, mytag, container);
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -101,11 +101,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         this.parameters = feature.getParameters();
         this.dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
-        this.id=feature.getId();
+        this.id = feature.getId();
         myself = this;
         String stateS = "";
         try {

@@ -18,6 +18,7 @@
 package widgets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.domogik.domodroid13.R;
@@ -56,7 +57,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private final SharedPreferences params;
 
 
-    public Graphical_Area(SharedPreferences params,tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
+    public Graphical_Area(SharedPreferences params, tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
         this.myself = this;
         this.Tracer = Trac;
@@ -64,7 +65,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         this.id_area = id;
         this.context = context;
         this.Activity = (android.app.Activity) context;
-        this.params=params;
+        this.params = params;
         setOnLongClickListener(this);
 
         mytag = "Graphical_Area(" + id_area + ")";
@@ -158,12 +159,10 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (String aFiilliste : fiilliste) {
-                list_icon.add(aFiilliste);
-            }
+            Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste,fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {

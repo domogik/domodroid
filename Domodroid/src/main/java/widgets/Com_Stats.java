@@ -79,7 +79,6 @@ public class Com_Stats extends FrameLayout {
 
     public Com_Stats(tracerengine Trac, Activity context, int widgetSize) {
         super(context);
-        FrameLayout myself = this;
 
         String mytag = "Com_Stats";
         this.setPadding(5, 5, 5, 5);

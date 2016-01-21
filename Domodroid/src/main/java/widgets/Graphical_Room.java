@@ -20,6 +20,7 @@ package widgets;
 import org.domogik.domodroid13.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import database.Cache_management;
@@ -139,12 +140,10 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (String aFiilliste : fiilliste) {
-                list_icon.add(aFiilliste);
-            }
+            Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste,fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {

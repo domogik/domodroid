@@ -2,6 +2,7 @@ package activities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -156,14 +157,14 @@ class Dialog_House extends Dialog implements OnClickListener {
         for (Entity_Feature feature : listFeature) {
             if (feature.getParameters().contains("command")) {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())).toString());
+                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())).toString());
+                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     list_feature.add(feature.getName() + " " + feature.getState_key());
@@ -188,9 +189,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         List<String> list_icon = new ArrayList<>();
         String[] fiilliste;
         fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-        for (int i = 0; i < fiilliste.length; i++) {
-            list_icon.add(fiilliste[i]);
-        }
+        Collections.addAll(list_icon, fiilliste);
         final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
         list_icon_choice.setTitle(R.string.Wich_ICON_message);
         List_Icon_Adapter adapter11 = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
@@ -387,69 +386,89 @@ class Dialog_House extends Dialog implements OnClickListener {
             }
         });
 
-        if (tag.equals("house_cancel"))
-            dismiss();
-        else if (tag.equals("house_ok")) {
-            SharedPreferences.Editor prefEditor = params.edit();
-            try {
-                prefEditor = params.edit();
-                //To allow the area view we have to remove by usage option
-                prefEditor.putBoolean("BY_USAGE", false);
+        switch (tag) {
+            case "house_cancel":
+                dismiss();
+                break;
+            case "house_ok":
+                SharedPreferences.Editor prefEditor = params.edit();
+                try {
+                    prefEditor = params.edit();
+                    //To allow the area view we have to remove by usage option
+                    prefEditor.putBoolean("BY_USAGE", false);
+                    prefEditor.commit();
+
+                } catch (Exception e) {
+                    Tracer.e(mytag, e.toString());
+                }
+
                 prefEditor.commit();
 
-            } catch (Exception e) {
-                Tracer.e(mytag, e.toString());
+                dismiss();
+                break;
+            case "add_area":
+                alert_Area.show();
+                break;
+            case "add_room": {
+                alert_Room.show();
+                AlertDialog alert_list_area = list_area_choice.create();
+                alert_list_area.show();
+                break;
             }
-
-            prefEditor.commit();
-
-            dismiss();
-        } else if (tag.equals("add_area")) {
-            alert_Area.show();
-        } else if (tag.equals("add_room")) {
-            alert_Room.show();
-            AlertDialog alert_list_area = list_area_choice.create();
-            alert_list_area.show();
-        } else if (tag.equals("add_widget")) {
-            list_type_choice.show();
-            AlertDialog alert_list_feature = list_feature_choice.create();
-            alert_list_feature.show();
-        } else if (tag.equals("add_widget_root")) {
-            alert_Feature.show();
-            v.setTag("add_widget");
-        } else if (tag.equals("add_widget_area")) {
-            alert_Feature.show();
-            AlertDialog alert_list_area = list_area_choice.create();
-            alert_list_area.show();
-            v.setTag("add_widget");
-        } else if (tag.equals("add_widget_room")) {
-            alert_Feature.show();
-            AlertDialog alert_list_room = list_room_choice.create();
-            alert_list_room.show();
-            v.setTag("add_widget");
-        } else if (tag.equals("add_icon")) {
-            list_type_choice.show();
-            AlertDialog alert_list_icon = list_icon_choice.create();
-            alert_list_icon.show();
-            //Ask user what icon i want to modify area, room, widget
-            //in function display
-            //display list of all icons
-            //and change the tag for onclic() method
-        } else if (tag.equals("add_icon_area")) {
-            alert_Icon.show();
-            AlertDialog alert_list_area = list_area_choice.create();
-            alert_list_area.show();
-            v.setTag("add_icon");
-        } else if (tag.equals("add_icon_room")) {
-            alert_Icon.show();
-            AlertDialog alert_list_room = list_room_choice.create();
-            alert_list_room.show();
-            v.setTag("add_icon");
-        } else if (tag.equals("add_icon_widget")) {
-            alert_Icon.show();
-            AlertDialog alert_list_feature = list_feature_choice.create();
-            alert_list_feature.show();
-            v.setTag("add_icon");
+            case "add_widget": {
+                list_type_choice.show();
+                AlertDialog alert_list_feature = list_feature_choice.create();
+                alert_list_feature.show();
+                break;
+            }
+            case "add_widget_root":
+                alert_Feature.show();
+                v.setTag("add_widget");
+                break;
+            case "add_widget_area": {
+                alert_Feature.show();
+                AlertDialog alert_list_area = list_area_choice.create();
+                alert_list_area.show();
+                v.setTag("add_widget");
+                break;
+            }
+            case "add_widget_room": {
+                alert_Feature.show();
+                AlertDialog alert_list_room = list_room_choice.create();
+                alert_list_room.show();
+                v.setTag("add_widget");
+                break;
+            }
+            case "add_icon":
+                list_type_choice.show();
+                AlertDialog alert_list_icon = list_icon_choice.create();
+                alert_list_icon.show();
+                //Ask user what icon i want to modify area, room, widget
+                //in function display
+                //display list of all icons
+                //and change the tag for onclic() method
+                break;
+            case "add_icon_area": {
+                alert_Icon.show();
+                AlertDialog alert_list_area = list_area_choice.create();
+                alert_list_area.show();
+                v.setTag("add_icon");
+                break;
+            }
+            case "add_icon_room": {
+                alert_Icon.show();
+                AlertDialog alert_list_room = list_room_choice.create();
+                alert_list_room.show();
+                v.setTag("add_icon");
+                break;
+            }
+            case "add_icon_widget": {
+                alert_Icon.show();
+                AlertDialog alert_list_feature = list_feature_choice.create();
+                alert_list_feature.show();
+                v.setTag("add_icon");
+                break;
+            }
         }
 
     }
@@ -502,14 +521,14 @@ class Dialog_House extends Dialog implements OnClickListener {
             map = new HashMap<>();
             if (feature.getParameters().contains("command")) {
                 try {
-                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
+                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
+                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     map.put("name", feature.getName() + " " + feature.getState_key());

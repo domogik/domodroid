@@ -37,7 +37,7 @@ import android.view.View.OnClickListener;
 public class Basic_Graphical_zone extends FrameLayout implements OnClickListener {
 
     final LinearLayout LL_background;
-    final ImageView IV_img;
+    private final ImageView IV_img;
     final TextView TV_name;
     private final int id;
     //private int session_type;
@@ -97,7 +97,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //description
         TextView TV_description = new TextView(context);
         try {
-            TV_description.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), description.toLowerCase())).toString());
+            TV_description.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), description.toLowerCase())));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + name);
             TV_description.setText(description);

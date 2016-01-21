@@ -347,7 +347,7 @@ class Widgets_Manager {
                 map.put("name", area.getName());
                 String iconName = "unknow";
                 try {
-                    iconName = domodb.requestIcons(area.getId(), "area").getValue().toString();
+                    iconName = domodb.requestIcons(area.getId(), "area").getValue();
                 } catch (Exception e) {
                     Tracer.e(mytag, e.toString());
                 }
@@ -408,7 +408,7 @@ class Widgets_Manager {
             try {
                 iconId = domodb.requestIcons(Id, "room").getValue();
             } catch (Exception e) {
-                Tracer.i(mytag,"No specific icon for this room");
+                Tracer.i(mytag, "No specific icon for this room");
                 //e.printStackTrace();
             }
             if (iconId.equals("unknown")) {

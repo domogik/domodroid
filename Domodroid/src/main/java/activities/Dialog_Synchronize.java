@@ -584,8 +584,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 publishProgress(25);
                 Tracer.e(mytag, "connected to a 0.4 domogik Version");
 
-                //TODO grab area,room,feature and feature_assotiation from previous sync if exists.
-                //Avoiding the user organization to be lost
+                //todo #75 ask user how he want the default Area to be organize
+                //see https://github.com/domogik/domodroid/issues/75
 
                 //Create JSONObject
                 json_RoomList = new JSONObject();
@@ -614,6 +614,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 try {
                     map_area.put("description", "");
                     map_area.put("id", "1");
+                    //todo #75 Rename this area by user choice
                     map_area.put("name", "Usage");
                     list.put(map_area);
                 } catch (JSONException e1) {
@@ -684,8 +685,10 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     //List all sensors
                     for (int y = 0; y < list_sensors; y++) {
                         try {
-                            //TODO reorder for the moment it his done by data_Type
+                            //todo #75 reorder for the moment it his done by name
                             usage = json_FeatureList1.getJSONObject(i).getString("name");
+                            //usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
+                            //usage = json_FeatureList1.getJSONObject(i).getString("client_id");
                         } catch (Exception e) {
                             usage = null;
                             // Cannot parse JSON Array or JSONObject
@@ -706,7 +709,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                         room.put("description", "");
                                         room.put("area", area);
                                         room.put("id", j);
-                                        room.put("name", json_FeatureList1.getJSONObject(i).getString("name"));
+                                        room.put("name", usage);
                                         rooms.put(room);
                                     } catch (JSONException e) {
                                         Tracer.e(mytag, e.toString());
@@ -720,8 +723,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                     }
                                     icons.put(icon);
                                     try {
-                                        list_usage.add(json_FeatureList1.getJSONObject(i).getString("name"));
-                                    } catch (JSONException e) {
+                                        list_usage.add(usage);
+                                    } catch (Exception e) {
                                         Tracer.e(mytag, e.toString());
                                     }
                                     j++;
@@ -731,8 +734,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             JSONObject Widget = new JSONObject();
                             try {
                                 Widget.put("place_type", "room");
-                                Widget.put("place_id", list_usage.indexOf(
-                                        json_FeatureList1.getJSONObject(i).getString("name")) + 2); //id_rooms);
+                                Widget.put("place_id", list_usage.indexOf(usage) + 2); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
                                 Widget.put("id", k);
                             } catch (JSONException e1) {
@@ -769,7 +771,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 device_feature1.put("adress", json_Sensors.getJSONObject(listsensor.getString(y)).getString("name"));
                                 device_feature1.put("device_type_id", json_FeatureList1.getJSONObject(i).getString("device_type_id"));
                                 device_feature1.put("description", json_FeatureList1.getJSONObject(i).getString("description"));
-                                device_feature1.put("name", usage);
+                                device_feature1.put("name", json_FeatureList1.getJSONObject(i).getString("name"));
                                 device_feature1.put("stat_key", json_Sensors.getJSONObject(listsensor.getString(y)).getString("reference"));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
@@ -842,8 +844,10 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     //List all commands
                     for (int y = 0; y < list_commands; y++) {
                         try {
-                            //TODO reorder for the moment it his done by data_Type
+                            //todo #75 reorder for the moment it his done by name
                             usage = json_FeatureList1.getJSONObject(i).getString("name");
+                            //usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
+                            //usage = json_FeatureList1.getJSONObject(i).getString("client_id");
                         } catch (Exception e) {
                             usage = null;
                             // Cannot parse JSON Array or JSONObject
@@ -864,7 +868,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                         room.put("description", "");
                                         room.put("area", area);
                                         room.put("id", j);
-                                        room.put("name", json_FeatureList1.getJSONObject(i).getString("name"));
+                                        room.put("name", usage);
                                         rooms.put(room);
                                     } catch (JSONException e) {
                                         Tracer.e(mytag, e.toString());
@@ -878,8 +882,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                         Tracer.e(mytag, e.toString());
                                     }
                                     try {
-                                        list_usage.add(json_FeatureList1.getJSONObject(i).getString("name"));
-                                    } catch (JSONException e) {
+                                        list_usage.add(usage);
+                                    } catch (Exception e) {
                                         Tracer.e(mytag, e.toString());
                                     }
                                     j++;
@@ -904,13 +908,13 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.e(mytag, e1.toString());
                             }
                             try {
-                                Widget.put("place_id", list_usage.indexOf(
-                                        json_FeatureList1.getJSONObject(i).getString("name")) + 2);
+                                Widget.put("place_id", list_usage.indexOf(usage) + 2);
                                 Widget.put("device_feature_id", tempid);
                                 Widget.put("id", k);
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
-                            } //id_rooms);
+                            }
+                            ;
                             k++;
                             String data_type = null;
                             try {
@@ -948,7 +952,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 device_feature1.put("adress", json_Commands.getJSONObject(listcommand.getString(y)).getString("name"));
                                 device_feature1.put("device_type_id", json_FeatureList1.getJSONObject(i).getString("device_type_id"));
                                 device_feature1.put("description", json_FeatureList1.getJSONObject(i).getString("description"));
-                                device_feature1.put("name", usage);
+                                device_feature1.put("name", json_FeatureList1.getJSONObject(i).getString("name"));
                                 device_feature1.put("stat_key", json_Commands.getJSONObject(listcommand.getString(y)).getString("name"));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());

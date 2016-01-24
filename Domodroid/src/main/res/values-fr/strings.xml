@@ -561,4 +561,9 @@
     <string name="time">Temps</string>
     <string name="events_error_mq_config">Erreur de configuration de MQ</string>
     <string name="events_error_mq">Erreur avec MQ</string>
+    <string name="OPTION_Device_sync_organization">Organisation lors de la syncronisation</string>
+    <string name="sync_by_device_name">Par nom de Device</string>
+    <string name="sync_by_device_type">Par type de Device</string>
+    <string name="sync_by_plugin">Par Plugin</string>
+    <string name="OPTION_only_0_4_more">Pour les version 0.4 et plus</string>
 </resources>

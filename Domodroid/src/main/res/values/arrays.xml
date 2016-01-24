@@ -68,4 +68,15 @@
 	<item>map</item>
 </string-array>
 
+    <string-array name="device_sync_order_name">
+        <item>@string/sync_by_device_name</item>
+        <item>@string/sync_by_device_type</item>
+        <item>@string/sync_by_plugin</item>
+    </string-array>
+
+    <string-array name="device_sync_order_value">
+        <item>device_name</item>
+        <item>device_type</item>
+        <item>plugin</item>
+    </string-array>
 </resources>

@@ -622,7 +622,7 @@ public class Graphics_Manager {
         //todo adapt for 0.4
         //information are in json device_types of each plugin
         //BLUEZ "available"
-        if (usage.equals("available") || usage.contains("bluez"))
+        if (usage.toLowerCase().equals("available") || usage.contains("bluez"))
             usage = "bluetooth";
         //CID "callerid"
         if (usage.contains("callerid"))
@@ -634,8 +634,8 @@ public class Graphics_Manager {
         if (usage.contains("swing") || usage.contains("fan"))
             usage = "ventilation";
         //DISKFREE "get_total_space", "get_percent_used", "get_free_space", "get_used_space"
-        if (usage.contains("diskfree") || usage.equals("get_total_space") || usage.equals("get_percent_used")
-                || usage.equals("get_free_space") || usage.equals("get_used_space"))
+        if (usage.contains("diskfree") || usage.toLowerCase().equals("get_total_space") || usage.toLowerCase().equals("get_percent_used")
+                || usage.toLowerCase().equals("get_free_space") || usage.toLowerCase().equals("get_used_space"))
             usage = "server";
         //GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
         //GEOLOC "position_degrees"
@@ -645,17 +645,17 @@ public class Graphics_Manager {
         //MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
         //"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
         //"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current",
-        if (usage.equals("sensor_battery"))
+        if (usage.toLowerCase().equals("sensor_battery"))
             usage = "battery";
-        if (usage.contains("power") || usage.contains("energy") || usage.contains("voltage") || usage.equals("sensor_current"))
+        if (usage.contains("power") || usage.contains("energy") || usage.contains("voltage") || usage.toLowerCase().equals("sensor_current"))
             usage = "electricity";
-        if (usage.equals("sensor_rainfall") || usage.equals("sensor_water"))
+        if (usage.toLowerCase().equals("sensor_rainfall") || usage.toLowerCase().equals("sensor_water"))
             usage = "water";
         //NOTIFY "msg_status", "error_send"
         //NUTSERVE "test_battery_start", "test_battery_start_deep", "ups_status", "ups_event", "input_voltage", "output_voltage"
         //"battery_voltage", "battery_charge", "ack_command",
         //ONEWIRE "temperature", "humidity", "serial", "gpio",
-        if (usage.equals("test_battery_start") || usage.equals("test_battery_start_deep") || usage.equals("battery_voltage") || usage.equals("battery_charge"))
+        if (usage.toLowerCase().equals("test_battery_start") || usage.toLowerCase().equals("test_battery_start_deep") || usage.toLowerCase().equals("battery_voltage") || usage.toLowerCase().equals("battery_charge"))
             usage = "battery";
         if (usage.contains("thermometer"))
             usage = "temperature";
@@ -668,26 +668,26 @@ public class Graphics_Manager {
         //TELEINFO "adco", "optarif", "isousc", "base", "iinst", "imax", "motdetat", "hchc", "hchp"
         //"ptec", "papp", "hhphc", "iinst1", "iinst2", "iinst3", "imax1", "imax2", "imax3", "adps"
         //"ejphn", "ejphpm", "pejp", "bbrhcjb", "bbrhpjb", "bbrhcjw", "bbrhpjw", "bbrhcjr", "bbrhpjr"
-        if (usage.contains("teleinfo") || usage.equals("adco") || usage.equals("optarif") || usage.equals("isousc") || usage.equals("base")
-                || usage.equals("iinst") || usage.equals("imax") || usage.equals("motdetat")
-                || usage.equals("hchc") || usage.equals("hchp") || usage.equals("ptec")
-                || usage.equals("papp") || usage.equals("hhphc") || usage.equals("iinst1")
-                || usage.equals("iinst2") || usage.equals("iinst3") || usage.equals("imax1")
-                || usage.equals("imax2") || usage.equals("imax3") || usage.equals("adps")
-                || usage.equals("ejphn") || usage.equals("ejphpm") || usage.equals("pejp")
-                || usage.equals("bbrhcjb") || usage.equals("bbrhpjb") || usage.equals("bbrhcjw")
-                || usage.equals("bbrhpjw") || usage.equals("bbrhcjr") || usage.equals("bbrhpjr")
+        if (usage.contains("teleinfo") || usage.toLowerCase().equals("adco") || usage.toLowerCase().equals("optarif") || usage.toLowerCase().equals("isousc") || usage.toLowerCase().equals("base")
+                || usage.toLowerCase().equals("iinst") || usage.toLowerCase().equals("imax") || usage.toLowerCase().equals("motdetat")
+                || usage.toLowerCase().equals("hchc") || usage.toLowerCase().equals("hchp") || usage.toLowerCase().equals("ptec")
+                || usage.toLowerCase().equals("papp") || usage.toLowerCase().equals("hhphc") || usage.toLowerCase().equals("iinst1")
+                || usage.toLowerCase().equals("iinst2") || usage.toLowerCase().equals("iinst3") || usage.toLowerCase().equals("imax1")
+                || usage.toLowerCase().equals("imax2") || usage.toLowerCase().equals("imax3") || usage.toLowerCase().equals("adps")
+                || usage.toLowerCase().equals("ejphn") || usage.toLowerCase().equals("ejphpm") || usage.toLowerCase().equals("pejp")
+                || usage.toLowerCase().equals("bbrhcjb") || usage.toLowerCase().equals("bbrhpjb") || usage.toLowerCase().equals("bbrhcjw")
+                || usage.toLowerCase().equals("bbrhpjw") || usage.toLowerCase().equals("bbrhcjr") || usage.toLowerCase().equals("bbrhpjr")
                 )
             usage = "electricity";
         //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close"
-        if (usage.equals("battery"))
+        if (usage.toLowerCase().equals("battery"))
             usage = "battery";
         if (usage.contains("lighting"))
             usage = "light";
         if (usage.contains("open_close"))
             usage = "door";
         //VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
-        if (usage.equals("temp"))
+        if (usage.toLowerCase().equals("temp"))
             usage = "temperature";
         //WEATHER "current_barometer_value", "current_feels_like", "current_humidity", "current_last_updated", "current_station", "current_temperature"
         //"current_text", "current_code", "current_visibility","current_wind_direction", "current_wind_speed", "current_sunrise", "current_sunset"
@@ -696,24 +696,24 @@ public class Graphics_Manager {
         //"forecast_2_day", "forecast_2_temperature_high", "forecast_2_temperature_low", "forecast_2_condition_text", "forecast_2_condition_code"
         //"forecast_3_day", "forecast_3_temperature_high", "forecast_3_temperature_low", "forecast_3_condition_text", "forecast_3_condition_code"
         //"forecast_4_day","forecast_4_temperature_high", "forecast_4_temperature_low","forecast_4_condition_text","forecast_4_condition_code"
-        if (usage.contains("temperature") || usage.equals("current_feels_like"))
+        if (usage.toLowerCase().contains("temperature") || usage.toLowerCase().equals("current_feels_like"))
             usage = "temperature";
-        if (usage.contains("humidity"))
+        if (usage.toLowerCase().contains("humidity"))
             usage = "water";
         //TODO change this on with a sun up and down icon
-        if (usage.contains("current_sunrise") || usage.equals("current_sunset"))
+        if (usage.toLowerCase().contains("current_sunrise") || usage.toLowerCase().equals("current_sunset"))
             usage = "cron";
         //WOL "wol"
-        if (usage.equals("wol"))
+        if (usage.toLowerCase().equals("wol"))
             usage = "computer";
         //ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
         //"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
         //"level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
-        if (usage.equals("battery_level") || usage.equals("low_battery") || usage.equals("battery_level"))
+        if (usage.toLowerCase().equals("battery_level") || usage.toLowerCase().equals("battery-level") || usage.toLowerCase().equals("low_battery") || usage.toLowerCase().equals("low-battery"))
             usage = "battery";
-        if (usage.contains("thermostat"))
+        if (usage.toLowerCase().contains("thermostat"))
             usage = "temperature";
-        if (usage.contains("opening_sensor") || usage.contains("opening.sensor"))
+        if (usage.toLowerCase().contains("opening_sensor") || usage.contains("opening.sensor") || usage.contains("opening-sensor") || usage.contains("door-window-sensor"))
             usage = "door";
         return usage;
 

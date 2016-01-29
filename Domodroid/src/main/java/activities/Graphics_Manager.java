@@ -509,7 +509,7 @@ public class Graphics_Manager {
             case 0:
                 //reorder by usage name for easy update
             /*
-			 * TODO add missing usage
+             * TODO add missing usage
 			 * air_conditionning
 			 * heating
 			 * mirror
@@ -621,6 +621,7 @@ public class Graphics_Manager {
     public static String adapt_usage(String usage) {
         //todo adapt for 0.4
         //information are in json device_types of each plugin
+        //So a lot of things to look at
         //BLUEZ "available"
         if (usage.toLowerCase().equals("available") || usage.contains("bluez"))
             usage = "bluetooth";
@@ -642,6 +643,12 @@ public class Graphics_Manager {
         //IPX800 "state", "input", "count"
         //IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
         //K8056 "sensor_switch_relay", "cmd_switch_relay"
+        //KARTOTZ "send_msg", "wakeup", "sleep", "left_ear", "right_ear", "msg_status", "error_send"
+        //MIRROR
+        if (usage.toLowerCase().equals("present"))
+            usage = "nanoztag";
+        if (usage.toLowerCase().equals("activated"))
+            usage = "mirror";
         //MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
         //"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
         //"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current",
@@ -651,6 +658,7 @@ public class Graphics_Manager {
             usage = "electricity";
         if (usage.toLowerCase().equals("sensor_rainfall") || usage.toLowerCase().equals("sensor_water"))
             usage = "water";
+        //NABAZTAG "send_msg", "wakeup", "sleep", "left_ear", "right_ear", "msg_status", "error_send"
         //NOTIFY "msg_status", "error_send"
         //NUTSERVE "test_battery_start", "test_battery_start_deep", "ups_status", "ups_event", "input_voltage", "output_voltage"
         //"battery_voltage", "battery_charge", "ack_command",
@@ -659,10 +667,22 @@ public class Graphics_Manager {
             usage = "battery";
         if (usage.contains("thermometer"))
             usage = "temperature";
+        //ONEWIRED "1-wire_cmd_output, "1-wire temperature", "1-wire humidity", "1-wire luminosity", "1-wire pressure",
+        // "1-wire voltage", "1-wire counter", "1-wire counter diff", "1-wire input", "1-wire output"
         //PING "ping"
         if (usage.contains("ping"))
             usage = "computer";
-        //SCRIPT "sensor_script_action", "sensor_script_info", "run_script_action", "run_script_info"
+        //PLCBUS "set_level_bin", "level_bin"
+        //RFXBNZ "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity", "sensor_pressure", "sensor_power"
+        // "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed", "sensor_rainfall", "sensor_outflow"
+        // "sensor_voltage", "sensor_current", "sensor_homeeasy_switch", "sensor_homeeasy_openclose", "sensor_x10_switch"
+        // "sensor_ati_remote", "sensor_generic"
+        //SCRIPT "sensor_script_action", "sensor_script_onoff", "sensor_script_info_number","sensor_script_info_temperature",
+        // "sensor_script_info_humidity", "sensor_script_info_binary", "sensor_script_info", "sensor_script_info_switch",
+        // "sensor_script_info_openclose", "sensor_script_info_string",
+        // "run_script_info", "cmd_script_action", "cmd_script_onoff"
+        if (usage.contains("openclose"))
+            usage = "door";
         if (usage.contains("script"))
             usage = "scene";
         //TELEINFO "adco", "optarif", "isousc", "base", "iinst", "imax", "motdetat", "hchc", "hchp"
@@ -686,6 +706,9 @@ public class Graphics_Manager {
             usage = "light";
         if (usage.contains("open_close"))
             usage = "door";
+        //VDEVICE "set_virtual_number", "set_virtual_binary", "set_virtual_string","set_virtual_temperature",
+        // "set_virtual_humidity", "set_virtual_percent", "set_virtual_switch", "set_virtual_openclose",
+        // "set_virtual_startstop", sensor are same as commands that's easier for this part.
         //VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
         if (usage.toLowerCase().equals("temp"))
             usage = "temperature";

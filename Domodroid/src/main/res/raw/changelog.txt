@@ -23,20 +23,21 @@
       % Version 14
       _ 2016-xx-xx
       ! Important due to new method for Domogik 0.4+ command, it's strongly recommended to synchronize again with Domogik.
+      * #75 Add an option for 0.4+ to order default area by device name, device type or by plugin.
       * #70 Close new Db method that delete widget if device didn't exist after a new sync (avoid filling db with past data).
       * #34 new sync method that avoid to loose house organisation.
       * #34 new sync method that deleting only area (Usage/Device). At least at the 2nd next sync.
-      * Add multiple parameters for 0.4 command (need a resync)
-      * #69 Widget command with multiple parameters
-      * #68 Android > KitKat image picker method change
+      * Add multiple parameters for 0.4+ command (need a resync).
+      * #69 Widget command with multiple parameters.
+      * #68 Android > KitKat image picker method change.
       * #35 Add icon for weather condition code.
-      * Add color picker RGB for 0.4 command
-      * Change power management method
-      * Correct history for callerid in 0.3
-      * Adding a new method from fritz to callurl in background (for command)
-      * Correct ANR by adding timeout in http connection
-      * Add icon for bluetooth and battery
-      * Correct maps widget state
+      * Add color picker RGB for 0.4+ command.
+      * Change power management method.
+      * Correct history for callerid in 0.3.
+      * Adding a new method from fritz to callurl in background (for command).
+      * Correct ANR by adding timeout in http connection.
+      * Add icon for bluetooth and battery.
+      * Correct maps widget state.
       * Still more translation ;)
       % Version 13
       _ 2015-12-21

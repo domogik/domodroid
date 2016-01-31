@@ -17,76 +17,73 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import activities.Activity_Cam;
-import activities.Gradients_Manager;
-import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.R;
-
-import database.DmdContentProvider;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
-import misc.List_Icon_Adapter;
+
 import misc.tracerengine;
-import android.view.Gravity;
+
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener{
+public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener {
 
-	private final String url;
-	private final Context context;
-	private static String mytag;
-	private tracerengine Tracer = null;
-	public static FrameLayout container = null;
-	private static String state_key;
-	private final String name_cam;
+    private String url;
+    private final Context context;
+    private static String mytag;
+    private tracerengine Tracer = null;
+    public static FrameLayout container = null;
+    private static FrameLayout myself = null;
+    private String name_cam;
+    private final Entity_Feature feature;
+    private int dev_id;
 
-	public Graphical_Cam(tracerengine Trac, Activity context,int id,int dev_id,String name, String state_key,String url,String usage,int widgetSize, int session_type,int place_id,String place_type) {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.context = context;
-		this.Tracer = Trac;
-		this.name_cam=name;
-		this.url = url;
-		FrameLayout myself = this;
-		setOnClickListener(this);
-		mytag="Graphical_Cam("+dev_id+")";
+    public Graphical_Cam(tracerengine Trac,
+                         final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.Tracer = Trac;
+        this.context = context;
+        onCreate();
+    }
 
-		//To have the icon colored as it has no state
-		IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+    public Graphical_Cam(tracerengine Trac,
+                         final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.Tracer = Trac;
+        this.context = context;
+        onCreate();
+    }
 
+    private void onCreate() {
+        myself = this;
+        this.url = feature.getAddress();
+        this.dev_id = feature.getDevId();
+        this.name_cam = feature.getName();
+        setOnClickListener(this);
+        mytag = "Graphical_Cam(" + dev_id + ")";
+        //To have the icon colored as it has no state
+        change_this_icon(2);
 
-	}
+    }
 
-	public void onClick(View v) {
-		if(!url.equals(null)){
-			Intent intent = new Intent(context,Activity_Cam.class);
-			Bundle b = new Bundle();
-			b.putString("url", url);
-			Tracer.e(mytag,""+url);
-			b.putString("name",name_cam);
-			intent.putExtras(b);
-			context.startActivity(intent);
-		}
-	}
+    public void onClick(View v) {
+        if (!url.equals(null)) {
+            Intent intent = new Intent(context, Activity_Cam.class);
+            Bundle b = new Bundle();
+            b.putString("url", url);
+            Tracer.e(mytag, "Opening camera at: " + url);
+            b.putString("name", name_cam);
+            intent.putExtras(b);
+            context.startActivity(intent);
+        }
+    }
 }

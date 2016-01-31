@@ -20,9 +20,8 @@ package widgets;
 import org.domogik.domodroid13.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import activities.Graphics_Manager;
 
 import database.Cache_management;
 import database.DmdContentProvider;
@@ -55,7 +54,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private final Activity Activity;
 
     public Graphical_Room(tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
-        super(context, id, name_room, description_room, icon, widgetSize, "room", handler);
+        super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
         this.myself = this;
         this.Tracer = Trac;
         this.id_room = id;
@@ -69,7 +68,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_choice = new ArrayList<String>();
+        List<String> list_choice = new ArrayList<>();
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
         list_choice.add(context.getString(R.string.delete));
@@ -138,15 +137,13 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             alert.show();
         } else if (action.equals(context.getString(R.string.change_icon))) {
             final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-            List<String> list_icon = new ArrayList<String>();
+            List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (int i = 0; i < fiilliste.length; i++) {
-                list_icon.add(fiilliste[i]);
-            }
+            Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer,getContext(), fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {
@@ -164,7 +161,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_room;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+                            change_this_icon(0, icon);
                             dialog.cancel();
                         }
                     }

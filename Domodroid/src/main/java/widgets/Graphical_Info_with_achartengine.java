@@ -44,6 +44,7 @@ import org.achartengine.tools.PanListener;
 import org.achartengine.tools.ZoomEvent;
 import org.achartengine.tools.ZoomListener;
 import org.achartengine.util.MathHelper;
+import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 
@@ -77,13 +79,10 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
 
     private LinearLayout chartContainer;
-    private final TextView value;
-    private final int dev_id;
-    private final int id;
-    private final String state_key;
+    private TextView value;
+    private int id;
 
-    private final Animation animation;
-    private final Activity context;
+    private Animation animation;
     private Message msg;
     private static String mytag = "";
     private String url = null;
@@ -91,12 +90,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     public final Boolean with_graph = true;
-    private tracerengine Tracer = null;
     private Entity_client session = null;
     private Boolean realtime = false;
     private GraphicalView mChart;
-    private final String login;
-    private final String password;
+    private String login;
+    private String password;
 
     private String step = "hour";
     private int limit = 6;        // items returned by Rinor on stats arrays when 'hour' average
@@ -111,25 +109,52 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     // 365 = 1 year
     private int sav_period;
 
-    private final float size10;
-    private final float size5;
-    private final XYMultipleSeriesRenderer multiRenderer;
-    private final XYSeriesRenderer incomeRenderer;
-    private final XYSeriesRenderer emptyRenderer;
-    private final XYMultipleSeriesDataset dataset;
-    private final XYSeries nameSeries;
-    private final XYSeries EmptySeries;
-    private final float api_version;
+    private float size10;
+    private float size5;
+    private XYMultipleSeriesRenderer multiRenderer;
+    private XYSeriesRenderer incomeRenderer;
+    private XYSeriesRenderer emptyRenderer;
+    private XYMultipleSeriesDataset dataset;
+    private XYSeries nameSeries;
+    private XYSeries EmptySeries;
+    private float api_version;
+    private final Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
+    private SimpleDateFormat format;
 
-    public Graphical_Info_with_achartengine(tracerengine Trac, final Activity context, int id, int dev_id, String name,
-                                            final String state_key, String url, final String usage, int period, int update,
-                                            int widgetSize, int session_type, final String parameters, int place_id, String place_type, SharedPreferences params) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type, mytag, container);
-        this.Tracer = Trac;
-        this.context = context;
-        this.dev_id = dev_id;
-        this.id = id;
-        this.state_key = state_key;
+    public Graphical_Info_with_achartengine(tracerengine Trac,
+                                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
+
+    public Graphical_Info_with_achartengine(tracerengine Trac,
+                                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
+
+    public void onCreate() {
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
+        this.id = feature.getId();
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
         String stateS;
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -137,8 +162,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
-        this.url = url;
-        this.myself = this;
+        myself = this;
         setOnClickListener(this);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -158,8 +182,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         dataset = new XYMultipleSeriesDataset();
         //Creating an  XYSeries for Income
         nameSeries = new TimeSeries(name);
-        //TODO translate
-        EmptySeries = new TimeSeries("NO VALUE");
+        EmptySeries = new TimeSeries(getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), "no_value")));
         incomeRenderer.setColor(0xff0B909A);
         emptyRenderer.setColor(0xffff0000);
         incomeRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -176,9 +199,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //incomeRenderer.setStroke(BasicStroke.DASHED);
         //Remove default X axis label
         //multiRenderer.setXLabels(0);
-        //TODO translate
         //Set X title
-        multiRenderer.setXTitle("Time");
+        multiRenderer.setXTitle(getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), "time")));
         //Remove default Y axis label
         multiRenderer.setYLabels(0);
         //Set X label text color
@@ -249,6 +271,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
+                    String test_unite = "";
                     try {
                         float formatedValue = 0;
                         if (loc_Value != null) {
@@ -258,14 +281,18 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         try {
                             //Basilic add, number feature has a unit parameter
                             JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                            String test_unite = jparam.getString("unit");
+                            test_unite = jparam.getString("unit");
                             //#30 add Scale value if too big for byte only
-                            if (test_unite.equals("b")) {
-                                value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
-                            } else if (test_unite.equals("ko")) {
-                                value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
-                            } else {
-                                value.setText(formatedValue + " " + test_unite);
+                            switch (test_unite) {
+                                case "b":
+                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
+                                    break;
+                                case "ko":
+                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
+                                    break;
+                                default:
+                                    value.setText(formatedValue + " " + test_unite);
+                                    break;
                             }
                         } catch (JSONException e) {
                             if (state_key.equalsIgnoreCase("temperature"))
@@ -284,16 +311,18 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                 value.setText(formatedValue + " km/h");
                             else if (state_key.equalsIgnoreCase("drewpoint"))
                                 value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code"))
+                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
                                 //Add try catch to avoid other case that make #1794
                                 try {
-
+                                    //use xml and weather fonts here
+                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                    value.setTypeface(typeface, Typeface.NORMAL);
                                     value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + loc_Value);
                                     value.setText(loc_Value);
                                 }
-                            else {
+                            } else {
                                 value.setText(loc_Value);
                             }
                         }
@@ -309,8 +338,22 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             value.setText(loc_Value);
                         }
                     }
-                    //To have the icon colored as it has no state
-                    IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
+                    //Change icon if in %
+                    if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+                        if (Float.parseFloat(loc_Value) >= 60) {
+                            //To have the icon colored if value beetwen 30 and 60
+                            change_this_icon(2);
+                        } else if (Float.parseFloat(loc_Value) >= 30) {
+                            //To have the icon colored if value >30
+                            change_this_icon(1);
+                        } else {
+                            //To have the icon colored if value <30
+                            change_this_icon(0);
+                        }
+                    } else {
+                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                        change_this_icon(2);
+                    }
 
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
@@ -326,6 +369,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        t.printStackTrace();
                     }    //kill the handler thread itself
                 }
             }
@@ -334,7 +378,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         //================================================================================
         /*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
@@ -344,12 +388,15 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             } else if (api_version >= 0.7f) {
                 session = new Entity_client(id, "", mytag, handler, session_type);
             }
-            if (Tracer.get_engine().subscribe(session)) {
-                realtime = true;        //we're connected to engine
-                //each time our value change, the engine will call handler
-                handler.sendEmptyMessage(9999);    //Force to consider current value in session
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         }
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....
@@ -456,7 +503,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         multiRenderer.addSeriesRenderer(incomeRenderer);
         multiRenderer.addSeriesRenderer(emptyRenderer);
 
-        Vector<Vector<Float>> values = new Vector<Vector<Float>>();
+        Vector<Vector<Float>> values = new Vector<>();
         chartContainer = new LinearLayout(context);
         // Getting a reference to LinearLayout of the MainActivity Layout
         chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -467,11 +514,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password);
+                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password);
+                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000);
             }
 
         } catch (Exception e) {
@@ -508,7 +555,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 int hour = valueArray.getJSONArray(i).getInt(4);
                 int hour_next = valueArray.getJSONArray(i + 1).getInt(4);
                 //String date=String.valueOf(hour)+"'";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date date1 = new Date();
                 try {
                     date1 = format.parse(String.valueOf(year) + "-"
@@ -576,7 +622,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 int day = valueArray.getJSONArray(i).getInt(3);
                 int day_next = valueArray.getJSONArray(i + 1).getInt(3);
                 //String date=String.valueOf(hour)+"'";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
                 calendar.set(Calendar.DAY_OF_MONTH, day);
@@ -635,7 +680,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 int week = valueArray.getJSONArray(i).getInt(1);
                 int week_next = valueArray.getJSONArray(i + 1).getInt(1);
                 //String date=String.valueOf(hour)+"'";
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
                 Calendar calendar = Calendar.getInstance();
                 calendar.clear();
                 //set to thursday because it's an average and much more nice like this.
@@ -778,6 +823,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     LL_background.removeView(chartContainer);
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 try {
 

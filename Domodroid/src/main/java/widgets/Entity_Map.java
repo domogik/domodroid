@@ -17,195 +17,85 @@
  */
 package widgets;
 
-import org.json.JSONException;
+import android.app.Activity;
+import android.content.SharedPreferences;
+
 import org.json.JSONObject;
+
 import activities.Graphics_Manager;
+import misc.tracerengine;
 
-public class Entity_Map{
-	private int id;
-	private JSONObject device;
-	private String description;
-	private String device_usage_id; 
-	private String address;
-	private String device_type_id;
-	private int devId;
-	private String name;
-	private String device_feature_model_id;
-	private String state_key;
-	private String parameters;
-	private String value_type;
-	private String currentState;
-	private int state;
-	private int posx;
-	private int posy;
-	private String map;
-	private Boolean isalive = true;
-	private Entity_client session;		//Structure to connect to WidgetUpdate, and receive notifications on change
+public class Entity_Map extends Entity_Feature {
+    private int id;
+    private int posx;
+    private int posy;
+    private String map;
+    private String currentState;
+    private Boolean isalive = true;
+    private Entity_client session;        //Structure to connect to WidgetUpdate, and receive notifications on change
 
-	public Entity_Map(String device_feature_model_id, int id, int devId, String device_usage_id, String address, 
-			String device_type_id, String description, String name, String state_key, String parameters, String value_type, 
-			int posx, int posy, String map) {
-		this.device_feature_model_id = device_feature_model_id;
-		this.id = id;
-		this.devId = devId;
-		this.device_usage_id = device_usage_id;
-		this.address = address;
-		this.device_type_id = device_type_id;
-		this.description = description;
-		this.name = name;
-		this.state_key = state_key;
-		this.parameters = parameters;
-		this.value_type = value_type;
-		this.posx = posx;
-		this.posy = posy;
-		this.map = map;
-		this.isalive = true;
-	}
+    public Entity_Map(SharedPreferences params, tracerengine Trac, Activity context, String device_feature_model_id, int id, int devId, String device_usage_id, String address,
+                      String device_type_id, String description, String name, String state_key, String parameters, String value_type,
+                      int posx, int posy, String map) {
+        super(params, Trac, context, device_feature_model_id, id, devId, device_usage_id, address, device_type_id,
+                description, name, state_key, parameters, value_type);
+        this.id = id;
+        this.posx = posx;
+        this.posy = posy;
+        this.map = map;
+        this.isalive = true;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public JSONObject getDevice() {
-		return device;
-	}
+    public int getPosx() {
+        return posx;
+    }
 
-	public void setDevice(JSONObject device){
-		this.device = device;
-	}
+    public void setPosx(int posx) {
+        this.posx = posx;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public int getPosy() {
+        return posy;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setPosy(int posy) {
+        this.posy = posy;
+    }
 
-	public String getDevice_usage_id() {
-		return device_usage_id;
-	}
+    public String getMap() {
+        return map;
+    }
 
-	public void setDevice_usage_id(String device_usage_id) {
-		this.device_usage_id = device_usage_id;
-	}
+    public void setMap(String map) {
+        this.map = map;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setSession(Entity_client session) {
+        this.session = session;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public Entity_client getSession() {
+        return session;
+    }
+    public String getCurrentState() {
+        return currentState;
+    }
+    public void setCurrentState(String currentState) {
+        this.currentState = currentState;
+    }
+    public Boolean isalive() {
+        return this.isalive;
+    }
+    public void setalive(Boolean mode) {
+        this.isalive = mode;
+    }
 
-	public int getDevId() {
-		return devId;
-	}
-
-	public void setDevId(int devId) {
-		this.devId = devId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDevice_feature_model_id() {
-		return device_feature_model_id;
-	}
-
-	public void setDevice_feature_model_id(String device_feature_model_id) {
-		this.device_feature_model_id = device_feature_model_id;
-	}
-
-	public String getState_key() {
-		return state_key;
-	}
-
-	public void setState_key(String state_key) {
-		this.state_key = state_key;
-	}
-
-	public String getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(String parameters) {
-		this.parameters = parameters;
-	}
-
-	public String getValue_type() {
-		return value_type;
-	}
-
-	public void setValue_type(String value_type) {
-		this.value_type = value_type;
-	}
-	public int getRessources() {
-		return Graphics_Manager.Map_Agent(getDevice_usage_id(),getState());
-	}
-	private int getState() {
-		return state;
-	}
-	public void setState(int state) {
-		this.state = state;
-	}
-
-	public String getCurrentState() {
-		return currentState;
-	}
-	public Boolean isalive() {
-		return this.isalive;
-	}
-	public void setCurrentState(String currentState) {
-		this.currentState = currentState;
-	}
-	public void setalive(Boolean mode) {
-		this.isalive = mode;
-	}
-	public String getDevice_type_id() {
-		return device_type_id;
-	}
-
-	public void setDevice_type_id(String device_type_id) {
-		this.device_type_id = device_type_id;
-	}
-
-	public int getPosx() {
-		return posx;
-	}
-
-	public void setPosx(int posx) {
-		this.posx = posx;
-	}
-
-	public int getPosy() {
-		return posy;
-	}
-
-	public void setPosy(int posy) {
-		this.posy = posy;
-	}
-
-	public String getMap() {
-		return map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-	public void setSession(Entity_client session) {
-		this.session = session;
-	}
-	public Entity_client getSession() {
-		return session;
-	}
 }

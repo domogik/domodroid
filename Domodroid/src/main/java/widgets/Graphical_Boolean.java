@@ -17,208 +17,216 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
+
 import org.domogik.domodroid13.R;
 
-import database.DmdContentProvider;
 import database.WidgetUpdate;
+
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import misc.List_Icon_Adapter;
+
 import misc.tracerengine;
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.EditText;
+
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 
 @SuppressWarnings("ALL")
-public class Graphical_Boolean extends Basic_Graphical_widget{
+public class Graphical_Boolean extends Basic_Graphical_widget {
 
-	private final TextView state;
-	private String value0;
-	private String value1;
-	private final String Value_0;
-	private final String Value_1;
-	private final ImageView bool;
-	private static String mytag;
-	private Message msg;
-	private String stateS = "";
+    private TextView state;
+    private String value0;
+    private String value1;
+    private String Value_0;
+    private String Value_1;
+    private ImageView bool;
+    private static String mytag;
+    private Message msg;
+    private String stateS = "";
+    public static FrameLayout container = null;
+    private static FrameLayout myself = null;
+    private Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
+    private final String url;
+    private String usage;
+    private String address;
+    private Entity_client session = null;
+    private Boolean realtime = false;
 
-	public static FrameLayout container = null;
-	private static FrameLayout myself = null;
-	private tracerengine Tracer = null;
+    public Graphical_Boolean(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
 
-	private Entity_client session = null; 
-	private Boolean realtime = false;
+    public Graphical_Boolean(tracerengine Trac,
+                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
 
-	public Graphical_Boolean(tracerengine Trac, final Activity context,
-			String address, final String name, 
-			int id,int dev_id, 
-			String state_key, final String usage,
-			String parameters, 
-			String model_id, int update, 
-			int widgetSize,
-			int session_type,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.myself=this;
-		this.Tracer = Trac;
-		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
-		}catch (Exception e){
-			Tracer.d(mytag, "no translation for: "+state_key);
-			this.stateS= state_key;
-		}
-		float api_version = params.getFloat("API_VERSION", 0);
+    public void onCreate() {
+        myself = this;
+        this.address = feature.getAddress();
+        this.usage = feature.getIcon_name();
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
 
-		try {
-			JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-			value0 = jparam.getString("value0");
-			value1 = jparam.getString("value1");
-		} catch (Exception e) {
-			value0 = "0";
-			value1 = "1";
-		}		
+        try {
+            this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+        } catch (Exception e) {
+            Tracer.d(mytag, "no translation for: " + state_key);
+            this.stateS = state_key;
+        }
+        float api_version = params.getFloat("API_VERSION", 0);
 
-		if (usage.equals("light")){
-			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
-			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
-		}else if (usage.equals("shutter")){
-			this.Value_0 =  getResources().getText(R.string.shutter_stat_0).toString();
-			this.Value_1 =  getResources().getText(R.string.shutter_stat_1).toString();
-		}else{
-			this.Value_0 = value0;
-			this.Value_1 = value1;		
-		}
+        try {
+            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            value0 = jparam.getString("value0");
+            value1 = jparam.getString("value1");
+        } catch (Exception e) {
+            value0 = "0";
+            value1 = "1";
+        }
 
-		mytag="Graphical_Boolean("+dev_id+")";
+        if (usage.equals("light")) {
+            this.Value_0 = getResources().getText(R.string.light_stat_0).toString();
+            this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
+        } else if (usage.equals("shutter")) {
+            this.Value_0 = getResources().getText(R.string.shutter_stat_0).toString();
+            this.Value_1 = getResources().getText(R.string.shutter_stat_1).toString();
+        } else {
+            this.Value_0 = value0;
+            this.Value_1 = value1;
+        }
 
-		//state
-		state=new TextView(context);
-		state.setTextColor(Color.BLACK);
-		try {
-			Tracer.d(mytag,"Try to get value translate from R.STRING" );
-			state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-		}catch (Exception e1) {
-			Tracer.d(mytag,"no translation for: "+Value_0);
-			state.setText(stateS + " : " + Value_0);
-		}
+        mytag = "Graphical_Boolean(" + dev_id + ")";
 
-		//boolean on/off
-		bool = new ImageView(context);
-		bool.setImageResource(R.drawable.boolean_off);
+        //state
+        state = new TextView(context);
+        state.setTextColor(Color.BLACK);
+        try {
+            Tracer.d(mytag, "Try to get value translate from R.STRING");
+            state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+        } catch (Exception e1) {
+            Tracer.d(mytag, "no translation for: " + Value_0);
+            state.setText(stateS + " : " + Value_0);
+        }
 
-		super.LL_infoPan.addView(state);
-		super.LL_featurePan.addView(bool);
+        //boolean on/off
+        bool = new ImageView(context);
+        bool.setImageResource(R.drawable.boolean_off);
 
-		Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				String status;
-				if (msg.what == 9999) {
-					if (session == null)
-						return;
-					status = session.getValue();
-					if (status != null) {
-						Tracer.d(mytag, "Handler receives a new status <" + status + ">");
+        super.LL_infoPan.addView(state);
+        super.LL_featurePan.addView(bool);
 
-						try {
-							if (status.equals(value0) || status.equals("0")) {
-								bool.setImageResource(R.drawable.boolean_off);
-								//change color if statue=low to (usage, o) means off
-								//note sure if it must be kept as set previously as default color.
-								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-								try {
-									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-								}catch (Exception e1) {
-									Tracer.d(mytag,"no translation for: "+Value_0);
-									state.setText(stateS + " : " + Value_0);
-								}
-							} else if (status.equals(value1) || status.equals("1")) {
-								bool.setImageResource(R.drawable.boolean_on);
-								//change color if statue=high to (usage, 2) means on
-								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-								try {
-									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-								}catch (Exception e1) {
-									Tracer.d(mytag,"no translation for: "+Value_1);
-									state.setText(stateS + " : " + Value_1);
-								}
-							}
-						} catch (Exception e) {
-							Tracer.e(mytag, "handler error device " + name);
-							e.printStackTrace();
-						}
-					}
-				} else if (msg.what == 9998) {
-					// state_engine send us a signal to notify it'll die !
-					Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-					session = null;
-					realtime = false;
-					removeView(LL_background);
-					myself.setVisibility(GONE);
-					if (container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-					try {
-						finalize();
-					} catch (Throwable t) {
-					}    //kill the handler thread itself
-				}
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String status;
+                if (msg.what == 9999) {
+                    if (session == null)
+                        return;
+                    status = session.getValue();
+                    if (status != null) {
+                        Tracer.d(mytag, "Handler receives a new status <" + status + ">");
 
-			}
+                        try {
+                            if (status.equals(value0) || status.equals("0")) {
+                                bool.setImageResource(R.drawable.boolean_off);
+                                //change color if statue=low to (usage, o) means off
+                                //note sure if it must be kept as set previously as default color.
+                                change_this_icon(0);
+                                try {
+                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + Value_0);
+                                    state.setText(stateS + " : " + Value_0);
+                                }
+                            } else if (status.equals(value1) || status.equals("1")) {
+                                bool.setImageResource(R.drawable.boolean_on);
+                                //change color if statue=high to (usage, 2) means on
+                                change_this_icon(2);
+                                try {
+                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + Value_1);
+                                    state.setText(stateS + " : " + Value_1);
+                                }
+                            }
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "handler error device " + name);
+                            e.printStackTrace();
+                        }
+                    }
+                } else if (msg.what == 9998) {
+                    // state_engine send us a signal to notify it'll die !
+                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
+                    session = null;
+                    realtime = false;
+                    removeView(LL_background);
+                    myself.setVisibility(GONE);
+                    if (container != null) {
+                        container.removeView(myself);
+                        container.recomputeViewAttributes(myself);
+                    }
+                    try {
+                        finalize();
+                    } catch (Throwable t) {
+                    }    //kill the handler thread itself
+                }
 
-		};
-		//================================================================================
-		/*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+            }
+
+        };
+        //================================================================================
+        /*
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-		if(cache_engine != null) {
-			if (api_version <=0.6f){
-				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version >=0.7f){
-				session = new Entity_client(id, "", mytag, handler, session_type);
-			}
-			if(Tracer.get_engine().subscribe(session)) {
-				realtime = true;		//we're connected to engine
-				//each time our value change, the engine will call handler
-				handler.sendEmptyMessage(9999);	//Force to consider current value in session
-			}
-
-		}
-		//================================================================================
-		//updateTimer();	//Don't use anymore cyclic refresh....	
-	}
+        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+        if (cache_engine != null) {
+            if (api_version <= 0.6f) {
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            } else if (api_version >= 0.7f) {
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //================================================================================
+        //updateTimer();	//Don't use anymore cyclic refresh....
+    }
 
 }
 

@@ -18,34 +18,63 @@
 package widgets;
 
 
-public class Entity_Area{
-	private String description;
-	private int id;
-	private String name;
+import android.app.Activity;
+import android.content.SharedPreferences;
+
+import database.DomodroidDB;
+import misc.tracerengine;
+
+public class Entity_Area {
+    private String description;
+    private int id;
+    private String name;
+    private final Activity context;
+    private tracerengine Tracer = null;
+    private final SharedPreferences params;
 
 
-	public Entity_Area(String description, int id, String name){
-		this.description = description;
-		this.id = id;
-		this.name = name;
-	}
+    public Entity_Area(SharedPreferences params, tracerengine Trac, Activity context, String description, int id, String name) {
+        this.description = description;
+        this.id = id;
+        this.name = name;
+        this.Tracer = Trac;
+        this.context = context;
+        this.params = params;
+    }
 
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIcon_name() {
+        String iconName = "unknow";
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
+        domodb.owner = "entity_area";
+        try {
+            iconName = domodb.requestIcons(id, "area").getValue();
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        return iconName;
+    }
 }

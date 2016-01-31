@@ -17,200 +17,180 @@
  */
 package widgets;
 
-import java.lang.Thread.State;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import activities.Gradients_Manager;
-import activities.Graphics_Manager;
+
 import org.domogik.domodroid13.R;
 
 import rinor.Stats_Com;
 
-import database.WidgetUpdate;
-
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
+
 import misc.tracerengine;
-import android.view.Gravity;
+
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 
-public class Com_Stats extends FrameLayout  {
+public class Com_Stats extends FrameLayout {
 
 
-	private FrameLayout imgPan;
-	private LinearLayout featurePan;
-	private LinearLayout featurePan2;
-	private View		  featurePan2_buttons;
-	private LinearLayout infoPan;
-	private ImageView img;
-	private int id;
-	private final Handler handler;
-	private Message msg;
-	public FrameLayout container = null;
+    private FrameLayout imgPan;
+    private LinearLayout featurePan;
+    private LinearLayout featurePan2;
+    private View featurePan2_buttons;
+    private LinearLayout infoPan;
+    private ImageView img;
+    private int id;
+    private final Handler handler;
+    private Message msg;
+    public FrameLayout container = null;
 
-	private Stats_Com stats = null;
-	private final TextView elapsed_period;
-	private final TextView cumul_period;
-	private final TextView cum_statsPR;
-	private final TextView cum_statsBR;
-	private final TextView cum_statsPS;
-	private final TextView cum_statsBS;
-	private final TextView cum_eventsPR;
-	private final TextView cum_eventsBR;
-	private final TextView cum_eventsPS;
-	private final TextView cum_eventsBS;
+    private final Stats_Com stats = null;
+    private final TextView elapsed_period;
+    private final TextView cumul_period;
+    private final TextView cum_statsPR;
+    private final TextView cum_statsBR;
+    private final TextView cum_statsPS;
+    private final TextView cum_statsBS;
+    private final TextView cum_eventsPR;
+    private final TextView cum_eventsBR;
+    private final TextView cum_eventsPS;
+    private final TextView cum_eventsBS;
 
-	private final TextView period_statsPR;
-	private final TextView period_statsBR;
-	private final TextView period_statsPS;
-	private final TextView period_statsBS;
-	private final TextView period_eventsPR;
-	private final TextView period_eventsBR;
-	private final TextView period_eventsPS;
-	private final TextView period_eventsBS;
+    private final TextView period_statsPR;
+    private final TextView period_statsBR;
+    private final TextView period_statsPS;
+    private final TextView period_statsBS;
+    private final TextView period_eventsPR;
+    private final TextView period_eventsBR;
+    private final TextView period_eventsPS;
+    private final TextView period_eventsBS;
 
-	public Com_Stats(tracerengine Trac,Activity context, int widgetSize) {
-		super(context);
-		FrameLayout myself = this;
+    public Com_Stats(tracerengine Trac, Activity context, int widgetSize) {
+        super(context);
 
-		String mytag = "Com_Stats";
-		this.setPadding(5, 5, 5, 5);
-		Trac.e(mytag, "New instance");
+        String mytag = "Com_Stats";
+        this.setPadding(5, 5, 5, 5);
+        Trac.e(mytag, "New instance");
 
-		//panel with border
-		LinearLayout background = new LinearLayout(context);
-		background.setOrientation(LinearLayout.VERTICAL);
-		if(widgetSize==0)
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		else 
-			background.setLayoutParams(new LayoutParams(widgetSize, LayoutParams.WRAP_CONTENT));
-		background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", background.getHeight()));
+        //panel with border
+        LinearLayout background = new LinearLayout(context);
+        background.setOrientation(LinearLayout.VERTICAL);
+        if (widgetSize == 0)
+            background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        else
+            background.setLayoutParams(new LayoutParams(widgetSize, LayoutParams.WRAP_CONTENT));
+        background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", background.getHeight()));
 
-		//panel with border
-		LinearLayout topPan = new LinearLayout(context);
-		topPan.setOrientation(LinearLayout.HORIZONTAL);
-		topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		//topPan.setTextColor(Color.parseColor("#333333"));
+        //panel with border
+        LinearLayout topPan = new LinearLayout(context);
+        topPan.setOrientation(LinearLayout.HORIZONTAL);
+        topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        //topPan.setTextColor(Color.parseColor("#333333"));
 
-		LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = layoutInflater.inflate(R.layout.com_stats_2,null);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.com_stats_2, null);
 
-		topPan.addView(view);
-		background.addView(topPan);
+        topPan.addView(view);
+        background.addView(topPan);
 
-		this.addView(background);
-		elapsed_period = (TextView) findViewById(R.id.textPeriodValue);
-		cumul_period = (TextView) findViewById(R.id.textCumulValue);
-		cum_statsPR = (TextView) findViewById(R.id.statsPR);
-		cum_statsBR = (TextView) findViewById(R.id.statsBR);
-		cum_statsPS = (TextView) findViewById(R.id.statsPS);
-		cum_statsBS = (TextView) findViewById(R.id.statsBS);
-		cum_eventsPR = (TextView) findViewById(R.id.eventsPR);
-		cum_eventsBR = (TextView) findViewById(R.id.eventsBR);
-		cum_eventsPS = (TextView) findViewById(R.id.eventsPS);
-		cum_eventsBS = (TextView) findViewById(R.id.eventsBS);
+        this.addView(background);
+        elapsed_period = (TextView) findViewById(R.id.textPeriodValue);
+        cumul_period = (TextView) findViewById(R.id.textCumulValue);
+        cum_statsPR = (TextView) findViewById(R.id.statsPR);
+        cum_statsBR = (TextView) findViewById(R.id.statsBR);
+        cum_statsPS = (TextView) findViewById(R.id.statsPS);
+        cum_statsBS = (TextView) findViewById(R.id.statsBS);
+        cum_eventsPR = (TextView) findViewById(R.id.eventsPR);
+        cum_eventsBR = (TextView) findViewById(R.id.eventsBR);
+        cum_eventsPS = (TextView) findViewById(R.id.eventsPS);
+        cum_eventsBS = (TextView) findViewById(R.id.eventsBS);
 
-		period_statsPR = (TextView) findViewById(R.id.PstatsPR);
-		period_statsBR = (TextView) findViewById(R.id.PstatsBR);
-		period_statsPS = (TextView) findViewById(R.id.PstatsPS);
-		period_statsBS = (TextView) findViewById(R.id.PstatsBS);
-		period_eventsPR = (TextView) findViewById(R.id.PeventsPR);
-		period_eventsBR = (TextView) findViewById(R.id.PeventsBR);
-		period_eventsPS = (TextView) findViewById(R.id.PeventsPS);
-		period_eventsBS = (TextView) findViewById(R.id.PeventsBS);
+        period_statsPR = (TextView) findViewById(R.id.PstatsPR);
+        period_statsBR = (TextView) findViewById(R.id.PstatsBR);
+        period_statsPS = (TextView) findViewById(R.id.PstatsPS);
+        period_statsBS = (TextView) findViewById(R.id.PstatsBS);
+        period_eventsPR = (TextView) findViewById(R.id.PeventsPR);
+        period_eventsBR = (TextView) findViewById(R.id.PeventsBR);
+        period_eventsPS = (TextView) findViewById(R.id.PeventsPS);
+        period_eventsBS = (TextView) findViewById(R.id.PeventsBS);
 
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				if(msg.what == 0) {
-					//Message from timer expired
-					if(stats != null) {
-						cumul_period.setText(stats.get_cumul_period());
-						elapsed_period.setText(stats.get_elapsed_period());
-						cum_statsPR.setText(Integer.toString(Stats_Com.cumul_stats_recv_packets));
-						cum_statsBR.setText(Integer.toString(Stats_Com.cumul_stats_recv_bytes));
-						cum_statsPS.setText(Integer.toString(Stats_Com.cumul_stats_sent_packets));
-						cum_statsBS.setText(Integer.toString(Stats_Com.cumul_stats_sent_bytes));
-						cum_eventsPR.setText(Integer.toString(Stats_Com.cumul_events_recv_packets));
-						cum_eventsBR.setText(Integer.toString(Stats_Com.cumul_events_recv_bytes));
-						cum_eventsPS.setText(Integer.toString(Stats_Com.cumul_events_sent_packets));
-						cum_eventsBS.setText(Integer.toString(Stats_Com.cumul_events_sent_bytes));
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == 0) {
+                    //Message from timer expired
+                    if (stats != null) {
+                        cumul_period.setText(stats.get_cumul_period());
+                        elapsed_period.setText(stats.get_elapsed_period());
+                        cum_statsPR.setText(Integer.toString(Stats_Com.cumul_stats_recv_packets));
+                        cum_statsBR.setText(Integer.toString(Stats_Com.cumul_stats_recv_bytes));
+                        cum_statsPS.setText(Integer.toString(Stats_Com.cumul_stats_sent_packets));
+                        cum_statsBS.setText(Integer.toString(Stats_Com.cumul_stats_sent_bytes));
+                        cum_eventsPR.setText(Integer.toString(Stats_Com.cumul_events_recv_packets));
+                        cum_eventsBR.setText(Integer.toString(Stats_Com.cumul_events_recv_bytes));
+                        cum_eventsPS.setText(Integer.toString(Stats_Com.cumul_events_sent_packets));
+                        cum_eventsBS.setText(Integer.toString(Stats_Com.cumul_events_sent_bytes));
 
-						period_statsPR.setText(Integer.toString(Stats_Com.periodic_stats_recv_packets));
-						period_statsBR.setText(Integer.toString(Stats_Com.periodic_stats_recv_bytes));
-						period_statsPS.setText(Integer.toString(Stats_Com.periodic_stats_sent_packets));
-						period_statsBS.setText(Integer.toString(Stats_Com.periodic_stats_sent_bytes));
-						period_eventsPR.setText(Integer.toString(Stats_Com.periodic_events_recv_packets));
-						period_eventsBR.setText(Integer.toString(Stats_Com.periodic_events_recv_bytes));
-						period_eventsPS.setText(Integer.toString(Stats_Com.periodic_events_sent_packets));
-						period_eventsBS.setText(Integer.toString(Stats_Com.periodic_events_sent_bytes));
-					}
-				} 
-			}
+                        period_statsPR.setText(Integer.toString(Stats_Com.periodic_stats_recv_packets));
+                        period_statsBR.setText(Integer.toString(Stats_Com.periodic_stats_recv_bytes));
+                        period_statsPS.setText(Integer.toString(Stats_Com.periodic_stats_sent_packets));
+                        period_statsBS.setText(Integer.toString(Stats_Com.periodic_stats_sent_bytes));
+                        period_eventsPR.setText(Integer.toString(Stats_Com.periodic_events_recv_packets));
+                        period_eventsBR.setText(Integer.toString(Stats_Com.periodic_events_recv_bytes));
+                        period_eventsPS.setText(Integer.toString(Stats_Com.periodic_events_sent_packets));
+                        period_eventsBS.setText(Integer.toString(Stats_Com.periodic_events_sent_bytes));
+                    }
+                }
+            }
 
-		};
-		Trac.e(mytag, "Instance created");
-		Timer();	
+        };
+        Trac.e(mytag, "Instance created");
+        Timer();
 
 
-	}
-	private void Timer() {
-		Timer timer = new Timer();
+    }
 
-		TimerTask doAsynchronousTask = new TimerTask() {
+    private void Timer() {
+        Timer timer = new Timer();
 
-			@Override
-			public void run() {
-				try {
-					//Tracer.e(mytag,"Update statistics.."+stats.elapsed_period);
-					handler.sendEmptyMessage(0);
+        TimerTask doAsynchronousTask = new TimerTask() {
 
-				} catch (Exception e) {
-					//e.printStackTrace();
-				}
-			}
+            @Override
+            public void run() {
+                try {
+                    //Tracer.e(mytag,"Update statistics.."+stats.elapsed_period);
+                    handler.sendEmptyMessage(0);
 
-		};
-		if(timer != null) {
-			timer.schedule(doAsynchronousTask, 0, 5000);	// Once per 5 seconds	
-			doAsynchronousTask.run();
-		}
-	}
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                }
+            }
 
-	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==View.VISIBLE){
+        };
+        if (timer != null) {
+            timer.schedule(doAsynchronousTask, 0, 5000);    // Once per 5 seconds
+            doAsynchronousTask.run();
+        }
+    }
 
-		}
-	}
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (visibility == View.VISIBLE) {
+
+        }
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package activities;
 
 import org.domogik.domodroid13.R;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -9,22 +10,22 @@ import android.view.Window;
 import android.widget.Button;
 
 class Dialog_Splash extends Dialog implements OnClickListener {
-	private final Button okButton;
+    private final Button okButton;
 
-	public Dialog_Splash(Context context) {
-		super(context);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		/** Design the dialog in main.xml file */
-		setContentView(R.layout.dialog_splash);
-		okButton = (Button) findViewById(R.id.OkButton);
-		okButton.setOnClickListener(this);
+    public Dialog_Splash(Context context) {
+        super(context);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        /** Design the dialog in main.xml file */
+        setContentView(R.layout.dialog_splash);
+        okButton = (Button) findViewById(R.id.OkButton);
+        okButton.setOnClickListener(this);
 
-	}
+    }
 
 
-	public void onClick(View v) {
-		/** When OK Button is clicked, dismiss the dialog */
-		if (v == okButton)
-			dismiss();
-	}
+    public void onClick(View v) {
+        /** When OK Button is clicked, dismiss the dialog */
+        if (v == okButton)
+            dismiss();
+    }
 }

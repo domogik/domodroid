@@ -20,6 +20,7 @@ package widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import rinor.CallUrl;
 import rinor.Rest_com;
 import database.DmdContentProvider;
 import database.JSONParser;
@@ -31,7 +32,9 @@ import org.w3c.dom.Text;
 
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
+
 import org.domogik.domodroid13.R;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -45,8 +48,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
+
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -64,356 +69,396 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener{
+public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener {
 
-	private Button ON;
-	private Button OFF;
-	private final TextView state;
-	private final String address;
-	private String state_progress;
-	private final String url;
-	private final String usage;
-	private final Handler handler;
-	private String value0;
-	private String value1;
-	private final String type;
-	public final boolean activate=false;
-	private Animation animation;
-	private boolean touching;
-	private int updating=0;
-	private Message msg;
-	private final String wname;
-	public static FrameLayout container = null;
-	private static FrameLayout myself = null;
-	private static String mytag = "";
-	private tracerengine Tracer = null;
-	private Activity context = null;
-	private String stateS = "";
-	private String Value_0 = "0";
-	private String Value_1 = "1";
-	private final String login;
-	private final String password;
-	private final float api_version;
-	private JSONObject jparam;
-	private String command_id = null;
-	private String command_type = null;
+    private Button ON;
+    private Button OFF;
+    private TextView state;
+    private String address;
+    private String state_progress;
+    private final String url;
+    private String usage;
+    private Handler handler;
+    private String value0;
+    private String value1;
+    private String type;
+    private final boolean activate = false;
+    private Animation animation;
+    private int updating = 0;
+    private Message msg;
+    public static FrameLayout container = null;
+    private static FrameLayout myself = null;
+    private static String mytag = "";
+    private String stateS = "";
+    private String Value_0 = "0";
+    private String Value_1 = "1";
+    private String login;
+    private String password;
+    private float api_version;
+    private final Entity_Feature feature;
+    private JSONObject jparam;
+    private String command_id = null;
+    private String command_type = null;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private Entity_client session = null;
+    private Boolean realtime = false;
+    private final int session_type;
+    private final SharedPreferences params;
 
-	private Entity_client session = null; 
-	private Boolean realtime = false;
 
+    public Graphical_Binary_New(tracerengine Trac,
+                                final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        onCreate();
+    }
 
-	public Graphical_Binary_New(tracerengine Trac, 
-			final Activity context, String address, String name, int id,int dev_id,String state_key, String url, final String usage,
-			String parameters, String model_id, int update, int widgetSize, int session_type,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.Tracer = Trac;
-		this.context = context;
-		this.address = address;
-		this.url = url;
-		this.usage = usage;
-		this.wname = name;
-		this.myself = this;
-		try{
-			this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
-		}catch (Exception e){
-			Tracer.d(mytag, "no translation for: "+state_key);
-			this.stateS= state_key;
-		}
+    public Graphical_Binary_New(tracerengine Trac,
+                                final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        onCreate();
+    }
 
-		login = params.getString("http_auth_username",null);
-		password = params.getString("http_auth_password",null);
-		api_version=params.getFloat("API_VERSION", 0);
+    private void onCreate() {
+        myself = this;
+        this.address = feature.getAddress();
+        this.usage = feature.getIcon_name();
+        this.state_key = feature.getState_key();
+        this.dev_id = feature.getDevId();
+        this.parameters = feature.getParameters();
 
-		mytag = "Graphical_Binary_New("+dev_id+")";
-		//get parameters		
+        try {
+            this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+        } catch (Exception e) {
+            Tracer.d(mytag, "no translation for: " + state_key);
+            this.stateS = state_key;
+        }
 
-		try {
-			jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-			value1 = jparam.getString("value1");
-			value0 = jparam.getString("value0");
-		} catch (Exception e) {
-			value0 = "0";
-			value1 = "1";
-		}
-		if (api_version>=0.7f){
-			try {
-				command_id = jparam.getString("command_id");
-				command_type= jparam.getString("command_type");
-			} catch (JSONException e) {
-				Tracer.d(mytag, "No command_id for this device");
-				ON.setEnabled(false);
-				OFF.setEnabled(false);
-			}	
-		}
+        login = params.getString("http_auth_username", null);
+        password = params.getString("http_auth_password", null);
+        api_version = params.getFloat("API_VERSION", 0);
 
-		if (usage.equals("light")){
-			this.Value_0 =  getResources().getText(R.string.light_stat_0).toString();
-			this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
-		}else if (usage.equals("shutter")){
-			this.Value_0 =  getResources().getText(R.string.shutter_stat_0).toString();
-			this.Value_1 =  getResources().getText(R.string.shutter_stat_1).toString();
-		}else{
-			this.Value_0 = value0;
-			this.Value_1 = value1;		
-		}
+        mytag = "Graphical_Binary_New(" + dev_id + ")";
+        //get parameters
 
-		String[] model = model_id.split("\\.");
-		type = model[0];
-		Tracer.d(mytag,"model_id = <"+model_id+"> type = <"+type+"> value0 = "+value0+"  value1 = "+value1 );
+        try {
+            jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            value1 = jparam.getString("value1");
+            value0 = jparam.getString("value0");
+        } catch (Exception e) {
+            value0 = "0";
+            value1 = "1";
+        }
+        if (api_version >= 0.7f) {
+            try {
+                int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+                if (number_of_command_parameters == 1) {
+                    command_id = jparam.getString("command_id");
+                    command_type = jparam.getString("command_type1");
+                }
+            } catch (JSONException e) {
+                Tracer.d(mytag, "No command_id for this device");
+                ON.setEnabled(false);
+                OFF.setEnabled(false);
+            }
+        }
 
-		//state
-		state=new TextView(context);
-		state.setTextColor(Color.BLACK);
-		state.setText(stateS);
-		//		if(api_version>=0.7f)
-		//		state.setVisibility(INVISIBLE);
+        switch (usage) {
+            case "light":
+                this.Value_0 = getResources().getText(R.string.light_stat_0).toString();
+                this.Value_1 = getResources().getText(R.string.light_stat_1).toString();
+                break;
+            case "shutter":
+                this.Value_0 = getResources().getText(R.string.shutter_stat_0).toString();
+                this.Value_1 = getResources().getText(R.string.shutter_stat_1).toString();
+                break;
+            default:
+                this.Value_0 = value0;
+                this.Value_1 = value1;
+                break;
+        }
 
-		final float scale = getContext().getResources().getDisplayMetrics().density;
-		float dps = 40;
-		int pixels = (int) (dps * scale + 0.5f);
-		//first seekbar on/off
-		ON=new Button(context);
-		ON.setOnClickListener(this);
-		ON.setHeight(pixels);
-		//ON.setWidth(60);
-		ON.setTag("ON");
-		try {
-			Tracer.d(mytag,"Try to get value translate from R.STRING" );
-			ON.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(),this.Value_1.toLowerCase())));
-		}catch (Exception e1) {
-			Tracer.d(mytag,"no translation for: "+this.Value_1);
-			ON.setText(this.Value_1);
-		}
-		ON.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
-		//ON.setBackgroundResource(R.drawable.boolean_on);
-		//ON.setPadding(10, 0, 10, 0);
+        String[] model = feature.getDevice_type_id().split("\\.");
+        type = model[0];
+        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + type + "> value0 = " + value0 + "  value1 = " + value1);
 
-		OFF=new Button(context);
-		OFF.setOnClickListener(this);
-		OFF.setTag("OFF");
-		OFF.setHeight(pixels);
-		//OFF.setWidth(60);
-		OFF.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-		//OFF.setBackgroundResource(R.drawable.boolean_off);
-		try {
-			Tracer.d(mytag,"Try to get value translate from R.STRING" );
-			OFF.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(),this.Value_0.toLowerCase())));
-		}catch (Exception e1) {
-			Tracer.d(mytag,"no translation for: "+this.Value_0);
-			OFF.setText(this.Value_0);
-		}
-		//OFF.setPadding(0,10,0,10);
+        //state
+        state = new TextView(context);
+        state.setTextColor(Color.BLACK);
+        state.setText(stateS);
+        //		if(api_version>=0.7f)
+        //		state.setVisibility(INVISIBLE);
 
-		super.LL_featurePan.addView(ON);
-		super.LL_featurePan.addView(OFF);
-		super.LL_infoPan.addView(state);
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        float dps = 40;
+        int pixels = (int) (dps * scale + 0.5f);
+        //first seekbar on/off
+        ON = new Button(context);
+        ON.setOnClickListener(this);
+        ON.setHeight(pixels);
+        //ON.setWidth(60);
+        ON.setTag("ON");
+        try {
+            Tracer.d(mytag, "Try to get value translate from R.STRING");
+            ON.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(), this.Value_1.toLowerCase())));
+        } catch (Exception e1) {
+            Tracer.d(mytag, "no translation for: " + this.Value_1);
+            ON.setText(this.Value_1);
+        }
+        ON.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        //ON.setBackgroundResource(R.drawable.boolean_on);
+        //ON.setPadding(10, 0, 10, 0);
 
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				if(activate) {
-					Tracer.d(mytag,"Handler receives a request to die " );
-					if(realtime) {
-						Tracer.get_engine().unsubscribe(session);
-						session = null;
-						realtime = false;
-					}
-					//That seems to be a zombie
-					//removeView(background);
-					myself.setVisibility(GONE);
-					if(container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-					try { finalize(); } catch (Throwable t) {}	//kill the handler thread itself
-				} else {
-					try {
-						Bundle b = msg.getData();
-						if(( b != null) && (b.getString("message") != null)) {
-							if (b.getString("message").equals(value0)){
-								try {
-									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-								}catch (Exception e1) {
-									Tracer.d(mytag,"no translation for: "+Value_0);
-									state.setText(stateS + " : " + Value_0);
-								}
-								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-							}else if(b.getString("message").equals(value1)){
-								try {
-									Tracer.d(mytag,"Try to get value translate from R.STRING" );
-									state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-								}catch (Exception e1) {
-									Tracer.d(mytag,"no translation for: "+Value_1);
-									state.setText(stateS+" : "+Value_1);
-								}
-								IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-							}
-							state.setAnimation(animation);
-						} else {
-							if(msg.what == 2) {
-								Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
-							} else if(msg.what == 9999) {
-								//state_engine send us a signal to notify value changed
-								if(session == null)
-									return;
-								String new_val = session.getValue();
-								Tracer.d(mytag,"Handler receives a new value <"+new_val+">" );
-								if(new_val.equals(value0)) {
-									try {
-										Tracer.d(mytag,"Try to get value translate from R.STRING" );
-										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-									}catch (Exception e1) {
-										Tracer.d(mytag,"no translation for: "+Value_0);
-										state.setText(stateS + " : " + Value_0);
-									}
-									IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-								}else if(new_val.equals(value1)){
-									try {
-										Tracer.d(mytag,"Try to get value translate from R.STRING" );
-										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-									}catch (Exception e1) {
-										Tracer.d(mytag,"no translation for: "+Value_1);
-										state.setText(stateS+" : "+Value_1);
-									}
-									IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-								} else {
-									try {
-										Tracer.d(mytag,"Try to get value translate from R.STRING" );
-										state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),new_val.toLowerCase())));
-									}catch (Exception e1) {
-										Tracer.d(mytag,"no translation for: "+new_val);
-										state.setText(stateS+" : "+new_val);
-									}
-								}
-							} else if(msg.what == 9998) {
-								// state_engine send us a signal to notify it'll die !
-								Tracer.d(mytag,"state engine disappeared ===> Harakiri !" );
-								session = null;
-								realtime = false;
-								//removeView(background);
-								myself.setVisibility(GONE);
-								if(container != null) {
-									container.removeView(myself);
-									container.recomputeViewAttributes(myself);
-								}
-								try { 
-									finalize(); 
-								} catch (Throwable t) {}	//kill the handler thread itself
-							}
-						}
+        OFF = new Button(context);
+        OFF.setOnClickListener(this);
+        OFF.setTag("OFF");
+        OFF.setHeight(pixels);
+        //OFF.setWidth(60);
+        OFF.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        //OFF.setBackgroundResource(R.drawable.boolean_off);
+        try {
+            Tracer.d(mytag, "Try to get value translate from R.STRING");
+            OFF.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(), this.Value_0.toLowerCase())));
+        } catch (Exception e1) {
+            Tracer.d(mytag, "no translation for: " + this.Value_0);
+            OFF.setText(this.Value_0);
+        }
+        //OFF.setPadding(0,10,0,10);
 
-					} catch (Exception e) {
-						Tracer.e(mytag, "Handler error for device "+wname);
-						e.printStackTrace();
-					}
-				}
-			}	
-		};
-		//================================================================================
-		/*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+        super.LL_featurePan.addView(ON);
+        super.LL_featurePan.addView(OFF);
+        super.LL_infoPan.addView(state);
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (activate) {
+                    Tracer.d(mytag, "Handler receives a request to die ");
+                    if (realtime) {
+                        Tracer.get_engine().unsubscribe(session);
+                        session = null;
+                        realtime = false;
+                    }
+                    //That seems to be a zombie
+                    //removeView(background);
+                    myself.setVisibility(GONE);
+                    if (container != null) {
+                        container.removeView(myself);
+                        container.recomputeViewAttributes(myself);
+                    }
+                    try {
+                        finalize();
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }    //kill the handler thread itself
+                } else {
+                    try {
+                        Bundle b = msg.getData();
+                        if ((b != null) && (b.getString("message") != null)) {
+                            if (b.getString("message").equals(value0)) {
+                                try {
+                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + Value_0);
+                                    state.setText(stateS + " : " + Value_0);
+                                }
+                                change_this_icon(0);
+                            } else if (b.getString("message").equals(value1)) {
+                                try {
+                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + Value_1);
+                                    state.setText(stateS + " : " + Value_1);
+                                }
+                                change_this_icon(2);
+                            }
+                            state.setAnimation(animation);
+                        } else {
+                            if (msg.what == 2) {
+                                Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+                            } else if (msg.what == 9999) {
+                                //state_engine send us a signal to notify value changed
+                                if (session == null)
+                                    return;
+                                String new_val = session.getValue();
+                                Tracer.d(mytag, "Handler receives a new value <" + new_val + ">");
+                                if (new_val.equals(value0)) {
+                                    try {
+                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                    } catch (Exception e1) {
+                                        Tracer.d(mytag, "no translation for: " + Value_0);
+                                        state.setText(stateS + " : " + Value_0);
+                                    }
+                                    change_this_icon(0);
+                                } else if (new_val.equals(value1)) {
+                                    try {
+                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                    } catch (Exception e1) {
+                                        Tracer.d(mytag, "no translation for: " + Value_1);
+                                        state.setText(stateS + " : " + Value_1);
+                                    }
+                                    change_this_icon(2);
+                                } else {
+                                    try {
+                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
+                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), new_val.toLowerCase())));
+                                    } catch (Exception e1) {
+                                        Tracer.d(mytag, "no translation for: " + new_val);
+                                        state.setText(stateS + " : " + new_val);
+                                    }
+                                }
+                            } else if (msg.what == 9998) {
+                                // state_engine send us a signal to notify it'll die !
+                                Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
+                                session = null;
+                                realtime = false;
+                                //removeView(background);
+                                myself.setVisibility(GONE);
+                                if (container != null) {
+                                    container.removeView(myself);
+                                    container.recomputeViewAttributes(myself);
+                                }
+                                try {
+                                    finalize();
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }    //kill the handler thread itself
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Handler error for device " + name);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        //================================================================================
+        /*
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-		if(cache_engine != null) {
-			if (api_version<=0.6f){
-				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version>=0.7f){
-				session = new Entity_client(id, "", mytag, handler, session_type);
-			}
-			if(Tracer.get_engine().subscribe(session)) {
-				realtime = true;		//we're connected to engine
-				//each time our value change, the engine will call handler
-				handler.sendEmptyMessage(9999);	//Force to consider current value in session
-			}
+        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+        if (cache_engine != null) {
+            if (api_version <= 0.6f) {
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            } else if (api_version >= 0.7f) {
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
 
-		}
-		//================================================================================
-		//updateTimer();	//Don't use anymore cyclic refresh....	
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //================================================================================
+        //updateTimer();	//Don't use anymore cyclic refresh....
 
-	}
+    }
 
-	public void onClick(View v) {
-		if(v.getTag().equals("OFF")) {
-			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 0));
-			try {
-				Tracer.d(mytag,"Try to get value translate from R.STRING" );
-				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_0.toLowerCase())));
-			}catch (Exception e1) {
-				Tracer.d(mytag,"no translation for: "+Value_0);
-				state.setText(stateS + " : " + Value_0);
-			}
-			if(api_version>=0.7f){
-				state_progress = "0";
-			}else{
-				state_progress = value0;
-			}
-		} else if(v.getTag().equals("ON")) {
-			IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-			try {
-				Tracer.d(mytag,"Try to get value translate from R.STRING" );
-				state.setText(stateS+" : "+context.getString(Graphics_Manager.getStringIdentifier(getContext(),Value_1.toLowerCase())));
-			}catch (Exception e1) {
-				Tracer.d(mytag,"no translation for: "+Value_1);
-				state.setText(stateS+" : "+Value_1);
-			}
-			if(api_version>=0.7f){
-				state_progress = "1";
-			}else{
-				state_progress = value1;
-			}
-		}
-		new CommandeThread().execute();
-	}
+    public void onClick(View v) {
+        if (v.getTag().equals("OFF")) {
+            change_this_icon(0);
+            try {
+                Tracer.d(mytag, "Try to get value translate from R.STRING");
+                state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+            } catch (Exception e1) {
+                Tracer.d(mytag, "no translation for: " + Value_0);
+                state.setText(stateS + " : " + Value_0);
+            }
+            if (api_version >= 0.7f) {
+                state_progress = "0";
+            } else {
+                state_progress = value0;
+            }
+        } else if (v.getTag().equals("ON")) {
+            change_this_icon(2);
+            try {
+                Tracer.d(mytag, "Try to get value translate from R.STRING");
+                state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+            } catch (Exception e1) {
+                Tracer.d(mytag, "no translation for: " + Value_1);
+                state.setText(stateS + " : " + Value_1);
+            }
+            if (api_version >= 0.7f) {
+                state_progress = "1";
+            } else {
+                state_progress = value1;
+            }
+        }
+        new CommandeThread().execute();
+    }
 
-	public class CommandeThread extends AsyncTask<Void, Integer, Void>{
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			Handler temphandler =  new Handler(context.getMainLooper());
-			temphandler.post( new Runnable(){
-				public void run(){
-					updating=3;
-					String Url2send;
-					if(api_version>=0.7f){
-						Url2send = url+"cmd/id/"+command_id+"?"+command_type+"="+state_progress;
-					}else{
-						Url2send = url+"command/"+type+"/"+address+"/"+state_progress;
-					}
-					Tracer.i(mytag,"Sending to Rinor : <"+Url2send+">");
-					JSONObject json_Ack = null;
-					try {
-						json_Ack = Rest_com.connect_jsonobject(Url2send,login,password);
-					} catch (Exception e) {
-						Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-						Toast.makeText(context, "Rinor exception sending command",Toast.LENGTH_LONG).show();
-					}
-					try {
-						Boolean ack = JSONParser.Ack(json_Ack);
-						if(!ack){
-							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
-							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
-							handler.sendEmptyMessage(2);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-					);
-			return null;
+        @Override
+        protected Void doInBackground(Void... params) {
+            Handler temphandler = new Handler(context.getMainLooper());
+            temphandler.post(new Runnable() {
+                                 public void run() {
+                                     updating = 3;
+                                     String Url2send;
+                                     if (api_version >= 0.7f) {
+                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
+                                     } else {
+                                         Url2send = url + "command/" + type + "/" + address + "/" + state_progress;
+                                     }
+                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
+                                     //JSONObject json_Ack = null;
+                                     try {
+                                         new CallUrl().execute(Url2send, login, password, "3000");
+                                         //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
+                                     } catch (Exception e) {
+                                         Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
+                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                     }
+                                     /*
+                                     try {
+                                        Boolean ack = JSONParser.Ack(json_Ack);
+                                         if (!ack) {
+                                             Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
+                                             Toast.makeText(context, "Received error from Rinor", Toast.LENGTH_LONG).show();
+                                             handler.sendEmptyMessage(2);
+                                         }
+                                     } catch (Exception e) {
+                                         e.printStackTrace();
+                                     }
+                                    */
+                                 }
+                             }
+            );
+            return null;
 
-		}
-	}
+        }
+    }
 
 
-	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==View.VISIBLE){
-			//activate=true;
-		}
-	}
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (visibility == View.VISIBLE) {
+            //activate=true;
+        }
+    }
 
 }
 

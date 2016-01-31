@@ -16,6 +16,7 @@ import widgets.Entity_Room;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import misc.tracerengine;
@@ -27,14 +28,16 @@ public class DomodroidDB {
     private final String mytag = "DomodroidDB";
     public String owner = "";
     private tracerengine Tracer = null;
+    private final SharedPreferences params;
+
     //////////////////////////////////////
 
-    public DomodroidDB(tracerengine Trac, Activity context) {
+    public DomodroidDB(tracerengine Trac, Activity context, SharedPreferences params) {
         this.context = context;
         this.Tracer = Trac;
+        this.params = params;
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
-
     }
 
     public void updateDb() {
@@ -42,10 +45,31 @@ public class DomodroidDB {
         context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);
     }
 
+    public void NewsyncDb() {
+        //delete all feature
+        context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
+        //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
+        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
+        domodb.owner = "Widgets_Manager.loadRoomWidgets";
+        Tracer.e(mytag, "load widgets for area 1");
+        Entity_Room[] listRoom = domodb.requestRoom(1);
+
+        for (Entity_Room room : listRoom) {
+            domodb.remove_one_room(room.getId());
+            domodb.remove_one_place_type_in_Featureassociation(room.getId(), "room");
+            domodb.remove_one_icon(room.getId(), "room");
+        }
+
+        domodb.remove_one_area(1);
+        domodb.remove_one_place_type_in_Featureassociation(1, "area");
+        domodb.remove_one_icon(1, "area");
+    }
+
     public void closeDb() {
         try {
             context.getContentResolver().cancelSync(null);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -349,30 +373,39 @@ public class DomodroidDB {
 
     //Send custom name to DmdContentProvder so that it could be write in DB
     public void update_name(int id, String name, String type) {
-        if (type.equals("feature")) {
-            ContentValues values = new ContentValues();
-            values.put("id", id);
-            values.put("newname", name);
-            Tracer.d(mytag, "Description set to: " + name + " for device: " + id);
-            context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
-        } else if (type.equals("area")) {
-            ContentValues values = new ContentValues();
-            values.put("id", id);
-            values.put("newname", name);
-            Tracer.d(mytag, "Description set to: " + name + " for area: " + id);
-            context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_AREA_NAME, values);
-        } else if (type.equals("room")) {
-            ContentValues values = new ContentValues();
-            values.put("id", id);
-            values.put("newname", name);
-            Tracer.d(mytag, "Description set to: " + name + " for room: " + id);
-            context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ROOM_NAME, values);
-        } else if (type.equals("icon")) {
-            ContentValues values = new ContentValues();
-            values.put("id", id);
-            values.put("newname", name);
-            Tracer.d(mytag, "Description set to: " + name + " for icon: " + id);
-            context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+        switch (type) {
+            case "feature": {
+                ContentValues values = new ContentValues();
+                values.put("id", id);
+                values.put("newname", name);
+                Tracer.d(mytag, "Description set to: " + name + " for device: " + id);
+                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_NAME, values);
+                break;
+            }
+            case "area": {
+                ContentValues values = new ContentValues();
+                values.put("id", id);
+                values.put("newname", name);
+                Tracer.d(mytag, "Description set to: " + name + " for area: " + id);
+                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_AREA_NAME, values);
+                break;
+            }
+            case "room": {
+                ContentValues values = new ContentValues();
+                values.put("id", id);
+                values.put("newname", name);
+                Tracer.d(mytag, "Description set to: " + name + " for room: " + id);
+                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ROOM_NAME, values);
+                break;
+            }
+            case "icon": {
+                ContentValues values = new ContentValues();
+                values.put("id", id);
+                values.put("newname", name);
+                Tracer.d(mytag, "Description set to: " + name + " for icon: " + id);
+                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                break;
+            }
         }
     }
 
@@ -389,7 +422,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                areas[i] = new Entity_Area(curs.getString(0), curs.getInt(1), curs.getString(2));
+                areas[i] = new Entity_Area(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getString(2));
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
@@ -400,10 +433,45 @@ public class DomodroidDB {
         return areas;
     }
 
+    public JSONObject request_json_Area() {
+        JSONObject json_AreaList = new JSONObject();
+        String[] projection = {"description", "id", "name"};
+        Cursor curs = null;
+        try {
+            json_AreaList.put("status", "OK");
+            json_AreaList.put("code", 0);
+            json_AreaList.put("description", "None");
+            JSONArray list = new JSONArray();
+            JSONObject map_area = null;
+            curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                map_area = new JSONObject();
+                if (curs.getString(0) == null) {
+                    map_area.put("description", "");
+                } else {
+                    map_area.put("description", curs.getString(0));
+                }
+
+                map_area.put("id", curs.getString(1));
+                map_area.put("name", curs.getString(2));
+                list.put(map_area);
+            }
+            json_AreaList.put("area", list);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_AreaList;
+    }
+
     public int requestlastidArea() {
         String[] projection = {"description", "id", "name"};
         Cursor curs = null;
-        int lastid = 0;
+        int lastid = 1;
         try {
             curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
             curs.moveToLast();
@@ -431,7 +499,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                rooms[i] = new Entity_Room(curs.getInt(0), curs.getString(1),
+                rooms[i] = new Entity_Room(params, Tracer, context, curs.getInt(0), curs.getString(1),
                         curs.getInt(2), curs.getString(3));
             }
         } catch (Exception e) {
@@ -440,6 +508,37 @@ public class DomodroidDB {
         }
         curs.close();
         return rooms;
+    }
+
+    public JSONObject request_json_Room() {
+        JSONObject json_RoomList = new JSONObject();
+        String[] projection = {"area_id", "description", "id", "name"};
+        Cursor curs = null;
+        try {
+            json_RoomList.put("status", "OK");
+            json_RoomList.put("code", 0);
+            json_RoomList.put("description", "None");
+            JSONArray rooms = new JSONArray();
+            JSONObject room = null;
+            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                room = new JSONObject();
+                room.put("area_id", curs.getString(0));
+                room.put("description", curs.getString(1));
+                room.put("id", curs.getString(2));
+                room.put("name", curs.getString(3));
+                rooms.put(room);
+            }
+            json_RoomList.put("room", rooms);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_RoomList;
     }
 
     public int requestidlastRoom() {
@@ -462,6 +561,31 @@ public class DomodroidDB {
         return lastid;
     }
 
+    //Request to remove association if no more device
+    public void CleanFeatures_association() {
+        Cursor curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ALL, null, null, null, null);
+        int[] device_feature_id_associated_somewhere = requestAllFeatures_association();
+        boolean found;
+        //parcourir la liste des feature avec comme device_feature_id_associated_somewhere=int[i]
+        // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated là
+        // on utilise int[i]
+        for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
+            found = false;
+            for (int j = 0; j < curs1.getCount(); j++) {
+                curs1.moveToPosition(j);
+                if (device_feature_id_associated_somewhere[i] == curs1.getInt(1)) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                remove_one_feature_association(device_feature_id_associated_somewhere[i]);
+                remove_one_feature_in_FeatureMap(device_feature_id_associated_somewhere[i]);
+            }
+        }
+        curs1.close();
+
+    }
+
     //Add a request for all device_feature_id in feature_association and feature_map
     //It's used to be sure that the url always contains all associated devices
     //to grab information if they're displayed somewhere.
@@ -475,7 +599,6 @@ public class DomodroidDB {
 
             curs1 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
             curs2 = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_MAP_ALL, null, null, null, null);
-
             dev_id = new int[curs1.getCount() + curs2.getCount()];
 
             int count = curs1.getCount();
@@ -498,6 +621,41 @@ public class DomodroidDB {
         curs1.close();
         curs2.close();
         return dev_id;
+    }
+
+    public JSONObject request_json_Features_association() {
+        JSONObject json_FeatureAssociationList = new JSONObject();
+        Cursor curs = null;
+        try {
+            json_FeatureAssociationList.put("status", "OK");
+            json_FeatureAssociationList.put("code", 0);
+            json_FeatureAssociationList.put("description", "None");
+            JSONArray ListFeature = new JSONArray();
+            JSONObject Widget = null;
+            curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                Widget = new JSONObject();
+                Widget.put("place_id", curs.getString(0));
+                Widget.put("place_type", curs.getString(1));
+                Widget.put("device_feature_id", curs.getString(2));
+                Widget.put("id", curs.getString(3));
+                if (curs.getString(4) == null) {
+                    Widget.put("device_feature", "");
+                } else {
+                    Widget.put("device_feature", curs.getString(4));
+                }
+                ListFeature.put(Widget);
+            }
+            json_FeatureAssociationList.put("feature_association", ListFeature);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_FeatureAssociationList;
     }
 
     public int requestidlastFeature_association() {
@@ -535,7 +693,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                rooms[i] = new Entity_Room(curs.getInt(0), curs.getString(1),
+                rooms[i] = new Entity_Room(params, Tracer, context, curs.getInt(0), curs.getString(1),
                         curs.getInt(2), curs.getString(3));
             }
         } catch (Exception e) {
@@ -588,6 +746,44 @@ public class DomodroidDB {
         return Icon;
     }
 
+    public JSONObject request_json_Icon() {
+        JSONObject json_IconList = new JSONObject();
+        String[] projection = {"name", "value", "reference"};
+        Cursor curs = null;
+        try {
+            json_IconList.put("status", "OK");
+            json_IconList.put("code", 0);
+            json_IconList.put("description", "None");
+            JSONArray icons = new JSONArray();
+            JSONObject icon = null;
+            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ICON,
+                    projection,
+                    null,
+                    null,
+                    null);
+            int count = curs.getCount();
+            for (int i = 0; i < count; i++) {
+                curs.moveToPosition(i);
+                icon = new JSONObject();
+                icon.put("name", curs.getString(0));
+                if (curs.getString(1) == null) {
+                    icon.put("value", "");
+                } else {
+                    icon.put("value", curs.getString(1));
+                }
+                icon.put("reference", curs.getString(2));
+                icons.put(icon);
+            }
+            json_IconList.put("ui_config", icons);
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request area error");
+            e.printStackTrace();
+        }
+        if (curs != null)
+            curs.close();
+        return json_IconList;
+    }
+
     public Entity_Feature[] requestFeatures(int id, String zone) {
         Cursor curs = null;
         Entity_Feature[] features = null;
@@ -597,7 +793,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                features[i] = new Entity_Feature(curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4),
+                features[i] = new Entity_Feature(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4),
                         curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
             }
         } catch (Exception e) {
@@ -641,7 +837,7 @@ public class DomodroidDB {
                 if (iconName.equals("unknow"))
                     iconName = device_usage_id;
 
-                features[i] = new Entity_Map(curs.getString(0), Id, curs.getInt(2), iconName, curs.getString(4), curs.getString(5),
+                features[i] = new Entity_Map(params, Tracer, context, curs.getString(0), Id, curs.getInt(2), iconName, curs.getString(4), curs.getString(5),
                         curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10), curs.getInt(12), curs.getInt(13), curs.getString(14));
             }
         } catch (Exception e) {
@@ -672,7 +868,7 @@ public class DomodroidDB {
                 //create the pseudo Entity_Map with all parameters present in table_feature_map : id, posx, posy and map_name
 
                 curs.moveToPosition(i);
-                features[i] = new Entity_Map("", curs.getInt(0), 0, "", "", "",
+                features[i] = new Entity_Map(params, Tracer, context, "", curs.getInt(0), 0, "", "", "",
                         "", "", "", "", "",
                         curs.getInt(1), curs.getInt(2), curs.getString(3));
             }
@@ -696,7 +892,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                features[i] = new Entity_Feature(curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
+                features[i] = new Entity_Feature(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature error");

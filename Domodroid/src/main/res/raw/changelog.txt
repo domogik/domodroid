@@ -19,9 +19,9 @@
     </style>
   </head>
   <body>
-    $ 1.4-DEV
+    $ 1.4
       % Version 14
-      _ 2016-xx-xx
+      _ 2016-01-31
       ! Important due to new method for Domogik 0.4+ command, it's strongly recommended to synchronize again with Domogik.
       * #75 Add an option for 0.4+ to order default area by device name, device type or by plugin.
       * #70 Close new Db method that delete widget if device didn't exist after a new sync (avoid filling db with past data).

@@ -20,6 +20,9 @@
   </head>
   <body>
     $ 1.4
+      % Version 15
+      _ 2016-01-31
+      * Problem when publishing to the store
       % Version 14
       _ 2016-01-31
       ! Important due to new method for Domogik 0.4+ command, it's strongly recommended to synchronize again with Domogik.

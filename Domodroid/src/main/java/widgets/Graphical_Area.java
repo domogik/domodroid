@@ -18,6 +18,7 @@
 package widgets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.domogik.domodroid13.R;
@@ -26,13 +27,12 @@ import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
 
-import activities.Graphics_Manager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Handler;
 
 import misc.List_Icon_Adapter;
@@ -54,15 +54,18 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Area";
     private String icon;
     private final Activity Activity;
+    private final SharedPreferences params;
 
-    public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
-        super(context, id, name_area, description_area, icon, widgetSize, "area", handler);
+
+    public Graphical_Area(SharedPreferences params, tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
+        super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
         this.myself = this;
         this.Tracer = Trac;
         this.icon = icon;
         this.id_area = id;
         this.context = context;
         this.Activity = (android.app.Activity) context;
+        this.params = params;
         setOnLongClickListener(this);
 
         mytag = "Graphical_Area(" + id_area + ")";
@@ -73,7 +76,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_choice = new ArrayList<String>();
+        List<String> list_choice = new ArrayList<>();
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
         list_choice.add(context.getString(R.string.delete));
@@ -101,7 +104,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             alert.setMessage(R.string.Delete_feature_message);
             alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    DomodroidDB domodb = new DomodroidDB(Tracer, Activity);
+                    DomodroidDB domodb = new DomodroidDB(Tracer, Activity, params);
                     domodb.owner = "Widgets_Manager.loadRoomWidgets";
                     Tracer.e(mytag, "load widgets for area " + id_area);
                     Entity_Room[] listRoom = domodb.requestRoom(id_area);
@@ -153,15 +156,13 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             alert.show();
         } else if (action.equals(context.getString(R.string.change_icon))) {
             final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-            List<String> list_icon = new ArrayList<String>();
+            List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (int i = 0; i < fiilliste.length; i++) {
-                list_icon.add(fiilliste[i]);
-            }
+            Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer,getContext(), fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {
@@ -179,8 +180,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_area;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
-
+                            change_this_icon(0, icon);
                             dialog.cancel();
                         }
                     }

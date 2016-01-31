@@ -1,7 +1,5 @@
 package rinor;
 
-import java.io.File;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -9,26 +7,16 @@ import org.zeromq.ZMQ;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import widgets.Entity_Feature;
-
 import database.Cache_Feature_Element;
-import database.DmdContentProvider;
-import database.DomodroidDB;
 import database.JSONParser;
 import database.WidgetUpdate;
 import misc.tracerengine;
-import activities.Activity_Main;
 
-import android.R.string;
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.FeatureInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.webkit.ValueCallback;
 
 public class Events_manager {
     private static Events_manager instance;
@@ -117,7 +105,7 @@ public class Events_manager {
                     try {
                         this.finalize();
                     } catch (Throwable t) {
-
+                        t.printStackTrace();
                     }
                 }
             }
@@ -130,7 +118,7 @@ public class Events_manager {
         Tracer.d(mytag, "Pause requested...");
         sleeping = true;
         /*
-		if(stats_com != null)		//Already done by cache engine !
+        if(stats_com != null)		//Already done by cache engine !
 			stats_com.set_sleeping();
 		 */
     }
@@ -173,7 +161,7 @@ public class Events_manager {
     private class ListenerThread extends AsyncTask<Void, Integer, Void> {
 
         public void cancel() {
-
+            //todo
         }
 
         @Override
@@ -221,13 +209,13 @@ public class Events_manager {
                                         String ticket = "1";
                                         String device_id = json_stats_04.get("sensor_id").toString();
                                         String New_Value = json_stats_04.get("stored_value").toString();
-                                        String Timestamp= json_stats_04.get("timestamp").toString();
+                                        String Timestamp = json_stats_04.get("timestamp").toString();
                                         //TODO find a way to get the state_key of the feature by id=sensorid here!!
                                         String New_Key = "";
-                                        Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value +" Timestamp = " + Timestamp);
+                                        Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                         Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                         put_event(to_stack);    //Put in stack, and notify cache engine
-                                        stats_com.add(Stats_Com.EVENTS_RCV, result.toString().length());
+                                        stats_com.add(Stats_Com.EVENTS_RCV, result.length());
                                     } catch (JSONException e) {
                                         Tracer.e(mytag, "Error making the json from MQ result");
                                         Tracer.e(mytag, e.toString());
@@ -241,7 +229,9 @@ public class Events_manager {
                         subscriber.close();
                         zmqContext.term();
                     } else {
-                        //TODO Say user Mq conf as a problem
+                        // TOdo Say user Mq conf as a problem
+                        // This make crash
+                        // Toast.makeText(null, R.string.events_error_mq,Toast.LENGTH_LONG).show();
                         Tracer.d(mytag, "error in MQ config");
                         //To avoid crash on multiple launch of dmd
                         try {
@@ -253,7 +243,8 @@ public class Events_manager {
                         return null;
                     }
                 } else {
-                    //TODO say user MQ adress or port is empty
+                    //todo say user MQ adress or port is empty
+                    //Toast.makeText(null, R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
                     Tracer.d(mytag, "MQ adress or port is empty");
                 }
             } else if (api_version <= 0.6f) {
@@ -286,6 +277,7 @@ public class Events_manager {
                         try {
                             Thread.sleep(sleep_time);    //Wait for 2s
                         } catch (Throwable t) {
+                            t.printStackTrace();
                         }
                         sleep_duration += sleep_time;
                         //TODO 0.4 try to change this to listen when MQ is no more connected.
@@ -310,6 +302,7 @@ public class Events_manager {
                         try {
                             Thread.sleep(counter_current);    //Wait for 10s, 20s, 30s, ... (max 5 minutes)
                         } catch (Throwable t) {
+                            t.printStackTrace();
                         }
                         //And try to reconnect
 
@@ -320,7 +313,8 @@ public class Events_manager {
                     stats_com.add(Stats_Com.EVENTS_SEND, request.length());
                     Tracer.w(mytag, "Requesting server <" + request + ">");
                     try {
-                        event = Rest_com.connect_jsonobject(request, login, password);        //Blocking request : we must have an answer to continue...
+                        //Set timeout very high as tickets is a long process
+                        event = Rest_com.connect_jsonobject(request, login, password, 30000); //Blocking request : we must have an answer to continue...
                         error = 0;
                     } catch (Exception e) {
                         error = 1;
@@ -405,7 +399,7 @@ public class Events_manager {
                                             String New_Key = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("key");
                                             String New_Value = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").getJSONObject(j).getString("value");
                                             String Timestamp = event.getJSONArray("event").getJSONObject(i).getString("timestamp");
-                                            Tracer.v(mytag, "event ready : Ticket = " + ticket + " Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value +" Timestamp = " + Timestamp);
+                                            Tracer.v(mytag, "event ready : Ticket = " + ticket + " Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                             event_item++;
                                             Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                             put_event(to_stack);    //Put in stack, and notify cache engine
@@ -426,10 +420,11 @@ public class Events_manager {
                     try {
                         Tracer.w(mytag, "Freeing ticket <" + request + ">");
                         stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-                        event = Rest_com.connect_jsonobject(request, login, password);        //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(request, login, password, 3000);        //Blocking request : we must have an answer to continue...
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                 }

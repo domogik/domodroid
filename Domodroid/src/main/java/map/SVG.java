@@ -22,6 +22,7 @@ import android.graphics.drawable.PictureDrawable;
    limitations under the License.
 
  */
+
 /**
  * Describes a vector Picture object, and optionally its bounds.
  *
@@ -47,12 +48,13 @@ public class SVG {
 
     /**
      * Construct a new SVG.
+     *
      * @param picture the parsed picture object.
      * @param bounds the bounds computed from the "bounds" layer in the SVG.
      */
     private float surfaceWidth;
     private float surfaceHeight;
-    
+
     SVG(Picture picture, RectF bounds) {
         this.picture = picture;
         this.bounds = bounds;
@@ -60,6 +62,7 @@ public class SVG {
 
     /**
      * Set the limits of the SVG, which are the estimated bounds computed by the parser.
+     *
      * @param limits the bounds computed while parsing the SVG, may not be entirely accurate.
      */
     void setLimits(RectF limits) {
@@ -68,6 +71,7 @@ public class SVG {
 
     /**
      * Create a picture drawable from the SVG.
+     *
      * @return the PictureDrawable.
      */
     public PictureDrawable createPictureDrawable() {
@@ -99,6 +103,7 @@ public class SVG {
 
     /**
      * Get the parsed SVG picture data.
+     *
      * @return the picture.
      */
     public Picture getPicture() {
@@ -107,6 +112,7 @@ public class SVG {
 
     /**
      * Gets the bounding rectangle for the SVG, if one was specified.
+     *
      * @return rectangle representing the bounds.
      */
     public RectF getBounds() {
@@ -115,25 +121,26 @@ public class SVG {
 
     /**
      * Gets the bounding rectangle for the SVG that was computed upon parsing. It may not be entirely accurate for certain curves or transformations, but is often better than nothing.
+     *
      * @return rectangle representing the computed bounds.
      */
     public RectF getLimits() {
         return limits;
     }
 
-	public float getSurfaceWidth() {
-		return surfaceWidth;
-	}
+    public float getSurfaceWidth() {
+        return surfaceWidth;
+    }
 
-	public void setSurfaceWidth(float surfaceWidth) {
-		this.surfaceWidth = surfaceWidth;
-	}
+    public void setSurfaceWidth(float surfaceWidth) {
+        this.surfaceWidth = surfaceWidth;
+    }
 
-	public float getSurfaceHeight() {
-		return surfaceHeight;
-	}
+    public float getSurfaceHeight() {
+        return surfaceHeight;
+    }
 
-	public void setSurfaceHeight(float surfaceHeight) {
-		this.surfaceHeight = surfaceHeight;
-	}
+    public void setSurfaceHeight(float surfaceHeight) {
+        this.surfaceHeight = surfaceHeight;
+    }
 }

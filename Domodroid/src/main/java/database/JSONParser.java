@@ -41,7 +41,7 @@ public class JSONParser {
 
         //parsing JSON area list
         for (int i = 0; i < itemArray.length(); i++) {
-            listArea[i] = new Entity_Area(
+            listArea[i] = new Entity_Area(null, null, null,
                     itemArray.getJSONObject(i).getString("description"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getString("name"));
@@ -60,7 +60,7 @@ public class JSONParser {
         for (int i = 0; i < itemArray.length(); i++) {
             if (itemArray.getJSONObject(i).getString("area_id").equals("")) area_id = 0;
             else area_id = itemArray.getJSONObject(i).getInt("area_id");
-            listRoom[i] = new Entity_Room(
+            listRoom[i] = new Entity_Room(null, null, null,
                     area_id,
                     itemArray.getJSONObject(i).getString("description"),
                     itemArray.getJSONObject(i).getInt("id"),
@@ -77,7 +77,7 @@ public class JSONParser {
 
         //parsing JSON feature list
         for (int i = 0; i < itemArray.length(); i++) {
-            listFeature[i] = new Entity_Feature(
+            listFeature[i] = new Entity_Feature(null, null, null,
                     itemArray.getJSONObject(i).getString("device_feature_model_id"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getJSONObject("device").getInt("id"),
@@ -114,7 +114,9 @@ public class JSONParser {
     public static Boolean Ack(JSONObject json) {
         try {
             if (json.getString("status").equals("ERROR")) {
-                //TODO need to say this to user and log it.
+                //todo need to say this to user and log it.
+                //add tracer access
+                // tracer.d(mytag,"json status erro");
                 Toast toast = Toast.makeText(null, "ERROR sending command", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
                 toast.show();
@@ -123,7 +125,8 @@ public class JSONParser {
                 return true;
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            //todo add tracer
+            //Tracer.d (mytag,""+ e.toString());
             return false;
         }
 

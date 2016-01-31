@@ -17,348 +17,382 @@
  */
 package widgets;
 
-import java.lang.Thread.State;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.jar.JarEntry;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import database.DmdContentProvider;
 import database.WidgetUpdate;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
-import misc.List_Icon_Adapter;
+
 import misc.tracerengine;
+
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
 
-	LinearLayout featurePan2;
-	private View		  featurePan2_buttons;
-	private final TextView value;
-	private Graphical_Info_View canvas;
-	private final Animation animation;
-	private final Activity context;
-	private Message msg;
-	private static String mytag;
-	public static FrameLayout container = null;
-	public static FrameLayout myself = null;
-	public Boolean with_graph = true;
-	private tracerengine Tracer = null;
-	private Entity_client session = null;
-	private Boolean realtime = false;
+    LinearLayout featurePan2;
+    private View featurePan2_buttons;
+    private TextView value;
+    private Graphical_Info_View canvas;
+    private Animation animation;
+    private Message msg;
+    private static String mytag;
+    public static FrameLayout container = null;
+    public static FrameLayout myself = null;
+    public Boolean with_graph = true;
+    private Entity_client session = null;
+    private Boolean realtime = false;
+    private final Entity_Feature feature;
+    private String state_key;
+    private String parameters;
+    private int dev_id;
+    private final int session_type;
+    private final SharedPreferences params;
+    private String url = null;
+    private int dpiClassification;
+    private int update;
 
-	private int dpiClassification;
+    public Graphical_Info(tracerengine Trac,
+                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Entity_Feature feature) {
+        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature;
+        this.url = url;
+        this.params = params;
+        this.session_type = session_type;
+        this.update = update;
+        onCreate();
+    }
 
-	public Graphical_Info(tracerengine Trac,final Activity context, int id,int dev_id, String name,
-			final String state_key, String url,final String usage, int update, 
-			int widgetSize, int session_type, final String parameters,int place_id,String place_type, SharedPreferences params) {
-		super(context,Trac, id, name, state_key, usage, widgetSize, session_type, place_id, place_type,mytag,container);
-		this.Tracer = Trac;
-		this.context = context;
-		String stateS;
-		try{
-			stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
-		}catch (Exception e){
-			Tracer.d(mytag, "no translation for: "+state_key);
-			stateS = state_key;
-		}
-		this.myself = this;
-		setOnClickListener(this);
+    public Graphical_Info(tracerengine Trac,
+                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Entity_Map feature_map) {
+        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        this.feature = feature_map;
+        this.url = url;
+        this.session_type = session_type;
+        this.params = params;
+        this.update = update;
+        onCreate();
+    }
 
-		mytag="Graphical_Info ("+dev_id+")";
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		//Label Text size according to the screen size
-		float size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
-		float size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, metrics);
+    private void onCreate() {
+        this.parameters = feature.getParameters();
+        this.dev_id = feature.getDevId();
+        this.state_key = feature.getState_key();
+        String stateS;
 
-		Tracer.i(mytag,"New instance for name = "+ name +" state_key = "+state_key);
-		String login = params.getString("http_auth_username", null);
-		String password = params.getString("http_auth_password", null);
-		float api_version = params.getFloat("API_VERSION", 0);
+        try {
+            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+        } catch (Exception e) {
+            Tracer.d(mytag, "no translation for: " + state_key);
+            stateS = state_key;
+        }
+        myself = this;
+        setOnClickListener(this);
 
-		//state key
-		TextView state_key_view = new TextView(context);
-		state_key_view.setText(stateS);
-		state_key_view.setTextColor(Color.parseColor("#333333"));
+        mytag = "Graphical_Info (" + dev_id + ")";
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        //Label Text size according to the screen size
+        float size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);
+        float size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, metrics);
 
-		//value
-		value = new TextView(context);
-		value.setTextSize(28);
-		value.setTextColor(Color.BLACK);
-		animation = new AlphaAnimation(0.0f, 1.0f);
-		animation.setDuration(1000);
+        Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
+        String login = params.getString("http_auth_username", null);
+        String password = params.getString("http_auth_password", null);
+        float api_version = params.getFloat("API_VERSION", 0);
 
-		if(with_graph) {
+        //state key
+        TextView state_key_view = new TextView(context);
+        state_key_view.setText(stateS);
+        state_key_view.setTextColor(Color.parseColor("#333333"));
 
-			//feature panel 2 which will contain graphic
-			featurePan2=new LinearLayout(context);
-			featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-			featurePan2.setGravity(Gravity.CENTER_VERTICAL);
-			featurePan2.setPadding(5, 10, 5, 10);
-			//canvas
-			canvas = new Graphical_Info_View(Tracer,context,params);
-			canvas.dev_id = dev_id;
-			canvas.id = id;
-			canvas.state_key = state_key;
-			canvas.url = url;
-			canvas.update = update;
+        //value
+        value = new TextView(context);
+        value.setTextSize(28);
+        value.setTextColor(Color.BLACK);
+        animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(1000);
 
-			LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			featurePan2_buttons=layoutInflater.inflate(R.layout.graph_buttons,null);
-			View v=null;
+        if (with_graph) {
 
-			v=featurePan2_buttons.findViewById(R.id.bt_prev);
-			if(v != null)
-				v.setOnClickListener(canvas);
+            //feature panel 2 which will contain graphic
+            featurePan2 = new LinearLayout(context);
+            featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            featurePan2.setGravity(Gravity.CENTER_VERTICAL);
+            featurePan2.setPadding(5, 10, 5, 10);
+            //canvas
+            canvas = new Graphical_Info_View(Tracer, context, params);
+            canvas.dev_id = dev_id;
+            canvas.id = feature.getId();
+            canvas.state_key = state_key;
+            canvas.url = url;
+            canvas.update = update;
 
-			v=featurePan2_buttons.findViewById(R.id.bt_next);
-			if(v != null)
-				v.setOnClickListener(canvas);
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            featurePan2_buttons = layoutInflater.inflate(R.layout.graph_buttons, null);
+            View v = null;
 
-			v=featurePan2_buttons.findViewById(R.id.bt_year);
-			if(v != null)
-				v.setOnClickListener(canvas);
+            v = featurePan2_buttons.findViewById(R.id.bt_prev);
+            if (v != null)
+                v.setOnClickListener(canvas);
 
-			v=featurePan2_buttons.findViewById(R.id.bt_month);
-			if(v != null)
-				v.setOnClickListener(canvas);
+            v = featurePan2_buttons.findViewById(R.id.bt_next);
+            if (v != null)
+                v.setOnClickListener(canvas);
 
-			v=featurePan2_buttons.findViewById(R.id.bt_week);
-			if(v != null)
-				v.setOnClickListener(canvas);
+            v = featurePan2_buttons.findViewById(R.id.bt_year);
+            if (v != null)
+                v.setOnClickListener(canvas);
 
-			v=featurePan2_buttons.findViewById(R.id.bt_day);
-			if(v != null)
-				v.setOnClickListener(canvas);
+            v = featurePan2_buttons.findViewById(R.id.bt_month);
+            if (v != null)
+                v.setOnClickListener(canvas);
 
-			v = featurePan2_buttons.findViewById(R.id.period);
-			if(v != null)
-				canvas.dates=(TextView)v;
+            v = featurePan2_buttons.findViewById(R.id.bt_week);
+            if (v != null)
+                v.setOnClickListener(canvas);
 
-			//background_stats.addView(canvas);
-			featurePan2.addView(canvas);
-		}
+            v = featurePan2_buttons.findViewById(R.id.bt_day);
+            if (v != null)
+                v.setOnClickListener(canvas);
 
-		LL_featurePan.addView(value);
-		LL_infoPan.addView(state_key_view);
+            v = featurePan2_buttons.findViewById(R.id.period);
+            if (v != null)
+                canvas.dates = (TextView) v;
 
-		Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				if (msg.what == 9999) {
-					//Message from widgetupdate
-					//state_engine send us a signal to notify value changed
-					if (session == null)
-						return;
+            //background_stats.addView(canvas);
+            featurePan2.addView(canvas);
+        }
 
-					String loc_Value = session.getValue();
-					Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-					try {
-						float formatedValue = 0;
-						if (loc_Value != null) {
-							formatedValue = Round(Float.parseFloat(loc_Value), 2);
-							Tracer.v(mytag, " Round the value" + loc_Value + " to " + formatedValue);
-						}
-						try {
-							//Basilic add, number feature has a unit parameter
-							JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-							String test_unite = jparam.getString("unit");
-							//#30 add Scale value if too big for byte only
-							if (test_unite.equals("b")) {
-								value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
-							} else if (test_unite.equals("ko")) {
-								value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
-							} else {
-								value.setText(formatedValue + " " + test_unite);
-							}
-						} catch (JSONException e) {
-							if (state_key.equalsIgnoreCase("temperature"))
-								value.setText(formatedValue + " +°C");
-							else if (state_key.equalsIgnoreCase("pressure"))
-								value.setText(formatedValue + " hPa");
-							else if (state_key.equalsIgnoreCase("humidity"))
-								value.setText(formatedValue + " %");
-							else if (state_key.equalsIgnoreCase("percent"))
-								value.setText(formatedValue + " %");
-							else if (state_key.equalsIgnoreCase("visibility"))
-								value.setText(formatedValue + " km");
-							else if (state_key.equalsIgnoreCase("chill"))
-								value.setText(formatedValue + " °C");
-							else if (state_key.equalsIgnoreCase("speed"))
-								value.setText(formatedValue + " km/h");
-							else if (state_key.equalsIgnoreCase("drewpoint"))
-								value.setText(formatedValue + " °C");
-							else if (state_key.equalsIgnoreCase("condition-code"))
-								//Add try catch to avoid other case that make #1794
-								try {
-									value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
-								} catch (Exception e1) {
-									Tracer.d(mytag, "no translation for: " + loc_Value);
-									value.setText(loc_Value);
-								}
-							else value.setText(loc_Value);
-						}
-						value.setAnimation(animation);
-					} catch (Exception e) {
-						// It's probably a String that could'nt be converted to a float
-						Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
-						try {
-							Tracer.d(mytag, "Try to get value translate from R.STRING");
-							value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
-						} catch (Exception e1) {
-							Tracer.d(mytag, "no translation for: " + loc_Value);
-							value.setText(loc_Value);
-							if (state_key.equalsIgnoreCase("current_sunset")) {
-								Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-								value.setTypeface(typeface, Typeface.NORMAL);
-								value.setText(Html.fromHtml("&#xf052;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
-							} else if (state_key.equalsIgnoreCase("current_sunrise")) {
-								Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-								value.setTypeface(typeface, Typeface.NORMAL);
-								value.setText(Html.fromHtml("&#xf051;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
-							}
-						}
-					}
-					//To have the icon colored as it has no state
-					IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(usage, 2));
-				} else if (msg.what == 9998) {
-					// state_engine send us a signal to notify it'll die !
-					Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-					session = null;
-					realtime = false;
-					removeView(LL_background);
-					myself.setVisibility(GONE);
-					if (container != null) {
-						container.removeView(myself);
-						container.recomputeViewAttributes(myself);
-					}
-					try {
-						finalize();
-					} catch (Throwable t) {
-					}    //kill the handler thread itself
-				}
-			}
+        LL_featurePan.addView(value);
+        LL_infoPan.addView(state_key_view);
 
-		};
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == 9999) {
+                    //Message from widgetupdate
+                    //state_engine send us a signal to notify value changed
+                    if (session == null)
+                        return;
 
-		//================================================================================
-		/*
-		 * New mechanism to be notified by widgetupdate engine when our value is changed
+                    String loc_Value = session.getValue();
+                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
+                    String test_unite = "";
+                    try {
+                        float formatedValue = 0;
+                        if (loc_Value != null) {
+                            formatedValue = Round(Float.parseFloat(loc_Value), 2);
+                            Tracer.v(mytag, " Round the value" + loc_Value + " to " + formatedValue);
+                        }
+                        try {
+                            //Basilic add, number feature has a unit parameter
+                            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+                            test_unite = jparam.getString("unit");
+                            //#30 add Scale value if too big for byte only
+                            switch (test_unite) {
+                                case "b":
+                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
+                                    break;
+                                case "ko":
+                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
+                                    break;
+                                default:
+                                    value.setText(formatedValue + " " + test_unite);
+                                    break;
+                            }
+                        } catch (JSONException e) {
+                            if (state_key.equalsIgnoreCase("temperature"))
+                                value.setText(formatedValue + " °C");
+                            else if (state_key.equalsIgnoreCase("pressure"))
+                                value.setText(formatedValue + " hPa");
+                            else if (state_key.equalsIgnoreCase("humidity"))
+                                value.setText(formatedValue + " %");
+                            else if (state_key.equalsIgnoreCase("percent"))
+                                value.setText(formatedValue + " %");
+                            else if (state_key.equalsIgnoreCase("visibility"))
+                                value.setText(formatedValue + " km");
+                            else if (state_key.equalsIgnoreCase("chill"))
+                                value.setText(formatedValue + " °C");
+                            else if (state_key.equalsIgnoreCase("speed"))
+                                value.setText(formatedValue + " km/h");
+                            else if (state_key.equalsIgnoreCase("drewpoint"))
+                                value.setText(formatedValue + " °C");
+                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
+                                //Add try catch to avoid other case that make #1794
+                                try {
+                                    //use xml and weather fonts here
+                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                    value.setTypeface(typeface, Typeface.NORMAL);
+                                    value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
+                                } catch (Exception e1) {
+                                    Tracer.d(mytag, "no translation for: " + loc_Value);
+                                    value.setText(loc_Value);
+                                }
+                            } else value.setText(loc_Value);
+                        }
+                        value.setAnimation(animation);
+                    } catch (Exception e) {
+                        // It's probably a String that could'nt be converted to a float
+                        Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
+                        try {
+                            Tracer.d(mytag, "Try to get value translate from R.STRING");
+                            value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
+                        } catch (Exception e1) {
+                            Tracer.d(mytag, "no translation for: " + loc_Value);
+                            value.setText(loc_Value);
+                            if (state_key.equalsIgnoreCase("current_sunset")) {
+                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                value.setTypeface(typeface, Typeface.NORMAL);
+                                value.setText(Html.fromHtml("&#xf052;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
+                            } else if (state_key.equalsIgnoreCase("current_sunrise")) {
+                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                value.setTypeface(typeface, Typeface.NORMAL);
+                                value.setText(Html.fromHtml("&#xf051;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
+                            }
+                        }
+                    }
+                    //Change icon if in %
+                    if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+                        if (Float.parseFloat(loc_Value) >= 60) {
+                            //To have the icon colored if value beetwen 30 and 60
+                            change_this_icon(2);
+                        } else if (Float.parseFloat(loc_Value) >= 30) {
+                            //To have the icon colored if value >30
+                            change_this_icon(1);
+                        } else {
+                            //To have the icon colored if value <30
+                            change_this_icon(0);
+                        }
+                    } else {
+                        //To have the icon colored as it has no state
+                        change_this_icon(2);
+                    }
+                } else if (msg.what == 9998) {
+                    // state_engine send us a signal to notify it'll die !
+                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
+                    session = null;
+                    realtime = false;
+                    removeView(LL_background);
+                    myself.setVisibility(GONE);
+                    if (container != null) {
+                        container.removeView(myself);
+                        container.recomputeViewAttributes(myself);
+                    }
+                    try {
+                        finalize();
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }    //kill the handler thread itself
+                }
+            }
+
+        };
+
+        //================================================================================
+        /*
+         * New mechanism to be notified by widgetupdate engine when our value is changed
 		 * 
 		 */
-		WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-		if(cache_engine != null) {
-			if (api_version <=0.6f){
-				session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-			}else if (api_version >=0.7f){
-				session = new Entity_client(id, "", mytag, handler, session_type);
-			}
-			if(Tracer.get_engine().subscribe(session)) {
-				realtime = true;		//we're connected to engine
-				//each time our value change, the engine will call handler
-				handler.sendEmptyMessage(9999);	//Force to consider current value in session
-			}
+        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+        if (cache_engine != null) {
+            if (api_version <= 0.6f) {
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            } else if (api_version >= 0.7f) {
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-		}
-		//================================================================================
-		//updateTimer();	//Don't use anymore cyclic refresh....	
+        }
+        //================================================================================
+        //updateTimer();	//Don't use anymore cyclic refresh....
 
-	}
+    }
 
-	public void onClick(View arg0) {
-		if(with_graph) {
-			//Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-			float size=262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
-			int sizeint=(int)size;
-			if(LL_background.getHeight() != sizeint){
-				try {
-					LL_background.removeView(featurePan2_buttons);
-					LL_background.removeView(featurePan2);
+    public void onClick(View arg0) {
+        if (with_graph) {
+            //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+            float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+            int sizeint = (int) size;
+            if (LL_background.getHeight() != sizeint) {
+                try {
+                    LL_background.removeView(featurePan2_buttons);
+                    LL_background.removeView(featurePan2);
 
-				} catch (Exception e) {}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,sizeint));
-				LL_background.addView(featurePan2_buttons);
-				LL_background.addView(featurePan2);
-				//TODO get value and draw graph in async-task to Avoid ANR.
-				canvas.activate = true;
-				canvas.updateTimer();
-			}
-			else{
-				LL_background.removeView(featurePan2_buttons);
-				LL_background.removeView(featurePan2);
-				LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-				canvas.activate = false;	//notify Graphical_Info_View to stop its UpdateTimer
-			}
-		}
-	}
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+                LL_background.addView(featurePan2_buttons);
+                LL_background.addView(featurePan2);
+                canvas.activate = true;
+                canvas.updateTimer();
+            } else {
+                LL_background.removeView(featurePan2_buttons);
+                LL_background.removeView(featurePan2);
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                canvas.activate = false;    //notify Graphical_Info_View to stop its UpdateTimer
+            }
+        }
+    }
 
-	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-		if(visibility==View.VISIBLE){
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        if (visibility == View.VISIBLE) {
 
-		}
-	}
+        }
+    }
 
-	public static double round(double value, int places) {
-		if (places < 0) throw new IllegalArgumentException();
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
 
-		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
-	}
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
-	public static float Round(float Rval, int Rpl) {
-		float p = (float)Math.pow(10,Rpl);
-		Rval = Rval * p;
-		float tmp = Math.round(Rval);
-		return tmp /p;
-	}
+    public static float Round(float Rval, int Rpl) {
+        float p = (float) Math.pow(10, Rpl);
+        Rval = Rval * p;
+        float tmp = Math.round(Rval);
+        return tmp / p;
+    }
 
 }
 

@@ -34,6 +34,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import widgets.Basic_Graphical_zone;
 import widgets.Entity_Area;
@@ -64,7 +65,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
+//import android.os.PowerManager;
 
 import android.preference.PreferenceManager;
 
@@ -76,6 +77,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -91,7 +93,7 @@ import android.widget.LinearLayout;
 public class Activity_Main extends Activity implements OnClickListener {
 
 
-    private PowerManager.WakeLock PM_WakeLock;
+    //private PowerManager.WakeLock PM_WakeLock;
     private SharedPreferences SP_params;
     private SharedPreferences.Editor SP_prefEditor;
     private AlertDialog.Builder AD_notSyncAlert;
@@ -191,12 +193,12 @@ public class Activity_Main extends Activity implements OnClickListener {
 
             public void onItemClick(AdapterView<?> adapter, View v, int pos,
                                     long id) {
-                DomodroidDB domodb = new DomodroidDB(Tracer, myself);
+                DomodroidDB domodb = new DomodroidDB(Tracer, myself, SP_params);
                 listRoom = domodb.requestallRoom();
                 listArea = domodb.requestArea();
                 String type = (history.elementAt(historyPosition)[1]);
                 historyPosition++;
-                if (type.equals("root")&&!(by_usage)) {
+                if (type.equals("root") && !(by_usage)) {
                     Tracer.v(mytag + ".widgetHandler", "add history " + listArea[pos].getId() + " area");
                     history.add(historyPosition, new String[]{listArea[pos].getId() + "", "area"});
                     loadWigets(listArea[pos].getId(), "area");
@@ -276,6 +278,9 @@ public class Activity_Main extends Activity implements OnClickListener {
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
+                        // Store settings to SDcard
+                        Tracer.i("Preference", "Saving pref to file");
+                        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();
@@ -343,9 +348,11 @@ public class Activity_Main extends Activity implements OnClickListener {
 
 
         //power management
-        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.PM_WakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
-        this.PM_WakeLock.acquire();
+        //final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        //this.PM_WakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
+        //this.PM_WakeLock.acquire();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 
         //titlebar
         final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
@@ -359,13 +366,13 @@ public class Activity_Main extends Activity implements OnClickListener {
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
 
-        house = new Basic_Graphical_zone(getApplicationContext(), 0,
+        house = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "House"),
                 "",
                 "house",
                 0, "", null);
         house.setPadding(0, 0, 5, 0);
-        map = new Basic_Graphical_zone(getApplicationContext(), 0,
+        map = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "Map"),
                 "",
                 "map",
@@ -465,7 +472,6 @@ public class Activity_Main extends Activity implements OnClickListener {
                 Tracer.i(mytag, "OnCreate Params splach is false and WidgetUpdate is null startCacheengine!");
                 startCacheEngine();
             }
-
         }
         // Changelog view
         changelog changelog = new changelog(this);
@@ -529,14 +535,14 @@ public class Activity_Main extends Activity implements OnClickListener {
             if (!Tracer.Map_as_main) {
                 // We're the main initial activity
                 Tracer.v(mytag + ".onDestroy", "cache engine set to sleeping !");
-                this.PM_WakeLock.release();    // We allow screen shut, now...
+                //PM_WakeLock.release();    // We allow screen shut, now...
                 WU_widgetUpdate.set_sleeping();    //Don't cancel the cache engine : only freeze it
                 // only if we are the main initial activity
             }
 
         }
-		/*
-		if(Tracer != null) {
+        /*
+        if(Tracer != null) {
 			Tracer.close();		//To flush text file, eventually
 			Tracer = null;
 		}
@@ -554,7 +560,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
 	/*
-	public void force_DB_update() {
+    public void force_DB_update() {
 		if(WU_widgetUpdate != null) {
 			WU_widgetUpdate.refreshNow();
 		}
@@ -597,7 +603,7 @@ public class Activity_Main extends Activity implements OnClickListener {
 
         if (history != null)
             history = null;        //Free resource
-        history = new Vector<String[]>();
+        history = new Vector<>();
         historyPosition = 0;
 
         //load widgets
@@ -624,8 +630,8 @@ public class Activity_Main extends Activity implements OnClickListener {
             WM_Agent = new Widgets_Manager(Tracer, widgetHandler);
             WM_Agent.widgetupdate = WU_widgetUpdate;
         }
-		/*
-		if(T_starting != null) {
+        /*
+        if(T_starting != null) {
 			T_starting.cancel();
 			T_starting.setText("Creating widgets....");
 			T_starting.setDuration(Toast.LENGTH_SHORT);
@@ -684,9 +690,7 @@ public class Activity_Main extends Activity implements OnClickListener {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
-    private boolean loadSharedPreferencesFromFile(File src) {
-        boolean res = false;
+    private void loadSharedPreferencesFromFile(File src) {
         ObjectInputStream input = null;
         try {
             input = new ObjectInputStream(new FileInputStream(src));
@@ -697,19 +701,18 @@ public class Activity_Main extends Activity implements OnClickListener {
                 String key = entry.getKey();
                 Tracer.i(mytag, "Loading pref : " + key + " -> " + v.toString());
                 if (v instanceof Boolean)
-                    SP_prefEditor.putBoolean(key, ((Boolean) v).booleanValue());
+                    SP_prefEditor.putBoolean(key, (Boolean) v);
                 else if (v instanceof Float)
-                    SP_prefEditor.putFloat(key, ((Float) v).floatValue());
+                    SP_prefEditor.putFloat(key, (Float) v);
                 else if (v instanceof Integer)
-                    SP_prefEditor.putInt(key, ((Integer) v).intValue());
+                    SP_prefEditor.putInt(key, (Integer) v);
                 else if (v instanceof Long)
-                    SP_prefEditor.putLong(key, ((Long) v).longValue());
+                    SP_prefEditor.putLong(key, (Long) v);
                 else if (v instanceof String)
-                    SP_prefEditor.putString(key, ((String) v));
+                    SP_prefEditor.putString(key, (String) v);
             }
             SP_prefEditor.commit();
-            this.LoadSelections();    // to set panel with known values
-            res = true;
+            LoadSelections();    // to set panel with known values
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -725,7 +728,6 @@ public class Activity_Main extends Activity implements OnClickListener {
                 ex.printStackTrace();
             }
         }
-        return res;
     }
 
     private void loadWigets(int id, String type) {
@@ -744,26 +746,33 @@ public class Activity_Main extends Activity implements OnClickListener {
 
         try {
             int mytype = 0;
-            if (type.equals("root")) {
-                LL_area.removeAllViews();
-                VG_parent.addView(LL_house_map);    // House & map
-                if (!by_usage) {
-                    // Version 0.2 or un-force by_usage : display house, map and areas
-                    LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
-                    VG_parent.addView(LL_area);    //and areas
-                    LL_activ.removeAllViews();
-                    LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
-                } else {
-                    // by_usage
-                    //TODO #19 change 1 in loadRoomWidgets by the right value.
-                    LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
-                    VG_parent.addView(LL_room);
-                    LL_activ.removeAllViews();
-                    LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
-                }
-                VG_parent.addView(LL_activ);
-				/*Should never arrive in this type.	
-			}else if(type.equals("house")) {
+            switch (type) {
+                case "root":
+                    LL_area.removeAllViews();
+                    VG_parent.addView(LL_house_map);    // House & map
+
+                    if (!by_usage) {
+                        // Version 0.2 or un-force by_usage : display house, map and areas
+                        LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
+                        VG_parent.addView(LL_area);    //and areas
+                        LL_activ.removeAllViews();
+                        // todo #33 here
+                        // Crash on reload for the moment
+                        //while (!WU_widgetUpdate.ready) {
+                        //Wait the widgetupdate to be ready
+                        //}
+                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
+                    } else {
+                        // by_usage
+                        //TODO #19 change 1 in loadRoomWidgets by the right value.
+                        LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
+                        VG_parent.addView(LL_room);
+                        LL_activ.removeAllViews();
+                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
+                    }
+                    VG_parent.addView(LL_activ);
+                /*Should never arrive in this type.
+                }else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
 				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
@@ -773,29 +782,36 @@ public class Activity_Main extends Activity implements OnClickListener {
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
 				 */
-            } else if (type.equals("statistics")) {
-                //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
-                LL_area.removeAllViews();
-                LL_activ.removeAllViews();
-                LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
-                VG_parent.addView(LL_activ);
+                    break;
+                case "statistics":
+                    //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
+                    LL_area.removeAllViews();
+                    LL_activ.removeAllViews();
+                    LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
+                    VG_parent.addView(LL_activ);
 
-            } else if (type.equals("area")) {
-                //Only possible if Version 0.2 or un-force by_usage (the area 'usage' is never proposed to be clicked)
-                if (!by_usage) {
-                    VG_parent.addView(LL_house_map);    // House & map
-                }
-                LL_room.removeAllViews();
-                LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
-                VG_parent.addView(LL_room);
-                LL_activ.removeAllViews();
-                LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
-                VG_parent.addView(LL_activ);
+                    break;
+                case "area":
+                    //Only possible if Version 0.2 or un-force by_usage (the area 'usage' is never proposed to be clicked)
+                    if (!by_usage) {
+                        VG_parent.addView(LL_house_map);    // House & map
+                    }
+                    LL_room.removeAllViews();
+                    LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
 
-            } else if (type.equals("room")) {
-                LL_activ.removeAllViews();
-                LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
-                VG_parent.addView(LL_activ);
+                    VG_parent.addView(LL_room);
+                    LL_activ.removeAllViews();
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
+
+                    VG_parent.addView(LL_activ);
+
+                    break;
+                case "room":
+                    LL_activ.removeAllViews();
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
+
+                    VG_parent.addView(LL_activ);
+                    break;
             }
 
         } catch (JSONException e) {
@@ -841,7 +857,7 @@ public class Activity_Main extends Activity implements OnClickListener {
         }
     }
 
-    private Boolean startCacheEngine() {
+    private void startCacheEngine() {
         Cache_management.checkcache(Tracer, myself);
         if (WU_widgetUpdate == null) {
             this.Create_message_box();
@@ -854,10 +870,9 @@ public class Activity_Main extends Activity implements OnClickListener {
             Tracer.i(mytag, "widgetupdate_wakup");
             WU_widgetUpdate.wakeup();
             if (!result)
-                return result;
+                return;
         }
         Tracer.set_engine(WU_widgetUpdate);
-        return true;
     }
 
     @Override
@@ -961,7 +976,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
 	/*
-	private class SBAnim extends AsyncTask<Void, Void, Void>{
+    private class SBAnim extends AsyncTask<Void, Void, Void>{
 
 		@Override
 		protected Void doInBackground(Void... params) {

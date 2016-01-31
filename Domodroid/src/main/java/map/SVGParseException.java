@@ -1,11 +1,12 @@
 package map;
+
 /**
  * Runtime exception thrown when there is a problem parsing an SVG.
  *
  * @author Larva Labs, LLC
  */
 @SuppressWarnings("serial")
-public class SVGParseException extends RuntimeException {
+class SVGParseException extends RuntimeException {
 
     public SVGParseException(String s) {
         super(s);

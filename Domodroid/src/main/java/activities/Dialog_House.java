@@ -2,6 +2,7 @@ package activities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -109,14 +110,15 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //list area where to put room
         final AlertDialog.Builder list_area_choice = new AlertDialog.Builder(getContext());
-        List<String> list_area = new ArrayList<String>();
+        List<String> list_area = new ArrayList<>();
+        List<String> list_area_icon = new ArrayList<>();
         for (Entity_Area area : listArea) {
             list_area.add(area.getName());
+            list_area_icon.add(area.getIcon_name());
         }
         final CharSequence[] char_list_zone = list_area.toArray(new String[list_area.size()]);
         list_area_choice.setTitle(R.string.Wich_AREA_message);
-        //TODO display icon in list
-        List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), list_area);
+        List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), list_area, list_area_icon);
         list_area_choice.setAdapter(adapter, null);
         list_area_choice.setSingleChoiceItems(char_list_zone, -1,
                 new DialogInterface.OnClickListener() {
@@ -129,14 +131,15 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //list room where to put widget
         final AlertDialog.Builder list_room_choice = new AlertDialog.Builder(getContext());
-        List<String> list_room = new ArrayList<String>();
+        List<String> list_room = new ArrayList<>();
+        List<String> list_room_icon = new ArrayList<>();
         for (Entity_Room room : listRoom) {
             list_room.add(room.getName());
+            list_room_icon.add(room.getIcon_name());
         }
         final CharSequence[] char_list_room = list_room.toArray(new String[list_room.size()]);
         list_room_choice.setTitle(R.string.Wich_ROOM_message);
-        //TODO display icon in list
-        List_Icon_Adapter adapter2 = new List_Icon_Adapter(Tracer, getContext(), list_room);
+        List_Icon_Adapter adapter2 = new List_Icon_Adapter(Tracer, getContext(), list_room, list_room_icon);
         list_room_choice.setAdapter(adapter2, null);
         list_room_choice.setSingleChoiceItems(char_list_room, -1,
                 new DialogInterface.OnClickListener() {
@@ -149,28 +152,29 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //list widget to put in room
         final AlertDialog.Builder list_feature_choice = new AlertDialog.Builder(getContext());
-        List<String> list_feature = new ArrayList<String>();
+        List<String> list_feature = new ArrayList<>();
+        List<String> list_feature_icon = new ArrayList<>();
         for (Entity_Feature feature : listFeature) {
             if (feature.getParameters().contains("command")) {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())).toString());
+                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())).toString());
+                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     list_feature.add(feature.getName() + " " + feature.getState_key());
                 }
             }
+            list_feature_icon.add(feature.getIcon_name());
         }
         final CharSequence[] char_list_feature = list_feature.toArray(new String[list_feature.size()]);
         list_feature_choice.setTitle(R.string.Wich_feature_message);
-        //TODO display icon in list
-        List_Icon_Adapter adapter1 = new List_Icon_Adapter(Tracer, getContext(), list_feature);
+        List_Icon_Adapter adapter1 = new List_Icon_Adapter(Tracer, getContext(), list_feature, list_feature_icon);
         list_feature_choice.setAdapter(adapter1, null);
         list_feature_choice.setSingleChoiceItems(char_list_feature, -1,
                 new DialogInterface.OnClickListener() {
@@ -182,15 +186,13 @@ class Dialog_House extends Dialog implements OnClickListener {
         );
         //list icon from array R.array.icon_area_array
         final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-        List<String> list_icon = new ArrayList<String>();
+        List<String> list_icon = new ArrayList<>();
         String[] fiilliste;
         fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-        for (int i = 0; i < fiilliste.length; i++) {
-            list_icon.add(fiilliste[i]);
-        }
+        Collections.addAll(list_icon, fiilliste);
         final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
         list_icon_choice.setTitle(R.string.Wich_ICON_message);
-        List_Icon_Adapter adapter11 = new List_Icon_Adapter(Tracer, getContext(), fiilliste);
+        List_Icon_Adapter adapter11 = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
         list_icon_choice.setAdapter(adapter11, null);
         list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                 new DialogInterface.OnClickListener() {
@@ -204,18 +206,24 @@ class Dialog_House extends Dialog implements OnClickListener {
         );
         //list type area,room, widget
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_type = new ArrayList<String>();
-        if (!v.getTag().equals("add_icon"))
+        List<String> list_type = new ArrayList<>();
+        List<String> list_type_icon = new ArrayList<>();
+        if (!v.getTag().equals("add_icon")) {
             list_type.add(context.getString(R.string.place_root));
+            list_type_icon.add("house");
+        }
         list_type.add(context.getString(R.string.area));
+        list_type_icon.add("area");
         list_type.add(context.getString(R.string.place_room));
-        if (!v.getTag().equals("add_widget"))
+        list_type_icon.add("map");
+        if (!v.getTag().equals("add_widget")) {
             list_type.add(context.getString(R.string.place_widget));
+            list_type_icon.add("usage");
+        }
 
         final CharSequence[] char_list_type = list_type.toArray(new String[list_type.size()]);
         list_type_choice.setTitle(R.string.Wich_TYPE_message);
-        //TODO display icon in list
-        List_Icon_Adapter adapter111 = new List_Icon_Adapter(Tracer, getContext(), list_type);
+        List_Icon_Adapter adapter111 = new List_Icon_Adapter(Tracer, getContext(), list_type, list_type_icon);
         list_type_choice.setAdapter(adapter111, null);
         list_type_choice.setSingleChoiceItems(char_list_type, -1,
                 new DialogInterface.OnClickListener() {
@@ -319,8 +327,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                     values.put("place_id", (area_id));
                 }
                 if (type.equals(context.getString(R.string.place_room))) {
-                    values.put("place_id", (room_id));
                     values.put("place_type", "room");
+                    values.put("place_id", (room_id));
                 }
                 //device_feature_id must come from the selected  one in list
                 values.put("device_feature_id", (feature_id));
@@ -378,75 +386,95 @@ class Dialog_House extends Dialog implements OnClickListener {
             }
         });
 
-        if (tag.equals("house_cancel"))
-            dismiss();
-        else if (tag.equals("house_ok")) {
-            SharedPreferences.Editor prefEditor = params.edit();
-            try {
-                prefEditor = params.edit();
-                //To allow the area view we have to remove by usage option
-                prefEditor.putBoolean("BY_USAGE", false);
+        switch (tag) {
+            case "house_cancel":
+                dismiss();
+                break;
+            case "house_ok":
+                SharedPreferences.Editor prefEditor = params.edit();
+                try {
+                    prefEditor = params.edit();
+                    //To allow the area view we have to remove by usage option
+                    prefEditor.putBoolean("BY_USAGE", false);
+                    prefEditor.commit();
+
+                } catch (Exception e) {
+                    Tracer.e(mytag, e.toString());
+                }
+
                 prefEditor.commit();
 
-            } catch (Exception e) {
-                Tracer.e(mytag, e.toString());
+                dismiss();
+                break;
+            case "add_area":
+                alert_Area.show();
+                break;
+            case "add_room": {
+                alert_Room.show();
+                AlertDialog alert_list_area = list_area_choice.create();
+                alert_list_area.show();
+                break;
             }
-
-            prefEditor.commit();
-
-            dismiss();
-        } else if (tag.equals("add_area")) {
-            alert_Area.show();
-        } else if (tag.equals("add_room")) {
-            alert_Room.show();
-            AlertDialog alert_list_area = list_area_choice.create();
-            alert_list_area.show();
-        } else if (tag.equals("add_widget")) {
-            list_type_choice.show();
-            AlertDialog alert_list_feature = list_feature_choice.create();
-            alert_list_feature.show();
-        } else if (tag.equals("add_widget_root")) {
-            alert_Feature.show();
-            v.setTag("add_widget");
-        } else if (tag.equals("add_widget_area")) {
-            alert_Feature.show();
-            AlertDialog alert_list_area = list_area_choice.create();
-            alert_list_area.show();
-            v.setTag("add_widget");
-        } else if (tag.equals("add_widget_room")) {
-            alert_Feature.show();
-            AlertDialog alert_list_room = list_room_choice.create();
-            alert_list_room.show();
-            v.setTag("add_widget");
-        } else if (tag.equals("add_icon")) {
-            list_type_choice.show();
-            AlertDialog alert_list_icon = list_icon_choice.create();
-            alert_list_icon.show();
-            //Ask user what icon i want to modify area, room, widget
-            //in function display
-            //display list of all icons
-            //and change the tag for onclic() method
-        } else if (tag.equals("add_icon_area")) {
-            alert_Icon.show();
-            AlertDialog alert_list_area = list_area_choice.create();
-            alert_list_area.show();
-            v.setTag("add_icon");
-        } else if (tag.equals("add_icon_room")) {
-            alert_Icon.show();
-            AlertDialog alert_list_room = list_room_choice.create();
-            alert_list_room.show();
-            v.setTag("add_icon");
-        } else if (tag.equals("add_icon_widget")) {
-            alert_Icon.show();
-            AlertDialog alert_list_feature = list_feature_choice.create();
-            alert_list_feature.show();
-            v.setTag("add_icon");
+            case "add_widget": {
+                list_type_choice.show();
+                AlertDialog alert_list_feature = list_feature_choice.create();
+                alert_list_feature.show();
+                break;
+            }
+            case "add_widget_root":
+                alert_Feature.show();
+                v.setTag("add_widget");
+                break;
+            case "add_widget_area": {
+                alert_Feature.show();
+                AlertDialog alert_list_area = list_area_choice.create();
+                alert_list_area.show();
+                v.setTag("add_widget");
+                break;
+            }
+            case "add_widget_room": {
+                alert_Feature.show();
+                AlertDialog alert_list_room = list_room_choice.create();
+                alert_list_room.show();
+                v.setTag("add_widget");
+                break;
+            }
+            case "add_icon":
+                list_type_choice.show();
+                AlertDialog alert_list_icon = list_icon_choice.create();
+                alert_list_icon.show();
+                //Ask user what icon i want to modify area, room, widget
+                //in function display
+                //display list of all icons
+                //and change the tag for onclic() method
+                break;
+            case "add_icon_area": {
+                alert_Icon.show();
+                AlertDialog alert_list_area = list_area_choice.create();
+                alert_list_area.show();
+                v.setTag("add_icon");
+                break;
+            }
+            case "add_icon_room": {
+                alert_Icon.show();
+                AlertDialog alert_list_room = list_room_choice.create();
+                alert_list_room.show();
+                v.setTag("add_icon");
+                break;
+            }
+            case "add_icon_widget": {
+                alert_Icon.show();
+                AlertDialog alert_list_feature = list_feature_choice.create();
+                alert_list_feature.show();
+                v.setTag("add_icon");
+                break;
+            }
         }
 
     }
 
     private void loadSpinnerData() {
-        domodb = new DomodroidDB(Tracer, context);
+        domodb = new DomodroidDB(Tracer, context, params);
 
         listArea = domodb.requestArea();
         listRoom = domodb.requestallRoom();
@@ -454,18 +482,12 @@ class Dialog_House extends Dialog implements OnClickListener {
         Entity_Icon[] listIcon = domodb.requestallIcon();
 
         //1st list area where to put room
-        ArrayList<HashMap<String, String>> list_Area = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> list_Area = new ArrayList<>();
         HashMap<String, String> map;
         for (Entity_Area area : listArea) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("name", area.getName());
-            String iconName = "unknow";
-            try {
-                iconName = domodb.requestIcons(area.getId(), "area").getValue();
-            } catch (Exception e) {
-                Tracer.e(mytag, e.toString());
-            }
-            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
+            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(area.getIcon_name(), 0)));
             list_Area.add(map);
         }
 //		ArrayAdapter<String> area_adapter =
@@ -478,17 +500,11 @@ class Dialog_House extends Dialog implements OnClickListener {
 
         //2nd list room where to put widget but contain also the area
         //widget could be place in an area or a room.
-        ArrayList<HashMap<String, String>> list_Room = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> list_Room = new ArrayList<>();
         for (Entity_Room room : listRoom) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("name", room.getName());
-            String iconName = "unknow";
-            try {
-                iconName = domodb.requestIcons(room.getId(), "room").getValue();
-            } catch (Exception e) {
-                Tracer.e(mytag, "error in db getting icon for this id");
-            }
-            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
+            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(room.getIcon_name(), 0)));
             list_Room.add(map);
         }
 //		ArrayAdapter<String> room_adapter =
@@ -500,35 +516,25 @@ class Dialog_House extends Dialog implements OnClickListener {
 //		spinner_room.setAdapter(room_adapter);
 
         //3rd list feature to put somewhere
-        ArrayList<HashMap<String, String>> list_Feature = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> list_Feature = new ArrayList<>();
         for (Entity_Feature feature : listFeature) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             if (feature.getParameters().contains("command")) {
                 try {
-                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
+                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())).toString());
+                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     map.put("name", feature.getName() + " " + feature.getState_key());
                 }
             }
-
-            String iconName = "unknow";
-            try {
-                iconName = domodb.requestIcons(feature.getId(), "feature").getValue();
-            } catch (Exception e) {
-                Tracer.e(mytag, "error in db getting icon for this id");
-            }
-            if (iconName.equals("unknow"))
-                iconName = feature.getDevice_usage_id();
-
-            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
+            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(feature.getIcon_name(), 0)));
             list_Feature.add(map);
         }
 //		ArrayAdapter<String> feature_adapter =
@@ -540,12 +546,13 @@ class Dialog_House extends Dialog implements OnClickListener {
         spinner_feature.setAdapter(adapter_feature);
 
         //4th list icon to associate with area, room or widget
-        ArrayList<String> list_icon = new ArrayList<String>();
+        //Todo improve this by drawing icon like all other
+        ArrayList<String> list_icon = new ArrayList<>();
         for (Entity_Icon icon : listIcon) {
             list_icon.add(icon.getName() + "-" + icon.getReference() + "-" + icon.getValue());
         }
         ArrayAdapter<String> icon_adapter =
-                new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_icon);
+                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list_icon);
         icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_icon.setAdapter(icon_adapter);
 

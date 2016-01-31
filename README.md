@@ -1,6 +1,4 @@
-domodroid
-=========
-
+# domodroid
 Android client for Domogik
 
-The 'master' branch must be kept as 'last stable' version
+This Branch is the Dev one with android studio.

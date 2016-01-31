@@ -32,7 +32,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.PowerManager;
+//import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
 import android.view.View;
@@ -42,7 +42,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class Activity_About extends Activity implements OnClickListener{
-	private PowerManager.WakeLock mWakeLock;
+	//private PowerManager.WakeLock mWakeLock;
 	private String pn = "";
 	private final String mytag="Activity_About";
 	private Button showchangelog;
@@ -81,14 +81,14 @@ public class Activity_About extends Activity implements OnClickListener{
 		showchangelog.setOnClickListener(this);
 
 		//power management
-		final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-		this.mWakeLock.acquire();
+		//final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		//this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+		//this.mWakeLock.acquire();
 	}
 
 	@Override
 	public void onDestroy() {
-		this.mWakeLock.release();
+		//this.mWakeLock.release();
 		super.onDestroy();
 	}
 

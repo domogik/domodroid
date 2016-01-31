@@ -18,6 +18,7 @@
 package widgets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import misc.List_Icon_Adapter;
@@ -57,21 +58,22 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     final LinearLayout LL_infoPan;
     final LinearLayout LL_featurePan;
     final LinearLayout LL_topPan;
-    final ImageView IV_img;
+    private final ImageView IV_img;
     private final TextView TV_name;
     private final int id;
     private final FrameLayout container;
     private final FrameLayout myself;
-    private tracerengine Tracer = null;
-    private final Activity context;
+    public tracerengine Tracer = null;
+    public Activity context;
     private String icon;
     private final String place_type;
     private final int place_id;
     private final String mytag;
-    private final String name;
+    public String name;
     private final String state_key;
+    private int icon_status;
 
-    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int session_type, int place_id, String place_type, String mytag, FrameLayout container) {
+    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container) {
         super(context);
         this.Tracer = Trac;
         this.context = context;
@@ -142,9 +144,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.addView(LL_background);
     }
 
+    @SuppressWarnings("Convert2Diamond")
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_choice = new ArrayList<String>();
+        List<String> list_choice = new ArrayList<>();
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
         list_choice.add(context.getString(R.string.delete));
@@ -165,6 +168,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         return false;
     }
 
+    @SuppressWarnings("Convert2Diamond")
     private void do_action(String action) {
         if (action.equals(context.getString(R.string.rename))) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -215,15 +219,13 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             alert.show();
         } else if (action.equals(context.getString(R.string.change_icon))) {
             final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
-            List<String> list_icon = new ArrayList<String>();
+            List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
             fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
-            for (int i = 0; i < fiilliste.length; i++) {
-                list_icon.add(fiilliste[i]);
-            }
+            Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
             list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name + "-" + state_key);
-            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer,getContext(), fiilliste);
+            List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
                     new DialogInterface.OnClickListener() {
@@ -237,13 +239,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             //icon is the name of the icon wich will be select
                             values.put("value", icon);
                             //reference is the id of the area, room, or feature
-                            int reference = 0;
-                            reference = id;
+                            int reference = id;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            //TODO need to select good icon in function of his state
-                            //Redraw it for this.
-                            IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
+                            change_this_icon(icon_status);
                             dialog.cancel();
                         }
                     }
@@ -252,6 +251,15 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             alert_list_icon.show();
 
         }
+    }
+
+    void change_this_icon(int icon_status) {
+        set_this_icon_status(icon_status);
+        IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, icon_status));
+    }
+
+    private void set_this_icon_status(int icon_status) {
+        this.icon_status = icon_status;
     }
 }
 

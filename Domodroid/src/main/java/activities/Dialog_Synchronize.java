@@ -208,7 +208,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             try {
                 json_rinor = Rest_com.connect_jsonobject(urlAccess, login, password, 3000);
             } catch (Exception e) {
-                Tracer.e(mytag, "Error connceting to rinor");
+                Tracer.e(mytag, "Error connecting to rinor");
                 json_rinor = null;
             }
             if (json_rinor == null) {
@@ -702,6 +702,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
                             } else if (device_sync_order.equals("plugin")) {
                                 usage = json_FeatureList1.getJSONObject(i).getString("client_id");
+                                usage = usage.substring(0, usage.indexOf("."));
+                                usage = usage.substring(usage.indexOf("-") + 1, usage.length());
+                                usage = usage.substring(0,1).toUpperCase() + usage.substring(1).toLowerCase();
                             } else {
                                 usage = json_FeatureList1.getJSONObject(i).getString("name");
                             }
@@ -867,6 +870,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
                             } else if (device_sync_order.equals("plugin")) {
                                 usage = json_FeatureList1.getJSONObject(i).getString("client_id");
+                                usage = usage.substring(0, usage.indexOf("."));
+                                usage = usage.substring(usage.indexOf("-") + 1, usage.length());
+                                usage = usage.substring(0,1).toUpperCase() + usage.substring(1).toLowerCase();
                             } else {
                                 usage = json_FeatureList1.getJSONObject(i).getString("name");
                             }

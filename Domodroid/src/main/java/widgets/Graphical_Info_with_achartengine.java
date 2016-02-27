@@ -304,7 +304,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                     value1 = new TextView(context);
                                     value1.setTextSize(14);
                                     value1.setTextColor(Color.BLACK);
-                                    value1.setText((int) formatedValue + test_unite);
+                                    value1.setText(formatedValue + test_unite);
                                     //Create a rotate animation for arrow with formatedValue as angle
                                     RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                                     animation.setDuration(0);
@@ -360,7 +360,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                 value.setText(loc_Value);
                             }
                         }
-                        value.setAnimation(animation);
+                        //value.setAnimation(animation);
                     } catch (Exception e) {
                         // It's probably a String that could'nt be converted to a float
                         Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");

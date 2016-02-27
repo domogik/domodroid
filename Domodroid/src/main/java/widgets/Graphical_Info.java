@@ -239,7 +239,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                     value1 = new TextView(context);
                                     value1.setTextSize(14);
                                     value1.setTextColor(Color.BLACK);
-                                    value1.setText((int) formatedValue + test_unite);
+                                    value1.setText(formatedValue + test_unite);
                                     //Create a rotate animation for arrow with formatedValue as angle
                                     RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                                     animation.setDuration(0);

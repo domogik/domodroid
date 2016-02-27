@@ -228,6 +228,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                     value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
                                     break;
                                 case "°":
+                                    //TODO find how to update the rotate when a new value is receiveds from events or mq
                                     //remove the textView from parent LinearLayout
                                     LL_featurePan.removeView(value);
                                     //Display an arrow with font-awesome

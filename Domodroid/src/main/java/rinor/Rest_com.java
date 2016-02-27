@@ -104,7 +104,10 @@ public class Rest_com {
             Tracer.e(mytag, e.toString());
         } catch (IOException | JSONException e) {
             Tracer.e(mytag, e.toString());
+        } catch (Exception e){
+            Tracer.e(mytag, e.toString());
         }
+
         return json;
     }
 

@@ -229,7 +229,7 @@ public class Events_manager {
                         subscriber.close();
                         zmqContext.term();
                     } else {
-                        // TOdo Say user Mq conf as a problem
+                        // Todo Say user Mq conf as a problem
                         // This make crash
                         // Toast.makeText(null, R.string.events_error_mq,Toast.LENGTH_LONG).show();
                         Tracer.d(mytag, "error in MQ config");

@@ -148,7 +148,7 @@ public class WidgetUpdate {
         new UpdateThread().execute();    //And force an immediate refresh
         this.callback_counts = 0;    //To force a refresh
         /*
-		Boolean said = false;
+        Boolean said = false;
 		int max_time_for_sync = 15 * 1000;		// On initial cache initialization, return an error 
 												// if cannot connect in 15 seconds
 												// Probably wrong URL ?

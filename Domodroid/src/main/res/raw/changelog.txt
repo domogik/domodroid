@@ -22,6 +22,8 @@
     $ 1.4
       % Version 16
       _ 2016-xx-xx
+      * Close #75.
+      * More Ru and Fr translation from transifex.
       % Version 15
       _ 2016-01-31
       * Problem when publishing to the store

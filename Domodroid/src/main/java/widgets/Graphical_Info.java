@@ -49,7 +49,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -59,6 +61,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     LinearLayout featurePan2;
     private View featurePan2_buttons;
     private TextView value;
+    private TextView value1;
     private Graphical_Info_View canvas;
     private Animation animation;
     private Message msg;
@@ -224,6 +227,37 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 case "ko":
                                     value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
                                     break;
+                                case "°":
+                                    //remove the textView from parent LinearLayout
+                                    LL_featurePan.removeView(value);
+                                    //Display an arrow with font-awesome
+                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
+                                    value.setTypeface(typeface, Typeface.NORMAL);
+                                    value.setText("\uf176");
+                                    //display the real value in smaller font
+                                    value1 = new TextView(context);
+                                    value1.setTextSize(14);
+                                    value1.setTextColor(Color.BLACK);
+                                    value1.setText((int) formatedValue + test_unite);
+                                    //Create a rotate animation for arrow with formatedValue as angle
+                                    RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                                    animation.setDuration(0);
+                                    animation.setFillEnabled(true);
+                                    animation.setFillAfter(true);
+                                    animation.setFillBefore(true);
+                                    //apply animation to textView
+                                    value.startAnimation(animation);
+                                    //apply gravity and size to textview with font-awesome
+                                    value.setMinimumHeight(LL_featurePan.getHeight());
+                                    value.setMinimumWidth(100);
+                                    value.setGravity(Gravity.CENTER);
+                                    //Create an empty linearlayout that will contains the value
+                                    LinearLayout LL_Temp = new LinearLayout(context);
+                                    //Re-add the view in parent's one
+                                    LL_Temp.addView(value1);
+                                    LL_Temp.addView(value);
+                                    LL_featurePan.addView(LL_Temp);
+                                    break;
                                 default:
                                     value.setText(formatedValue + " " + test_unite);
                                     break;
@@ -258,7 +292,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 }
                             } else value.setText(loc_Value);
                         }
-                        value.setAnimation(animation);
+
                     } catch (Exception e) {
                         // It's probably a String that could'nt be converted to a float
                         Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");

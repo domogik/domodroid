@@ -80,6 +80,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private String url = null;
     private int dpiClassification;
     private int update;
+    private TextView state_key_view;
+    private String stateS;
+    private Typeface typefaceweather;
+    private Typeface typefaceawesome;
 
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
@@ -109,7 +113,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         this.parameters = feature.getParameters();
         this.dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
-        String stateS;
 
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -132,7 +135,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         float api_version = params.getFloat("API_VERSION", 0);
 
         //state key
-        TextView state_key_view = new TextView(context);
+        state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -142,6 +145,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         value.setTextColor(Color.BLACK);
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         if (with_graph) {
 
@@ -195,7 +200,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         }
 
         LL_featurePan.addView(value);
-        LL_infoPan.addView(state_key_view);
 
         Handler handler = new Handler() {
             @Override
@@ -232,8 +236,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                     //remove the textView from parent LinearLayout
                                     LL_featurePan.removeView(value);
                                     //Display an arrow with font-awesome
-                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
-                                    value.setTypeface(typeface, Typeface.NORMAL);
+                                    value.setTypeface(typefaceawesome, Typeface.NORMAL);
                                     value.setText("\uf176");
                                     //display the real value in smaller font
                                     value1 = new TextView(context);
@@ -260,10 +263,24 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                     LL_featurePan.addView(LL_Temp);
                                     break;
                                 default:
+                                    if (state_key.equalsIgnoreCase("current_wind_speed")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf03e;"), TextView.BufferType.SPANNABLE);
+                                    } else if (state_key.equalsIgnoreCase("current_humidity")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf07a;"), TextView.BufferType.SPANNABLE);
+                                    } else if (state_key.equalsIgnoreCase("current_barometer_value")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
+                                    } else if (state_key.contains("temperature")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
+                                    }
                                     value.setText(formatedValue + " " + test_unite);
                                     break;
                             }
                         } catch (JSONException e) {
+                            //It has no unit in database or in json
                             if (state_key.equalsIgnoreCase("temperature"))
                                 value.setText(formatedValue + " °C");
                             else if (state_key.equalsIgnoreCase("pressure"))
@@ -284,8 +301,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 //Add try catch to avoid other case that make #1794
                                 try {
                                     //use xml and weather fonts here
-                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                    value.setTypeface(typeface, Typeface.NORMAL);
+                                    value.setTypeface(typefaceweather, Typeface.NORMAL);
                                     value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + loc_Value);
@@ -293,7 +309,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 }
                             } else value.setText(loc_Value);
                         }
-
                     } catch (Exception e) {
                         // It's probably a String that could'nt be converted to a float
                         Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
@@ -304,13 +319,11 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             Tracer.d(mytag, "no translation for: " + loc_Value);
                             value.setText(loc_Value);
                             if (state_key.equalsIgnoreCase("current_sunset")) {
-                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                value.setTypeface(typeface, Typeface.NORMAL);
-                                value.setText(Html.fromHtml("&#xf052;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
+                                state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
                             } else if (state_key.equalsIgnoreCase("current_sunrise")) {
-                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                value.setTypeface(typeface, Typeface.NORMAL);
-                                value.setText(Html.fromHtml("&#xf051;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
+                                state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
                             }
                         }
                     }
@@ -350,7 +363,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             }
 
         };
-
+        LL_infoPan.addView(state_key_view);
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed

@@ -63,6 +63,7 @@ import android.os.Message;
 
 import misc.tracerengine;
 
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -127,6 +128,10 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private final int session_type;
     private final SharedPreferences params;
     private SimpleDateFormat format;
+    private TextView state_key_view;
+    private String stateS;
+    private Typeface typefaceweather;
+    private Typeface typefaceawesome;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -157,7 +162,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.id = feature.getId();
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        String stateS;
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -248,7 +252,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
 
         //state key
-        TextView state_key_view = new TextView(context);
+        state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -258,6 +262,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         value.setTextColor(Color.BLACK);
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         super.LL_featurePan.addView(value);
         super.LL_infoPan.addView(state_key_view);
@@ -325,6 +331,19 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                     LL_featurePan.addView(LL_Temp);
                                     break;
                                 default:
+                                    if (state_key.equalsIgnoreCase("current_wind_speed")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf03e;"), TextView.BufferType.SPANNABLE);
+                                    } else if (state_key.equalsIgnoreCase("current_humidity")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf07a;"), TextView.BufferType.SPANNABLE);
+                                    } else if (state_key.equalsIgnoreCase("current_barometer_value")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
+                                    } else if (state_key.contains("temperature")) {
+                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
+                                    }
                                     value.setText(formatedValue + " " + test_unite);
                                     break;
                             }
@@ -360,7 +379,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                 value.setText(loc_Value);
                             }
                         }
-                        //value.setAnimation(animation);
                     } catch (Exception e) {
                         // It's probably a String that could'nt be converted to a float
                         Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
@@ -370,6 +388,13 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + loc_Value);
                             value.setText(loc_Value);
+                            if (state_key.equalsIgnoreCase("current_sunset")) {
+                                state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
+                            } else if (state_key.equalsIgnoreCase("current_sunrise")) {
+                                state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                                state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
+                            }
                         }
                     }
                     //Change icon if in %

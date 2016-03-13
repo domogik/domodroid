@@ -901,6 +901,16 @@ public class MapView extends View {
                                 paint_text);
 
 
+                }else if (featureMap.getValue_type().equals("video")) {
+                    for (int j = 1; j < 5; j++)
+                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                    paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                    if (!params.getBoolean("HIDE", false))
+                        canvasWidget.drawText(label,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                paint_text);
+
                 } else {
                     // This widget is'nt alive anymore...
                     Tracer.e(mytag, "Could not draw " + featureMap.getId());
@@ -1073,6 +1083,10 @@ public class MapView extends View {
                             widgetSize, 0, Id, zone, params, feature);
                     panel_widget.addView(info_commands);
                 }
+            }else if (feature.getValue_type().equals("video")){
+                Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature);
+                panel_widget.addView(cam);
             } else {
                 info = new Graphical_Info(Tracer, context, URL,
                         widgetSize, 0, Id, zone, params, update_timer, feature);

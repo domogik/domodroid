@@ -729,7 +729,10 @@ public class Graphics_Manager {
         //WOL "wol"
         if (usage.toLowerCase().equals("wol"))
             usage = "computer";
-        //ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
+        //Yi
+        if (usage.toLowerCase().equals("yi"))
+            usage = "security_camera";
+        // ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
         //"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
         //"level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
         if (usage.toLowerCase().equals("battery_level") || usage.toLowerCase().equals("battery-level") || usage.toLowerCase().equals("low_battery") || usage.toLowerCase().equals("low-battery"))

@@ -280,6 +280,12 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
                 }
                 //used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
+            }else if (Value_type.equals("video")){
+                Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                        widgetSize, session_type, id, zone, params, feature);
+                Graphical_Cam.container = tmpPan;
+                tmpPan.addView(cam);
+                Tracer.i(mytag, "   ==> Graphical_Cam");
             }
 
             if (columns) {

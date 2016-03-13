@@ -22,6 +22,9 @@
     $ 1.4
       % Version 16
       _ 2016-xx-xx
+      * Sensor with unit ° now display an arrow woth the value as angle.
+      * Add font-awesome for future usage.
+      * Close #33.
       * Close #75.
       * More Ru and Fr translation from transifex.
       % Version 15

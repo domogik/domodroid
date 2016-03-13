@@ -170,12 +170,10 @@ public class Activity_Main extends Activity implements OnClickListener {
                                 R.layout.navigation_drawer_item, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
                         LV_My_Navigation_Drawer.setAdapter(adapter_area);
                     }
-                    //TODO comment this before releasing navigation drawer.
                     if (LV_My_Navigation_Drawer.getVisibility() == View.INVISIBLE) {
                         LV_My_Navigation_Drawer.setVisibility(View.VISIBLE);
                     } else {
                         LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
-
                     }
 
                 }
@@ -756,11 +754,15 @@ public class Activity_Main extends Activity implements OnClickListener {
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
                         VG_parent.addView(LL_area);    //and areas
                         LL_activ.removeAllViews();
-                        // todo #33 here
-                        // Crash on reload for the moment
-                        //while (!WU_widgetUpdate.ready) {
-                        //Wait the widgetupdate to be ready
-                        //}
+                        // #33 here
+                        // add try catch because on settings reload it crash
+                        try {
+                            while (!WU_widgetUpdate.ready) {
+                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
+                            }
+                        } catch (Exception e1){
+                            Tracer.e(mytag,e1.toString());
+                        }
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage

@@ -25,8 +25,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import database.WidgetUpdate;
 import misc.tracerengine;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -42,6 +45,11 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private String name_cam;
     private final Entity_Feature feature;
     private int dev_id;
+    private Entity_client session = null;
+    private final SharedPreferences params;
+    private final int session_type;
+    private String state_key;
+    private Boolean realtime = false;
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -50,6 +58,8 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
+        this.params = params;
+        this.session_type = session_type;
         onCreate();
     }
 
@@ -60,6 +70,8 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.feature = feature_map;
         this.Tracer = Trac;
         this.context = context;
+        this.params = params;
+        this.session_type = session_type;
         onCreate();
     }
 
@@ -68,19 +80,81 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.url = feature.getAddress();
         this.dev_id = feature.getDevId();
         this.name_cam = feature.getName();
-        setOnClickListener(this);
+        this.state_key = feature.getState_key();
         mytag = "Graphical_Cam(" + dev_id + ")";
+        float api_version = params.getFloat("API_VERSION", 0);
+        setOnClickListener(this);
         //To have the icon colored as it has no state
         change_this_icon(2);
+        //handler to listen value change
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String status;
+                if (msg.what == 9999) {
+                    if (session == null)
+                        return;
+                    status = session.getValue();
+                    if (status != null) {
+                        Tracer.d(mytag, "Handler receives a new status <" + status + ">");
 
+                    }
+                } else if (msg.what == 9998) {
+                    // state_engine send us a signal to notify it'll die !
+                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
+                    session = null;
+                    realtime = false;
+                    removeView(LL_background);
+                    myself.setVisibility(GONE);
+                    if (container != null) {
+                        container.removeView(myself);
+                        container.recomputeViewAttributes(myself);
+                    }
+                    try {
+                        finalize();
+                    } catch (Throwable t) {
+                    }    //kill the handler thread itself
+                }
+
+            }
+
+        };
+        ;//================================================================================
+            /*
+             * New mechanism to be notified by widgetupdate engine when our value is changed
+             *
+             */
+        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+        if (cache_engine != null)
+
+        {
+            if (api_version <= 0.6f) {
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            } else if (api_version >= 0.7f) {
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+            }
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    realtime = true;        //we're connected to engine
+                    //each time our value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //================================================================================
+        //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
     public void onClick(View v) {
         if (!url.equals(null)) {
+            if (url.equals("Mjpeg video url"))
+                url = session.getValue();
             Intent intent = new Intent(context, Activity_Cam.class);
             Bundle b = new Bundle();
             b.putString("url", url);
-            Tracer.e(mytag, "Opening camera at: " + url);
+            Tracer.i(mytag, "Opening camera at: " + url);
             b.putString("name", name_cam);
             intent.putExtras(b);
             context.startActivity(intent);

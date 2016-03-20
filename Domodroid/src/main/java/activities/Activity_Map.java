@@ -544,16 +544,11 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                         //else just copy svg or png to domodroid dir
                     } else {
                         File destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
-                        //todo Need improvement if the new "file+random" also exists!
-                                /*
-                                String baseFilename = "photo";
-                                File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
-                                int i = 2; // whatever increment you want to start with, I'm copying Windows' naming convention
-                                while (outputFile.exists()) {
-                                    outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + "(" + i + ")" + ".jpg");
-                                    i++;
-                                }
-                                */
+                        int i = 1;
+                        while (destFile.exists()) {
+                            destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + "(" + i + ")" + fileName);
+                            i++;
+                        }
                         CopyFile.copyDirectory(selectFile, destFile);
                     }
                     cursor.close();

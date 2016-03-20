@@ -521,16 +521,13 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             //FileOutputStream out = new FileOutputStream(fileName);
                             fileName = fileName.substring(0, fileName.length() - extension.length() - 1) + ".png";
                             extension = "png";
-                            //todo Need improvement if the new "file+random" also exists!
-                                /*
-                                String baseFilename = "photo";
-                                File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
-                                int i = 2; // whatever increment you want to start with, I'm copying Windows' naming convention
-                                while (outputFile.exists()) {
-                                    outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + "(" + i + ")" + ".jpg");
-                                    i++;
-                                }
-                                */
+                            File destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
+                            int i = 1;
+                            while (destFile.exists()) {
+                                destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
+                                fileName = "(" + i + ")" + fileName;
+                                i++;
+                            }
                             FileOutputStream out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
                             Bitmap bmp = mapView.decodeFile(selectFile);
                             bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
@@ -567,22 +564,13 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                             String renamefileName = input.getText().toString();
                             Tracer.i(mytag, "new fileName: " + renamefileName);
                             destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + "." + extension);
-                            if (destFile.exists()) {
-                                //todo Need improvement if the new "file+random" also exists!
-                                /*
-                                String baseFilename = "photo";
-                                File outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + ".jpg");
-                                int i = 2; // whatever increment you want to start with, I'm copying Windows' naming convention
-                                while (outputFile.exists()) {
-                                    outputFile = new File(Environment.getExternalStorageDirectory(), baseFilename + "(" + i + ")" + ".jpg");
-                                    i++;
-                                }
-                                */
-                                Random randomInt = new Random();
-                                new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName).renameTo(new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + (randomInt.nextInt(100)) + "." + extension));
-                            } else {
-                                new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName).renameTo(new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + "." + extension));
+                            File destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
+                            int i = 1;
+                            while (destFile.exists()) {
+                                destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + "(" + i + ")" + renamefileName);
+                                i++;
                             }
+                            new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName).renameTo(destFile);
                             //Restart the activity to save change
                             restartactivity();
                         }

@@ -40,6 +40,9 @@ import android.content.DialogInterface;
 import android.content.pm.FeatureInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -72,8 +75,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     public String name;
     private final String state_key;
     private int icon_status;
+    private final Handler widgetHandler;
 
-    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container) {
+    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
         this.Tracer = Trac;
         this.context = context;
@@ -87,6 +91,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.myself = this;
         this.name = name;
         this.state_key = state_key;
+        this.widgetHandler = handler;
         setOnLongClickListener(this);
 
         //panel with border
@@ -203,13 +208,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     Tracer.get_engine().remove_one_feature_association(id, place_id, place_type);
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, context);
-                    //Refresh the view
-                    if (container != null) {
-                        removeView(myself);
-                        removeAllViews();
-                        recomputeViewAttributes(myself);
-                        Tracer.d(mytag, "removing a view");
-                    }
+                    refresh_the_views();
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -251,13 +250,13 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             AlertDialog alert_list_icon = list_icon_choice.create();
             alert_list_icon.show();
         } else if (action.equals(context.getString(R.string.move_down))) {
-            //TODO Refresh the view
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "down");
+            refresh_the_views();
         } else if (action.equals(context.getString(R.string.move_up))) {
-            //TODO Refresh the view
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
+            refresh_the_views();
         }
     }
 
@@ -268,6 +267,15 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
     private void set_this_icon_status(int icon_status) {
         this.icon_status = icon_status;
+    }
+
+    private void refresh_the_views(){
+        //Refresh the view
+        Bundle b = new Bundle();
+        b.putBoolean("refresh", true);
+        Message msg = new Message();
+        msg.setData(b);
+        widgetHandler.sendMessage(msg);
     }
 }
 

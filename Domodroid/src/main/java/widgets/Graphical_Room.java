@@ -31,11 +31,13 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Handler;
 
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
@@ -52,6 +54,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Room";
     private String icon;
     private final Activity Activity;
+    private final Handler widgetHandler;
 
     public Graphical_Room(tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
@@ -61,6 +64,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
         this.context = context;
         this.icon = icon;
         this.Activity = (android.app.Activity) context;
+        this.widgetHandler = handler;
         setOnLongClickListener(this);
         mytag = "Graphical_Room(" + id_room + ")";
     }
@@ -101,12 +105,12 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().remove_one_icon(id_room, "room");
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
+                    //Refresh the view
+                    Bundle b = new Bundle();
+                    b.putBoolean("refresh", true);
+                    Message msg = new Message();
+                    msg.setData(b);
+                    widgetHandler.sendMessage(msg);
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

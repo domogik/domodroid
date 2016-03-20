@@ -610,12 +610,15 @@ public class Activity_Main extends Activity implements OnClickListener {
             widgetHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
-
                     try {
-                        historyPosition++;
-                        loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-                        Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
-                        history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
+                        if (msg.getData().getBoolean("refresh")) {
+                            refresh();
+                        } else if (!msg.getData().getBoolean("refresh")) {
+                            historyPosition++;
+                            loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
+                            Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
+                            history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
+                        }
                     } catch (Exception e) {
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
                         e.printStackTrace();

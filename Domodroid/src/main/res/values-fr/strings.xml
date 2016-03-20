@@ -593,4 +593,6 @@
     <string name="posleft">Position gauche</string>
     <string name="sleep">Coucher</string>
     <string name="action_done">Action effectuée</string>
+    <string name="move_up">Monter</string>
+    <string name="move_down">Descendre</string>
 </resources>

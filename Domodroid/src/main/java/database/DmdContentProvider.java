@@ -66,9 +66,10 @@ public class DmdContentProvider extends ContentProvider {
     private static final int CLEAR_one_FEATURE_STATE = 262;
     private static final int UPDATE_FEATURE_STATE = 300;
     private static final int UPDATE_FEATURE_NAME = 301;
-    private static final int UPDATE_AREA_NAME = 302;
-    private static final int UPDATE_ROOM_NAME = 303;
-    private static final int UPDATE_ICON_NAME = 304;
+    private static final int UPDATE_FEATURE_POSITION_ID = 302;
+    private static final int UPDATE_AREA_NAME = 303;
+    private static final int UPDATE_ROOM_NAME = 304;
+    private static final int UPDATE_ICON_NAME = 305;
 
     private static final int UPGRADE_FEATURE_STATE = 400;
 
@@ -115,6 +116,7 @@ public class DmdContentProvider extends ContentProvider {
 
     public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
     public static final Uri CONTENT_URI_UPDATE_FEATURE_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME");
+    public static final Uri CONTENT_URI_UPDATE_FEATURE_POSITION_ID = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_POSITION_ID");
     public static final Uri CONTENT_URI_UPDATE_AREA_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME");
     public static final Uri CONTENT_URI_UPDATE_ROOM_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME");
     public static final Uri CONTENT_URI_UPDATE_ICON_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME");
@@ -168,6 +170,7 @@ public class DmdContentProvider extends ContentProvider {
 
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME", UPDATE_FEATURE_NAME);
+        sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_POSITION_ID", UPDATE_FEATURE_POSITION_ID);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME", UPDATE_AREA_NAME);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME", UPDATE_ROOM_NAME);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME", UPDATE_ICON_NAME);
@@ -378,7 +381,47 @@ public class DmdContentProvider extends ContentProvider {
                     mDB.getWritableDatabase().execSQL("UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id=" + values.getAsString("id"));
                     Tracer.d(mytag, "UPDATE table_feature SET description='" + values.getAsString("newname") + "' WHERE id=" + values.getAsString("id"));
                 } catch (SQLException e) {
-                    Tracer.e(mytag, "Error modifiying the description of feature: " + e.toString());
+                    Tracer.e(mytag, "Error modifying the description of feature: " + e.toString());
+                }
+                break;
+            case UPDATE_FEATURE_POSITION_ID:
+                // Update the position id of a widget in current place
+                try {
+                    Cursor cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE device_feature_id=" + values.getAsString("id")
+                            + " AND place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'", null);
+                    if (cursor != null) {
+                        cursor.moveToFirst();
+                        int positionid = cursor.getInt(cursor.getColumnIndex("id")); // id is column name in db
+                        int newid = 0;
+                        if (values.getAsString("order").equals("up")) {
+                            newid = positionid - 1;
+                        } else if (values.getAsString("order").equals("down")) {
+                            newid = positionid + 1;
+                        }
+                        Cursor cursor1 = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE id=" + newid
+                                + " AND place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'", null);
+                        if (cursor1 == null || !cursor1.moveToFirst()) {
+                        } else {
+                            //todo find a way to grab previous or next if not successive.
+                            //Change also the position of the previous or next feature association id
+                            cursor1.moveToFirst();
+                            int old_device_feature_id = cursor1.getInt(cursor.getColumnIndex("device_feature_id"));
+                            Tracer.d(mytag, "Moving " + values.getAsString("order") + "the feature id:" + old_device_feature_id + " in place_id:" + values.getAsString("place_id")
+                                    + " of type:" + values.getAsString("place_type") + " from position:" + newid + " to:" + positionid);
+                            mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + positionid + "' WHERE id=" + newid
+                                    + " AND place_id=" + values.getAsString("place_id") + " AND device_feature_id=" + old_device_feature_id
+                                    + " AND place_type='" + values.getAsString("place_type") + "'");
+                        }
+                        Tracer.d(mytag, "Moving " + values.getAsString("order") + " the feature id:" + values.getAsString("id") + " in place_id:" + values.getAsString("place_id")
+                                + " of type:" + values.getAsString("place_type") + " from position:" + positionid + " to:" + newid);
+                        mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + newid + "' WHERE id=" + positionid
+                                + " AND place_id=" + values.getAsString("place_id") + " AND device_feature_id=" + values.getAsString("id")
+                                + " AND place_type='" + values.getAsString("place_type") + "'");
+                    }
+                } catch (SQLException e) {
+                    Tracer.e(mytag, "SQLException Error modifying the position of feature: " + e.toString());
+                } catch (Exception e) {
+                    Tracer.e(mytag, "GlobalException Error modifying the position of feature: " + e.toString());
                 }
                 break;
             case UPDATE_AREA_NAME:
@@ -386,7 +429,7 @@ public class DmdContentProvider extends ContentProvider {
                     mDB.getWritableDatabase().execSQL("UPDATE table_area SET name='" + values.getAsString("newname") + "' WHERE id=" + values.getAsString("id"));
                     Tracer.d(mytag, "UPDATE table_area SET name='" + values.getAsString("newname") + "' WHERE id=" + values.getAsString("id"));
                 } catch (SQLException e) {
-                    Tracer.e(mytag, "Error modifiying the description of area: " + e.toString());
+                    Tracer.e(mytag, "Error modifying the description of area: " + e.toString());
                 }
                 break;
             case UPDATE_ROOM_NAME:
@@ -394,7 +437,7 @@ public class DmdContentProvider extends ContentProvider {
                     mDB.getWritableDatabase().execSQL("UPDATE table_room SET name='" + values.getAsString("newname") + "' WHERE id=" + values.getAsString("id"));
                     Tracer.d(mytag, "UPDATE table_room SET name='" + values.getAsString("newname") + "' WHERE id=" + values.getAsString("id"));
                 } catch (SQLException e) {
-                    Tracer.e(mytag, "Error modifiying the description of room: " + e.toString());
+                    Tracer.e(mytag, "Error modifying the description of room: " + e.toString());
                 }
                 break;
             case UPDATE_ICON_NAME:
@@ -408,7 +451,7 @@ public class DmdContentProvider extends ContentProvider {
                         Tracer.d(mytag, "UPDATE table_icon SET value='" + values.getAsString("value") + "' WHERE reference=" + values.getAsString("reference") + " AND name='" + values.getAsString("name") + "'");
                     }
                 } catch (SQLException e) {
-                    Tracer.e(mytag, "Error modifiying the description of icon: " + e.toString());
+                    Tracer.e(mytag, "Error modifying the description of icon: " + e.toString());
                 }
                 cursor.close();
                 break;

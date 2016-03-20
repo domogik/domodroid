@@ -409,6 +409,16 @@ public class DomodroidDB {
         }
     }
 
+    public void move_one_feature_association(int id, int place_id, String place_type, String order) {
+        ContentValues values = new ContentValues();
+        values.put("id", id);
+        values.put("place_id", place_id);
+        values.put("place_type", place_type);
+        values.put("order", order);
+        context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_POSITION_ID, values);
+        Tracer.d(mytag, "Moving "+order+" the feature id:" + id + " in place_id:" + place_id + " of type:" + place_type);
+        return;
+    }
     ////////////////// REQUEST
 
 

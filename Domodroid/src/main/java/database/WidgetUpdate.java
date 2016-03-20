@@ -969,6 +969,14 @@ public class WidgetUpdate {
     }
 
     /*
+     * This one allow Widgets to permut (for moving up or down)
+     */
+
+    public void move_one_feature_association(int id, int place_id, String place_type,String order) {
+        domodb.move_one_feature_association(id,place_id,place_type,order);
+    }
+
+    /*
      * This one allow MapView to clean all widgets from a map
      */
     public void cleanFeatureMap(String map_name) {

@@ -151,6 +151,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
         list_choice.add(context.getString(R.string.delete));
+        list_choice.add(context.getString(R.string.move_up));
+        list_choice.add(context.getString(R.string.move_down));
         final CharSequence[] char_list = list_choice.toArray(new String[list_choice.size()]);
         //list_type_choice.setTitle(R.string.What_to_do_message);
         list_type_choice.setSingleChoiceItems(char_list, -1,
@@ -207,7 +209,6 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                         removeAllViews();
                         recomputeViewAttributes(myself);
                         Tracer.d(mytag, "removing a view");
-
                     }
                 }
             });
@@ -249,7 +250,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             );
             AlertDialog alert_list_icon = list_icon_choice.create();
             alert_list_icon.show();
-
+        } else if (action.equals(context.getString(R.string.move_down))) {
+            //TODO Refresh the view
+            Tracer.d(mytag, "moving down");
+            Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "down");
+        } else if (action.equals(context.getString(R.string.move_up))) {
+            //TODO Refresh the view
+            Tracer.d(mytag, "moving up");
+            Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
         }
     }
 

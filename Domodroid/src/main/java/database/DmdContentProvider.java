@@ -389,8 +389,7 @@ public class DmdContentProvider extends ContentProvider {
                 try {
                     Cursor cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE device_feature_id=" + values.getAsString("id")
                             + " AND place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'", null);
-                    if (cursor != null) {
-                        cursor.moveToFirst();
+                    if (cursor != null && cursor.moveToFirst()) {
                         int positionid = cursor.getInt(cursor.getColumnIndex("id")); // id is column name in db
                         int newid = 0;
                         if (values.getAsString("order").equals("up")) {
@@ -400,11 +399,9 @@ public class DmdContentProvider extends ContentProvider {
                         }
                         Cursor cursor1 = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE id=" + newid
                                 + " AND place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'", null);
-                        if (cursor1 == null || !cursor1.moveToFirst()) {
-                        } else {
+                        if (cursor1 != null && cursor1.moveToFirst()) {
                             //todo find a way to grab previous or next if not successive.
                             //Change also the position of the previous or next feature association id
-                            cursor1.moveToFirst();
                             int old_device_feature_id = cursor1.getInt(cursor.getColumnIndex("device_feature_id"));
                             Tracer.d(mytag, "Moving " + values.getAsString("order") + "the feature id:" + old_device_feature_id + " in place_id:" + values.getAsString("place_id")
                                     + " of type:" + values.getAsString("place_type") + " from position:" + newid + " to:" + positionid);

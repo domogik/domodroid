@@ -658,4 +658,6 @@
     <string name="script_onoff">Script OnOff</string>
     <string name="level_bin">Level Bin</string>
     <string name="switch_on_or_off">Switch On or Off</string>
+    <string name="move_up">Move UP</string>
+    <string name="move_down">Move Down</string>
 </resources>

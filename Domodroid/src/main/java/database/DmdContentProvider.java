@@ -386,32 +386,62 @@ public class DmdContentProvider extends ContentProvider {
                 break;
             case UPDATE_FEATURE_POSITION_ID:
                 // Update the position id of a widget in current place
+                //todo find a way to grab previous or next if not successive (maybe a cursor navigation in a for next).
                 try {
-                    Cursor cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE device_feature_id=" + values.getAsString("id")
-                            + " AND place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'", null);
+                    //select all feature in this place order by id like when drawing this place.
+                    Cursor cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE place_id=" + values.getAsString("place_id")
+                            + " AND place_type='" + values.getAsString("place_type") + "' order by id", null);
+                    int new_position_id = 0;
+                    int old_position_id = 0;
+                    //iterate the cursor to find the previous/current/next position of the selected feature.
                     if (cursor != null && cursor.moveToFirst()) {
-                        int positionid = cursor.getInt(cursor.getColumnIndex("id")); // id is column name in db
-                        int newid = 0;
-                        if (values.getAsString("order").equals("up")) {
-                            newid = positionid - 1;
-                        } else if (values.getAsString("order").equals("down")) {
-                            newid = positionid + 1;
+                        int previous_position = cursor.getInt(cursor.getColumnIndex("id"));
+                        boolean getnext = false;
+                        boolean getprev = false;
+                        cursor.moveToFirst();
+                        //loop until end
+                        while (!cursor.isAfterLast()) {
+                            int current_device = cursor.getInt(cursor.getColumnIndex("device_feature_id"));
+                            int current_position = cursor.getInt(cursor.getColumnIndex("id"));
+                            if (current_device == values.getAsInteger("id")) {
+                                if (values.getAsString("order").equals("up")) {
+                                    //we need to get previous position
+                                    getprev = true;
+                                } else if (values.getAsString("order").equals("down")) {
+                                    //we need to get next position
+                                    getnext = true;
+                                }
+                                //store this position as old one as it's matching device feature id
+                                old_position_id = current_position;
+                                //store this position in case it is the last one
+                                new_position_id = previous_position;
+                            } else if (getnext) {
+                                //store this position as the next one from previous loop.
+                                new_position_id = current_position;
+                                getnext = false;
+                            } else if (getprev) {
+                                new_position_id = previous_position;
+                                getprev = false;
+                            } else {
+                                //store position for next loop
+                                previous_position = current_position;
+                            }
+                            cursor.moveToNext();
                         }
-                        Cursor cursor1 = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE id=" + newid
+                        Cursor cursor1 = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association WHERE id=" + new_position_id
                                 + " AND place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'", null);
                         if (cursor1 != null && cursor1.moveToFirst()) {
-                            //todo find a way to grab previous or next if not successive.
                             //Change also the position of the previous or next feature association id
                             int old_device_feature_id = cursor1.getInt(cursor.getColumnIndex("device_feature_id"));
                             Tracer.d(mytag, "Moving " + values.getAsString("order") + "the feature id:" + old_device_feature_id + " in place_id:" + values.getAsString("place_id")
-                                    + " of type:" + values.getAsString("place_type") + " from position:" + newid + " to:" + positionid);
-                            mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + positionid + "' WHERE id=" + newid
+                                    + " of type:" + values.getAsString("place_type") + " from position:" + new_position_id + " to:" + old_position_id);
+                            mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + old_position_id + "' WHERE id=" + new_position_id
                                     + " AND place_id=" + values.getAsString("place_id") + " AND device_feature_id=" + old_device_feature_id
                                     + " AND place_type='" + values.getAsString("place_type") + "'");
                         }
                         Tracer.d(mytag, "Moving " + values.getAsString("order") + " the feature id:" + values.getAsString("id") + " in place_id:" + values.getAsString("place_id")
-                                + " of type:" + values.getAsString("place_type") + " from position:" + positionid + " to:" + newid);
-                        mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + newid + "' WHERE id=" + positionid
+                                + " of type:" + values.getAsString("place_type") + " from position:" + old_position_id + " to:" + new_position_id);
+                        mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + new_position_id + "' WHERE id=" + old_position_id
                                 + " AND place_id=" + values.getAsString("place_id") + " AND device_feature_id=" + values.getAsString("id")
                                 + " AND place_type='" + values.getAsString("place_type") + "'");
                     }

@@ -54,7 +54,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                          final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        super(context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
@@ -66,7 +66,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                          final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+        super(context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
         this.feature = feature_map;
         this.Tracer = Trac;
         this.context = context;
@@ -97,7 +97,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                     status = session.getValue();
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new status <" + status + ">");
-
                     }
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
@@ -148,9 +147,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     }
 
     public void onClick(View v) {
+        if (url.equals("Mjpeg video url"))
+            url = session.getValue();
         if (!url.equals(null)) {
-            if (url.equals("Mjpeg video url"))
-                url = session.getValue();
             Intent intent = new Intent(context, Activity_Cam.class);
             Bundle b = new Bundle();
             b.putString("url", url);

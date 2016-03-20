@@ -51,7 +51,7 @@ public class DomodroidDB {
         //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
         DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
-        Tracer.e(mytag, "load widgets for area 1");
+        Tracer.i(mytag, "load widgets for area 1");
         Entity_Room[] listRoom = domodb.requestRoom(1);
 
         for (Entity_Room room : listRoom) {

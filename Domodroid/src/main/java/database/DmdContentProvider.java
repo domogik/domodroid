@@ -518,7 +518,7 @@ public class DmdContentProvider extends ContentProvider {
                 break;
             case REQUEST_ICON:
                 queryBuilder.setTables("table_icon");
-                cursor = queryBuilder.query(mDB.getReadableDatabase(), projection, selection, selectionArgs, null, null, "id");
+                cursor = queryBuilder.query(mDB.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case REQUEST_FEATURE_ASSOCIATION:
                 queryBuilder.setTables("table_feature_association");

@@ -22,10 +22,17 @@
     $ 1.4
       % Version 16
       _ 2016-xx-xx
-      * Sensor with unit ° now display an arrow woth the value as angle.
+      * Refreshing view on deletion or moving is now working correctly.
+      * Working camera widget with datatype DT_VideoMjpeg in 0.4.
+      * Sensor with unit in degrees now display an arrow with the value as angle.
       * Add font-awesome for future usage.
-      * Close #33.
-      * Close #75.
+      * Close #81 last room id in db when syncing.
+      * Close #80 Adding a widget from house menu.
+      * Close #79 Move widget up or down.
+      * Close #77 Device ID for debugging is no more displayed.
+      * Close #75 Organize area Usage by user choice at sync.
+      * Close #68 Select new image for map with uri.
+      * Close #33 refresh widget at root.
       * More Ru and Fr translation from transifex.
       % Version 15
       _ 2016-01-31

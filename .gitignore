@@ -21,5 +21,5 @@ Thumbs.db
 /captures
 # Additionnal files
 gradlew
-gradlew.bat
+#gradlew.bat
 local.properties

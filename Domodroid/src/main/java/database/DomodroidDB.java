@@ -678,8 +678,8 @@ public class DomodroidDB {
                     null,
                     null,
                     null);
-            lastid = curs.getCount();
-
+            curs.moveToLast();
+            lastid = curs.getInt(3);
         } catch (Exception e) {
             Tracer.v(mytag + "(" + owner + ")", "request last room error");
             e.printStackTrace();

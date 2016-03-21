@@ -414,7 +414,8 @@ public class DmdContentProvider extends ContentProvider {
                                 //store this position as old one as it's matching device feature id
                                 old_position_id = current_position;
                                 //store this position in case it is the last one
-                                new_position_id = previous_position;
+                                if (cursor.isLast())
+                                    new_position_id = current_position;
                             } else if (getnext) {
                                 //store this position as the next one from previous loop.
                                 new_position_id = current_position;

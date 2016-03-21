@@ -269,6 +269,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("description", "");
                 values.put("id", (lastid + 1));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
+                // #76
+               //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
                 loadSpinnerData();
             }
         });
@@ -296,6 +298,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 int lastid = domodb.requestlastidArea();
                 values.put("id", lastid + 1);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
+                // #76
+                //prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
                 loadSpinnerData();
             }
         });
@@ -335,6 +339,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 //values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
+                // #76
+                //prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, context);
                 loadSpinnerData();
@@ -377,6 +383,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 }
                 values.put("reference", reference);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                // #76
+                // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                 loadSpinnerData();
             }
         });

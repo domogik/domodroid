@@ -188,6 +188,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id, result, "feature");
+                    //#76
+                    // need to save table_feature to json but this method do not exists
+                    //prefEditor.putString("FEATURE_LIST", db.request_json_FeatureList().toString());
                     TV_name.setText(result);
                 }
             });
@@ -204,8 +207,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     Tracer.d(mytag, "deleting widget id= " + id + " place_id= " + place_id + " placetype= " + place_type);
-
                     Tracer.get_engine().remove_one_feature_association(id, place_id, place_type);
+                    // #76
+                    //prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, context);
                     refresh_the_views();
@@ -242,6 +246,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             int reference = id;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                            // #76
+                            // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                             change_this_icon(icon_status);
                             dialog.cancel();
                         }

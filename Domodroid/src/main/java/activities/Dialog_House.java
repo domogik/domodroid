@@ -270,7 +270,7 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
                 // #76
-               //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
+                //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
                 loadSpinnerData();
             }
         });

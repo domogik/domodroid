@@ -1131,6 +1131,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 try {
                     db.insertFeature(json_FeatureList);
                     //No need of db request method as feature only comes from rest
+                    // in fact for #76 it will be need.
                     prefEditor.putString("FEATURE_LIST", json_FeatureList.toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());

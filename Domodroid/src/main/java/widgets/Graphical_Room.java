@@ -103,6 +103,10 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().remove_one_things(id_room, "room");
                     Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room, "room");
                     Tracer.get_engine().remove_one_icon(id_room, "room");
+                    // #76
+                    //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
+                    //prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
+                    // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view
@@ -130,6 +134,8 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id_room, result, "room");
+                    // #76
+                    //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
                     TV_name.setText(result);
                 }
             });
@@ -165,6 +171,8 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_room;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                            // #76
+                            // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
                             change_this_icon(0, icon);
                             dialog.cancel();
                         }

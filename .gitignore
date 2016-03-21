@@ -3,7 +3,6 @@
 .gradle
 /.gradle
 /.idea
-!build.gradle
 build/
 /*/local.properties
 /*/out

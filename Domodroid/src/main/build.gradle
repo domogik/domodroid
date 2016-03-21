@@ -11,8 +11,20 @@ buildscript {
 android {
     compileSdkVersion 8
     buildToolsVersion "22.0.1"
-}
 
+    defaultConfig {
+        applicationId "org.domogik.domodroid13"
+        versionCode 16
+        versionName "1.4_android_studio"
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
+    }
+}
 repositories {
     jcenter()
 }

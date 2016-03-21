@@ -443,7 +443,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e1.toString());
                 }
 
-                int j = 2;
+                int j = db.requestidlastRoom() + 1;
                 try {
                     json_FeatureAssociationList.put("status", "OK");
                     json_FeatureAssociationList.put("code", "0");
@@ -661,7 +661,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e1.toString());
                 }
 
-                int j = 2;
+                int j = db.requestidlastRoom() + 1;
                 int k = 50;
                 try {
                     json_FeatureAssociationList.put("status", "OK");
@@ -703,7 +703,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } else if (device_sync_order.equals("plugin")) {
                                 usage = json_FeatureList1.getJSONObject(i).getString("client_id");
                                 usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
-                                usage = usage.substring(0,1).toUpperCase() + usage.substring(1).toLowerCase();
+                                usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
                             } else {
                                 usage = json_FeatureList1.getJSONObject(i).getString("name");
                             }
@@ -870,7 +870,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } else if (device_sync_order.equals("plugin")) {
                                 usage = json_FeatureList1.getJSONObject(i).getString("client_id");
                                 usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
-                                usage = usage.substring(0,1).toUpperCase() + usage.substring(1).toLowerCase();
+                                usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
                             } else {
                                 usage = json_FeatureList1.getJSONObject(i).getString("name");
                             }

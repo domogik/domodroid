@@ -8,6 +8,8 @@ buildscript {
     }
 }
 
+apply plugin: 'android'
+
 allprojects {
     repositories {
         jcenter()

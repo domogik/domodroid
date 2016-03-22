@@ -9,12 +9,14 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 8
-    buildToolsVersion "22.0.1"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "org.domogik.domodroid13"
-        versionCode 16
+        minSdkVersion 8
+		targetSdkVersion 8
+		versionCode 16
         versionName "1.4_android_studio"
     }
 

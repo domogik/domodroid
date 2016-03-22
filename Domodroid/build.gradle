@@ -1,3 +1,15 @@
+apply plugin: 'com.android.application'
+
+Properties props = new Properties()
+File gradlePropertiesFile = file("gradle.properties")
+if (!gradlePropertiesFile.exists()) {
+    throw new IllegalStateException(
+            "Please create the file 'gradle.properties' before " +
+                    "importing the project. Do not forget to add custom values!"
+    )
+}
+props.load(new FileInputStream(gradlePropertiesFile))
+
 buildscript {
     repositories {
         jcenter()
@@ -24,11 +36,13 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
+			zipAlignEnabled true
+            debuggable true
         }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             zipAlignEnabled true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
 
     }

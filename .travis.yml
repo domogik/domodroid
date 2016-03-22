@@ -13,4 +13,4 @@ android:
   - extra-android-m2repository
   - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 script:
-  - ./gradlew build
+  - ./gradlew build --debug

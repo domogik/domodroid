@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion = 8
-  buildToolsVersion "22.0.1"
+  buildToolsVersion = "22.0.1"
 
     defaultConfig {
         applicationId "org.domogik.domodroid13"
-        minSdkVersion 8
-		targetSdkVersion 22
-		versionCode 16
-        versionName "1.4_android_studio"
+        minSdkVersion =8
+		targetSdkVersion =22
+		versionCode = 16
+        versionName = "1.4_android_studio"
     }
 
     buildTypes {

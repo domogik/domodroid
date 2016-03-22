@@ -1,25 +1,5 @@
 apply plugin: 'com.android.application'
 
-Properties props = new Properties()
-File gradlePropertiesFile = file("gradle.properties")
-if (!gradlePropertiesFile.exists()) {
-    throw new IllegalStateException(
-            "Please create the file 'gradle.properties' before " +
-                    "importing the project. Do not forget to add custom values!"
-    )
-}
-props.load(new FileInputStream(gradlePropertiesFile))
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.3'
-    }
-}
-
 android {
   compileSdkVersion = 8
   buildToolsVersion = "22.0.1"
@@ -27,7 +7,7 @@ android {
     defaultConfig {
         applicationId "org.domogik.domodroid13"
         minSdkVersion 8
-		targetSdkVersion 8
+		targetSdkVersion 22
 		versionCode 16
         versionName "1.4_android_studio"
     }
@@ -40,17 +20,9 @@ android {
             debuggable true
         }
         release {
-            zipAlignEnabled true
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
     }
-}
-repositories {
-    jcenter()
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
 }

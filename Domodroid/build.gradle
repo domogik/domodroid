@@ -13,7 +13,7 @@ android {
     }
 	sourceSets {
     main {
-      manifest.srcFile 'AndroidManifest.xml'
+      manifest.srcFile 'src\main\AndroidManifest.xml'
       java.srcDirs = ['src\java']
       resources.srcDirs = ['src']
       renderscript.srcDirs = ['src']

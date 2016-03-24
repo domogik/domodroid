@@ -26,24 +26,18 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
-        debug {
-            applicationIdSuffix '.debug'
-            versionNameSuffix '-DEBUG'
-			zipAlignEnabled true
-            debuggable true
-        }
+
         release {
-            minifyEnabled true
+            minifyEnabled false
              proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
     }
     lintOptions {
         abortOnError false
+        disable 'MissingTranslation'
     }
 }
 dependencies {
-    compile files('libs/achartengine-1.2.0.jar')
-    compile files('libs/android-support-v4.jar')
-    compile files('libs/jeromq-0.3.4.jar')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }

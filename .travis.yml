@@ -1,8 +1,11 @@
 language: android
 android:
   components:
+    - tools
     - android-8
     - build-tools-23.0.2
+
+sudo: required
 
 notifications:
   email: false

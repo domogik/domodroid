@@ -1,6 +1,7 @@
 language: android
 android:
   components:
+    - android-8
     - build-tools-22.0.1
 
 notifications:

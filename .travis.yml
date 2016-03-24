@@ -2,7 +2,7 @@ language: android
 android:
   components:
     - android-8
-    - build-tools-24.0.2
+    - build-tools-23.0.2
 
 notifications:
   email: false

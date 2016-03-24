@@ -1,37 +1,48 @@
 apply plugin: 'com.android.application'
-
+sourceCompatibility = 1.7 //changed from 1.6
 android {
-  buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.2"
     compileSdkVersion 8
 
     sourceSets {
         main {
             manifest.srcFile 'src/main/AndroidManifest.xml'
-            java.srcDirs = ['src/java']
+            java.srcDirs = ['src/main/java']
             res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['src/assets']
+            assets.srcDirs = ['src/main/assets']
         }
     }
 
     defaultConfig {
         applicationId "org.domogik.domodroid13"
         minSdkVersion 8
-		targetSdkVersion 22
-		versionCode = 16
+        targetSdkVersion 8
+        versionCode = 16
         versionName = "1.4_android_studio"
+    }
+
+    compileOptions {
+
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-			zipAlignEnabled true
+            zipAlignEnabled true
             debuggable true
         }
         release {
             minifyEnabled true
-             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
     }
+}
+dependencies {
+    compile files('libs/achartengine-1.2.0.jar')
+    compile files('libs/android-support-v4.jar')
+    compile files('libs/jeromq-0.3.4.jar')
 }

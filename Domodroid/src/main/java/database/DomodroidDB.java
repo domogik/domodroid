@@ -577,7 +577,7 @@ public class DomodroidDB {
         int[] device_feature_id_associated_somewhere = requestAllFeatures_association();
         boolean found;
         //parcourir la liste des feature avec comme device_feature_id_associated_somewhere=int[i]
-        // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated là
+        // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated l
         // on utilise int[i]
         for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
             found = false;

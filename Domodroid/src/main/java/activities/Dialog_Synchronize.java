@@ -499,6 +499,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                         JSONObject Widget = new JSONObject();
                         try {
                             Widget.put("place_type", "room");
+                            //Todo #81 here, place_id is false.
                             Widget.put("place_id", list_usage.indexOf(
                                     json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id")) + 2); //id_rooms);
                             Widget.put("device_feature_id", json_FeatureList.getJSONArray("feature").getJSONObject(i).getString("id"));
@@ -752,6 +753,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             JSONObject Widget = new JSONObject();
                             try {
                                 Widget.put("place_type", "room");
+                                //todo #83 here place_id is false
                                 Widget.put("place_id", list_usage.indexOf(usage) + 2); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
                                 Widget.put("id", k);
@@ -934,6 +936,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.e(mytag, e1.toString());
                             }
                             try {
+                                //todo #83 here place_id is false
                                 Widget.put("place_id", list_usage.indexOf(usage) + 2);
                                 Widget.put("device_feature_id", tempid);
                                 Widget.put("id", k);

@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import activities.Graphics_Manager;
@@ -284,7 +285,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         float formatedValue = 0;
                         if (loc_Value != null) {
                             formatedValue = Round(Float.parseFloat(loc_Value), 2);
-                            Tracer.v(mytag, " Round the value" + loc_Value + " to " + formatedValue);
+                            Tracer.v(mytag, " Round the value: " + loc_Value + " to " + formatedValue);
                         }
                         try {
                             //Basilic add, number feature has a unit parameter
@@ -384,17 +385,65 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
                         try {
                             Tracer.d(mytag, "Try to get value translate from R.STRING");
-                            value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
+                            // todo #90
+                            if (loc_Value.startsWith("AM") && loc_Value.contains("/PM")) {
+                                Tracer.d(mytag, "Try to split: " + loc_Value + " in two parts to translate it");
+                                StringTokenizer st = new StringTokenizer(loc_Value, "/");
+                                String AM = st.nextToken();
+                                String PM = st.nextToken();
+                                try {
+                                    AM = AM.replace("AM ", "");
+                                    AM = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), AM.toLowerCase()));
+                                } catch (Exception amexception) {
+                                    Tracer.d(mytag, "no translation for: " + AM);
+                                }
+                                try {
+                                    PM = PM.replace("PM ", "");
+                                    PM = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), PM.toLowerCase()));
+                                } catch (Exception pmexception) {
+                                    Tracer.d(mytag, "no translation for: " + PM);
+                                }
+                                value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
+                            } else {
+                                value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
+                            }
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + loc_Value);
-                            value.setText(loc_Value);
                             if (state_key.equalsIgnoreCase("current_sunset")) {
                                 state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                                 state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
+                                // Convert value to hour
+                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                                Date testDate = null;
+                                try {
+                                    testDate = sdf.parse(loc_Value);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                                SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+                                String newFormat = formatter.format(testDate);
+                                value.setText(newFormat);
                             } else if (state_key.equalsIgnoreCase("current_sunrise")) {
                                 state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                                 state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
+                                // Convert value to hour
+                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                                Date testDate = null;
+                                try {
+                                    testDate = sdf.parse(loc_Value);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                                SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+                                String newFormat = formatter.format(testDate);
+                                value.setText(newFormat);
+                            } else if (state_key.equalsIgnoreCase("current_last_updated")) {
+                                // TODO: convert value to translated date
+                                value.setText(loc_Value);
+                            } else {
+                                value.setText(loc_Value);
                             }
+
                         }
                     }
                     //Change icon if in %

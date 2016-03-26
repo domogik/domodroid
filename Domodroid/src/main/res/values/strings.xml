@@ -429,6 +429,7 @@
     <string name="info3200">Not available</string>
     <string name="not_available">Not available</string>
     <string name="info48">--</string>
+    <string name="rain">Rain</string>
 
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>
@@ -661,4 +662,6 @@
     <string name="move_up">Move UP</string>
     <string name="move_down">Move Down</string>
     <string name="no_motion">No motion</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
 </resources>

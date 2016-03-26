@@ -596,4 +596,5 @@
     <string name="move_up">Monter</string>
     <string name="move_down">Descendre</string>
     <string name="no_motion">Aucun mouvement</string>
+    <string name="rain">Pluie</string>
 </resources>

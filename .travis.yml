@@ -8,7 +8,10 @@ android:
 sudo: required
 
 notifications:
-  email: false
+  email: true
+  irc: "irc.freenode.net#domogik"
+  on_success: never
+  on_failure: always
 
 before_install:
 

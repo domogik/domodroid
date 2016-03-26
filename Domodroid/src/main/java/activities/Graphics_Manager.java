@@ -57,6 +57,8 @@ public class Graphics_Manager {
                         return R.drawable.usage_light_off;
                     case "mirror":
                         return R.drawable.usage_mirror_off;
+                    case "motion":
+                        return R.drawable.usage_motion_off;
                     case "music":
                         return R.drawable.usage_music_off;
                     case "nanoztag":
@@ -275,6 +277,8 @@ public class Graphics_Manager {
                         return R.drawable.usage_light_on;
                     case "mirror":
                         return R.drawable.usage_mirror_on;
+                    case "motion":
+                        return R.drawable.usage_motion_on;
                     case "music":
                         return R.drawable.usage_music_on;
                     case "nanoztag":
@@ -513,6 +517,7 @@ public class Graphics_Manager {
 			 * air_conditionning
 			 * heating
 			 * mirror
+			 * motion
 			 * music
 			 * nanoztag
 			 * portal
@@ -732,6 +737,8 @@ public class Graphics_Manager {
         //Yi
         if (usage.toLowerCase().equals("yi"))
             usage = "security_camera";
+        if (usage.toLowerCase().contains("motion"))
+            usage = "motion";
         // ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
         //"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
         //"level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"

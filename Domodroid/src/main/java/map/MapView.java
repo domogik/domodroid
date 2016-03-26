@@ -1045,6 +1045,13 @@ public class MapView extends View {
                         widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
+                /*todo when #89
+                Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
+                Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
+                panel_widget.addView(info1);
+                */
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
                 info = new Graphical_Info(Tracer, context, URL,

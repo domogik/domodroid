@@ -526,7 +526,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             temphandler.post(new Runnable() {
                                  public void run() {
                                      String Url2send = "";
-                                     //TODO change for 0.4
                                      if (api_version >= 0.7f) {
                                          Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=";
                                          if ((argb != 0) && switch_state) {

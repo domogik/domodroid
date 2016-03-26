@@ -38,7 +38,12 @@ android {
         disable 'MissingTranslation'
     }
 }
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:support-v4:23.0.1"
     compile 'org.zeromq:jeromq:0.3.4'

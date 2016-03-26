@@ -6,11 +6,7 @@ import java.util.HashMap;
 import database.DomodroidDB;
 import database.WidgetUpdate;
 
-import org.domogik.domodroid13.R;
-import org.domogik.domodroid13.R.string;
 import org.json.JSONException;
-
-import rinor.Stats_Com;
 
 import widgets.Com_Stats;
 import widgets.Entity_Area;
@@ -40,10 +36,7 @@ import misc.tracerengine;
 
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
 class Widgets_Manager {
 
@@ -220,7 +213,14 @@ class Widgets_Manager {
                     info_with_achartengine.setLayoutParams(layout_param);
                     Graphical_Info_with_achartengine.container = tmpPan;
                     tmpPan.addView(info_with_achartengine);
+                    /* Todo when #89
+                    Graphical_Info_with_mpandroidchart info_with_mpandroidchart = new Graphical_Info_with_mpandroidchart(Tracer, context, URL,
+                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    info_with_mpandroidchart.setLayoutParams(layout_param);
+                    Graphical_Info_with_mpandroidchart.container = tmpPan;
+                    tmpPan.addView(info_with_mpandroidchart);
                     Tracer.i(mytag, "   ==> Graphical_Info_with_achartengine + Graphic");
+                    */
                 } else {
                     Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
                     info = new Graphical_Info(Tracer, context, URL,

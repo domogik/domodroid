@@ -22,11 +22,13 @@
     $ 1.4
       % Version 16
       _ 2016-xx-xx
+      * New function to move up/don a widget to reorder widget display.
       * Refreshing view on deletion or moving is now working correctly.
       * Working camera widget with datatype DT_VideoMjpeg in 0.4.
       * Sensor with unit in degrees now display an arrow with the value as angle.
       * Add font-awesome for future usage.
       * Close #86 utf8 issue in DomodroidDB.java.
+      * Close #85 Room ID when sync is false if saved one.
       * Close #84 Automated build on Travis-CI.
       * Close #83 Add license information.
       * Close #81 last room id in db when syncing.

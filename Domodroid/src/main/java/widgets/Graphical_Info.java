@@ -353,7 +353,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }
-                                SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
                                 String newFormat = formatter.format(testDate);
                                 value.setText(newFormat);
                             } else if (state_key.equalsIgnoreCase("current_sunrise")) {
@@ -367,7 +367,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }
-                                SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
                                 String newFormat = formatter.format(testDate);
                                 value.setText(newFormat);
                             } else if (state_key.equalsIgnoreCase("current_last_updated")) {

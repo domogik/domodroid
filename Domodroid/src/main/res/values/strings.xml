@@ -660,4 +660,5 @@
     <string name="switch_on_or_off">Switch On or Off</string>
     <string name="move_up">Move UP</string>
     <string name="move_down">Move Down</string>
+    <string name="no_motion">No motion</string>
 </resources>

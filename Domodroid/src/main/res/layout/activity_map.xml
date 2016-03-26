@@ -51,7 +51,7 @@
 
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent" android:layout_height="0dp"
-			android:id="@+id/map_container" android:layout_weight="1" />
+			android:id="@+id/map_container1" android:layout_weight="1" />
 		<activities.Sliding_Drawer
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:id="@+id/bottomPanel" panel:position="bottom"

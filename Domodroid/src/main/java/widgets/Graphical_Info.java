@@ -22,6 +22,7 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 
@@ -371,8 +372,20 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                                 String newFormat = formatter.format(testDate);
                                 value.setText(newFormat);
                             } else if (state_key.equalsIgnoreCase("current_last_updated")) {
-                                // TODO: convert value to translated date
-                                value.setText(loc_Value);
+                                // TODO: convert value to translated date in locale settings
+                                try {
+                                    SimpleDateFormat sdf = new SimpleDateFormat("EE',' dd MMM yyyy hh:mm a z");
+                                    Date testDate = null;
+                                    testDate = sdf.parse(loc_Value);
+                                    Tracer.e(mytag + "Date conversion", "Works");
+                                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                                    String newFormat = formatter.format(testDate);
+                                    value.setText(newFormat);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
+                                    value.setText(loc_Value);
+                                }
                             } else {
                                 value.setText(loc_Value);
                             }

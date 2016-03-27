@@ -26,3 +26,7 @@ This Branch is the Dev one with android studio.
  
  You should have received a copy of the GNU General Public License along with
  Domodroid. If not, see <http://www.gnu.org/licenses/>.
+
+## Links
+* [Domodroid on Google Play](https://play.google.com/store/apps/details?id=org.domogik.domodroid13)
+* [Domogik](http://domogik.org)

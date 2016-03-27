@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -412,39 +413,39 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             if (state_key.equalsIgnoreCase("current_sunset")) {
                                 state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                                 state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
-                                // Convert value to hour
-                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                                // Convert value to hour and in local language
+                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
                                 Date testDate = null;
                                 try {
                                     testDate = sdf.parse(loc_Value);
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }
-                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
                                 String newFormat = formatter.format(testDate);
                                 value.setText(newFormat);
                             } else if (state_key.equalsIgnoreCase("current_sunrise")) {
                                 state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                                 state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
-                                // Convert value to hour
-                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                                // Convert value to hour and in local language
+                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
                                 Date testDate = null;
                                 try {
                                     testDate = sdf.parse(loc_Value);
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }
-                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
                                 String newFormat = formatter.format(testDate);
                                 value.setText(newFormat);
                             } else if (state_key.equalsIgnoreCase("current_last_updated")) {
-                                // TODO: convert value to translated date in locale settings
+                                // convert value to translated date in locale settings
                                 try {
-                                    SimpleDateFormat sdf = new SimpleDateFormat("EE, dd MMM yyyy hh:mm a z");
-                                    Date testDate = null;
-                                    testDate = sdf.parse(loc_Value);
+                                    loc_Value=loc_Value.substring(0, loc_Value.lastIndexOf(" "));
+                                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
+                                    Date testDate = sdf.parse(loc_Value);
                                     Tracer.e(mytag + "Date conversion", "Works");
-                                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
                                     String newFormat = formatter.format(testDate);
                                     value.setText(newFormat);
                                 } catch (Exception ex) {
@@ -455,7 +456,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             } else {
                                 value.setText(loc_Value);
                             }
-
                         }
                     }
                     //Change icon if in %

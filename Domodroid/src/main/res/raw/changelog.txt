@@ -27,6 +27,7 @@
       * Working camera widget with datatype DT_VideoMjpeg in 0.4.
       * Sensor with unit in degrees now display an arrow with the value as angle.
       * Add font-awesome for future usage.
+      * #38 Weather plugin sunrise/sunset and update date translate.
       * Close #86 utf8 issue in DomodroidDB.java.
       * Close #85 Room ID when sync is false if saved one.
       * Close #84 Automated build on Travis-CI.
@@ -38,7 +39,7 @@
       * Close #75 Organize area Usage by user choice at sync.
       * Close #68 Select new image for map with uri.
       * Close #33 refresh widget at root.
-      * More Ru and Fr translation from transifex.
+      * #38 More Ru and Fr translation from transifex.
       % Version 15
       _ 2016-01-31
       * Problem when publishing to the store
@@ -60,20 +61,20 @@
       * Correct ANR by adding timeout in http connection.
       * Add icon for bluetooth and battery.
       * Correct maps widget state.
-      * Still more translation ;)
+      * #38 Still more translation ;)
       % Version 13
       _ 2015-12-21
       * Correct Map no more editable
       * Correct history for callerid in 0.5
-      * Add lot of translation again
+      * #38 Add lot of translation again
       * Correct a crash with navigation drawer if by usage
       % Version 12
       _ 2015-12-20
       * Working with non xpl plugin and 0.5
       * #24 start working on navigation drawer
       * #30 Solved disk space converted (no more 1.4e7)
-      * Translate command (for display in list and widget)
-      * Update RU translation (nearly finished)
+      * #38 Translate command (for display in list and widget)
+      * #38 Update RU translation (nearly finished)
       * Solved MqListener never shutdown (draining battery)
       * Solved Sync error if no xplstat in device json
       * Solved Map crash (memory leak)
@@ -83,7 +84,7 @@
       * Now dev with Android Studio
       % Version 11
       _ 2015-11-29
-      * Update translation RU/FR/NL
+      * #38 Update translation RU/FR/NL
 	  * Solved #57 free_command widget for number limit to number keyboard but allow float value with a "."
 	  * Change api version check to allow sync with 0.8
 	  * Close #54 invert order of callerId if in 0.4 

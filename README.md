@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/domogik/domodroid.svg?branch=1-4-android_studio)](https://travis-ci.org/domogik/domodroid)
 [![Documentation Status](http://readthedocs.org/projects/domodroid/badge/?version=latest)](http://domodroid.readthedocs.org/en/latest/?badge=latest)
-[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/Domogik)
+[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/newdomodroid)
 ![API](https://img.shields.io/badge/API-8%2B-green.svg?style=flat)
 
 domodroid

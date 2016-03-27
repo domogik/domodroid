@@ -1,4 +1,4 @@
-[Build Status](https://travis-ci.org/domogik/domodroid.svg?branch=1-4-android_studio)](https://travis-ci.org/domogik/domodroid)
+[![Build Status](https://travis-ci.org/domogik/domodroid.svg?branch=1-4-android_studio)](https://travis-ci.org/domogik/domodroid)
 
 domodroid
 =========

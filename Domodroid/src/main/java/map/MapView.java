@@ -1027,10 +1027,6 @@ public class MapView extends View {
                 panel_widget.addView(info);
                 Tracer.i(mytag, "   ==> Graphical_Info");
             }
-        } else if (State_key.equals("color")) {
-            Graphical_Color color = new Graphical_Color(Tracer, context, URL,
-                    widgetSize, 0, Id, zone, params, feature, handler);
-            panel_widget.addView(color);
         } else if (feature.getValue_type().equals("number")) {
             Tracer.i(mytag, "Parameters for number:" + feature.getParameters());
             if (feature.getParameters().contains("command_type")) {

@@ -30,26 +30,20 @@ import org.domogik.domodroid13.R;
 
 import database.Cache_management;
 import database.DmdContentProvider;
-import activities.Activity_Main;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.FeatureInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.view.ViewManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;

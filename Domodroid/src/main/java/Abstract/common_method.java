@@ -24,7 +24,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,9 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import activities.Graphics_Manager;
-import activities.Preference;
-import database.DomodroidDB;
 import misc.tracerengine;
 
 public abstract class common_method {

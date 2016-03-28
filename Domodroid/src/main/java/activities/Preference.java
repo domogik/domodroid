@@ -19,12 +19,6 @@
 package activities;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 import Abstract.common_method;
 import misc.tracerengine;
 
@@ -32,22 +26,13 @@ import org.domogik.domodroid13.R;
 
 import database.Cache_management;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceActivity;
-
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {

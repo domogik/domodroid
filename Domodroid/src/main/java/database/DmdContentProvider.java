@@ -17,7 +17,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.TypedValue;
 
 public class DmdContentProvider extends ContentProvider {

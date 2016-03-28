@@ -54,12 +54,12 @@ class Dialog_House extends Dialog implements OnClickListener {
     private String icon = null;
     private WidgetUpdate widgetUpdate;
     private Dialog dialog_feature;
-    private DomodroidDB domodb;
+    private final DomodroidDB domodb;
     private Entity_Area[] listArea;
     private Entity_Room[] listRoom;
     private Entity_Feature[] listFeature;
     private final String mytag;
-    private SharedPreferences.Editor prefEditor;
+    private final SharedPreferences.Editor prefEditor;
 
     public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
         super(context);

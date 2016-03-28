@@ -63,9 +63,6 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private String command_type;
 
     private final Entity_Feature feature;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
     private JSONObject jparam;
@@ -92,11 +89,11 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         this.address = feature.getAddress();
-        this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
+        String state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
 
         String stateS;
         try {
@@ -178,7 +175,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     }
 
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

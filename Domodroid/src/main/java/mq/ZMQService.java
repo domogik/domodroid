@@ -17,7 +17,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class ZMQService extends Service {
-    public static final String TAG = "ZMQService";
+    private static final String TAG = "ZMQService";
 
     private ZMQTask task;
     private tracerengine Tracer = null;

@@ -318,7 +318,7 @@ public class DomodroidDB {
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE, values);
     }
 
-    public void remove_one_feature_association(int id) {
+    private void remove_one_feature_association(int id) {
         ContentValues values = new ContentValues();
         values.put("id", id);
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION, values);
@@ -413,7 +413,6 @@ public class DomodroidDB {
         values.put("order", order);
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_POSITION_ID, values);
         Tracer.d(mytag, "Moving "+order+" the feature id:" + id + " in place_id:" + place_id + " of type:" + place_type);
-        return;
     }
     ////////////////// REQUEST
 

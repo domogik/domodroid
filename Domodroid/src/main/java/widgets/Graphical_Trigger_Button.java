@@ -43,7 +43,7 @@ public class Graphical_Trigger_Button extends LinearLayout {
         };
     }
 
-    public class SBAnim extends AsyncTask<Void, Integer, Void> {
+    private class SBAnim extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

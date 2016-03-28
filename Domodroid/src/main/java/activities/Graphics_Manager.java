@@ -622,7 +622,7 @@ public class Graphics_Manager {
         return context.getResources().getIdentifier(name, "string", context.getPackageName());
     }
 
-    public static String adapt_usage(String usage) {
+    private static String adapt_usage(String usage) {
         //todo adapt for 0.4
         //information are in json device_types of each plugin
         //So a lot of things to look at

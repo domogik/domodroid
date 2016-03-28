@@ -24,16 +24,16 @@ import java.math.RoundingMode;
 
 public class calcul {
 
-    public static double Round_double(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
+    public static double Round_double(double value) {
+        if (2 < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
-    public static float Round_float(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
+    public static float Round_float(float Rval) {
+        float p = (float) Math.pow(10, 2);
         Rval = Rval * p;
         float tmp = Math.round(Rval);
         return tmp / p;

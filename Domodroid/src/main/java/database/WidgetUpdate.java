@@ -35,16 +35,16 @@ public class WidgetUpdate {
     private boolean activated;
     private Activity context;
     private DomodroidDB domodb;
-    public final String mytag = "WidgetUpdate";
+    private final String mytag = "WidgetUpdate";
     private TimerTask doAsynchronousTask;
     private tracerengine Tracer = null;
 
-    public ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
+    private ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
     private Boolean locked = false;
     private Boolean timer_flag = false;
     public Boolean ready = false;
     private Handler mapView = null;
-    public Events_manager eventsManager = null;
+    private Events_manager eventsManager = null;
     private static Handler myselfHandler = null;
     private int last_ticket = -1;
     private int last_position = -1;
@@ -462,7 +462,7 @@ public class WidgetUpdate {
     /*
      * This method should only be called once, to create and arm a cyclic timer
      */
-    public void Timer() {
+    private void Timer() {
         timer = new Timer();
 
 
@@ -548,7 +548,7 @@ public class WidgetUpdate {
         }
     }
 
-    public class waitingThread extends AsyncTask<Void, Integer, Void> {
+    private class waitingThread extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
             Boolean said = false;
@@ -583,7 +583,7 @@ public class WidgetUpdate {
 
     }
 
-    public class UpdateThread extends AsyncTask<Void, Integer, Void> {
+    private class UpdateThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -757,7 +757,7 @@ public class WidgetUpdate {
      * Update device value in cache, and eventually notify clients about change
      * This sequence must be protected against concurrent access
      */
-    public Boolean update_cache_device(int dev_id, String skey, String Val) {
+    private Boolean update_cache_device(int dev_id, String skey, String Val) {
         if (cache == null)
             return false;
 

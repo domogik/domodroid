@@ -129,14 +129,14 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         dispHeight = getHeight();
     }
 
-    public void startPlayback() {
+    private void startPlayback() {
         if (mIn != null) {
             mRun = true;
             thread.start();
         }
     }
 
-    public void stopPlayback() {
+    private void stopPlayback() {
         mRun = false;
         boolean retry = true;
         while (retry) {

@@ -61,21 +61,18 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final ImageView IV_img;
     private final TextView TV_name;
     private final int id;
-    private final FrameLayout container;
-    private final FrameLayout myself;
-    public tracerengine Tracer = null;
-    public Activity context;
+    tracerengine Tracer = null;
+    final Activity context;
     private String icon;
     private final String place_type;
     private final int place_id;
     private final String mytag;
-    public String name;
+    final String name;
     private final String state_key;
     private int icon_status;
     private final Handler widgetHandler;
-    private final SharedPreferences params;
-    private DomodroidDB domodb;
-    private SharedPreferences.Editor prefEditor;
+    private final DomodroidDB domodb;
+    private final SharedPreferences.Editor prefEditor;
 
     Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
@@ -87,14 +84,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.place_id = place_id;
         this.place_type = place_type;
         this.mytag = mytag;
-        this.container = container;
-        this.myself = this;
+        FrameLayout container1 = container;
+        FrameLayout myself = this;
         this.name = name;
         this.state_key = state_key;
-        this.params = params;
+        SharedPreferences params1 = params;
         this.widgetHandler = handler;
         domodb = new DomodroidDB(this.Tracer, this.context, params);
-        prefEditor = this.params.edit();
+        prefEditor = params1.edit();
         setOnLongClickListener(this);
 
         //panel with border

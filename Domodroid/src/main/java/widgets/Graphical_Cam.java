@@ -47,11 +47,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private static FrameLayout myself = null;
     private String name_cam;
     private final Entity_Feature feature;
-    private int dev_id;
     private Entity_client session = null;
     private final SharedPreferences params;
     private final int session_type;
-    private String state_key;
     private Boolean realtime = false;
 
     public Graphical_Cam(tracerengine Trac,
@@ -81,9 +79,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private void onCreate() {
         myself = this;
         this.url = feature.getAddress();
-        this.dev_id = feature.getDevId();
+        int dev_id = feature.getDevId();
         this.name_cam = feature.getName();
-        this.state_key = feature.getState_key();
+        String state_key = feature.getState_key();
         mytag = "Graphical_Cam(" + dev_id + ")";
         float api_version = params.getFloat("API_VERSION", 0);
         setOnClickListener(this);

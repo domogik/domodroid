@@ -7,8 +7,8 @@ package mq;
 import android.os.Parcelable;
 
 public abstract class MQMessage implements Parcelable {
-    protected String message;
-    protected String id;
+    private String message;
+    private String id;
 
     MQMessage() {
     }

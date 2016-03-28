@@ -57,8 +57,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private String address;
     private String state_progress;
     private final String url;
-    private String usage;
-    private Handler handler;
     private String value0;
     private String value1;
     private String type;
@@ -79,9 +77,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private JSONObject jparam;
     private String command_id = null;
     private String command_type = null;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private Entity_client session = null;
     private Boolean realtime = false;
     private final int session_type;
@@ -113,10 +108,10 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private void onCreate() {
         myself = this;
         this.address = feature.getAddress();
-        this.usage = feature.getIcon_name();
-        this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
+        String usage = feature.getIcon_name();
+        String state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -220,7 +215,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         super.LL_featurePan.addView(OFF);
         super.LL_infoPan.addView(state);
 
-        handler = new Handler() {
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (activate) {

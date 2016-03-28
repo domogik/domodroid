@@ -48,7 +48,7 @@ public abstract class display_sensor_info {
         try {
             float formatedValue = 0;
             if (loc_Value != null) {
-                formatedValue = calcul.Round_float(Float.parseFloat(loc_Value), 2);
+                formatedValue = calcul.Round_float(Float.parseFloat(loc_Value));
                 Tracer.v(mytag, " Round_float the value: " + loc_Value + " to " + formatedValue);
             }
             if (!test_unite.equals("")){

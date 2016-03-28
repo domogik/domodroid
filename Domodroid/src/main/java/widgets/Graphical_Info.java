@@ -55,28 +55,26 @@ import android.widget.TextView;
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
 
-    LinearLayout featurePan2;
+    private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private TextView value;
     private TextView value1;
     private Graphical_Info_View canvas;
-    private Animation animation;
     private Message msg;
     private static String mytag;
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    private static FrameLayout myself = null;
     public Boolean with_graph = true;
     private Entity_client session = null;
     private Boolean realtime = false;
     private final Entity_Feature feature;
     private String state_key;
     private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
     private String url = null;
     private int dpiClassification;
-    private int update;
+    private final int update;
     private TextView state_key_view;
     private String stateS;
     private String test_unite;
@@ -109,7 +107,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     private void onCreate() {
         this.parameters = feature.getParameters();
-        this.dev_id = feature.getDevId();
+        int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
 
         try {
@@ -141,7 +139,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         value = new TextView(context);
         value.setTextSize(28);
         value.setTextColor(Color.BLACK);
-        animation = new AlphaAnimation(0.0f, 1.0f);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
         typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
         typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");

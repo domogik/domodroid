@@ -58,8 +58,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String address;
     private String state_progress;
     private final String url;
-    private String usage;
-    private Handler handler;
     private String value0;
     private String value1;
     private String type;
@@ -83,9 +81,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String command_id = null;
     private String command_type = null;
     private final Entity_Feature feature;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
 
@@ -114,10 +109,10 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private void onCreate() {
         myself = this;
         this.address = feature.getAddress();
-        this.usage = feature.getIcon_name();
-        this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
+        String usage = feature.getIcon_name();
+        String state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
 
 
         try {
@@ -197,7 +192,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 seekBarOnOff.setEnabled(false);
             }
         }
-        handler = new Handler() {
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (activate) {

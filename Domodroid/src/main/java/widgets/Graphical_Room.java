@@ -50,17 +50,16 @@ import android.widget.ListView;
 public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickListener {
 
     public final FrameLayout container = null;
-    public FrameLayout myself = null;
+    private FrameLayout myself = null;
     private final Context context;
     private final int id_room;
     private tracerengine Tracer = null;
     private String mytag = "Graphical_Room";
     private String icon;
     private final Activity Activity;
-    private final SharedPreferences params;
     private final Handler widgetHandler;
-    private DomodroidDB domodb;
-    private SharedPreferences.Editor prefEditor;
+    private final DomodroidDB domodb;
+    private final SharedPreferences.Editor prefEditor;
 
     public Graphical_Room(SharedPreferences params,tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
@@ -69,11 +68,11 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
         this.id_room = id;
         this.context = context;
         this.icon = icon;
-        this.params = params;
+        SharedPreferences params1 = params;
         this.Activity = (android.app.Activity) context;
         this.widgetHandler = handler;
         domodb = new DomodroidDB(this.Tracer, this.Activity, params);
-        prefEditor = this.params.edit();
+        prefEditor = params1.edit();
 
         setOnLongClickListener(this);
         mytag = "Graphical_Room(" + id_room + ")";
@@ -186,7 +185,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
                             common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                            change_this_icon(0, icon);
+                            change_this_icon(icon);
                             dialog.cancel();
                         }
                     }

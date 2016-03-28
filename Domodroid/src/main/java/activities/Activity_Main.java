@@ -704,8 +704,6 @@ public class Activity_Main extends Activity implements OnClickListener {
             }
             SP_prefEditor.commit();
             LoadSelections();    // to set panel with known values
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -809,7 +807,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     break;
             }
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

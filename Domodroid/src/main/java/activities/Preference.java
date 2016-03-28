@@ -39,7 +39,6 @@ public class Preference extends PreferenceActivity implements
     private Preference myself = null;
 
     private static tracerengine Tracer = null;
-    private String mytag = "Preference";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +99,7 @@ public class Preference extends PreferenceActivity implements
         prefEditor.commit();
 
         //Save to file
+        String mytag = "Preference";
         common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");

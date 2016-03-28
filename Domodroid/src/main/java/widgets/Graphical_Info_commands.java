@@ -56,14 +56,14 @@ import android.widget.Toast;
 public class Graphical_Info_commands extends Basic_Graphical_widget {
 
 
-    LinearLayout featurePan2;
+    private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private EditText value1 = null;
     private Message msg;
     private static String mytag;
     private String url = null;
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    private static FrameLayout myself = null;
     private Entity_client session = null;
     private Boolean realtime = false;
     private String login;
@@ -74,14 +74,10 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private JSONObject jparam;
     private String command_id = null;
     private String command_type[] = null;
-    private String command_data_type[] = null;
     private List<EditText> allEds = null;
-    int number_of_command_parameters;
+    private int number_of_command_parameters;
 
     private final Entity_Feature feature;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
 
@@ -107,10 +103,10 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         onCreate();
     }
 
-    public void onCreate() {
-        this.parameters = feature.getParameters();
-        this.dev_id = feature.getDevId();
-        this.state_key = feature.getState_key();
+    private void onCreate() {
+        String parameters = feature.getParameters();
+        int dev_id = feature.getDevId();
+        String state_key = feature.getState_key();
         String value_type = feature.getValue_type();
         String stateS;
         try {
@@ -140,7 +136,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             number_of_command_parameters = jparam.getInt("number_of_command_parameters");
             command_id = jparam.getString("command_id");
             command_type = new String[number_of_command_parameters];
-            command_data_type = new String[number_of_command_parameters];
+            String[] command_data_type = new String[number_of_command_parameters];
             EditText ed;
             TextView tv_edittext;
             allEds = new ArrayList<>();
@@ -204,7 +200,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     }
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

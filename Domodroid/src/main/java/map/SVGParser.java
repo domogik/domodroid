@@ -71,7 +71,7 @@ public class SVGParser {
      * @return the parsed SVG.
      * @throws SVGParseException if there is an error while parsing.
      */
-    public static SVG getSVGFromInputStream(InputStream svgData) throws SVGParseException {
+    private static SVG getSVGFromInputStream(InputStream svgData) throws SVGParseException {
         return SVGParser.parse(svgData, 0, 0, false);
     }
 
@@ -135,7 +135,7 @@ public class SVGParser {
      * @return the parsed SVG.
      * @throws SVGParseException if there is an error while parsing.
      */
-    public static SVG getSVGFromInputStream(InputStream svgData, int searchColor, int replaceColor) throws SVGParseException {
+    private static SVG getSVGFromInputStream(InputStream svgData, int searchColor, int replaceColor) throws SVGParseException {
         return SVGParser.parse(svgData, searchColor, replaceColor, false);
     }
 

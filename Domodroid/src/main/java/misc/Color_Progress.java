@@ -52,7 +52,7 @@ public class Color_Progress extends SeekBar {
 
 
         float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
+        Color.colorToHSV(0, hsv);
         mCurrentHue = hsv[0];
 
         if (mode == 0) {

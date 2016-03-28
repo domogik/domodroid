@@ -9,12 +9,12 @@ import android.view.MotionEvent;
  * perform matrix transformations
  */
 class TransformManager {
-    public static final int POS_X = 0;
-    public static final int POS_Y = 1;
+    private static final int POS_X = 0;
+    private static final int POS_Y = 1;
 
-    public static final int NONE = 0;
-    public static final int ZOOM = 1;
-    public static final int DRAG = 2;
+    private static final int NONE = 0;
+    private static final int ZOOM = 1;
+    private static final int DRAG = 2;
     private int mode = NONE;
     private boolean zoom;
     private boolean drag;
@@ -24,14 +24,14 @@ class TransformManager {
     private final PointF mid = new PointF();
     private final PointF mid2 = new PointF();
     private float oldDist = 1f;
-    float lastPosX = 0;
-    float lastPosY = 0;
+    private float lastPosX = 0;
+    private float lastPosY = 0;
     //float lastScale = 1;
     public final Matrix matrix = new Matrix();
-    public int screenMode = 2;
+    private int screenMode = 2;
     private final float[] value = new float[9];
-    final int[] pos = new int[2];
-    final float[] savedValue = new float[9];
+    private final int[] pos = new int[2];
+    private final float[] savedValue = new float[9];
     public float currentScale;
     public float mapWidth;
     public float mapHeight;
@@ -98,7 +98,7 @@ class TransformManager {
     }
 
     // rearrange the matrix
-    public void matrixTuning() {
+    private void matrixTuning() {
         matrix.getValues(value);
         savedMatrix2.getValues(savedValue);
         if (value[0] * currentScale > 1.5 || value[4] * currentScale > 1.5) {

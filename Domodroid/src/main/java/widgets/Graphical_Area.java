@@ -51,7 +51,6 @@ import android.widget.ListView;
 public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickListener {
 
     private final FrameLayout container = null;
-    private FrameLayout myself = null;
     private final Context context;
     private final int id_area;
     private tracerengine Tracer = null;
@@ -60,12 +59,12 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private final Activity Activity;
     private final SharedPreferences params;
     private final Handler widgetHandler;
-    private DomodroidDB domodb;
-    private SharedPreferences.Editor prefEditor;
+    private final DomodroidDB domodb;
+    private final SharedPreferences.Editor prefEditor;
 
     public Graphical_Area(SharedPreferences params, tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
-        this.myself = this;
+        FrameLayout myself = this;
         this.Tracer = Trac;
         this.icon = icon;
         this.id_area = id;
@@ -197,7 +196,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
                             common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                            change_this_icon(0, icon);
+                            change_this_icon(icon);
                             dialog.cancel();
                         }
                     }

@@ -58,7 +58,7 @@ class ParserHelper {
         }
     }
 
-    public void skipNumberSeparator() {
+    private void skipNumberSeparator() {
         while (pos < n) {
             char c = s.charAt(pos);
             switch (c) {
@@ -81,7 +81,7 @@ class ParserHelper {
     /**
      * Parses the content of the buffer and converts it to a float.
      */
-    public float parseFloat() {
+    private float parseFloat() {
         int mant = 0;
         int mantDig = 0;
         boolean mantPos = true;
@@ -359,7 +359,7 @@ class ParserHelper {
     /**
      * Computes a float from mantissa and exponent.
      */
-    public static float buildFloat(int mant, int exp) {
+    private static float buildFloat(int mant, int exp) {
         if (exp < -125 || mant == 0) {
             return 0.0f;
         }

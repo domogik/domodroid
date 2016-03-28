@@ -57,7 +57,7 @@ class Widgets_Manager {
     }
 
     public LinearLayout loadActivWidgets(Activity context, int id,
-                                         String zone, LinearLayout ll, SharedPreferences params, int session_type) throws JSONException {
+                                         String zone, LinearLayout ll, SharedPreferences params, int session_type) {
 
         DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadActivWidgets";
@@ -454,7 +454,7 @@ class Widgets_Manager {
         return ll;
     }
 
-    public void colonnes(Activity context, LinearLayout ll, LinearLayout mainPan, LinearLayout leftPan, LinearLayout rightPan, SharedPreferences params) {
+    private void colonnes(Activity context, LinearLayout ll, LinearLayout mainPan, LinearLayout leftPan, LinearLayout rightPan, SharedPreferences params) {
         DisplayMetrics metrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;

@@ -57,19 +57,18 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private String address;
     private int state_progress;
     private final String url;
-    private Handler handler;
     private int scale;
     private int valueMin = 0;
     private int valueMax = 100;
     private int CustomMax;
     private String type;
-    public static int stateThread;
-    public final boolean activate = false;
+    private static int stateThread;
+    private final boolean activate = false;
     private Animation animation;
     private boolean touching;
     private int updating = 0;
     public static FrameLayout container = null;
-    public static final FrameLayout myself = null;
+    private static final FrameLayout myself = null;
     private static String mytag;
     private Message msg;
 
@@ -83,9 +82,6 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private String command_id = null;
     private String command_type = null;
     private final Entity_Feature feature;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
     private JSONObject jparam;
@@ -112,10 +108,10 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         onCreate();
     }
 
-    public void onCreate() {
-        this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
+    private void onCreate() {
+        String state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
         this.address = feature.getAddress();
 
         stateThread = 1;
@@ -213,7 +209,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         super.LL_topPan.removeView(super.LL_featurePan);
         super.LL_infoPan.addView(bodyPanHorizontal);
 
-        handler = new Handler() {
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 /// Deprecated method to die /////////////////////////////////////////
@@ -337,7 +333,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     }
 
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

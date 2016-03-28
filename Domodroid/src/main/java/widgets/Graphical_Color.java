@@ -44,7 +44,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String mKey;
 
     private LinearLayout featurePan2;
-    private Handler handler;
     private Color_Progress seekBarHueBar;
     private Color_Progress seekBarRGBXBar;
     private Color_Progress seekBarRGBYBar;
@@ -62,17 +61,17 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String type;
     private String address;
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    private static FrameLayout myself = null;
     private Boolean switch_state = false;
     private TimerTask doAsynchronousTask;
 
     private Color currentColor;
     private SeekBar seekBarOnOff;
     private int[] mMainColors = new int[65536];
-    public float mCurrentHue = 0;
+    private float mCurrentHue = 0;
     public int rgbHue = 0;
-    public int rgbX = 0;
-    public int rgbY = 0;
+    private int rgbX = 0;
+    private int rgbY = 0;
 
     private TextView title7;
     private TextView title8;
@@ -86,15 +85,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String login;
     private String password;
     private float api_version;
-    private String value0;
-    private String value1;
     private JSONObject jparam;
     private final Entity_Feature feature;
     private String command_id = null;
     private String command_type = null;
-    private int dev_id;
-    private String parameters;
-    private String state_key;
     private final int session_type;
 
     public Graphical_Color(tracerengine Trac,
@@ -121,12 +115,14 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     private void onCreate() {
         myself = this;
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
-        this.state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
+        String state_key = feature.getState_key();
         this.address = feature.getAddress();
         mytag = "Graphical_Color(" + dev_id + ")";
 
+        String value0;
+        String value1;
         try {
             jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
             value1 = jparam.getString("value1");
@@ -309,7 +305,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             }
         }
         //LoadSelections();
-        handler = new Handler() {
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 argbS = "?";

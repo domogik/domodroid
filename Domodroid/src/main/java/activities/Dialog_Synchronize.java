@@ -608,14 +608,19 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     map_area.put("description", "");
                     map_area.put("id", "1");
                     //todo #75 reorder for the moment it his done by name
-                    if (device_sync_order.equals("device_name")) {
-                        map_area.put("name", "Device Name");
-                    } else if (device_sync_order.equals("device_type")) {
-                        map_area.put("name", "Device Type");
-                    } else if (device_sync_order.equals("plugin")) {
-                        map_area.put("name", "Plugin");
-                    } else {
-                        map_area.put("name", "Usage");
+                    switch (device_sync_order) {
+                        case "device_name":
+                            map_area.put("name", "Device Name");
+                            break;
+                        case "device_type":
+                            map_area.put("name", "Device Type");
+                            break;
+                        case "plugin":
+                            map_area.put("name", "Plugin");
+                            break;
+                        default:
+                            map_area.put("name", "Usage");
+                            break;
                     }
                     list.put(map_area);
                 } catch (JSONException e1) {
@@ -688,16 +693,21 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     for (int y = 0; y < list_sensors; y++) {
                         try {
                             //todo #75 reorder for the moment it his done by name
-                            if (device_sync_order.equals("device_name")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
-                            } else if (device_sync_order.equals("device_type")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
-                            } else if (device_sync_order.equals("plugin")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("client_id");
-                                usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
-                                usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
-                            } else {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
+                            switch (device_sync_order) {
+                                case "device_name":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
+                                case "device_type":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
+                                    break;
+                                case "plugin":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("client_id");
+                                    usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
+                                    usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
+                                    break;
+                                default:
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
                             }
                         } catch (Exception e) {
                             usage = null;
@@ -856,16 +866,21 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     for (int y = 0; y < list_commands; y++) {
                         try {
                             //todo #75 reorder for the moment it his done by name
-                            if (device_sync_order.equals("device_name")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
-                            } else if (device_sync_order.equals("device_type")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
-                            } else if (device_sync_order.equals("plugin")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("client_id");
-                                usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
-                                usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
-                            } else {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
+                            switch (device_sync_order) {
+                                case "device_name":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
+                                case "device_type":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
+                                    break;
+                                case "plugin":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("client_id");
+                                    usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
+                                    usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
+                                    break;
+                                default:
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
                             }
                         } catch (Exception e) {
                             usage = null;
@@ -915,9 +930,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             int tempid = 0;
                             try {
                                 tempid = Integer.parseInt(json_Commands.getJSONObject(listcommand.getString(y)).getString("id"));
-                            } catch (NumberFormatException e1) {
-                                Tracer.e(mytag, e1.toString());
-                            } catch (JSONException e1) {
+                            } catch (NumberFormatException | JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
                             tempid = tempid + 50000;

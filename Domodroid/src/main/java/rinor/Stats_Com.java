@@ -34,9 +34,9 @@ public class Stats_Com {
     public static int periodic_stats_sent_bytes = 0;
     public static int periodic_stats_recv_bytes = 0;
 
-    public static int elapsed_period = 0;
-    public static int cumul_period = 0;
-    public static int period;                // Number of seconds between periodic clears
+    private static int elapsed_period = 0;
+    private static int cumul_period = 0;
+    private static int period;                // Number of seconds between periodic clears
     private static Timer timer = null;
     private static Boolean sleeping = false;
 
@@ -89,7 +89,7 @@ public class Stats_Com {
         }
     }
 
-    public void clear() {
+    private void clear() {
         periodic_events_sent_packets = 0;
         periodic_events_recv_packets = 0;
         periodic_events_sent_bytes = 0;

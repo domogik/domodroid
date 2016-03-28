@@ -36,6 +36,7 @@
       * Close #80 Adding a widget from house menu.
       * Close #79 Move widget up or down.
       * Close #77 Device ID for debugging is no more displayed.
+      * Close #76 House organisation not saved.
       * Close #75 Organize area Usage by user choice at sync.
       * Close #68 Select new image for map with uri.
       * Close #33 refresh widget at root.

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.domogik.domodroid13.R;
 
+import Abstract.common_method;
 import widgets.Entity_Area;
 import widgets.Entity_Feature;
 import widgets.Entity_Icon;
@@ -76,6 +77,7 @@ class Dialog_House extends Dialog implements OnClickListener {
         setContentView(R.layout.dialog_house);
         mytag = "Dialog_House";
         prefEditor = this.params.edit();
+        domodb = new DomodroidDB(Tracer, context, params);
 
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
         cancelButton.setTag("house_cancel");
@@ -275,7 +277,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
                 //#76
-                save_params_to_file();
+                prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 loadSpinnerData();
             }
         });
@@ -304,7 +307,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", lastid + 1);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
                 //#76
-                save_params_to_file();
+                prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 loadSpinnerData();
             }
         });
@@ -345,7 +349,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 //values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
                 //#76
-                save_params_to_file();
+                prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, context);
                 loadSpinnerData();
@@ -389,7 +394,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("reference", reference);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                 //#76
-                save_params_to_file();
+                prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 loadSpinnerData();
             }
         });
@@ -487,8 +493,6 @@ class Dialog_House extends Dialog implements OnClickListener {
     }
 
     private void loadSpinnerData() {
-        domodb = new DomodroidDB(Tracer, context, params);
-
         listArea = domodb.requestArea();
         listRoom = domodb.requestallRoom();
         listFeature = domodb.requestFeatures();
@@ -568,17 +572,6 @@ class Dialog_House extends Dialog implements OnClickListener {
                 new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list_icon);
         icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_icon.setAdapter(icon_adapter);
-    }
-
-    private void save_params_to_file(){
-        //#76
-        prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-        prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-        prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-        prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-        prefEditor.commit();
-        Tracer.i(mytag, "Saving pref to file");
-        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getContext());
     }
 }
 

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.domogik.domodroid13.R;
 
+import Abstract.common_method;
 import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
@@ -58,6 +59,8 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private final Activity Activity;
     private final SharedPreferences params;
     private final Handler widgetHandler;
+    private DomodroidDB domodb;
+    private SharedPreferences.Editor prefEditor;
 
     public Graphical_Area(SharedPreferences params, tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
@@ -70,11 +73,9 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         this.params = params;
         this.widgetHandler = handler;
         setOnLongClickListener(this);
-
+        domodb = new DomodroidDB(this.Tracer, this.Activity, params);
+        prefEditor = this.params.edit();
         mytag = "Graphical_Area(" + id_area + ")";
-        //Log.d("Graphical_Area("+id+")","creating view for "+name_area+" "+description_area);
-
-
     }
 
     public boolean onLongClick(View v) {
@@ -122,10 +123,11 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area, "area");
                     Tracer.get_engine().remove_one_icon(id_area, "area");
                     // #76
-                    //prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
-                    //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
-                    // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
-                    //prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
+                    prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+                    prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+                    prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                    prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     // recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view
@@ -154,7 +156,8 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id_area, result, "area");
                     //#76
-                    // prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
+                    prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     TV_name.setText(result);
                 }
             });
@@ -191,7 +194,8 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
-                            // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
+                            prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                             change_this_icon(0, icon);
                             dialog.cancel();
                         }

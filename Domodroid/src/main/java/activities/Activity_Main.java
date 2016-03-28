@@ -36,6 +36,7 @@ import java.util.Vector;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Abstract.common_method;
 import widgets.Basic_Graphical_zone;
 import widgets.Entity_Area;
 import widgets.Entity_Feature;
@@ -277,8 +278,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        Tracer.i(mytag, "Saving pref to file");
-                        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getApplicationContext());
+                        common_method.save_params_to_file(Tracer,SP_prefEditor, mytag, getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();

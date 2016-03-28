@@ -93,7 +93,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Feature feature, Handler handler) {
-        super(context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -105,7 +105,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Map feature_map, Handler handler) {
-        super(context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -374,7 +374,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             } else if (state_key.equalsIgnoreCase("current_last_updated")) {
                                 // convert value to translated date in locale settings
                                 try {
-                                    loc_Value=loc_Value.substring(0,loc_Value.lastIndexOf(" "));
+                                    loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
                                     SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
                                     Date testDate = sdf.parse(loc_Value);
                                     Tracer.e(mytag + "Date conversion", "Works");

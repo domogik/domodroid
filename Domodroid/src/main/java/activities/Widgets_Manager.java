@@ -437,7 +437,7 @@ class Widgets_Manager {
             map.put("type", "room");
             Activity_Main.Navigation_drawer_ItemsList.add(map);
 
-            Graphical_Room graph_room = new Graphical_Room(Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
+            Graphical_Room graph_room = new Graphical_Room(params,Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
             tmpPan.addView(graph_room);
 
             if (columns) {

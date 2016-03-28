@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import Abstract.common_method;
+import database.DomodroidDB;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
@@ -37,6 +39,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.FeatureInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -76,8 +79,11 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final String state_key;
     private int icon_status;
     private final Handler widgetHandler;
+    private final SharedPreferences params;
+    private DomodroidDB domodb;
+    private SharedPreferences.Editor prefEditor;
 
-    Basic_Graphical_widget(Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
+    Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
         this.Tracer = Trac;
         this.context = context;
@@ -91,7 +97,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.myself = this;
         this.name = name;
         this.state_key = state_key;
+        this.params = params;
         this.widgetHandler = handler;
+        domodb = new DomodroidDB(this.Tracer, this.context, params);
+        prefEditor = this.params.edit();
         setOnLongClickListener(this);
 
         //panel with border
@@ -188,9 +197,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id, result, "feature");
-                    //#76
+                    //Todo Create a method to Rename or change descritpion directly on domogik
                     // need to save table_feature to json but this method do not exists
-                    //prefEditor.putString("FEATURE_LIST", db.request_json_FeatureList().toString());
+                    //prefEditor.putString("FEATURE_LIST", domodb.request_json_FeatureList().toString());
+                    //common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     TV_name.setText(result);
                 }
             });
@@ -209,10 +219,11 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     Tracer.d(mytag, "deleting widget id= " + id + " place_id= " + place_id + " placetype= " + place_type);
                     Tracer.get_engine().remove_one_feature_association(id, place_id, place_type);
                     // #76
-                    //prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
+                    prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, context);
-                    refresh_the_views();
+                    common_method.refresh_the_views(widgetHandler);
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -247,7 +258,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
-                            // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
+                            prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                             change_this_icon(icon_status);
                             dialog.cancel();
                         }
@@ -258,11 +270,17 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         } else if (action.equals(context.getString(R.string.move_down))) {
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "down");
-            refresh_the_views();
+            prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+            // #76
+            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
-            refresh_the_views();
+            // #76
+            prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            common_method.refresh_the_views(widgetHandler);
         }
     }
 
@@ -275,13 +293,5 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.icon_status = icon_status;
     }
 
-    private void refresh_the_views(){
-        //Refresh the view
-        Bundle b = new Bundle();
-        b.putBoolean("refresh", true);
-        Message msg = new Message();
-        msg.setData(b);
-        widgetHandler.sendMessage(msg);
-    }
 }
 

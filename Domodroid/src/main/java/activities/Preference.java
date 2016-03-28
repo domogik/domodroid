@@ -53,7 +53,6 @@ public class Preference extends PreferenceActivity implements
     private Preference myself = null;
 
     private static tracerengine Tracer = null;
-    private final File backupprefs = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings");
     private String mytag = "Preference";
 
     @Override
@@ -115,8 +114,8 @@ public class Preference extends PreferenceActivity implements
         prefEditor.commit();
 
         //Save to file
-        if (backupprefs != null)
-            saveSharedPreferencesToFile(backupprefs, this);    // Store settings to SDcard
+        Tracer.i(mytag, "Saving pref to file");
+        saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), this);    // Store settings to SDcard
 
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.

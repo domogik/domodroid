@@ -23,9 +23,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import activities.Graphics_Manager;
 import activities.Preference;
@@ -38,7 +43,7 @@ public abstract class common_method {
         //#76
         prefEditor.commit();
         Tracer.i(mytag, "Saving pref to file");
-        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), context);
+        saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), context, Tracer, mytag);
     }
 
     public static void refresh_the_views(Handler widgetHandler) {
@@ -50,4 +55,24 @@ public abstract class common_method {
         widgetHandler.sendMessage(msg);
     }
 
+    private static void saveSharedPreferencesToFile(File dst, Context context, tracerengine Tracer, String mytag) {
+        ObjectOutputStream output = null;
+        try {
+            output = new ObjectOutputStream(new FileOutputStream(dst));
+            output.writeObject(PreferenceManager.getDefaultSharedPreferences(context).getAll());
+        } catch (FileNotFoundException e) {
+            Tracer.e(mytag, "Files error: " + e.toString());
+        } catch (IOException e) {
+            Tracer.e(mytag, "IO error: " + e.toString());
+        } finally {
+            try {
+                if (output != null) {
+                    output.flush();
+                    output.close();
+                }
+            } catch (IOException ex) {
+                Tracer.e(mytag, "IO error: " + ex.toString());
+            }
+        }
+    }
 }

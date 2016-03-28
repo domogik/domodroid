@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import Abstract.common_method;
 import misc.tracerengine;
 
 import org.domogik.domodroid13.R;
@@ -114,8 +115,7 @@ public class Preference extends PreferenceActivity implements
         prefEditor.commit();
 
         //Save to file
-        Tracer.i(mytag, "Saving pref to file");
-        saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), this);    // Store settings to SDcard
+        common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
@@ -144,24 +144,4 @@ public class Preference extends PreferenceActivity implements
         }
     }
 
-    public static void saveSharedPreferencesToFile(File dst, Context context) {
-        ObjectOutputStream output = null;
-        try {
-            output = new ObjectOutputStream(new FileOutputStream(dst));
-            output.writeObject(PreferenceManager.getDefaultSharedPreferences(context).getAll());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (output != null) {
-                    output.flush();
-                    output.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 } 

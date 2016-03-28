@@ -21,33 +21,25 @@
  */
 package widgets;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
-import Abstract.Display_sensor;
+import Abstract.display_sensor_info;
+import Abstract.calcul;
 import activities.Graphics_Manager;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
-import org.achartengine.chart.LineChart;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.tools.PanListener;
-import org.achartengine.tools.ZoomEvent;
-import org.achartengine.tools.ZoomListener;
 import org.achartengine.util.MathHelper;
-import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +58,6 @@ import android.os.Message;
 
 import misc.tracerengine;
 
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -75,7 +66,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -292,7 +282,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    Display_sensor.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    display_sensor_info.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
@@ -503,7 +493,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // range between 1 to 8 days (average per hour)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = round(real_val, 2);
+                real_val = calcul.round(real_val, 2);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int month = valueArray.getJSONArray(i).getInt(1);
                 int week = valueArray.getJSONArray(i).getInt(2);
@@ -572,7 +562,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // range between 9 to 32 days (average per day)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = round(real_val, 2);
+                real_val = calcul.round(real_val, 2);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int month = valueArray.getJSONArray(i).getInt(1);
                 int day = valueArray.getJSONArray(i).getInt(3);
@@ -631,7 +621,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // (average per week)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = round(real_val, 2);
+                real_val = calcul.round(real_val, 2);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int week = valueArray.getJSONArray(i).getInt(1);
                 int week_next = valueArray.getJSONArray(i + 1).getInt(1);
@@ -752,21 +742,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         // Adding the Combined Chart to the LinearLayout
         chartContainer.addView(mChart);
-    }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    public static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
     }
 
     public void onClick(View arg0) {

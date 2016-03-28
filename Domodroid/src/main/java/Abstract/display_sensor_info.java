@@ -30,8 +30,6 @@ import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -41,7 +39,7 @@ import activities.Graphics_Manager;
 import misc.tracerengine;
 
 
-public abstract class Display_sensor {
+public abstract class display_sensor_info {
 
     public static void display(tracerengine Tracer, String loc_Value, String mytag, String parameters, TextView value,
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
@@ -50,7 +48,7 @@ public abstract class Display_sensor {
         try {
             float formatedValue = 0;
             if (loc_Value != null) {
-                formatedValue = Round(Float.parseFloat(loc_Value), 2);
+                formatedValue = calcul.Round(Float.parseFloat(loc_Value), 2);
                 Tracer.v(mytag, " Round the value: " + loc_Value + " to " + formatedValue);
             }
             if (!test_unite.equals("")){
@@ -220,19 +218,5 @@ public abstract class Display_sensor {
         }
     }
 
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    public static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
-    }
 
 }

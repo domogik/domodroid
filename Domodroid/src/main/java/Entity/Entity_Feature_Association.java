@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
-package widgets;
+package Entity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

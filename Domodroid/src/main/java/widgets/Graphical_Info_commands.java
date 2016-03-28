@@ -17,75 +17,40 @@
  */
 package widgets;
 
-import java.lang.Thread.State;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import activities.Gradients_Manager;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
-import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import rinor.CallUrl;
-import rinor.Rest_com;
-
-import database.DmdContentProvider;
-import database.JSONParser;
-import database.WidgetUpdate;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.FeatureInfo;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
-import android.text.Html;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.TextView.OnEditorActionListener;
 
 @SuppressWarnings("Convert2Diamond")
 public class Graphical_Info_commands extends Basic_Graphical_widget {

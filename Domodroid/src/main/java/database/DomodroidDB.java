@@ -1,18 +1,14 @@
 package database;
 
-import java.util.Arrays;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import database.DmdContentProvider;
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Feature_Association;
-import widgets.Entity_Icon;
-import widgets.Entity_Map;
-import widgets.Entity_Room;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Icon;
+import Entity.Entity_Map;
+import Entity.Entity_Room;
 
 import android.app.Activity;
 import android.content.ContentValues;

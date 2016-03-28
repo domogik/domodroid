@@ -28,20 +28,16 @@ import java.io.ObjectInputStream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import Abstract.common_method;
 import widgets.Basic_Graphical_zone;
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Room;
-import widgets.Graphical_butler;
+import Entity.Entity_Area;
+import Entity.Entity_Room;
 import misc.changelog;
 import misc.tracerengine;
 import mq.Main;
@@ -51,17 +47,13 @@ import database.WidgetUpdate;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.ProgressDialog;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -81,11 +73,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -278,7 +268,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        common_method.save_params_to_file(Tracer,SP_prefEditor, mytag, getApplicationContext());
+                        common_method.save_params_to_file(Tracer, SP_prefEditor, mytag, getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();

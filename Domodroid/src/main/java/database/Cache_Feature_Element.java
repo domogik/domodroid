@@ -1,10 +1,8 @@
 package database;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import widgets.Entity_client;
+import Entity.Entity_client;
 
 
 public class Cache_Feature_Element {

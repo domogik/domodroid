@@ -17,6 +17,9 @@
  */
 package widgets;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import rinor.CallUrl;
 import database.WidgetUpdate;
 

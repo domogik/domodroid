@@ -21,15 +21,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Feature_Association;
-import widgets.Entity_Icon;
-import widgets.Entity_Room;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Feature_Association;
+import Entity.Entity_Icon;
+import Entity.Entity_Room;
 
 public class JSONParser {
 

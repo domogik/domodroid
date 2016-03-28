@@ -17,55 +17,35 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import rinor.CallUrl;
-import rinor.Rest_com;
-import database.DmdContentProvider;
-import database.JSONParser;
 import database.WidgetUpdate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 

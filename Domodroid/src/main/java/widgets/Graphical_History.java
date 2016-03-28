@@ -26,6 +26,9 @@ import java.util.TimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
@@ -50,7 +53,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_History extends Basic_Graphical_widget implements OnClickListener {
 

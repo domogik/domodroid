@@ -1,6 +1,5 @@
 package activities;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.domogik.domodroid13.R;
@@ -13,17 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import widgets.Entity_Feature;
-
-import android.R.bool;
-import android.R.integer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 

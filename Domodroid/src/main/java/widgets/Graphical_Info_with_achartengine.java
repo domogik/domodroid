@@ -29,6 +29,9 @@ import java.util.Vector;
 
 import Abstract.display_sensor_info;
 import Abstract.calcul;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
 import org.achartengine.ChartFactory;

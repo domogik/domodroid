@@ -1,9 +1,6 @@
 package database;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,20 +9,15 @@ import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
 import rinor.Stats_Com;
-import widgets.Entity_Feature;
-import widgets.Entity_Feature_Association;
-import widgets.Entity_Map;
-import widgets.Entity_client;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 
-import org.domogik.domodroid13.R;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;

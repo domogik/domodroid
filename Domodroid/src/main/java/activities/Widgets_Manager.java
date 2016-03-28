@@ -9,9 +9,9 @@ import database.WidgetUpdate;
 import org.json.JSONException;
 
 import widgets.Com_Stats;
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Room;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Room;
 import widgets.Graphical_Area;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Binary_New;

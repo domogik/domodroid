@@ -24,6 +24,7 @@ import java.util.List;
 import org.domogik.domodroid13.R;
 
 import Abstract.common_method;
+import Entity.Entity_Room;
 import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;

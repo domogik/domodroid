@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
-package widgets;
+package Entity;
 
 
 import android.app.Activity;
@@ -24,7 +24,8 @@ import android.content.SharedPreferences;
 import database.DomodroidDB;
 import misc.tracerengine;
 
-public class Entity_Area {
+public class Entity_Room {
+    private int area_id;
     private String description;
     private int id;
     private String name;
@@ -33,7 +34,8 @@ public class Entity_Area {
     private final SharedPreferences params;
 
 
-    public Entity_Area(SharedPreferences params, tracerengine Trac, Activity context, String description, int id, String name) {
+    public Entity_Room(SharedPreferences params, tracerengine Trac, Activity context, int area_id, String description, int id, String name) {
+        this.area_id = area_id;
         this.description = description;
         this.id = id;
         this.name = name;
@@ -42,25 +44,41 @@ public class Entity_Area {
         this.params = params;
     }
 
+
+    public int getArea_id() {
+        return area_id;
+    }
+
+
+    public void setArea_id(int area_id) {
+        this.area_id = area_id;
+    }
+
+
     public String getDescription() {
         return description;
     }
+
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+
     public int getId() {
         return id;
     }
+
 
     public void setId(int id) {
         this.id = id;
     }
 
+
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -69,12 +87,13 @@ public class Entity_Area {
     public String getIcon_name() {
         String iconName = "unknow";
         DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
-        domodb.owner = "entity_area";
+        domodb.owner = "entity_room";
         try {
-            iconName = domodb.requestIcons(id, "area").getValue();
+            iconName = domodb.requestIcons(id, "room").getValue();
         } catch (Exception e) {
             //e.printStackTrace();
         }
         return iconName;
     }
+
 }

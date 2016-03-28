@@ -18,6 +18,9 @@
 package widgets;
 
 import Abstract.display_sensor_info;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;

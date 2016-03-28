@@ -17,6 +17,8 @@
  */
 package widgets;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
 import rinor.CallUrl;
 
 import org.domogik.domodroid13.R;

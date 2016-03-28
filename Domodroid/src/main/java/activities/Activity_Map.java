@@ -2,19 +2,15 @@ package activities;
 
 import org.domogik.domodroid13.R;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 import database.WidgetUpdate;
@@ -22,7 +18,7 @@ import map.Dialog_Help;
 import map.Dialog_Move;
 import map.MapView;
 import activities.Sliding_Drawer.OnPanelListener;
-import widgets.Entity_Feature;
+import Entity.Entity_Feature;
 
 import android.app.Activity;
 import android.app.AlertDialog;

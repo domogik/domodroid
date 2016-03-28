@@ -15,14 +15,11 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
-package widgets;
+package Entity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-import org.json.JSONObject;
-
-import activities.Graphics_Manager;
 import misc.tracerengine;
 
 public class Entity_Map extends Entity_Feature {

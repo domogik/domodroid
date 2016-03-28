@@ -21,6 +21,9 @@ package widgets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.*;
@@ -33,7 +36,6 @@ import database.WidgetUpdate;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -55,7 +57,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout.LayoutParams;
 
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {

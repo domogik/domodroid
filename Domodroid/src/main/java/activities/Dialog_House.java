@@ -1,8 +1,6 @@
 package activities;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +8,10 @@ import java.util.List;
 import org.domogik.domodroid13.R;
 
 import Abstract.common_method;
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Icon;
-import widgets.Entity_Room;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Icon;
+import Entity.Entity_Room;
 import misc.List_Icon_Adapter;
 
 import database.Cache_management;
@@ -26,12 +24,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Entity;
 import android.content.SharedPreferences;
 
 import misc.tracerengine;
 
-import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -40,9 +36,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.ListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Spinner;
 
 class Dialog_House extends Dialog implements OnClickListener {

@@ -2,6 +2,9 @@ package widgets;
 
 import java.util.TimerTask;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
@@ -31,7 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 

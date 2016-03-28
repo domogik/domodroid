@@ -1,5 +1,6 @@
 package activities;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import android.content.SharedPreferences;
 
 import misc.tracerengine;
 
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -63,6 +65,7 @@ class Dialog_House extends Dialog implements OnClickListener {
     private Entity_Room[] listRoom;
     private Entity_Feature[] listFeature;
     private final String mytag;
+    private SharedPreferences.Editor prefEditor;
 
     public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
         super(context);
@@ -72,6 +75,8 @@ class Dialog_House extends Dialog implements OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
         mytag = "Dialog_House";
+        prefEditor = this.params.edit();
+
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
         cancelButton.setTag("house_cancel");
         cancelButton.setOnClickListener(this);
@@ -269,8 +274,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("description", "");
                 values.put("id", (lastid + 1));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
-                // #76
-                //prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
+                //#76
+                save_params_to_file();
                 loadSpinnerData();
             }
         });
@@ -298,8 +303,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 int lastid = domodb.requestlastidArea();
                 values.put("id", lastid + 1);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
-                // #76
-                //prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
+                //#76
+                save_params_to_file();
                 loadSpinnerData();
             }
         });
@@ -339,8 +344,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 //values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
-                // #76
-                //prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
+                //#76
+                save_params_to_file();
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, context);
                 loadSpinnerData();
@@ -383,8 +388,8 @@ class Dialog_House extends Dialog implements OnClickListener {
                 }
                 values.put("reference", reference);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                // #76
-                // prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
+                //#76
+                save_params_to_file();
                 loadSpinnerData();
             }
         });
@@ -454,7 +459,7 @@ class Dialog_House extends Dialog implements OnClickListener {
                 //Ask user what icon i want to modify area, room, widget
                 //in function display
                 //display list of all icons
-                //and change the tag for onclic() method
+                //and change the tag for onclick() method
                 break;
             case "add_icon_area": {
                 alert_Icon.show();
@@ -563,7 +568,17 @@ class Dialog_House extends Dialog implements OnClickListener {
                 new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list_icon);
         icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_icon.setAdapter(icon_adapter);
+    }
 
+    private void save_params_to_file(){
+        //#76
+        prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+        prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+        prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+        prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+        prefEditor.commit();
+        Tracer.i(mytag, "Saving pref to file");
+        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getContext());
     }
 }
 

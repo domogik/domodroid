@@ -277,7 +277,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        Tracer.i("Preference", "Saving pref to file");
+                        Tracer.i(mytag, "Saving pref to file");
                         Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK

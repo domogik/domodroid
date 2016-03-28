@@ -526,19 +526,14 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                 } // for loop on feature list...
 
-                //TODO load existing room from prefeditor(room) and grab rooms as JSONArray
-                //The put method replace value by new one so loading previous version will
-                //avoid lost of user organization
-                //rooms.put(prefEditor.getString("ROOM_LIST");
-
                 //Prepare list of rooms, and list of usable features
                 try {
-                    json_RoomList.put("room", rooms);
+                    json_RoomList.putOpt("room", rooms);
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
                 try {
-                    json_FeatureAssociationList.put("feature_association", ListFeature);
+                    json_FeatureAssociationList.putOpt("feature_association", ListFeature);
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }

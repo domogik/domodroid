@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.jar.JarEntry;
 
+import Abstract.Display_sensor;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
@@ -87,6 +88,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private int update;
     private TextView state_key_view;
     private String stateS;
+    private String test_unite;
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
 
@@ -206,6 +208,15 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
         LL_featurePan.addView(value);
 
+        test_unite = "";
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            test_unite = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
+
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -217,180 +228,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    String test_unite = "";
-                    try {
-                        float formatedValue = 0;
-                        if (loc_Value != null) {
-                            formatedValue = Round(Float.parseFloat(loc_Value), 2);
-                            Tracer.v(mytag, " Round the value: " + loc_Value + " to " + formatedValue);
-                        }
-                        try {
-                            //Basilic add, number feature has a unit parameter
-                            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                            test_unite = jparam.getString("unit");
-                            //#30 add Scale value if too big for byte only
-                            switch (test_unite) {
-                                case "b":
-                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
-                                    break;
-                                case "ko":
-                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
-                                    break;
-                                case "°":
-                                    //TODO find how to update the rotate when a new value is receiveds from events or mq
-                                    //remove the textView from parent LinearLayout
-                                    LL_featurePan.removeView(value);
-                                    //Display an arrow with font-awesome
-                                    value.setTypeface(typefaceawesome, Typeface.NORMAL);
-                                    value.setText("\uf176");
-                                    //display the real value in smaller font
-                                    value1 = new TextView(context);
-                                    value1.setTextSize(14);
-                                    value1.setTextColor(Color.BLACK);
-                                    value1.setText(formatedValue + test_unite);
-                                    //Create a rotate animation for arrow with formatedValue as angle
-                                    RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                                    animation.setDuration(0);
-                                    animation.setFillEnabled(true);
-                                    animation.setFillAfter(true);
-                                    animation.setFillBefore(true);
-                                    //apply animation to textView
-                                    value.startAnimation(animation);
-                                    //apply gravity and size to textview with font-awesome
-                                    value.setMinimumHeight(LL_featurePan.getHeight());
-                                    value.setMinimumWidth(100);
-                                    value.setGravity(Gravity.CENTER);
-                                    //Create an empty linearlayout that will contains the value
-                                    LinearLayout LL_Temp = new LinearLayout(context);
-                                    //Re-add the view in parent's one
-                                    LL_Temp.addView(value1);
-                                    LL_Temp.addView(value);
-                                    LL_featurePan.addView(LL_Temp);
-                                    break;
-                                default:
-                                    if (state_key.equalsIgnoreCase("current_wind_speed")) {
-                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf03e;"), TextView.BufferType.SPANNABLE);
-                                    } else if (state_key.equalsIgnoreCase("current_humidity")) {
-                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf07a;"), TextView.BufferType.SPANNABLE);
-                                    } else if (state_key.equalsIgnoreCase("current_barometer_value")) {
-                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
-                                    } else if (state_key.contains("temperature")) {
-                                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
-                                    }
-                                    value.setText(formatedValue + " " + test_unite);
-                                    break;
-                            }
-                        } catch (JSONException e) {
-                            //It has no unit in database or in json
-                            if (state_key.equalsIgnoreCase("temperature"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("pressure"))
-                                value.setText(formatedValue + " hPa");
-                            else if (state_key.equalsIgnoreCase("humidity"))
-                                value.setText(formatedValue + " %");
-                            else if (state_key.equalsIgnoreCase("percent"))
-                                value.setText(formatedValue + " %");
-                            else if (state_key.equalsIgnoreCase("visibility"))
-                                value.setText(formatedValue + " km");
-                            else if (state_key.equalsIgnoreCase("chill"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("speed"))
-                                value.setText(formatedValue + " km/h");
-                            else if (state_key.equalsIgnoreCase("drewpoint"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
-                                //Add try catch to avoid other case that make #1794
-                                try {
-                                    //use xml and weather fonts here
-                                    value.setTypeface(typefaceweather, Typeface.NORMAL);
-                                    value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
-                                } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + loc_Value);
-                                    value.setText(loc_Value);
-                                }
-                            } else value.setText(loc_Value);
-                        }
-                    } catch (Exception e) {
-                        // It's probably a String that could'nt be converted to a float
-                        Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
-                        try {
-                            Tracer.d(mytag, "Try to get value translate from R.STRING");
-                            //todo #90
-                            if (loc_Value.startsWith("AM") && loc_Value.contains("/PM")) {
-                                Tracer.d(mytag, "Try to split: " + loc_Value + " in two parts to translate it");
-                                StringTokenizer st = new StringTokenizer(loc_Value, "/");
-                                String AM = st.nextToken();
-                                String PM = st.nextToken();
-                                try {
-                                    AM = AM.replace("AM ", "");
-                                    AM = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), AM.toLowerCase()));
-                                } catch (Exception amexception) {
-                                    Tracer.d(mytag, "no translation for: " + AM);
-                                }
-                                try {
-                                    PM = PM.replace("PM ", "");
-                                    PM = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), PM.toLowerCase()));
-                                } catch (Exception pmexception) {
-                                    Tracer.d(mytag, "no translation for: " + PM);
-                                }
-                                value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
-                            } else {
-                                value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
-                            }
-                        } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + loc_Value);
-                            if (state_key.equalsIgnoreCase("current_sunset")) {
-                                state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                                state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
-                                // Convert value to hour and in local language
-                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
-                                Date testDate = null;
-                                try {
-                                    testDate = sdf.parse(loc_Value);
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
-                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                                String newFormat = formatter.format(testDate);
-                                value.setText(newFormat);
-                            } else if (state_key.equalsIgnoreCase("current_sunrise")) {
-                                state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                                state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
-                                // Convert value to hour and in local language
-                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
-                                Date testDate = null;
-                                try {
-                                    testDate = sdf.parse(loc_Value);
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
-                                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                                String newFormat = formatter.format(testDate);
-                                value.setText(newFormat);
-                            } else if (state_key.equalsIgnoreCase("current_last_updated")) {
-                                // convert value to translated date in locale settings
-                                try {
-                                    loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
-                                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
-                                    Date testDate = sdf.parse(loc_Value);
-                                    Tracer.e(mytag + "Date conversion", "Works");
-                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
-                                    String newFormat = formatter.format(testDate);
-                                    value.setText(newFormat);
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
-                                    value.setText(loc_Value);
-                                }
-                            } else {
-                                value.setText(loc_Value);
-                            }
-                        }
-                    }
+
+                    Display_sensor.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
                         if (Float.parseFloat(loc_Value) >= 60) {

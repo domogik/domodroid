@@ -121,7 +121,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
             }
 
         };
-        ;//================================================================================
+        //================================================================================
             /*
              * New mechanism to be notified by widgetupdate engine when our value is changed
              *

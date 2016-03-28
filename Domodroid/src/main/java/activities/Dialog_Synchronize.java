@@ -934,7 +934,6 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            ;
                             k++;
                             String data_type = null;
                             try {

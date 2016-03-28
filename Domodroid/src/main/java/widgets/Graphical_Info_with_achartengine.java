@@ -493,7 +493,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // range between 1 to 8 days (average per hour)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = calcul.round(real_val, 2);
+                real_val = calcul.Round_double(real_val, 2);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int month = valueArray.getJSONArray(i).getInt(1);
                 int week = valueArray.getJSONArray(i).getInt(2);
@@ -562,7 +562,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // range between 9 to 32 days (average per day)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = calcul.round(real_val, 2);
+                real_val = calcul.Round_double(real_val, 2);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int month = valueArray.getJSONArray(i).getInt(1);
                 int day = valueArray.getJSONArray(i).getInt(3);
@@ -621,7 +621,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // (average per week)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = calcul.round(real_val, 2);
+                real_val = calcul.Round_double(real_val, 2);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int week = valueArray.getJSONArray(i).getInt(1);
                 int week_next = valueArray.getJSONArray(i + 1).getInt(1);

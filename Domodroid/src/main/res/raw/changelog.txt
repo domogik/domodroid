@@ -28,6 +28,8 @@
       * Sensor with unit in degrees now display an arrow with the value as angle.
       * Add font-awesome for future usage.
       * #38 Weather plugin sunrise/sunset and update date translate.
+      * #25 Icon for new motion sensor/command.
+      * Numbers are internationalised.
       * Close #86 utf8 issue in DomodroidDB.java.
       * Close #85 Room ID when sync is false if saved one.
       * Close #84 Automated build on Travis-CI.

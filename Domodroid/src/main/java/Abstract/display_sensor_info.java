@@ -21,6 +21,7 @@ package Abstract;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.animation.Animation;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -43,7 +45,7 @@ public abstract class display_sensor_info {
 
     public static void display(tracerengine Tracer, String loc_Value, String mytag, String parameters, TextView value,
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
-                               String state_key, TextView state_key_view, String stateS,String test_unite) {
+                               String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
         try {
             float formatedValue = 0;
@@ -51,9 +53,9 @@ public abstract class display_sensor_info {
                 formatedValue = calcul.Round_float(Float.parseFloat(loc_Value));
                 Tracer.v(mytag, " Round_float the value: " + loc_Value + " to " + formatedValue);
             }
-            if (!test_unite.equals("")){
+            if (!test_unite.equals("")) {
                 //Basilic add, number feature has a unit parameter
-                //#30 add Scale value if too big for byte only
+                //#30 add Scale value if too big for byte, ko and Wh unit
                 switch (test_unite) {
                     case "b":
                         value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
@@ -61,8 +63,12 @@ public abstract class display_sensor_info {
                     case "ko":
                         value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
                         break;
+                    case "Wh":
+                        //#30
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        break;
                     case "°":
-                        //TODO find how to update the rotate when a new value is receiveds from events or mq
+                        //TODO find how to update the rotate when a new value is receive from events or mq
                         //remove the textView from parent LinearLayout
                         LL_featurePan.removeView(value);
                         //Display an arrow with font-awesome
@@ -72,7 +78,7 @@ public abstract class display_sensor_info {
                         value1 = new TextView(context);
                         value1.setTextSize(14);
                         value1.setTextColor(Color.BLACK);
-                        value1.setText(formatedValue + test_unite);
+                        value1.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         //Create a rotate animation for arrow with formatedValue as angle
                         RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                         animation.setDuration(0);
@@ -106,27 +112,27 @@ public abstract class display_sensor_info {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
                         }
-                        value.setText(formatedValue + " " + test_unite);
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;
                 }
             } else {
                 //It has no unit in database or in json
                 if (state_key.equalsIgnoreCase("temperature"))
-                    value.setText(formatedValue + " °C");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " °C");
                 else if (state_key.equalsIgnoreCase("pressure"))
-                    value.setText(formatedValue + " hPa");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " hPa");
                 else if (state_key.equalsIgnoreCase("humidity"))
-                    value.setText(formatedValue + " %");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " %");
                 else if (state_key.equalsIgnoreCase("percent"))
-                    value.setText(formatedValue + " %");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " %");
                 else if (state_key.equalsIgnoreCase("visibility"))
-                    value.setText(formatedValue + " km");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " km");
                 else if (state_key.equalsIgnoreCase("chill"))
-                    value.setText(formatedValue + " °C");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " °C");
                 else if (state_key.equalsIgnoreCase("speed"))
-                    value.setText(formatedValue + " km/h");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " km/h");
                 else if (state_key.equalsIgnoreCase("drewpoint"))
-                    value.setText(formatedValue + " °C");
+                    value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " °C");
                 else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
                     //Add try catch to avoid other case that make #1794
                     try {
@@ -137,10 +143,12 @@ public abstract class display_sensor_info {
                         Tracer.d(mytag, "no translation for: " + loc_Value);
                         value.setText(loc_Value);
                     }
-                } else value.setText(loc_Value);
+                } else if (state_key.equalsIgnoreCase("callerid")) {
+                    value.setText(phone_convertion(Tracer, mytag, loc_Value));
+                } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));
             }
         } catch (Exception e) {
-            // It's probably a String that could'nt be converted to a float
+            // It's probably a String that could not be converted to a float
             Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
             try {
                 Tracer.d(mytag, "Try to get value translate from R.STRING");
@@ -211,6 +219,8 @@ public abstract class display_sensor_info {
                         Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
                         value.setText(loc_Value);
                     }
+                } else if (state_key.equalsIgnoreCase("callerid")) {
+                    value.setText(phone_convertion(Tracer, mytag, loc_Value));
                 } else {
                     value.setText(loc_Value);
                 }
@@ -218,5 +228,26 @@ public abstract class display_sensor_info {
         }
     }
 
+    public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
+        try {
+            String convert_phone = PhoneNumberUtils.formatNumber(phone);
+            return convert_phone;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Tracer.e(mytag + "Phone conversion", "Error: " + ex.toString());
+            return phone;
+        }
+    }
+
+    public static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
+        try {
+            String convert_number = NumberFormat.getInstance().format(number);
+            return convert_number;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Tracer.e(mytag + "value_convertion", "Error: " + ex.toString());
+            return origin_number;
+        }
+    }
 
 }

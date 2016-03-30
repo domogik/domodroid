@@ -17,34 +17,11 @@
  */
 package widgets;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.TimeZone;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.R;
-
-import rinor.Rest_com;
-
-import database.WidgetUpdate;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -53,6 +30,25 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.TimeZone;
+
+import Abstract.display_sensor_info;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Graphics_Manager;
+import database.WidgetUpdate;
+import misc.tracerengine;
+import rinor.Rest_com;
 
 public class Graphical_History extends Basic_Graphical_widget implements OnClickListener {
 
@@ -149,7 +145,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
                     value.setAnimation(animation);
-                    value.setText(loc_Value);
+
+                    display_sensor_info.display(Tracer, loc_Value, mytag, feature.getParameters(), value, context, LL_featurePan, null, null, state_key, null, null, null);
+
                     //To have the icon colored as it has no state
                     change_this_icon(2);
 

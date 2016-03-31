@@ -294,7 +294,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             change_this_icon(0);
                         }
                     } else {
-                        // todo #93
+                        // #93
                         if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
                             change_this_icon(0);
                             //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources

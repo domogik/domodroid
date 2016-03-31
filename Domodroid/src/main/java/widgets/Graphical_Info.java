@@ -233,8 +233,11 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             change_this_icon(0);
                         }
                     } else {
-                        //To have the icon colored as it has no state
-                        change_this_icon(2);
+                        // #93
+                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
+                            change_this_icon(0);
+                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                        } else change_this_icon(2);
                     }
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !

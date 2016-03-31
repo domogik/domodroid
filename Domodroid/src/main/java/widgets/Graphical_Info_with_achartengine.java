@@ -21,18 +21,23 @@
  */
 package widgets;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
-
-import Abstract.display_sensor_info;
-import Abstract.calcul;
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-import activities.Graphics_Manager;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
+import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Message;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -47,31 +52,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Vector;
+
+import Abstract.calcul;
+import Abstract.display_sensor_info;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Graphics_Manager;
 import database.WidgetUpdate;
-
-import rinor.Rest_com;
-
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Paint.Align;
-import android.graphics.Typeface;
-import android.os.Handler;
-import android.os.Message;
-
 import misc.tracerengine;
-
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-
-import android.view.View.OnClickListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import rinor.Rest_com;
 
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
@@ -299,10 +294,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             change_this_icon(0);
                         }
                     } else {
-                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        change_this_icon(2);
+                        // todo #93
+                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
+                            change_this_icon(0);
+                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                        } else {
+                            change_this_icon(2);
+                        }
                     }
-
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
@@ -330,7 +329,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null) {
+        if (cache_engine != null)
+
+        {
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {

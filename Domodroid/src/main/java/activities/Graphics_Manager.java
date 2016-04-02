@@ -616,6 +616,8 @@ public class Graphics_Manager {
         name = name.replace(" ", "_");
         name = name.replace("-", "_");
         name = name.replace(":", "_");
+        name = name.replace("(", "");
+        name = name.replace(")", "");
         //To get a drawable R.Drawable
         //context.getResources().getIdentifier(name, "drawable", context.getPackageName());
         //To get a string from R.String

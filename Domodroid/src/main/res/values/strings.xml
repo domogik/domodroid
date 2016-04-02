@@ -432,6 +432,10 @@
     <string name="not_available">Not available</string>
     <string name="info48">--</string>
     <string name="rain">Rain</string>
+    <string name="mostly_cloudy_night">mostly cloudy (night)</string>
+    <string name="mostly_cloudy_day">mostly cloudy (day)</string>
+    <string name="partly_cloudy_night">partly cloudy (night)</string>
+    <string name="partly_cloudy_day">partly cloudy (night)</string>
 
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>

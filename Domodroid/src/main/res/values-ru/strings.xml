@@ -566,4 +566,8 @@
     <string name="wake_on_lan">Включение по сети</string>
     <string name="blacklist">Черный список</string>
     <string name="switch_on_or_off">Вкл.-Выкл.</string>
+    <string name="mostly_cloudy_night">Сильная облачность (день)</string>
+    <string name="mostly_cloudy_day">Сильная облачность (ночь)</string>
+    <string name="partly_cloudy_night">Переменная облачность (день)</string>
+    <string name="partly_cloudy_day">Переменная облачность (ночь)</string>
 </resources>

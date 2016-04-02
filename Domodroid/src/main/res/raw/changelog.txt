@@ -43,6 +43,7 @@
       * Close #68 Select new image for map with uri.
       * Close #33 refresh widget at root.
       * #38 More Ru and Fr translation from transifex.
+      * #38 weather condtion codes translate to brasilian.
       % Version 15
       _ 2016-01-31
       * Problem when publishing to the store

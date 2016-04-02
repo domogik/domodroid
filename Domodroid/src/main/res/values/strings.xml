@@ -390,10 +390,14 @@
     <string name="cloudy">Cloudy</string>
     <string name="info27">Mostly cloudy</string>
     <string name="mostly_cloudy">Mostly cloudy</string>
+    <string name="mostly_cloudy_night">mostly cloudy (night)</string>
     <string name="info28">Mostly cloudy</string>
+    <string name="mostly_cloudy_day">mostly cloudy (day)</string>
     <string name="info29">Partly cloudy</string>
+    <string name="partly_cloudy_night">partly cloudy (night)</string>
     <string name="partly_cloudy">Partly cloudy</string>
     <string name="info30">Partly cloudy</string>
+    <string name="partly_cloudy_day">partly cloudy (night)</string>
     <string name="info31">Clear (night)</string>
     <string name="clear_night">Clear (night)</string>
     <string name="info32">Sunny</string>
@@ -432,10 +436,6 @@
     <string name="not_available">Not available</string>
     <string name="info48">--</string>
     <string name="rain">Rain</string>
-    <string name="mostly_cloudy_night">mostly cloudy (night)</string>
-    <string name="mostly_cloudy_day">mostly cloudy (day)</string>
-    <string name="partly_cloudy_night">partly cloudy (night)</string>
-    <string name="partly_cloudy_day">partly cloudy (night)</string>
 
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>

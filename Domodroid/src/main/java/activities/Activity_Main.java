@@ -249,9 +249,8 @@ public class Activity_Main extends Activity implements OnClickListener {
         if (house_listener == null) {
             house_listener = new DialogInterface.OnDismissListener() {
                 public void onDismiss(DialogInterface dialog) {
-                    //TODO Try to redraw after house dialog closed.
+                    //Redraw after house dialog closed.
                     loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
-
                 }
             };
         }
@@ -439,6 +438,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 dialog_reload.setMessage(getText(R.string.home_reload));
                 dialog_reload.setPositiveButton(getText(R.string.reloadOK), reload_listener);
                 dialog_reload.setNegativeButton(getText(R.string.reloadNO), reload_listener);
+                //todo #94
                 dialog_reload.show();
                 init_done = false;    //A choice is pending : Rest of init has to be completed...
             } else {
@@ -447,6 +447,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 end_of_init_requested = true;
                 // open server config view
                 Intent helpI = new Intent(Activity_Main.this, Preference.class);
+                //todo #94
                 startActivity(helpI);
             }
         } else {
@@ -569,7 +570,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
     private void end_of_init() {
-        // Finalize screen appearence
+        // Finalize screen appearances
         if (Tracer == null)
             Tracer = Tracer.getInstance(this);
         Tracer.v(mytag, "end_of_init Main Screen..");

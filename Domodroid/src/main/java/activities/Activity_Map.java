@@ -558,16 +558,16 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
                     rename.setPositiveButton(R.string.Rename_file_OK, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog_customname, int whichButton) {
                             String renamefileName = input.getText().toString();
-                            Tracer.i(mytag, "new fileName: " + renamefileName);
-                            destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + "." + extension);
-                            File destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName);
-                            int i = 1;
-                            while (destFile.exists()) {
-                                destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + "(" + i + ")" + renamefileName);
-                                i++;
-                            }
-                            new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName).renameTo(destFile);
-                            //Restart the activity to save change
+                            if (!renamefileName.equals(fileName.substring(0, fileName.length() - extension.length() - 1))) {
+                                Tracer.i(mytag, "new fileName: " + renamefileName);
+                                destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + renamefileName + "." + extension);
+                                int i = 1;
+                                while (destFile.exists()) {
+                                    destFile = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + "(" + i + ")" + renamefileName + "." + extension);
+                                    i++;
+                                }
+                                new File(Environment.getExternalStorageDirectory() + "/domodroid/" + fileName).renameTo(destFile);
+                            }//Restart the activity to save change
                             restartactivity();
                         }
                     });

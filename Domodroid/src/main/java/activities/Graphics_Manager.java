@@ -678,6 +678,9 @@ public class Graphics_Manager {
             usage = "temperature";
         //ONEWIRED "1-wire_cmd_output, "1-wire temperature", "1-wire humidity", "1-wire luminosity", "1-wire pressure",
         // "1-wire voltage", "1-wire counter", "1-wire counter diff", "1-wire input", "1-wire output"
+        // "onewire output switch cmd", "onewire temperature", "onewire humidity", "onewire luminosity", "onewire pressure",
+        // "onewire voltage", "onewire counter", "onewire counter diff", "onewire input switch", "onewire input openclose",
+        // "onewire output switch",
         //PING "ping"
         if (usage.contains("ping"))
             usage = "computer";

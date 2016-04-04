@@ -631,7 +631,7 @@ public class Graphics_Manager {
         //BLUEZ "available"
         if (usage.toLowerCase().equals("available") || usage.contains("bluez"))
             usage = "bluetooth";
-        //CID "callerid"
+        //CID "callerid", "name", "blacklisted", "blacklist"
         if (usage.contains("callerid"))
             usage = "telephony";
         //DAIKCODE "set_power", "set_setpoint", "set_mode", "set_vertical_swing", "set_horizontal_swing",

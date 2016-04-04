@@ -658,7 +658,9 @@ public class Graphics_Manager {
             usage = "mirror";
         //MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
         //"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
-        //"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current",
+        //"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current", "command_mqtt_onoff",
+        // "command_mqtt_string", "sensor_mqtt_temperature", "sensor_mqtt_humidity", "sensor_mqtt_number",
+        // "sensor_mqtt_onoff", "sensor_mqtt_openclose", "sensor_mqtt_string"
         if (usage.toLowerCase().equals("sensor_battery"))
             usage = "battery";
         if (usage.contains("power") || usage.contains("energy") || usage.contains("voltage") || usage.toLowerCase().equals("sensor_current"))

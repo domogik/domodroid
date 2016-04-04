@@ -705,7 +705,7 @@ public class Graphics_Manager {
                 || usage.toLowerCase().equals("bbrhpjw") || usage.toLowerCase().equals("bbrhcjr") || usage.toLowerCase().equals("bbrhpjr")
                 )
             usage = "electricity";
-        //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close"
+        //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close", "smoke"
         if (usage.toLowerCase().equals("battery"))
             usage = "battery";
         if (usage.contains("lighting"))

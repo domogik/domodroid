@@ -645,6 +645,7 @@ public class Graphics_Manager {
                 || usage.toLowerCase().equals("get_free_space") || usage.toLowerCase().equals("get_used_space"))
             usage = "server";
         //GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
+        // "set_rgb_color", "send_text",
         //GEOLOC "position_degrees"
         //IPX800 "state", "input", "count"
         //IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"

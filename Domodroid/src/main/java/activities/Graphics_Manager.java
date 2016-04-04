@@ -740,9 +740,20 @@ public class Graphics_Manager {
             usage = "security_camera";
         if (usage.toLowerCase().contains("motion"))
             usage = "motion";
-        // ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
-        //"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
-        //"level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
+        // ZWAVE "ctrl_status", "node_status", "power_failure", "switch_state", "tamper_sensor"
+        // "energy", "power", "switch_state", "energy", "energy_k", "power", "opening_sensor",
+        // "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c",
+        // "temperature-k", "temperature_f", "battery_level", "humidity", "relative_humidity"
+        // "level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
+        // "binary_sensor", "motion_sensor_binary", "status", "power_m", "power_k", "energy_m"
+        // "energy_previous_reading", "energy_previous_reading_m", "energy_previous_reading_k"
+        // "energy_production_k", "instant_energy_production_k", "total_energy_production_k"
+        // "energy_production_today-k", "total_production_time_k", "counter", "indicator_str"
+        // "locked_state", "alarm_str_report", "power_management_alarm", "smoke_alarm",
+        // "carbonmonoxide_alarm", "carbondioxide_alarm", "heat_alarm", "flood_alarm"
+        // "fan_mode", "fan_state", "thermostat_mode", "thermostat_operating_state", "thermostat-setpoint-c"
+        // "thermostat-setpoint-f", "thermostat-setpoint-k", "toggle_switch_binary", "increase",
+        // "decrease", "bright", "dim",
         if (usage.toLowerCase().equals("battery_level") || usage.toLowerCase().equals("battery-level") || usage.toLowerCase().equals("low_battery") || usage.toLowerCase().equals("low-battery"))
             usage = "battery";
         if (usage.toLowerCase().contains("thermostat"))

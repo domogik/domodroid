@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
-package widgets;
+package Entity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -79,17 +79,17 @@ public class Entity_Feature {
     }
 
     public String getDescription() {
-        String retrun_value;
+        String return_value;
         if (description.length() < 1 || description.equalsIgnoreCase("null")) {
-            retrun_value = name;
+            return_value = name;
         } else {
-            retrun_value = description;
+            return_value = description;
         }
         //add debug option to change label adding its Id
         if (params.getBoolean("DEV", false))
-            retrun_value = retrun_value + " (" + id + ")";
+            return_value = return_value + " (" + id + ")";
 
-        return retrun_value;
+        return return_value;
     }
 
     public void setDescription(String description) {

@@ -19,42 +19,26 @@
 package activities;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
+import Abstract.common_method;
 import misc.tracerengine;
 
 import org.domogik.domodroid13.R;
 
 import database.Cache_management;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceActivity;
-
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
     private Preference myself = null;
 
     private static tracerengine Tracer = null;
-    private final File backupprefs = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings");
-    private String mytag = "Preference";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,8 +99,8 @@ public class Preference extends PreferenceActivity implements
         prefEditor.commit();
 
         //Save to file
-        if (backupprefs != null)
-            saveSharedPreferencesToFile(backupprefs, this);    // Store settings to SDcard
+        String mytag = "Preference";
+        common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
@@ -145,24 +129,4 @@ public class Preference extends PreferenceActivity implements
         }
     }
 
-    public static void saveSharedPreferencesToFile(File dst, Context context) {
-        ObjectOutputStream output = null;
-        try {
-            output = new ObjectOutputStream(new FileOutputStream(dst));
-            output.writeObject(PreferenceManager.getDefaultSharedPreferences(context).getAll());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (output != null) {
-                    output.flush();
-                    output.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 } 

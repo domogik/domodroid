@@ -1,6 +1,5 @@
 package activities;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.domogik.domodroid13.R;
@@ -13,17 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import widgets.Entity_Feature;
-
-import android.R.bool;
-import android.R.integer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
@@ -208,7 +202,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             try {
                 json_rinor = Rest_com.connect_jsonobject(urlAccess, login, password, 3000);
             } catch (Exception e) {
-                Tracer.e(mytag, "Error connceting to rinor");
+                Tracer.e(mytag, "Error connecting to rinor");
                 json_rinor = null;
             }
             if (json_rinor == null) {
@@ -443,7 +437,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e1.toString());
                 }
 
-                int j = 2;
+                int numberofroom = db.requestidlastRoom();
+                int j = numberofroom + 1;
                 try {
                     json_FeatureAssociationList.put("status", "OK");
                     json_FeatureAssociationList.put("code", "0");
@@ -499,8 +494,9 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                         JSONObject Widget = new JSONObject();
                         try {
                             Widget.put("place_type", "room");
-                            Widget.put("place_id", list_usage.indexOf(
-                                    json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id")) + 2); //id_rooms);
+                            //#85 here, place_id was false.
+                            Widget.put("place_id", numberofroom + list_usage.indexOf(
+                                    json_FeatureList.getJSONArray("feature").getJSONObject(i).getJSONObject("device").getString("device_usage_id")) + 1); //id_rooms);
                             Widget.put("device_feature_id", json_FeatureList.getJSONArray("feature").getJSONObject(i).getString("id"));
                             Widget.put("id", 50 + i);
                         } catch (JSONException e) {
@@ -524,19 +520,14 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                 } // for loop on feature list...
 
-                //TODO load existing room from prefeditor(room) and grab rooms as JSONArray
-                //The put method replace value by new one so loading previous version will
-                //avoid lost of user organization
-                //rooms.put(prefEditor.getString("ROOM_LIST");
-
                 //Prepare list of rooms, and list of usable features
                 try {
-                    json_RoomList.put("room", rooms);
+                    json_RoomList.putOpt("room", rooms);
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
                 try {
-                    json_FeatureAssociationList.put("feature_association", ListFeature);
+                    json_FeatureAssociationList.putOpt("feature_association", ListFeature);
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
@@ -617,14 +608,19 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     map_area.put("description", "");
                     map_area.put("id", "1");
                     //todo #75 reorder for the moment it his done by name
-                    if (device_sync_order.equals("device_name")) {
-                        map_area.put("name", "Device Name");
-                    } else if (device_sync_order.equals("device_type")) {
-                        map_area.put("name", "Device Type");
-                    } else if (device_sync_order.equals("plugin")) {
-                        map_area.put("name", "Plugin");
-                    } else {
-                        map_area.put("name", "Usage");
+                    switch (device_sync_order) {
+                        case "device_name":
+                            map_area.put("name", "Device Name");
+                            break;
+                        case "device_type":
+                            map_area.put("name", "Device Type");
+                            break;
+                        case "plugin":
+                            map_area.put("name", "Plugin");
+                            break;
+                        default:
+                            map_area.put("name", "Usage");
+                            break;
                     }
                     list.put(map_area);
                 } catch (JSONException e1) {
@@ -661,7 +657,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e1.toString());
                 }
 
-                int j = 2;
+                int numberofroom = db.requestidlastRoom();
+                int j = numberofroom + 1;
                 int k = 50;
                 try {
                     json_FeatureAssociationList.put("status", "OK");
@@ -696,14 +693,21 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     for (int y = 0; y < list_sensors; y++) {
                         try {
                             //todo #75 reorder for the moment it his done by name
-                            if (device_sync_order.equals("device_name")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
-                            } else if (device_sync_order.equals("device_type")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
-                            } else if (device_sync_order.equals("plugin")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("client_id");
-                            } else {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
+                            switch (device_sync_order) {
+                                case "device_name":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
+                                case "device_type":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
+                                    break;
+                                case "plugin":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("client_id");
+                                    usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
+                                    usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
+                                    break;
+                                default:
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
                             }
                         } catch (Exception e) {
                             usage = null;
@@ -750,7 +754,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             JSONObject Widget = new JSONObject();
                             try {
                                 Widget.put("place_type", "room");
-                                Widget.put("place_id", list_usage.indexOf(usage) + 2); //id_rooms);
+                                //#85 here place_id wass false
+                                Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
                                 Widget.put("id", k);
                             } catch (JSONException e1) {
@@ -861,14 +866,21 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     for (int y = 0; y < list_commands; y++) {
                         try {
                             //todo #75 reorder for the moment it his done by name
-                            if (device_sync_order.equals("device_name")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
-                            } else if (device_sync_order.equals("device_type")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
-                            } else if (device_sync_order.equals("plugin")) {
-                                usage = json_FeatureList1.getJSONObject(i).getString("client_id");
-                            } else {
-                                usage = json_FeatureList1.getJSONObject(i).getString("name");
+                            switch (device_sync_order) {
+                                case "device_name":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
+                                case "device_type":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("device_type_id");
+                                    break;
+                                case "plugin":
+                                    usage = json_FeatureList1.getJSONObject(i).getString("client_id");
+                                    usage = usage.substring(usage.indexOf("-") + 1, usage.indexOf("."));
+                                    usage = usage.substring(0, 1).toUpperCase() + usage.substring(1).toLowerCase();
+                                    break;
+                                default:
+                                    usage = json_FeatureList1.getJSONObject(i).getString("name");
+                                    break;
                             }
                         } catch (Exception e) {
                             usage = null;
@@ -918,9 +930,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                             int tempid = 0;
                             try {
                                 tempid = Integer.parseInt(json_Commands.getJSONObject(listcommand.getString(y)).getString("id"));
-                            } catch (NumberFormatException e1) {
-                                Tracer.e(mytag, e1.toString());
-                            } catch (JSONException e1) {
+                            } catch (NumberFormatException | JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
                             tempid = tempid + 50000;
@@ -930,13 +940,13 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.e(mytag, e1.toString());
                             }
                             try {
-                                Widget.put("place_id", list_usage.indexOf(usage) + 2);
+                                //#85 here place_id was false
+                                Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1);
                                 Widget.put("device_feature_id", tempid);
                                 Widget.put("id", k);
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            ;
                             k++;
                             String data_type = null;
                             try {
@@ -1127,6 +1137,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 try {
                     db.insertFeature(json_FeatureList);
                     //No need of db request method as feature only comes from rest
+                    // in fact the best way for feature is to rename or change description directly in domogik.
                     prefEditor.putString("FEATURE_LIST", json_FeatureList.toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());

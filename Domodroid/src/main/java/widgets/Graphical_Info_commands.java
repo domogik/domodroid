@@ -17,88 +17,53 @@
  */
 package widgets;
 
-import java.lang.Thread.State;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import activities.Gradients_Manager;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
-import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import rinor.CallUrl;
-import rinor.Rest_com;
-
-import database.DmdContentProvider;
-import database.JSONParser;
-import database.WidgetUpdate;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.FeatureInfo;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Process;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
-import android.text.Html;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.TextView.OnEditorActionListener;
 
 @SuppressWarnings("Convert2Diamond")
 public class Graphical_Info_commands extends Basic_Graphical_widget {
 
 
-    LinearLayout featurePan2;
+    private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private EditText value1 = null;
     private Message msg;
     private static String mytag;
     private String url = null;
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    private static FrameLayout myself = null;
     private Entity_client session = null;
     private Boolean realtime = false;
     private String login;
@@ -109,21 +74,17 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private JSONObject jparam;
     private String command_id = null;
     private String command_type[] = null;
-    private String command_data_type[] = null;
     private List<EditText> allEds = null;
-    int number_of_command_parameters;
+    private int number_of_command_parameters;
 
     private final Entity_Feature feature;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
 
     public Graphical_Info_commands(tracerengine Trac,
                                    final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                   final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                                   final Entity_Feature feature, Handler handler) {
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -133,8 +94,8 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     public Graphical_Info_commands(tracerengine Trac,
                                    final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                   final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                                   final Entity_Map feature_map, Handler handler) {
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -142,10 +103,10 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         onCreate();
     }
 
-    public void onCreate() {
-        this.parameters = feature.getParameters();
-        this.dev_id = feature.getDevId();
-        this.state_key = feature.getState_key();
+    private void onCreate() {
+        String parameters = feature.getParameters();
+        int dev_id = feature.getDevId();
+        String state_key = feature.getState_key();
         String value_type = feature.getValue_type();
         String stateS;
         try {
@@ -175,7 +136,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             number_of_command_parameters = jparam.getInt("number_of_command_parameters");
             command_id = jparam.getString("command_id");
             command_type = new String[number_of_command_parameters];
-            command_data_type = new String[number_of_command_parameters];
+            String[] command_data_type = new String[number_of_command_parameters];
             EditText ed;
             TextView tv_edittext;
             allEds = new ArrayList<>();
@@ -239,7 +200,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     }
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

@@ -20,11 +20,13 @@ package widgets;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import misc.tracerengine;
 import mq.Main;
 
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -38,8 +40,9 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
     private static final FrameLayout container = null;
     private final String name_butler;
 
-    public Graphical_butler(tracerengine Trac, Activity context, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type) {
-        super(context, Trac, id, name, state_key, usage, widgetSize, place_id, place_type, mytag, container);
+    public Graphical_butler(tracerengine Trac, Activity context, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type,
+                            SharedPreferences params, Handler handler) {
+        super(params, context, Trac, id, name, state_key, usage, widgetSize, place_id, place_type, mytag, container, handler);
         this.context = context;
         this.Tracer = Trac;
         this.name_butler = name;

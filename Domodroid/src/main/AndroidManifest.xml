@@ -1,5 +1,5 @@
 <manifest package="org.domogik.domodroid13"
-    android:versionCode="14"
+    android:versionCode="16"
     android:versionName="1.4_android_studio"
     xmlns:android="http://schemas.android.com/apk/res/android">
     

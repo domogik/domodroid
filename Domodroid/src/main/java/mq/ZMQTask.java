@@ -10,7 +10,7 @@ import misc.tracerengine;
 
 import org.zeromq.ZMQ;
 
-public class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
+class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
 	private tracerengine Tracer = null;
 
 	private ZMQService theContext = null;

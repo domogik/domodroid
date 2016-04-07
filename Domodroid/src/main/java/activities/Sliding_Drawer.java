@@ -60,9 +60,9 @@ public class Sliding_Drawer extends LinearLayout {
 
     private OnPanelListener panelListener;
 
-    public static final int TOP = 0;
-    public static final int BOTTOM = 1;
-    public static final int LEFT = 2;
+    private static final int TOP = 0;
+    private static final int BOTTOM = 1;
+    private static final int LEFT = 2;
     public static final int RIGHT = 3;
 
     private enum State {
@@ -201,7 +201,7 @@ public class Sliding_Drawer extends LinearLayout {
         return v;
     }
 
-    final OnTouchListener touchListener = new OnTouchListener() {
+    private final OnTouchListener touchListener = new OnTouchListener() {
         int initX;
         int initY;
         boolean setInitialPosition;
@@ -239,7 +239,7 @@ public class Sliding_Drawer extends LinearLayout {
         }
     };
 
-    final Runnable startAnimation = new Runnable() {
+    private final Runnable startAnimation = new Runnable() {
         public void run() {
 
             TranslateAnimation animation;

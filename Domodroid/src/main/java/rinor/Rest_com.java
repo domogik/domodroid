@@ -44,7 +44,6 @@ import misc.tracerengine;
 
 public class Rest_com {
     private static final String mytag = "Rest_com";
-    private SharedPreferences params;
 
     private static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -102,9 +101,10 @@ public class Rest_com {
             }
         } catch (HttpHostConnectException | ClientProtocolException e) {
             Tracer.e(mytag, e.toString());
-        } catch (IOException | JSONException e) {
+        } catch (Exception e){
             Tracer.e(mytag, e.toString());
         }
+
         return json;
     }
 
@@ -139,15 +139,13 @@ public class Rest_com {
 
         } catch (HttpHostConnectException e) {
             //e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return json;
     }
 
     public void setParams(SharedPreferences params) {
-        this.params = params;
+        SharedPreferences params1 = params;
     }
 }

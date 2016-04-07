@@ -17,55 +17,35 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import rinor.CallUrl;
-import rinor.Rest_com;
-import database.DmdContentProvider;
-import database.JSONParser;
 import database.WidgetUpdate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +57,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private String address;
     private String state_progress;
     private final String url;
-    private String usage;
-    private Handler handler;
     private String value0;
     private String value1;
     private String type;
@@ -99,9 +77,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private JSONObject jparam;
     private String command_id = null;
     private String command_type = null;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private Entity_client session = null;
     private Boolean realtime = false;
     private final int session_type;
@@ -110,8 +85,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
     public Graphical_Binary_New(tracerengine Trac,
                                 final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                                final Entity_Feature feature, Handler handler) {
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -121,8 +96,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
     public Graphical_Binary_New(tracerengine Trac,
                                 final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                                final Entity_Map feature_map, Handler handler) {
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -133,10 +108,10 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private void onCreate() {
         myself = this;
         this.address = feature.getAddress();
-        this.usage = feature.getIcon_name();
-        this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
+        String usage = feature.getIcon_name();
+        String state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -240,7 +215,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         super.LL_featurePan.addView(OFF);
         super.LL_infoPan.addView(state);
 
-        handler = new Handler() {
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (activate) {

@@ -1,4 +1,4 @@
-package widgets;
+package Entity;
 
 public class Entity_Icon {
     private String name;

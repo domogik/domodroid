@@ -42,15 +42,15 @@ public class Main extends Activity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
     // Config
-    public SharedPreferences SP;
+    private SharedPreferences SP;
     // TTS
     private final int CHECK_CODE = 0x1;     // TODO : rename ?
     private Speaker speaker;
 
     // Chat history
-    ListView chatHistory;
-    ArrayList<String> chatHistoryList;
-    ArrayAdapter<String> arrayAdapter;
+    private ListView chatHistory;
+    private ArrayList<String> chatHistoryList;
+    private ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

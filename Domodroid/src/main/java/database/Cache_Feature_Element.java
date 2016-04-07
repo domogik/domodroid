@@ -1,10 +1,8 @@
 package database;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import widgets.Entity_client;
+import Entity.Entity_client;
 
 
 public class Cache_Feature_Element {
@@ -44,7 +42,6 @@ public class Cache_Feature_Element {
             new_client.setClientId(clients_list.size() - 1);    //set index into caller structure
             return;
         }
-        return;        //Wrong ID/Skey
     }
 
     public void remove_client(Entity_client client) {
@@ -61,7 +58,6 @@ public class Cache_Feature_Element {
                 }
             }
         }
-        return;
     }
 
     public ArrayList<Entity_client> clone_clients_list() {

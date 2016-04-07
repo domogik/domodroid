@@ -1,9 +1,6 @@
 package database;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,20 +9,15 @@ import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
 import rinor.Stats_Com;
-import widgets.Entity_Feature;
-import widgets.Entity_Feature_Association;
-import widgets.Entity_Map;
-import widgets.Entity_client;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 
-import org.domogik.domodroid13.R;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -43,16 +35,16 @@ public class WidgetUpdate {
     private boolean activated;
     private Activity context;
     private DomodroidDB domodb;
-    public final String mytag = "WidgetUpdate";
+    private final String mytag = "WidgetUpdate";
     private TimerTask doAsynchronousTask;
     private tracerengine Tracer = null;
 
-    public ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
+    private ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
     private Boolean locked = false;
     private Boolean timer_flag = false;
     public Boolean ready = false;
     private Handler mapView = null;
-    public Events_manager eventsManager = null;
+    private Events_manager eventsManager = null;
     private static Handler myselfHandler = null;
     private int last_ticket = -1;
     private int last_position = -1;
@@ -148,7 +140,7 @@ public class WidgetUpdate {
         new UpdateThread().execute();    //And force an immediate refresh
         this.callback_counts = 0;    //To force a refresh
         /*
-		Boolean said = false;
+        Boolean said = false;
 		int max_time_for_sync = 15 * 1000;		// On initial cache initialization, return an error 
 												// if cannot connect in 15 seconds
 												// Probably wrong URL ?
@@ -470,7 +462,7 @@ public class WidgetUpdate {
     /*
      * This method should only be called once, to create and arm a cyclic timer
      */
-    public void Timer() {
+    private void Timer() {
         timer = new Timer();
 
 
@@ -556,7 +548,7 @@ public class WidgetUpdate {
         }
     }
 
-    public class waitingThread extends AsyncTask<Void, Integer, Void> {
+    private class waitingThread extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
             Boolean said = false;
@@ -591,7 +583,7 @@ public class WidgetUpdate {
 
     }
 
-    public class UpdateThread extends AsyncTask<Void, Integer, Void> {
+    private class UpdateThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -765,7 +757,7 @@ public class WidgetUpdate {
      * Update device value in cache, and eventually notify clients about change
      * This sequence must be protected against concurrent access
      */
-    public Boolean update_cache_device(int dev_id, String skey, String Val) {
+    private Boolean update_cache_device(int dev_id, String skey, String Val) {
         if (cache == null)
             return false;
 
@@ -966,6 +958,14 @@ public class WidgetUpdate {
         } catch (Exception e) {
             Tracer.d(mytag, e.toString());
         }
+    }
+
+    /*
+     * This one allow Widgets to permut (for moving up or down)
+     */
+
+    public void move_one_feature_association(int id, int place_id, String place_type,String order) {
+        domodb.move_one_feature_association(id,place_id,place_type,order);
     }
 
     /*

@@ -1,17 +1,17 @@
 package activities;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import org.domogik.domodroid13.R;
 
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Icon;
-import widgets.Entity_Room;
+import Abstract.common_method;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Icon;
+import Entity.Entity_Room;
 import misc.List_Icon_Adapter;
 
 import database.Cache_management;
@@ -24,7 +24,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Entity;
 import android.content.SharedPreferences;
 
 import misc.tracerengine;
@@ -37,9 +36,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.ListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Spinner;
 
 class Dialog_House extends Dialog implements OnClickListener {
@@ -58,11 +54,12 @@ class Dialog_House extends Dialog implements OnClickListener {
     private String icon = null;
     private WidgetUpdate widgetUpdate;
     private Dialog dialog_feature;
-    private DomodroidDB domodb;
+    private final DomodroidDB domodb;
     private Entity_Area[] listArea;
     private Entity_Room[] listRoom;
     private Entity_Feature[] listFeature;
     private final String mytag;
+    private final SharedPreferences.Editor prefEditor;
 
     public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
         super(context);
@@ -72,6 +69,9 @@ class Dialog_House extends Dialog implements OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
         mytag = "Dialog_House";
+        prefEditor = this.params.edit();
+        domodb = new DomodroidDB(Tracer, context, params);
+
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
         cancelButton.setTag("house_cancel");
         cancelButton.setOnClickListener(this);
@@ -269,6 +269,9 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("description", "");
                 values.put("id", (lastid + 1));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
+                //#76
+                prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 loadSpinnerData();
             }
         });
@@ -296,6 +299,9 @@ class Dialog_House extends Dialog implements OnClickListener {
                 int lastid = domodb.requestlastidArea();
                 values.put("id", lastid + 1);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
+                //#76
+                prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 loadSpinnerData();
             }
         });
@@ -335,6 +341,9 @@ class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 //values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
+                //#76
+                prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, context);
                 loadSpinnerData();
@@ -377,6 +386,9 @@ class Dialog_House extends Dialog implements OnClickListener {
                 }
                 values.put("reference", reference);
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                //#76
+                prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 loadSpinnerData();
             }
         });
@@ -446,7 +458,7 @@ class Dialog_House extends Dialog implements OnClickListener {
                 //Ask user what icon i want to modify area, room, widget
                 //in function display
                 //display list of all icons
-                //and change the tag for onclic() method
+                //and change the tag for onclick() method
                 break;
             case "add_icon_area": {
                 alert_Icon.show();
@@ -474,8 +486,6 @@ class Dialog_House extends Dialog implements OnClickListener {
     }
 
     private void loadSpinnerData() {
-        domodb = new DomodroidDB(Tracer, context, params);
-
         listArea = domodb.requestArea();
         listRoom = domodb.requestallRoom();
         listFeature = domodb.requestFeatures();
@@ -555,7 +565,6 @@ class Dialog_House extends Dialog implements OnClickListener {
                 new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list_icon);
         icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_icon.setAdapter(icon_adapter);
-
     }
 }
 

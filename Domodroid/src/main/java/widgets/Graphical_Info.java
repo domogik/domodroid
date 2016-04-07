@@ -17,10 +17,10 @@
  */
 package widgets;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.jar.JarEntry;
-
+import Abstract.display_sensor_info;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
@@ -40,7 +40,6 @@ import android.os.Message;
 
 import misc.tracerengine;
 
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -56,32 +55,36 @@ import android.widget.TextView;
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
 
-    LinearLayout featurePan2;
+    private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private TextView value;
+    private TextView value1;
     private Graphical_Info_View canvas;
-    private Animation animation;
     private Message msg;
     private static String mytag;
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    private static FrameLayout myself = null;
     public Boolean with_graph = true;
     private Entity_client session = null;
     private Boolean realtime = false;
     private final Entity_Feature feature;
     private String state_key;
     private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
     private String url = null;
     private int dpiClassification;
-    private int update;
+    private final int update;
+    private TextView state_key_view;
+    private String stateS;
+    private String test_unite;
+    private Typeface typefaceweather;
+    private Typeface typefaceawesome;
 
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
-                          final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                          final Entity_Feature feature, Handler handler) {
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -92,8 +95,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
-                          final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                          final Entity_Map feature_map, Handler handler) {
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -104,9 +107,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     private void onCreate() {
         this.parameters = feature.getParameters();
-        this.dev_id = feature.getDevId();
+        int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
-        String stateS;
 
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -129,7 +131,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         float api_version = params.getFloat("API_VERSION", 0);
 
         //state key
-        TextView state_key_view = new TextView(context);
+        state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -137,8 +139,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         value = new TextView(context);
         value.setTextSize(28);
         value.setTextColor(Color.BLACK);
-        animation = new AlphaAnimation(0.0f, 1.0f);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         if (with_graph) {
 
@@ -192,7 +196,15 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         }
 
         LL_featurePan.addView(value);
-        LL_infoPan.addView(state_key_view);
+
+        test_unite = "";
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            test_unite = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
 
         Handler handler = new Handler() {
             @Override
@@ -205,80 +217,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    String test_unite = "";
-                    try {
-                        float formatedValue = 0;
-                        if (loc_Value != null) {
-                            formatedValue = Round(Float.parseFloat(loc_Value), 2);
-                            Tracer.v(mytag, " Round the value" + loc_Value + " to " + formatedValue);
-                        }
-                        try {
-                            //Basilic add, number feature has a unit parameter
-                            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                            test_unite = jparam.getString("unit");
-                            //#30 add Scale value if too big for byte only
-                            switch (test_unite) {
-                                case "b":
-                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
-                                    break;
-                                case "ko":
-                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
-                                    break;
-                                default:
-                                    value.setText(formatedValue + " " + test_unite);
-                                    break;
-                            }
-                        } catch (JSONException e) {
-                            if (state_key.equalsIgnoreCase("temperature"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("pressure"))
-                                value.setText(formatedValue + " hPa");
-                            else if (state_key.equalsIgnoreCase("humidity"))
-                                value.setText(formatedValue + " %");
-                            else if (state_key.equalsIgnoreCase("percent"))
-                                value.setText(formatedValue + " %");
-                            else if (state_key.equalsIgnoreCase("visibility"))
-                                value.setText(formatedValue + " km");
-                            else if (state_key.equalsIgnoreCase("chill"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("speed"))
-                                value.setText(formatedValue + " km/h");
-                            else if (state_key.equalsIgnoreCase("drewpoint"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
-                                //Add try catch to avoid other case that make #1794
-                                try {
-                                    //use xml and weather fonts here
-                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                    value.setTypeface(typeface, Typeface.NORMAL);
-                                    value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
-                                } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + loc_Value);
-                                    value.setText(loc_Value);
-                                }
-                            } else value.setText(loc_Value);
-                        }
-                        value.setAnimation(animation);
-                    } catch (Exception e) {
-                        // It's probably a String that could'nt be converted to a float
-                        Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
-                        try {
-                            Tracer.d(mytag, "Try to get value translate from R.STRING");
-                            value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
-                        } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + loc_Value);
-                            value.setText(loc_Value);
-                            if (state_key.equalsIgnoreCase("current_sunset")) {
-                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                value.setTypeface(typeface, Typeface.NORMAL);
-                                value.setText(Html.fromHtml("&#xf052;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
-                            } else if (state_key.equalsIgnoreCase("current_sunrise")) {
-                                Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                value.setTypeface(typeface, Typeface.NORMAL);
-                                value.setText(Html.fromHtml("&#xf051;" + " " + loc_Value), TextView.BufferType.SPANNABLE);
-                            }
-                        }
-                    }
+
+                    display_sensor_info.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
                         if (Float.parseFloat(loc_Value) >= 60) {
@@ -292,8 +233,11 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             change_this_icon(0);
                         }
                     } else {
-                        //To have the icon colored as it has no state
-                        change_this_icon(2);
+                        // #93
+                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
+                            change_this_icon(0);
+                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                        } else change_this_icon(2);
                     }
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
@@ -315,7 +259,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             }
 
         };
-
+        LL_infoPan.addView(state_key_view);
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -377,21 +321,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         if (visibility == View.VISIBLE) {
 
         }
-    }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    public static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
     }
 
 }

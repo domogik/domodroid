@@ -24,7 +24,6 @@
 	<View
 	    android:layout_width="fill_parent"
 	    android:layout_height="1.6dp"
-	    android:id="@+id/separator1"
 	    android:visibility="visible"
 	    android:background="@android:color/black"/>
 	
@@ -68,7 +67,6 @@
             <View
 			    android:layout_width="fill_parent"
 			    android:layout_height="1.6dp"
-			    android:id="@+id/separator2"
 			    android:visibility="visible"
 			    android:background="@android:color/black"/>
             
@@ -81,7 +79,7 @@
             	
                 <!--  sens title -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum2"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -120,13 +118,12 @@
 	            <View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1.6dp"
-				    android:id="@+id/separatorx3"
 				    android:visibility="visible"
 				    android:background="@android:color/black"/>
 	            
 	            <!--  Cumulated Stats packets -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum3"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -171,7 +168,7 @@
             	
             	<!--  Cumulated Stats Bytes -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum4"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -216,13 +213,12 @@
             	<View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1.6dp"
-				    android:id="@+id/separatorx3"
 				    android:visibility="visible"
 				    android:background="@android:color/black"/>
             	
             	<!--  Cumulated Events packets -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum5"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -267,7 +263,7 @@
             	
             	<!--  Cumulated Events Bytes -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum6"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -310,7 +306,6 @@
             	<View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1.6dp"
-				    android:id="@+id/separatorx3"
 				    android:visibility="visible"
 				    android:background="@android:color/black"/>
             </LinearLayout>
@@ -324,7 +319,6 @@
       	<View
 	    android:layout_width="1.6dp"
 	    android:layout_height="fill_parent"
-	    android:id="@+id/separator2"
 	    android:visibility="visible"
 	    android:background="@android:color/black"/>
       	<!--  Periodic -->
@@ -361,19 +355,18 @@
             <View
 			    android:layout_width="fill_parent"
 			    android:layout_height="1.6dp"
-			    android:id="@+id/separator1"
 			    android:visibility="visible"
 			    android:background="@android:color/black"/>
             <!-- Bloc 'periodic'  -->
             <LinearLayout
-			    android:id="@+id/layout_period1"
+			    android:id="@+id/layout_period2"
 		        android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="vertical" >
             	
                 <!--  sens title -->
                 <LinearLayout
-				    android:id="@+id/layout_period1"
+				    android:id="@+id/layout_period3"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -412,13 +405,12 @@
 	            <View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1.6dp"
-				    android:id="@+id/separatorx4"
 				    android:visibility="visible"
 				    android:background="@android:color/black"/>
 	            
 	            <!--  Periodic Stats packets -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum7"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -463,7 +455,7 @@
             	
             	<!--  periodic Stats Bytes -->
                 <LinearLayout
-				    android:id="@+id/layout_cum1"
+				    android:id="@+id/layout_cum8"
 			        android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:orientation="horizontal" >
@@ -508,7 +500,6 @@
             	<View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1.6dp"
-				    android:id="@+id/separatorx3"
 				    android:visibility="visible"
 				    android:background="@android:color/black"/>
             	
@@ -603,7 +594,6 @@
             	<View
 				    android:layout_width="fill_parent"
 				    android:layout_height="1.6dp"
-				    android:id="@+id/separatorx3"
 				    android:visibility="visible"
 				    android:background="@android:color/black"/>
             </LinearLayout>

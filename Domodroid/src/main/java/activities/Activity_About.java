@@ -27,12 +27,10 @@ import misc.tracerengine;
 
 import org.domogik.domodroid13.R;
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-//import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
 import android.view.View;

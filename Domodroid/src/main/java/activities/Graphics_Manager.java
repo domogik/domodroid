@@ -20,7 +20,6 @@ package activities;
 
 import org.domogik.domodroid13.*;
 
-import android.app.Activity;
 import android.content.Context;
 
 
@@ -57,6 +56,8 @@ public class Graphics_Manager {
                         return R.drawable.usage_light_off;
                     case "mirror":
                         return R.drawable.usage_mirror_off;
+                    case "motion":
+                        return R.drawable.usage_motion_off;
                     case "music":
                         return R.drawable.usage_music_off;
                     case "nanoztag":
@@ -275,6 +276,8 @@ public class Graphics_Manager {
                         return R.drawable.usage_light_on;
                     case "mirror":
                         return R.drawable.usage_mirror_on;
+                    case "motion":
+                        return R.drawable.usage_motion_on;
                     case "music":
                         return R.drawable.usage_music_on;
                     case "nanoztag":
@@ -513,6 +516,7 @@ public class Graphics_Manager {
 			 * air_conditionning
 			 * heating
 			 * mirror
+			 * motion
 			 * music
 			 * nanoztag
 			 * portal
@@ -612,20 +616,22 @@ public class Graphics_Manager {
         name = name.replace(" ", "_");
         name = name.replace("-", "_");
         name = name.replace(":", "_");
+        name = name.replace("(", "");
+        name = name.replace(")", "");
         //To get a drawable R.Drawable
         //context.getResources().getIdentifier(name, "drawable", context.getPackageName());
         //To get a string from R.String
         return context.getResources().getIdentifier(name, "string", context.getPackageName());
     }
 
-    public static String adapt_usage(String usage) {
+    private static String adapt_usage(String usage) {
         //todo adapt for 0.4
         //information are in json device_types of each plugin
         //So a lot of things to look at
         //BLUEZ "available"
         if (usage.toLowerCase().equals("available") || usage.contains("bluez"))
             usage = "bluetooth";
-        //CID "callerid"
+        //CID "callerid", "name", "blacklisted", "blacklist"
         if (usage.contains("callerid"))
             usage = "telephony";
         //DAIKCODE "set_power", "set_setpoint", "set_mode", "set_vertical_swing", "set_horizontal_swing",
@@ -639,6 +645,7 @@ public class Graphics_Manager {
                 || usage.toLowerCase().equals("get_free_space") || usage.toLowerCase().equals("get_used_space"))
             usage = "server";
         //GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
+        // "set_rgb_color", "send_text",
         //GEOLOC "position_degrees"
         //IPX800 "state", "input", "count"
         //IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
@@ -651,7 +658,9 @@ public class Graphics_Manager {
             usage = "mirror";
         //MQTT "sensor_temperature", "sensor_humidity", "sensor_battery", "sensor_luminosity","sensor_pressure"
         //"sensor_power", "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed"
-        //"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current",
+        //"sensor_rainfall", "sensor_outflow", "sensor_voltage", "sensor_current", "command_mqtt_onoff",
+        // "command_mqtt_string", "sensor_mqtt_temperature", "sensor_mqtt_humidity", "sensor_mqtt_number",
+        // "sensor_mqtt_onoff", "sensor_mqtt_openclose", "sensor_mqtt_string"
         if (usage.toLowerCase().equals("sensor_battery"))
             usage = "battery";
         if (usage.contains("power") || usage.contains("energy") || usage.contains("voltage") || usage.toLowerCase().equals("sensor_current"))
@@ -669,6 +678,9 @@ public class Graphics_Manager {
             usage = "temperature";
         //ONEWIRED "1-wire_cmd_output, "1-wire temperature", "1-wire humidity", "1-wire luminosity", "1-wire pressure",
         // "1-wire voltage", "1-wire counter", "1-wire counter diff", "1-wire input", "1-wire output"
+        // "onewire output switch cmd", "onewire temperature", "onewire humidity", "onewire luminosity", "onewire pressure",
+        // "onewire voltage", "onewire counter", "onewire counter diff", "onewire input switch", "onewire input openclose",
+        // "onewire output switch",
         //PING "ping"
         if (usage.contains("ping"))
             usage = "computer";
@@ -699,7 +711,7 @@ public class Graphics_Manager {
                 || usage.toLowerCase().equals("bbrhpjw") || usage.toLowerCase().equals("bbrhcjr") || usage.toLowerCase().equals("bbrhpjr")
                 )
             usage = "electricity";
-        //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close"
+        //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close", "smoke"
         if (usage.toLowerCase().equals("battery"))
             usage = "battery";
         if (usage.contains("lighting"))
@@ -709,6 +721,8 @@ public class Graphics_Manager {
         //VDEVICE "set_virtual_number", "set_virtual_binary", "set_virtual_string","set_virtual_temperature",
         // "set_virtual_humidity", "set_virtual_percent", "set_virtual_switch", "set_virtual_openclose",
         // "set_virtual_startstop", sensor are same as commands that's easier for this part.
+        if (usage.contains("video"))
+            usage = "security_camera";
         //VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
         if (usage.toLowerCase().equals("temp"))
             usage = "temperature";
@@ -729,9 +743,25 @@ public class Graphics_Manager {
         //WOL "wol"
         if (usage.toLowerCase().equals("wol"))
             usage = "computer";
-        //ZWAVE "ctrl_status", "switch_state", "switch_state", "energy", "power", "switch_state", "energy", "energy_k", "power",
-        //"opening_sensor", "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c", "battery_level", "humidity", "relative_humidity"
-        //"level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
+        //Yi
+        if (usage.toLowerCase().equals("yi"))
+            usage = "security_camera";
+        if (usage.toLowerCase().contains("motion"))
+            usage = "motion";
+        // ZWAVE "ctrl_status", "node_status", "power_failure", "switch_state", "tamper_sensor"
+        // "energy", "power", "switch_state", "energy", "energy_k", "power", "opening_sensor",
+        // "power_applied", "battery_level", "low_battery", "tamper_event", "temperature_c",
+        // "temperature-k", "temperature_f", "battery_level", "humidity", "relative_humidity"
+        // "level", "motion_sensor_level", "luminance", "sensor_alarm", "thermostat_setpoint"
+        // "binary_sensor", "motion_sensor_binary", "status", "power_m", "power_k", "energy_m"
+        // "energy_previous_reading", "energy_previous_reading_m", "energy_previous_reading_k"
+        // "energy_production_k", "instant_energy_production_k", "total_energy_production_k"
+        // "energy_production_today-k", "total_production_time_k", "counter", "indicator_str"
+        // "locked_state", "alarm_str_report", "power_management_alarm", "smoke_alarm",
+        // "carbonmonoxide_alarm", "carbondioxide_alarm", "heat_alarm", "flood_alarm"
+        // "fan_mode", "fan_state", "thermostat_mode", "thermostat_operating_state", "thermostat-setpoint-c"
+        // "thermostat-setpoint-f", "thermostat-setpoint-k", "toggle_switch_binary", "increase",
+        // "decrease", "bright", "dim",
         if (usage.toLowerCase().equals("battery_level") || usage.toLowerCase().equals("battery-level") || usage.toLowerCase().equals("low_battery") || usage.toLowerCase().equals("low-battery"))
             usage = "battery";
         if (usage.toLowerCase().contains("thermostat"))

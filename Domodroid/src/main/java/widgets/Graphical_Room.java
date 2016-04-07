@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import Abstract.common_method;
 import database.Cache_management;
 import database.DmdContentProvider;
 
@@ -31,11 +32,15 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 
+import database.DomodroidDB;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
@@ -45,22 +50,30 @@ import android.widget.ListView;
 public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickListener {
 
     public final FrameLayout container = null;
-    public FrameLayout myself = null;
+    private FrameLayout myself = null;
     private final Context context;
     private final int id_room;
     private tracerengine Tracer = null;
     private String mytag = "Graphical_Room";
     private String icon;
     private final Activity Activity;
+    private final Handler widgetHandler;
+    private final DomodroidDB domodb;
+    private final SharedPreferences.Editor prefEditor;
 
-    public Graphical_Room(tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
+    public Graphical_Room(SharedPreferences params,tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
         this.myself = this;
         this.Tracer = Trac;
         this.id_room = id;
         this.context = context;
         this.icon = icon;
+        SharedPreferences params1 = params;
         this.Activity = (android.app.Activity) context;
+        this.widgetHandler = handler;
+        domodb = new DomodroidDB(this.Tracer, this.Activity, params);
+        prefEditor = params1.edit();
+
         setOnLongClickListener(this);
         mytag = "Graphical_Room(" + id_room + ")";
     }
@@ -99,14 +112,19 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().remove_one_things(id_room, "room");
                     Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_room, "room");
                     Tracer.get_engine().remove_one_icon(id_room, "room");
+                    // #76
+                    prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+                    prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+                    prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
+                    //Refresh the view
+                    Bundle b = new Bundle();
+                    b.putBoolean("refresh", true);
+                    Message msg = new Message();
+                    msg.setData(b);
+                    widgetHandler.sendMessage(msg);
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -126,6 +144,9 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id_room, result, "room");
+                    // #76
+                    prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     TV_name.setText(result);
                 }
             });
@@ -161,7 +182,10 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             reference = id_room;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
-                            change_this_icon(0, icon);
+                            // #76
+                            prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                            change_this_icon(icon);
                             dialog.cancel();
                         }
                     }

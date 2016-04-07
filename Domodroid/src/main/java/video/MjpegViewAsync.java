@@ -132,7 +132,7 @@ public class MjpegViewAsync extends SurfaceView implements SurfaceHolder.Callbac
         dispHeight = getHeight();
     }
 
-    public void startPlayback() {
+    private void startPlayback() {
         if (mIn != null) {
             mRun = true;
             thread.execute();

@@ -35,6 +35,8 @@
     <string name="help_Text3">Domogik Project : http://www.domogik.org/</string>
     <string name="help_Text4">Domodroid documentation is available at:\nhttp://domodroid.readthedocs.org/</string>
     <string name="help_Text5">Contacts by mailing list :\ndomogik-developers@lists.labs.libre-entreprise.org</string>
+    <string name="help_Text6">Follow-us on twitter :\nhttps://twitter.com/domogik</string>
+    <string name="help_Text7">https://twitter.com/newdomodroid</string>
 
     <string name="splash_title">Welcome to Domodroid 1.3 !</string>
     <string name="home_splash">This new version of Domodroid contains lot of new features and improvements that have not been tested on all kind of Android devices. If anything goes wrong, you can contact dev at the following address: http://wiki.domogik.org/Contact+and+support .</string>
@@ -388,10 +390,14 @@
     <string name="cloudy">Cloudy</string>
     <string name="info27">Mostly cloudy</string>
     <string name="mostly_cloudy">Mostly cloudy</string>
+    <string name="mostly_cloudy_night">mostly cloudy (night)</string>
     <string name="info28">Mostly cloudy</string>
+    <string name="mostly_cloudy_day">mostly cloudy (day)</string>
     <string name="info29">Partly cloudy</string>
+    <string name="partly_cloudy_night">partly cloudy (night)</string>
     <string name="partly_cloudy">Partly cloudy</string>
     <string name="info30">Partly cloudy</string>
+    <string name="partly_cloudy_day">partly cloudy (day)</string>
     <string name="info31">Clear (night)</string>
     <string name="clear_night">Clear (night)</string>
     <string name="info32">Sunny</string>
@@ -429,6 +435,7 @@
     <string name="info3200">Not available</string>
     <string name="not_available">Not available</string>
     <string name="info48">--</string>
+    <string name="rain">Rain</string>
 
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>
@@ -512,7 +519,6 @@
     <string name="osd_command">Osd command</string>
     <string name="send_text">Send text</string>
     <string name="brightness">Brightness</string>
-    <string name="motion">Motion</string>
     <string name="state">State</string>
     <string name="set_state">Set state</string>
     <string name="callerid">Caller id</string>
@@ -658,4 +664,12 @@
     <string name="script_onoff">Script OnOff</string>
     <string name="level_bin">Level Bin</string>
     <string name="switch_on_or_off">Switch On or Off</string>
+    <string name="move_up">Move UP</string>
+    <string name="move_down">Move Down</string>
+    <string name="virtual_motion">Virtual Motion</string>
+    <string name="motion">Motion</string>
+    <string name="no_motion">No motion</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="virtual_video">Virtual Video</string>
 </resources>

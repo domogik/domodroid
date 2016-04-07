@@ -49,8 +49,9 @@
 	<item>heating</item>
 	<item>light</item>
 	<item>mirror</item>
-	<item>music</item>
-	<item>nanoztag</item>
+	<item>motion</item>
+    <item>music</item>
+    <item>nanoztag</item>
 	<item>portal</item>
 	<item>scene</item>
 	<item>security_camera</item>

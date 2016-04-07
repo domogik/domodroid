@@ -1,7 +1,7 @@
 package database;
 
 import misc.tracerengine;
-import widgets.Entity_Feature;
+import Entity.Entity_Feature;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

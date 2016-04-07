@@ -28,19 +28,16 @@ import java.io.ObjectInputStream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import Abstract.common_method;
 import widgets.Basic_Graphical_zone;
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Room;
-import widgets.Graphical_butler;
+import Entity.Entity_Area;
+import Entity.Entity_Room;
 import misc.changelog;
 import misc.tracerengine;
 import mq.Main;
@@ -50,17 +47,13 @@ import database.WidgetUpdate;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.ProgressDialog;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -80,11 +73,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -170,12 +161,10 @@ public class Activity_Main extends Activity implements OnClickListener {
                                 R.layout.navigation_drawer_item, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
                         LV_My_Navigation_Drawer.setAdapter(adapter_area);
                     }
-                    //TODO comment this before releasing navigation drawer.
                     if (LV_My_Navigation_Drawer.getVisibility() == View.INVISIBLE) {
                         LV_My_Navigation_Drawer.setVisibility(View.VISIBLE);
                     } else {
                         LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
-
                     }
 
                 }
@@ -260,9 +249,8 @@ public class Activity_Main extends Activity implements OnClickListener {
         if (house_listener == null) {
             house_listener = new DialogInterface.OnDismissListener() {
                 public void onDismiss(DialogInterface dialog) {
-                    //TODO Try to redraw after house dialog closed.
+                    //Redraw after house dialog closed.
                     loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
-
                 }
             };
         }
@@ -279,8 +267,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     if (((Dialog_Synchronize) dialog).need_refresh) {
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        Tracer.i("Preference", "Saving pref to file");
-                        Preference.saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), getApplicationContext());
+                        common_method.save_params_to_file(Tracer, SP_prefEditor, mytag, getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();
@@ -451,6 +438,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 dialog_reload.setMessage(getText(R.string.home_reload));
                 dialog_reload.setPositiveButton(getText(R.string.reloadOK), reload_listener);
                 dialog_reload.setNegativeButton(getText(R.string.reloadNO), reload_listener);
+                //todo #94
                 dialog_reload.show();
                 init_done = false;    //A choice is pending : Rest of init has to be completed...
             } else {
@@ -459,6 +447,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                 end_of_init_requested = true;
                 // open server config view
                 Intent helpI = new Intent(Activity_Main.this, Preference.class);
+                //todo #94
                 startActivity(helpI);
             }
         } else {
@@ -581,7 +570,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
     private void end_of_init() {
-        // Finalize screen appearence
+        // Finalize screen appearances
         if (Tracer == null)
             Tracer = Tracer.getInstance(this);
         Tracer.v(mytag, "end_of_init Main Screen..");
@@ -612,12 +601,15 @@ public class Activity_Main extends Activity implements OnClickListener {
             widgetHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
-
                     try {
-                        historyPosition++;
-                        loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-                        Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
-                        history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
+                        if (msg.getData().getBoolean("refresh")) {
+                            refresh();
+                        } else if (!msg.getData().getBoolean("refresh")) {
+                            historyPosition++;
+                            loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
+                            Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
+                            history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
+                        }
                     } catch (Exception e) {
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
                         e.printStackTrace();
@@ -713,8 +705,6 @@ public class Activity_Main extends Activity implements OnClickListener {
             }
             SP_prefEditor.commit();
             LoadSelections();    // to set panel with known values
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -756,11 +746,15 @@ public class Activity_Main extends Activity implements OnClickListener {
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
                         VG_parent.addView(LL_area);    //and areas
                         LL_activ.removeAllViews();
-                        // todo #33 here
-                        // Crash on reload for the moment
-                        //while (!WU_widgetUpdate.ready) {
-                        //Wait the widgetupdate to be ready
-                        //}
+                        // #33 here
+                        // add try catch because on settings reload it crash
+                        try {
+                            while (!WU_widgetUpdate.ready) {
+                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
+                            }
+                        } catch (Exception e1){
+                            Tracer.e(mytag,e1.toString());
+                        }
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage
@@ -814,7 +808,7 @@ public class Activity_Main extends Activity implements OnClickListener {
                     break;
             }
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

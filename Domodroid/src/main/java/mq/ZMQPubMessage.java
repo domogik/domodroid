@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
     private ZMQ.Socket pub = null;
 
-    public static String getHostName() {
+    private static String getHostName() {
         try {
             Method getString = Build.class.getDeclaredMethod("getString", String.class);
             getString.setAccessible(true);

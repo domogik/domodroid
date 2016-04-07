@@ -1,9 +1,6 @@
 # Android Studio
 .idea/
-.gradle
-/.gradle
 /.idea
-!build.gradle
 build/
 /*/local.properties
 /*/out
@@ -25,5 +22,5 @@ Thumbs.db
 /captures
 # Additionnal files
 gradlew
-gradlew.bat
+#gradlew.bat
 local.properties

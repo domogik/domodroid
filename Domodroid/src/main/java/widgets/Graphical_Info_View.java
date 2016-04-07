@@ -1,7 +1,22 @@
+/*
+ * This file is part of Domodroid.
+ *
+ * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
+ *
+ * Domodroid is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * Domodroid. If not, see <http://www.gnu.org/licenses/>.
+ */
 package widgets;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,6 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import Abstract.calcul;
 import rinor.Rest_com;
 
 import org.json.JSONArray;
@@ -67,12 +83,12 @@ public class Graphical_Info_View extends View implements OnClickListener {
     public int update;
     private final Handler handler;
     public boolean activate = false;
-    public boolean loaded = false;
+    private boolean loaded = false;
     private final String mytag = "Graphical_Info_View";
-    public final FrameLayout container = null;
-    public View myself = null;
+    private final FrameLayout container = null;
+    private View myself = null;
     private Calendar calendar = Calendar.getInstance();
-    final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private final Date time_start = new Date();
     private final Date time_end = new Date();
     public TextView dates = null;
@@ -258,7 +274,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         }
     }
 
-    public void drawMessage() {
+    private void drawMessage() {
         Paint paint = new Paint();
         paint.setColor(Color.DKGRAY);
         paint.setAntiAlias(true);
@@ -266,7 +282,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         can2.drawText("Loading Data ...", 10, 15, paint);
     }
 
-    public void drawGrid() {
+    private void drawGrid() {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.GRAY);
@@ -277,7 +293,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         can.drawLine(gridStartX, gridStartY, gridStartX, gridStopY, paint);
     }
 
-    public void drawValue() {
+    private void drawValue() {
         //min - max - avg lines
         float gridSize_values = (gridStartY - gridOffset) - (gridStopY + gridOffset);
         float scale_values = gridSize_values / (maxf - minf);
@@ -319,7 +335,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         }
     }
 
-    public void drawGraph() {
+    private void drawGraph() {
         float gridSize_values = (gridStartY - gridOffset) - (gridStopY + gridOffset);
         float scale_values = gridSize_values / (maxf - minf);
         float step = (gridStopX - gridStartX) / (values.size() - 1);
@@ -535,8 +551,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                 timer.cancel();
                                 this.finalize();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
@@ -559,7 +573,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
     /*
      * Graphs are refreshed using a direct request to Domogik server
      */
-    public class UpdateThread extends AsyncTask<Void, Integer, Void> {
+    private class UpdateThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -629,7 +643,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 
                     Vector<Float> vect = new Vector<>();
                     Double real_val = valueArray.getJSONArray(i).getDouble(limit - 1);    // Get the real 'value'
-                    real_val = round(real_val, 2);
+                    real_val = calcul.Round_double(real_val);
 
                     if (limit == 6) {
                         // stats per hour return [ year, month, week, day, hour, value]
@@ -845,7 +859,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 e.printStackTrace();
             }
             avgf = avgf / values.size();
-            avgf = round(avgf, 2);
+            avgf = calcul.Round_float(avgf);
 
             gridStartX = Float.toString(maxf).length() * 7;
             if (Float.toString(minf).length() * 7 > gridStartX)
@@ -926,22 +940,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
         }
 
     }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    public static float round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
-    }
-
 
     private void display_dates() {
         if (dates != null) {

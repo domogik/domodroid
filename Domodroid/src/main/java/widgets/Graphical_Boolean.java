@@ -19,6 +19,9 @@ package widgets;
 
 import org.json.JSONObject;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import activities.Graphics_Manager;
 
 import org.domogik.domodroid13.R;
@@ -65,8 +68,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
 
     public Graphical_Boolean(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                             final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                             final Entity_Feature feature, Handler handler) {
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -76,8 +79,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
 
     public Graphical_Boolean(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                             final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                             final Entity_Map feature_map, Handler handler) {
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;

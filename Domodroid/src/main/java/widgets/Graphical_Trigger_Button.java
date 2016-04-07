@@ -11,7 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.FrameLayout.LayoutParams;
 
 public class Graphical_Trigger_Button extends LinearLayout {
     private boolean touching;
@@ -44,7 +43,7 @@ public class Graphical_Trigger_Button extends LinearLayout {
         };
     }
 
-    public class SBAnim extends AsyncTask<Void, Integer, Void> {
+    private class SBAnim extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

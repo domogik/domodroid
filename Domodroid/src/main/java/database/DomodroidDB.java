@@ -1,18 +1,14 @@
 package database;
 
-import java.util.Arrays;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import database.DmdContentProvider;
-import widgets.Entity_Area;
-import widgets.Entity_Feature;
-import widgets.Entity_Feature_Association;
-import widgets.Entity_Icon;
-import widgets.Entity_Map;
-import widgets.Entity_Room;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Icon;
+import Entity.Entity_Map;
+import Entity.Entity_Room;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -51,7 +47,7 @@ public class DomodroidDB {
         //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
         DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
-        Tracer.e(mytag, "load widgets for area 1");
+        Tracer.i(mytag, "load widgets for area 1");
         Entity_Room[] listRoom = domodb.requestRoom(1);
 
         for (Entity_Room room : listRoom) {
@@ -322,7 +318,7 @@ public class DomodroidDB {
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE, values);
     }
 
-    public void remove_one_feature_association(int id) {
+    private void remove_one_feature_association(int id) {
         ContentValues values = new ContentValues();
         values.put("id", id);
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_one_FEATURE_ASSOCIATION, values);
@@ -409,6 +405,15 @@ public class DomodroidDB {
         }
     }
 
+    public void move_one_feature_association(int id, int place_id, String place_type, String order) {
+        ContentValues values = new ContentValues();
+        values.put("id", id);
+        values.put("place_id", place_id);
+        values.put("place_type", place_type);
+        values.put("order", order);
+        context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_POSITION_ID, values);
+        Tracer.d(mytag, "Moving "+order+" the feature id:" + id + " in place_id:" + place_id + " of type:" + place_type);
+    }
     ////////////////// REQUEST
 
 
@@ -567,7 +572,7 @@ public class DomodroidDB {
         int[] device_feature_id_associated_somewhere = requestAllFeatures_association();
         boolean found;
         //parcourir la liste des feature avec comme device_feature_id_associated_somewhere=int[i]
-        // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated là
+        // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated l
         // on utilise int[i]
         for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
             found = false;
@@ -668,8 +673,8 @@ public class DomodroidDB {
                     null,
                     null,
                     null);
-            lastid = curs.getCount();
-
+            curs.moveToLast();
+            lastid = curs.getInt(3);
         } catch (Exception e) {
             Tracer.v(mytag + "(" + owner + ")", "request last room error");
             e.printStackTrace();

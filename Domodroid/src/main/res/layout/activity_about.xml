@@ -38,13 +38,13 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
 	    android:paddingLeft="5dip"
-	    android:paddingTop="40dip" >
+	    android:paddingTop="30dip" >
 
 	    <LinearLayout
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
-	        android:paddingTop="10dip" >
+	        android:paddingTop="5dip" >
 
 	        <ImageView
 	            android:id="@+id/domodroid"
@@ -64,7 +64,7 @@
 	    <TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:paddingTop="10dip"
+	        android:paddingTop="5dip"
 	        android:text="@string/help_Text1"
 	        android:textColor="#FFFFFF" />
 
@@ -77,7 +77,7 @@
 		<TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:paddingTop="10dip"
+	        android:paddingTop="5dip"
 	        android:text="@string/help_Text2"
 	        android:textColor="#FFFFFF" />
 
@@ -85,12 +85,28 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:autoLink="web"
-	        android:paddingTop="10dip"
+	        android:paddingTop="5dip"
 	        android:text="@string/help_Text3"
 	        android:textColor="#FFFFFF" >
 	    </TextView>
 
-	    <TextView
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:autoLink="web"
+			android:paddingTop="5dip"
+			android:text="@string/help_Text6"
+			android:textColor="#FFFFFF" />
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:autoLink="web"
+			android:paddingTop="5dip"
+			android:text="@string/help_Text7"
+			android:textColor="#FFFFFF" />
+
+		<TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:autoLink="web"
@@ -102,15 +118,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:autoLink="web|email"
-			android:paddingTop="10dip"
-			android:text="@string/help_Text5"
-			android:textColor="#FFFFFF" />
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:autoLink="web|email"
-			android:paddingTop="10dip"
+			android:paddingTop="5dip"
 			android:text="@string/about_traduction"
 			android:textColor="#FFFFFF" />
 
@@ -118,19 +126,19 @@
 	        android:id="@+id/versionText"
 	     	android:layout_width="wrap_content"
 	        android:layout_height="wrap_content" />
-	    
+
 	    <TextView
 	        android:id="@+id/domogikversionText"
 	     	android:layout_width="wrap_content"
 	        android:layout_height="wrap_content" />
-	    
+
 	    <Button
 	        android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/changelog_title"
 			android:id="@+id/showchangelog"
-			android:layout_marginTop="10dip" />
-	    
+			android:layout_marginTop="5dip" />
+
 	</LinearLayout>
 </ScrollView>
-</FrameLayout>	
+</FrameLayout>

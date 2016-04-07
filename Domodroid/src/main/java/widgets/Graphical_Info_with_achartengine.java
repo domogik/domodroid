@@ -21,38 +21,6 @@
  */
 package widgets;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
-
-import activities.Graphics_Manager;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.GraphicalView;
-import org.achartengine.chart.LineChart;
-import org.achartengine.chart.PointStyle;
-import org.achartengine.model.TimeSeries;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
-import org.achartengine.tools.PanListener;
-import org.achartengine.tools.ZoomEvent;
-import org.achartengine.tools.ZoomListener;
-import org.achartengine.util.MathHelper;
-import org.domogik.domodroid13.R;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import database.WidgetUpdate;
-
-import rinor.Rest_com;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -60,14 +28,10 @@ import android.graphics.Paint.Align;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -75,21 +39,50 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.chart.PointStyle;
+import org.achartengine.model.TimeSeries;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+import org.achartengine.util.MathHelper;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Vector;
+
+import Abstract.calcul;
+import Abstract.display_sensor_info;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Graphics_Manager;
+import database.WidgetUpdate;
+import misc.tracerengine;
+import rinor.Rest_com;
+
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
 
     private LinearLayout chartContainer;
     private TextView value;
+    private TextView value1;
     private int id;
 
-    private Animation animation;
     private Message msg;
     private static String mytag = "";
     private String url = null;
 
     public static FrameLayout container = null;
-    public static FrameLayout myself = null;
-    public final Boolean with_graph = true;
+    private static FrameLayout myself = null;
+    private final Boolean with_graph = true;
     private Entity_client session = null;
     private Boolean realtime = false;
     private GraphicalView mChart;
@@ -125,11 +118,16 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private final int session_type;
     private final SharedPreferences params;
     private SimpleDateFormat format;
+    private TextView state_key_view;
+    private String stateS;
+    private String test_unite;
+    private Typeface typefaceweather;
+    private Typeface typefaceawesome;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                            final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                                            final Entity_Feature feature, Handler handler) {
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -139,8 +137,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                            final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                                            final Entity_Map feature_map, Handler handler) {
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -148,14 +146,13 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         this.state_key = feature.getState_key();
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        String stateS;
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -246,7 +243,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
 
         //state key
-        TextView state_key_view = new TextView(context);
+        state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -254,11 +251,22 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         value = new TextView(context);
         value.setTextSize(28);
         value.setTextColor(Color.BLACK);
-        animation = new AlphaAnimation(0.0f, 1.0f);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         super.LL_featurePan.addView(value);
         super.LL_infoPan.addView(state_key_view);
+
+        test_unite = "";
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            test_unite = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
 
         Handler handler = new Handler() {
             @Override
@@ -271,73 +279,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
                     String loc_Value = session.getValue();
                     Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    String test_unite = "";
-                    try {
-                        float formatedValue = 0;
-                        if (loc_Value != null) {
-                            formatedValue = Round(Float.parseFloat(loc_Value), 2);
-                            Tracer.v(mytag, " Round the value" + loc_Value + " to " + formatedValue);
-                        }
-                        try {
-                            //Basilic add, number feature has a unit parameter
-                            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                            test_unite = jparam.getString("unit");
-                            //#30 add Scale value if too big for byte only
-                            switch (test_unite) {
-                                case "b":
-                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
-                                    break;
-                                case "ko":
-                                    value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
-                                    break;
-                                default:
-                                    value.setText(formatedValue + " " + test_unite);
-                                    break;
-                            }
-                        } catch (JSONException e) {
-                            if (state_key.equalsIgnoreCase("temperature"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("pressure"))
-                                value.setText(formatedValue + " hPa");
-                            else if (state_key.equalsIgnoreCase("humidity"))
-                                value.setText(formatedValue + " %");
-                            else if (state_key.equalsIgnoreCase("percent"))
-                                value.setText(formatedValue + " %");
-                            else if (state_key.equalsIgnoreCase("visibility"))
-                                value.setText(formatedValue + " km");
-                            else if (state_key.equalsIgnoreCase("chill"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("speed"))
-                                value.setText(formatedValue + " km/h");
-                            else if (state_key.equalsIgnoreCase("drewpoint"))
-                                value.setText(formatedValue + " °C");
-                            else if (state_key.equalsIgnoreCase("condition-code") || state_key.toLowerCase().contains("condition_code") || state_key.toLowerCase().contains("current_code")) {
-                                //Add try catch to avoid other case that make #1794
-                                try {
-                                    //use xml and weather fonts here
-                                    Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-                                    value.setTypeface(typeface, Typeface.NORMAL);
-                                    value.setText(Graphics_Manager.Names_conditioncodes(getContext(), (int) formatedValue));
-                                } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + loc_Value);
-                                    value.setText(loc_Value);
-                                }
-                            } else {
-                                value.setText(loc_Value);
-                            }
-                        }
-                        value.setAnimation(animation);
-                    } catch (Exception e) {
-                        // It's probably a String that could'nt be converted to a float
-                        Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
-                        try {
-                            Tracer.d(mytag, "Try to get value translate from R.STRING");
-                            value.setText(Graphics_Manager.getStringIdentifier(getContext(), loc_Value.toLowerCase()));
-                        } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + loc_Value);
-                            value.setText(loc_Value);
-                        }
-                    }
+                    display_sensor_info.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
                         if (Float.parseFloat(loc_Value) >= 60) {
@@ -351,10 +294,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             change_this_icon(0);
                         }
                     } else {
-                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        change_this_icon(2);
+                        // #93
+                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
+                            change_this_icon(0);
+                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                        } else {
+                            change_this_icon(2);
+                        }
                     }
-
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
@@ -382,7 +329,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null) {
+        if (cache_engine != null)
+
+        {
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
@@ -547,7 +496,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // range between 1 to 8 days (average per hour)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = round(real_val, 2);
+                real_val = calcul.Round_double(real_val);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int month = valueArray.getJSONArray(i).getInt(1);
                 int week = valueArray.getJSONArray(i).getInt(2);
@@ -616,7 +565,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // range between 9 to 32 days (average per day)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = round(real_val, 2);
+                real_val = calcul.Round_double(real_val);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int month = valueArray.getJSONArray(i).getInt(1);
                 int day = valueArray.getJSONArray(i).getInt(3);
@@ -675,7 +624,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             // (average per week)
             for (int i = 0; i < valueArray.length() - 1; i++) {
                 real_val = valueArray.getJSONArray(i).getDouble(limit - 1);
-                real_val = round(real_val, 2);
+                real_val = calcul.Round_double(real_val);
                 int year = valueArray.getJSONArray(i).getInt(0);
                 int week = valueArray.getJSONArray(i).getInt(1);
                 int week_next = valueArray.getJSONArray(i + 1).getInt(1);
@@ -796,21 +745,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         // Adding the Combined Chart to the LinearLayout
         chartContainer.addView(mChart);
-    }
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    public static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
     }
 
     public void onClick(View arg0) {

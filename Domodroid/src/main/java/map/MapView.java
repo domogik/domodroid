@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +24,8 @@ import database.WidgetUpdate;
 import activities.Activity_Map;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
-import widgets.Entity_Map;
-import widgets.Entity_client;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Binary_New;
 import widgets.Graphical_Boolean;
@@ -82,9 +81,9 @@ public class MapView extends View {
     private TransformManager mat;
     private Matrix origin;
     private SVG svg;
-    float currentScale = 1;
-    float currentScalewidth = 1;
-    float currentScaleheight = 1;
+    private float currentScale = 1;
+    private float currentScalewidth = 1;
+    private float currentScaleheight = 1;
     private int screenwidth;
     private int screenheight;
     private int widgetSize;
@@ -99,7 +98,7 @@ public class MapView extends View {
     private boolean map_autozoom = false;
     public int temp_id;
     public int map_id;
-    public final String map_name = "";
+    private final String map_name = "";
 
     private Paint paint_map;
     private Paint paint_text;
@@ -133,7 +132,7 @@ public class MapView extends View {
     private String Value_0;
     private String Value_1;
     private static Handler handler = null;
-    final Handler handler_longclic = new Handler();
+    private final Handler handler_longclic = new Handler();
     private tracerengine Tracer = null;
     private final int mytype = 2;
     private WidgetUpdate cache_engine = null;
@@ -144,7 +143,7 @@ public class MapView extends View {
     private String URL;
     private String state_progress;
     //Declare this flag globally
-    boolean longclic = false;
+    private boolean longclic = false;
     private MotionEvent event1;
     private float[] valuelongclic = new float[9];
     private String command_id = null;
@@ -854,57 +853,69 @@ public class MapView extends View {
                                 paint_text);
                     }
 
-                } else if (featureMap.getState_key().equals("color")) {
-                    Tracer.e(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
-                    Paint paint_color = new Paint();
-                    paint_color.setPathEffect(null);
-                    paint_color.setAntiAlias(true);
-                    //paint_color.setStyle(Paint.Style.FILL_AND_STROKE);
-                    paint_color.setStyle(Paint.Style.FILL);
-                    String argbS = states;
-                    //Process RGB value
-                    if (states.equals("off")) {
-                        argbS = "#000000";
-                    } else if (argbS.equals("on")) {
-                        argbS = params.getString("COLORRGB", "#FFFFFF");    //Restore last known color, White by default
-                    } else {
-                        //To avoid http://tracker.domogik.org/issues/1972 here
-                        argbS = "#FFFFFF";
-                    }
-                    //Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
-                    //Draw first a black background...
-                    paint_color.setColor(Color.BLACK);
-                    paint_color.setShadowLayer(1, 0, 0, Color.BLACK);
-                    int left = (int) (featureMap.getPosx() * currentScale) + text_Offset_X - (10 * (int) scale);
-                    int top = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y - (15 * (int) scale);
-                    int right = (int) (featureMap.getPosx() * currentScale) + text_Offset_X + (85 * (int) scale);
-                    int bottom = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y + (10 * (int) scale);
-                    Rect r = new Rect(left, top, right, bottom);
-                    canvasWidget.drawRect(r, paint_color);
-
-                    //And draw real color inside the 1st one
-
-                    paint_color.setColor(Color.parseColor(argbS));
-                    left += 3;
-                    top += 3;
-                    right -= 3;
-                    bottom -= 3;
-                    r = new Rect(left, top, right, bottom);
-                    canvasWidget.drawRect(r, paint_color);
-                    for (int j = 1; j < 5; j++)
-                        paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
-                    paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                    if (!params.getBoolean("HIDE", false))
-                        canvasWidget.drawText(label,
-                                (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
-                                paint_text);
-
-
                 } else {
-                    // This widget is'nt alive anymore...
-                    Tracer.e(mytag, "Could not draw " + featureMap.getId());
-                    canvasWidget = null; //?????
+                    if (featureMap.getState_key().equals("color")) {
+                        Tracer.e(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
+                        Paint paint_color = new Paint();
+                        paint_color.setPathEffect(null);
+                        paint_color.setAntiAlias(true);
+                        //paint_color.setStyle(Paint.Style.FILL_AND_STROKE);
+                        paint_color.setStyle(Paint.Style.FILL);
+                        String argbS = states;
+                        //Process RGB value
+                        if (states.equals("off")) {
+                            argbS = "#000000";
+                        } else if (argbS.equals("on")) {
+                            argbS = params.getString("COLORRGB", "#FFFFFF");    //Restore last known color, White by default
+                        } else {
+                            //To avoid http://tracker.domogik.org/issues/1972 here
+                            argbS = "#FFFFFF";
+                        }
+                        //Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
+                        //Draw first a black background...
+                        paint_color.setColor(Color.BLACK);
+                        paint_color.setShadowLayer(1, 0, 0, Color.BLACK);
+                        int left = (int) (featureMap.getPosx() * currentScale) + text_Offset_X - (10 * (int) scale);
+                        int top = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y - (15 * (int) scale);
+                        int right = (int) (featureMap.getPosx() * currentScale) + text_Offset_X + (85 * (int) scale);
+                        int bottom = (int) (featureMap.getPosy() * currentScale) + text_Offset_Y + (10 * (int) scale);
+                        Rect r = new Rect(left, top, right, bottom);
+                        canvasWidget.drawRect(r, paint_color);
+
+                        //And draw real color inside the 1st one
+
+                        paint_color.setColor(Color.parseColor(argbS));
+                        left += 3;
+                        top += 3;
+                        right -= 3;
+                        bottom -= 3;
+                        r = new Rect(left, top, right, bottom);
+                        canvasWidget.drawRect(r, paint_color);
+                        for (int j = 1; j < 5; j++)
+                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                        if (!params.getBoolean("HIDE", false))
+                            canvasWidget.drawText(label,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
+                                    paint_text);
+
+
+                    } else if (featureMap.getValue_type().equals("video")) {
+                        for (int j = 1; j < 5; j++)
+                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                        if (!params.getBoolean("HIDE", false))
+                            canvasWidget.drawText(label,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                    paint_text);
+
+                    } else {
+                        // This widget is'nt alive anymore...
+                        Tracer.e(mytag, "Could not draw " + featureMap.getId());
+                        canvasWidget = null; //?????
+                    }
                 }
 
             }
@@ -915,7 +926,7 @@ public class MapView extends View {
     }
 
     @SuppressWarnings("RedundantStringToString")
-    public void showTopWidget(Entity_Map feature) throws JSONException {
+    private void showTopWidget(Entity_Map feature) {
         Tracer.d(mytag, "Show top Widget");
         DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
         domodb.owner = "MapView.showTopWidgets";
@@ -967,12 +978,12 @@ public class MapView extends View {
             } else {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
                     onoff = new Graphical_Binary(Tracer, context, URL,
-                            widgetSize, 0, Id, zone, params, feature);
+                            widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     onoff_New = new Graphical_Binary_New(Tracer, context, URL,
-                            widgetSize, 0, Id, zone, params, feature);
+                            widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
@@ -982,100 +993,107 @@ public class MapView extends View {
             if (feature.getParameters().contains("command")) {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
                     onoff = new Graphical_Binary(Tracer, context, URL,
-                            widgetSize, 0, Id, zone, params, feature);
+                            widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     onoff_New = new Graphical_Binary_New(Tracer, context, URL,
-                            widgetSize, 0, Id, zone, params, feature);
+                            widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
             } else {
                 Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature);
+                        widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Boolean.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
         } else if (feature.getValue_type().equals("range")) {
             Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
-                    widgetSize, 0, Id, zone, params, feature);
+                    widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_Range.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
             if (parameters.contains("command")) {
                 Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature);
+                        widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
                 info = new Graphical_Info(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, update_timer, feature);
+                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
                 Tracer.i(mytag, "   ==> Graphical_Info");
             }
-        } else if (State_key.equals("color")) {
-            Graphical_Color color = new Graphical_Color(Tracer, context, URL,
-                    widgetSize, 0, Id, zone, params, feature);
-            panel_widget.addView(color);
         } else if (feature.getValue_type().equals("number")) {
             Tracer.i(mytag, "Parameters for number:" + feature.getParameters());
             if (feature.getParameters().contains("command_type")) {
                 info_commands = new Graphical_Info_commands(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature);
+                        widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature);
+                        widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
+                /*todo when #89
+                Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
+                Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
+                panel_widget.addView(info1);
+                */
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
                 info = new Graphical_Info(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, update_timer, feature);
+                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else if (feature.getValue_type().equals("list")) {
             Graphical_List list = new Graphical_List(Tracer, context, URL,
-                    widgetSize, 0, Id, zone, params, feature);
+                    widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_List.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
             colorw = new Graphical_Color(Tracer, context, URL,
-                    widgetSize, 0, Id, zone, params, feature);
+                    widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_Color.container = (FrameLayout) panel_widget;
             panel_widget.addView(colorw);
         } else if (feature.getValue_type().equals("string")) {
             Tracer.i(mytag, "parameters=" + parameters);
             if (feature.getDevice_feature_model_id().contains("call")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature);
+                        widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(info_with_history);
             } else if (feature.getDevice_feature_model_id().contains("camera")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature);
+                        widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
             } else if (parameters.contains("command")) {
                 if (State_key.equals("Set RGB color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                     colorw = new Graphical_Color(Tracer, context, URL,
-                            widgetSize, 0, Id, zone, params, feature);
+                            widgetSize, 0, Id, zone, params, feature, handler);
                     panel_widget.addView(colorw);
                 } else {
                     info_commands = new Graphical_Info_commands(Tracer, context, URL,
-                            widgetSize, 0, Id, zone, params, feature);
+                            widgetSize, 0, Id, zone, params, feature, handler);
                     panel_widget.addView(info_commands);
                 }
+            } else if (feature.getValue_type().equals("video")) {
+                Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(cam);
             } else {
                 info = new Graphical_Info(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, update_timer, feature);
+                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
@@ -1299,7 +1317,7 @@ public class MapView extends View {
                                             Tracer.d(mytag, "Launch showtopwidgets");
                                             try {
                                                 showTopWidget(featureMap);
-                                            } catch (JSONException e) {
+                                            } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
                                             panel_button.setVisibility(View.GONE);
@@ -1352,7 +1370,7 @@ public class MapView extends View {
         return true;
     }
 
-    final Runnable mLongPressed = new Runnable() {
+    private final Runnable mLongPressed = new Runnable() {
         public void run() {
             if (!params.getBoolean("map_menu_disable", false)) {
                 longclic = true;
@@ -1543,7 +1561,7 @@ public class MapView extends View {
         }
     }
 
-    public String getFileAsString(File file) {
+    private String getFileAsString(File file) {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         DataInputStream dis = null;
@@ -1565,7 +1583,7 @@ public class MapView extends View {
         return sb.toString();
     }
 
-    public float autoscale(int image_width, int image_height) {
+    private float autoscale(int image_width, int image_height) {
         currentScalewidth = (float) screenwidth / (float) image_width;
         currentScaleheight = (float) screenheight / (float) image_height;
         //select witch scale is the best
@@ -1653,7 +1671,7 @@ public class MapView extends View {
         this.moveMode = moveMode;
     }
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
             Handler temphandler = new Handler(context.getMainLooper());
@@ -1694,7 +1712,7 @@ public class MapView extends View {
 
     }
 
-    public static float Round(float Rval, int Rpl) {
+    private static float Round(float Rval, int Rpl) {
         float p = (float) Math.pow(10, Rpl);
         Rval = Rval * p;
         float tmp = Math.round(Rval);

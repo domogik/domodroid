@@ -17,6 +17,8 @@
  */
 package widgets;
 
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
 import rinor.CallUrl;
 
 import org.domogik.domodroid13.R;
@@ -61,17 +63,14 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private String command_type;
 
     private final Entity_Feature feature;
-    private String state_key;
-    private String parameters;
-    private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
     private JSONObject jparam;
 
     public Graphical_Trigger(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                             final Entity_Feature feature) {
-        super(context, Trac, feature.getId(), feature.getName(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                             final Entity_Feature feature, Handler handler) {
+        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -81,8 +80,8 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 
     public Graphical_Trigger(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                             final Entity_Map feature_map) {
-        super(context, Trac, feature_map.getId(), feature_map.getName(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container);
+                             final Entity_Map feature_map, Handler handler) {
+        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -90,11 +89,11 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         onCreate();
     }
 
-    public void onCreate() {
+    private void onCreate() {
         this.address = feature.getAddress();
-        this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
-        this.parameters = feature.getParameters();
+        String state_key = feature.getState_key();
+        int dev_id = feature.getDevId();
+        String parameters = feature.getParameters();
 
         String stateS;
         try {
@@ -176,7 +175,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     }
 
 
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
+    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

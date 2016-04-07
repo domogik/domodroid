@@ -1,17 +1,23 @@
 package activities;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import database.DomodroidDB;
-import database.WidgetUpdate;
-
-import org.json.JSONException;
-
-import widgets.Com_Stats;
 import Entity.Entity_Area;
 import Entity.Entity_Feature;
 import Entity.Entity_Room;
+import database.DomodroidDB;
+import database.WidgetUpdate;
+import misc.tracerengine;
+import widgets.Com_Stats;
 import widgets.Graphical_Area;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Binary_New;
@@ -26,17 +32,6 @@ import widgets.Graphical_List;
 import widgets.Graphical_Range;
 import widgets.Graphical_Room;
 import widgets.Graphical_Trigger;
-
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.Handler;
-import android.util.DisplayMetrics;
-
-import misc.tracerengine;
-
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.LinearLayout;
 
 class Widgets_Manager {
 
@@ -280,12 +275,21 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
                 }
                 //used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
-            }else if (Value_type.equals("video")){
-                Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
-                        widgetSize, session_type, id, zone, params, feature, widgetHandler);
-                Graphical_Cam.container = tmpPan;
-                tmpPan.addView(cam);
-                Tracer.i(mytag, "   ==> Graphical_Cam");
+            } else if (Value_type.equals("video")) {
+                if (!parameters.contains("command")) {
+                    Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    Graphical_Cam.container = tmpPan;
+                    tmpPan.addView(cam);
+                    Tracer.i(mytag, "   ==> Graphical_Cam");
+                } else {
+                    info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    info_commands.setLayoutParams(layout_param);
+                    Graphical_Info_commands.container = tmpPan;
+                    tmpPan.addView(info_commands);
+                    Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
+                }
             }
 
             if (columns) {
@@ -437,7 +441,7 @@ class Widgets_Manager {
             map.put("type", "room");
             Activity_Main.Navigation_drawer_ItemsList.add(map);
 
-            Graphical_Room graph_room = new Graphical_Room(params,Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
+            Graphical_Room graph_room = new Graphical_Room(params, Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
             tmpPan.addView(graph_room);
 
             if (columns) {

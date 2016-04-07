@@ -30,6 +30,10 @@
       * #38 Weather plugin sunrise/sunset and update date translate.
       * #25 Icon for new motion sensor/command.
       * Numbers are internationalised.
+      * Close #93 Icon for state number.
+      * Close #92 Renaming map image.
+      * Close #88 Multiple Id duplication in layout.
+      * Close #87 libpng warning when build.
       * Close #86 utf8 issue in DomodroidDB.java.
       * Close #85 Room ID when sync is false if saved one.
       * Close #84 Automated build on Travis-CI.

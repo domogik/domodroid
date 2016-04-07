@@ -721,6 +721,8 @@ public class Graphics_Manager {
         //VDEVICE "set_virtual_number", "set_virtual_binary", "set_virtual_string","set_virtual_temperature",
         // "set_virtual_humidity", "set_virtual_percent", "set_virtual_switch", "set_virtual_openclose",
         // "set_virtual_startstop", sensor are same as commands that's easier for this part.
+        if (usage.contains("video"))
+            usage = "security_camera";
         //VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
         if (usage.toLowerCase().equals("temp"))
             usage = "temperature";

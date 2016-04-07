@@ -671,4 +671,5 @@
     <string name="no_motion">No motion</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
+    <string name="virtual_video">Virtual Video</string>
 </resources>

@@ -21,7 +21,7 @@
   <body>
     $ 1.4
       % Version 16
-      _ 2016-xx-xx
+      _ 2016-04-07
       * New function to move up/don a widget to reorder widget display.
       * Refreshing view on deletion or moving is now working correctly.
       * Working camera widget with datatype DT_VideoMjpeg in 0.4.

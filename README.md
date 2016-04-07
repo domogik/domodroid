@@ -8,9 +8,7 @@ domodroid
 
 Android client for Domogik
 
-The 'master' branch must be kept as 'last stable' version
-
-Now use Android Studio for developpement.
+This Branch is the Dev one with android studio.
 
 
  Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET

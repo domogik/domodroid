@@ -17,30 +17,12 @@
  */
 package widgets;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-import activities.Graphics_Manager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import rinor.CallUrl;
-
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -51,6 +33,20 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Graphics_Manager;
+import misc.tracerengine;
+import rinor.CallUrl;
 
 @SuppressWarnings("Convert2Diamond")
 public class Graphical_Info_commands extends Basic_Graphical_widget {
@@ -69,7 +65,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private String login;
     private String password;
     private float api_version;
-
+    private Boolean SSL;
     private int dpiClassification;
     private JSONObject jparam;
     private String command_id = null;
@@ -127,6 +123,8 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
+        SSL = params.getBoolean("ssl_activate", false);
+
         try {
             jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
         } catch (Exception e) {
@@ -220,7 +218,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000");
+                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          //Clean all text from allEds
                                          for (int i = 0; i < allEds.size(); i++) {

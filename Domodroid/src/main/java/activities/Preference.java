@@ -19,13 +19,6 @@
 package activities;
 
 
-import Abstract.common_method;
-import misc.tracerengine;
-
-import org.domogik.domodroid13.R;
-
-import database.Cache_management;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -33,6 +26,12 @@ import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+
+import org.domogik.domodroid13.R;
+
+import Abstract.common_method;
+import database.Cache_management;
+import misc.tracerengine;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
@@ -73,18 +72,28 @@ public class Preference extends PreferenceActivity implements
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
         String temp = params.getString("rinorIP", "");
+        Boolean SSL = params.getBoolean("ssl_activate", false);
         SharedPreferences.Editor prefEditor;
-        if (!temp.toUpperCase().startsWith("HTTP://")) {
+        if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
             PreferenceManager.getDefaultSharedPreferences(this).edit();
             prefEditor = params.edit();
-            prefEditor.putString("rinor_IP", "http://" + temp);
+            if (SSL) {
+                prefEditor.putString("rinor_IP", "https://" + temp);
+            } else {
+                prefEditor.putString("rinor_IP", "http://" + temp);
+            }
             prefEditor.commit();
-        } else if (temp.toUpperCase().startsWith("HTTP://")) {
+        } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
             PreferenceManager.getDefaultSharedPreferences(this).edit();
             prefEditor = params.edit();
-            prefEditor.putString("rinorIP", temp.replace("http://", ""));
+            if (SSL) {
+                prefEditor.putString("rinor_IP", temp.replace("https://", ""));
+            } else {
+                prefEditor.putString("rinor_IP", temp.replace("http://", ""));
+            }
             prefEditor.commit();
         }
+
         //refresh URL address
         prefEditor = params.edit();
         String urlAccess = params.getString("rinor_IP", "1.1.1.1") + ":" + params.getString("rinorPort", "40405") + params.getString("rinorPath", "/");

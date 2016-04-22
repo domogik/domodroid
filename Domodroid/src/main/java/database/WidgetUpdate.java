@@ -1,21 +1,5 @@
 package database;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-
-import rinor.Events_manager;
-import rinor.Rest_com;
-import rinor.Rinor_event;
-import rinor.Stats_Com;
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -24,7 +8,21 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
 import misc.tracerengine;
+import rinor.Events_manager;
+import rinor.Rest_com;
+import rinor.Rinor_event;
+import rinor.Stats_Com;
 
 public class WidgetUpdate {
     //implements Serializable {
@@ -56,6 +54,7 @@ public class WidgetUpdate {
     private static Stats_Com stats_com = null;
     private String login;
     private String password;
+    private Boolean SSL;
     private float api_version;
     //
     // Table of handlers to notify
@@ -114,6 +113,7 @@ public class WidgetUpdate {
         activated = true;
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
+        SSL = params.getBoolean("ssl_activate", false);
         api_version = sharedparams.getFloat("API_VERSION", 0);
         /*
         if(Tracer != null) {
@@ -180,8 +180,8 @@ public class WidgetUpdate {
                         eventsManager = Events_manager.getInstance();
                     }
                     eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
-					/*
-					if(parent[0] != null) {
+                    /*
+                    if(parent[0] != null) {
 						parent[0].sendEmptyMessage(8999);	//Forward event to Main
 					}
 					 */
@@ -615,10 +615,10 @@ public class WidgetUpdate {
                     try {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
-                            json_widget_state = Rest_com.connect_jsonobject(request, login, password, 300000);
+                            json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
                             Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
-                            json_widget_state_0_4 = Rest_com.connect_jsonarray(request, login, password, 3000);
+                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
@@ -654,7 +654,7 @@ public class WidgetUpdate {
      * Methods concerning cache management
      * 	(Doume, 2013/02/15)
      */
-	/*
+    /*
 	 * Private method to update values in cache, and eventually notify all connected clients
 	 * Parameter : result of Rest request (multiple stats)
 	 */
@@ -964,8 +964,8 @@ public class WidgetUpdate {
      * This one allow Widgets to permut (for moving up or down)
      */
 
-    public void move_one_feature_association(int id, int place_id, String place_type,String order) {
-        domodb.move_one_feature_association(id,place_id,place_type,order);
+    public void move_one_feature_association(int id, int place_id, String place_type, String order) {
+        domodb.move_one_feature_association(id, place_id, place_type, order);
     }
 
     /*

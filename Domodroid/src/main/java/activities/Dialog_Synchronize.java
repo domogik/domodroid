@@ -1,17 +1,5 @@
 package activities;
 
-import java.util.ArrayList;
-
-import org.domogik.domodroid13.R;
-
-import rinor.Rest_com;
-import database.Cache_management;
-import database.DomodroidDB;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -20,15 +8,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import database.Cache_management;
+import database.DomodroidDB;
+import misc.tracerengine;
+import rinor.Rest_com;
 
 class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final Button cancelButton;
@@ -45,6 +42,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
     private tracerengine Tracer = null;
     private final String login;
     private final String password;
+    private Boolean SSL;
     private final String mytag = "Dialog_Synchronize";
     private float previous_api_version = 0f;
     private boolean by_usage;
@@ -61,6 +59,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
         cancelButton.setOnClickListener(this);
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
+        SSL = params.getBoolean("ssl_activate", false);
 
         handler = new Handler() {
             @Override
@@ -200,7 +199,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_rinor;
             String mytag = "Dialog_Synchronize";
             try {
-                json_rinor = Rest_com.connect_jsonobject(urlAccess, login, password, 3000);
+                json_rinor = Rest_com.connect_jsonobject(Tracer, urlAccess, login, password, 3000, SSL);
             } catch (Exception e) {
                 Tracer.e(mytag, "Error connecting to rinor");
                 json_rinor = null;
@@ -304,7 +303,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
             }
 
             if (Rinor_Api_Version <= 0.5f) {
-                json_AreaList = Rest_com.connect_jsonobject(urlAccess + "base/area/list/", login, password, 3000);
+                json_AreaList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/area/list/", login, password, 3000, SSL);
                 if (json_AreaList == null) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
@@ -318,7 +317,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 Tracer.d(mytag, "AreaList = <" + json_AreaList.toString() + ">");
 
                 publishProgress(20);
-                json_RoomList = Rest_com.connect_jsonobject(urlAccess + "base/room/list/", login, password, 3000);
+                json_RoomList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/room/list/", login, password, 3000, SSL);
                 if (json_RoomList == null) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
@@ -332,7 +331,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 Tracer.d(mytag, "RoomList = <" + json_RoomList.toString() + ">");
 
                 publishProgress(40);
-                json_FeatureList = Rest_com.connect_jsonobject(urlAccess + "base/feature/list", login, password, 3000);
+                json_FeatureList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature/list", login, password, 3000, SSL);
                 if (json_FeatureList == null) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
@@ -345,7 +344,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                 }
 
                 publishProgress(60);
-                json_FeatureAssociationList = Rest_com.connect_jsonobject(urlAccess + "base/feature_association/list/", login, password, 3000);
+                json_FeatureAssociationList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature_association/list/", login, password, 3000, SSL);
                 if (json_FeatureAssociationList == null) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
@@ -357,7 +356,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(80);
-                json_IconList = Rest_com.connect_jsonobject(urlAccess + "base/ui_config/list/", login, password, 3000);
+                json_IconList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/ui_config/list/", login, password, 3000, SSL);
                 if (json_IconList == null) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
@@ -372,7 +371,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
 
             } else if (Rinor_Api_Version <= 0.6f) {
                 // Function special Basilic domogik 0.3
-                json_FeatureList = Rest_com.connect_jsonobject(urlAccess + "base/feature/list", login, password, 3000);
+                json_FeatureList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature/list", login, password, 3000, SSL);
                 if (json_FeatureList == null) {
                     // Cannot connect to Rinor server.....
                     Bundle b = new Bundle();
@@ -548,8 +547,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
                     Tracer.e(mytag, "ERROR getting MQ information");
                 }
-                json_FeatureList1 = Rest_com.connect_jsonarray(urlAccess + "device", login, password, 3000);
-                JSONObject Json_data_type = Rest_com.connect_jsonobject(urlAccess + "datatype", login, password, 3000);
+                json_FeatureList1 = Rest_com.connect_jsonarray(Tracer, urlAccess + "device", login, password, 3000, SSL);
+                JSONObject Json_data_type = Rest_com.connect_jsonobject(Tracer, urlAccess + "datatype", login, password, 3000, SSL);
                 if (json_FeatureList1 == null) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");

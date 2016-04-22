@@ -62,6 +62,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private String url = null;
     private String login;
     private String password;
+    private Boolean SSL;
     private float api_version;
 
     public static FrameLayout container = null;
@@ -115,6 +116,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
+        SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
 
         mytag = "Graphical_History(" + dev_id + ")";
@@ -213,11 +215,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/5/");
-                json_LastValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/last/5/", login, password, 10000);
+                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/5/", login, password, 10000, SSL);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/5");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(url + "sensorhistory/id/" + id + "/last/5", login, password, 10000);
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/5", login, password, 10000, SSL);
                 json_LastValues = new JSONObject();
                 json_LastValues.put("stats", json_LastValues_0_4);
 

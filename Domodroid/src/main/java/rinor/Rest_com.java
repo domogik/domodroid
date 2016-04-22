@@ -14,13 +14,16 @@
  * 
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * A special thanks go to Chteuteu as he allow us to re-use parts of his
+ * code from Munin-for-Android (https://github.com/chteuchteu/Munin-for-Android)
+ *
+ *
  */
 package rinor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.content.SharedPreferences;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,7 +40,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.SharedPreferences;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import misc.tracerengine;
 
@@ -45,107 +53,132 @@ import misc.tracerengine;
 public class Rest_com {
     private static final String mytag = "Rest_com";
 
-    private static String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
 
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+    @SuppressWarnings("null")
+    public static JSONObject connect_jsonobject(tracerengine Tracer, String url, String login, String password, int timeout, boolean SSL) {
+
+        JSONObject json = null;
+        if (!SSL) {
             try {
-                is.close();
-            } catch (IOException e) {
+                // Set timeout
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+                HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+                DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
+                httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+
+                HttpGet httpget = new HttpGet(url);
+                HttpResponse response;
+                String result = null;
+                response = httpclient.execute(httpget);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    if (entity != null) {
+                        InputStream instream = entity.getContent();
+                        result = Abstract.httpsUrl.convertStreamToString(instream);
+                        json = new JSONObject(result);
+                        instream.close();
+                    }
+                } else if (response.getStatusLine().getStatusCode() == 204) {
+                    //TODO need to adapt for 0.4 since rest answer now with standard code
+                    //204,400,404 and else
+                    json = new JSONObject();
+                    json.put("status", "204 NO CONTENT");
+                } else {
+                    Tracer.d(mytag, "Resource not available>");
+                }
+            } catch (HttpHostConnectException | ClientProtocolException e) {
+                Tracer.e(mytag, e.toString());
+            } catch (Exception e) {
+                Tracer.e(mytag, e.toString());
+            }
+            return json;
+        } else {
+            try {
+                Tracer.d(mytag, "Start https connection");
+                if (url.startsWith("http://")) {
+                    url = url.replace("http://", "https://");
+                }
+                Tracer.d(mytag, "Url=" + url.toString());
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                String result = null;
+                InputStream instream = urlConnection.getInputStream();
+                result = Abstract.httpsUrl.convertStreamToString(instream);
+                json = new JSONObject(result);
+                instream.close();
+                //} catch (HttpHostConnectException e) {
+                //    e.printStackTrace();
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
+            return json;
+
         }
-        return sb.toString();
+
     }
 
     @SuppressWarnings("null")
-    public static JSONObject connect_jsonobject(String url, String login, String password, int timeout) {
-
-        tracerengine Tracer = null;
-        JSONObject json = null;
-        try {
-            // Set timeout
-            HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
-            HttpConnectionParams.setSoTimeout(httpParameters, timeout);
-            DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
-            httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-
-            HttpGet httpget = new HttpGet(url);
-            HttpResponse response;
-            String result = null;
-            response = httpclient.execute(httpget);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    InputStream instream = entity.getContent();
-                    result = convertStreamToString(instream);
-                    json = new JSONObject(result);
-                    instream.close();
-                }
-            } else if (response.getStatusLine().getStatusCode() == 204) {
-                //TODO need to adapt for 0.4 since rest answer now with standard code
-                //204,400,404 and else
-                json = new JSONObject();
-                json.put("status", "204 NO CONTENT");
-            } else {
-                Tracer.d(mytag, "Resource not available>");
-            }
-        } catch (HttpHostConnectException | ClientProtocolException e) {
-            Tracer.e(mytag, e.toString());
-        } catch (Exception e){
-            Tracer.e(mytag, e.toString());
-        }
-
-        return json;
-    }
-
-    @SuppressWarnings("null")
-    public static JSONArray connect_jsonarray(String url, String login, String password, int timeout) {
-
-        tracerengine Tracer = null;
+    public static JSONArray connect_jsonarray(tracerengine Tracer, String url, String login, String password, int timeout, boolean SSL) {
         JSONArray json = null;
-        try {
-            // Set timeout
-            HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
-            HttpConnectionParams.setSoTimeout(httpParameters, timeout);
-            DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
-            httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-            HttpGet httpget = new HttpGet(url);
-            HttpResponse response;
-            String result = null;
-            response = httpclient.execute(httpget);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    InputStream instream = entity.getContent();
-                    result = convertStreamToString(instream);
-                    json = new JSONArray(result);
-                    instream.close();
+
+        if (!SSL) {
+            try {
+                // Set timeout
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+                HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+                DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
+                httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                HttpGet httpget = new HttpGet(url);
+                HttpResponse response;
+                String result = null;
+                response = httpclient.execute(httpget);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    if (entity != null) {
+                        InputStream instream = entity.getContent();
+                        result = Abstract.httpsUrl.convertStreamToString(instream);
+                        json = new JSONArray(result);
+                        instream.close();
+                    }
+                } else {
+                    Tracer.d(mytag, "Resource not available>");
                 }
-            } else {
-                Tracer.d(mytag, "Resource not available>");
+
+
+            } catch (HttpHostConnectException e) {
+                e.printStackTrace();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
+            return json;
+        } else {
+            try {
+                Tracer.d(mytag, "Start https connection");
+                if (url.startsWith("http://")) {
+                    url = url.replace("http://", "https://");
+                }
+                Tracer.d(mytag, "Url=" + url.toString());
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                String result = null;
+                InputStream instream = urlConnection.getInputStream();
+                result = Abstract.httpsUrl.convertStreamToString(instream);
+                json = new JSONArray(result);
+                instream.close();
+                //} catch (HttpHostConnectException e) {
+                //    e.printStackTrace();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return json;
 
-
-        } catch (HttpHostConnectException e) {
-            //e.printStackTrace();
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
         }
-        return json;
     }
 
     public void setParams(SharedPreferences params) {
         SharedPreferences params1 = params;
     }
+
+    //public static HttpsURLConnection setUpHttpsConnection(String urlString, tracerengine Tracer) {
+
 }

@@ -17,16 +17,6 @@
  */
 package widgets;
 
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import rinor.CallUrl;
-
-import org.domogik.domodroid13.R;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import activities.Graphics_Manager;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -34,14 +24,21 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import activities.Graphics_Manager;
+import misc.tracerengine;
+import rinor.CallUrl;
 
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
@@ -58,6 +55,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private Message msg;
     private String login;
     private String password;
+    private Boolean SSL;
     private float api_version;
     private String command_id;
     private String command_type;
@@ -105,6 +103,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         mytag = "Graphical_Trigger(" + dev_id + ")";
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
+        SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
 
         boolean usable = false;
@@ -191,7 +190,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000");
+                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

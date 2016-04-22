@@ -49,6 +49,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -83,7 +84,7 @@ import android.widget.LinearLayout;
 @SuppressWarnings({"static-access"})
 public class Activity_Main extends Activity implements OnClickListener {
 
-
+    public static Context context;
     //private PowerManager.WakeLock PM_WakeLock;
     private SharedPreferences SP_params;
     private SharedPreferences.Editor SP_prefEditor;
@@ -137,6 +138,7 @@ public class Activity_Main extends Activity implements OnClickListener {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Activity_Main.context = getApplicationContext();
         super.onCreate(savedInstanceState);
         myself = this;
         if (android.os.Build.VERSION.SDK_INT == 8) // FROYO (8)
@@ -458,7 +460,7 @@ public class Activity_Main extends Activity implements OnClickListener {
         if (SP_params.getBoolean("SYNC", false)) {
             //A config exists and a sync as been done by past.
             if (WU_widgetUpdate == null) {
-                Tracer.i(mytag, "OnCreate Params splach is false and WidgetUpdate is null startCacheengine!");
+                Tracer.i(mytag, "OnCreate Params splash is false and WidgetUpdate is null startCacheengine!");
                 startCacheEngine();
             }
         }

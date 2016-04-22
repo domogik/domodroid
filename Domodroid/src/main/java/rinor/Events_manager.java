@@ -1,22 +1,22 @@
 package rinor;
 
-import java.util.ArrayList;
-import java.util.TimerTask;
-
-import org.zeromq.ZMQ;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import database.Cache_Feature_Element;
-import database.JSONParser;
-import database.WidgetUpdate;
-import misc.tracerengine;
-
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.zeromq.ZMQ;
+
+import java.util.ArrayList;
+import java.util.TimerTask;
+
+import database.Cache_Feature_Element;
+import database.JSONParser;
+import database.WidgetUpdate;
+import misc.tracerengine;
 
 public class Events_manager {
     private static Events_manager instance;
@@ -41,6 +41,7 @@ public class Events_manager {
     private Boolean sleeping = false;
     private String login;
     private String password;
+    private Boolean SSL;
     private float api_version;
     private String MQaddress;
     private String MQsubport;
@@ -81,6 +82,7 @@ public class Events_manager {
         urlAccess = params.getString("URL", "1.1.1.1");
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
+        SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
         MQaddress = params.getString("MQaddress", null);
         MQsubport = params.getString("MQsubport", null);
@@ -243,7 +245,7 @@ public class Events_manager {
                         return null;
                     }
                 } else {
-                    //todo say user MQ adress or port is empty
+                    //todo say user MQ address or port is empty
                     //Toast.makeText(null, R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
                     Tracer.d(mytag, "MQ adress or port is empty");
                 }
@@ -284,7 +286,7 @@ public class Events_manager {
                         if (sleep_duration > max_time_for_ticket) {
                             cache_out_of_date = true;
                             request = ticket_request;
-                            com_broken = false;        //Retry immediatly to reconnect
+                            com_broken = false;        //Retry immediately to reconnect
                         }
                     }
                     // Exit from sleep loop ( wake up requested )
@@ -314,7 +316,7 @@ public class Events_manager {
                     Tracer.w(mytag, "Requesting server <" + request + ">");
                     try {
                         //Set timeout very high as tickets is a long process
-                        event = Rest_com.connect_jsonobject(request, login, password, 30000); //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 30000, SSL); //Blocking request : we must have an answer to continue...
                         error = 0;
                     } catch (Exception e) {
                         error = 1;
@@ -420,7 +422,7 @@ public class Events_manager {
                     try {
                         Tracer.w(mytag, "Freeing ticket <" + request + ">");
                         stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-                        event = Rest_com.connect_jsonobject(request, login, password, 3000);        //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 3000, SSL);        //Blocking request : we must have an answer to continue...
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {

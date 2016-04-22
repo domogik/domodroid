@@ -123,6 +123,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private String test_unite;
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
+    private Boolean SSL;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -238,6 +239,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
+        SSL = params.getBoolean("ssl_activate", false);
 
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
         Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
@@ -295,7 +297,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         }
                     } else {
                         // #93
-                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
+                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0") || loc_Value.equals("0.0")) {
                             change_this_icon(0);
                             //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
                         } else {
@@ -463,11 +465,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000);
+                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000);
+                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
             }
 
         } catch (Exception e) {

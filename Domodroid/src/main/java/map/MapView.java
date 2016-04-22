@@ -1,44 +1,5 @@
 package map;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.domogik.domodroid13.R;
-
-import rinor.CallUrl;
-
-import database.Cache_management;
-import database.DmdContentProvider;
-import database.DomodroidDB;
-import database.WidgetUpdate;
-import activities.Activity_Map;
-import activities.Graphics_Manager;
-import activities.Sliding_Drawer;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-import widgets.Graphical_Binary;
-import widgets.Graphical_Binary_New;
-import widgets.Graphical_Boolean;
-import widgets.Graphical_Cam;
-import widgets.Graphical_Color;
-import widgets.Graphical_History;
-import widgets.Graphical_Info;
-import widgets.Graphical_Info_commands;
-import widgets.Graphical_Info_with_achartengine;
-import widgets.Graphical_List;
-import widgets.Graphical_Range;
-import widgets.Graphical_Trigger;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -58,10 +19,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.List_Icon_Adapter;
-import misc.tracerengine;
-
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -70,6 +27,46 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Activity_Map;
+import activities.Graphics_Manager;
+import activities.Sliding_Drawer;
+import database.Cache_management;
+import database.DmdContentProvider;
+import database.DomodroidDB;
+import database.WidgetUpdate;
+import misc.List_Icon_Adapter;
+import misc.tracerengine;
+import rinor.CallUrl;
+import widgets.Graphical_Binary;
+import widgets.Graphical_Binary_New;
+import widgets.Graphical_Boolean;
+import widgets.Graphical_Cam;
+import widgets.Graphical_Color;
+import widgets.Graphical_History;
+import widgets.Graphical_Info;
+import widgets.Graphical_Info_commands;
+import widgets.Graphical_Info_with_achartengine;
+import widgets.Graphical_List;
+import widgets.Graphical_Range;
+import widgets.Graphical_Trigger;
 
 public class MapView extends View {
     private Bitmap map;
@@ -139,6 +136,7 @@ public class MapView extends View {
     private final float scale;
     private final String login;
     private final String password;
+    private Boolean SSL;
     private String Address;
     private String URL;
     private String state_progress;
@@ -158,6 +156,7 @@ public class MapView extends View {
         api_version = params.getFloat("API_VERSION", 0);
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
+        SSL = params.getBoolean("ssl_activate", false);
 
         //activated=true;
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -1686,7 +1685,7 @@ public class MapView extends View {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000");
+                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

@@ -18,6 +18,30 @@
 package widgets;
 
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,38 +49,9 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import rinor.CallUrl;
-
 import database.WidgetUpdate;
-
-
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-
 import misc.tracerengine;
-
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import rinor.CallUrl;
 
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
@@ -81,6 +76,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String type;
     private String login;
     private String password;
+    private Boolean SSL;
     private float api_version;
     private int id;
     private Entity_Feature feature;
@@ -130,6 +126,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
+        SSL = params.getBoolean("ssl_activate", false);
 
         //state key
         TextView state_key_view = new TextView(context);
@@ -311,7 +308,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                          Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                          JSONObject json_Ack = null;
                                          try {
-                                             new CallUrl().execute(Url2send, login, password, "3000");
+                                             new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
                                              //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          } catch (Exception e) {
                                              Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

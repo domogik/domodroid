@@ -22,6 +22,7 @@
     $ 1.4
       % Version 17
       _ 2016-xx-xx
+      * #96 SSL for Rest.
       % Version 16
       _ 2016-04-07
       * New function to move up/don a widget to reorder widget display.

@@ -17,21 +17,6 @@
  */
 package widgets;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
-
-import Abstract.calcul;
-import rinor.Rest_com;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import org.domogik.domodroid13.*;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -43,17 +28,28 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Vector;
+
+import Abstract.calcul;
+import misc.tracerengine;
+import rinor.Rest_com;
 
 
 public class Graphical_Info_View extends View implements OnClickListener {
@@ -114,6 +110,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final float size15;
     private final float size10;
     private final float api_version;
+    private Boolean SSL;
 
     public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params) {
         super(context);
@@ -122,6 +119,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
+        SSL = params.getBoolean("ssl_activate", false);
 
         values = new Vector<>();
         activate = true;
@@ -591,22 +589,22 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 try {
                     if (api_version <= 0.6f) {
                         Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                        json_GraphValues = Rest_com.connect_jsonobject(url + "stats/" + dev_id + "/" +
+                        json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" +
                                 state_key +
                                 "/from/" +
                                 startTimestamp +
                                 "/to/" +
                                 currentTimestamp +
-                                "/interval/" + step + "/selector/avg", login, password, 10000);
+                                "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
                     } else if (api_version >= 0.7f) {
                         Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                         //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                        json_GraphValues = Rest_com.connect_jsonobject(url + "sensorhistory/id/" + id +
+                        json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "sensorhistory/id/" + id +
                                 "/from/" +
                                 startTimestamp +
                                 "/to/" +
                                 currentTimestamp +
-                                "/interval/" + step + "/selector/avg", login, password, 10000);
+                                "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
                     }
                 } catch (Exception e) {
                     Tracer.d(mytag, "Could not get sensor history.");
@@ -616,7 +614,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 //Tracer.d(mytag,"UpdateThread ("+dev_id+") Rinor result: "+json_GraphValues.toString());
 
                 //TODO
-                //replace json_GraphValues.getJSONArray("stats") != null by somthing else as it may crash on a 0.4.
+                //replace json_GraphValues.getJSONArray("stats") != null by something else as it may crash on a 0.4.
                 //if(! ((json_GraphValues != null) && (json_GraphValues.getJSONArray("stats") != null))) {
                 if (json_GraphValues == null) {
                     //That seems to be a zombie

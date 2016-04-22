@@ -34,6 +34,11 @@
             android:key="http_auth_password"
             android:password="true"
             android:title="@string/OPTION_server_http_password" />
+        <CheckBoxPreference
+            android:key="ssl_activate"
+            android:summaryOff="No ssl use"
+            android:summaryOn="Using https for Rest"
+            android:title="SSL option" />
         <Preference
             android:enabled="false"
             android:key="UPDATE_TIMER"

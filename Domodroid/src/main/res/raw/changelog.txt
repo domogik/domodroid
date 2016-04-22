@@ -22,6 +22,7 @@
     $ 1.4
       % Version 17
       _ 2016-xx-xx
+      * Close #98 Camera widget from map not working.
       * #96 SSL for Rest.
       % Version 16
       _ 2016-04-07

@@ -1065,6 +1065,18 @@ public class MapView extends View {
                     widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_Color.container = (FrameLayout) panel_widget;
             panel_widget.addView(colorw);
+        } else if (feature.getValue_type().equals("video")) {
+            if (!parameters.contains("command")) {
+                Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(cam);
+            } else {
+                info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Info_commands.container = (FrameLayout) panel_widget;
+                panel_widget.addView(info_commands);
+            }
+
         } else if (feature.getValue_type().equals("string")) {
             Tracer.i(mytag, "parameters=" + parameters);
             if (feature.getDevice_feature_model_id().contains("call")) {

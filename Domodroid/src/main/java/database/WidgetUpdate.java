@@ -26,8 +26,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -1030,7 +1028,7 @@ public class WidgetUpdate {
                     urlConnection.setDoOutput(true);
                     OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(getQuery(nameValuePairs));
+                    writer.write(Abstract.httpsUrl.getQuery(nameValuePairs));
                     writer.flush();
                     writer.close();
                     os.close();
@@ -1045,24 +1043,6 @@ public class WidgetUpdate {
 
 
         }
-    }
-
-    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException, UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        for (NameValuePair pair : params) {
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-        }
-
-        return result.toString();
     }
 
     /*

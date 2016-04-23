@@ -86,7 +86,7 @@
         <string name="Sync">Sync</string>
         <string name="Exit_Program">Quitter</string>
         <string name="Rename_title">Renommer</string>
-        <string name="Rename_message">Choisir le texte à afficher.\nCette valeur sera perdue si vous faites une synchronisation.</string>
+        <string name="Rename_message">Choisir le texte à afficher.\nCela changera la description de ce device dans Domogik 0.5.</string>
         <string name="Delete_feature_title">Supprimer</string>
         <string name="Delete_feature_message">Supprimer cette fonctionnalitée.\nCette valeur sera perdue si vous faites une synchronisation.</string>
         <string name="New_ROOM_title">Créer une Pièce</string>
@@ -603,4 +603,8 @@
         <string name="move_down">Descendre</string>
         <string name="motion">Mouvement</string>
         <string name="no_motion">Aucun mouvement</string>
-    </resources>
+        <string name="domogik_information">Information de Domogik</string>
+        <string name="domogik_error">Erreur de Domogik</string>
+        <string name="device_update_message">Un Device a changé dans Domogik, vous devriez refaire une synchronisation.</string>
+        <string name="stats_error">Erreur lors de la récupération des stats dans Domogik.</string>
+</resources>

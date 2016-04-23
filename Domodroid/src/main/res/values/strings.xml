@@ -95,7 +95,7 @@
     <string name="Exit_Program">Exit Program</string>
 
     <string name="Rename_title">Rename</string>
-    <string name="Rename_message">Set the text to be displayed.\nThis information will be lost if you make a new sync.</string>
+    <string name="Rename_message">Set the text to be displayed.\nIt will change the description of the device in Domogik 0.5.</string>
 
     <string name="Delete_feature_title">Delete</string>
     <string name="Delete_feature_message">Delete this feature.\nThis information will be lost if you make a new sync.</string>

@@ -197,6 +197,7 @@ public class Events_manager {
                         subscriber.connect("tcp://" + MQaddress + ":" + MQsubport);
                         Tracer.d(mytag, "subscriber.connect (tcp://" + MQaddress + ":" + MQsubport + ")");
                         subscriber.subscribe("device-stats".getBytes());
+                        subscriber.subscribe("device.update".getBytes());
                         Tracer.d(mytag, "subscriber.subscribe(device-stats)");
 
                         while (alive) {
@@ -221,6 +222,11 @@ public class Events_manager {
                                     } catch (JSONException e) {
                                         Tracer.e(mytag, "Error making the json from MQ result");
                                         Tracer.e(mytag, e.toString());
+                                    }
+                                } else if (result.contains("device.update")) {
+                                    Tracer.i(mytag, "New MQ message for device.update : " + result);
+                                    if (state_engine_handler != null) {
+                                        state_engine_handler.sendEmptyMessage(9903);
                                     }
                                 }
                                 if (subscriber.getReceiveTimeOut() == 1) {

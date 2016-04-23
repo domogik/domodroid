@@ -1,6 +1,7 @@
 package database;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,7 +33,7 @@ public class WidgetUpdate {
     private SharedPreferences sharedparams;
 
     private boolean activated;
-    private Activity context;
+    private static Activity context;
     private DomodroidDB domodb;
     private final String mytag = "WidgetUpdate";
     private TimerTask doAsynchronousTask;
@@ -99,7 +101,7 @@ public class WidgetUpdate {
 
     }
 
-    public Boolean init(tracerengine Trac, Activity context, SharedPreferences params) {
+    public Boolean init(tracerengine Trac, final Activity context, SharedPreferences params) {
         Boolean result = false;
         if (init_done) {
             Log.e(mytag, "init already done");
@@ -201,7 +203,6 @@ public class WidgetUpdate {
                                 last_ticket = event.item;
                             }
 
-
                             mapView = null;
                             //mapView will be set by update_cache_device if at least one mini widget has to be notified
                             update_cache_device(event.device_id, event.key, event.Value);
@@ -243,6 +244,15 @@ public class WidgetUpdate {
                     //Time out processed
                     callback_counts++;
 
+                } else if (msg.what == 9903) {
+                    //New or update device detected by MQ
+                    //Notify on main screen
+                    Tracer.i(mytag, "Handler send a notification to MainView");
+                    AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
+                    dialog_device_update.setTitle(context.getText(R.string.device_update_title));
+                    dialog_device_update.setMessage(context.getText(R.string.device_update_message));
+                    dialog_device_update.show();
+                    //todo notify on map screen if a device change.
                 }
             }
         };
@@ -655,7 +665,7 @@ public class WidgetUpdate {
      * 	(Doume, 2013/02/15)
      */
     /*
-	 * Private method to update values in cache, and eventually notify all connected clients
+     * Private method to update values in cache, and eventually notify all connected clients
 	 * Parameter : result of Rest request (multiple stats)
 	 */
     private int update_cache(JSONObject json_widget_state) {
@@ -1080,6 +1090,10 @@ public class WidgetUpdate {
     public Entity_Feature[] requestFeatures() {
         return domodb.requestFeatures();
 
+    }
+
+    public static Activity getactivity() {
+        return context;
     }
 
 

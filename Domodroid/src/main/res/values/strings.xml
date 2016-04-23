@@ -672,4 +672,6 @@
     <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="virtual_video">Virtual Video</string>
+    <string name="device_update_title">Domogik information</string>
+    <string name="device_update_message">A device has changed in Domogik, you should do a new sync.</string>
 </resources>

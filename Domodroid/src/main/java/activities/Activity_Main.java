@@ -17,52 +17,19 @@
  */
 package activities;
 
-import org.domogik.domodroid13.R;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
-
-import org.json.JSONException;
-
-import Abstract.common_method;
-import widgets.Basic_Graphical_zone;
-import Entity.Entity_Area;
-import Entity.Entity_Room;
-import misc.changelog;
-import misc.tracerengine;
-import mq.Main;
-import database.Cache_management;
-import database.DomodroidDB;
-import database.WidgetUpdate;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-//import android.os.PowerManager;
-
 import android.preference.PreferenceManager;
-
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,16 +37,42 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
+
+import Abstract.common_method;
+import Entity.Entity_Area;
+import Entity.Entity_Room;
+import database.Cache_management;
+import database.DomodroidDB;
+import database.WidgetUpdate;
+import misc.changelog;
+import misc.tracerengine;
+import mq.Main;
+import widgets.Basic_Graphical_zone;
+
+//import android.os.PowerManager;
 
 @SuppressWarnings({"static-access"})
 public class Activity_Main extends Activity implements OnClickListener {
@@ -323,6 +316,16 @@ public class Activity_Main extends Activity implements OnClickListener {
 					dialog_message.show();
 
 					 */
+                } else if (msg.what == 8001) {
+                    AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
+                    dialog_stats_error.setTitle(R.string.domogik_error);
+                    dialog_stats_error.setMessage(R.string.stats_error);
+                    dialog_stats_error.show();
+                } else if (msg.what == 8002) {
+                    AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
+                    dialog_stats_error.setTitle(R.string.domogik_error);
+                    dialog_stats_error.setMessage("ERROR");
+                    dialog_stats_error.show();
                 } else if (msg.what == 8999) {
                     //Cache engine is ready for use....
                     if (Tracer != null)
@@ -754,8 +757,8 @@ public class Activity_Main extends Activity implements OnClickListener {
                             while (!WU_widgetUpdate.ready) {
                                 //Wait the widgetupdate to be ready or this widgets won't be refreshed
                             }
-                        } catch (Exception e1){
-                            Tracer.e(mytag,e1.toString());
+                        } catch (Exception e1) {
+                            Tracer.e(mytag, e1.toString());
                         }
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {

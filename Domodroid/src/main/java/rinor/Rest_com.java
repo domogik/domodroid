@@ -29,8 +29,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
@@ -40,10 +40,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -87,8 +86,10 @@ public class Rest_com {
                 } else {
                     Tracer.d(mytag, "Resource not available>");
                 }
-            } catch (HttpHostConnectException | ClientProtocolException e) {
-                Tracer.e(mytag, e.toString());
+            } catch (UnknownHostException e) {
+                Tracer.e(mytag, "Unable to resolve host");
+            } catch (ConnectTimeoutException e) {
+                Tracer.e(mytag, "Timeout connecting to domogik");
             } catch (Exception e) {
                 Tracer.e(mytag, e.toString());
             }
@@ -108,8 +109,12 @@ public class Rest_com {
                 instream.close();
                 //} catch (HttpHostConnectException e) {
                 //    e.printStackTrace();
+            } catch (UnknownHostException e) {
+                Tracer.e(mytag, "Unable to resolve host");
+            } catch (ConnectTimeoutException e) {
+                Tracer.e(mytag, "Timeout connecting to domogik");
             } catch (IOException | JSONException e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
             return json;
 
@@ -145,11 +150,16 @@ public class Rest_com {
                     Tracer.d(mytag, "Resource not available>");
                 }
 
-
+            } catch (UnknownHostException e) {
+                json = new JSONArray();
+                json.put("Error ; Unknown host");
+                Tracer.e(mytag, "Unable to resolve host");
             } catch (HttpHostConnectException e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
+            } catch (ConnectTimeoutException e) {
+                Tracer.e(mytag, "Timeout connecting to domogik");
             } catch (IOException | JSONException e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
             return json;
         } else {
@@ -167,8 +177,12 @@ public class Rest_com {
                 instream.close();
                 //} catch (HttpHostConnectException e) {
                 //    e.printStackTrace();
+            } catch (UnknownHostException e) {
+                Tracer.e(mytag, "Unable to resolve host");
+            } catch (ConnectTimeoutException e) {
+                Tracer.e(mytag, "Timeout connecting to domogik");
             } catch (IOException | JSONException e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
             return json;
 
@@ -178,7 +192,5 @@ public class Rest_com {
     public void setParams(SharedPreferences params) {
         SharedPreferences params1 = params;
     }
-
-    //public static HttpsURLConnection setUpHttpsConnection(String urlString, tracerengine Tracer) {
 
 }

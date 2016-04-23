@@ -146,16 +146,20 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     }
 
     public void onClick(View v) {
-        if (url.equals("Mjpeg video url") || url.equals("Virtual Video"))
-            url = session.getValue();
-        if (!url.equals(null)) {
-            Intent intent = new Intent(context, Activity_Cam.class);
-            Bundle b = new Bundle();
-            b.putString("url", url);
-            Tracer.i(mytag, "Opening camera at: " + url);
-            b.putString("name", name_cam);
-            intent.putExtras(b);
-            context.startActivity(intent);
+        try {
+            if (url.equals("Mjpeg video url") || url.equals("Virtual Video"))
+                url = session.getValue();
+            if (!url.equals(null)) {
+                Intent intent = new Intent(context, Activity_Cam.class);
+                Bundle b = new Bundle();
+                b.putString("url", url);
+                //Tracer.i(mytag, "Opening camera at: " + url);
+                b.putString("name", name_cam);
+                intent.putExtras(b);
+                context.startActivity(intent);
+            }
+        } catch (Exception e) {
+            Tracer.e(mytag, e.toString());
         }
     }
 }

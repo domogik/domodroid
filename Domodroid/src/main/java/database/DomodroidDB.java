@@ -1,5 +1,10 @@
 package database;
 
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,12 +14,6 @@ import Entity.Entity_Feature;
 import Entity.Entity_Icon;
 import Entity.Entity_Map;
 import Entity.Entity_Room;
-
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-
 import misc.tracerengine;
 
 public class DomodroidDB {
@@ -412,7 +411,7 @@ public class DomodroidDB {
         values.put("place_type", place_type);
         values.put("order", order);
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_POSITION_ID, values);
-        Tracer.d(mytag, "Moving "+order+" the feature id:" + id + " in place_id:" + place_id + " of type:" + place_type);
+        Tracer.d(mytag, "Moving " + order + " the feature id:" + id + " in place_id:" + place_id + " of type:" + place_type);
     }
     ////////////////// REQUEST
 
@@ -907,6 +906,22 @@ public class DomodroidDB {
         return features;
     }
 
+    public Entity_Feature requestFeaturesbyid(String id) {
+        Cursor curs = null;
+        Entity_Feature feature = null;
+        try {
+            Tracer.v(mytag + "(" + owner + ")", "requesting features by id" + id);
+            curs = context.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_BY_ID, null, null, new String[]{(id)}, null);
+            curs.moveToFirst();
+            feature = new Entity_Feature(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request features by id error");
+            e.printStackTrace();
+        }
+        curs.close();
+        return feature;
+    }
+
     public String requestFeatureState(int device_id, String key) {
         String state = " ";
         String[] projection = {"value"};
@@ -935,5 +950,6 @@ public class DomodroidDB {
 
         return state;
     }
+
 
 }

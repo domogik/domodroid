@@ -31,6 +31,7 @@ public class DmdContentProvider extends ContentProvider {
     private static final int REQUEST_ROOM = 110;
     private static final int REQUEST_ICON = 120;
     private static final int REQUEST_FEATURE_ALL = 130;
+    private static final int REQUEST_FEATURE_BY_ID =131;
     private static final int REQUEST_FEATURE_MAP = 140;
     private static final int REQUEST_MAP_SWITCHES = 141;
     private static final int REQUEST_FEATURE_ID = 150;
@@ -78,6 +79,7 @@ public class DmdContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI_REQUEST_ROOM = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_ROOM");
     public static final Uri CONTENT_URI_REQUEST_ICON = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_ICON");
     public static final Uri CONTENT_URI_REQUEST_FEATURE_ALL = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ALL");
+    public static final Uri CONTENT_URI_REQUEST_FEATURE_BY_ID = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_BY_ID");
     public static final Uri CONTENT_URI_REQUEST_FEATURE_MAP = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP");
     public static final Uri CONTENT_URI_REQUEST_MAP_SWITCHES = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_MAP_SWITCHES");
     public static final Uri CONTENT_URI_REQUEST_FEATURE_ID = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ID");
@@ -132,6 +134,7 @@ public class DmdContentProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_ROOM", REQUEST_ROOM);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_ICON", REQUEST_ICON);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ALL", REQUEST_FEATURE_ALL);
+        sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_BY_ID", REQUEST_FEATURE_BY_ID);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP", REQUEST_FEATURE_MAP);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_MAP_SWITCHES", REQUEST_MAP_SWITCHES);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ID", REQUEST_FEATURE_ID);
@@ -527,6 +530,12 @@ public class DmdContentProvider extends ContentProvider {
                 //cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
                 cursor = mDB.getReadableDatabase().rawQuery(
                         "SELECT * FROM table_feature order by name COLLATE NOCASE"
+                        , null);
+                break;
+            case REQUEST_FEATURE_BY_ID:
+                //cursor=mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature INNER JOIN table_feature_association ON table_feature.id = table_feature_association.device_feature_id GROUP BY device_id,state_key",null);
+                cursor = mDB.getReadableDatabase().rawQuery(
+                        "SELECT * FROM table_feature WHERE table_feature.id = " + selectionArgs[0]
                         , null);
                 break;
             case REQUEST_FEATURE_ASSOCIATION_ALL:

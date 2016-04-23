@@ -9,11 +9,21 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -249,7 +259,7 @@ public class WidgetUpdate {
                     //Notify on main screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
                     AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
-                    dialog_device_update.setTitle(context.getText(R.string.device_update_title));
+                    dialog_device_update.setTitle(context.getText(R.string.domogik_information));
                     dialog_device_update.setMessage(context.getText(R.string.device_update_message));
                     dialog_device_update.show();
                     //todo notify on map screen if a device change.
@@ -684,12 +694,29 @@ public class WidgetUpdate {
         try {
             itemArray = json_widget_state.getJSONArray("stats");
         } catch (Exception e) {
-            Tracer.i(mytag, "Cache update : No stats result !");
-            Tracer.d(mytag, e.toString());
+            Tracer.e(mytag, "Cache update : No stats result !");
+            Tracer.e(mytag, e.toString());
+            if (parent[0] != null) {
+                parent[0].sendEmptyMessage(8001);    //Ask main to display message
+            }
             return 0;
         }
-        if (itemArray == null)
+        if (itemArray == null) {
+            if (parent[0] != null) {
+                parent[0].sendEmptyMessage(8001);    //Ask main to display message
+            }
             return 0;
+        }
+        try {
+            if (itemArray.getJSONObject(0).getString("Error").length() > 0) {
+                if (parent[0] != null) {
+                    parent[0].sendEmptyMessage(8002);    //Ask main to display message
+                }
+                return 0;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         mapView = null;
         for (int i = 0; i < itemArray.length(); i++) {
             //force to process to true for all item and then to false if something wrong
@@ -954,6 +981,7 @@ public class WidgetUpdate {
         locked = false;
     }
 
+
     /*
      * Some methods to help widgets for database access (they don't have anymore to connect to DomodroidDB !
      *
@@ -965,6 +993,19 @@ public class WidgetUpdate {
         }
         try {
             domodb.update_name(id, new_desc, type);
+            //Todo Create a method to Rename or change description directly on domogik
+            try {
+                Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPut httpput = new HttpPut("http://domogik.dev.tikijs.dyndns.org:40406/rest/device/" + feature.getDevId());
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
+                httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httpput);
+                Tracer.d(mytag, "Put method response=" + response.getStatusLine().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             Tracer.d(mytag, e.toString());
         }

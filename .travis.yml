@@ -11,7 +11,7 @@ notifications:
   email: true
   irc: "irc.freenode.net#domogik"
   on_success: never
-  on_failure: always
+  on_failure: never
 
 before_install:
 

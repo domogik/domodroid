@@ -21,11 +21,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -994,28 +1002,75 @@ public class WidgetUpdate {
         try {
             domodb.update_name(id, new_desc, type);
             //Todo Create a method to Rename or change description directly on domogik
-            try {
-                Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPut httpput = new HttpPut("http://domogik.dev.tikijs.dyndns.org:40406/rest/device/" + feature.getDevId());
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-                nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse response = httpclient.execute(httpput);
-                Tracer.d(mytag, "Put method response=" + response.getStatusLine().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
+            // for SSL too
+            if (!sharedparams.getBoolean("ssl_activate", false)) {
+                try {
+                    Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPut httpput = new HttpPut(sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
+                            + sharedparams.getString("rinorPath", "/") + "device/" + feature.getDevId());
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                    nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
+                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    HttpResponse response = httpclient.execute(httpput);
+                    Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
+                } catch (IOException e) {
+                    Tracer.d(mytag, "Renaming to Domogik without SSL error " + e.toString());
+                }
+            } else {
+                try {
+                    Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                    HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(
+                            sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
+                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
+                    urlConnection.setRequestMethod("PUT");
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                    nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
+                    String result = null;
+                    urlConnection.setDoOutput(true);
+                    OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(getQuery(nameValuePairs));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    int responseCode = urlConnection.getResponseCode();
+                    Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
+                } catch (IOException e) {
+                    Tracer.d(mytag, "Renaming to Domogik with SSL error " + e.toString());
+                }
             }
         } catch (Exception e) {
             Tracer.d(mytag, e.toString());
+
+
         }
+    }
+
+    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException, UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (NameValuePair pair : params) {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
     }
 
     /*
      * This one allow Widgets to permut (for moving up or down)
      */
 
-    public void move_one_feature_association(int id, int place_id, String place_type, String order) {
+    public void move_one_feature_association(int id, int place_id, String place_type, String
+            order) {
         domodb.move_one_feature_association(id, place_id, place_type, order);
     }
 

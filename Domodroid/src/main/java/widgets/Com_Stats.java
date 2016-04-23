@@ -77,12 +77,12 @@ public class Com_Stats extends FrameLayout {
     private final TextView period_eventsPS;
     private final TextView period_eventsBS;
 
-    public Com_Stats(tracerengine Trac, Activity context, int widgetSize) {
+    public Com_Stats(tracerengine Tracer, Activity context, int widgetSize) {
         super(context);
 
         String mytag = "Com_Stats";
         this.setPadding(5, 5, 5, 5);
-        Trac.e(mytag, "New instance");
+        Tracer.i(mytag, "New instance");
 
         //panel with border
         LinearLayout background = new LinearLayout(context);
@@ -156,7 +156,7 @@ public class Com_Stats extends FrameLayout {
             }
 
         };
-        Trac.e(mytag, "Instance created");
+        Tracer.e(mytag, "Instance created");
         Timer();
 
 

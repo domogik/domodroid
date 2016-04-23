@@ -17,22 +17,6 @@
  */
 package widgets;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import Abstract.common_method;
-import database.DomodroidDB;
-import misc.List_Icon_Adapter;
-import misc.tracerengine;
-
-import org.domogik.domodroid13.R;
-
-import database.Cache_management;
-import database.DmdContentProvider;
-import activities.Gradients_Manager;
-import activities.Graphics_Manager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -50,7 +34,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.domogik.domodroid13.R;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import Abstract.common_method;
+import activities.Gradients_Manager;
+import activities.Graphics_Manager;
+import database.Cache_management;
+import database.DmdContentProvider;
+import database.DomodroidDB;
+import misc.List_Icon_Adapter;
+import misc.tracerengine;
 
 public class Basic_Graphical_widget extends FrameLayout implements OnLongClickListener {
 
@@ -188,7 +195,6 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id, result, "feature");
-                    //Todo Create a method to Rename or change descritpion directly on domogik
                     // need to save table_feature to json but this method do not exists
                     //prefEditor.putString("FEATURE_LIST", domodb.request_json_FeatureList().toString());
                     //common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());

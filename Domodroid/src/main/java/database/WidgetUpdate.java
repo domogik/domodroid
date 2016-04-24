@@ -999,8 +999,7 @@ public class WidgetUpdate {
         }
         try {
             domodb.update_name(id, new_desc, type);
-            //Todo Create a method to Rename or change description directly on domogik
-            // for SSL too
+            //Todo Move this method somewhere else and mak it reusable.
             if (!sharedparams.getBoolean("ssl_activate", false)) {
                 try {
                     Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));

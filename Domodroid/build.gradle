@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 sourceCompatibility = 1.7 //changed from 1.6
 
 android {
-  buildToolsVersion "23.0.3"
+  buildToolsVersion "23.0.1"
     compileSdkVersion 23
 
     //only if you use Apache packages

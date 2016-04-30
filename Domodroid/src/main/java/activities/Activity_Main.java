@@ -839,8 +839,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //TODO prepare a normal menu call.
-
+        //normal menu call.
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -849,7 +848,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
                 Intent intent = new Intent(this, Main.class);
                 this.startActivity(intent);
                 return true;
-
             case R.id.menu_exit:
                 //Disconnect all opened sessions....
                 Tracer.v(mytag + "Exit", "Stopping WidgetUpdate thread !");
@@ -863,26 +861,22 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
                 //And stop main program
                 this.finish();
                 return true;
-
             case R.id.menu_house_config:
                 Tracer.v(mytag + ".onclick()", "Call to House settings screen");
                 Dialog_House DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
                 DIALOG_house_set.show();
                 DIALOG_house_set.setOnDismissListener(house_listener);
                 return true;
-
             case R.id.menu_preferences:
                 //Prepare a normal preferences activity.
                 Intent helpI = new Intent(Activity_Main.this, Preference.class);
                 startActivity(helpI);
                 return true;
-
             case R.id.menu_about:
                 //dont_freeze=true;		//To avoid WidgetUpdate engine freeze
                 Intent helpI1 = new Intent(Activity_Main.this, Activity_About.class);
                 startActivity(helpI1);
                 return true;
-
             case R.id.menu_stats:
                 if (SP_params.getBoolean("SYNC", false)) {
                     loadWigets(0, "statistics");
@@ -894,12 +888,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
                     AD_notSyncAlert.show();
                 }
                 return true;
-
             case R.id.menu_sync:
                 // click on 'sync' button into Sliding_Drawer View
                 run_sync_dialog();        // And run a resync with Rinor server
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,26 +19,23 @@ import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
@@ -49,6 +45,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,13 +61,13 @@ import map.MapView;
 import misc.CopyFile;
 import misc.tracerengine;
 
-public class Activity_Map extends AppCompatActivity implements OnPanelListener, OnClickListener {
+public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
     private Sliding_Drawer panel;
-    private Sliding_Drawer topPanel;
+    //private Sliding_Drawer topPanel;
     private Sliding_Drawer bottomPanel;
     public static Dialog dialog_feature;
     private Entity_Feature[] listFeature;
@@ -80,14 +77,13 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener, 
     private MapView mapView;
     private SharedPreferences.Editor prefEditor;
     private SharedPreferences params;
-    private ViewGroup panel_widget;
-    private ViewGroup panel_button;
+//    private ViewGroup panel_widget;
+//    private ViewGroup panel_button;
 
     private ListView listeMap;
     private ArrayList<HashMap<String, String>> listItem;
     private Animation animation1;
     private Animation animation2;
-    private TextView menu_green;
 
     private WidgetUpdate widgetUpdate;
     private static Handler sbanim;
@@ -99,6 +95,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener, 
     private String owner = "Map";
     private Boolean dont_freeze = false;
     private final String mytag = "Activity_Map";
+    private Menu mainMenu;
 
     private static final int PICK_IMAGE = 1;
 
@@ -111,28 +108,32 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO add normal menu
         params = PreferenceManager.getDefaultSharedPreferences(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Tracer = tracerengine.getInstance(params, this);
-        //prefEditor = params.edit();
+        prefEditor = params.edit();
         mapView = new MapView(Tracer, this, params);
         mapView.setParams(params);
         mapView.setUpdate(params.getInt("UPDATE_TIMER", 300));
         setContentView(R.layout.activity_map);
-        ViewGroup parent = (ViewGroup) findViewById(R.id.map_container);
+        ViewGroup parent = (ViewGroup) findViewById(R.id.map_container1);
 
-        //titlebar
-        final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
-        titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title", 40));
-
-        //menu button
-        TextView menu_white = (TextView) findViewById(R.id.menu_button1);
-        menu_white.setOnClickListener(this);
-        menu_white.setTag("menu");
-        menu_green = (TextView) findViewById(R.id.menu_button2);
-        menu_green.setVisibility(View.GONE);
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ignored) {
+        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
 
         animation1 = new AlphaAnimation(0.0f, 1.0f);
         animation1.setDuration(500);
@@ -156,89 +157,19 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener, 
         build_maps_list();
 
         //sliding drawer
-        topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
-        panel.setOnPanelListener(this);
-        panel.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        //topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
+//        panel.setOnPanelListener(this);
+
 
         bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
         panel.setOnPanelListener(this);
-        mapView.setTopDrawer(topPanel);
+        //mapView.setTopDrawer(topPanel);
         mapView.setBottomDrawer(bottomPanel);
-
-        panel_widget = (ViewGroup) findViewById(R.id.panelWidget);
-        panel_button = (ViewGroup) findViewById(R.id.panelButton);
-
-        mapView.setPanel_widget(panel_widget);
-        mapView.setPanel_button(panel_button);
-
-        //add remove buttonObject engine = (Object)widgetUpdate;
-        Button add = new Button(this);
-        add.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
-        add.setPadding(10, 13, 10, 13);
-        add.setText(R.string.map_button1);
-        add.setTextColor(Color.parseColor("#cfD1D1"));
-        add.setTextSize(15);
-        add.setTag("add");
-        add.setBackgroundColor(Color.parseColor("#00000000"));
-        add.setOnClickListener(this);
-
-        Button help = new Button(this);
-        help.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
-        help.setPadding(10, 13, 10, 13);
-        help.setText(R.string.map_button3);
-        help.setTextColor(Color.parseColor("#cfD1D1"));
-        help.setTextSize(15);
-        help.setTag("help");
-        help.setBackgroundColor(Color.parseColor("#00000000"));
-        help.setOnClickListener(this);
-
-        Button remove = new Button(this);
-        remove.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
-        remove.setPadding(10, 13, 10, 13);
-        remove.setText(R.string.map_button2);
-        remove.setTextColor(Color.parseColor("#cfD1D1"));
-        remove.setTextSize(15);
-        remove.setTag("remove");
-        remove.setBackgroundColor(Color.parseColor("#00000000"));
-        remove.setOnClickListener(this);
-
-        Button remove_all = new Button(this);
-        remove_all.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
-        remove_all.setPadding(10, 13, 10, 13);
-        remove_all.setText(R.string.map_button2b);
-        remove_all.setTextColor(Color.parseColor("#cfD1D1"));
-        remove_all.setTextSize(15);
-        remove_all.setTag("remove_all");
-        remove_all.setBackgroundColor(Color.parseColor("#00000000"));
-        remove_all.setOnClickListener(this);
-
-        Button move = new Button(this);
-        move.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1));
-        move.setPadding(10, 13, 10, 13);
-        move.setText(R.string.map_button2c);
-        move.setTextColor(Color.parseColor("#cfD1D1"));
-        move.setTextSize(15);
-        move.setTag("move");
-        move.setBackgroundColor(Color.parseColor("#00000000"));
-        move.setOnClickListener(this);
-
-
-        panel_button.addView(add);
-        panel_button.addView(help);
-        panel_button.addView(remove);
-        panel_button.addView(move);
-        panel_button.addView(remove_all);
-
 
         bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
         panel.setOnPanelListener(this);
 
         dialog_feature = new Dialog(this);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.Add_widget_title);
@@ -662,9 +593,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener, 
     public void onPanelClosed(Sliding_Drawer panel) {
         if (Tracer != null)
             Tracer.v(mytag, "Onpanelclosepanel request to close");
-        menu_green.startAnimation(animation2);
-        menu_green.setVisibility(View.GONE);
-        panel_widget.removeAllViews();
+//        panel_widget.removeAllViews();
     }
 
 
@@ -673,134 +602,113 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener, 
         if (!params.getBoolean("map_menu_disable", false)) {
             if (Tracer != null)
                 Tracer.v(mytag, "onPanelOpened panel request to be displayed");
-            menu_green.setVisibility(View.VISIBLE);
-            menu_green.startAnimation(animation1);
-        }
-    }
-
-
-    public void onClick(View v) {
-        if (v.getTag().equals("menu")) {
-            //disable menu if set in option
-
-            if (!topPanel.isOpen()) {
-                bottomPanel.setOpen(true, true);
-                panel_button.setVisibility(View.VISIBLE);
-                if (!params.getBoolean("map_menu_disable", false))
-                    topPanel.setOpen(true, true);
-
-            } else if (topPanel.isOpen() && !bottomPanel.isOpen()) {
-                panel_widget.setVisibility(View.GONE);
-                panel_button.setVisibility(View.VISIBLE);
-                bottomPanel.setOpen(true, true);
-            } else {
-                bottomPanel.setOpen(false, true);
-                topPanel.setOpen(false, true);
-            }
-
-
-        } else if (v.getTag().equals("add")) {
-            //Add a widget
-            panel.setOpen(false, true);
-            if (list_usable_files.isEmpty()) {
-                Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-            } else {
-                topPanel.setOpen(false, true);
-                //show list of feature available
-                dialog_feature.show();
-                mapView.setRemoveMode(false);
-                mapView.setMoveMode(false);
-            }
-
-        } else if (v.getTag().equals("remove")) {
-            //case when user want to remove only one widget
-            if (list_usable_files.isEmpty()) {
-                Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-            } else {
-                if (!mapView.isRemoveMode()) {
-                    //if remove mode is select for the first time
-                    //say Mapview.java to turn on remove mode
-                    mapView.setMoveMode(false);
-                    mapView.setRemoveMode(true);
-                } else {
-                    //Remove mode was active, return to normal mode
-                    //Turn menu text color back
-                    mapView.setRemoveMode(false);
-                }
-                panel.setOpen(false, true);
-                topPanel.setOpen(false, true);
-
-            }
-
-        } else if (v.getTag().equals("move")) {
-            //case when user want to move one widget
-            // first step remove, second add the removed widget
-            if (list_usable_files.isEmpty()) {
-                Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-            } else {
-                //Show the move dialog box to help user
-                Dialog_Move dialog_move = new Dialog_Move(this);
-                dialog_move.show();
-                if (!mapView.isMoveMode()) {
-                    //if remove mode is select for the first time
-                    //say Mapview.java to turn on remove mode
-                    mapView.setRemoveMode(false);
-                    mapView.setMoveMode(true);
-                } else {
-                    //Remove mode was active, return to normal mode
-                    //Turn menu text color back
-                    mapView.setRemoveMode(false);
-                }
-                panel.setOpen(false, true);
-                topPanel.setOpen(false, true);
-
-            }
-
-        } else if (v.getTag().equals("remove_all")) {
-            //case when user select remove all from menu
-            if (list_usable_files.isEmpty()) {
-                Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-            } else {
-                panel.setOpen(false, true);
-                topPanel.setOpen(false, true);
-                Tracer.i(mytag, "request to clear widgets");
-                mapView.clear_Widgets();
-                mapView.setRemoveMode(false);
-            }
-        } else if (v.getTag().equals("help")) {
-            Dialog_Help dialog_help = new Dialog_Help(this);
-            dialog_help.show();
-            prefEditor = params.edit();
-            prefEditor.putBoolean("SPLASH", true);
-            prefEditor.commit();
         }
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_map, menu);
+        mainMenu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //normal menu call.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.map_menu_add:
+                //Add a widget
+                panel.setOpen(false, true);
+                if (list_usable_files.isEmpty()) {
+                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+                } else {
+                    //show list of feature available
+                    dialog_feature.show();
+                    mapView.setRemoveMode(false);
+                    mapView.setMoveMode(false);
+                }
+                return true;
+            case R.id.map_menu_help:
+                Dialog_Help dialog_help = new Dialog_Help(this);
+                dialog_help.show();
+                prefEditor.putBoolean("SPLASH", true);
+                prefEditor.commit();
+                return true;
+            case R.id.map_menu_del:
+                //case when user want to remove only one widget
+                if (list_usable_files.isEmpty()) {
+                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+                } else {
+                    if (!mapView.isRemoveMode()) {
+                        //if remove mode is select for the first time
+                        //say Mapview.java to turn on remove mode
+                        mapView.setMoveMode(false);
+                        mapView.setRemoveMode(true);
+                    } else {
+                        //Remove mode was active, return to normal mode
+                        //Turn menu text color back
+                        mapView.setRemoveMode(false);
+                    }
+                    panel.setOpen(false, true);
+                }
+                return true;
+            case R.id.map_menu_move:
+                //case when user want to move one widget
+                // first step remove, second add the removed widget
+                if (list_usable_files.isEmpty()) {
+                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+                } else {
+                    //Show the move dialog box to help user
+                    Dialog_Move dialog_move = new Dialog_Move(this);
+                    dialog_move.show();
+                    if (!mapView.isMoveMode()) {
+                        //if remove mode is select for the first time
+                        //say Mapview.java to turn on remove mode
+                        mapView.setRemoveMode(false);
+                        mapView.setMoveMode(true);
+                    } else {
+                        //Remove mode was active, return to normal mode
+                        //Turn menu text color back
+                        mapView.setRemoveMode(false);
+                    }
+                    panel.setOpen(false, true);
+                }
+                return true;
+            case R.id.map_menu_del_all:
+                //case when user select remove all from menu
+                if (list_usable_files.isEmpty()) {
+                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+                } else {
+                    panel.setOpen(false, true);
+                    Tracer.i(mytag, "request to clear widgets");
+                    mapView.clear_Widgets();
+                    mapView.setRemoveMode(false);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     //Physical button keycode 82 is menu button
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         //disable menu if set in option
-        Tracer.v(mytag, "onKeyDown keyCode = " + keyCode);
-        if (keyCode == 82 && !topPanel.isOpen()) {
-            bottomPanel.setOpen(true, true);
-            panel_button.setVisibility(View.VISIBLE);
-            if (!params.getBoolean("map_menu_disable", false)) {
-                topPanel.setOpen(true, true);
-            }
-            return false;
-
-        } else if (keyCode == 82 && topPanel.isOpen() && !bottomPanel.isOpen()) {
-            panel_widget.setVisibility(View.GONE);
-            panel_button.setVisibility(View.VISIBLE);
+        Tracer.v(mytag, "onKeyUp keyCode = " + keyCode);
+        if (keyCode == 82 && !bottomPanel.isOpen()) {
             bottomPanel.setOpen(true, true);
             return false;
-
-        } else if ((keyCode == 82 || keyCode == 4) && topPanel.isOpen()) {
+        } else if ((keyCode == 82 || keyCode == 4)) {
             bottomPanel.setOpen(false, true);
-            topPanel.setOpen(false, true);
             return false;
         }
-        return super.onKeyDown(keyCode, event);
+        if ((keyCode == 82) && mainMenu != null) {
+            mainMenu.performIdentifierAction(R.id.menu_overflow, 0);
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     private static void createDirIfNotExists() {

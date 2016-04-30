@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".Activity_Main">
-    <!-- Search / will display always -->
     <item
         android:id="@+id/menu_overflow"
         android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"
@@ -16,8 +15,6 @@
                 android:icon="@drawable/icon_menu_house"
                 android:title="@string/house_settings"
                 app:showAsAction="never"
-
-
                 />
             <!-- menu_butler -->
             <item

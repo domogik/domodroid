@@ -100,9 +100,7 @@ public class MapView extends View {
     private Paint paint_map;
     private Paint paint_text;
     private ViewGroup panel_widget;
-    private ViewGroup panel_button;
     private final Activity context;
-    private Sliding_Drawer top_drawer;
     private Sliding_Drawer bottom_drawer;
 
     private Vector<String> files;
@@ -324,8 +322,8 @@ public class MapView extends View {
         //mat.setDrag(params.getBoolean("DRAG", false));
         mat.setZoom(false);
         mat.setDrag(false);
-
         mat.setScreenConfigScaling();
+
         paint_text = new Paint();
         paint_text.setPathEffect(null);
         paint_text.setAntiAlias(true);
@@ -1240,7 +1238,6 @@ public class MapView extends View {
                                 System.gc();
                                 initMap();
 
-                                panel_button.setVisibility(View.GONE);
                                 panel_widget.setVisibility(View.VISIBLE);
                                 widgetActiv = true;
                                 postInvalidate();
@@ -1331,10 +1328,7 @@ public class MapView extends View {
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
-                                            panel_button.setVisibility(View.GONE);
                                             panel_widget.setVisibility(View.VISIBLE);
-                                            if (!top_drawer.isOpen())
-                                                top_drawer.setOpen(true, true);
                                             if (bottom_drawer.isOpen())
                                                 bottom_drawer.setOpen(false, true);
                                             widgetActiv = true;
@@ -1350,7 +1344,6 @@ public class MapView extends View {
                         //hide it
                         if (!widgetActiv && moves < 5) {
                             Tracer.d(mytag, "Launch HIDE top widgets");
-                            top_drawer.setOpen(false, true);
                             bottom_drawer.setOpen(false, true);
                         }
                     }
@@ -1640,14 +1633,6 @@ public class MapView extends View {
 
     public void setPanel_widget(ViewGroup panel_widget) {
         this.panel_widget = panel_widget;
-    }
-
-    public void setPanel_button(ViewGroup panel_button) {
-        this.panel_button = panel_button;
-    }
-
-    public void setTopDrawer(Sliding_Drawer top_drawer) {
-        this.top_drawer = top_drawer;
     }
 
     public void setBottomDrawer(Sliding_Drawer bottom_drawer) {

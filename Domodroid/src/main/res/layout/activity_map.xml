@@ -15,65 +15,10 @@
     android:layout_height="fill_parent"
     android:background="@drawable/background">
 
-    <!-- body -->
-    <LinearLayout
-        android:id="@+id/map_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="0dip" />
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
-
-        <activities.Sliding_Drawer
-            android:id="@+id/map_slidingdrawer"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            panel:animationDuration="500"
-            panel:linearFlying="true"
-            panel:position="top">
-
-            <Button
-                android:id="@id/panelHandle"
-                android:layout_width="fill_parent"
-                android:layout_height="0dip" />
-
-            <LinearLayout
-                android:id="@id/panelContent"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="fill_horizontal"
-                android:background="@drawable/drawer_button"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="32dip"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dip"
-                    android:layout_gravity="fill_horizontal"
-                    android:orientation="vertical" />
-
-                <LinearLayout
-                    android:id="@+id/panelButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-
-                <FrameLayout
-                    android:id="@+id/panelWidget"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </activities.Sliding_Drawer>
-
 
         <LinearLayout
             android:id="@+id/map_container1"
@@ -122,42 +67,4 @@
             </LinearLayout>
         </activities.Sliding_Drawer>
     </LinearLayout>
-    <!-- Set center image + backgroud -->
-    <FrameLayout
-        android:id="@+id/TitleBar"
-        android:layout_width="fill_parent"
-        android:layout_height="40dip"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/menu_button1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:paddingLeft="10dip"
-            android:paddingTop="4dip"
-            android:text="@string/home_button1"
-            android:textColor="#cfD1D1"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/menu_button2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:paddingLeft="10dip"
-            android:paddingTop="4dip"
-            android:text="@string/home_button1"
-            android:textColor="#A5C933"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingRight="5dip"
-            android:paddingTop="5dip"
-            android:src="@drawable/app_name" />
-    </FrameLayout>
 </FrameLayout>

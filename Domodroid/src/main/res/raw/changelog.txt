@@ -25,6 +25,7 @@
       * #32 Start working on AppCompat.
       * #34 renaming a device directly to Domogik.
       * Correct help crash in map mode.
+      * Correct map mode bug with command number.
       * Close #98 Camera widget from map not working.
       * #96 SSL for Rest.
       % Version 16

@@ -1,25 +1,5 @@
 package activities;
 
-import org.domogik.domodroid13.R;
-
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
-
-import database.WidgetUpdate;
-import map.Dialog_Help;
-import map.Dialog_Move;
-import map.MapView;
-import activities.Sliding_Drawer.OnPanelListener;
-import Entity.Entity_Feature;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,11 +18,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
-
-import misc.CopyFile;
-import misc.tracerengine;
-
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -56,16 +33,38 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Activity_Map extends Activity implements OnPanelListener, OnClickListener {
+import org.domogik.domodroid13.R;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
+
+import Entity.Entity_Feature;
+import activities.Sliding_Drawer.OnPanelListener;
+import database.WidgetUpdate;
+import map.Dialog_Help;
+import map.Dialog_Move;
+import map.MapView;
+import misc.CopyFile;
+import misc.tracerengine;
+
+public class Activity_Map extends AppCompatActivity implements OnPanelListener, OnClickListener {
     /**
      *
      */
@@ -771,6 +770,7 @@ public class Activity_Map extends Activity implements OnPanelListener, OnClickLi
         } else if (v.getTag().equals("help")) {
             Dialog_Help dialog_help = new Dialog_Help(this);
             dialog_help.show();
+            prefEditor = params.edit();
             prefEditor.putBoolean("SPLASH", true);
             prefEditor.commit();
         }

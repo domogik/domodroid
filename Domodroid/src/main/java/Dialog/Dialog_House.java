@@ -1,23 +1,4 @@
-package activities;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import org.domogik.domodroid13.R;
-
-import Abstract.common_method;
-import Entity.Entity_Area;
-import Entity.Entity_Feature;
-import Entity.Entity_Icon;
-import Entity.Entity_Room;
-import misc.List_Icon_Adapter;
-
-import database.Cache_management;
-import database.DmdContentProvider;
-import database.DomodroidDB;
-import database.WidgetUpdate;
+package Dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,9 +6,6 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-
-import misc.tracerengine;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -38,7 +16,27 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
-class Dialog_House extends Dialog implements OnClickListener {
+import org.domogik.domodroid13.R;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import Abstract.common_method;
+import Entity.Entity_Area;
+import Entity.Entity_Feature;
+import Entity.Entity_Icon;
+import Entity.Entity_Room;
+import activities.Graphics_Manager;
+import database.Cache_management;
+import database.DmdContentProvider;
+import database.DomodroidDB;
+import database.WidgetUpdate;
+import misc.List_Icon_Adapter;
+import misc.tracerengine;
+
+public class Dialog_House extends Dialog implements OnClickListener {
     private final Spinner spinner_area;
     private final Spinner spinner_room;
     private final Spinner spinner_feature;
@@ -294,7 +292,6 @@ class Dialog_House extends Dialog implements OnClickListener {
             public void onClick(DialogInterface dialog_customname, int whichButton) {
                 ContentValues values = new ContentValues();
                 values.put("name", name1.getText().toString());
-                //values.put("description", itemArray.getJSONObject(i).getString("description").toString());
                 //put the next available id from db here
                 int lastid = domodb.requestlastidArea();
                 values.put("id", lastid + 1);
@@ -339,7 +336,6 @@ class Dialog_House extends Dialog implements OnClickListener {
                 //device_feature_id must come from the selected  one in list
                 values.put("device_feature_id", (feature_id));
                 values.put("id", (lastid + 1));
-                //values.put("device_feature", itemArray.getJSONObject(i).getString("device_feature"));
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
                 //#76
                 prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
@@ -500,13 +496,9 @@ class Dialog_House extends Dialog implements OnClickListener {
             map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(area.getIcon_name(), 0)));
             list_Area.add(map);
         }
-//		ArrayAdapter<String> area_adapter =
-//				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item);
-//		area_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SimpleAdapter adapter_area = new SimpleAdapter(getContext(), list_Area,
                 R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         spinner_area.setAdapter(adapter_area);
-//		spinner_area.setAdapter(area_adapter);
 
         //2nd list room where to put widget but contain also the area
         //widget could be place in an area or a room.
@@ -517,13 +509,9 @@ class Dialog_House extends Dialog implements OnClickListener {
             map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(room.getIcon_name(), 0)));
             list_Room.add(map);
         }
-//		ArrayAdapter<String> room_adapter =
-//				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item);
-//		room_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SimpleAdapter adapter_room = new SimpleAdapter(getContext(), list_Room,
                 R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         spinner_room.setAdapter(adapter_room);
-//		spinner_room.setAdapter(room_adapter);
 
         //3rd list feature to put somewhere
         ArrayList<HashMap<String, String>> list_Feature = new ArrayList<>();
@@ -547,23 +535,25 @@ class Dialog_House extends Dialog implements OnClickListener {
             map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(feature.getIcon_name(), 0)));
             list_Feature.add(map);
         }
-//		ArrayAdapter<String> feature_adapter =
-//				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_Feature);
-//		feature_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		spinner_feature.setAdapter(feature_adapter);
         SimpleAdapter adapter_feature = new SimpleAdapter(getContext(), list_Feature,
                 R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         spinner_feature.setAdapter(adapter_feature);
 
         //4th list icon to associate with area, room or widget
-        //Todo improve this by drawing icon like all other
-        ArrayList<String> list_icon = new ArrayList<>();
+        //ArrayList<String> list_icon = new ArrayList<>();
+        ArrayList<HashMap<String, String>> list_icon = new ArrayList<>();
         for (Entity_Icon icon : listIcon) {
-            list_icon.add(icon.getName() + "-" + icon.getReference() + "-" + icon.getValue());
+            map = new HashMap<>();
+            map.put("name",icon.getName() + "-" + icon.getReference());
+            //Todo Replace name by Real value (get from type and id)
+            // feature-445 or room-4 or area-5 sould be replace by the correct value
+            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(icon.getValue(), 0)));
+            //list_icon.add(icon.getName() + "-" + icon.getReference() + "-" + icon.getValue());
+            list_icon.add(map);
         }
-        ArrayAdapter<String> icon_adapter =
-                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list_icon);
-        icon_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SimpleAdapter icon_adapter = new SimpleAdapter(getContext(), list_icon,
+                R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
+
         spinner_icon.setAdapter(icon_adapter);
     }
 }

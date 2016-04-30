@@ -1,4 +1,4 @@
-package activities;
+package Dialog;
 
 import org.domogik.domodroid13.R;
 
@@ -9,7 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 
-class Dialog_Splash extends Dialog implements OnClickListener {
+public class Dialog_Splash extends Dialog implements OnClickListener {
     private final Button okButton;
 
     public Dialog_Splash(Context context) {

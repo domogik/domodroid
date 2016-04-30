@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
+
+import static android.widget.FrameLayout.LayoutParams.*;
 
 public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener {
 
@@ -182,6 +185,9 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         ON.setHeight(pixels);
         //ON.setWidth(60);
         ON.setTag("ON");
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
             ON.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(), this.Value_1.toLowerCase())));
@@ -189,6 +195,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             Tracer.d(mytag, "no translation for: " + this.Value_1);
             ON.setText(this.Value_1);
         }
+        ON.setLayoutParams(params);
         ON.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
         //ON.setBackgroundResource(R.drawable.boolean_on);
         //ON.setPadding(10, 0, 10, 0);
@@ -198,7 +205,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         OFF.setTag("OFF");
         OFF.setHeight(pixels);
         //OFF.setWidth(60);
-        OFF.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
         //OFF.setBackgroundResource(R.drawable.boolean_off);
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
@@ -207,6 +213,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             Tracer.d(mytag, "no translation for: " + this.Value_0);
             OFF.setText(this.Value_0);
         }
+        OFF.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        OFF.setLayoutParams(params);
         //OFF.setPadding(0,10,0,10);
 
         super.LL_featurePan.addView(ON);

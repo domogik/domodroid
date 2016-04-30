@@ -1,4 +1,4 @@
-package activities;
+package Dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -22,12 +22,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import activities.Activity_Main;
 import database.Cache_management;
 import database.DomodroidDB;
 import misc.tracerengine;
 import rinor.Rest_com;
 
-class Dialog_Synchronize extends Dialog implements OnClickListener {
+public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final Button cancelButton;
     private final TextView message;
     private String urlAccess;
@@ -46,6 +47,7 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final String mytag = "Dialog_Synchronize";
     private float previous_api_version = 0f;
     private boolean by_usage;
+    private int progress;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
         super(context);
@@ -473,7 +475,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                         if (!list_usage.contains(usage)) {
                             try {
                                 if (json_FeatureList.getJSONArray("feature").length() > 0) {
-                                    publishProgress(100 * i / json_FeatureList.getJSONArray("feature").length());
+                                    progress = 100 * i / json_FeatureList.getJSONArray("feature").length();
+                                    publishProgress(progress);
                                     JSONObject room = new JSONObject();
                                     room.put("area_id", "1");
                                     room.put("description", "");
@@ -720,7 +723,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                         if (usage != null) {
                             if (!list_usage.contains(usage)) {
                                 if (json_Sensors.length() > 0) {
-                                    publishProgress(55 + (45 * y / json_Sensors.length()));
+                                    progress = 55 + (45 * y / json_Sensors.length());
+                                    publishProgress(progress);
                                     JSONObject room = new JSONObject();
                                     JSONObject icon = new JSONObject();
                                     try {
@@ -893,7 +897,8 @@ class Dialog_Synchronize extends Dialog implements OnClickListener {
                         if (usage != null) {
                             if (!list_usage.contains(usage)) {
                                 if (json_Commands.length() > 0) {
-                                    publishProgress(75 + (25 * y / json_Commands.length()));
+                                    progress = 75 + (25 * y / json_Commands.length());
+                                    publishProgress(progress);
                                     JSONObject room = new JSONObject();
                                     JSONObject icon = new JSONObject();
                                     try {

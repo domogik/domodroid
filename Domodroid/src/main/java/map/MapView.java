@@ -924,7 +924,6 @@ public class MapView extends View {
 
     }
 
-    @SuppressWarnings("RedundantStringToString")
     private void showTopWidget(Entity_Map feature) {
         Tracer.d(mytag, "Show top Widget");
         DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
@@ -1152,7 +1151,6 @@ public class MapView extends View {
         return b;
     }
 
-    @SuppressWarnings("RedundantStringToString")
     public boolean onTouchEvent(MotionEvent event) {
         int nbPointers = event.getPointerCount();
         float[] value = new float[9];

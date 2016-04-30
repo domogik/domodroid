@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +36,7 @@ import org.json.JSONObject;
 
 //TODO add Tracer engine to log message
 
-public class Main extends Activity {
+public class Main extends AppCompatActivity {
     private Intent zmqService;
     private ZMQSubMessageReceiver recv = null;
     private boolean recvIsRegistered = false;

@@ -2,8 +2,8 @@ language: android
 android:
   components:
     - tools
-    - android-8
-    - build-tools-23.0.2
+    - android-23
+    - build-tools-23.0.3
 
 sudo: required
 

@@ -10,6 +10,7 @@
             backward-compatibility can go here.
         <item name="android:panelBackground">@android:color/white</item>
         -->
+        <item name="android:windowFullscreen">true</item>
         <item name="actionBarStyle">@style/ActionBarLogo</item>
     </style>
 

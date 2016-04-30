@@ -8,7 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import Entity.Entity_Area;
@@ -46,8 +45,6 @@ class Widgets_Manager {
         super();
         this.widgetHandler = handler;
         this.Tracer = Trac;
-        //populate the NAvigationDrawer list
-        HashMap<String, String> map = new HashMap<>();
 
     }
 
@@ -332,10 +329,6 @@ class Widgets_Manager {
         int size = listArea.length;
         Entity_Area area;
 
-        //TODO improve navigation drawer
-        Activity_Main.Navigation_drawer_ItemsList = new ArrayList<>();
-
-
         try {
             for (int pos = 0; pos < size; ++pos) {
                 area = listArea[pos];
@@ -351,19 +344,6 @@ class Widgets_Manager {
                 Tracer.d(mytag + " loadRoomWidgets", "Adding area : " + area.getName());
                 String name = area.getName();
                 name = Graphics_Manager.Names_Agent(context, name);
-
-                //populate the NAvigationDrawer list
-                HashMap<String, String> map = new HashMap<>();
-                map.put("name", area.getName());
-                String iconName = "unknow";
-                try {
-                    iconName = domodb.requestIcons(area.getId(), "area").getValue();
-                } catch (Exception e) {
-                    Tracer.e(mytag, e.toString());
-                }
-                map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconName, 1)));
-                map.put("type", "area");
-                Activity_Main.Navigation_drawer_ItemsList.add(map);
 
                 Graphical_Area graph_area = new Graphical_Area(params, Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
                 tmpPan.addView(graph_area);
@@ -409,8 +389,6 @@ class Widgets_Manager {
         int size = listRoom.length;
         Entity_Room room;
 
-        //TODO improve navigation drawer
-        Activity_Main.Navigation_drawer_ItemsList = new ArrayList<>();
         for (int pos = 0; pos < size; ++pos) {
             room = listRoom[pos];
             int Id = room.getId();
@@ -433,13 +411,6 @@ class Widgets_Manager {
             Tracer.d(mytag + " loadRoomWidgets", "Adding room : " + ref);
             String name = room.getName();
             name = Graphics_Manager.Names_Agent(context, name);
-
-            //populate the NAvigationDrawer list
-            HashMap<String, String> map = new HashMap<>();
-            map.put("name", name);
-            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(iconId, 0)));
-            map.put("type", "room");
-            Activity_Main.Navigation_drawer_ItemsList.add(map);
 
             Graphical_Room graph_room = new Graphical_Room(params, Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
             tmpPan.addView(graph_room);

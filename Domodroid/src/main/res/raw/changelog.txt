@@ -22,12 +22,14 @@
     $ 1.4
       % Version 17
       _ 2016-xx-xx
+      * #32 Start working on AppCompat.
       * #34 renaming a device directly to Domogik.
+      * Correct help crash in map mode.
       * Close #98 Camera widget from map not working.
       * #96 SSL for Rest.
       % Version 16
       _ 2016-04-07
-      * New function to move up/don a widget to reorder widget display.
+      * New function to move up/down a widget to reorder widget display.
       * Refreshing view on deletion or moving is now working correctly.
       * Working camera widget with datatype DT_VideoMjpeg in 0.4.
       * Sensor with unit in degrees now display an arrow with the value as angle.

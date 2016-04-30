@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="domogik.domodroid.main">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" />
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="mq.Main">
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/icon_menu_options"
+        android:orderInCategory="100"
+        android:title="@string/home_button2"
+        app:showAsAction="always"/>
 </menu>

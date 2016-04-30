@@ -17,7 +17,6 @@
  */
 package activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,23 +29,20 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
@@ -55,34 +51,32 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
 import Abstract.common_method;
+import Dialog.Dialog_House;
+import Dialog.Dialog_Splash;
+import Dialog.Dialog_Synchronize;
 import Entity.Entity_Area;
 import Entity.Entity_Room;
 import database.Cache_management;
-import database.DomodroidDB;
 import database.WidgetUpdate;
 import misc.changelog;
 import misc.tracerengine;
 import mq.Main;
 import widgets.Basic_Graphical_zone;
 
-//import android.os.PowerManager;
 
 @SuppressWarnings({"static-access"})
-public class Activity_Main extends Activity implements OnClickListener {
+public class Activity_Main extends AppCompatActivity implements OnClickListener {
 
     public static Context context;
-    //private PowerManager.WakeLock PM_WakeLock;
     private SharedPreferences SP_params;
     private SharedPreferences.Editor SP_prefEditor;
     private AlertDialog.Builder AD_notSyncAlert;
-    //private Toast T_starting;
     private Widgets_Manager WM_Agent;
     private Dialog_Synchronize DIALOG_dialog_sync;
     private WidgetUpdate WU_widgetUpdate;
@@ -91,8 +85,6 @@ public class Activity_Main extends Activity implements OnClickListener {
     private Intent INTENT_map = null;
     private ImageView appname;
 
-    //private int dayOffset = 1;
-    //private int secondeOffset = 5;
     private ViewGroup VG_parent;
     private Vector<String[]> history;
     private int historyPosition;
@@ -101,38 +93,45 @@ public class Activity_Main extends Activity implements OnClickListener {
     private Basic_Graphical_zone map;
 
     private Boolean reload = false;
-    //DialogInterface.OnClickListener reload_listener = null;
     private DialogInterface.OnDismissListener sync_listener = null;
     private DialogInterface.OnDismissListener house_listener = null;
 
     private static Boolean by_usage = false;
     private Boolean init_done = false;
     private final File backupprefs = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings");
-    //private Boolean dont_freeze = false;
     private final Thread waiting_thread = null;
     private Activity_Main myself = null;
     private tracerengine Tracer = null;
-    //private String tracer_state = "false";
-    //private Boolean dont_kill = false;		//Set by call to map, to avoid engines destruction
-    //private AlertDialog.Builder AD_dialog_message;
     private ProgressDialog PG_dialog_message;
-    //private Boolean cache_ready = false;
     private Boolean end_of_init_requested = true;
     private final String mytag = "Activity_Main";
-    //private Menu menu;
-    public static ArrayList<HashMap<String, String>> Navigation_drawer_ItemsList;
-    private static ListView LV_My_Navigation_Drawer;
-    //public static CharSequence[]  char_list;
     private Entity_Room[] listRoom;
     private Entity_Area[] listArea;
+    private Menu mainMenu;
 
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Activity_Main.context = getApplicationContext();
         super.onCreate(savedInstanceState);
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ignored) {
+        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
+
+        Activity_Main.context = getApplicationContext();
         myself = this;
         if (android.os.Build.VERSION.SDK_INT == 8) // FROYO (8)
         {
@@ -144,57 +143,6 @@ public class Activity_Main extends Activity implements OnClickListener {
         SP_prefEditor = SP_params.edit();
         Tracer = tracerengine.getInstance(SP_params, this);
         setContentView(R.layout.activity_home);
-        ImageView navigation_button = (ImageView) findViewById(R.id.navigation_button);
-
-        if (SP_params.getBoolean("Navigation_drawer", false)) {
-            //hide navigation button if not available
-            navigation_button.setOnClickListener(new OnClickListener() {
-                //When clicking on the appname it chow/hide the left menu
-                public void onClick(View v) {
-                    if (Navigation_drawer_ItemsList != null) {
-                        SimpleAdapter adapter_area = new SimpleAdapter(getApplicationContext(), Navigation_drawer_ItemsList,
-                                R.layout.navigation_drawer_item, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
-                        LV_My_Navigation_Drawer.setAdapter(adapter_area);
-                    }
-                    if (LV_My_Navigation_Drawer.getVisibility() == View.INVISIBLE) {
-                        LV_My_Navigation_Drawer.setVisibility(View.VISIBLE);
-                    } else {
-                        LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
-                    }
-
-                }
-            });
-        } else {
-            navigation_button.setVisibility(View.INVISIBLE);
-        }
-        //Navigation_drawer_ItemsList = null;
-        LV_My_Navigation_Drawer = (ListView) findViewById(R.id.my_drawer);
-        //myDrawer.setAdapter(new ArrayAdapter<String>(this,
-        //        R.layout.drawer_item, drawerItemsList));
-        //Hide it, it will be show when clicking the logo.
-        LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
-        LV_My_Navigation_Drawer.setOnItemClickListener(new OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> adapter, View v, int pos,
-                                    long id) {
-                DomodroidDB domodb = new DomodroidDB(Tracer, myself, SP_params);
-                listRoom = domodb.requestallRoom();
-                listArea = domodb.requestArea();
-                String type = (history.elementAt(historyPosition)[1]);
-                historyPosition++;
-                if (type.equals("root") && !(by_usage)) {
-                    Tracer.v(mytag + ".widgetHandler", "add history " + listArea[pos].getId() + " area");
-                    history.add(historyPosition, new String[]{listArea[pos].getId() + "", "area"});
-                    loadWigets(listArea[pos].getId(), "area");
-                } else {
-                    Tracer.v(mytag + ".widgetHandler", "add history " + listRoom[pos].getId() + " room");
-                    history.add(historyPosition, new String[]{listRoom[pos].getId() + "", "room"});
-                    loadWigets(listRoom[pos].getId(), "room");
-                }
-                LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
-            }
-
-        });
 
         //Added by Doume
         File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
@@ -300,12 +248,16 @@ public class Activity_Main extends Activity implements OnClickListener {
             public void handleMessage(Message msg) {
                 if (msg.what == 0) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name2));
+                    getSupportActionBar().setLogo(R.drawable.app_name2);
                 } else if (msg.what == 1) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name3));
+                    getSupportActionBar().setLogo(R.drawable.app_name3);
                 } else if (msg.what == 2) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name1));
+                    getSupportActionBar().setLogo(R.drawable.app_name1);
                 } else if (msg.what == 3) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
+                    getSupportActionBar().setLogo(R.drawable.app_name4);
                 } else if (msg.what == 8000) {
                     Tracer.e(mytag, "Request to display message : 8000");
                     /*
@@ -314,7 +266,6 @@ public class Activity_Main extends Activity implements OnClickListener {
 					}
 					dialog_message.setMessage("Starting cache engine...");
 					dialog_message.show();
-
 					 */
                 } else if (msg.what == 8001) {
                     AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
@@ -338,17 +289,8 @@ public class Activity_Main extends Activity implements OnClickListener {
             }
         };
 
-
-        //power management
-        //final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        //this.PM_WakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "");
-        //this.PM_WakeLock.acquire();
+        //window managemer to kee screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
-        //titlebar
-        final FrameLayout titlebar = (FrameLayout) findViewById(R.id.TitleBar);
-        titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title", 40));
 
         //Parent view
         VG_parent = (ViewGroup) findViewById(R.id.home_container);
@@ -372,7 +314,6 @@ public class Activity_Main extends Activity implements OnClickListener {
         map.setPadding(5, 0, 0, 0);
 
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
-
 
         house.setLayoutParams(param);
         house.setOnClickListener(new OnClickListener() {
@@ -892,6 +833,7 @@ public class Activity_Main extends Activity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
+        mainMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -900,6 +842,9 @@ public class Activity_Main extends Activity implements OnClickListener {
         //TODO prepare a normal menu call.
 
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.menu_butler:
                 Intent intent = new Intent(this, Main.class);
                 this.startActivity(intent);
@@ -961,41 +906,17 @@ public class Activity_Main extends Activity implements OnClickListener {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //Close navigation drawer if it's open on any key press
-        if (LV_My_Navigation_Drawer.getVisibility() == View.VISIBLE) {
-            LV_My_Navigation_Drawer.setVisibility(View.INVISIBLE);
-            return false;
-        } else if ((keyCode == 4) && historyPosition > 0 && LV_My_Navigation_Drawer.getVisibility() == View.INVISIBLE) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if ((keyCode == 4) && historyPosition > 0) {
             historyPosition--;
             refresh();
             return false;
+        } else if ((keyCode == 82) && mainMenu != null) {
+            mainMenu.performIdentifierAction(R.id.menu_overflow, 0);
         }
-        return super.onKeyDown(keyCode, event);
+        return super.onKeyUp(keyCode, event);
     }
 
-	/*
-    private class SBAnim extends AsyncTask<Void, Void, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			new Thread(new Runnable() {
-				public synchronized void run() {
-					try {
-						appname.setBackgroundResource(R.drawable.app_name2);
-						this.wait(100);
-						appname.setBackgroundResource(R.drawable.app_name3);
-						this.wait(100);
-						appname.setBackgroundResource(R.drawable.app_name1);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
-			return null;
-		}
-	}
-	*/
 
     @Override
     public void onConfigurationChanged(Configuration newConfig)

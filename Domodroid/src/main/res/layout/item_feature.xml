@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  * This file is part of Domodroid.
  * 
  * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
@@ -16,43 +15,59 @@
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  -->
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="wrap_content" android:layout_gravity="center_vertical"
-	android:paddingLeft="10dp" android:layout_weight="1" android:background="#00000000">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_weight="1"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:paddingLeft="10dp">
 
-	<LinearLayout android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="0dip"
-		android:layout_weight="1">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-		<ImageView
-        	android:id="@+id/icon"
-        	android:layout_width="wrap_content"
-        	android:layout_height="match_parent"
-        	android:layout_marginTop="1dp"
-        	android:src="@drawable/ic_launcher"/>
-		
-		<TextView android:id="@+id/name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="16sp"
-			android:textColor="#FFFFFF"
-			android:paddingBottom="3dip" />
-		
-		<TextView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:textSize="16sp"
-			android:textColor="#FFFFFF" android:paddingBottom="3dip"
-			android:text="  -  "/>
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="1dp"
+            android:src="@drawable/ic_launcher" />
 
-		<TextView android:id="@+id/state_key" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:textSize="16sp"
-			android:textColor="#FFFFFF"
-			android:paddingBottom="3dip" />
-	</LinearLayout>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dip"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
-	<TextView android:id="@+id/description" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:textSize="15sp"
-		android:textColor="#AFAFAF" android:paddingLeft="10dip" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dip"
+            android:text="  -  "
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/state_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dip"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:textColor="#AFAFAF"
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
@@ -19,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-public class Activity_Cam extends Activity{
+public class Activity_Cam extends AppCompatActivity {
 	private MjpegViewAsync mv;
 	private TextView TV_frameRate;
 
@@ -35,23 +36,6 @@ public class Activity_Cam extends Activity{
 		//activity
 		LinearLayout LL_activity = new LinearLayout(this);
 		LL_activity.setOrientation(LinearLayout.VERTICAL);
-
-		//create title layout
-		FrameLayout FL_title = new FrameLayout(this);
-		FL_title.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, (int) (40 * scale)));
-		FL_title.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title", (int) (40 * scale)));
-		LL_activity.addView(FL_title);
-
-		//panel to set img with padding left
-		FrameLayout FL_imgPan = new FrameLayout(this);
-		FL_imgPan.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, Gravity.RIGHT));
-		FL_imgPan.setPadding(0, 8, 8, 0);
-		//img
-		ImageView IV_img = new ImageView(this);
-		IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		IV_img.setBackgroundResource(R.drawable.app_name);
-		FL_imgPan.addView(IV_img);
-		FL_title.addView(FL_imgPan);
 
 		//video panel
 		FrameLayout FL_viewPan = new FrameLayout(this);

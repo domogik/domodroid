@@ -33,13 +33,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class Activity_About extends Activity implements OnClickListener{
+public class Activity_About extends AppCompatActivity implements OnClickListener{
 	//private PowerManager.WakeLock mWakeLock;
 	private String pn = "";
 	private final String mytag="Activity_About";
@@ -71,9 +72,6 @@ public class Activity_About extends Activity implements OnClickListener{
 			TV_versionText.setText(pn+" "+vns+" "+getString(R.string.version)+"_"+vcs);
 		}
 
-		//titlebar
-		final FrameLayout FL_titlebar = (FrameLayout) findViewById(R.id.TitleBar);
-		FL_titlebar.setBackgroundDrawable(Gradients_Manager.LoadDrawable("title",40));
 		showchangelog = (Button) findViewById(R.id.showchangelog);
 		showchangelog.setTag("showchangelog");
 		showchangelog.setOnClickListener(this);

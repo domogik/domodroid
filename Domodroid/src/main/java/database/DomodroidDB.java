@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +63,7 @@ public class DomodroidDB {
 
     public void closeDb() {
         try {
-            context.getContentResolver().cancelSync(null);
+            context.getContentResolver().cancelSync(Uri.EMPTY);
         } catch (Exception e) {
             e.printStackTrace();
         }

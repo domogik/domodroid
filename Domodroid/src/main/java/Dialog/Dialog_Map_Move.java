@@ -1,4 +1,4 @@
-package map;
+package Dialog;
 
 import org.domogik.domodroid13.R;
 
@@ -9,10 +9,10 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 
-public class Dialog_Move extends Dialog implements OnClickListener {
+public class Dialog_Map_Move extends Dialog implements OnClickListener {
     private final Button okButton;
 
-    public Dialog_Move(Context context) {
+    public Dialog_Map_Move(Context context) {
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         /** Design the dialog in main.xml file */

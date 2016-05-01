@@ -46,8 +46,6 @@ import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
 
-import static android.widget.FrameLayout.LayoutParams.*;
-
 public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener {
 
     private Button ON;
@@ -185,9 +183,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         ON.setHeight(pixels);
         //ON.setWidth(60);
         ON.setTag("ON");
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
             ON.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(), this.Value_1.toLowerCase())));

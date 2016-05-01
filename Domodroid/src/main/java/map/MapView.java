@@ -101,6 +101,7 @@ public class MapView extends View {
     private Paint paint_text;
     private ViewGroup panel_widget;
     private final Activity context;
+    private Sliding_Drawer top_drawer;
     private Sliding_Drawer bottom_drawer;
 
     private Vector<String> files;
@@ -118,7 +119,7 @@ public class MapView extends View {
 
     private final int screen_width;
     //private Boolean activated;
-    private final String mytag = "MapView";
+    private final String mytag = this.getClass().getName();
     private Boolean locked = false;
     private String parameters;
     private int valueMin;
@@ -373,11 +374,7 @@ public class MapView extends View {
                 }
                 map = Bitmap.createBitmap((int) (bitmap.getWidth() * currentScale), (int) (bitmap.getHeight() * currentScale), Bitmap.Config.ARGB_4444);
                 canvasMap = new Canvas(map);
-                Matrix matScale = new Matrix();
-                matScale.postScale(currentScale, currentScale);
-                origin = canvasMap.getMatrix();
-                origin.postConcat(mat.matrix);
-                canvasMap.setMatrix(matScale);
+                canvasMap.scale(currentScale, currentScale);
                 canvasMap.drawBitmap(bitmap, 0, 0, paint_map);
                 widget = Bitmap.createBitmap((int) ((bitmap.getWidth() + screen_width) * currentScale), (int) ((bitmap.getHeight() + screenheight) * currentScale), Bitmap.Config.ARGB_8888);
                 canvasWidget = new Canvas(widget);
@@ -432,9 +429,7 @@ public class MapView extends View {
                 }
                 map = Bitmap.createBitmap((int) (bitmap.getWidth() * currentScale), (int) (bitmap.getHeight() * currentScale), Bitmap.Config.ARGB_4444);
                 canvasMap = new Canvas(map);
-                Matrix matScale = new Matrix();
-                matScale.postScale(currentScale, currentScale);
-                canvasMap.setMatrix(matScale);
+                canvasMap.scale(currentScale, currentScale);
                 canvasMap.drawBitmap(bitmap, 0, 0, paint_map);
                 Tracer.e(mytag, "Trying to create widget at scale : " + currentScale);
                 widget = Bitmap.createBitmap((int) ((bitmap.getWidth() + screen_width) * currentScale), (int) ((bitmap.getHeight() + screenheight) * currentScale), Bitmap.Config.ARGB_8888);
@@ -1329,6 +1324,8 @@ public class MapView extends View {
                                                 e.printStackTrace();
                                             }
                                             panel_widget.setVisibility(View.VISIBLE);
+                                            if (!top_drawer.isOpen())
+                                                top_drawer.setOpen(true, true);
                                             if (bottom_drawer.isOpen())
                                                 bottom_drawer.setOpen(false, true);
                                             widgetActiv = true;
@@ -1344,6 +1341,7 @@ public class MapView extends View {
                         //hide it
                         if (!widgetActiv && moves < 5) {
                             Tracer.d(mytag, "Launch HIDE top widgets");
+                            top_drawer.setOpen(false, true);
                             bottom_drawer.setOpen(false, true);
                         }
                     }
@@ -1633,6 +1631,11 @@ public class MapView extends View {
 
     public void setPanel_widget(ViewGroup panel_widget) {
         this.panel_widget = panel_widget;
+    }
+
+
+    public void setTopDrawer(Sliding_Drawer top_drawer) {
+        this.top_drawer = top_drawer;
     }
 
     public void setBottomDrawer(Sliding_Drawer bottom_drawer) {

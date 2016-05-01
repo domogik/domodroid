@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -55,8 +56,8 @@ import java.util.Vector;
 import Entity.Entity_Feature;
 import activities.Sliding_Drawer.OnPanelListener;
 import database.WidgetUpdate;
-import map.Dialog_Help;
-import map.Dialog_Move;
+import Dialog.Dialog_Map_Help;
+import Dialog.Dialog_Map_Move;
 import map.MapView;
 import misc.CopyFile;
 import misc.tracerengine;
@@ -67,7 +68,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
      */
     private static final long serialVersionUID = 1L;
     private Sliding_Drawer panel;
-    //private Sliding_Drawer topPanel;
+    private Sliding_Drawer topPanel;
     private Sliding_Drawer bottomPanel;
     public static Dialog dialog_feature;
     private Entity_Feature[] listFeature;
@@ -77,8 +78,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private MapView mapView;
     private SharedPreferences.Editor prefEditor;
     private SharedPreferences params;
-//    private ViewGroup panel_widget;
-//    private ViewGroup panel_button;
+    private ViewGroup panel_widget;
 
     private ListView listeMap;
     private ArrayList<HashMap<String, String>> listItem;
@@ -94,7 +94,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private tracerengine Tracer = null;
     private String owner = "Map";
     private Boolean dont_freeze = false;
-    private final String mytag = "Activity_Map";
+    private final String mytag = this.getClass().getName();
     private Menu mainMenu;
 
     private static final int PICK_IMAGE = 1;
@@ -117,7 +117,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         mapView.setParams(params);
         mapView.setUpdate(params.getInt("UPDATE_TIMER", 300));
         setContentView(R.layout.activity_map);
-        ViewGroup parent = (ViewGroup) findViewById(R.id.map_container1);
+        ViewGroup parent = (ViewGroup) findViewById(R.id.map_container);
 
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
@@ -157,14 +157,21 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         build_maps_list();
 
         //sliding drawer
-        //topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
-//        panel.setOnPanelListener(this);
-
+        topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
+        panel.setOnPanelListener(this);
+        panel.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
         panel.setOnPanelListener(this);
-        //mapView.setTopDrawer(topPanel);
+        mapView.setTopDrawer(topPanel);
         mapView.setBottomDrawer(bottomPanel);
+
+        panel_widget = (ViewGroup) findViewById(R.id.panelWidget);
+        mapView.setPanel_widget(panel_widget);
 
         bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
         panel.setOnPanelListener(this);
@@ -247,7 +254,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             //mapView.updateTimer();
             parent.addView(mapView);
         } else {
-            Dialog_Help dialog_help = new Dialog_Help(this);
+            Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
             dialog_help.show();
         }
         //update thread
@@ -593,12 +600,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onPanelClosed(Sliding_Drawer panel) {
         if (Tracer != null)
             Tracer.v(mytag, "Onpanelclosepanel request to close");
-//        panel_widget.removeAllViews();
+        panel_widget.removeAllViews();
     }
 
 
     public void onPanelOpened(Sliding_Drawer panel) {
-        //disable menu if set in option
+        //todo disable menu if set in option
         if (!params.getBoolean("map_menu_disable", false)) {
             if (Tracer != null)
                 Tracer.v(mytag, "onPanelOpened panel request to be displayed");
@@ -633,7 +640,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                 }
                 return true;
             case R.id.map_menu_help:
-                Dialog_Help dialog_help = new Dialog_Help(this);
+                Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
                 dialog_help.show();
                 prefEditor.putBoolean("SPLASH", true);
                 prefEditor.commit();
@@ -663,7 +670,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
                 } else {
                     //Show the move dialog box to help user
-                    Dialog_Move dialog_move = new Dialog_Move(this);
+                    Dialog_Map_Move dialog_move = new Dialog_Map_Move(this);
                     dialog_move.show();
                     if (!mapView.isMoveMode()) {
                         //if remove mode is select for the first time
@@ -695,13 +702,17 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     }
 
     //Physical button keycode 82 is menu button
+    //Physical button keycode 4 is back button
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        //disable menu if set in option
+        //todo disable menu if set in option
         Tracer.v(mytag, "onKeyUp keyCode = " + keyCode);
         if (keyCode == 82 && !bottomPanel.isOpen()) {
             bottomPanel.setOpen(true, true);
             return false;
-        } else if ((keyCode == 82 || keyCode == 4)) {
+        } else if (((keyCode == 82 || keyCode == 4) && bottomPanel.isOpen())) {
+            bottomPanel.setOpen(false, true);
+            return false;
+        } else if (((keyCode == 82 || keyCode == 4) && bottomPanel.isOpen())) {
             bottomPanel.setOpen(false, true);
             return false;
         }
@@ -716,14 +727,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    //this is called when the screen rotates.
-    // (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
-    {
+    public void onConfigurationChanged(Configuration newConfig) {
+        //this is called when the screen rotates.
+        // (onCreate is no longer called when screen rotates due to manifest, see: android:configChanges)
         super.onConfigurationChanged(newConfig);
         System.gc();
         mapView.initMap();
-
     }
 
     private void restartactivity() {

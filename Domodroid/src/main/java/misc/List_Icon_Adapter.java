@@ -21,6 +21,8 @@ public class List_Icon_Adapter extends ArrayAdapter<String> {
     private final String[] values_icon;
     private boolean bool_type_List;    //Will be used to change icon grabber method.
     private String icon;
+    private final String mytag = this.getClass().getName();
+
 
     public List_Icon_Adapter(tracerengine Trac, Context context, String[] values, String[] values_icon) {
         super(context, R.layout.row_layout_list_icon, values);
@@ -48,7 +50,6 @@ public class List_Icon_Adapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.label);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 
-        String mytag = "List_Icon_Adapter";
         try {
             textView.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), values[position].toLowerCase())));
         } catch (Exception e) {

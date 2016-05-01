@@ -11,6 +11,7 @@ import android.widget.Button;
 
 public class Dialog_Splash extends Dialog implements OnClickListener {
     private final Button okButton;
+    private final String mytag = this.getClass().getName();
 
     public Dialog_Splash(Context context) {
         super(context);

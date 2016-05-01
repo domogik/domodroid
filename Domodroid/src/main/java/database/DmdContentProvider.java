@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
 public class DmdContentProvider extends ContentProvider {
-    private final String mytag = "DmdContentProvider";
+    private final String mytag = this.getClass().getName();
     private DatabaseHelper mDB;
     private SQLiteDatabase bdd;
 

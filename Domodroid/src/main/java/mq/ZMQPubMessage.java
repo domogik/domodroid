@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 
 class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
     private ZMQ.Socket pub = null;
+    private final String mytag = this.getClass().getName();
 
     private static String getHostName() {
         try {
@@ -33,7 +34,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             ZMQ.Context context = ZMQ.context(1);
             this.pub = context.socket(ZMQ.PUB);
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(), "error:" + e);
+            Log.d(mytag, "error:" + e);
         }
     }
 
@@ -41,7 +42,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
         String url = params[0];
         String cat = params[1];
         try {
-            Log.d(this.getClass().getSimpleName(), "Start sending");
+            Log.d(mytag, "Start sending");
             JSONObject jo = new JSONObject();
             jo.put("text", params[2]);
             jo.put("media", "speech");
@@ -57,16 +58,16 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             }
             String msgId = cat + "." + String.valueOf(System.currentTimeMillis() * 1000) + "." + "0_1";
             if (!this.pub.sendMore(msgId)) {
-                Log.e(this.getClass().getSimpleName(), "Send of msg id not ok: " + msgId);
+                Log.e(mytag, "Send of msg id not ok: " + msgId);
             }
             if (!this.pub.send(msg)) {
-                Log.e(this.getClass().getSimpleName(), "Send of msg not ok: " + msg);
+                Log.e(mytag, "Send of msg not ok: " + msg);
             }
-            Log.d(this.getClass().getSimpleName(), "End sending");
+            Log.d(mytag, "End sending");
         } catch (JSONException e) {
-            Log.d(this.getClass().getSimpleName(), "json error:" + e);
+            Log.d(mytag, "json error:" + e);
         } catch (Exception e) {
-            Log.d(this.getClass().getSimpleName(), "error:" + e);
+            Log.d(mytag, "error:" + e);
         }
         this.pub.close();
         return 1;

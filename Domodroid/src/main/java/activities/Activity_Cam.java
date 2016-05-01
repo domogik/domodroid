@@ -23,6 +23,7 @@ import android.widget.TextView;
 public class Activity_Cam extends AppCompatActivity {
 	private MjpegViewAsync mv;
 	private TextView TV_frameRate;
+	private final String mytag = this.getClass().getName();
 
 
 	public void onCreate(Bundle icicle) {

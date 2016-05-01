@@ -17,7 +17,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class ZMQService extends Service {
-    private static final String TAG = "ZMQService";
+    private final String mytag = this.getClass().getName();
 
     private ZMQTask task;
     private tracerengine Tracer = null;
@@ -67,10 +67,10 @@ public class ZMQService extends Service {
         try {
             jsonMessage = new JSONObject(json);
         } catch (JSONException e) {
-            Tracer.d(TAG, "Unable to parse message JSON" + e.toString());
+            Tracer.d(mytag, "Unable to parse message JSON" + e.toString());
         }
         if (jsonMessage == null) {
-            Tracer.e(TAG, "msg was not properly parsed");
+            Tracer.e(mytag, "msg was not properly parsed");
             return; // return early to bail out of processing
         }
         ZMQMessage msg = new ZMQMessage();

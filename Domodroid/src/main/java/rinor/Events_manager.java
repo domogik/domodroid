@@ -28,7 +28,6 @@ public class Events_manager {
     private int stack_out = -1;
     private int event_item = 0;
     private final int stack_size = 500;
-    private String mytag = "Events_manager";
     private String urlAccess;
     private ListenerThread listener = null;
     private Boolean alive = false;
@@ -47,6 +46,7 @@ public class Events_manager {
     private String MQsubport;
     private final Rinor_event[] event_stack = new Rinor_event[stack_size];
     private static Stats_Com stats_com = null;
+    private final String mytag = this.getClass().getName();
 
     /*******************************************************************************
      * Internal Constructor
@@ -78,7 +78,6 @@ public class Events_manager {
         this.Tracer = Trac;
         this.engine_cache = engine_cache;
         //setOwner(owner, state_engine_handler);
-        mytag = "Events";
         urlAccess = params.getString("URL", "1.1.1.1");
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);

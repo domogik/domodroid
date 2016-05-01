@@ -12,13 +12,14 @@ import org.zeromq.ZMQ;
 
 class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
 	private tracerengine Tracer = null;
+	private final String mytag = this.getClass().getName();
 
 	private ZMQService theContext = null;
 	public ZMQTask(ZMQService context) {
 		theContext = context;
 		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
 		Tracer = tracerengine.getInstance(SP_params,context);
-		Tracer.d("foo", "contextutons!!!");
+		Tracer.d(mytag, "contextutons!!!");
 		
 	}
 
@@ -46,15 +47,15 @@ class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
 				if (sub.hasReceiveMore()) {
 					msgContent = new String(sub.recv());
 				}
-				Tracer.d(this.getClass().getSimpleName(),msgId);
+				Tracer.d(mytag,msgId);
 				// Do something with the message
 				service.handleMessage(msgId, msgContent);
 			} catch (Exception e) {
-				Tracer.d(this.getClass().getSimpleName(), e.getMessage());
+				Tracer.e(mytag, e.getMessage());
 			}
-			Tracer.d(this.getClass().getSimpleName(), "run");
+			Tracer.d(mytag, "run");
 		}
-		Tracer.d(this.getClass().getSimpleName(), "Task ended");
+		Tracer.d(mytag, "Task ended");
 		return null;
 	}
 }

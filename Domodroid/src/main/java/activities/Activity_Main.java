@@ -72,7 +72,7 @@ import widgets.Basic_Graphical_zone;
 
 @SuppressWarnings({"static-access"})
 public class Activity_Main extends AppCompatActivity implements OnClickListener {
-
+    private final String mytag = this.getClass().getName();
     public static Context context;
     private SharedPreferences SP_params;
     private SharedPreferences.Editor SP_prefEditor;
@@ -104,7 +104,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
     private tracerengine Tracer = null;
     private ProgressDialog PG_dialog_message;
     private Boolean end_of_init_requested = true;
-    private final String mytag = "Activity_Main";
     private Entity_Room[] listRoom;
     private Entity_Area[] listArea;
     private Menu mainMenu;

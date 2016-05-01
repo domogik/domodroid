@@ -44,7 +44,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final String login;
     private final String password;
     private Boolean SSL;
-    private final String mytag = "Dialog_Synchronize";
+    private final String mytag = this.getClass().getName();
     private float previous_api_version = 0f;
     private boolean by_usage;
     private int progress;

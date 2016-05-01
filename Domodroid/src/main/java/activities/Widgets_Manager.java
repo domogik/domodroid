@@ -39,7 +39,7 @@ class Widgets_Manager {
     private final Handler widgetHandler;
     public WidgetUpdate widgetupdate = null;
     private tracerengine Tracer = null;
-    private final String mytag = "Widgets_Manager";
+    private final String mytag = this.getClass().getName();
 
     public Widgets_Manager(tracerengine Trac, Handler handler) {
         super();

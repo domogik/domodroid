@@ -21,7 +21,7 @@ public class DomodroidDB {
 
     private final Activity context;
     // Added by Doume to clarify debugging
-    private final String mytag = "DomodroidDB";
+    private final String mytag = this.getClass().getName();
     public String owner = "";
     private tracerengine Tracer = null;
     private final SharedPreferences params;

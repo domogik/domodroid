@@ -56,7 +56,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
     private Entity_Area[] listArea;
     private Entity_Room[] listRoom;
     private Entity_Feature[] listFeature;
-    private final String mytag;
+    private final String mytag = this.getClass().getName();
     private final SharedPreferences.Editor prefEditor;
 
     public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
@@ -66,7 +66,6 @@ public class Dialog_House extends Dialog implements OnClickListener {
         this.Tracer = Trac;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
-        mytag = "Dialog_House";
         prefEditor = this.params.edit();
         domodb = new DomodroidDB(Tracer, context, params);
 

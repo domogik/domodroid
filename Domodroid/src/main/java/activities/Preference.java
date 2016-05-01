@@ -45,7 +45,7 @@ import misc.tracerengine;
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
     private Preference myself = null;
-
+    private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
 
     protected void onPostCreate(Bundle savedInstanceState) {

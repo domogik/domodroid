@@ -43,7 +43,7 @@ import android.widget.TextView;
 public class Activity_About extends AppCompatActivity implements OnClickListener{
 	//private PowerManager.WakeLock mWakeLock;
 	private String pn = "";
-	private final String mytag="Activity_About";
+	private final String mytag = this.getClass().getName();
 	private Button showchangelog;
 	private tracerengine Tracer = null;
 

@@ -31,6 +31,7 @@ import Entity.Entity_Icon;
 import Entity.Entity_Room;
 
 public class JSONParser {
+    private final String mytag = this.getClass().getName();
 
 
     //Parse JSON object and create list of AREA----------------------

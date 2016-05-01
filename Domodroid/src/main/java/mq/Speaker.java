@@ -13,6 +13,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 
 class Speaker implements OnInitListener {
     private tracerengine Tracer = null;
+    private final String mytag = this.getClass().getName();
 
     private final TextToSpeech tts;
 
@@ -43,7 +44,7 @@ class Speaker implements OnInitListener {
             ready = true;
         } else {
             ready = false;
-            Tracer.e(this.getClass().getSimpleName(), "Unable to set TTS to ready (check your locales)");
+            Tracer.e(mytag, "Unable to set TTS to ready (check your locales)");
         }
     }
 

@@ -25,6 +25,8 @@ import javax.net.ssl.HttpsURLConnection;
  * all those parameters should be String
  */
 public class CallUrl extends AsyncTask<String, Void, String> {
+    private final String mytag = this.getClass().getName();
+
     @Override
     protected String doInBackground(String... uri) {
         // TODO : use non deprecated functions

@@ -10,12 +10,12 @@
         android:id="@+id/toolbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?actionBarSize"
+        android:background="@drawable/background"
         android:maxHeight="?actionBarSize"
+        android:minHeight="?actionBarSize"
         app:navigationIcon="?homeAsUpIndicator"
         app:theme="@style/AppBaseTheme"
         app:title="@string/action_settings"
-        android:background="@drawable/background"
         app:titleTextColor="#FFFFFF" />
 
 </android.support.design.widget.AppBarLayout>

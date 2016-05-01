@@ -53,11 +53,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import Dialog.Dialog_Map_Help;
+import Dialog.Dialog_Map_Move;
 import Entity.Entity_Feature;
 import activities.Sliding_Drawer.OnPanelListener;
 import database.WidgetUpdate;
-import Dialog.Dialog_Map_Help;
-import Dialog.Dialog_Map_Move;
 import map.MapView;
 import misc.CopyFile;
 import misc.tracerengine;

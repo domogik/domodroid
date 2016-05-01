@@ -11,24 +11,24 @@
         <menu>
             <item
                 android:id="@+id/map_menu_add"
-                android:icon="@drawable/icon_menu_house"
+                android:icon="@drawable/ic_action_add_to_queue"
                 android:title="@string/map_button1"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/map_menu_move"
-                android:icon="@drawable/icon_menu_house"
+                android:icon="@drawable/ic_action_undo"
                 android:title="@string/map_button2c" />
             <item
                 android:id="@+id/map_menu_del"
-                android:icon="@drawable/icon_menu_house"
+                android:icon="@drawable/ic_action_remove"
                 android:title="@string/map_button2" />
             <item
                 android:id="@+id/map_menu_del_all"
-                android:icon="@drawable/icon_menu_house"
+                android:icon="@drawable/ic_action_discard"
                 android:title="@string/map_button2b" />
             <item
                 android:id="@+id/map_menu_help"
-                android:icon="@drawable/icon_menu_house"
+                android:icon="@drawable/ic_action_help"
                 android:title="@string/map_button3" />
         </menu>
     </item>

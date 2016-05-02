@@ -16,8 +16,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -69,7 +74,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private static final long serialVersionUID = 1L;
     private Sliding_Drawer panel;
     private Sliding_Drawer topPanel;
-    private Sliding_Drawer bottomPanel;
     public static Dialog dialog_feature;
     private Entity_Feature[] listFeature;
     private HashMap<String, String> map;
@@ -96,6 +100,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private Boolean dont_freeze = false;
     private final String mytag = this.getClass().getName();
     private Menu mainMenu;
+
+    private Toolbar toolbar;
+    private NavigationView mDrawer;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private int mSelectedId;
 
     private static final int PICK_IMAGE = 1;
 
@@ -128,12 +138,27 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             }
         } catch (Exception ignored) {
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("");
         }
+        */
+
+        initView();
+
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                //disable longtouch and longclic event in map view to add a widget
+                mapView.handler_longclic.removeCallbacks(mapView.mLongPressed);
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        mDrawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         animation1 = new AlphaAnimation(0.0f, 1.0f);
         animation1.setDuration(500);
@@ -165,16 +190,10 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             }
         });
 
-        bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
-        panel.setOnPanelListener(this);
         mapView.setTopDrawer(topPanel);
-        mapView.setBottomDrawer(bottomPanel);
 
         panel_widget = (ViewGroup) findViewById(R.id.panelWidget);
         mapView.setPanel_widget(panel_widget);
-
-        bottomPanel = panel = (Sliding_Drawer) findViewById(R.id.bottomPanel);
-        panel.setOnPanelListener(this);
 
         dialog_feature = new Dialog(this);
 
@@ -305,7 +324,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             list_usable_files = null;
 
         //list Map
-        listeMap = (ListView) findViewById(R.id.listeMap);
+        listeMap = (ListView) findViewById(R.id.listMap);
         listItem = new ArrayList<>();
         list_usable_files = new Vector<>();
         int i;
@@ -349,6 +368,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         listeMap.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tracer.v(mytag, "On click Map selected at Position = " + position);
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 int last_map = list_usable_files.size() - 1;
                 if ((position <= last_map) && (position > -1)) {
                     mapView.setCurrentFile(position);
@@ -375,6 +395,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         listeMap.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Tracer.i(mytag, " longclic on a map");
+                mDrawerLayout.closeDrawer(GravityCompat.START);
                 //switch to select maps
                 int last_map = list_usable_files.size() - 1;
                 if ((position <= last_map) && (position > -1)) {
@@ -531,7 +552,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             Toast.makeText(this, R.string.map_add_file_nok, Toast.LENGTH_LONG).show();
             Tracer.e(mytag, e.toString());
         }
-
     }
 
     @Override
@@ -544,7 +564,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                 widgetUpdate.set_sleeping();    //We act as main screen : if going to pause, freeze cache engine
             }
         }
-
     }
 
     public void onResume() {
@@ -558,14 +577,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             startCacheEngine();
         } else {
             widgetUpdate.wakeup();
-            build_maps_list();
+            //build_maps_list();
             if (mapView != null) {
                 System.gc();
                 mapView.refreshMap();
             }
         }
-
-
     }
 
     @Override
@@ -701,19 +718,14 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         }
     }
 
+    @Override
     //Physical button keycode 82 is menu button
     //Physical button keycode 4 is back button
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         //todo disable menu if set in option
         Tracer.v(mytag, "onKeyUp keyCode = " + keyCode);
-        if (keyCode == 82 && !bottomPanel.isOpen()) {
-            bottomPanel.setOpen(true, true);
-            return false;
-        } else if (((keyCode == 82 || keyCode == 4) && bottomPanel.isOpen())) {
-            bottomPanel.setOpen(false, true);
-            return false;
-        } else if (((keyCode == 82 || keyCode == 4) && bottomPanel.isOpen())) {
-            bottomPanel.setOpen(false, true);
+        if ((keyCode == 82 || keyCode == 4) && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
             return false;
         }
         if ((keyCode == 82) && mainMenu != null) {
@@ -733,6 +745,20 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         super.onConfigurationChanged(newConfig);
         System.gc();
         mapView.initMap();
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        //save selected item so it will remains same even after orientation change
+        outState.putInt("SELECTED_ID", mSelectedId);
+    }
+
+    private void initView() {
+        mDrawer = (NavigationView) findViewById(R.id.map_drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_map_layout);
     }
 
     private void restartactivity() {

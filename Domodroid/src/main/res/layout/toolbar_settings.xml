@@ -13,6 +13,7 @@
         android:background="@drawable/background"
         android:maxHeight="?actionBarSize"
         android:minHeight="?actionBarSize"
+        app:logo="@drawable/icon_menu_options"
         app:navigationIcon="?homeAsUpIndicator"
         app:theme="@style/AppBaseTheme"
         app:title="@string/action_settings"

@@ -102,7 +102,6 @@ public class MapView extends View {
     private ViewGroup panel_widget;
     private final Activity context;
     private Sliding_Drawer top_drawer;
-    private Sliding_Drawer bottom_drawer;
 
     private Vector<String> files;
     private Entity_Map[] listFeatureMap;
@@ -128,7 +127,7 @@ public class MapView extends View {
     private String Value_0;
     private String Value_1;
     private static Handler handler = null;
-    private final Handler handler_longclic = new Handler();
+    public final Handler handler_longclic = new Handler();
     private tracerengine Tracer = null;
     private final int mytype = 2;
     private WidgetUpdate cache_engine = null;
@@ -146,6 +145,7 @@ public class MapView extends View {
     private String command_id = null;
     private String command_type = null;
     private final float dip20;
+    private boolean navigationdraweropen;
 
     public MapView(tracerengine Trac, Activity context, SharedPreferences params) {
         super(context);
@@ -1326,8 +1326,6 @@ public class MapView extends View {
                                             panel_widget.setVisibility(View.VISIBLE);
                                             if (!top_drawer.isOpen())
                                                 top_drawer.setOpen(true, true);
-                                            if (bottom_drawer.isOpen())
-                                                bottom_drawer.setOpen(false, true);
                                             widgetActiv = true;
                                             break;
                                     }
@@ -1342,7 +1340,6 @@ public class MapView extends View {
                         if (!widgetActiv && moves < 5) {
                             Tracer.d(mytag, "Launch HIDE top widgets");
                             top_drawer.setOpen(false, true);
-                            bottom_drawer.setOpen(false, true);
                         }
                     }
                 }
@@ -1372,7 +1369,7 @@ public class MapView extends View {
         return true;
     }
 
-    private final Runnable mLongPressed = new Runnable() {
+    public final Runnable mLongPressed = new Runnable() {
         public void run() {
             if (!params.getBoolean("map_menu_disable", false)) {
                 longclic = true;
@@ -1633,13 +1630,8 @@ public class MapView extends View {
         this.panel_widget = panel_widget;
     }
 
-
     public void setTopDrawer(Sliding_Drawer top_drawer) {
         this.top_drawer = top_drawer;
-    }
-
-    public void setBottomDrawer(Sliding_Drawer bottom_drawer) {
-        this.bottom_drawer = bottom_drawer;
     }
 
     public void setFiles(Vector<String> files) {
@@ -1717,5 +1709,10 @@ public class MapView extends View {
         float tmp = Math.round(Rval);
         return tmp / p;
     }
+
+    public void set_navigationdraweropen(boolean navigationdraweropen) {
+        this.navigationdraweropen = navigationdraweropen;
+    }
+
 
 }

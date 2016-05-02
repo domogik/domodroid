@@ -676,4 +676,6 @@
     <string name="domogik_error">Domogik error</string>
     <string name="device_update_message">A device has changed in Domogik, you should do a new sync.</string>
     <string name="stats_error">Error while try to get stats from Domogik</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

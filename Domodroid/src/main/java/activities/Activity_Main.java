@@ -28,7 +28,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -40,9 +45,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import org.domogik.domodroid13.R;
 
@@ -52,6 +60,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
@@ -71,7 +81,7 @@ import widgets.Basic_Graphical_zone;
 
 
 @SuppressWarnings({"static-access"})
-public class Activity_Main extends AppCompatActivity implements OnClickListener {
+public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
     public static Context context;
     private SharedPreferences SP_params;
@@ -108,6 +118,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
     private Entity_Area[] listArea;
     private Menu mainMenu;
 
+    private Toolbar toolbar;
+    private NavigationView mDrawer;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private int mSelectedId;
+
+    private ListView listePlace;
+    private ArrayList<HashMap<String, String>> listItem;
+
     /**
      * Called when the activity is first created.
      */
@@ -123,12 +142,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
             }
         } catch (Exception ignored) {
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
-        }
 
         Activity_Main.context = getApplicationContext();
         myself = this;
@@ -142,6 +155,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
         SP_prefEditor = SP_params.edit();
         Tracer = tracerengine.getInstance(SP_params, this);
         setContentView(R.layout.activity_home);
+
+        initView();
+
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         //Added by Doume
         File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
@@ -597,11 +616,27 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
         }
         init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
+        listePlace = (ListView) findViewById(R.id.listplace);
+        SimpleAdapter adapter_map = new SimpleAdapter(getBaseContext(), listItem,
+                R.layout.item_map, new String[]{"name"}, new int[]{R.id.name});
+        listePlace.setAdapter(adapter_map);
+        listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Tracer.v(mytag, "On click Place selected at Position = " + position);
+            }
+        });
+        listePlace.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Tracer.i(mytag, " On Longclick Place selected at Position = " + position);
+                return false;
+            }
+        });
     }
 
     /*
      * Check the answer after the proposal to reload existing settings (fresh install)
      */
+
     private void check_answer() {
         Tracer.v(mytag, "reload choice done..");
         if (reload) {
@@ -667,6 +702,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
 
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
+        listItem = new ArrayList<>();
         VG_parent.removeAllViews();
         LinearLayout LL_area = new LinearLayout(this);
         LL_area.setOrientation(LinearLayout.VERTICAL);
@@ -897,6 +933,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
     }
 
     @Override
+    //Physical button keycode 82 is menu button
+    //Physical button keycode 4 is back button
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if ((keyCode == 4) && historyPosition > 0) {
             historyPosition--;
@@ -917,8 +955,34 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener 
         //Check if sync as been done by past to avoid crash
         //on orientation change when user have to reload saved parameters.
         super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
         if (SP_params.getBoolean("SYNC", false))
             refresh();
+    }
+
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        menuItem.setChecked(true);
+        mSelectedId = menuItem.getItemId();
+        itemSelection(mSelectedId);
+        return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        //save selected item so it will remains same even after orientation change
+        outState.putInt("SELECTED_ID", mSelectedId);
+    }
+
+    private void initView() {
+        mDrawer = (NavigationView) findViewById(R.id.home_drawer);
+        mDrawer.setNavigationItemSelectedListener(this);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_home_layout);
+    }
+
+    private void itemSelection(int mSelectedId) {
+        Tracer.d(mytag, "Selected this item from navigation drawer: " + mSelectedId);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     private void refresh() {

@@ -151,6 +151,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     @SuppressWarnings("Convert2Diamond")
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
+        //Todo change this to add icon and viewadapter
         List<String> list_choice = new ArrayList<>();
         list_choice.add(context.getString(R.string.change_icon));
         list_choice.add(context.getString(R.string.rename));
@@ -158,7 +159,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         list_choice.add(context.getString(R.string.move_up));
         list_choice.add(context.getString(R.string.move_down));
         final CharSequence[] char_list = list_choice.toArray(new String[list_choice.size()]);
-        //list_type_choice.setTitle(R.string.What_to_do_message);
+        list_type_choice.setTitle(R.string.Widget_longclic_menu_title);
         list_type_choice.setSingleChoiceItems(char_list, -1,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {

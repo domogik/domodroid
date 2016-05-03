@@ -678,4 +678,5 @@
     <string name="stats_error">Error while try to get stats from Domogik</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="Widget_longclic_menu_title">What do you want to do with this widget?</string>
 </resources>

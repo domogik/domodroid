@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import Entity.Entity_Area;
@@ -308,6 +309,8 @@ class Widgets_Manager {
         domodb.owner = "Widgets_Manager.loadAreaWidgets";
         Entity_Area[] listArea = domodb.requestArea();
         Tracer.d(mytag + " loadAreaWidgets", "Areas list size : " + listArea.length);
+        //New list item that will contains list of area
+        Activity_Main.listItem = new ArrayList<>();
 
         LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
@@ -346,6 +349,14 @@ class Widgets_Manager {
                 name = Graphics_Manager.Names_Agent(context, name);
 
                 Graphical_Area graph_area = new Graphical_Area(params, Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
+
+                //Fill List from value
+                HashMap<String, String> map = new HashMap<>();
+                map.put("type", "area");
+                map.put("name", name);
+                map.put("id", String.valueOf(Id));
+                Activity_Main.listItem.add(map);
+
                 tmpPan.addView(graph_area);
                 if (columns) {
                     if (counter == 0) {
@@ -370,6 +381,9 @@ class Widgets_Manager {
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
         Entity_Room[] listRoom = domodb.requestRoom(id);
         Tracer.d(mytag + " loadRoomWidgets", "Rooms list size : " + listRoom.length);
+
+        //New list item that will contains list of area
+        Activity_Main.listItem = new ArrayList<>();
 
         LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
@@ -414,6 +428,13 @@ class Widgets_Manager {
 
             Graphical_Room graph_room = new Graphical_Room(params, Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
             tmpPan.addView(graph_room);
+
+            //Fill List from value
+            HashMap<String, String> map = new HashMap<>();
+            map.put("type", "room");
+            map.put("name", name);
+            map.put("id", String.valueOf(Id));
+            Activity_Main.listItem.add(map);
 
             if (columns) {
                 if (counter == 0) {

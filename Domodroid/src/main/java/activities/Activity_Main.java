@@ -124,8 +124,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ActionBarDrawerToggle drawerToggle;
     private int mSelectedId;
 
+    public static ArrayList<HashMap<String, String>> listItem;
     private ListView listePlace;
-    private ArrayList<HashMap<String, String>> listItem;
+    private SimpleAdapter adapter_map;
 
     /**
      * Called when the activity is first created.
@@ -617,17 +618,23 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
         listePlace = (ListView) findViewById(R.id.listplace);
-        SimpleAdapter adapter_map = new SimpleAdapter(getBaseContext(), listItem,
+        adapter_map = new SimpleAdapter(getBaseContext(), listItem,
                 R.layout.item_map, new String[]{"name"}, new int[]{R.id.name});
         listePlace.setAdapter(adapter_map);
         listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Tracer.v(mytag, "On click Place selected at Position = " + position);
+                HashMap<String, String> map = listItem.get(position);
+                loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
+                historyPosition++;
+                history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
             }
         });
         listePlace.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Tracer.i(mytag, " On Longclick Place selected at Position = " + position);
+                Tracer.d(mytag, " On Longclick Place selected at Position = " + position);
+                HashMap<String, String> map = listItem.get(position);
+                Tracer.d(mytag, "On click Place selected at Position = " + map.toString());
+                //delete this place from directly navigation drawer
                 return false;
             }
         });
@@ -702,7 +709,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
-        listItem = new ArrayList<>();
         VG_parent.removeAllViews();
         LinearLayout LL_area = new LinearLayout(this);
         LL_area.setOrientation(LinearLayout.VERTICAL);
@@ -721,7 +727,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 case "root":
                     LL_area.removeAllViews();
                     VG_parent.addView(LL_house_map);    // House & map
-
                     if (!by_usage) {
                         // Version 0.2 or un-force by_usage : display house, map and areas
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
@@ -788,7 +793,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     VG_parent.addView(LL_activ);
                     break;
             }
-
+            update_navigation_menu();
+            Tracer.d(mytag, "List item= " + listItem.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -936,7 +942,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     //Physical button keycode 82 is menu button
     //Physical button keycode 4 is back button
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if ((keyCode == 4) && historyPosition > 0) {
+        Tracer.v(mytag, "onKeyUp keyCode = " + keyCode);
+        if ((keyCode == 82 || keyCode == 4) && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return false;
+        } else if ((keyCode == 4) && historyPosition > 0) {
             historyPosition--;
             refresh();
             return false;
@@ -987,6 +997,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
     private void refresh() {
         loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+    }
+
+    public void update_navigation_menu() {
+        adapter_map.notifyDataSetChanged();
+        listePlace.setAdapter(new SimpleAdapter(getBaseContext(), listItem,
+                R.layout.item_map, new String[]{"name"}, new int[]{R.id.name}));
+        Tracer.d(mytag, "Update navigation drawer listview");
     }
 }
 

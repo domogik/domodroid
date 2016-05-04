@@ -18,9 +18,9 @@
 
 package activities;
 
-import org.domogik.domodroid13.*;
-
 import android.content.Context;
+
+import org.domogik.domodroid13.R;
 
 
 public class Graphics_Manager {
@@ -525,7 +525,7 @@ public class Graphics_Manager {
 			 * water
 			 * window
 			 */
-			/*
+            /*
 			try{
 				return context.getResources().getIdentifier("map_usage_"+usage+"_off", "drawable", context.getPackageName());
 			} catch (Exception e){
@@ -626,7 +626,7 @@ public class Graphics_Manager {
 
     private static String adapt_usage(String usage) {
         //todo adapt for 0.4
-        //information are in json device_types of each plugin
+        //information are in json device_types sensor and command name of each plugin
         //So a lot of things to look at
         //BLUEZ "available"
         if (usage.toLowerCase().equals("available") || usage.contains("bluez"))
@@ -645,7 +645,7 @@ public class Graphics_Manager {
                 || usage.toLowerCase().equals("get_free_space") || usage.toLowerCase().equals("get_used_space"))
             usage = "server";
         //GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
-        // "set_rgb_color", "send_text",
+        // "set_rgb_color", "send_text", "pressure", "co2", "tvoc", "insolation",
         //GEOLOC "position_degrees"
         //IPX800 "state", "input", "count"
         //IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
@@ -711,6 +711,8 @@ public class Graphics_Manager {
                 || usage.toLowerCase().equals("bbrhpjw") || usage.toLowerCase().equals("bbrhcjr") || usage.toLowerCase().equals("bbrhpjr")
                 )
             usage = "electricity";
+        //RFXBNZ "temperature", "humidity", "battery", "luminosity", "pressure", "power", "energy", "water", "windspeed", "rainfall", "outflow",
+        // "voltage", "current", "homeeasy S_switch", "homeeasy_openclose", "x10_switch", "ati_remote", "generic"
         //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close", "smoke"
         if (usage.toLowerCase().equals("battery"))
             usage = "battery";
@@ -723,7 +725,7 @@ public class Graphics_Manager {
         // "set_virtual_startstop", sensor are same as commands that's easier for this part.
         if (usage.contains("video"))
             usage = "security_camera";
-        //VELBUS "level_bin", "level_range", "temp", "power", "energy", "input"
+        //VELBUS "level_bin", "level_range", "temp", "power", "energy", "input", "set_level_range", "set_level_bin"
         if (usage.toLowerCase().equals("temp"))
             usage = "temperature";
         //WEATHER "current_barometer_value", "current_feels_like", "current_humidity", "current_last_updated", "current_station", "current_temperature"

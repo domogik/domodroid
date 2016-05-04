@@ -62,9 +62,6 @@ public class Activity_Cam extends AppCompatActivity {
 		TV_frameRate.setPadding(15, 0, 0, 0);
 		TV_frameRate.setText(getText(R.string.frame_rate_default));
 
-
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
 		mv = new MjpegViewAsync(this);
 		mv.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 

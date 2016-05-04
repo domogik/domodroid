@@ -625,7 +625,8 @@ public class Graphics_Manager {
     }
 
     private static String adapt_usage(String usage) {
-        //todo adapt for 0.4
+        //todo adapt for 0.4 and + use final dt_type (open_close) for example to simplify.
+        //Dt_type are in table table_feature in column device_feature_model_id before first "."
         //information are in json device_types sensor and command name of each plugin
         //So a lot of things to look at
         //BLUEZ "available"

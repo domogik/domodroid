@@ -139,6 +139,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             urlAccess = urlAccess.replaceAll("[\r\n]+", "");
             //Try to solve #1623
             urlAccess = urlAccess.replaceAll(" ", "%20");
+            //todo try to see if this might help for all case
+            // urlAccess=URLEncoder.encode(urlAccess);
             String format_urlAccess;
             //add a '/' at the end of the IP address
             if (urlAccess.lastIndexOf("/") == urlAccess.length() - 1)
@@ -185,7 +187,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            message.setText(context.getString(R.string.sync_load) + " " + values[0] + "%");
+            message.setText(String.format("%s %d%%", context.getString(R.string.sync_load), values[0]));
             super.onProgressUpdate(values);
         }
 
@@ -676,6 +678,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     list_size = json_FeatureList1.length();
                 Tracer.i(mytag, "Device list size = " + list_size);
                 for (int i = 0; i < list_size; i++) {
+                    progress = 55 + (35 * i / list_size);
+                    publishProgress(progress);
                     int list_sensors = 0;
                     //List sensors for this device
                     try {
@@ -723,8 +727,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         if (usage != null) {
                             if (!list_usage.contains(usage)) {
                                 if (json_Sensors.length() > 0) {
-                                    progress = 55 + (45 * y / json_Sensors.length());
-                                    publishProgress(progress);
                                     JSONObject room = new JSONObject();
                                     JSONObject icon = new JSONObject();
                                     try {
@@ -897,8 +899,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         if (usage != null) {
                             if (!list_usage.contains(usage)) {
                                 if (json_Commands.length() > 0) {
-                                    progress = 75 + (25 * y / json_Commands.length());
-                                    publishProgress(progress);
                                     JSONObject room = new JSONObject();
                                     JSONObject icon = new JSONObject();
                                     try {
@@ -1073,8 +1073,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             }
 
                         }
-
                     }
+                    publishProgress(90);
                     // for loop on feature list...
 
                     //Prepare list of rooms, and list of usable features

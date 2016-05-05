@@ -545,6 +545,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
                     prefEditor.putString("MQaddress", MQaddress);
+                    //todo #103 if MQadress=localhost
                     prefEditor.putString("MQsubport", MQsubport);
                     prefEditor.putString("MQpubport", MQpubport);
                 } catch (Exception e1) {

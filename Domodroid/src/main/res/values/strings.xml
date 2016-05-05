@@ -680,4 +680,6 @@
     <string name="drawer_close">Close</string>
     <string name="Widget_longclic_menu_title">What do you want to do with this widget?</string>
     <string name="action_back">Move back</string>
+    <string name="domodroid_list_of_place">Domodroid List of place</string>
+    <string name="domodroid_list_of_map">Domodroid List of map</string>
 </resources>

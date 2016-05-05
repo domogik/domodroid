@@ -139,26 +139,33 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         } catch (Exception ignored) {
         }
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // this sets the button visible
+            getSupportActionBar().setHomeButtonEnabled(true); // makes it clickable
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
         }
-        */
+
 
         initView();
 
         drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
                 //disable longtouch and longclic event in map view to add a widget
                 mapView.handler_longclic.removeCallbacks(mapView.mLongPressed);
-                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);// set your own icon
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
+                drawerToggle.syncState();
             }
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
-        drawerToggle.syncState();
 
         animation1 = new AlphaAnimation(0.0f, 1.0f);
         animation1.setDuration(500);
@@ -338,7 +345,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     map = new HashMap<>();
                     map.put("name", files[i].substring(0, files[i].lastIndexOf('.')));
                     map.put("position", String.valueOf(i));
-                    map.put("icon", "");
+                    map.put("icon", Integer.toString(R.drawable.ic_domain_white_24dp));
                     listItem.add(map);
                 } catch (Exception badfileformat) {
                     Tracer.e(mytag, "Good extension but can't load file");
@@ -353,7 +360,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             map = new HashMap<>();
             map.put("name", getText(R.string.go_Main).toString());
             map.put("position", String.valueOf(i));
-            map.put("icon", "");
+            map.put("icon", Integer.toString(R.drawable.ic_arrow_back_white));
             listItem.add(map);
             i++;
         }
@@ -361,7 +368,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         map = new HashMap<>();
         map.put("name", getText(R.string.map_select_file).toString());
         map.put("position", String.valueOf(i));
-        map.put("icon", Integer.toString(R.drawable.ic_action_add_to_queue));
+        map.put("icon", Integer.toString(R.drawable.ic_add_to_photos_white_24dp));
         listItem.add(map);
         i++;
 
@@ -642,6 +649,10 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            Tracer.d(mytag, "clic on drawertoggle");
+            return true;
+        }
         //normal menu call.
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -739,6 +750,13 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     private static void createDirIfNotExists() {
         File file = new File(Environment.getExternalStorageDirectory(), "/domodroid");
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
     }
 
     @Override

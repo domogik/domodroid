@@ -157,11 +157,29 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         Tracer = tracerengine.getInstance(SP_params, this);
         setContentView(R.layout.activity_home);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // this sets the button visible
+            getSupportActionBar().setHomeButtonEnabled(true); // makes it clickable
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
+        }
+
         initView();
 
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close){
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);// set your own icon
+            }
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
+                drawerToggle.syncState();
+            }
+        };
         mDrawerLayout.setDrawerListener(drawerToggle);
-        drawerToggle.syncState();
 
         //Added by Doume
         File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
@@ -480,6 +498,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         this.WM_Agent = null;
@@ -626,6 +651,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 HashMap<String, String> map = listItem.get(position);
                 if (map.get("type") == "action") {
                     if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
+                        Tracer.v(mytag,"clic move back in navigation drawer");
                         historyPosition--;
                         refresh();
                     }
@@ -633,6 +659,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
                     historyPosition++;
                     history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                    if (map.get("type") == "room") {
+                        //close navigationdrawer if select a room
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
+                    }
                 }
             }
         });
@@ -892,6 +922,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            Tracer.d(mytag,"clic on drawertoggle");
+            return true;
+        }
         //normal menu call.
         switch (item.getItemId()) {
             case android.R.id.home:

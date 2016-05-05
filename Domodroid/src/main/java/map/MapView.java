@@ -805,7 +805,7 @@ public class MapView extends View {
                     if (!params.getBoolean("HIDE", false)) {
                         //TODO see if we should not use label instead of featureMap.getDevice_usage_id()
                         //It is not the same text displayed for this type of device
-                        canvasWidget.drawText(featureMap.getCurrentState(),
+                        canvasWidget.drawText(value,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                 paint_text);

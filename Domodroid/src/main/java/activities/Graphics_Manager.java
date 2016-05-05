@@ -149,7 +149,6 @@ public class Graphics_Manager {
                         return R.drawable.usage_appliance_50;
                     case "battery":
                         return R.drawable.usage_battery_50;
-
                     //todo add bluetooth 50
                     case "christmas_tree":
                         return R.drawable.usage_christmas_tree_50;

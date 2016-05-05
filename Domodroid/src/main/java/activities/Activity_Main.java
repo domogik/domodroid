@@ -619,7 +619,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
         listePlace = (ListView) findViewById(R.id.listplace);
         adapter_map = new SimpleAdapter(getBaseContext(), listItem,
-                R.layout.item_map, new String[]{"name"}, new int[]{R.id.name});
+                R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         listePlace.setAdapter(adapter_map);
         listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -886,9 +886,16 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 onBackPressed();
                 return true;
             case R.id.menu_butler:
-                Intent intent = new Intent(this, Main.class);
-                this.startActivity(intent);
-                return true;
+                if (SP_params.getBoolean("SYNC", false)) {
+                    Intent intent = new Intent(this, Main.class);
+                    this.startActivity(intent);
+                    return true;
+                } else {
+                    if (AD_notSyncAlert == null)
+                        createAlert();
+                    AD_notSyncAlert.show();
+                    return true;
+                }
             case R.id.menu_exit:
                 //Disconnect all opened sessions....
                 Tracer.v(mytag + "Exit", "Stopping WidgetUpdate thread !");
@@ -1002,7 +1009,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     public void update_navigation_menu() {
         adapter_map.notifyDataSetChanged();
         listePlace.setAdapter(new SimpleAdapter(getBaseContext(), listItem,
-                R.layout.item_map, new String[]{"name"}, new int[]{R.id.name}));
+                R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon}));
         Tracer.d(mytag, "Update navigation drawer listview");
     }
 }

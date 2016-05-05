@@ -355,6 +355,7 @@ class Widgets_Manager {
                 map.put("type", "area");
                 map.put("name", name);
                 map.put("id", String.valueOf(Id));
+                map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(area.getIcon_name(), 0)));
                 Activity_Main.listItem.add(map);
 
                 tmpPan.addView(graph_area);
@@ -434,6 +435,7 @@ class Widgets_Manager {
             map.put("type", "room");
             map.put("name", name);
             map.put("id", String.valueOf(Id));
+            map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(room.getIcon_name(), 0)));
             Activity_Main.listItem.add(map);
 
             if (columns) {

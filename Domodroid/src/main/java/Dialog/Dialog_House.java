@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -496,7 +495,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
             list_Area.add(map);
         }
         SimpleAdapter adapter_area = new SimpleAdapter(getContext(), list_Area,
-                R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
+                R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         spinner_area.setAdapter(adapter_area);
 
         //2nd list room where to put widget but contain also the area
@@ -509,7 +508,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
             list_Room.add(map);
         }
         SimpleAdapter adapter_room = new SimpleAdapter(getContext(), list_Room,
-                R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
+                R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         spinner_room.setAdapter(adapter_room);
 
         //3rd list feature to put somewhere
@@ -535,7 +534,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
             list_Feature.add(map);
         }
         SimpleAdapter adapter_feature = new SimpleAdapter(getContext(), list_Feature,
-                R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
+                R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         spinner_feature.setAdapter(adapter_feature);
 
         //4th list icon to associate with area, room or widget
@@ -551,7 +550,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
             list_icon.add(map);
         }
         SimpleAdapter icon_adapter = new SimpleAdapter(getContext(), list_icon,
-                R.layout.item_feature_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
+                R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
 
         spinner_icon.setAdapter(icon_adapter);
     }

@@ -4,7 +4,6 @@ import org.domogik.domodroid13.R;
 
 import activities.Preference;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.preference.PreferenceManager;
@@ -72,7 +71,7 @@ public class Main extends AppCompatActivity {
         chatHistory = (ListView) findViewById(R.id.listView);
         chatHistoryList = new ArrayList<>();
         //chatHistoryList.add("Butler > Welcome");
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.list_view_theme, chatHistoryList);
+        arrayAdapter = new ArrayAdapter<>(this, R.layout.list_view_in_butler, chatHistoryList);
         /*
         ArrayAdapter<String> arrayAdapter =
 

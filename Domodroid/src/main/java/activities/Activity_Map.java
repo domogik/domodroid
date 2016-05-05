@@ -245,7 +245,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         }
         if ((listItem1 != null) && (listItem1.size() > 0)) {
             SimpleAdapter adapter_feature = new SimpleAdapter(getBaseContext(), listItem1,
-                    R.layout.item_feature, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
+                    R.layout.item_feature_list_add_feature_map, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
             listview_feature.setAdapter(adapter_feature);
             listview_feature.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -338,6 +338,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     map = new HashMap<>();
                     map.put("name", files[i].substring(0, files[i].lastIndexOf('.')));
                     map.put("position", String.valueOf(i));
+                    map.put("icon", "");
                     listItem.add(map);
                 } catch (Exception badfileformat) {
                     Tracer.e(mytag, "Good extension but can't load file");
@@ -352,6 +353,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             map = new HashMap<>();
             map.put("name", getText(R.string.go_Main).toString());
             map.put("position", String.valueOf(i));
+            map.put("icon", "");
             listItem.add(map);
             i++;
         }
@@ -359,11 +361,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         map = new HashMap<>();
         map.put("name", getText(R.string.map_select_file).toString());
         map.put("position", String.valueOf(i));
+        map.put("icon", "");
         listItem.add(map);
         i++;
 
         SimpleAdapter adapter_map = new SimpleAdapter(getBaseContext(), listItem,
-                R.layout.item_map, new String[]{"name"}, new int[]{R.id.name});
+                R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
         listeMap.setAdapter(adapter_map);
         listeMap.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

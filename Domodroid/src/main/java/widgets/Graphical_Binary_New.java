@@ -184,6 +184,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         //ON.setWidth(60);
         ON.setTag("ON");
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.weight = 0.5f;
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
             ON.setText(context.getString(Graphics_Manager.getStringIdentifier(getContext(), this.Value_1.toLowerCase())));

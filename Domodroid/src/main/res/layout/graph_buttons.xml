@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="32dp"
+    android:layout_width="match_parent"
+    android:layout_height="25dp"
 	android:orientation="horizontal">
 
     <Button
@@ -10,7 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt_prev"
-        android:textSize="6sp" />
+        android:textSize="6sp"
+		android:layout_weight="0.1" />
 
 	<Button
 	    android:id="@+id/bt_next"
@@ -18,7 +19,8 @@
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="@string/bt_next"
-	    android:textSize="6sp" />
+	    android:textSize="6sp"
+		android:layout_weight="0.1" />
 
 	<Button
 	    android:id="@+id/bt_year"
@@ -26,7 +28,8 @@
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 		android:text="@string/bt_year"
-	    android:textSize="6sp" />
+	    android:textSize="6sp"
+		android:layout_weight="0.1" />
 
 	<Button
         android:id="@+id/bt_month"
@@ -34,7 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
        	android:text="@string/bt_month"
-        android:textSize="6sp" />
+        android:textSize="6sp"
+		android:layout_weight="0.1" />
 
 	<Button
 	    android:id="@+id/bt_week"
@@ -43,7 +47,7 @@
 	    android:tag="Week"
 	    android:text="@string/bt_week"
 	    android:textSize="6sp"
-	     />
+		android:layout_weight="0.1" />
 
 	<Button
         android:id="@+id/bt_day"
@@ -51,7 +55,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
        	android:text="@string/bt_day"
-        android:textSize="6sp" />
+        android:textSize="6sp"
+		android:layout_weight="0.1" />
 
 	<EditText
 	    android:id="@+id/period"
@@ -60,7 +65,8 @@
 	    android:ems="10"
 	    android:gravity="center"
 	    android:textSize="6sp"
-		android:inputType="text">
+		android:inputType="text"
+		android:layout_weight="0.05">
 
 	</EditText>
 

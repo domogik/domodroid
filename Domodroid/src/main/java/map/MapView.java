@@ -161,7 +161,7 @@ public class MapView extends View {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         screen_width = metrics.widthPixels;
         scale = getContext().getResources().getDisplayMetrics().density;
-        dip20 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 17, metrics);
+        dip20 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, metrics);
         text_Offset_X = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, metrics);
 
         startCacheEngine();
@@ -790,25 +790,26 @@ public class MapView extends View {
                                 paint_text.setTextSize(texsize * scale + 0.5f - 1);
                                 paint_text.setTypeface(Typeface.DEFAULT);
                                 Tracer.e(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
-                                if (!params.getBoolean("HIDE", false))
-                                    canvasWidget.drawText(label,
-                                            (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                            (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
-                                            paint_text);
+
                             }
                         }
+                        if (!params.getBoolean("HIDE", false))
+                            canvasWidget.drawText(label,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
+                                    paint_text);
                     }
                 } else if (featureMap.getValue_type().equals("range") || ((parameters.contains("command")) && (featureMap.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
                     for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                     paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                    canvasWidget.drawText(value,
+                            (featureMap.getPosx() * currentScale) + text_Offset_X,
+                            (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                            paint_text);
                     if (!params.getBoolean("HIDE", false)) {
                         //TODO see if we should not use label instead of featureMap.getDevice_usage_id()
                         //It is not the same text displayed for this type of device
-                        canvasWidget.drawText(value,
-                                (featureMap.getPosx() * currentScale) + text_Offset_X,
-                                (featureMap.getPosy() * currentScale) + text_Offset_Y,
-                                paint_text);
                         canvasWidget.drawText(label,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -817,13 +818,13 @@ public class MapView extends View {
                     } else {
                         if (featureMap.getState_key().equals("light")) {
                             if (Integer.parseInt(featureMap.getCurrentState()) > valueMin) {
-                                canvasWidget.drawText(featureMap.getCurrentState(),
+                                canvasWidget.drawText(value,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                         paint_text);
                             }
                         } else {
-                            canvasWidget.drawText(featureMap.getCurrentState(),
+                            canvasWidget.drawText(value,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                     paint_text);

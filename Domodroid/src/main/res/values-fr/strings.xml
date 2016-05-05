@@ -607,4 +607,5 @@
         <string name="domogik_error">Erreur de Domogik</string>
         <string name="device_update_message">Un Device a changé dans Domogik, vous devriez refaire une synchronisation.</string>
         <string name="stats_error">Erreur lors de la récupération des stats dans Domogik.</string>
+        <string name="action_back">Retour</string>
 </resources>

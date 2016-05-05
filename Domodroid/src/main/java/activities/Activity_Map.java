@@ -361,7 +361,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         map = new HashMap<>();
         map.put("name", getText(R.string.map_select_file).toString());
         map.put("position", String.valueOf(i));
-        map.put("icon", "");
+        map.put("icon", Integer.toString(R.drawable.ic_action_add_to_queue));
         listItem.add(map);
         i++;
 

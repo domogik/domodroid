@@ -194,7 +194,7 @@
             android:defaultValue="true"
             android:key="LOG_VERBOSE"
             android:summaryOff="@string/debug_log_verbose_off"
-            android:summaryOn="@string/debug_log_verbose_off"
+            android:summaryOn="@string/debug_log_verbose_on"
             android:title="@string/debug_log_verbose" />
         <CheckBoxPreference
             android:defaultValue="true"

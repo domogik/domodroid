@@ -8,6 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 
+import org.domogik.domodroid13.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -311,6 +313,7 @@ class Widgets_Manager {
         Tracer.d(mytag + " loadAreaWidgets", "Areas list size : " + listArea.length);
         //New list item that will contains list of area
         Activity_Main.listItem = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
 
         LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
@@ -351,7 +354,7 @@ class Widgets_Manager {
                 Graphical_Area graph_area = new Graphical_Area(params, Tracer, context, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
 
                 //Fill List from value
-                HashMap<String, String> map = new HashMap<>();
+                map = new HashMap<>();
                 map.put("type", "area");
                 map.put("name", name);
                 map.put("id", String.valueOf(Id));
@@ -385,6 +388,11 @@ class Widgets_Manager {
 
         //New list item that will contains list of area
         Activity_Main.listItem = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("type", "action");
+        map.put("name", context.getApplicationContext().getResources().getString(R.string.action_back));
+        map.put("icon", Integer.toString(R.drawable.ic_action_undo));
+        Activity_Main.listItem.add(map);
 
         LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
@@ -431,7 +439,7 @@ class Widgets_Manager {
             tmpPan.addView(graph_room);
 
             //Fill List from value
-            HashMap<String, String> map = new HashMap<>();
+            map = new HashMap<>();
             map.put("type", "room");
             map.put("name", name);
             map.put("id", String.valueOf(Id));

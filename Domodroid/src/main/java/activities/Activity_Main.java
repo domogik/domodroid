@@ -624,18 +624,30 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String, String> map = listItem.get(position);
-                loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
-                historyPosition++;
-                history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                if (map.get("type") == "action") {
+                    if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
+                        historyPosition--;
+                        refresh();
+                    }
+                } else {
+                    loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
+                    historyPosition++;
+                    history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                }
             }
         });
         listePlace.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Tracer.d(mytag, " On Longclick Place selected at Position = " + position);
                 HashMap<String, String> map = listItem.get(position);
-                Tracer.d(mytag, "On click Place selected at Position = " + map.toString());
-                //delete this place from directly navigation drawer
-                return false;
+                if (map.get("type") == "action") {
+                    Tracer.d(mytag, "long clic on action button");
+                    return false;
+                } else {
+                    Tracer.d(mytag, "On click Place selected at Position = " + map.toString());
+                    //Todo delete this place directly from navigation drawer
+                    return false;
+                }
             }
         });
     }

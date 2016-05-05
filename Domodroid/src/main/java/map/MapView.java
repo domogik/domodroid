@@ -798,6 +798,21 @@ public class MapView extends View {
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
                                     paint_text);
+                    } else {
+                        //number with commands
+                        for (int j = 1; j < 5; j++)
+                            paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                        paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                        canvasWidget.drawText(value,
+                                (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                                paint_text);
+                        if (!params.getBoolean("HIDE", false)) {
+                            canvasWidget.drawText(label,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                    paint_text);
+                        }
                     }
                 } else if (featureMap.getValue_type().equals("range") || ((parameters.contains("command")) && (featureMap.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
                     for (int j = 1; j < 5; j++)
@@ -808,13 +823,12 @@ public class MapView extends View {
                             (featureMap.getPosy() * currentScale) + text_Offset_Y,
                             paint_text);
                     if (!params.getBoolean("HIDE", false)) {
-                        //TODO see if we should not use label instead of featureMap.getDevice_usage_id()
-                        //It is not the same text displayed for this type of device
                         canvasWidget.drawText(label,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
                                 paint_text);
-                        //Tracer.e(mytag,"Drawing value for "+featureMap.getDescription()+" X = "+featureMap.getPosx()+" Y = "+featureMap.getPosy());
+                        Tracer.d(mytag, "Drawing value for " + featureMap.getDescription() + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                        Tracer.d(mytag, "Type= " + featureMap.getValue_type() + " featuremodel id = " + featureMap.getDevice_feature_model_id());
                     } else {
                         if (featureMap.getState_key().equals("light")) {
                             if (Integer.parseInt(featureMap.getCurrentState()) > valueMin) {

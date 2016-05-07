@@ -998,7 +998,7 @@ public class MapView extends View {
 
             }
         } else if (feature.getValue_type().equals("boolean") || feature.getValue_type().equals("bool")) {
-            if (feature.getParameters().contains("command")) {
+            if (parameters.contains("command")) {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
                     onoff = new Graphical_Binary(Tracer, context, URL,
                             widgetSize, 0, Id, zone, params, feature, handler);
@@ -1039,8 +1039,8 @@ public class MapView extends View {
             }
         } else if (feature.getValue_type().equals("number")) {
             Tracer.i(mytag, "Parameters for number:" + feature.getParameters());
-            if (feature.getParameters().contains("command")) {
-                //todo display range widgte for DT_scaling
+            if (parameters.contains("command")) {
+                //display range widget for DT_scaling command with number
                 if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")){
                     Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
                             widgetSize, 0, Id, zone, params, feature, handler);
@@ -1137,8 +1137,7 @@ public class MapView extends View {
         origin = canvas.getMatrix();
         origin.postConcat(mat.matrix);
         canvas.setMatrix(origin);
-        //35 is the height of the top border in dip.
-        canvas.drawBitmap(map, 0, 35 * getResources().getDisplayMetrics().density, paint_map);
+        canvas.drawBitmap(map, 0, 0, paint_map);
         canvas.drawBitmap(widget, 0, 0, paint_map);
         System.gc();
     }

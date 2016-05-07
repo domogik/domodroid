@@ -87,8 +87,8 @@ class Widgets_Manager {
         int size = listFeature.length;
         Entity_Feature feature;
 
-        for (int pos = 0; pos < size; ++pos) {
-            feature = listFeature[pos];
+        for (Entity_Feature aListFeature : listFeature) {
+            feature = aListFeature;
 
             //-----add component-------
             tmpPan = null;
@@ -336,8 +336,8 @@ class Widgets_Manager {
         Entity_Area area;
 
         try {
-            for (int pos = 0; pos < size; ++pos) {
-                area = listArea[pos];
+            for (Entity_Area aListArea : listArea) {
+                area = aListArea;
                 int Id = area.getId();
                 String iconId = "unknown";
                 try {
@@ -412,8 +412,8 @@ class Widgets_Manager {
         int size = listRoom.length;
         Entity_Room room;
 
-        for (int pos = 0; pos < size; ++pos) {
-            room = listRoom[pos];
+        for (Entity_Room aListRoom : listRoom) {
+            room = aListRoom;
             int Id = room.getId();
             String iconId = "unknown";
             try {

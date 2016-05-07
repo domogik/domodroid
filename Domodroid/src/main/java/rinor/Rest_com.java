@@ -100,7 +100,7 @@ public class Rest_com {
                 if (url.startsWith("http://")) {
                     url = url.replace("http://", "https://");
                 }
-                Tracer.d(mytag, "Url=" + url.toString());
+                Tracer.d(mytag, "Url=" + url);
                 HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
                 String result = null;
                 InputStream instream = urlConnection.getInputStream();
@@ -168,7 +168,7 @@ public class Rest_com {
                 if (url.startsWith("http://")) {
                     url = url.replace("http://", "https://");
                 }
-                Tracer.d(mytag, "Url=" + url.toString());
+                Tracer.d(mytag, "Url=" + url);
                 HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
                 String result = null;
                 InputStream instream = urlConnection.getInputStream();

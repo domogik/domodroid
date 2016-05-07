@@ -16,113 +16,111 @@
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * This code to get version number and name is adapt from 
+ * This code to get version number and name is adapt from
  * http://ballardhack.wordpress.com/2010/09/28/subversion-revision-in-android-app-version-with-eclipse/
  */
 package activities;
 
 
-import misc.changelog;
-import misc.tracerengine;
-
-import org.domogik.domodroid13.R;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class Activity_About extends AppCompatActivity implements OnClickListener{
-	//private PowerManager.WakeLock mWakeLock;
-	private String pn = "";
-	private final String mytag = this.getClass().getName();
-	private Button showchangelog;
-	private tracerengine Tracer = null;
+import org.domogik.domodroid13.R;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		pn = getPackageName();
+import misc.changelog;
+import misc.tracerengine;
 
-		setContentView(R.layout.activity_about);
-		//display domogik version
-		TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
+public class Activity_About extends AppCompatActivity implements OnClickListener {
+    //private PowerManager.WakeLock mWakeLock;
+    private String pn = "";
+    private final String mytag = this.getClass().getName();
+    private Button showchangelog;
+    private tracerengine Tracer = null;
 
-		SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
-		Tracer = tracerengine.getInstance(SP_params,this);
-		TV_domogikversionText.setText(getText(R.string.domogik_version)+SP_params.getString("DOMOGIK-VERSION", ""));
-		//display domodroid version
-		TextView TV_versionText = (TextView) findViewById(R.id.versionText);
-		if (TV_versionText != null) {
-			//set text in the activity_help versiontText textview
-			//it's a concatenation of version from string.xml, the versionCode and versionName from AndroidManifest.xml
-			String vcs = "??";
-			String vns = getVersionName();
-			int vc = getVersionCode();
-			if(vc != -1)
-				vcs=Integer.toString(vc);
-			TV_versionText.setText(pn+" "+vns+" "+getString(R.string.version)+"_"+vcs);
-		}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        pn = getPackageName();
 
-		showchangelog = (Button) findViewById(R.id.showchangelog);
-		showchangelog.setTag("showchangelog");
-		showchangelog.setOnClickListener(this);
+        setContentView(R.layout.activity_about);
+        //display domogik version
+        TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
 
-		//power management
-		//final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		//this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-		//this.mWakeLock.acquire();
-	}
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
+        Tracer = tracerengine.getInstance(SP_params, this);
+        TV_domogikversionText.setText(getText(R.string.domogik_version) + SP_params.getString("DOMOGIK-VERSION", ""));
+        //display domodroid version
+        TextView TV_versionText = (TextView) findViewById(R.id.versionText);
+        if (TV_versionText != null) {
+            //set text in the activity_help versiontText textview
+            //it's a concatenation of version from string.xml, the versionCode and versionName from AndroidManifest.xml
+            String vcs = "??";
+            String vns = getVersionName();
+            int vc = getVersionCode();
+            if (vc != -1)
+                vcs = Integer.toString(vc);
+            TV_versionText.setText(pn + " " + vns + " " + getString(R.string.version) + "_" + vcs);
+        }
 
-	@Override
-	public void onDestroy() {
-		//this.mWakeLock.release();
-		super.onDestroy();
-	}
+        showchangelog = (Button) findViewById(R.id.showchangelog);
+        showchangelog.setTag("showchangelog");
+        showchangelog.setOnClickListener(this);
 
-	private String getVersionName() {
-		//set a fake version
-		String version = "??";
-		try {
-			//get versionName from AndroidManifest.xml
-			PackageInfo pi = getPackageManager().getPackageInfo( pn, 0);
-			version = pi.versionName;
-		} catch (PackageManager.NameNotFoundException e) {
-			Tracer.e(mytag, "Version name not found in package");
-		}
-		return version;
-	}
+        //power management
+        //final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        //this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        //this.mWakeLock.acquire();
+    }
 
-	private int getVersionCode() {
-		//set a fake code
-		int version = -1;
-		String pn = getPackageName();
-		try {
-			//get versionCode from AndroidManifest.xml
-			PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
-			version = pi.versionCode;
-		} catch (PackageManager.NameNotFoundException e) {
-			Tracer.e(mytag, "Version number not found in package");
-		}
-		return version;
-	}
+    @Override
+    public void onDestroy() {
+        //this.mWakeLock.release();
+        super.onDestroy();
+    }
 
-	public void onClick(View v) {
-		changelog changelog = new changelog(this);
-		/** When OK Button is clicked, dismiss the dialog */
-		if (v == showchangelog)
-			try{
-				changelog.getFullLogDialog().show();
-			} catch (Exception e) {
-				Tracer.e(mytag,e.toString());
-			}
-	}
+    private String getVersionName() {
+        //set a fake version
+        String version = "??";
+        try {
+            //get versionName from AndroidManifest.xml
+            PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
+            version = pi.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Tracer.e(mytag, "Version name not found in package");
+        }
+        return version;
+    }
+
+    private int getVersionCode() {
+        //set a fake code
+        int version = -1;
+        String pn = getPackageName();
+        try {
+            //get versionCode from AndroidManifest.xml
+            PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
+            version = pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Tracer.e(mytag, "Version number not found in package");
+        }
+        return version;
+    }
+
+    public void onClick(View v) {
+        changelog changelog = new changelog(this);
+        /** When OK Button is clicked, dismiss the dialog */
+        if (v == showchangelog)
+            try {
+                changelog.getFullLogDialog().show();
+            } catch (Exception e) {
+                Tracer.e(mytag, e.toString());
+            }
+    }
 }

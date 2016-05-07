@@ -452,6 +452,8 @@ public class DmdContentProvider extends ContentProvider {
                         mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + new_position_id + "' WHERE id=" + old_position_id
                                 + " AND place_id=" + values.getAsString("place_id") + " AND device_feature_id=" + values.getAsString("id")
                                 + " AND place_type='" + values.getAsString("place_type") + "'");
+                    cursor.close();
+                    cursor1.close();
                     }
                 } catch (SQLException e) {
                     Tracer.e(mytag, "SQLException Error modifying the position of feature: " + e.toString());

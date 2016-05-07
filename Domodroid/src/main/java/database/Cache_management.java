@@ -28,8 +28,8 @@ public class Cache_management {
             Trac.i(mytag, "urlupdate= " + urlUpdate);
             int compteur = 0;
             for (Entity_Feature feature : listFeature) {
-                for (int i = 0; i < listFeature_Association.length; i++) {
-                    if (feature.getId() == listFeature_Association[i]) {
+                for (int aListFeature_Association : listFeature_Association) {
+                    if (feature.getId() == aListFeature_Association) {
                         if (!feature.getState_key().equals("")) {
                             urlUpdate = urlUpdate.concat(feature.getDevId() + "/" + feature.getState_key() + "/");
                             compteur = compteur + 1;

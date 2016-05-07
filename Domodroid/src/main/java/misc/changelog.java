@@ -232,7 +232,7 @@ public class changelog {
                         case '%':
                             // line contains version title
                             this.closeList();
-                            sb.append("<div class='title'>" + line.substring(1).trim() + "</div>\n");
+                            sb.append("<div class='title'>").append(line.substring(1).trim()).append("</div>\n");
                             break;
                         case '_':
                             // line contains version title

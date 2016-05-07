@@ -574,17 +574,17 @@ public class DomodroidDB {
         //parcourir la liste des feature avec comme device_feature_id_associated_somewhere=int[i]
         // Si erreur c'est que le feature n'existe plus, on peut supprimer des tables feature_map et feature_associated l
         // on utilise int[i]
-        for (int i = 0; i < device_feature_id_associated_somewhere.length; i++) {
+        for (int aDevice_feature_id_associated_somewhere : device_feature_id_associated_somewhere) {
             found = false;
             for (int j = 0; j < curs1.getCount(); j++) {
                 curs1.moveToPosition(j);
-                if (device_feature_id_associated_somewhere[i] == curs1.getInt(1)) {
+                if (aDevice_feature_id_associated_somewhere == curs1.getInt(1)) {
                     found = true;
                 }
             }
             if (!found) {
-                remove_one_feature_association(device_feature_id_associated_somewhere[i]);
-                remove_one_feature_in_FeatureMap(device_feature_id_associated_somewhere[i]);
+                remove_one_feature_association(aDevice_feature_id_associated_somewhere);
+                remove_one_feature_in_FeatureMap(aDevice_feature_id_associated_somewhere);
             }
         }
         curs1.close();

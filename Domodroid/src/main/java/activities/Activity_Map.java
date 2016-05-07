@@ -218,8 +218,8 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         if (listFeature != null) {
             int size = listFeature.length;
             Entity_Feature feature;
-            for (int pos = 0; pos < size; ++pos) {
-                feature = listFeature[pos];
+            for (Entity_Feature aListFeature : listFeature) {
+                feature = aListFeature;
                 if (feature != null) {
                     map = new HashMap<>();
                     map.put("name", feature.getName());

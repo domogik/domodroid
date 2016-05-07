@@ -40,7 +40,6 @@ public class Cache_Feature_Element {
             //not yet exists in list
             clients_list.add(new_client);                    // add this client at end of list
             new_client.setClientId(clients_list.size() - 1);    //set index into caller structure
-            return;
         }
     }
 
@@ -54,7 +53,6 @@ public class Cache_Feature_Element {
                     //index is the good one : remove this client from list...
                     clients_list.remove(client.getClientId());
                     client.setClientId(-1);    //Not anymore connected to this device
-                    return;
                 }
             }
         }

@@ -111,6 +111,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                     try {
                         finalize();
                     } catch (Throwable t) {
+                        Tracer.e(mytag,"Error in deleting container");
                     }    //kill the handler thread itself
                 }
 

@@ -329,8 +329,6 @@ public class Events_manager {
                     } catch (Throwable t) {
                         error = 2;
                         Tracer.e(mytag, "Rinor Throwable error ");
-                    } finally {
-
                     }
 
                     if (error != 0) {

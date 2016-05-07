@@ -62,12 +62,6 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dip"
-                        android:layout_gravity="fill_horizontal"
-                        android:orientation="vertical" />
-
-                    <LinearLayout
                         android:id="@+id/panelButton"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"

@@ -119,6 +119,8 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         params = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Tracer = tracerengine.getInstance(params, this);

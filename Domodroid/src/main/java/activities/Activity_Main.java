@@ -326,7 +326,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         };
 
-        //window managemer to kee screen on
+        //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         //Parent view

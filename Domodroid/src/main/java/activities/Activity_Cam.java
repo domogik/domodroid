@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,10 @@ public class Activity_Cam extends AppCompatActivity {
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        //window manager to keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         Bundle b = getIntent().getExtras();
         String name_cam = b.getString("name");
         String url = b.getString("url");

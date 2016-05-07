@@ -85,7 +85,8 @@
 					    android:textSize="15sp" />
 
 				</TableRow>
-
+<!--
+Todo restore only whn zoom/drag will work
 				<TableRow
 				    android:id="@+id/tableRow3"
 				    android:layout_width="fill_parent"
@@ -120,7 +121,7 @@
 						android:textColor="#999999" android:textSize="15sp"
 						android:gravity="center" android:paddingLeft="10dip" />
 				</TableRow>
-
+-->
 				<Button android:layout_width="wrap_content"
 					android:layout_height="wrap_content" android:text="@string/Ok" android:id="@+id/OkButton"
 					android:layout_marginTop="20dip" />

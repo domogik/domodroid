@@ -1040,10 +1040,19 @@ public class MapView extends View {
         } else if (feature.getValue_type().equals("number")) {
             Tracer.i(mytag, "Parameters for number:" + feature.getParameters());
             if (feature.getParameters().contains("command")) {
-                info_commands = new Graphical_Info_commands(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Info_commands.container = (FrameLayout) panel_widget;
-                panel_widget.addView(info_commands);
+                //todo display range widgte for DT_scaling
+                if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")){
+                    Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature, handler);
+                    Graphical_Range.container = (FrameLayout) panel_widget;
+                    panel_widget.addView(variator);
+                }else{
+                    info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                            widgetSize, 0, Id, zone, params, feature, handler);
+                    Graphical_Info_commands.container = (FrameLayout) panel_widget;
+                    panel_widget.addView(info_commands);
+                }
+
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, context, URL,

@@ -32,7 +32,7 @@ public class Activity_Cam extends AppCompatActivity {
 		String name_cam = b.getString("name");
 		String url = b.getString("url");
 		//typedDimension
-		float scale = getResources().getDisplayMetrics().density; 
+		float scale = getResources().getDisplayMetrics().density;
 
 		//activity
 		LinearLayout LL_activity = new LinearLayout(this);
@@ -57,8 +57,9 @@ public class Activity_Cam extends AppCompatActivity {
 		TV_name.setPadding(0, 0, 15, 0);
 
 
-		//description
+		//frame rate
 		TV_frameRate=new TextView(this);
+		TV_frameRate.setTextColor(Color.WHITE);
 		TV_frameRate.setPadding(15, 0, 0, 0);
 		TV_frameRate.setText(getText(R.string.frame_rate_default));
 
@@ -71,7 +72,7 @@ public class Activity_Cam extends AppCompatActivity {
 		FL_viewPan.addView(LL_infoPan);
 		LL_activity.addView(FL_viewPan);
 
-		setContentView(LL_activity);        
+		setContentView(LL_activity);
 		try {
 			mv.setSource(MjpegInputStream.read(url));
 		} catch (Exception e) {

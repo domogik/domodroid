@@ -22,12 +22,26 @@
     $ 1.4
       % Version 17
       _ 2016-xx-xx
-      * #32 Start working on AppCompat.
-      * #34 renaming a device directly to Domogik.
+      ! Important due to new Theme, your map widget may have to be moved once.
+      * Correct camera framerate color.
+      * #63 Remove map option zoom/drag from help.
+      * In mapview hide top widget when longclick on map.
+      * In mapview correct map not displayed at top since fullscreen mode.
+      * Add number with DT_scaling show on top widgets in map mode.
+      * In mapview correct a problem for device of type number with commands.
+      * In mapview correct a problem to display label even if no value.
+      * In mapview correct a problem to display command of type DT_Scaling.
+      * Correct a preferences screen toggle text
+      * Restore Fulscreen theme for domodroid.
+      * #32 Start working with AppCompat.
+      * #24 Add NavigationDrawer to main and map.
+      * #34 Rename a device directly to Domogik device description.
+      * #34 Progress not correctly count while syncing.
       * Correct help crash in map mode.
       * Correct map mode bug with command number.
       * Close #98 Camera widget from map not working.
       * #96 SSL for Rest.
+      * #38 ru from transifex thank's to axboct.
       % Version 16
       _ 2016-04-07
       * New function to move up/down a widget to reorder widget display.

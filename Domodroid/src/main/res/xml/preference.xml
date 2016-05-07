@@ -123,7 +123,8 @@
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/map_explain" />
-
+<!--
+Todo disable until map drag and zoom solved
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="DRAG"
@@ -136,7 +137,7 @@
             android:summaryOff="@string/map_option_zoom_off"
             android:summaryOn="@string/map_option_zoom_on"
             android:title="@string/map_option_zoom" />
-
+-->
         <CheckBoxPreference
             android:key="HIDE"
             android:summaryOff="@string/map_option_hide_off"

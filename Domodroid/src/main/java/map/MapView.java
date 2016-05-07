@@ -431,7 +431,7 @@ public class MapView extends View {
                 canvasMap = new Canvas(map);
                 canvasMap.scale(currentScale, currentScale);
                 canvasMap.drawBitmap(bitmap, 0, 0, paint_map);
-                Tracer.e(mytag, "Trying to create widget at scale : " + currentScale);
+                Tracer.d(mytag, "Trying to create widget at scale : " + currentScale);
                 widget = Bitmap.createBitmap((int) ((bitmap.getWidth() + screen_width) * currentScale), (int) ((bitmap.getHeight() + screenheight) * currentScale), Bitmap.Config.ARGB_8888);
                 canvasWidget = new Canvas(widget);
 
@@ -453,7 +453,7 @@ public class MapView extends View {
         locked = true;
         int id = 0;
         // first try to process map switches, if any present in this map
-        Tracer.e(mytag, "Processing map switches widgets list");
+        Tracer.d(mytag, "Processing map switches widgets list");
 
         Bitmap drawable;
         float texsize = 14;
@@ -466,7 +466,7 @@ public class MapView extends View {
                 id = id - 99999;
                 if ((id >= 0) && (id < files.size())) {
                     String mapname = files.elementAt(id);
-                    Tracer.e(mytag, "Processing switch to map <" + mapname + ">");
+                    Tracer.d(mytag, "Processing switch to map <" + mapname + ">");
                     // Draw symbol of 'map_next'
                     try {
 
@@ -499,7 +499,7 @@ public class MapView extends View {
             }
         }
         // And now process real widgets
-        Tracer.e(mytag, "Processing normal widgets list");
+        Tracer.d(mytag, "Processing normal widgets list");
 
         for (Entity_Map featureMap : listFeatureMap) {
 
@@ -619,7 +619,7 @@ public class MapView extends View {
                 if ((featureMap.getValue_type().equals("string") && (!featureMap.getState_key().equals("color")))
                         || featureMap.getValue_type().equals("datetime")) {
                     if (featureMap.getState_key().equals("rgb_color")) {
-                        Tracer.e(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
+                        Tracer.d(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
                         Paint paint_color = new Paint();
                         paint_color.setPathEffect(null);
                         paint_color.setAntiAlias(true);
@@ -782,14 +782,14 @@ public class MapView extends View {
                                 paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                             paint_text.setTextSize(texsize * scale + 0.5f + 4);
                             if (featureMap != null) {
-                                Tracer.e(mytag, "Drawing value for " + label + "Value = " + value + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                                Tracer.d(mytag, "Drawing value for " + label + "Value = " + value + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
                                 canvasWidget.drawText(value,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y - (10 * (int) scale),
                                         paint_text);
                                 paint_text.setTextSize(texsize * scale + 0.5f - 1);
                                 paint_text.setTypeface(Typeface.DEFAULT);
-                                Tracer.e(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                                Tracer.d(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
 
                             }
                         }
@@ -864,7 +864,7 @@ public class MapView extends View {
 
                 } else {
                     if (featureMap.getState_key().equals("color")) {
-                        Tracer.e(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
+                        Tracer.d(mytag, "Drawing color for " + featureMap.getName() + " Value = " + states);
                         Paint paint_color = new Paint();
                         paint_color.setPathEffect(null);
                         paint_color.setAntiAlias(true);
@@ -1399,6 +1399,8 @@ public class MapView extends View {
                 //Code for long click
                 Tracer.v(mytag, "Long press :)");
                 Builder list_type_choice = new Builder(getContext());
+                //hide top widgets
+                top_drawer.setOpen(false, false);
                 List<String> list_choice = new ArrayList<>();
                 list_choice.add(context.getString(R.string.add));
                 //Check if clicked on a widget

@@ -35,6 +35,8 @@
     <string name="help_Text3">Проект Domogik : http://www.domogik.org/</string>
     <string name="help_Text4">Документация Domodroid доступна:\nhttp://domodroid.readthedocs.org/</string>
     <string name="help_Text5">Связь через:\ndomogik-developers@lists.labs.libre-entreprise.org</string>
+    <string name="help_Text6">Следуйте за нами на Twitter :\nhttps://twitter.com/domogik</string>
+    <string name="help_Text7">https://twitter.com/newdomodroid</string>
     <string name="splash_title">Милости просим в Domodroid 1.3 !</string>
     <string name="home_splash">В новой версии Domodroid включено много новых функций и улучшений, которые не были проверены по всем видам устройств Android. Если что-нибудь пойдет не так, вы можете связаться с разработчиком по адресу: http://wiki.domogik.org/Contact+and+support .</string>
     <string name="home_splash2">Пожалуйста, удалите данные кэша Domodroid из панели \"Управление приложениями\"  перед использованием новой версии.</string>
@@ -84,7 +86,6 @@
     <string name="Sync">Синхр.</string>
     <string name="Exit_Program">Выход</string>
     <string name="Rename_title">Переименовать</string>
-    <string name="Rename_message">Введите текст для показа.\nЭта информация будет утеряна при синхронизации.</string>
     <string name="Delete_feature_title">Удалить</string>
     <string name="Delete_feature_message">Удалить эту функцию.\nЭта информация будет утеряна при синхронизации.</string>
     <string name="New_ROOM_title">Создать комнату</string>
@@ -202,6 +203,7 @@
     <string name="Navigation_drawer">Бокс навигатора</string>
     <string name="Navigation_drawer_on">Бокс навигатора вкл.</string>
     <string name="Navigation_drawer_off">Бокс навигатора выкл.</string>
+    <string name="UPDATE_TIMER">Таймер обновления, если нет событий или mq</string>
     <string name="Rinor_URL">Url для соединения с rest</string>
     <string name="MQ_address">MQ адрес</string>
     <string name="Mq_sub_port">MQ sub порт</string>
@@ -345,10 +347,14 @@
     <string name="cloudy">Облачно</string>
     <string name="info27">Сильная облачность</string>
     <string name="mostly_cloudy">Сильная облачность</string>
+    <string name="mostly_cloudy_night">Сильная облачность (день)</string>
     <string name="info28">Сильная облачность</string>
+    <string name="mostly_cloudy_day">Сильная облачность (ночь)</string>
     <string name="info29">Переменная облачность</string>
+    <string name="partly_cloudy_night">Переменная облачность (день)</string>
     <string name="partly_cloudy">Переменная облачность</string>
     <string name="info30">Переменная облачность</string>
+    <string name="partly_cloudy_day">Переменная облачность (ночь)</string>
     <string name="info31">Ясно (ночь)</string>
     <string name="clear_night">Ясно (ночь)</string>
     <string name="info32">Солнечно</string>
@@ -386,6 +392,7 @@
     <string name="info3200">Не доступен</string>
     <string name="not_available">Не доступен</string>
     <string name="info48">--</string>
+    <string name="rain">Дождь</string>
     <string name="butler">Дворецкий</string>
     <string name="action_settings">Настройки</string>
     <string name="title_activity_main">Дворецкий Domogik</string>
@@ -465,7 +472,6 @@
     <string name="osd_command">Команда OSD</string>
     <string name="send_text">Отправить текст</string>
     <string name="brightness">Яркость</string>
-    <string name="motion">Движение</string>
     <string name="state">Состояниe</string>
     <string name="set_state">Установить состояние</string>
     <string name="callerid">Определение телефонного номера</string>
@@ -494,9 +500,12 @@
     <string name="frame_rate">Частота кадров</string>
     <string name="fps">Кад./сек.</string>
     <string name="sync_rinor_error">Rinor ошибка соединения. Проверте настройки</string>
-    <string name="sync_2_error_area">Domogik 2 не может загрузить /базу/зону/список/</string>
-    <string name="sync_2_error_room">Domogik 2 не может загрузить /базу/комнату/список/</string>
-    <string name="sync_2_error_feature">Domogik 2 не может загрузить /базу/свойство/список/</string>
+    <string name="sync_2_error_area">Domogik 2 не может загрузить /base/area/list/</string>
+    <string name="sync_2_error_room">Domogik 2 не может загрузить /base/room/list/</string>
+    <string name="sync_2_error_feature">Domogik 2 не может загрузить base/feature/list</string>
+    <string name="sync_2_error_assoc">Domogik 2 не может загрузить base/feature_association/list</string>
+    <string name="sync_2_error_ui">Domogik 2 не может загрузить base/ui_config/list</string>
+    <string name="sync_3_error_feature">Domogik 3 не может загрузить base/feature/list</string>
     <string name="sync_4_error_device">Domogik 4 не может загрузить JSON устройств. Проверьте конфигурацию</string>
     <string name="sync_4_error_datatype">Domogik 4 не может загрузить типы данных JSON. Проверьте конфигурацию</string>
     <string name="connection_error">Ошибка соединения</string>
@@ -563,11 +572,21 @@
     <string name="thermostat_setpoint_c">Установки термостата °C</string>
     <string name="sensor_alarm">Тревожный датчик </string>
     <string name="temperature_setpoint">Установки температуры</string>
+    <string name="send_a_message_with_options">Отправить сообщение с параметрами</string>
     <string name="wake_on_lan">Включение по сети</string>
     <string name="blacklist">Черный список</string>
+    <string name="right_ear_position">Положение правого уха</string>
+    <string name="posright">Правое положение</string>
+    <string name="wake_up">Пробуждение</string>
+    <string name="left_ear_position">Положение левого уха</string>
+    <string name="posleft">Левое положение</string>
+    <string name="sleep">Сон</string>
     <string name="switch_on_or_off">Вкл.-Выкл.</string>
-    <string name="mostly_cloudy_night">Сильная облачность (день)</string>
-    <string name="mostly_cloudy_day">Сильная облачность (ночь)</string>
-    <string name="partly_cloudy_night">Переменная облачность (день)</string>
-    <string name="partly_cloudy_day">Переменная облачность (ночь)</string>
+    <string name="motion">Движение</string>
+    <string name="no_motion">Нет движения</string>
+    <string name="domogik_information">Информация Domogik</string>
+    <string name="domogik_error">Ошибка Domogik</string>
+    <string name="drawer_open">Откр.</string>
+    <string name="drawer_close">Закр.</string>
+    <string name="Widget_longclic_menu_title">Что вы хотите сделать с виджетом?</string>
 </resources>

@@ -23,6 +23,8 @@
       % Version 17
       _ 2016-xx-xx
       ! Important due to new Theme, your map widget may have to be moved once.
+      * Reorganize menu order.
+      * Remove useless list in house organisation.
       * Correct camera frame rate color.
       * #63 Remove map option zoom/drag from help.
       * Add number with DT_scaling show on top widgets in map mode.
@@ -41,8 +43,9 @@
       * Correct help crash in map mode.
       * Correct map mode bug with command number.
       * Close #98 Camera widget from map not working.
-      * #96 SSL for Rest.
+      * #96 SSL for Rest with Oauth too if used.
       * #38 ru from Transifex thank's to AXBOCT.
+      * Disable stats for now.
       % Version 16
       _ 2016-04-07
       * New function to move up/down a widget to reorder widget display.

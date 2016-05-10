@@ -9,42 +9,38 @@
         android:orderInCategory="11111"
         app:showAsAction="always">
         <menu>
-            <!-- menu_house_config -->
-            <item
-                android:id="@+id/menu_house_config"
-                android:icon="@drawable/icon_menu_house"
-                android:title="@string/house_settings"
-                app:showAsAction="never"
-                />
-            <!-- menu_butler -->
-            <item
-                android:id="@+id/menu_butler"
-                android:icon="@drawable/icon_menu_butler"
-                android:title="@string/butler" />
             <!-- menu_preferences -->
             <item
                 android:id="@+id/menu_preferences"
                 android:icon="@drawable/icon_menu_options"
                 android:title="@string/home_button2" />
-
             <!-- menu_sync -->
             <item
                 android:id="@+id/menu_sync"
                 android:icon="@drawable/icon_menu_sync"
                 android:title="@string/home_button3" />
-
-            <!-- menu_stats -->
+            <!-- menu_butler -->
             <item
+                android:id="@+id/menu_butler"
+                android:icon="@drawable/icon_menu_butler"
+                android:title="@string/butler" />
+            <!-- menu_house_config -->
+            <item
+                android:id="@+id/menu_house_config"
+                android:icon="@drawable/icon_menu_house"
+                android:title="@string/house_settings"
+                app:showAsAction="never" />
+            <!-- menu_stats -->
+<!--            <item
                 android:id="@+id/menu_stats"
                 android:icon="@drawable/icon_menu_statistics"
                 android:title="@string/statistics" />
-
+-->
             <!-- menu_about -->
             <item
                 android:id="@+id/menu_about"
                 android:icon="@drawable/icon_menu_about"
                 android:title="@string/button4" />
-
             <!-- menu_exit -->
             <item
                 android:id="@+id/menu_exit"

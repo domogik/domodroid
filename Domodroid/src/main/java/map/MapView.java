@@ -1041,12 +1041,12 @@ public class MapView extends View {
             Tracer.i(mytag, "Parameters for number:" + feature.getParameters());
             if (parameters.contains("command")) {
                 //display range widget for DT_scaling command with number
-                if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")){
+                if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")) {
                     Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Range.container = (FrameLayout) panel_widget;
                     panel_widget.addView(variator);
-                }else{
+                } else {
                     info_commands = new Graphical_Info_commands(Tracer, context, URL,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Info_commands.container = (FrameLayout) panel_widget;
@@ -1139,6 +1139,7 @@ public class MapView extends View {
         canvas.setMatrix(origin);
         canvas.drawBitmap(map, 0, 0, paint_map);
         canvas.drawBitmap(widget, 0, 0, paint_map);
+        invalidate();
         System.gc();
     }
 
@@ -1608,8 +1609,12 @@ public class MapView extends View {
     }
 
     private float autoscale(int image_width, int image_height) {
+        TypedValue tv = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+        int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
+
         currentScalewidth = (float) screenwidth / (float) image_width;
-        currentScaleheight = (float) screenheight / (float) image_height;
+        currentScaleheight = (float) (screenheight - actionBarHeight) / (float) image_height;
         //select witch scale is the best
         if (currentScaleheight < currentScalewidth) {
             currentScale = currentScaleheight;

@@ -97,7 +97,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         //spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
         //spinner_icon = (Spinner) findViewById(R.id.spin_list_icon);
         // Loading spinner data from database
-        //loadSpinnerData();
+        loadSpinnerData();
 
     }
 
@@ -268,7 +268,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //#76
                 prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                //loadSpinnerData();
+                loadSpinnerData();
             }
         });
         alert_Room.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -297,7 +297,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //#76
                 prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                //loadSpinnerData();
+                loadSpinnerData();
             }
         });
         alert_Area.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -340,7 +340,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, context);
-                //loadSpinnerData();
+                loadSpinnerData();
             }
         });
         alert_Feature.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -383,7 +383,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //#76
                 prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                //loadSpinnerData();
+                loadSpinnerData();
             }
         });
         alert_Icon.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {

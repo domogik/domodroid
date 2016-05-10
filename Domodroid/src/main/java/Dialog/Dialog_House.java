@@ -36,10 +36,10 @@ import misc.List_Icon_Adapter;
 import misc.tracerengine;
 
 public class Dialog_House extends Dialog implements OnClickListener {
-    private final Spinner spinner_area;
-    private final Spinner spinner_room;
-    private final Spinner spinner_feature;
-    private final Spinner spinner_icon;
+    //private final Spinner spinner_area;
+    //private final Spinner spinner_room;
+    //private final Spinner spinner_feature;
+    //private final Spinner spinner_icon;
     private final SharedPreferences params;
     private final Activity context;
     private tracerengine Tracer = null;
@@ -88,16 +88,16 @@ public class Dialog_House extends Dialog implements OnClickListener {
         add_widget_Button.setTag("add_widget");
         add_widget_Button.setOnClickListener(this);
 
-        Button add_icon_Button = (Button) findViewById(R.id.house_add_icon);
-        add_icon_Button.setTag("add_icon");
-        add_icon_Button.setOnClickListener(this);
+        //Button add_icon_Button = (Button) findViewById(R.id.house_add_icon);
+        //add_icon_Button.setTag("add_icon");
+        //add_icon_Button.setOnClickListener(this);
 
-        spinner_area = (Spinner) findViewById(R.id.spin_list_area);
-        spinner_room = (Spinner) findViewById(R.id.spin_list_room);
-        spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
-        spinner_icon = (Spinner) findViewById(R.id.spin_list_icon);
+        //spinner_area = (Spinner) findViewById(R.id.spin_list_area);
+        //spinner_room = (Spinner) findViewById(R.id.spin_list_room);
+        //spinner_feature = (Spinner) findViewById(R.id.spin_list_feature);
+        //spinner_icon = (Spinner) findViewById(R.id.spin_list_icon);
         // Loading spinner data from database
-        loadSpinnerData();
+        //loadSpinnerData();
 
     }
 
@@ -268,7 +268,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //#76
                 prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                loadSpinnerData();
+                //loadSpinnerData();
             }
         });
         alert_Room.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -297,7 +297,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //#76
                 prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                loadSpinnerData();
+                //loadSpinnerData();
             }
         });
         alert_Area.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -340,7 +340,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, context);
-                loadSpinnerData();
+                //loadSpinnerData();
             }
         });
         alert_Feature.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -383,7 +383,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //#76
                 prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-                loadSpinnerData();
+                //loadSpinnerData();
             }
         });
         alert_Icon.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -496,7 +496,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         }
         SimpleAdapter adapter_area = new SimpleAdapter(getContext(), list_Area,
                 R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
-        spinner_area.setAdapter(adapter_area);
+        //spinner_area.setAdapter(adapter_area);
 
         //2nd list room where to put widget but contain also the area
         //widget could be place in an area or a room.
@@ -509,7 +509,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         }
         SimpleAdapter adapter_room = new SimpleAdapter(getContext(), list_Room,
                 R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
-        spinner_room.setAdapter(adapter_room);
+        //spinner_room.setAdapter(adapter_room);
 
         //3rd list feature to put somewhere
         ArrayList<HashMap<String, String>> list_Feature = new ArrayList<>();
@@ -535,7 +535,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         }
         SimpleAdapter adapter_feature = new SimpleAdapter(getContext(), list_Feature,
                 R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
-        spinner_feature.setAdapter(adapter_feature);
+        //spinner_feature.setAdapter(adapter_feature);
 
         //4th list icon to associate with area, room or widget
         //ArrayList<String> list_icon = new ArrayList<>();
@@ -552,7 +552,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         SimpleAdapter icon_adapter = new SimpleAdapter(getContext(), list_icon,
                 R.layout.item_in_spinner_dialog_house, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
 
-        spinner_icon.setAdapter(icon_adapter);
+        //spinner_icon.setAdapter(icon_adapter);
     }
 }
 

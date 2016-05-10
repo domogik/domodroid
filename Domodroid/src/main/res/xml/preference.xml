@@ -109,12 +109,12 @@
             android:summaryOff="@string/usage_byhouse"
             android:summaryOn="@string/usage_byusage"
             android:title="@string/usage_byusagecheckbox" />
-<!--        <CheckBoxPreference
-            android:key="Navigation_drawer"
-            android:summaryOff="@string/Navigation_drawer_off"
-            android:summaryOn="@string/Navigation_drawer_on"
-            android:title="@string/Navigation_drawer" />
--->
+        <!--        <CheckBoxPreference
+                    android:key="Navigation_drawer"
+                    android:summaryOff="@string/Navigation_drawer_off"
+                    android:summaryOn="@string/Navigation_drawer_on"
+                    android:title="@string/Navigation_drawer" />
+        -->
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/map_settings">
@@ -123,21 +123,21 @@
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/map_explain" />
-<!--
-Todo disable until map drag and zoom solved
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="DRAG"
-            android:summaryOff="@string/map_option_drag_off"
-            android:summaryOn="@string/map_option_drag_on"
-            android:title="@string/map_option_drag" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="ZOOM"
-            android:summaryOff="@string/map_option_zoom_off"
-            android:summaryOn="@string/map_option_zoom_on"
-            android:title="@string/map_option_zoom" />
--->
+        <!--
+        Todo disable until map drag and zoom solved
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="DRAG"
+                    android:summaryOff="@string/map_option_drag_off"
+                    android:summaryOn="@string/map_option_drag_on"
+                    android:title="@string/map_option_drag" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="ZOOM"
+                    android:summaryOff="@string/map_option_zoom_off"
+                    android:summaryOn="@string/map_option_zoom_on"
+                    android:title="@string/map_option_zoom" />
+        -->
         <CheckBoxPreference
             android:key="HIDE"
             android:summaryOff="@string/map_option_hide_off"

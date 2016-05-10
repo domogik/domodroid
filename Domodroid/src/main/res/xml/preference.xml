@@ -109,12 +109,12 @@
             android:summaryOff="@string/usage_byhouse"
             android:summaryOn="@string/usage_byusage"
             android:title="@string/usage_byusagecheckbox" />
-        <CheckBoxPreference
+<!--        <CheckBoxPreference
             android:key="Navigation_drawer"
             android:summaryOff="@string/Navigation_drawer_off"
             android:summaryOn="@string/Navigation_drawer_on"
             android:title="@string/Navigation_drawer" />
-
+-->
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/map_settings">

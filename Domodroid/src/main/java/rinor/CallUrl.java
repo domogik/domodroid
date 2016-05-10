@@ -16,6 +16,8 @@ import org.apache.http.params.HttpParams;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -26,13 +28,14 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class CallUrl extends AsyncTask<String, Void, String> {
     private final String mytag = this.getClass().getName();
+    private boolean alreadyTriedAuthenticating = false;
 
     @Override
     protected String doInBackground(String... uri) {
         // TODO : use non deprecated functions
         String url = uri[0];
-        String login = uri[1];
-        String password = uri[2];
+        final String login = uri[1];
+        final String password = uri[2];
         int timeout = Integer.parseInt(uri[3]);
         Boolean SSL = Boolean.valueOf(uri[4]);
         if (!SSL) {
@@ -66,13 +69,18 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 // Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
             }
             return responseString;
-        }else{
+        } else {
             String responseMessage = null;
             try {
                 if (url.startsWith("http://")) {
                     url = url.replace("http://", "https://");
                 }
-                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                final HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                Authenticator.setDefault(new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(login, password.toCharArray());
+                    }
+                });
                 String result = null;
                 InputStream instream = urlConnection.getInputStream();
                 // Read response headers

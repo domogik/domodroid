@@ -42,6 +42,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -51,10 +53,10 @@ import misc.tracerengine;
 
 public class Rest_com {
     private static final String mytag = "Rest_com";
-
+    private static boolean alreadyTriedAuthenticating = false;
 
     @SuppressWarnings("null")
-    public static JSONObject connect_jsonobject(tracerengine Tracer, String url, String login, String password, int timeout, boolean SSL) {
+    public static JSONObject connect_jsonobject(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
 
         JSONObject json = null;
         if (!SSL) {
@@ -65,7 +67,6 @@ public class Rest_com {
                 HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                 DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                 httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-
                 HttpGet httpget = new HttpGet(url);
                 HttpResponse response;
                 String result = null;
@@ -102,6 +103,11 @@ public class Rest_com {
                 }
                 Tracer.d(mytag, "Url=" + url);
                 HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                Authenticator.setDefault(new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(login, password.toCharArray());
+                    }
+                });
                 String result = null;
                 InputStream instream = urlConnection.getInputStream();
                 result = Abstract.httpsUrl.convertStreamToString(instream);
@@ -123,7 +129,7 @@ public class Rest_com {
     }
 
     @SuppressWarnings("null")
-    public static JSONArray connect_jsonarray(tracerengine Tracer, String url, String login, String password, int timeout, boolean SSL) {
+    public static JSONArray connect_jsonarray(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
         JSONArray json = null;
 
         if (!SSL) {
@@ -170,6 +176,11 @@ public class Rest_com {
                 }
                 Tracer.d(mytag, "Url=" + url);
                 HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                Authenticator.setDefault(new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(login, password.toCharArray());
+                    }
+                });
                 String result = null;
                 InputStream instream = urlConnection.getInputStream();
                 result = Abstract.httpsUrl.convertStreamToString(instream);

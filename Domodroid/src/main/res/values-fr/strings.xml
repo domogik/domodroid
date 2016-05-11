@@ -52,9 +52,9 @@
         <string name="home_button3">Synchroniser</string>
         <string name="home_button4">A propos</string>
         <string name="map_button1">Ajouter Widget</string>
-        <string name="map_button2">Effacer Widget</string>
-        <string name="map_button2b">Supprimer tous les Widgets</string>
-        <string name="map_button2c">Déplacer Widgets</string>
+        <string name="map_button2">Effacer un widget</string>
+        <string name="map_button2b">Supprimer tous les widgets</string>
+        <string name="map_button2c">Déplacer widgets</string>
         <string name="map_nothing">Aucune carte chargée, Cliquez \"Aide\"</string>
         <string name="map_button3">Aide</string>
         <string name="map_help_text">Un répertoire nommé \"domodroid\" a été créé à la racine du stockage externe (ou interne suivant les équipements). Les images de cartes doivent y être installées, au format PNG ou SVG créé par votre outil \"Illustrator\" (les textures de base sont supportées). </string>
@@ -206,8 +206,8 @@
         <string name="Navigation_drawer_on">Menu de Navigation activé</string>
         <string name="Navigation_drawer_off">Menu de Navigation désactivé</string>
         <string name="UPDATE_TIMER">Temps de mise à jour sans événements ni message de la MQ</string>
-        <string name="UPDATE_URL">Url utilisé par le processus d\'update</string>
-        <string name="Rinor_URL">Url utilisé pour joindre Rest</string>
+        <string name="UPDATE_URL">Url utilisée par le processus d\'update</string>
+        <string name="Rinor_URL">Url utilisée pour joindre Rest</string>
         <string name="MQ_address">Adresse de MQ</string>
         <string name="Mq_sub_port">Port sub de MQ</string>
         <string name="Mq_pub_port">Port sub de MQ</string>
@@ -607,5 +607,10 @@
         <string name="domogik_error">Erreur de Domogik</string>
         <string name="device_update_message">Un Device a changé dans Domogik, vous devriez refaire une synchronisation.</string>
         <string name="stats_error">Erreur lors de la récupération des stats dans Domogik.</string>
-        <string name="action_back">Retour</string>
+        <string name="drawer_open">Ouvert</string>
+        <string name="drawer_close">Fermé</string>
+        <string name="Widget_longclic_menu_title">Que voulez-vous faire avec ce widget?</string>
+        <string name="action_back">Retour arrière</string>
+        <string name="domodroid_list_of_place">Domodroid Liste des emplacements</string>
+        <string name="domodroid_list_of_map">Domodroid liste des cartes</string>
 </resources>

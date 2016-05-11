@@ -591,8 +591,6 @@
     <string name="change_icon">Change icon</string>
     <string name="delete">Delete</string>
     <string name="high">High</string>
-    <string name="move">Move</string>
-    <string name="add">Add</string>
     <string name="events">Events</string>
     <string name="Graph_achartengine">AChartengine Graph</string>
     <string name="Graph_normal">Normal Graph</string>

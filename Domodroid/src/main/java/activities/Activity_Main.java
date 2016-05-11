@@ -714,10 +714,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } else {
             Tracer.v(mytag, "Settings not reloaded : clear database..");
             File database = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/domodroid.db");
-            if (database.exists()) {
-                boolean sucess = database.delete();
-                if (sucess == false)
-                    Tracer.i(mytag,"Database not deleted");
+            try {
+                if (database.exists()) {
+                    boolean sucess = database.delete();
+                    if (sucess == false)
+                        Tracer.i(mytag, "Database not deleted");
+                }
+            } catch (Exception e) {
+                Tracer.e(mytag, "deleting domodroid.db error " + e.toString());
             }
             // open server config view
             Intent helpI = new Intent(Activity_Main.this, Preference.class);

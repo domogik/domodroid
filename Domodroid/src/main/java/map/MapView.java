@@ -241,14 +241,21 @@ public class MapView extends View {
 
     public void removefile() {
         //remove the current file
-        File f = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + files.elementAt(currentFile));
-        Tracer.i(mytag, "Request to remove " + currentFile);
-        f.delete();
-        //remove feature of this map in table_feature_map
-        Tracer.get_engine().cleanFeatureMap(map_name);
-        //All device on this map as been delete re-check the cache URL
-        Cache_management.checkcache(Tracer, context);
+        try {
+            File f = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + files.elementAt(currentFile));
+            Tracer.i(mytag, "Request to remove " + currentFile);
+            boolean sucess = f.delete();
+            if (sucess == false)
+                Tracer.i(mytag, "No " + currentFile + " deleted");
+            //remove feature of this map in table_feature_map
+            Tracer.get_engine().cleanFeatureMap(map_name);
+            //All device on this map as been delete re-check the cache URL
+            Cache_management.checkcache(Tracer, context);
+        } catch (Exception e) {
+            Tracer.e(mytag, "deleting " + currentFile + " error " + e.toString());
+        }
         initMap();
+
     }
 
     public void initMap() {

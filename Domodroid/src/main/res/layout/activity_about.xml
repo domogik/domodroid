@@ -80,7 +80,7 @@
                 android:autoLink="web"
                 android:paddingTop="5dip"
                 android:text="@string/help_Text3"
-                android:textColor="#FFFFFF"></TextView>
+                android:textColor="#FFFFFF"/>
 
             <TextView
                 android:layout_width="wrap_content"

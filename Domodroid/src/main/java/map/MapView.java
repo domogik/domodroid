@@ -1207,11 +1207,11 @@ public class MapView extends View {
                 float pos_X1 = event.getX();
                 //Select what action to do
                 if (addMode) {
-                    do_action(context.getString(R.string.add), event, value);
+                    do_action(context.getString(R.string.house_add_widget), event, value);
                 } else if (removeMode) {
-                    do_action(context.getString(R.string.delete), event, value);
+                    do_action(context.getString(R.string.map_button2), event, value);
                 } else if (moveMode) {
-                    do_action(context.getString(R.string.move), event, value);
+                    do_action(context.getString(R.string.map_moveTitle), event, value);
                 } else {
                     //Move to left
                     if (pos_X1 - pos_X0 > screen_width / 2) {
@@ -1403,16 +1403,16 @@ public class MapView extends View {
                 //hide top widgets
                 top_drawer.setOpen(false, false);
                 List<String> list_choice = new ArrayList<>();
-                list_choice.add(context.getString(R.string.add));
+                list_choice.add(context.getString(R.string.house_add_widget));
                 //Check if clicked on a widget
                 for (final Entity_Map featureMap : listFeatureMap) {
                     if ((int) ((event1.getX() - valuelongclic[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event1.getX() - valuelongclic[2]) / currentScale) < featureMap.getPosx() + dip20 &&
                             (int) ((event1.getY() - valuelongclic[5]) / currentScale) > featureMap.getPosy() - dip20 && (int) ((event1.getY() - valuelongclic[5]) / currentScale) < featureMap.getPosy() + dip20) {
                         //Clear list and add new item
                         list_choice.clear();
-                        list_choice.add(context.getString(R.string.move));
+                        list_choice.add(context.getString(R.string.map_moveTitle));
                         list_choice.add(context.getString(R.string.change_icon));
-                        list_choice.add(context.getString(R.string.delete));
+                        list_choice.add(context.getString(R.string.map_button2));
                     }
                 }
                 //Check if clicked on a map shortcut
@@ -1421,9 +1421,9 @@ public class MapView extends View {
                             (int) ((event1.getY() - valuelongclic[5]) / currentScale) > switchesMap.getPosy() - dip20 && (int) ((event1.getY() - valuelongclic[5]) / currentScale) < switchesMap.getPosy() + dip20) {
                         //Clear list and add new item
                         list_choice.clear();
-                        list_choice.add(context.getString(R.string.move));
+                        list_choice.add(context.getString(R.string.map_moveTitle));
                         list_choice.add(context.getString(R.string.change_icon));
-                        list_choice.add(context.getString(R.string.delete));
+                        list_choice.add(context.getString(R.string.map_button2));
                     }
                 }
                 final CharSequence[] char_list = list_choice.toArray(new String[list_choice.size()]);
@@ -1433,7 +1433,7 @@ public class MapView extends View {
                             public void onClick(DialogInterface dialog, int item) {
                                 ListView lw = ((AlertDialog) dialog).getListView();
                                 Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                                if (checkedItem.toString().equals(context.getString(R.string.add))) {
+                                if (checkedItem.toString().equals(context.getString(R.string.house_add_widget))) {
                                     Activity_Map.dialog_feature.show();
                                 }
                                 do_action(checkedItem.toString(), event1, valuelongclic);
@@ -1489,7 +1489,7 @@ public class MapView extends View {
 
                 }
             }
-        } else if (action.equals(context.getString(R.string.move))) {
+        } else if (action.equals(context.getString(R.string.map_moveTitle))) {
             Tracer.d(mytag, "Move");
             for (Entity_Map featureMap : listFeatureMap) {
                 if ((int) ((event.getX() - value[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event.getX() - value[2]) / currentScale) < featureMap.getPosx() + dip20 &&
@@ -1526,7 +1526,7 @@ public class MapView extends View {
                     addMode = true;
                 }
             }
-        } else if (action.equals(context.getString(R.string.delete))) {
+        } else if (action.equals(context.getString(R.string.map_button2))) {
             Tracer.d(mytag, "Delete");
             for (final Entity_Map featureMap : listFeatureMap) {
                 if ((int) ((event.getX() - value[2]) / currentScale) > featureMap.getPosx() - dip20 && (int) ((event.getX() - value[2]) / currentScale) < featureMap.getPosx() + dip20 &&
@@ -1559,7 +1559,7 @@ public class MapView extends View {
                     initMap();
                 }
             }
-        } else if (action.equals(context.getString(R.string.add))) {
+        } else if (action.equals(context.getString(R.string.house_add_widget))) {
             int db_id = 0;
             if (temp_id != -1) {
                 //insert in the database feature map the device id, its position and map name.

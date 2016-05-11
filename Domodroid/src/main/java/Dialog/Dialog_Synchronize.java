@@ -554,10 +554,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, "ERROR getting MQ information");
                 }
                 json_FeatureList1 = Rest_com.connect_jsonarray(Tracer, urlAccess + "device", login, password, 3000, SSL);
-                JSONObject Json_data_type = Rest_com.connect_jsonobject(Tracer, urlAccess + "datatype", login, password, 3000, SSL);
                 if (json_FeatureList1 == null) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");
+                    Toast.makeText(context, "Problem geting device information", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
                     b.putString("message", "device");
@@ -566,9 +567,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     handler.sendMessage(msg);
                     return null;
                 }
+                JSONObject Json_data_type = Rest_com.connect_jsonobject(Tracer, urlAccess + "datatype", login, password, 3000, SSL);
                 if (Json_data_type == null) {
                     // Cannot get data_type from Rinor server.....
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                    Toast.makeText(context, "Problem geting datatype information", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
                     b.putString("message", "datatype");

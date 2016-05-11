@@ -166,12 +166,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         initView();
 
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close){
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);// set your own icon
             }
+
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -182,13 +183,27 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         mDrawerLayout.setDrawerListener(drawerToggle);
 
         //Added by Doume
-        File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
-        if (!storage.exists())
-            storage.mkdirs();
+        try {
+            File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
+            if (!storage.exists()) {
+                boolean sucess = storage.mkdirs();
+                if (sucess == false)
+                    Tracer.i(mytag, "No dir .conf created");
+            }
+        } catch (Exception e) {
+            Tracer.e(mytag, "creating dir /.conf/ error " + e.toString());
+        }
         //Configure Tracer tool initial state
-        File logpath = new File(Environment.getExternalStorageDirectory() + "/domodroid/.log/");
-        if (!logpath.exists())
-            logpath.mkdirs();
+        try {
+            File logpath = new File(Environment.getExternalStorageDirectory() + "/domodroid/.log/");
+            if (!logpath.exists()) {
+                boolean sucess = logpath.mkdirs();
+                if (sucess == false)
+                    Tracer.i(mytag, "No dir .log created");
+            }
+        } catch (Exception e) {
+            Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
+        }
 
         String currlogpath = SP_params.getString("LOGNAME", "");
         if (currlogpath.equals("")) {
@@ -211,14 +226,16 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         Tracer.set_profile(SP_params);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
-        String nomedia = Environment.getExternalStorageDirectory() + "/domodroid/.nomedia";
+        File nomedia = new File(Environment.getExternalStorageDirectory() + "/domodroid/.nomedia");
         try {
-            if (!(new File(nomedia).exists())) {
+            if (!(nomedia.exists())) {
                 new FileOutputStream(nomedia).close();
+                boolean sucess = nomedia.createNewFile();
+                if (sucess == false)
+                    Tracer.i(mytag, "No File .nomedia created");
             }
         } catch (Exception e) {
-            Tracer.d(mytag, "nomedia part");
-            Tracer.d(mytag, e.toString());
+            Tracer.e(mytag, "creating file .nomedia error " + e.toString());
         }
 
         appname = (ImageView) findViewById(R.id.app_name);
@@ -651,7 +668,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 HashMap<String, String> map = listItem.get(position);
                 if (map.get("type") == "action") {
                     if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
-                        Tracer.v(mytag,"clic move back in navigation drawer");
+                        Tracer.v(mytag, "clic move back in navigation drawer");
                         historyPosition--;
                         refresh();
                     }
@@ -698,7 +715,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             Tracer.v(mytag, "Settings not reloaded : clear database..");
             File database = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/domodroid.db");
             if (database.exists()) {
-                database.delete();
+                boolean sucess = database.delete();
+                if (sucess == false)
+                    Tracer.i(mytag,"Database not deleted");
             }
             // open server config view
             Intent helpI = new Intent(Activity_Main.this, Preference.class);
@@ -923,7 +942,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
-            Tracer.d(mytag,"clic on drawertoggle");
+            Tracer.d(mytag, "clic on drawertoggle");
             return true;
         }
         //normal menu call.

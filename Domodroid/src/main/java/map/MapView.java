@@ -1617,7 +1617,7 @@ public class MapView extends View {
 
     private float autoscale(int image_width, int image_height) {
         TypedValue tv = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+        context.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, tv, true);
         int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
 
         currentScalewidth = (float) screenwidth / (float) image_width;

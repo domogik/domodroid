@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ import java.util.List;
 import Abstract.common_method;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
+import adapter.ArrayAdapterWithIcon;
 import database.Cache_management;
 import database.DmdContentProvider;
 import database.DomodroidDB;
@@ -148,24 +150,17 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.addView(LL_background);
     }
 
-    @SuppressWarnings("Convert2Diamond")
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        //Todo change this to add icon and viewadapter
-        List<String> list_choice = new ArrayList<>();
-        list_choice.add(context.getString(R.string.change_icon));
-        list_choice.add(context.getString(R.string.rename));
-        list_choice.add(context.getString(R.string.delete));
-        list_choice.add(context.getString(R.string.move_up));
-        list_choice.add(context.getString(R.string.move_down));
-        final CharSequence[] char_list = list_choice.toArray(new String[list_choice.size()]);
+        final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
+                context.getString(R.string.delete), context.getString(R.string.move_up), context.getString(R.string.move_down)};
+        final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
+                R.drawable.ic_delete_black, R.drawable.ic_arrow_upward_black, R.drawable.ic_arrow_downward_black};
+        ListAdapter adapter = new ArrayAdapterWithIcon(context, String_list_action, Integer_list_action_icon);
         list_type_choice.setTitle(R.string.Widget_longclic_menu_title);
-        list_type_choice.setSingleChoiceItems(char_list, -1,
-                new DialogInterface.OnClickListener() {
+        list_type_choice.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        ListView lw = ((AlertDialog) dialog).getListView();
-                        Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                        do_action(checkedItem.toString());
+                        do_action(String_list_action[item]);
                         dialog.cancel();
                     }
                 }

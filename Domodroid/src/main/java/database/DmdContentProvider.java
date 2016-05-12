@@ -1,8 +1,5 @@
 package database;
 
-import misc.tracerengine;
-import database.DatabaseHelper;
-
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -19,6 +16,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
+import misc.tracerengine;
+
 public class DmdContentProvider extends ContentProvider {
     private final String mytag = this.getClass().getName();
     private DatabaseHelper mDB;
@@ -31,7 +30,7 @@ public class DmdContentProvider extends ContentProvider {
     private static final int REQUEST_ROOM = 110;
     private static final int REQUEST_ICON = 120;
     private static final int REQUEST_FEATURE_ALL = 130;
-    private static final int REQUEST_FEATURE_BY_ID =131;
+    private static final int REQUEST_FEATURE_BY_ID = 131;
     private static final int REQUEST_FEATURE_MAP = 140;
     private static final int REQUEST_MAP_SWITCHES = 141;
     private static final int REQUEST_FEATURE_ID = 150;
@@ -64,12 +63,15 @@ public class DmdContentProvider extends ContentProvider {
     private static final int INSERT_FEATURE_STATE = 260;
     private static final int CLEAR_FEATURE_STATE = 261;
     private static final int CLEAR_one_FEATURE_STATE = 262;
+
     private static final int UPDATE_FEATURE_STATE = 300;
     private static final int UPDATE_FEATURE_NAME = 301;
     private static final int UPDATE_FEATURE_POSITION_ID = 302;
     private static final int UPDATE_AREA_NAME = 303;
     private static final int UPDATE_ROOM_NAME = 304;
     private static final int UPDATE_ICON_NAME = 305;
+    private static final int UPDATE_AREA_POSITION_ID = 307;
+    private static final int UPDATE_ROOM_POSITION_ID = 308;
 
     private static final int UPGRADE_FEATURE_STATE = 400;
 
@@ -118,6 +120,8 @@ public class DmdContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
     public static final Uri CONTENT_URI_UPDATE_FEATURE_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME");
     public static final Uri CONTENT_URI_UPDATE_FEATURE_POSITION_ID = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_POSITION_ID");
+    public static final Uri CONTENT_URI_UPDATE_AREA_POSITION_ID = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_AREA_POSITION_ID");
+    public static final Uri CONTENT_URI_UPDATE_ROOM_POSITION_ID = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_ROOM_POSITION_ID");
     public static final Uri CONTENT_URI_UPDATE_AREA_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME");
     public static final Uri CONTENT_URI_UPDATE_ROOM_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME");
     public static final Uri CONTENT_URI_UPDATE_ICON_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME");
@@ -173,6 +177,8 @@ public class DmdContentProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE", UPDATE_FEATURE_STATE);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME", UPDATE_FEATURE_NAME);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_FEATURE_POSITION_ID", UPDATE_FEATURE_POSITION_ID);
+        sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_AREA_POSITION_ID", UPDATE_AREA_POSITION_ID);
+        sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ROOM_POSITION_ID", UPDATE_ROOM_POSITION_ID);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_AREA_NAME", UPDATE_AREA_NAME);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ROOM_NAME", UPDATE_ROOM_NAME);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/UPDATE_ICON_NAME", UPDATE_ICON_NAME);
@@ -452,13 +458,129 @@ public class DmdContentProvider extends ContentProvider {
                         mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET id='" + new_position_id + "' WHERE id=" + old_position_id
                                 + " AND place_id=" + values.getAsString("place_id") + " AND device_feature_id=" + values.getAsString("id")
                                 + " AND place_type='" + values.getAsString("place_type") + "'");
-                    cursor.close();
-                    cursor1.close();
+                        cursor.close();
+                        cursor1.close();
                     }
                 } catch (SQLException e) {
                     Tracer.e(mytag, "SQLException Error modifying the position of feature: " + e.toString());
                 } catch (Exception e) {
                     Tracer.e(mytag, "GlobalException Error modifying the position of feature: " + e.toString());
+                }
+                break;
+            case UPDATE_AREA_POSITION_ID:
+                // Update the position id of an area
+                //todo find a way to grab previous or next if not successive (maybe a cursor navigation in a for next).
+                try {
+                    //select all area by id like when drawing this place.
+                    Cursor cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_area order by id", null);
+                    int new_position_id = 0;
+                    int old_position_id = 0;
+                    //iterate the cursor to find the previous/current/next position of the selected feature.
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int previous_position = cursor.getInt(cursor.getColumnIndex("id"));
+                        boolean getnext = false;
+                        boolean getprev = false;
+                        cursor.moveToFirst();
+                        //loop until end
+                        while (!cursor.isAfterLast()) {
+                            int current_position = cursor.getInt(cursor.getColumnIndex("id"));
+                            if (current_position == values.getAsInteger("id")) {
+                                if (values.getAsString("order").equals("up")) {
+                                    //we need to get previous position
+                                    getprev = true;
+                                } else if (values.getAsString("order").equals("down")) {
+                                    //we need to get next position
+                                    getnext = true;
+                                }
+                                //store this position as old one as it's matching device feature id
+                                old_position_id = current_position;
+                                //store this position in case it is the last one
+                                if (cursor.isLast()) {
+                                    if (values.getAsString("order").equals("down")) {
+                                        new_position_id = current_position;
+                                    } else {
+                                        new_position_id = previous_position;
+                                    }
+                                }
+                            } else if (getnext) {
+                                //store this position as the next one from previous loop.
+                                new_position_id = current_position;
+                                getnext = false;
+                            } else if (getprev) {
+                                new_position_id = previous_position;
+                                getprev = false;
+                            } else {
+                                //store position for next loop
+                                previous_position = current_position;
+                            }
+                            cursor.moveToNext();
+                        }
+                        cursor.close();
+                        Tracer.d(mytag, "Modifying the position of area: from id " + old_position_id + " to: " + new_position_id);
+                        //todo move all feature and rooms too
+                    }
+                } catch (SQLException e) {
+                    Tracer.e(mytag, "SQLException Error modifying the position of area: " + e.toString());
+                } catch (Exception e) {
+                    Tracer.e(mytag, "GlobalException Error modifying the position of area: " + e.toString());
+                }
+                break;
+            case UPDATE_ROOM_POSITION_ID:
+                // Update the position id of a room
+                //todo find a way to grab previous or next if not successive (maybe a cursor navigation in a for next).
+                try {
+                    //select all feature in this place order by id like when drawing this place.
+                    Cursor cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_room order by id", null);
+                    int new_position_id = 0;
+                    int old_position_id = 0;
+                    //iterate the cursor to find the previous/current/next position of the selected feature.
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int previous_position = cursor.getInt(cursor.getColumnIndex("id"));
+                        boolean getnext = false;
+                        boolean getprev = false;
+                        cursor.moveToFirst();
+                        //loop until end
+                        while (!cursor.isAfterLast()) {
+                            int current_position = cursor.getInt(cursor.getColumnIndex("id"));
+                            if (current_position == values.getAsInteger("id")) {
+                                if (values.getAsString("order").equals("up")) {
+                                    //we need to get previous position
+                                    getprev = true;
+                                } else if (values.getAsString("order").equals("down")) {
+                                    //we need to get next position
+                                    getnext = true;
+                                }
+                                //store this position as old one as it's matching device feature id
+                                old_position_id = current_position;
+                                //store this position in case it is the last one
+                                if (cursor.isLast()) {
+                                    if (values.getAsString("order").equals("down")) {
+                                        new_position_id = current_position;
+                                    } else {
+                                        new_position_id = previous_position;
+                                    }
+                                }
+                            } else if (getnext) {
+                                //store this position as the next one from previous loop.
+                                new_position_id = current_position;
+                                getnext = false;
+                            } else if (getprev) {
+                                new_position_id = previous_position;
+                                getprev = false;
+                            } else {
+                                //store position for next loop
+                                previous_position = current_position;
+                            }
+                            cursor.moveToNext();
+                        }
+                        cursor.close();
+                        Tracer.d(mytag, "Modifying the position of room: from id " + old_position_id + " to: " + new_position_id);
+                        //todo move all feature too
+                    }
+                } catch (SQLException e) {
+                    Tracer.e(mytag, "SQLException Error modifying the position of room: " + e.toString());
+                } catch (Exception e) {
+                    Tracer.e(mytag, "GlobalException Error modifying the position of room: " + e.toString());
                 }
                 break;
             case UPDATE_AREA_NAME:
@@ -512,7 +634,7 @@ public class DmdContentProvider extends ContentProvider {
                 cursor = mDB.getReadableDatabase().rawQuery(
                         "SELECT * FROM table_area order by id"
                         , null);
-                Tracer.d(mytag, "Query on table_area return " + cursor.getCount() + " rows");
+                //Tracer.d(mytag, "Query on table_area return " + cursor.getCount() + " rows");
                 break;
             case REQUEST_ROOM:
                 queryBuilder.setTables("table_room");

@@ -17,16 +17,6 @@
  */
 package widgets;
 
-import org.domogik.domodroid13.R;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import Abstract.common_method;
-import database.Cache_management;
-import database.DmdContentProvider;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -35,17 +25,27 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-
-import database.DomodroidDB;
-import misc.List_Icon_Adapter;
-import misc.tracerengine;
-
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import org.domogik.domodroid13.R;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import Abstract.common_method;
+import adapter.ArrayAdapterWithIcon;
+import database.Cache_management;
+import database.DmdContentProvider;
+import database.DomodroidDB;
+import misc.List_Icon_Adapter;
+import misc.tracerengine;
 
 public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickListener {
 
@@ -61,7 +61,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private final DomodroidDB domodb;
     private final SharedPreferences.Editor prefEditor;
 
-    public Graphical_Room(SharedPreferences params,tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
+    public Graphical_Room(SharedPreferences params, tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
         this.myself = this;
         this.Tracer = Trac;
@@ -81,18 +81,21 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        List<String> list_choice = new ArrayList<>();
-        list_choice.add(context.getString(R.string.change_icon));
-        list_choice.add(context.getString(R.string.rename));
-        list_choice.add(context.getString(R.string.delete));
-        final CharSequence[] char_list = list_choice.toArray(new String[list_choice.size()]);
-        //list_type_choice.setTitle(R.string.What_to_do_message);
-        list_type_choice.setSingleChoiceItems(char_list, -1,
-                new DialogInterface.OnClickListener() {
+/*Todo when moving up/down room
+        final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
+                context.getString(R.string.delete), context.getString(R.string.move_up), context.getString(R.string.move_down)};
+        final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
+                R.drawable.ic_delete_black, R.drawable.ic_arrow_upward_black, R.drawable.ic_arrow_downward_black};
+*/
+        final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
+                context.getString(R.string.delete)};
+        final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
+                R.drawable.ic_delete_black};
+        ListAdapter adapter = new ArrayAdapterWithIcon(context, String_list_action, Integer_list_action_icon);
+        list_type_choice.setTitle(R.string.Widget_longclic_menu_title);
+        list_type_choice.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        ListView lw = ((AlertDialog) dialog).getListView();
-                        Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                        do_action(checkedItem.toString());
+                        do_action(String_list_action[item]);
                         dialog.cancel();
                     }
                 }
@@ -192,7 +195,18 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             );
             AlertDialog alert_list_icon = list_icon_choice.create();
             alert_list_icon.show();
-
+        } else if (action.equals(context.getString(R.string.move_down))) {
+            Tracer.d(mytag, "moving down");
+            Tracer.get_engine().move_one_room(id_room, 0, "room", "down");
+            prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            common_method.refresh_the_views(widgetHandler);
+        } else if (action.equals(context.getString(R.string.move_up))) {
+            Tracer.d(mytag, "moving up");
+            Tracer.get_engine().move_one_room(id_room, 0, "room", "up");
+            prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
+            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            common_method.refresh_the_views(widgetHandler);
         }
     }
 

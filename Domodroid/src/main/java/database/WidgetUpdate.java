@@ -1052,7 +1052,22 @@ public class WidgetUpdate {
             order) {
         domodb.move_one_feature_association(id, place_id, place_type, order);
     }
+    /*
+     * This one allow area to permut (for moving up or down)
+     */
 
+    public void move_one_area(int id, int place_id, String place_type, String
+            order) {
+        domodb.move_one_area(id, place_id, place_type, order);
+    }
+        /*
+     * This one allow room to permut (for moving up or down)
+     */
+
+    public void move_one_room(int id, int place_id, String place_type, String
+            order) {
+        domodb.move_one_room(id, place_id, place_type, order);
+    }
     /*
      * This one allow MapView to clean all widgets from a map
      */

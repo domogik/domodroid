@@ -80,7 +80,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-/*Todo when moving up/down area
+/* #78 Todo when moving up/down area
         final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
                 context.getString(R.string.delete), context.getString(R.string.move_up), context.getString(R.string.move_down)};
         final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
@@ -91,7 +91,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
                 R.drawable.ic_delete_black};
         ListAdapter adapter = new ArrayAdapterWithIcon(context, String_list_action, Integer_list_action_icon);
-        list_type_choice.setTitle(R.string.Widget_longclic_menu_title);
+        list_type_choice.setTitle(R.string.Area_longclic_menu_title);
         list_type_choice.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         do_action(String_list_action[item]);

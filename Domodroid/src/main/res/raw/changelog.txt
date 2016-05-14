@@ -21,7 +21,7 @@
   <body>
     $ 1.4
       % Version 17
-      _ 2016-xx-xx
+      _ 2016-05-14
       ! Important due to new Theme, your map widget may have to be moved once. Also note that all potential action as not been test, particularly an old domogik 0.2 & 0.3.
       * Reorganize menu order.
       * Remove useless list in house organisation.

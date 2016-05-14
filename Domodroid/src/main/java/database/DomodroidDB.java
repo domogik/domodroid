@@ -544,7 +544,7 @@ public class DomodroidDB {
             json_RoomList.put("description", "None");
             JSONArray rooms = new JSONArray();
             JSONObject room = null;
-            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, null);
+            curs = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, "id Asc");
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
@@ -712,7 +712,7 @@ public class DomodroidDB {
                     projection,
                     "area_id = ?",
                     new String[]{area_id + ""},
-                    null);
+                    "id Asc");
             rooms = new Entity_Room[curs.getCount()];
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {

@@ -22,10 +22,11 @@
     $ 1.4
       % Version 17
       _ 2016-xx-xx
-      ! Important due to new Theme, your map widget may have to be moved once.
+      ! Important due to new Theme, your map widget may have to be moved once. Also note that all potential action as not been test, particularly an old domogik 0.2 & 0.3.
       * Reorganize menu order.
       * Remove useless list in house organisation.
       * Correct camera frame rate color.
+      * Add icon in longclic widget menu.
       * #63 Remove map option zoom/drag from help.
       * Add number with DT_scaling show on top widgets in map mode.
       * In mapview hide top widget when longclick on map.

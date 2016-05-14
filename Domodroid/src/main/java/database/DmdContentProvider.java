@@ -573,10 +573,42 @@ public class DmdContentProvider extends ContentProvider {
                             }
                             cursor.moveToNext();
                         }
-                        cursor.close();
-                        Tracer.d(mytag, "Modifying the position of room: from id " + old_position_id + " to: " + new_position_id);
-                        //todo move all feature too
                     }
+                    cursor.close();
+                    Tracer.d(mytag, "Modifying the position of room: from id " + old_position_id + " to: " + new_position_id);
+                    int tempid = 0;
+                    mDB.getWritableDatabase().execSQL("UPDATE table_room SET id='" + tempid + "' WHERE id=" + old_position_id);
+                    mDB.getWritableDatabase().execSQL("UPDATE table_room SET id='" + old_position_id + "' WHERE id=" + new_position_id);
+                    mDB.getWritableDatabase().execSQL("UPDATE table_room SET id='" + new_position_id + "' WHERE id=" + tempid);
+                    //todo move all feature too
+                    cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_feature_association order by id", null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        cursor.moveToFirst();
+                        while (!cursor.isAfterLast()) {
+                            cursor.moveToNext();
+                            int current_place_id = cursor.getInt(cursor.getColumnIndex("place_id"));
+                            String current_place_type = cursor.getString(cursor.getColumnIndex("place_type"));
+                            if (current_place_type.equals("room")) {
+                                if (current_place_id == old_position_id) {
+                                    int device_feature_id = cursor.getInt(cursor.getColumnIndex("device_feature_id"));
+                                    int current_id = cursor.getInt(cursor.getColumnIndex("id"));
+                                    mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET place_id='" + new_position_id + "' WHERE place_id=" + old_position_id
+                                            + " AND device_feature_id=" + device_feature_id + " AND id=" + current_id + " AND place_type='room'");
+                                    cursor.moveToNext();
+                                } else if (current_place_id == new_position_id) {
+                                    int device_feature_id = cursor.getInt(cursor.getColumnIndex("device_feature_id"));
+                                    int current_id = cursor.getInt(cursor.getColumnIndex("id"));
+                                    mDB.getWritableDatabase().execSQL("UPDATE table_feature_association SET place_id='" + old_position_id + "' WHERE place_id=" + new_position_id
+                                            + " AND device_feature_id=" + device_feature_id + " AND id=" + current_id + " AND place_type='room'");
+                                    cursor.moveToNext();
+                                } else {
+                                    cursor.moveToNext();
+                                }
+                            }
+                        }
+                        cursor.close();
+                    }
+
                 } catch (SQLException e) {
                     Tracer.e(mytag, "SQLException Error modifying the position of room: " + e.toString());
                 } catch (Exception e) {

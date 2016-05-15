@@ -240,7 +240,7 @@ public class WidgetUpdate {
                     }
                 } else if (msg.what == 9901) {
                     // Events_Manager thread is dead....
-                    Toast.makeText(WidgetUpdate.this.context, "Event_manage die. Check Log", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.event_manager_die, Toast.LENGTH_LONG).show();
                     eventsManager = null;
                     init_done = false;
                     Tracer.i(mytag, "No more Events_Manager now ! ! ! ");
@@ -662,7 +662,7 @@ public class WidgetUpdate {
                         //Toast not available in asynctask
                         context.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "Error " + e.toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
                             }
                         });
                         return null;

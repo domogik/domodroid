@@ -194,7 +194,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                     /*
                     try {

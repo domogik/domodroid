@@ -4,17 +4,18 @@ package mq;
  * Created by mpunie on 12/05/2015.
  */
 
-import misc.tracerengine;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import misc.tracerengine;
 
 public class ZMQService extends Service {
     private final String mytag = this.getClass().getName();
@@ -39,7 +40,7 @@ public class ZMQService extends Service {
     public void onDestroy() {
         task.cancel(true);
         super.onDestroy();
-        Toast.makeText(this, "Service destroyed...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.service_destroyed, Toast.LENGTH_LONG).show();
     }
 
     @Override

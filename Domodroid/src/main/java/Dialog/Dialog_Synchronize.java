@@ -549,7 +549,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     if (MQaddress.equals("localhost")) {
                         context.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "MQ in domogik.cfg is listening only on localhost. It will not work correctly Domodroid", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -558,8 +558,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (Exception e1) {
                     context.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, "Problem with MQ information", Toast.LENGTH_LONG).show();
-                            Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.problm_with_mq_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
                     Tracer.e(mytag, "ERROR getting MQ information");
@@ -570,8 +570,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, "Cannot connect to to grab device list");
                     context.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, "Problem geting device information", Toast.LENGTH_LONG).show();
-                            Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.problem_geting_device_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
                     Bundle b = new Bundle();
@@ -588,8 +588,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
                     context.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, "Problem geting datatype information", Toast.LENGTH_LONG).show();
-                            Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.problem_geting_datatype_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
                     Bundle b = new Bundle();

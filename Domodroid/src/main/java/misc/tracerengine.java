@@ -260,7 +260,7 @@ public class tracerengine {
             } catch (IOException i) {
                 txtFile = null;        //Abort log to text file in future
                 to_txtFile = false;
-                Logger.e("Tracerengine FileLog: "+i.toString());
+                Logger.e("Tracerengine FileLog: " + i.toString());
             }
         }
     }

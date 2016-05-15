@@ -311,7 +311,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             public void handleMessage(Message msg) {
                 argbS = "?";
                 if (msg.what == 2) {
-                    Toast.makeText(getContext(), "Command to server rejected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.command_rejected, Toast.LENGTH_SHORT).show();
 
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
@@ -575,7 +575,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                      /*
                                      try {

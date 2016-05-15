@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -226,7 +227,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                          }
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                  }
 

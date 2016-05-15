@@ -244,9 +244,9 @@ public class Events_manager {
                         zmqContext.term();
                     } else {
                         // Say user Mq conf as a problem
-                        Events_manager.this.context.runOnUiThread(new Runnable() {
+                        context.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(Events_manager.this.context, R.string.events_error_mq, Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, R.string.events_error_mq, Toast.LENGTH_LONG).show();
                             }
                         });
                         Tracer.d(mytag, "error in MQ config");

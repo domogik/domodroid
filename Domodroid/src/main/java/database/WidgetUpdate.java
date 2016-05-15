@@ -197,7 +197,7 @@ public class WidgetUpdate {
                     // Cache engine being ready, we can start events manager
                     Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
                     if (eventsManager == null) {
-                        eventsManager = Events_manager.getInstance();
+                        eventsManager = Events_manager.getInstance(context);
                     }
                     eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
                     /*

@@ -1,12 +1,15 @@
 package rinor;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zeromq.ZMQ;
@@ -22,6 +25,7 @@ import misc.tracerengine;
 public class Events_manager {
     private static Events_manager instance;
     private tracerengine Tracer;
+    private static Activity context;
     private Handler state_engine_handler;
     private Handler events_engine_handler;
     private ArrayList<Cache_Feature_Element> engine_cache;
@@ -52,16 +56,17 @@ public class Events_manager {
     /*******************************************************************************
      * Internal Constructor
      *******************************************************************************/
-    private Events_manager() {
+    private Events_manager(final Activity context) {
         super();
+        this.context = context;
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
         com_broken = false;
     }
 
-    public static Events_manager getInstance() {
+    public static Events_manager getInstance(final Activity context) {
         if (instance == null) {
             Logger.e("Creating instance........................");
-            instance = new Events_manager();
+            instance = new Events_manager(context);
         }
         return instance;
 
@@ -238,9 +243,12 @@ public class Events_manager {
                         subscriber.close();
                         zmqContext.term();
                     } else {
-                        // Todo Say user Mq conf as a problem
-                        // This make crash
-                        // Toast.makeText(null, R.string.events_error_mq,Toast.LENGTH_LONG).show();
+                        // Say user Mq conf as a problem
+                        Events_manager.this.context.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(Events_manager.this.context, R.string.events_error_mq, Toast.LENGTH_LONG).show();
+                            }
+                        });
                         Tracer.d(mytag, "error in MQ config");
                         //To avoid crash on multiple launch of dmd
                         try {

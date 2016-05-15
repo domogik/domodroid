@@ -14,13 +14,6 @@
  */
 package misc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.domogik.domodroid13.R;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,9 +21,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.webkit.WebView;
+
+import com.orhanobut.logger.Logger;
+
+import org.domogik.domodroid13.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class changelog {
 
@@ -51,6 +52,8 @@ public class changelog {
      */
     public changelog(Context context) {
         this(context, PreferenceManager.getDefaultSharedPreferences(context));
+        com.orhanobut.logger.Logger.init("changelog").methodCount(0);
+
     }
 
     /**
@@ -66,16 +69,16 @@ public class changelog {
 
         // get version numbers
         this.lastVersion = sp.getString(VERSION_KEY, NO_VERSION);
-        Log.d(TAG, "lastVersion: " + lastVersion);
+        Logger.d("lastVersion: " + lastVersion);
         try {
             this.thisVersion = Integer.toString(context.getPackageManager().getPackageInfo(context.getPackageName(),
                     0).versionCode);
         } catch (NameNotFoundException e) {
             this.thisVersion = NO_VERSION;
-            Log.e(TAG, "could not get version name from manifest!");
+            Logger.e("could not get version name from manifest!");
             e.printStackTrace();
         }
-        Log.d(TAG, "appVersion: " + this.thisVersion);
+        Logger.d("appVersion: " + this.thisVersion);
     }
 
     /**
@@ -141,7 +144,7 @@ public class changelog {
                         full ? R.string.changelog_full_title : R.string.changelog_title))
                 .setView(wv)
                 .setCancelable(false)
-                        // OK button
+                // OK button
                 .setPositiveButton(context.getResources().getString(R.string.changelog_ok_button),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

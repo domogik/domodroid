@@ -110,6 +110,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
+        mytag = "Graphical_Binary_New(" + dev_id + ")";
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -123,7 +124,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
 
-        mytag = "Graphical_Binary_New(" + dev_id + ")";
         //get parameters
 
         try {

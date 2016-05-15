@@ -110,6 +110,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
         this.address = feature.getAddress();
+        mytag = "Graphical_Range(" + dev_id + ")";
 
         stateThread = 1;
         try {
@@ -118,7 +119,6 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
-        mytag = "Graphical_Range(" + dev_id + ")";
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);

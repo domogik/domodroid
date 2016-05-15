@@ -6,8 +6,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -105,12 +106,13 @@ public class WidgetUpdate {
      *******************************************************************************/
     private WidgetUpdate() {
         super();
+        com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
 
     }
 
     public static WidgetUpdate getInstance() {
         if (instance == null) {
-            Log.e("Events_Manager", "Creating instance........................");
+            Logger.e("Creating instance........................");
             instance = new WidgetUpdate();
         }
         return instance;
@@ -120,7 +122,7 @@ public class WidgetUpdate {
     public Boolean init(tracerengine Trac, final Activity context, SharedPreferences params) {
         Boolean result = false;
         if (init_done) {
-            Log.e(mytag, "init already done");
+            Logger.e("init already done");
             return true;
         }
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
@@ -642,14 +644,16 @@ public class WidgetUpdate {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
                             json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
-                            Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for <0.6 API=");
+                            Tracer.json(mytag, json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
                             json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
                             json_widget_state.put("stats", json_widget_state_0_4);
-                            Tracer.d(mytag, "json_widget_state for 0.7 API=" + json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for 0.7 API=");
+                            Tracer.json(mytag, json_widget_state.toString());
                         }
                     } catch (Exception e) {
                         //stats request cannot be completed (broken link or terminal in standby ?)
@@ -721,7 +725,7 @@ public class WidgetUpdate {
                 return 0;
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         mapView = null;
         for (int i = 0; i < itemArray.length(); i++) {
@@ -738,8 +742,8 @@ public class WidgetUpdate {
                     //dev_id = itemArray.getJSONObject(i).getInt("device_id");
                 }
             } catch (Exception e) {
-                Tracer.i(mytag, "Cache update : No feature id ! ");
-                Tracer.d(mytag, e.toString());
+                Tracer.e(mytag, "Cache update : No feature id ! ");
+                Tracer.e(mytag, e.toString());
                 to_process = false;
             }
             try {
@@ -752,8 +756,8 @@ public class WidgetUpdate {
 
                 }
             } catch (Exception e) {
-                Tracer.i(mytag, "Cache update : No skey ! ");
-                Tracer.d(mytag, e.toString());
+                Tracer.e(mytag, "Cache update : No skey ! ");
+                Tracer.e(mytag, e.toString());
                 to_process = false;
             }
             try {
@@ -768,8 +772,8 @@ public class WidgetUpdate {
                     }
                 }
             } catch (Exception e) {
-                Tracer.i(mytag, "Cache update : No value ! ");
-                Tracer.d(mytag, e.toString());
+                Tracer.e(mytag, "Cache update : No value ! ");
+                Tracer.e(mytag, e.toString());
                 to_process = false;
             }
             // Try to put this in cache, now
@@ -787,7 +791,7 @@ public class WidgetUpdate {
                 Tracer.i(mytag, "cache engine send a unique notification to MapView");
                 mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         mapView = null;
@@ -811,7 +815,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(100);        //Standby 10 milliseconds
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         locked = true;    //Take the lock
@@ -849,7 +853,7 @@ public class WidgetUpdate {
                                     Tracer.i(mytag, "cache engine send (" + Val + ") to client <" + cache.get(cache_position).clients_list.get(j).getName() + ">");
                                     client.sendEmptyMessage(9999);    //notify the widget a new value is ready for display
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Tracer.e(mytag, e.toString());
                                 }
                             }
                         } // test of valid client handler
@@ -926,7 +930,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(100);        //Standby 10 milliseconds
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         locked = true;    //Take the lock
@@ -965,7 +969,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(10);        //Standby 10 milliseconds
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         locked = true;
@@ -1012,7 +1016,7 @@ public class WidgetUpdate {
                     HttpResponse response = httpclient.execute(httpput);
                     Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
                 } catch (IOException e) {
-                    Tracer.d(mytag, "Renaming to Domogik without SSL error " + e.toString());
+                    Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
                 }
             } else {
                 try {
@@ -1034,11 +1038,11 @@ public class WidgetUpdate {
                     int responseCode = urlConnection.getResponseCode();
                     Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
                 } catch (IOException e) {
-                    Tracer.d(mytag, "Renaming to Domogik with SSL error " + e.toString());
+                    Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
                 }
             }
         } catch (Exception e) {
-            Tracer.d(mytag, e.toString());
+            Tracer.e(mytag, e.toString());
 
 
         }
@@ -1068,6 +1072,7 @@ public class WidgetUpdate {
             order) {
         domodb.move_one_room(id, place_id, place_type, order);
     }
+
     /*
      * This one allow MapView to clean all widgets from a map
      */

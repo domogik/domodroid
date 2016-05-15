@@ -5,6 +5,8 @@ import java.util.TimerTask;
 
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 public class Stats_Com {
     private static Stats_Com instance = null;
     // Supported kinds of counters
@@ -149,7 +151,8 @@ public class Stats_Com {
     }
 
     public void cancel() {
-        Log.w("Stats", "cancel requested !");
+        com.orhanobut.logger.Logger.init("Stats_Com").methodCount(0);
+        Logger.w("cancel requested !");
 
         if (timer != null)
             timer.cancel();

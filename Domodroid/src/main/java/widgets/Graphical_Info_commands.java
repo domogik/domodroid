@@ -105,6 +105,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         String state_key = feature.getState_key();
         String value_type = feature.getValue_type();
         String stateS;
+        mytag = "Graphical_Info_commands (" + dev_id + ")";
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -113,7 +114,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         }
         myself = this;
 
-        mytag = "Graphical_Info_commands (" + dev_id + ")";
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         //Label Text size according to the screen size
         float size60 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);

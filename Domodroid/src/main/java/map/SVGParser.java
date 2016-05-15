@@ -62,7 +62,7 @@ import android.graphics.Shader;
  */
 public class SVGParser {
 
-    static final String TAG = "SVGAndroid";
+    static final String mytag = "SVGAndroid";
 
     /**
      * Parse SVG data from an input stream.

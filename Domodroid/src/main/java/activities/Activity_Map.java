@@ -25,7 +25,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +42,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
 
 import org.domogik.domodroid13.R;
 
@@ -119,6 +120,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         params = PreferenceManager.getDefaultSharedPreferences(this);
+        com.orhanobut.logger.Logger.init(mytag).methodCount(0);
 
         //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -453,12 +455,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             if (requestCode == PICK_IMAGE && data != null && data.getData() != null) {
-                Log.e(mytag, "onActivityResult");
+                Logger.e("onActivityResult");
                 Uri _uri = data.getData();
                 //User had pick an image.
                 Cursor cursor = getContentResolver().query(_uri, new String[]{android.provider.MediaStore.Images.ImageColumns.DATA}, null, null, null);
                 cursor.moveToFirst();
-                Log.e(mytag, "cursormove");
+                Logger.e("cursormove");
                 //Copy the select picture to Domodroid directory
                 Uri uri = data.getData();
                 Tracer.i(mytag, "Uri: " + uri.toString());
@@ -804,7 +806,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             try {
                 if (metaCursor.moveToFirst()) {
                     filename = metaCursor.getString(0);
-                    Log.e("DriveFileAbsolutePath", "filename=" + filename);
+                    Logger.e("filename=" + filename);
                 }
             } finally {
                 metaCursor.close();

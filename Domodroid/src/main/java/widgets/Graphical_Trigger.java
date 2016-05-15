@@ -92,6 +92,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
+        mytag = "Graphical_Trigger(" + dev_id + ")";
 
         String stateS;
         try {
@@ -100,7 +101,6 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
-        mytag = "Graphical_Trigger(" + dev_id + ")";
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);

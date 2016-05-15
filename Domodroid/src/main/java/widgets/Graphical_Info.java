@@ -109,6 +109,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         this.parameters = feature.getParameters();
         int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
+        mytag = "Graphical_Info (" + dev_id + ")";
 
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -119,7 +120,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         myself = this;
         setOnClickListener(this);
 
-        mytag = "Graphical_Info (" + dev_id + ")";
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         //Label Text size according to the screen size
         float size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, metrics);

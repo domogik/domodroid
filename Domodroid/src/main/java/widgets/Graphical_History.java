@@ -106,6 +106,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         this.id = feature.getId();
         myself = this;
         String stateS = "";
+        mytag = "Graphical_History(" + dev_id + ")";
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -118,8 +119,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
-
-        mytag = "Graphical_History(" + dev_id + ")";
 
         //state key
         TextView state_key_view = new TextView(context);

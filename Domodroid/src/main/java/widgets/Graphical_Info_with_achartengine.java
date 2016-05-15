@@ -153,6 +153,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.parameters = feature.getParameters();
         this.id = feature.getId();
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -241,7 +242,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
 
-        mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
         Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
 
         //state key

@@ -110,6 +110,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
+        mytag = "Graphical_Binary(" + dev_id + ")";
 
 
         try {
@@ -119,7 +120,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             this.stateS = state_key;
         }
 
-        mytag = "Graphical_Binary(" + dev_id + ")";
         //get parameters
 
         try {

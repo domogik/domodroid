@@ -30,6 +30,8 @@ import android.widget.ArrayAdapter;
 import android.speech.tts.TextToSpeech;
 
 
+import com.orhanobut.logger.Logger;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +59,7 @@ public class Main extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tts);
+        com.orhanobut.logger.Logger.init("MQ.Main").methodCount(0);
 
         // Config
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -142,7 +145,7 @@ public class Main extends AppCompatActivity {
                     String ip = SP.getString("MQaddress", "");    // TODO : use a R. for the default value
                     String port = SP.getString("MQpubport", "40411");    // TODO : use a R. for the default value
                     String pub_url = "tcp://" + ip + ":" + port;
-                    Log.d(this.getClass().getSimpleName(), "Pub address : " + pub_url);
+                    Logger.d("Pub address : " + pub_url);
                     pub.execute(pub_url, "interface.input", result.get(0));
                     pub = null;
                 }
@@ -194,16 +197,17 @@ public class Main extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(this.getClass().getSimpleName(), "here");
+            Logger.d("here");
             ZMQMessage message = intent.getParcelableExtra("message");
             String response = "";
             if (message != null) {
-                Log.d(this.getClass().getSimpleName(), "JSON received : " + message.getMessage());
+                Logger.d("JSON received : ");
+                Logger.json(message.getMessage());
                 try {
                     JSONObject jsonData = new JSONObject(message.getMessage());
                     response = (String) jsonData.get("text");
                 } catch (JSONException e) {
-                    Log.e(this.getClass().getSimpleName(), "Error while decoding json: ", e);
+                    Logger.e("Error while decoding json: ", e);
                     Toast.makeText(this.context, "Error while decoding json from the butler", Toast.LENGTH_SHORT).show();
                 }
                 //Toast.makeText(this.context, message.getMessage(), Toast.LENGTH_SHORT).show();
@@ -215,7 +219,7 @@ public class Main extends AppCompatActivity {
                 chatHistory.setSelection(arrayAdapter.getCount() - 1);
 
             } else {
-                Log.d(this.getClass().getSimpleName(), "Empty");
+                Logger.d("Empty");
             }
         }
     }

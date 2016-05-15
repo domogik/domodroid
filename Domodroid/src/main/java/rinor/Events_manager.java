@@ -4,7 +4,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class Events_manager {
 
     public static Events_manager getInstance() {
         if (instance == null) {
-            Log.e("Events_Manager", "Creating instance........................");
+            Logger.e("Creating instance........................");
             instance = new Events_manager();
         }
         return instance;
@@ -202,7 +203,8 @@ public class Events_manager {
                         while (alive) {
                             while (!sleeping) {
                                 String result = subscriber.recvStr(0);
-                                Log.d(mytag, "MQ information receive: " + result);
+                                Logger.json("MQ information receive: ");
+                                Logger.json(result);
                                 if (result.contains("stored_value")) {
                                     try {
                                         JSONObject json_stats_04 = new JSONObject(result);

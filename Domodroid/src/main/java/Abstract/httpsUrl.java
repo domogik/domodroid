@@ -21,6 +21,7 @@ import javax.net.ssl.X509TrustManager;
 
 
 public class httpsUrl {
+    //todo add tracerengine here too handle log.
     public static HttpsURLConnection setUpHttpsConnection(String urlString) {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{

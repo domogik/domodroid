@@ -230,7 +230,7 @@ public class WidgetUpdate {
                                     Tracer.i(mytag, "Handler send a notification to MapView");
                                     mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Tracer.e(mytag, e.toString());
                                 }
                             }
                             //event = eventsManager.get_event();		//Try to get the next...
@@ -255,7 +255,7 @@ public class WidgetUpdate {
                     try {
                         this.finalize();
                     } catch (Throwable t) {
-                        t.printStackTrace();
+                        Tracer.e(mytag, t.toString());
                     }
 
                 } else if (msg.what == 9902) {
@@ -323,7 +323,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(10);        //Standby 10 milliseconds
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         locked = true;
@@ -351,7 +351,7 @@ public class WidgetUpdate {
                             curclient = clients_list.get(j);
 
                         } catch (Exception e) {
-                            Tracer.i(mytag, "   Exception on client # " + j);
+                            Tracer.e(mytag, "   Exception on client # " + j);
                             curclient = null;
                         }
                         //check each connected client pointed by list
@@ -393,7 +393,7 @@ public class WidgetUpdate {
             try {
                 Thread.sleep(10);        //Standby 10 milliseconds
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         locked = true;
@@ -480,7 +480,7 @@ public class WidgetUpdate {
                     //finalize();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
             }
         }
         Tracer.d(mytag, "cache engine ready after resync !");
@@ -509,7 +509,7 @@ public class WidgetUpdate {
                             try {
                                 new UpdateThread().execute();
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                Tracer.e(mytag, e.toString());
                             }
 
                         }
@@ -519,7 +519,7 @@ public class WidgetUpdate {
                 try {
                     loc_handler.post(myTH);        //To avoid exception on ICS
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Tracer.e(mytag, e.toString());
                 }
             }
         };
@@ -594,7 +594,7 @@ public class WidgetUpdate {
                         counter = 0;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Tracer.e(mytag, e.toString());
                 }
             }
             if (myselfHandler != null) {

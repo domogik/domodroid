@@ -619,7 +619,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         }
                     } catch (Exception e) {
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
-                        e.printStackTrace();
+                        Tracer.e(mytag, e.toString());
                     }
                 }
             };
@@ -758,16 +758,19 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             SP_prefEditor.commit();
             LoadSelections();    // to set panel with known values
         } catch (IOException e) {
-            e.printStackTrace();
+            Tracer.e(mytag, "Can't load preferences file");
+            Tracer.e(mytag, e.toString());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Tracer.e(mytag, "Can't load preferences file");
+            Tracer.e(mytag, e.toString());
         } finally {
             try {
                 if (input != null) {
                     input.close();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Tracer.e(mytag, "Can't load preferences file");
+                Tracer.e(mytag, ex.toString());
             }
         }
     }
@@ -854,14 +857,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 case "room":
                     LL_activ.removeAllViews();
                     LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
-
                     VG_parent.addView(LL_activ);
                     break;
             }
             update_navigation_menu();
             Tracer.d(mytag, "List item= " + listItem.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(mytag, "Can't load area/room or widgets");
+            Tracer.e(mytag, e.toString());
         }
     }
 

@@ -65,7 +65,7 @@ public class DomodroidDB {
         try {
             context.getContentResolver().cancelSync(Uri.EMPTY);
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
     }
 
@@ -137,7 +137,8 @@ public class DomodroidDB {
                 context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
             } catch (Exception e) {
                 // Cannot parse JSON Array or JSONObject
-                Tracer.d(mytag, "Exception inserting Features list in bdd (" + i + ")");
+                Tracer.e(mytag, "Exception inserting Features list in bdd (" + i + ")");
+                Tracer.e(mytag, e.toString());
             }
         }
     }
@@ -159,8 +160,8 @@ public class DomodroidDB {
             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE, values);
         } catch (Exception e) {
             // Cannot parse JSON Array or JSONObject
-            Tracer.d(mytag, "Exception inserting Features list in bdd");
-            Tracer.d(mytag, e.toString());
+            Tracer.e(mytag, "Exception inserting Features list in bdd");
+            Tracer.e(mytag, e.toString());
         }
     }
 
@@ -414,6 +415,7 @@ public class DomodroidDB {
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_FEATURE_POSITION_ID, values);
         Tracer.d(mytag, "Moving " + order + " the feature id:" + id + " in place_id:" + place_id + " of type:" + place_type);
     }
+
     public void move_one_area(int id, int place_id, String place_type, String order) {
         ContentValues values = new ContentValues();
         values.put("id", id);
@@ -423,6 +425,7 @@ public class DomodroidDB {
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_AREA_POSITION_ID, values);
         Tracer.d(mytag, "Moving " + order + " the area id:" + id + " in place_id:" + place_id + " of type:" + place_type);
     }
+
     public void move_one_room(int id, int place_id, String place_type, String order) {
         ContentValues values = new ContentValues();
         values.put("id", id);
@@ -450,7 +453,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (curs != null)
             curs.close();
@@ -485,7 +488,7 @@ public class DomodroidDB {
             json_AreaList.put("area", list);
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (curs != null)
             curs.close();
@@ -502,7 +505,7 @@ public class DomodroidDB {
             lastid = curs.getInt(1);
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request last area error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (curs != null)
             curs.close();
@@ -528,7 +531,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "Exception requesting all rooms ");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return rooms;
@@ -558,7 +561,7 @@ public class DomodroidDB {
             json_RoomList.put("room", rooms);
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (curs != null)
             curs.close();
@@ -579,7 +582,7 @@ public class DomodroidDB {
             lastid = curs.getInt(2);
         } catch (Exception e) {
             Tracer.v(mytag + "(" + owner + ")", "request last room error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return lastid;
@@ -640,7 +643,7 @@ public class DomodroidDB {
 
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature_association error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs1.close();
         curs2.close();
@@ -675,7 +678,7 @@ public class DomodroidDB {
             json_FeatureAssociationList.put("feature_association", ListFeature);
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (curs != null)
             curs.close();
@@ -696,7 +699,7 @@ public class DomodroidDB {
             lastid = curs.getInt(3);
         } catch (Exception e) {
             Tracer.v(mytag + "(" + owner + ")", "request last room error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return lastid;
@@ -722,7 +725,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.v(mytag + "(" + owner + ")", "Exception requesting for rooms of area_id " + area_id);
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return rooms;
@@ -764,7 +767,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.v(mytag + "(" + owner + ")", "Exception requesting all rooms ");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return Icon;
@@ -801,7 +804,7 @@ public class DomodroidDB {
             json_IconList.put("ui_config", icons);
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (curs != null)
             curs.close();
@@ -822,7 +825,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return features;
@@ -866,7 +869,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature_map error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return features;
@@ -898,7 +901,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request map_switches error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return features;
@@ -920,7 +923,7 @@ public class DomodroidDB {
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return features;
@@ -936,7 +939,7 @@ public class DomodroidDB {
             feature = new Entity_Feature(params, Tracer, context, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request features by id error");
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         curs.close();
         return feature;
@@ -964,7 +967,7 @@ public class DomodroidDB {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
 
 

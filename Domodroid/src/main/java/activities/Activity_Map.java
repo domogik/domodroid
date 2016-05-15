@@ -308,7 +308,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         try {
             mapView.drawWidgets();
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
     }
 
@@ -503,8 +503,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                             bmp.recycle();
                             Tracer.i(mytag, "On activity result convert image to png !");
                         } catch (Exception e) {
-                            //Tracer.e(mytag, e.toString());
-                            e.printStackTrace();
+                            Tracer.e(mytag, e.toString());
                         }
                         //else just copy svg or png to domodroid dir
                     } else {

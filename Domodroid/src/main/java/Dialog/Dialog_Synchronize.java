@@ -103,7 +103,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
 
                 } catch (Exception e) {
-                    Tracer.d(mytag, e.toString());
+                    Tracer.e(mytag, e.toString());
                     message.setText(R.string.connection_error);
                 }
                 message.setText(R.string.connection_error);
@@ -296,7 +296,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     db.NewsyncDb();
                     Tracer.i(mytag, "Doing a sync update only, not erasing all");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Tracer.e(mytag, e.toString());
                     db.updateDb();
                     Tracer.i(mytag, "Doing a full sync, erasing all !!!");
                 }
@@ -469,6 +469,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         usage = null;
                         // Cannot parse JSON Array or JSONObject
                         Tracer.e(mytag, "Exception processing Features list (" + i + ")");
+                        Tracer.e(mytag, e.toString());
                     }
                     Tracer.i(mytag, "Features list processing usage = <" + usage + ">");
 

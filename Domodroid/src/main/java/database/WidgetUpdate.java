@@ -655,12 +655,16 @@ public class WidgetUpdate {
                             Tracer.d(mytag, "json_widget_state for 0.7 API=");
                             Tracer.json(mytag, json_widget_state.toString());
                         }
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         //stats request cannot be completed (broken link or terminal in standby ?)
                         //Will retry automatically in 2'05, if no events received
                         Tracer.e(mytag, "get stats : Rinor error <" + e.getMessage() + ">");
                         //Toast not available in asynctask
-                        //Toast.makeText(context,  "Error "+e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        context.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Error " + e.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         return null;
                     }
                     //Tracer.d(mytag,"UPDATE_URL = "+ sharedparams.getString("UPDATE_URL", null));

@@ -545,20 +545,35 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
                     prefEditor.putString("MQaddress", MQaddress);
-                    //todo #103 if MQadress=localhost
+                    // #103 if MQadress=localhost
+                    if (MQaddress.equals("localhost")) {
+                        context.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "MQ in domogik.cfg is listening only on localhost. It will not work correctly Domodroid", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                     prefEditor.putString("MQsubport", MQsubport);
                     prefEditor.putString("MQpubport", MQpubport);
                 } catch (Exception e1) {
-                    Toast.makeText(context, "Problem with MQ information", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Problem with MQ information", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     Tracer.e(mytag, "ERROR getting MQ information");
                 }
                 json_FeatureList1 = Rest_com.connect_jsonarray(Tracer, urlAccess + "device", login, password, 3000, SSL);
                 if (json_FeatureList1 == null) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");
-                    Toast.makeText(context, "Problem geting device information", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Problem geting device information", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
                     b.putString("message", "device");
@@ -571,8 +586,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 if (Json_data_type == null) {
                     // Cannot get data_type from Rinor server.....
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
-                    Toast.makeText(context, "Problem geting datatype information", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Problem geting datatype information", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
                     b.putString("message", "datatype");

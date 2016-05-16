@@ -608,6 +608,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             widgetHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
+                    //#107 around here
+                    Tracer.d("debug map bak", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
                         if (msg.getData().getBoolean("refresh")) {
                             refresh();
@@ -619,7 +621,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         }
                     } catch (Exception e) {
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
-                        Tracer.e(mytag, e.toString());
+                        Tracer.e("debug map bak", e.toString());
                     }
                 }
             };
@@ -638,27 +640,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 		}
 		*/
 
-        if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
-            //Solve #2029
-            if (SP_params.getBoolean("SYNC", false)) {
-                Tracer.v(mytag, "Direct start on Map requested...");
-                Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
-                INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
-                startActivity(INTENT_map);
-            } else {
-                if (AD_notSyncAlert == null)
-                    createAlert();
-                AD_notSyncAlert.show();
-            }
-        } else {
-            Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            loadWigets(0, "root");
-            historyPosition = 0;
-            history.add(historyPosition, new String[]{"0", "root"});
-        }
-
-        init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
+
         listePlace = (ListView) findViewById(R.id.listplace);
         try {
             listItem = new ArrayList<>();
@@ -702,6 +685,28 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
+            //Solve #2029
+            if (SP_params.getBoolean("SYNC", false)) {
+                Tracer.v(mytag, "Direct start on Map requested...");
+                Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
+                INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
+                startActivity(INTENT_map);
+            } else {
+                if (AD_notSyncAlert == null)
+                    createAlert();
+                AD_notSyncAlert.show();
+            }
+        } else {
+            Tracer.force_Main = false;    //Reset flag 'called from Map view'
+            loadWigets(0, "root");
+            historyPosition = 0;
+            history.add(historyPosition, new String[]{"0", "root"});
+        }
+
+        init_done = true;
+
     }
 
 

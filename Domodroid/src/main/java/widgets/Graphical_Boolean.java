@@ -95,6 +95,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         this.state_key = feature.getState_key();
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
+        mytag = "Graphical_Boolean(" + dev_id + ")";
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -123,8 +124,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             this.Value_0 = value0;
             this.Value_1 = value1;
         }
-
-        mytag = "Graphical_Boolean(" + dev_id + ")";
 
         //state
         state = new TextView(context);

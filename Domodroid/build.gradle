@@ -21,8 +21,8 @@ android {
         applicationId "org.domogik.domodroid13"
         minSdkVersion 8
 		targetSdkVersion 8
-		versionCode = 17
-        versionName = "1.4"
+		versionCode = 18
+        versionName = "1.4_android_studio"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -52,4 +52,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'org.zeromq:jeromq:0.3.4'
+    compile 'com.github.orhanobut:logger:1.12'
 }

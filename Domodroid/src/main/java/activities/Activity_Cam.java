@@ -23,7 +23,7 @@ public class Activity_Cam extends AppCompatActivity {
     private MjpegViewAsync mv;
     private TextView TV_frameRate;
     private final String mytag = this.getClass().getName();
-
+    //todo add tracerengine here too handle log.
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);

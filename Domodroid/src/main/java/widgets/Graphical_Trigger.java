@@ -92,6 +92,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
+        mytag = "Graphical_Trigger(" + dev_id + ")";
 
         String stateS;
         try {
@@ -100,7 +101,6 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
-        mytag = "Graphical_Trigger(" + dev_id + ")";
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
@@ -194,7 +194,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                     /*
                     try {

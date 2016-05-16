@@ -343,7 +343,7 @@ class Widgets_Manager {
                 try {
                     iconId = domodb.requestIcons(Id, "area").getValue();
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    Tracer.i(mytag, "No specific icon for this area");
                 }
                 tmpPan = null;
                 tmpPan = new FrameLayout(context);
@@ -373,7 +373,8 @@ class Widgets_Manager {
                 } else ll.addView(tmpPan);
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            Tracer.e(mytag, "Can't load area: " + e.toString());
+
         }
 
         return ll;

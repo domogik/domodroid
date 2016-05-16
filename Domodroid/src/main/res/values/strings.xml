@@ -682,4 +682,17 @@
     <string name="domodroid_list_of_map">Domodroid List of map</string>
     <string name="Area_longclic_menu_title">What do you want to do with this area?</string>
     <string name="Room_longclic_menu_title">What do you want to do with this room?</string>
+    <string name="mq_domogik_conf_localhost">MQ in domogik.cfg is listening only on localhost. It will not work correctly with Domodroid</string>
+    <string name="error_sending_command">ERROR sending command</string>
+    <string name="problm_with_mq_information">Problem with MQ information</string>
+    <string name="check_server_part_in_option">Check server part in Option</string>
+    <string name="problem_geting_device_information">Problem geting device information</string>
+    <string name="problem_geting_datatype_information">Problem geting datatype information</string>
+    <string name="Error">"Error "</string>
+    <string name="event_manager_die">Event_manage die. Check Log</string>
+    <string name="rinor_command_exception">Rinor exception sending command</string>
+    <string name="error_decode_json_butler">Error while decoding json from the butler</string>
+    <string name="speech_not_supported">Speech not supported</string>
+    <string name="service_destroyed">Service destroyed...</string>
+    <string name="command_rejected">Command to server rejected</string>
 </resources>

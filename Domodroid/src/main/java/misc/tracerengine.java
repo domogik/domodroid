@@ -1,16 +1,17 @@
 package misc;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
-import database.WidgetUpdate;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import database.WidgetUpdate;
 
 public class tracerengine {
     private static tracerengine instance;
@@ -57,8 +58,9 @@ public class tracerengine {
     }
 
     public static tracerengine getInstance(SharedPreferences params, Context context) {
+        com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         if (instance == null) {
-            Log.e("tracerengine", "Creating instance........................");
+            Logger.d("Creating instance........................");
             instance = new tracerengine(context);
         }
         settings = params;
@@ -68,8 +70,9 @@ public class tracerengine {
     }
 
     public static tracerengine getInstance(Context context) {
+        com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         if (instance == null) {
-            Log.e("tracerengine", "Creating instance........................");
+            Logger.d("Creating instance........................");
             instance = new tracerengine(context);
         }
         return instance;
@@ -111,6 +114,11 @@ public class tracerengine {
     public void w(String tag, String msg) {
         if (Warning)
             choose_log(4, tag, msg);
+    }
+
+    public void json(String tag, String msg) {
+        if (Verbose)
+            choose_log(5, tag, msg);
     }
 
     /*
@@ -199,10 +207,11 @@ public class tracerengine {
      * Method writing messages to screen view
      */
     private static void screenlog(String tag, String msg) {
+        com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         try {
             Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Log.d("Tracerengine", e.toString());
+            Logger.e("Tracerengine ScreenLog: " + e.toString());
         }
     }
 
@@ -238,6 +247,9 @@ public class tracerengine {
                 case 4:
                     typeC = "W";
                     break;
+                case 5:
+                    typeC = "V";
+                    break;
             }
             try {
                 String line = typeC + " | " + dateS + " | " + tids + " | " + tagS + " | " + msg;
@@ -248,30 +260,43 @@ public class tracerengine {
             } catch (IOException i) {
                 txtFile = null;        //Abort log to text file in future
                 to_txtFile = false;
+                Logger.e("Tracerengine FileLog: " + i.toString());
             }
         }
     }
 
     /*
-     * method sending messages to system log ( for Eclipse, and CatLog )
+     * method sending messages to system log ( for Eclipse, Android Studio or CatLog )
+     * It use the https://github.com/orhanobut/logger log system.
      */
     private static void syslog(int type, String tag, String msg) {
+        com.orhanobut.logger.Logger.init(tag).methodCount(5).hideThreadInfo().methodOffset(0);
         switch (type) {
             case 0:
-                Log.d(tag, msg);
+                //Log.d(tag, msg);
+                Logger.d(msg);
                 break;
             case 1:
-                Log.e(tag, msg);
+                //Log.e(tag, msg);
+                Logger.e(msg);
                 break;
             case 2:
-                Log.i(tag, msg);
+                //Log.i(tag, msg);
+                Logger.i(msg);
                 break;
             case 3:
-                Log.v(tag, msg);
+                //Log.v(tag, msg);
+                Logger.v(msg);
                 break;
             case 4:
-                Log.w(tag, msg);
+                //Log.w(tag, msg);
+                Logger.v(msg);
                 break;
+            case 5:
+                //Log.w(tag, msg);
+                Logger.json(msg);
+                break;
+
         }
     }
 
@@ -282,4 +307,5 @@ public class tracerengine {
     public static void set_engine(WidgetUpdate engine) {
         state_engine = engine;
     }
+
 }

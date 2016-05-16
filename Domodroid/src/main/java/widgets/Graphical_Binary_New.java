@@ -110,6 +110,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
+        mytag = "Graphical_Binary_New(" + dev_id + ")";
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -123,7 +124,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
 
-        mytag = "Graphical_Binary_New(" + dev_id + ")";
         //get parameters
 
         try {
@@ -266,7 +266,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                             state.setAnimation(animation);
                         } else {
                             if (msg.what == 2) {
-                                Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
                             } else if (msg.what == 9999) {
                                 //state_engine send us a signal to notify value changed
                                 if (session == null)
@@ -408,7 +408,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                      /*
                                      try {

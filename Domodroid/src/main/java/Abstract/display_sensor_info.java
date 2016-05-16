@@ -140,7 +140,7 @@ public abstract class display_sensor_info {
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
                         value.setText(Graphics_Manager.Names_conditioncodes(context, (int) formatedValue));
                     } catch (Exception e1) {
-                        Tracer.d(mytag, "no translation for: " + loc_Value);
+                        Tracer.i(mytag, "no translation for: " + loc_Value);
                         value.setText(loc_Value);
                     }
                 } else if (state_key.equalsIgnoreCase("callerid")) {
@@ -186,6 +186,7 @@ public abstract class display_sensor_info {
                         testDate = sdf.parse(loc_Value);
                     } catch (Exception ex) {
                         ex.printStackTrace();
+                        Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
                     }
                     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     String newFormat = formatter.format(testDate);
@@ -200,6 +201,7 @@ public abstract class display_sensor_info {
                         testDate = sdf.parse(loc_Value);
                     } catch (Exception ex) {
                         ex.printStackTrace();
+                        Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
                     }
                     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     String newFormat = formatter.format(testDate);

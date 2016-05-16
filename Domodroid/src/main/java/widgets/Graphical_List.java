@@ -227,7 +227,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             public void handleMessage(Message msg) {
 
                 if (msg.what == 2) {
-                    Toast.makeText(getContext(), "Command Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
 
                 } else if (msg.what == 9999) {
 

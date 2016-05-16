@@ -103,7 +103,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
 
                 } catch (Exception e) {
-                    Tracer.d(mytag, e.toString());
+                    Tracer.e(mytag, e.toString());
                     message.setText(R.string.connection_error);
                 }
                 message.setText(R.string.connection_error);
@@ -296,7 +296,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     db.NewsyncDb();
                     Tracer.i(mytag, "Doing a sync update only, not erasing all");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Tracer.e(mytag, e.toString());
                     db.updateDb();
                     Tracer.i(mytag, "Doing a full sync, erasing all !!!");
                 }
@@ -469,6 +469,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         usage = null;
                         // Cannot parse JSON Array or JSONObject
                         Tracer.e(mytag, "Exception processing Features list (" + i + ")");
+                        Tracer.e(mytag, e.toString());
                     }
                     Tracer.i(mytag, "Features list processing usage = <" + usage + ">");
 
@@ -545,20 +546,35 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
                     prefEditor.putString("MQaddress", MQaddress);
-                    //todo #103 if MQadress=localhost
+                    // #103 if MQadress=localhost
+                    if (MQaddress.equals("localhost")) {
+                        context.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                     prefEditor.putString("MQsubport", MQsubport);
                     prefEditor.putString("MQpubport", MQpubport);
                 } catch (Exception e1) {
-                    Toast.makeText(context, "Problem with MQ information", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, R.string.problm_with_mq_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
+                        }
+                    });
                     Tracer.e(mytag, "ERROR getting MQ information");
                 }
                 json_FeatureList1 = Rest_com.connect_jsonarray(Tracer, urlAccess + "device", login, password, 3000, SSL);
                 if (json_FeatureList1 == null) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");
-                    Toast.makeText(context, "Problem geting device information", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, R.string.problem_geting_device_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
+                        }
+                    });
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
                     b.putString("message", "device");
@@ -571,8 +587,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 if (Json_data_type == null) {
                     // Cannot get data_type from Rinor server.....
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
-                    Toast.makeText(context, "Problem geting datatype information", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "Check server part in Option", Toast.LENGTH_LONG).show();
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, R.string.problem_geting_datatype_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
+                        }
+                    });
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
                     b.putString("message", "datatype");

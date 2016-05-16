@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zeromq.ZMQ;
@@ -30,25 +32,28 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
     }
 
     public ZMQPubMessage() {
+        com.orhanobut.logger.Logger.init("ZMQPubMessage").methodCount(0);
         try {
             ZMQ.Context context = ZMQ.context(1);
             this.pub = context.socket(ZMQ.PUB);
         } catch (Exception e) {
-            Log.d(mytag, "error:" + e);
+            Logger.d("error:" + e);
         }
     }
 
     protected Integer doInBackground(String... params) {
+        com.orhanobut.logger.Logger.init("ZMQPubMessage").methodCount(0);
         String url = params[0];
         String cat = params[1];
         try {
-            Log.d(mytag, "Start sending");
+            Logger.d("Start sending");
             JSONObject jo = new JSONObject();
             jo.put("text", params[2]);
             jo.put("media", "speech");
             jo.put("identity", "domodroid");
             jo.put("source", "terminal-android." + getHostName());
             String msg = jo.toString();
+            Logger.json(msg);
             this.pub.connect(url);
             // we need this timeout to let zeromq connect to the publisher
             try {
@@ -58,16 +63,16 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             }
             String msgId = cat + "." + String.valueOf(System.currentTimeMillis() * 1000) + "." + "0_1";
             if (!this.pub.sendMore(msgId)) {
-                Log.e(mytag, "Send of msg id not ok: " + msgId);
+                Logger.e("Send of msg id not ok: " + msgId);
             }
             if (!this.pub.send(msg)) {
-                Log.e(mytag, "Send of msg not ok: " + msg);
+                Logger.e("Send of msg not ok: " + msg);
             }
-            Log.d(mytag, "End sending");
+            Logger.d("End sending");
         } catch (JSONException e) {
-            Log.d(mytag, "json error:" + e);
+            Logger.d("json error:" + e);
         } catch (Exception e) {
-            Log.d(mytag, "error:" + e);
+            Logger.d("error:" + e);
         }
         this.pub.close();
         return 1;

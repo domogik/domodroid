@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -105,6 +106,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         String state_key = feature.getState_key();
         String value_type = feature.getValue_type();
         String stateS;
+        mytag = "Graphical_Info_commands (" + dev_id + ")";
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -113,7 +115,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         }
         myself = this;
 
-        mytag = "Graphical_Info_commands (" + dev_id + ")";
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         //Label Text size according to the screen size
         float size60 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);
@@ -226,7 +227,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                          }
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                  }
 

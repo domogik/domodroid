@@ -17,6 +17,7 @@
  */
 package database;
 
+import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,7 +118,7 @@ public class JSONParser {
                 //todo need to say this to user and log it.
                 //add tracer access
                 // tracer.d(mytag,"json status erro");
-                Toast toast = Toast.makeText(null, "ERROR sending command", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(null, R.string.error_sending_command, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
                 toast.show();
                 return false;

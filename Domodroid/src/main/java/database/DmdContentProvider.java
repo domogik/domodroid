@@ -203,7 +203,7 @@ public class DmdContentProvider extends ContentProvider {
         try {
             finalize();
         } catch (Throwable e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
     }
 

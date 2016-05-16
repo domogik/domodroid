@@ -20,6 +20,9 @@
   </head>
   <body>
     $ 1.4
+      % Version 19
+      _ 2016-xx-xx
+      * #106 solved start in map
       % Version 18
       _ 2016-05-16
       * #106 Disable start directly to map as it crash for now.

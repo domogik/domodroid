@@ -637,8 +637,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 			T_starting.show();
 		}
 		*/
-        init_done = true;
-/* todo disable start on map to avoid crash
+
         if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
             //Solve #2029
             if (SP_params.getBoolean("SYNC", false)) {
@@ -657,12 +656,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             historyPosition = 0;
             history.add(historyPosition, new String[]{"0", "root"});
         }
-*/
 
         init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
         listePlace = (ListView) findViewById(R.id.listplace);
         try {
+            listItem = new ArrayList<>();
             adapter_map = new SimpleAdapter(getBaseContext(), listItem,
                     R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
             listePlace.setAdapter(adapter_map);

@@ -155,14 +155,11 @@
             android:summaryOff="@string/map_autozoom_off"
             android:summaryOn="@string/map_autozoom_on"
             android:title="@string/map_autozoom" />
-<!--
-todo solve start on map crash
         <CheckBoxPreference
             android:key="START_ON_MAP"
             android:summaryOff="@string/map_option_start_off"
             android:summaryOn="@string/map_option_start_on"
             android:title="@string/map_option_start" />
--->
         <Preference
             android:defaultValue="800"
             android:key="SIZE"

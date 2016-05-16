@@ -638,7 +638,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 		}
 		*/
         init_done = true;
-
+/* todo disable start on map to avoid crash
         if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
             //Solve #2029
             if (SP_params.getBoolean("SYNC", false)) {
@@ -657,47 +657,54 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             historyPosition = 0;
             history.add(historyPosition, new String[]{"0", "root"});
         }
+*/
+
         init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
         listePlace = (ListView) findViewById(R.id.listplace);
-        adapter_map = new SimpleAdapter(getBaseContext(), listItem,
-                R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
-        listePlace.setAdapter(adapter_map);
-        listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> map = listItem.get(position);
-                if (map.get("type") == "action") {
-                    if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
-                        Tracer.v(mytag, "clic move back in navigation drawer");
-                        historyPosition--;
-                        refresh();
-                    }
-                } else {
-                    loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
-                    historyPosition++;
-                    history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
-                    if (map.get("type") == "room") {
-                        //close navigationdrawer if select a room
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
+        try {
+            adapter_map = new SimpleAdapter(getBaseContext(), listItem,
+                    R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
+            listePlace.setAdapter(adapter_map);
+            listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    HashMap<String, String> map = listItem.get(position);
+                    if (map.get("type") == "action") {
+                        if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
+                            Tracer.v(mytag, "clic move back in navigation drawer");
+                            historyPosition--;
+                            refresh();
+                        }
+                    } else {
+                        loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
+                        historyPosition++;
+                        history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                        if (map.get("type") == "room") {
+                            //close navigationdrawer if select a room
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                        }
                     }
                 }
-            }
-        });
-        listePlace.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Tracer.d(mytag, " On Longclick Place selected at Position = " + position);
-                HashMap<String, String> map = listItem.get(position);
-                if (map.get("type") == "action") {
-                    Tracer.d(mytag, "long clic on action button");
-                    return false;
-                } else {
-                    Tracer.d(mytag, "On click Place selected at Position = " + map.toString());
-                    //Todo delete this place directly from navigation drawer
-                    return false;
+            });
+            listePlace.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Tracer.d(mytag, " On Longclick Place selected at Position = " + position);
+                    HashMap<String, String> map = listItem.get(position);
+                    if (map.get("type") == "action") {
+                        Tracer.d(mytag, "long clic on action button");
+                        return false;
+                    } else {
+                        Tracer.d(mytag, "On click Place selected at Position = " + map.toString());
+                        //Todo delete this place directly from navigation drawer
+                        return false;
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     /*
      * Check the answer after the proposal to reload existing settings (fresh install)

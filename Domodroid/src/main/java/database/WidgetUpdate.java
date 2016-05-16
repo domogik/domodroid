@@ -572,7 +572,8 @@ public class WidgetUpdate {
 
             }
         } catch (Exception e) {
-            Tracer.e(mytag, "Crash cause by: " + e.toString());
+            e.printStackTrace();
+            //Tracer.e(mytag, "Crash cause by: " + e.toString());
         }
     }
 

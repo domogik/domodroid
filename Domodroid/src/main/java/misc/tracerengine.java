@@ -270,7 +270,7 @@ public class tracerengine {
      * It use the https://github.com/orhanobut/logger log system.
      */
     private static void syslog(int type, String tag, String msg) {
-        com.orhanobut.logger.Logger.init(tag).methodCount(0);
+        com.orhanobut.logger.Logger.init(tag).methodCount(5).hideThreadInfo().methodOffset(0);
         switch (type) {
             case 0:
                 //Log.d(tag, msg);

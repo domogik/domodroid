@@ -652,12 +652,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 AD_notSyncAlert.show();
             }
         } else {
-            Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            loadWigets(0, "root");
-            historyPosition = 0;
-            history.add(historyPosition, new String[]{"0", "root"});
-        }
 */
+        Tracer.force_Main = false;    //Reset flag 'called from Map view'
+        loadWigets(0, "root");
+        historyPosition = 0;
+        history.add(historyPosition, new String[]{"0", "root"});
+//        }
 
         init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines

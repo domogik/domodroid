@@ -21,7 +21,7 @@
   <body>
     $ 1.4
       % Version 18
-      _ 2016-xx-xx
+      _ 2016-05-16
       * #106 Disable start directly to map as it crash for now.
       * Add a new logger lib (https://github.com/orhanobut/logger)
       % Version 17

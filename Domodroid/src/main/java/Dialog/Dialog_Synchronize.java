@@ -602,7 +602,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(25);
-                Tracer.e(mytag, "connected to a 0.4 or more Domogik Version");
+                Tracer.i(mytag, "connected to a 0.4 or more Domogik Version");
 
                 //todo #75 ask user how he want the default Area to be organize
                 //see https://github.com/domogik/domodroid/issues/75
@@ -1123,35 +1123,21 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
             prefEditor.putBoolean("SYNC", true);
             Tracer.v(mytag, "Updating database tables with new House configuration");
-            try
-
-            {
+            try {
                 db.insertArea(json_AreaList);
                 prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
-            } catch (
-                    JSONException e
-                    )
-
-            {
+            } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
 
-            try
-
-            {
+            try {
                 db.insertRoom(json_RoomList);
                 prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
-            } catch (
-                    JSONException e
-                    )
-
-            {
+            } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
 
-            if (Rinor_Api_Version >= 0.7f)
-
-            {
+            if (Rinor_Api_Version >= 0.7f) {
                 try {
                     db.insertIcon(json_IconList);
                     prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
@@ -1160,9 +1146,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 }
             }
 
-            if (Rinor_Api_Version <= 0.6f)
-
-            {
+            if (Rinor_Api_Version <= 0.6f) {
                 try {
                     db.insertFeature(json_FeatureList);
                     //No need of db request method as feature only comes from rest
@@ -1171,29 +1155,19 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-            } else
-
-            {
+            } else {
                 //No need of db request method as feature only comes from rest
                 prefEditor.putString("FEATURE_LIST", json_FeatureList1.toString());
             }
 
-            try
-
-            {
+            try {
                 db.insertFeatureAssociation(json_FeatureAssociationList);
                 prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
-            } catch (
-                    JSONException e
-                    )
-
-            {
+            } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
 
-            if (Rinor_Api_Version <= 0.5f)
-
-            {
+            if (Rinor_Api_Version <= 0.5f) {
                 try {
                     db.insertIcon(json_IconList);
                     prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
@@ -1201,9 +1175,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e.toString());
                 }
                 prefEditor.putBoolean("BY_USAGE", false);
-            } else if (Rinor_Api_Version >= 0.6f)
-
-            {
+            } else if (Rinor_Api_Version >= 0.6f) {
                 if (Rinor_Api_Version >= 0.7f)
                     prefEditor.putBoolean("WIDGET_CHOICE", true);
                 prefEditor.putBoolean("BY_USAGE", by_usage);

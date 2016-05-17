@@ -65,7 +65,7 @@ public class Events_manager {
 
     public static Events_manager getInstance(final Activity context) {
         if (instance == null) {
-            Logger.e("Creating instance........................");
+            Logger.i("Creating instance........................");
             instance = new Events_manager(context);
         }
         return instance;

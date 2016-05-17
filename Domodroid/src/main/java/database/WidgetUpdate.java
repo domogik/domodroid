@@ -386,7 +386,7 @@ public class WidgetUpdate {
     public void dump_cache() {
         String[] name = new String[]{"Main   ", "Map    ", "MapView", "???    "};
         int size = cache.size();
-        Tracer.e(mytag, "Dump of Cache , size = " + cache.size());
+        Tracer.v(mytag, "Dump of Cache , size = " + cache.size());
 
         while (locked) {
             //Somebody else is updating list...
@@ -410,7 +410,7 @@ public class WidgetUpdate {
                 if (clients_list != null)
                     clients_list_size = clients_list.size();
 
-                Tracer.e(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size);
+                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size);
                 if (clients_list_size > 0) {
                     for (int j = 0; j < clients_list_size; j++) {
                         if (clients_list.get(j) == null)
@@ -429,7 +429,7 @@ public class WidgetUpdate {
                         if (ctype == -1)
                             ctype = 3;
 
-                        Tracer.e(mytag, "           ==> entry : " + j + " owner : " + name[ctype]
+                        Tracer.v(mytag, "           ==> entry : " + j + " owner : " + name[ctype]
                                 + " client name : " + client_name
                                 + " type = " + type
                                 + " state = " + state);
@@ -441,7 +441,7 @@ public class WidgetUpdate {
         }    //End of loop on clients list, for a cache entry
 
         locked = false;
-        Tracer.e(mytag, "End of cache dump ");
+        Tracer.i(mytag, "End of cache dump ");
 
     }
 

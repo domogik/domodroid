@@ -288,7 +288,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         }
                         onResume();
                     } else {
-                        Tracer.e(mytag, "sync dialog end with no refresh !");
+                        Tracer.v(mytag, "sync dialog end with no refresh !");
 
                     }
                     ((Dialog_Synchronize) dialog).need_refresh = false;
@@ -313,7 +313,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
                     getSupportActionBar().setLogo(R.drawable.app_name4);
                 } else if (msg.what == 8000) {
-                    Tracer.e(mytag, "Request to display message : 8000");
+                    Tracer.d(mytag, "Request to display message : 8000");
                     /*
                     if(dialog_message == null) {
 						Create_message_box();

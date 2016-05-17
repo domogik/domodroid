@@ -212,7 +212,7 @@ public abstract class display_sensor_info {
                         loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
                         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
                         Date testDate = sdf.parse(loc_Value);
-                        Tracer.e(mytag + "Date conversion", "Works");
+                        Tracer.d(mytag + "Date conversion", "Works");
                         SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
                         String newFormat = formatter.format(testDate);
                         value.setText(newFormat);

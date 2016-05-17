@@ -472,12 +472,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     Tracer.i(mytag, "Image from new picker with uri that may crash");
                     selectFile = new File(getDriveFileAbsolutePath(this, uri));
                 }
-                Tracer.e(mytag, "selectfile");
+                Tracer.d(mytag, "selectfile");
                 fileName = selectFile.getName();
-                Tracer.e(mytag, "filename");
+                Tracer.d(mytag, "filename");
                 //filter for extension if not png or svg say it to user
                 String filenameArray[] = fileName.split("\\.");
-                Tracer.e(mytag, "split");
+                Tracer.d(mytag, "split");
                 //get file extension
                 extension = filenameArray[filenameArray.length - 1];
                 //put extension in lower case

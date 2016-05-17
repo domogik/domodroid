@@ -213,7 +213,7 @@ public class Events_manager {
                                 if (result.contains("stored_value")) {
                                     try {
                                         JSONObject json_stats_04 = new JSONObject(result);
-                                        Tracer.d(mytag, "MQ Parsing result to jsonobject");
+                                        Tracer.v(mytag, "MQ Parsing result to jsonobject");
                                         //Tracer.d(mytag, json_stats_04.toString());
                                         String ticket = "1";
                                         String device_id = json_stats_04.get("sensor_id").toString();

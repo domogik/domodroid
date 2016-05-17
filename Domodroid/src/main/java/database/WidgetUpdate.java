@@ -210,7 +210,7 @@ public class WidgetUpdate {
                         callback_counts++;
                         Rinor_event event = eventsManager.get_event();
                         if (event != null) {
-                            Tracer.d(mytag, "Event from Events_Manager found, ticket : " + event.ticket_id + " # " + event.item);
+                            Tracer.v(mytag, "Event from Events_Manager found, ticket : " + event.ticket_id + " # " + event.item);
 
                             if (last_ticket == -1) {
                                 last_ticket = event.item;    //Initial synchro on item

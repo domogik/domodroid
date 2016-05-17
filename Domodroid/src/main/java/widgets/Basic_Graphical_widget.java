@@ -191,7 +191,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "Customname Canceled.");
+                    Tracer.v(mytag, "Customname Canceled.");
                 }
             });
             alert.show();
@@ -214,7 +214,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "delete Canceled.");
+                    Tracer.v(mytag, "delete Canceled.");
                 }
             });
             alert.show();

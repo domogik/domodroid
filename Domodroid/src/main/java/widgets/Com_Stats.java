@@ -156,7 +156,7 @@ public class Com_Stats extends FrameLayout {
             }
 
         };
-        Tracer.e(mytag, "Instance created");
+        Tracer.i(mytag, "Instance created");
         Timer();
 
 

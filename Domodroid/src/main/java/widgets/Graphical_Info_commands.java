@@ -120,7 +120,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         float size60 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, metrics);
         float size120 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, metrics);
 
-        Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
+        Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);

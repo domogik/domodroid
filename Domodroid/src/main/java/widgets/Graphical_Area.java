@@ -113,7 +113,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
                     DomodroidDB domodb = new DomodroidDB(Tracer, Activity, params);
                     domodb.owner = "Widgets_Manager.loadRoomWidgets";
-                    Tracer.e(mytag, "load widgets for area " + id_area);
+                    Tracer.v(mytag, "load widgets for area " + id_area);
                     Entity_Room[] listRoom = domodb.requestRoom(id_area);
 
                     for (Entity_Room room : listRoom) {
@@ -143,7 +143,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "delete Canceled.");
+                    Tracer.v(mytag, "delete Canceled.");
                 }
             });
             alert.show();
@@ -166,7 +166,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "Customname Canceled.");
+                    Tracer.v(mytag, "Customname Canceled.");
                 }
             });
             alert.show();

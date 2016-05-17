@@ -156,7 +156,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
                 command = jparam.getString("command");
                 commandValues = jparam.getJSONArray("commandValues");
-                Tracer.e(mytag, "Json command :" + commandValues);
+                Tracer.v(mytag, "Json command :" + commandValues);
             } catch (Exception e) {
                 command = "";
                 commandValues = null;

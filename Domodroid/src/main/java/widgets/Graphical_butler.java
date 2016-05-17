@@ -61,7 +61,7 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
             Intent intent = new Intent(context, Main.class);
             Bundle b = new Bundle();
             b.putString("url", url);
-            Tracer.e(mytag, "" + url);
+            Tracer.v(mytag, "" + url);
             b.putString("name", name_butler);
             intent.putExtras(b);
             context.startActivity(intent);

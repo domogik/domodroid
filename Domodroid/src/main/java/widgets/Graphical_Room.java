@@ -132,7 +132,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "delete Canceled.");
+                    Tracer.v(mytag, "delete Canceled.");
                 }
             });
             alert.show();
@@ -155,7 +155,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "Customname Canceled.");
+                    Tracer.v(mytag, "Customname Canceled.");
                 }
             });
             alert.show();

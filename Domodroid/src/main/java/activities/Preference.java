@@ -86,9 +86,25 @@ public class Preference extends PreferenceActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PreferenceManager.setDefaultValues(this, R.xml.preference, false);
-        addPreferencesFromResource(R.xml.preference);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
+        String action = getIntent().getAction();
+        if (action != null && action.equals("preferences_server")) {
+            addPreferencesFromResource(R.xml.preferences_server);
+        } else if (action != null && action.equals("preferences_widget")) {
+            addPreferencesFromResource(R.xml.preferences_widget);
+        } else if (action != null && action.equals("preferences_map")) {
+            addPreferencesFromResource(R.xml.preferences_map);
+        } else if (action != null && action.equals("preferences_house")) {
+            addPreferencesFromResource(R.xml.preferences_house);
+        } else if (action != null && action.equals("preferences_butler")) {
+            addPreferencesFromResource(R.xml.preferences_butler);
+        } else if (action != null && action.equals("preferences_debug")) {
+            addPreferencesFromResource(R.xml.preferences_debug);
+        } else {
+            addPreferencesFromResource(R.xml.preference);
+        }
+
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
             initSummary(getPreferenceScreen().getPreference(i));

@@ -1,272 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/AppBaseTheme"
-    android:title="Preferences">
+    android:title="Preferences"
+    tools:context="activities.Activity_Main">
 
-    <PreferenceCategory android:title="@string/OPTION_server_settings">
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:summary="@string/OPTION_server_explain" />
-        <EditTextPreference
-            android:dialogTitle="@string/OPTION_server_IP_Title"
-            android:inputType="textUri"
-            android:key="rinorIP"
-            android:title="@string/OPTION_server_IP" />
-        <EditTextPreference
-            android:defaultValue="40405"
-            android:dialogTitle="@string/OPTION_server_PORT_Title"
-            android:inputType="number"
-            android:key="rinorPort"
-            android:title="@string/OPTION_server_PORT" />
-        <EditTextPreference
-            android:dialogTitle="@string/OPTION_server_Path_Title"
-            android:key="rinorPath"
-            android:title="@string/OPTION_server_Path" />
-        <EditTextPreference
-            android:dialogTitle="@string/OPTION_server_http_user_Title"
-            android:key="http_auth_username"
-            android:title="@string/OPTION_server_http_user" />
-        <EditTextPreference
-            android:dialogTitle="@string/OPTION_server_http_password_Title"
-            android:inputType="textPassword"
-            android:key="http_auth_password"
-            android:password="true"
-            android:title="@string/OPTION_server_http_password" />
-        <CheckBoxPreference
-            android:key="ssl_activate"
-            android:summaryOff="No ssl use"
-            android:summaryOn="Using https for Rest"
-            android:title="SSL option" />
-        <Preference
-            android:enabled="false"
-            android:key="UPDATE_TIMER"
-            android:selectable="false"
-            android:shouldDisableView="true"
-            android:title="@string/UPDATE_TIMER" />
-        <EditTextPreference
-            android:enabled="false"
-            android:key="UPDATE_URL"
-            android:selectable="false"
-            android:shouldDisableView="true"
-            android:title="@string/UPDATE_URL" />
-        <EditTextPreference
-            android:enabled="false"
-            android:key="URL"
-            android:selectable="false"
-            android:shouldDisableView="true"
-            android:title="@string/Rinor_URL" />
-        <EditTextPreference
-            android:enabled="true"
-            android:inputType="textUri"
-            android:key="MQaddress"
-            android:selectable="true"
-            android:title="@string/MQ_address" />
-        <EditTextPreference
-            android:defaultValue="40412"
-            android:inputType="number"
-            android:key="MQsubport"
-            android:title="@string/Mq_sub_port" />
-        <EditTextPreference
-            android:defaultValue="40411"
-            android:inputType="number"
-            android:key="MQpubport"
-            android:title="@string/Mq_pub_port" />
-    </PreferenceCategory>
+    <Preference
+        android:icon="@drawable/ic_settings_applications_black_24dp"
+        android:persistent="false"
+        android:title="@string/OPTION_server_settings">
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_server" />
+    </Preference>
 
-    <PreferenceCategory android:title="@string/usage_settings">
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:summary="@string/usage_explain" />
-        <CheckBoxPreference
-            android:key="WIDGET_CHOICE"
-            android:summaryOff="@string/widget_normal"
-            android:summaryOn="@string/widgets_alternative"
-            android:title="@string/widget_choice" />
-        <CheckBoxPreference
-            android:key="Graph_CHOICE"
-            android:summaryOff="@string/Graph_normal"
-            android:summaryOn="@string/Graph_achartengine"
-            android:title="@string/graph_choice" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="twocol_lanscape"
-            android:summaryOff="@string/twocollandscape_2"
-            android:summaryOn="@string/twocollandscape_1"
-            android:title="@string/twocollandscapecheckbox" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="twocol_portrait"
-            android:summaryOff="@string/twocolportrait_2"
-            android:summaryOn="@string/twocolportrait_1"
-            android:title="@string/twocolportraitcheckbox" />
-        <CheckBoxPreference
-            android:key="BY_USAGE"
-            android:summaryOff="@string/usage_byhouse"
-            android:summaryOn="@string/usage_byusage"
-            android:title="@string/usage_byusagecheckbox" />
-        <!--        <CheckBoxPreference
-                    android:key="Navigation_drawer"
-                    android:summaryOff="@string/Navigation_drawer_off"
-                    android:summaryOn="@string/Navigation_drawer_on"
-                    android:title="@string/Navigation_drawer" />
-        -->
+    <Preference
+        android:icon="@drawable/ic_widgets_black_24dp"
+        android:persistent="false"
+        android:title="@string/usage_settings">
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_widget" />
+    </Preference>
 
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/map_settings">
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:summary="@string/map_explain" />
-        <!--
-        Todo disable until map drag and zoom solved
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="DRAG"
-                    android:summaryOff="@string/map_option_drag_off"
-                    android:summaryOn="@string/map_option_drag_on"
-                    android:title="@string/map_option_drag" />
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="ZOOM"
-                    android:summaryOff="@string/map_option_zoom_off"
-                    android:summaryOn="@string/map_option_zoom_on"
-                    android:title="@string/map_option_zoom" />
-        -->
-        <CheckBoxPreference
-            android:key="HIDE"
-            android:summaryOff="@string/map_option_hide_off"
-            android:summaryOn="@string/map_option_hide_on"
-            android:title="@string/map_option_hide" />
-        <CheckBoxPreference
-            android:key="map_menu_disable"
-            android:summaryOff="@string/map_option_menu_disable_off"
-            android:summaryOn="@string/map_option_menu_disable_on"
-            android:title="@string/map_option_menu_disable" />
+    <Preference
+        android:icon="@drawable/ic_map_black_24dp"
+        android:persistent="false"
+        android:title="@string/map_settings">
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_map" />
+    </Preference>
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="map_autozoom"
-            android:summaryOff="@string/map_autozoom_off"
-            android:summaryOn="@string/map_autozoom_on"
-            android:title="@string/map_autozoom" />
-        <CheckBoxPreference
-            android:key="START_ON_MAP"
-            android:summaryOff="@string/map_option_start_off"
-            android:summaryOn="@string/map_option_start_on"
-            android:title="@string/map_option_start" />
-        <Preference
-            android:defaultValue="800"
-            android:key="SIZE"
-            android:title="@string/map_option_size" />
-
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/debug_settings">
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:summary="@string/debug_explain" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="LOG_DEBUG"
-            android:summaryOff="@string/debug_log_debug_off"
-            android:summaryOn="@string/debug_log_debug_on"
-            android:title="@string/debug_log_debug" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="LOG_ERROR"
-            android:summaryOff="@string/debug_log_error_off"
-            android:summaryOn="@string/debug_log_error_on"
-            android:title="@string/debug_log_error" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="LOG_INFO"
-            android:summaryOff="@string/debug_log_info_off"
-            android:summaryOn="@string/debug_log_info_on"
-            android:title="@string/debug_log_info" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="LOG_VERBOSE"
-            android:summaryOff="@string/debug_log_verbose_off"
-            android:summaryOn="@string/debug_log_verbose_on"
-            android:title="@string/debug_log_verbose" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="LOG_WARNING"
-            android:summaryOff="@string/debug_log_warning_off"
-            android:summaryOn="@string/debug_log_warning_on"
-            android:title="@string/debug_log_warning" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="SYSTEMLOG"
-            android:summaryOff="@string/debug_system_off"
-            android:summaryOn="@string/debug_system_on"
-            android:title="@string/debug_system" />
-        <CheckBoxPreference
-            android:key="SCREENLOG"
-            android:summaryOff="@string/debug_screen_off"
-            android:summaryOn="@string/debug_screen_on"
-            android:title="@string/debug_screen" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="TEXTLOG"
-            android:summaryOff="@string/debug_file_off"
-            android:summaryOn="@string/debug_file_on"
-            android:title="@string/debug_file" />
-        <EditTextPreference
-            android:dialogTitle="LOGPATH"
-            android:key="LOGPATH"
-            android:title="@string/debug_dirpath" />
-        <EditTextPreference
-            android:dialogTitle="LOGNAME"
-            android:key="LOGNAME"
-            android:title="@string/debug_filename" />
-        <CheckBoxPreference
-            android:key="DEV"
-            android:summaryOff="Device id hide"
-            android:summaryOn="Device id show"
-            android:title="@string/network_Text18" />
-
-    </PreferenceCategory>
-
-
-    <PreferenceCategory
-        android:summary="Soon......"
+    <Preference
+        android:icon="@drawable/ic_home_black_24dp"
+        android:persistent="false"
+        android:summary="@string/soon"
         android:title="@string/house_settings">
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:summary="@string/house_explain" />
-        <ListPreference
-            android:entries="@array/device_sync_order_name"
-            android:entryValues="@array/device_sync_order_value"
-            android:key="device_sync_order"
-            android:summary="@string/OPTION_only_0_4_more"
-            android:title="@string/OPTION_Device_sync_organization" />
-    </PreferenceCategory>
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_house" />
+    </Preference>
 
-    <PreferenceCategory android:title="@string/OPTION_butler_settings">
-        <Preference
-            android:enabled="false"
-            android:selectable="false"
-            android:shouldDisableView="false"
-            android:summary="@string/OPTION_butler_explain" />
-        <EditTextPreference
-            android:key="dmg_butler_name"
-            android:summary="@string/OPTION_butler_name_desc"
-            android:title="@string/OPTION_butler_name" />
-        <EditTextPreference
-            android:key="dmg_your_name"
-            android:summary="@string/OPTION_your_name_desc"
-            android:title="@string/OPTION_your_name" />
-    </PreferenceCategory>
+    <Preference
+        android:icon="@drawable/ic_forum_black_24dp"
+        android:persistent="false"
+        android:title="@string/OPTION_butler_settings">
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_butler" />
+    </Preference>
+
+    <Preference
+        android:icon="@drawable/ic_bug_report_black_24dp"
+        android:persistent="false"
+        android:title="@string/debug_settings">
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_debug" />
+    </Preference>
 
 </PreferenceScreen>

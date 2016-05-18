@@ -15,11 +15,13 @@
             android:shouldDisableView="false"
             android:summary="@string/OPTION_butler_explain" />
         <EditTextPreference
+            android:icon="@drawable/ic_settings_black_24dp"
             android:inputType="textCapWords"
             android:key="dmg_butler_name"
             android:summary="@string/OPTION_butler_name_desc"
             android:title="@string/OPTION_butler_name" />
         <EditTextPreference
+            android:icon="@drawable/ic_perm_identity_black_24dp"
             android:inputType="textCapWords"
             android:key="dmg_your_name"
             android:summary="@string/OPTION_your_name_desc"

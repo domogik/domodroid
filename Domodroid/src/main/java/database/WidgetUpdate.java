@@ -112,7 +112,7 @@ public class WidgetUpdate {
 
     public static WidgetUpdate getInstance() {
         if (instance == null) {
-            Logger.e("Creating instance........................");
+            Logger.i("Creating instance........................");
             instance = new WidgetUpdate();
         }
         return instance;

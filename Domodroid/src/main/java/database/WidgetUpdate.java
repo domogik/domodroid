@@ -269,7 +269,9 @@ public class WidgetUpdate {
                     AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
                     dialog_device_update.setTitle(context.getText(R.string.domogik_information));
                     dialog_device_update.setMessage(context.getText(R.string.device_update_message));
-                    dialog_device_update.show();
+                    if (!((Activity) context).isFinishing()) {
+                        dialog_device_update.show();
+                    }
                     //todo notify on map screen if a device change.
                 }
             }

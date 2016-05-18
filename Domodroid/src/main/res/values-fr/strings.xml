@@ -190,7 +190,7 @@
         <string name="OPTION_your_name">Votre nom</string>
         <string name="OPTION_your_name_desc">Définissez votre nom</string>
         <string name="OPTION_butler_explain">Cet écran permet la configuration du majordome</string>
-        <string name="usage_settings">Configurer widget</string>
+        <string name="usage_settings">Configurer Widget</string>
         <string name="usage_bt_apply">Appliquer</string>
         <string name="usage_bt_cancel">Annuler</string>
         <string name="usage_explain">Cet écran permet la configuration du mode widget</string>
@@ -542,8 +542,6 @@
         <string name="change_icon">Remplacer l’icône</string>
         <string name="delete">Supprimer</string>
         <string name="high">Haut</string>
-        <string name="move">Déplacer</string>
-        <string name="add">Ajouter</string>
         <string name="events">Événements</string>
         <string name="Graph_achartengine">Graphique avec Achartengine</string>
         <string name="Graph_normal">Graphique normaux</string>
@@ -605,7 +603,7 @@
         <string name="no_motion">Aucun mouvement</string>
         <string name="domogik_information">Information de Domogik</string>
         <string name="domogik_error">Erreur de Domogik</string>
-        <string name="device_update_message">Un Device a changé dans Domogik, vous devriez refaire une synchronisation.</string>
+        <string name="device_update_message">Un device a changé dans Domogik, vous devriez refaire une synchronisation.</string>
         <string name="stats_error">Erreur lors de la récupération des stats dans Domogik.</string>
         <string name="drawer_open">Ouvert</string>
         <string name="drawer_close">Fermé</string>
@@ -613,4 +611,12 @@
         <string name="action_back">Retour arrière</string>
         <string name="domodroid_list_of_place">Domodroid Liste des emplacements</string>
         <string name="domodroid_list_of_map">Domodroid liste des cartes</string>
+        <string name="Area_longclic_menu_title">Que voulez-vous faire avec cette zone?</string>
+        <string name="Room_longclic_menu_title">Que voulez-vous faire avec cette pièce?</string>
+        <string name="mq_domogik_conf_localhost">La MQ n\'écoute que sur localhost dans domogik.cfg. Cela ne fonctionnera pas correctement avec Domodroid.</string>
+        <string name="check_server_part_in_option">Vérifier la partie serveur dans les paramètres</string>
+        <string name="Error">Erreur</string>
+        <string name="speech_not_supported">Synthèse vocale non supportée</string>
+        <string name="service_destroyed">Service détruit</string>
+        <string name="soon">Bientôt......</string>
 </resources>

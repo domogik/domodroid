@@ -695,4 +695,5 @@
     <string name="speech_not_supported">Speech not supported</string>
     <string name="service_destroyed">Service destroyed...</string>
     <string name="command_rejected">Command to server rejected</string>
+    <string name="soon">Soon......</string>
 </resources>

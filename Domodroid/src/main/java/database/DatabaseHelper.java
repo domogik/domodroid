@@ -27,7 +27,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         com.orhanobut.logger.Logger.init("DatabaseHelper").methodCount(0);
-        Logger.e("DATABASE_NAME = " + DATABASE_NAME);
+        Logger.i("DATABASE_NAME = " + DATABASE_NAME);
 
     }
 

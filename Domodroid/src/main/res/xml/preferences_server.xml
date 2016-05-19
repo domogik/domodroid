@@ -39,6 +39,7 @@
             android:password="true"
             android:title="@string/OPTION_server_http_password" />
         <CheckBoxPreference
+            android:icon="@drawable/ic_https_black_24dp"
             android:key="ssl_activate"
             android:summaryOff="No ssl use"
             android:summaryOn="Using https for Rest"

@@ -125,9 +125,10 @@ public class Preference extends PreferenceActivity implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
-        updatePreferences(findPreference(key));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
         String temp = params.getString("rinorIP", "");
@@ -173,7 +174,11 @@ public class Preference extends PreferenceActivity implements
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
-        //this.onContentChanged();
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        updatePreferences(findPreference(key));
 
     }
 

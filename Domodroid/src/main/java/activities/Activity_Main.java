@@ -205,6 +205,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
 
+        //Load default value to avoid crash.
+        //https://developer.android.com/reference/android/preference/PreferenceManager.html#setDefaultValues%28android.content.Context,%20int,%20boolean%29
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_butler, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_debug, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_house, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_server, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false);
+
         String currlogpath = SP_params.getString("LOGNAME", "");
         if (currlogpath.equals("")) {
             //Not yet existing prefs : Configure debugging by default, to configure Tracer

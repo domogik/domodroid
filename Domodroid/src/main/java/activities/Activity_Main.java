@@ -182,6 +182,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
 
+        //load default pref
+        load_preferences();
         //Added by Doume
         try {
             File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
@@ -204,15 +206,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
-
-        //Load default value to avoid crash.
-        //https://developer.android.com/reference/android/preference/PreferenceManager.html#setDefaultValues%28android.content.Context,%20int,%20boolean%29
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_butler, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_debug, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_house, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_server, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false);
 
         String currlogpath = SP_params.getString("LOGNAME", "");
         if (currlogpath.equals("")) {
@@ -621,6 +614,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     Tracer.d("debug map bak", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
                         if (msg.getData().getBoolean("refresh")) {
+                            load_preferences();
                             refresh();
                         } else if (!msg.getData().getBoolean("refresh")) {
                             historyPosition++;
@@ -1105,6 +1099,18 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         listePlace.setAdapter(new SimpleAdapter(getBaseContext(), listItem,
                 R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon}));
         Tracer.d(mytag, "Update navigation drawer listview");
+    }
+
+    private void load_preferences() {
+        //Load default value to avoid crash.
+        //https://developer.android.com/reference/android/preference/PreferenceManager.html#setDefaultValues%28android.content.Context,%20int,%20boolean%29
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_butler, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_debug, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_house, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_server, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false);
+
     }
 }
 

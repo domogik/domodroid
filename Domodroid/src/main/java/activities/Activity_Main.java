@@ -183,7 +183,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         mDrawerLayout.setDrawerListener(drawerToggle);
 
         //load default pref
-        load_preferences();
         //Added by Doume
         try {
             File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
@@ -206,25 +205,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
-
-        String currlogpath = SP_params.getString("LOGNAME", "");
-        if (currlogpath.equals("")) {
-            //Not yet existing prefs : Configure debugging by default, to configure Tracer
-            currlogpath = Environment.getExternalStorageDirectory() + "/domodroid/.log/";
-            SP_prefEditor.putString("LOGPATH", currlogpath);
-            SP_prefEditor.putString("LOGNAME", "Domodroid.txt");
-            SP_prefEditor.putBoolean("SYSTEMLOG", false);
-            SP_prefEditor.putBoolean("TEXTLOG", false);
-            SP_prefEditor.putBoolean("SCREENLOG", false);
-            SP_prefEditor.putBoolean("LOGCHANGED", true);
-            SP_prefEditor.putBoolean("LOGAPPEND", false);
-        } else {
-            SP_prefEditor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
-        }
-        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
-        SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
-
-        SP_prefEditor.commit();
+        load_preferences();
 
         Tracer.set_profile(SP_params);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
@@ -614,7 +595,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     Tracer.d("debug map bak", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
                         if (msg.getData().getBoolean("refresh")) {
-                            load_preferences();
                             refresh();
                         } else if (!msg.getData().getBoolean("refresh")) {
                             historyPosition++;
@@ -1103,13 +1083,28 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
     private void load_preferences() {
         //Load default value to avoid crash.
-        //https://developer.android.com/reference/android/preference/PreferenceManager.html#setDefaultValues%28android.content.Context,%20int,%20boolean%29
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_butler, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_debug, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_house, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_map, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_server, false);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false);
+        String currlogpath = SP_params.getString("LOGNAME", "");
+        if (currlogpath.equals("")) {
+            //Not yet existing prefs : Configure debugging by default, to configure Tracer
+            currlogpath = Environment.getExternalStorageDirectory() + "/domodroid/.log/";
+            SP_prefEditor.putString("LOGPATH", currlogpath);
+            SP_prefEditor.putString("LOGNAME", "Domodroid.txt");
+            SP_prefEditor.putBoolean("SYSTEMLOG", false);
+            SP_prefEditor.putBoolean("TEXTLOG", false);
+            SP_prefEditor.putBoolean("SCREENLOG", false);
+            SP_prefEditor.putBoolean("LOGCHANGED", true);
+            SP_prefEditor.putBoolean("LOGAPPEND", false);
+            //set other default value
+            SP_prefEditor.putBoolean("twocol_lanscape", true);
+            SP_prefEditor.putBoolean("twocol_portrait", true);
+        } else {
+            SP_prefEditor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
+        }
+        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
+        SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
+
+        SP_prefEditor.commit();
+
 
     }
 }

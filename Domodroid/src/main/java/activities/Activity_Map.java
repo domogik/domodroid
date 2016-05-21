@@ -805,7 +805,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             try {
                 if (metaCursor.moveToFirst()) {
                     filename = metaCursor.getString(0);
-                    Logger.e("filename=" + filename);
+                    Logger.i("filename=" + filename);
                 }
             } finally {
                 metaCursor.close();

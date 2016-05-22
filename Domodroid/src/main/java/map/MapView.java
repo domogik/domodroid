@@ -274,7 +274,7 @@ public class MapView extends View {
                         featureMap.getState_key(),
                         "mini widget",
                         handler,
-                        mytype);
+                        mytype, "Value_timestamp");
                 cursession.setType(true);    //It's a mini widget !
             } else if (api_version >= 0.7f) {
                 cursession = new Entity_client(
@@ -282,7 +282,7 @@ public class MapView extends View {
                         "",
                         "mini widget",
                         handler,
-                        mytype);
+                        mytype, "Value_timestamp");
                 cursession.setType(true);    //It's a mini widget !
             }
 

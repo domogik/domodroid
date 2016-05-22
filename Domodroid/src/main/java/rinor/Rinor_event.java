@@ -6,7 +6,7 @@ public class Rinor_event {
     public final int device_id;
     public final String key;
     public final String Value;
-    private final String Timestamp;
+    public final String Timestamp;
 
     public Rinor_event(int ticket, int item, int dev_id, String key, String value, String Timestamp) {
         this.ticket_id = ticket;

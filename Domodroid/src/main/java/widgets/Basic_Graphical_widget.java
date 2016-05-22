@@ -69,6 +69,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final int place_id;
     private final String mytag;
     final String name;
+    final String Timestamp = "";
     private final String state_key;
     private int icon_status;
     private final Handler widgetHandler;
@@ -128,6 +129,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
         //feature panel
         LL_featurePan = new LinearLayout(context);
+        LL_featurePan.setOrientation(LinearLayout.VERTICAL);
         LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
         LL_featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         LL_featurePan.setPadding(0, 0, 20, 0);

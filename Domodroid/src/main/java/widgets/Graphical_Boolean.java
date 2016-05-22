@@ -151,9 +151,10 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
                     if (session == null)
                         return;
                     status = session.getValue();
+                    String Value_timestamp = session.getTimestamp();
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new status <" + status + ">");
-
+                        Tracer.d(mytag, "Handler receives a new value at " + Value_timestamp);
                         try {
                             if (status.equals(value0) || status.equals("0")) {
                                 bool.setImageResource(R.drawable.boolean_off);
@@ -212,9 +213,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

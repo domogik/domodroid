@@ -40,6 +40,7 @@ import android.os.Message;
 
 import misc.tracerengine;
 
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -52,13 +53,18 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
 
     private LinearLayout featurePan2;
     private View featurePan2_buttons;
-    private TextView value;
-    private TextView value1;
+    private TextView TV_Value;
+    private TextView TV_Timestamp;
     private Graphical_Info_View canvas;
     private Message msg;
     private static String mytag;
@@ -69,6 +75,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private Boolean realtime = false;
     private final Entity_Feature feature;
     private String state_key;
+    private String timestamp;
     private String parameters;
     private final int session_type;
     private final SharedPreferences params;
@@ -135,10 +142,15 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
-        //value
-        value = new TextView(context);
-        value.setTextSize(28);
-        value.setTextColor(Color.BLACK);
+        //TV_Value
+        TV_Value = new TextView(context);
+        TV_Value.setTextSize(28);
+        TV_Value.setTextColor(Color.BLACK);
+
+        TV_Timestamp = new TextView(context);
+        TV_Timestamp.setTextSize(16);
+        TV_Timestamp.setTextColor(Color.RED);
+
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
         typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
@@ -195,7 +207,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             featurePan2.addView(canvas);
         }
 
-        LL_featurePan.addView(value);
+        LL_featurePan.addView(TV_Value);
+        LL_featurePan.addView(TV_Timestamp);
 
         test_unite = "";
         try {
@@ -211,30 +224,42 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             public void handleMessage(Message msg) {
                 if (msg.what == 9999) {
                     //Message from widgetupdate
-                    //state_engine send us a signal to notify value changed
+                    //state_engine send us a signal to notify TV_Value changed
                     if (session == null)
                         return;
 
                     String loc_Value = session.getValue();
-                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
+                    String Timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Timestamp);
+                    //Prepare timestamp conversion
+                    Calendar calendar = Calendar.getInstance();
+                    TimeZone tz = TimeZone.getDefault();
+                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    java.util.Date currenTimeZone;
+                    Long timestamp_long = Long.valueOf(Timestamp);
+                    timestamp_long = timestamp_long * 1000;
+                    currenTimeZone = new java.util.Date(timestamp_long);
+                    Timestamp = sdf.format(currenTimeZone);
 
-                    display_sensor_info.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    display_sensor_info.display(Tracer, loc_Value,Timestamp , mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    //Todo display timestamp
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
                         if (Float.parseFloat(loc_Value) >= 60) {
-                            //To have the icon colored if value beetwen 30 and 60
+                            //To have the icon colored if TV_Value beetwen 30 and 60
                             change_this_icon(2);
                         } else if (Float.parseFloat(loc_Value) >= 30) {
-                            //To have the icon colored if value >30
+                            //To have the icon colored if TV_Value >30
                             change_this_icon(1);
                         } else {
-                            //To have the icon colored if value <30
+                            //To have the icon colored if TV_Value <30
                             change_this_icon(0);
                         }
                     } else {
                         // #93
-                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0")|| loc_Value.equals("0.0")) {
+                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0") || loc_Value.equals("0.0")) {
                             change_this_icon(0);
                             //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
                         } else change_this_icon(2);
@@ -262,21 +287,21 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         LL_infoPan.addView(state_key_view);
         //================================================================================
         /*
-         * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, timestamp);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, timestamp);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    //each time our TV_Value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -111,7 +111,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                     try {
                         finalize();
                     } catch (Throwable t) {
-                        Tracer.e(mytag,"Error in deleting container");
+                        Tracer.e(mytag, "Error in deleting container");
                     }    //kill the handler thread itself
                 }
 
@@ -128,9 +128,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 
         {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

@@ -236,9 +236,10 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     if (session == null)
                         return;
 
-                    String loc_Value = session.getValue();
-                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    value.setText(getStringResourceByName(loc_Value));
+                    String new_val = session.getValue();
+                    String Timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
+                    value.setText(getStringResourceByName(new_val));
                     //To have the icon colored as it has no state
                     change_this_icon(2);
 
@@ -270,9 +271,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
+                session = new Entity_client(id, "", mytag, handler, session_type, "Value_timestamp");
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

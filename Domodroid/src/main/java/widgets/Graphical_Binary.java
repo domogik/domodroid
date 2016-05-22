@@ -218,6 +218,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                         Bundle b = msg.getData();
                         if ((b != null) && (b.getString("message") != null)) {
                             if (b.getString("message").equals(value0)) {
+                                String new_val = session.getValue();
+                                String Timestamp = session.getTimestamp();
+                                Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
                                     state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
@@ -245,7 +248,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 if (session == null)
                                     return;
                                 String new_val = session.getValue();
-                                Tracer.d(mytag, "Handler receives a new value <" + new_val + ">");
+                                String Timestamp = session.getTimestamp();
+                                Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 if (new_val.equals(value0)) {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
@@ -308,9 +312,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, Timestamp);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, Timestamp);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

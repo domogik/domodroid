@@ -405,9 +405,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

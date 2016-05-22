@@ -28,11 +28,12 @@ public class Entity_client {
     private String skey;                // 	//
     private String currentState;        // last value exchanged with client
     private String client_name;            // To have a clear debugging !
+    private String timestamp;
     private Boolean miniwidget;
     private Handler client_handler = null;
 
 
-    public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
+    public Entity_client(int devId, String skey, String Name, Handler handler, int session_type, String timestamp) {
         //super();
         this.devId = devId;
         this.skey = skey;
@@ -41,6 +42,7 @@ public class Entity_client {
         this.client_id = -1;    //Initially not connected
         this.client_type = session_type;
         this.miniwidget = false;    //By default, it's not a map widget
+        this.timestamp = timestamp;
     }
 
     /*
@@ -72,6 +74,10 @@ public class Entity_client {
 
     public void setName(String Name) {
         this.client_name = Name;
+    }
+
+    public void setTimestamp(String Timestamp) {
+        this.timestamp = Timestamp;
     }
 
     public void setType(Boolean type) {
@@ -111,6 +117,10 @@ public class Entity_client {
 
     public String getName() {
         return client_name;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public Boolean is_Miniwidget() {

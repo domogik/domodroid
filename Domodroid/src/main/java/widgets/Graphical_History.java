@@ -18,10 +18,12 @@
 package widgets;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -38,6 +40,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
@@ -54,7 +57,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
 
     private ListView listeChoices;
-    private TextView value;
+    private TextView TV_Value;
+    private TextView TV_Timestamp;
     private TextView state;
     private int id;
     private static String mytag;
@@ -125,14 +129,14 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
-        //value
-        value = new TextView(context);
-        value.setTextSize(28);
-        value.setTextColor(Color.BLACK);
+        //TV_Value
+        TV_Value = new TextView(context);
+        TV_Value.setTextSize(28);
+        TV_Value.setTextColor(Color.BLACK);
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
-        super.LL_featurePan.addView(value);
+        super.LL_featurePan.addView(TV_Value);
         super.LL_infoPan.addView(state_key_view);
 
         Handler handler = new Handler() {
@@ -142,12 +146,23 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 if (msg.what == 9999) {
                     if (session == null)
                         return;
-                    status = session.getValue();
-                    String loc_Value = session.getValue();
-                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    value.setAnimation(animation);
+                    String new_val = session.getValue();
+                    String Timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Timestamp);
+                    TV_Value.setAnimation(animation);
+                    //Prepare timestamp conversion
+                    Calendar calendar = Calendar.getInstance();
+                    TimeZone tz = TimeZone.getDefault();
+                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    java.util.Date currenTimeZone;
+                    Long timestamp_long = Long.valueOf(Timestamp);
+                    timestamp_long = timestamp_long * 1000;
+                    currenTimeZone = new java.util.Date(timestamp_long);
 
-                    display_sensor_info.display(Tracer, loc_Value, mytag, feature.getParameters(), value, context, LL_featurePan, null, null, state_key, null, null, null);
+                    Timestamp = sdf.format(currenTimeZone);
+
+                    display_sensor_info.display(Tracer, new_val, Timestamp, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);
@@ -175,21 +190,21 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         };
         //================================================================================
         /*
-         * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
+                session = new Entity_client(id, "", mytag, handler, session_type, "Value_timestamp");
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    //each time our TV_Value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
                 }
 
             } catch (Exception e) {
@@ -228,24 +243,24 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 for (int i = itemArray.length(); i >= 0; i--) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("value", itemArray.getJSONObject(i).getString("value"));
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json value");
+                        Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
             } else if (api_version == 0.7f) {
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("value", itemArray.getJSONObject(i).getString("value_str"));
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json value");
+                        Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
             } else if (api_version >= 0.8f) {
@@ -258,13 +273,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("value", itemArray.getJSONObject(i).getString("value_str"));
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
                         currenTimeZone = new java.util.Date((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
                         map.put("date", sdf.format(currenTimeZone));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json value");
+                        Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
             }
@@ -275,7 +290,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
 
         SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
-                R.layout.item_history_in_graphical_history, new String[]{"value", "date"}, new int[]{R.id.phone_value, R.id.phone_date});
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.phone_value, R.id.phone_date});
         listeChoices.setAdapter(adapter_feature);
         listeChoices.setScrollingCacheEnabled(false);
     }

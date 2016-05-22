@@ -43,10 +43,11 @@ import misc.tracerengine;
 
 public abstract class display_sensor_info {
 
-    public static void display(tracerengine Tracer, String loc_Value, String mytag, String parameters, TextView value,
+    public static void display(tracerengine Tracer, String loc_Value, String Value_timestamp, String mytag, String parameters, TextView value, TextView timestamp,
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
+        timestamp.setText(Value_timestamp);
         try {
             float formatedValue = 0;
             if (loc_Value != null) {

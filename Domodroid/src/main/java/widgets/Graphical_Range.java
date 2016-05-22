@@ -238,6 +238,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                         } catch (Exception e) {
                             new_val = 0;
                         }
+                        String Timestamp = session.getTimestamp();
+                        Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
+
                         //#1649
                         //Value min and max should be the limit of the widget
                         if (new_val <= valueMin) {
@@ -280,9 +283,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

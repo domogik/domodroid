@@ -246,9 +246,8 @@ public class DmdContentProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         int uriType = sURIMatcher.match(uri);
         long id = 0;
-        long rowid = 0;
+        //long rowid = 0;
         switch (uriType) {
-
             case INSERT_AREA:
                 mDB.getWritableDatabase().insert("table_area", null, values);
                 break;
@@ -646,7 +645,7 @@ public class DmdContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        Cursor cursor = null;
+        Cursor cursor;
         int uriType = sURIMatcher.match(uri);
         switch (uriType) {
             case REQUEST_AREA:
@@ -733,11 +732,11 @@ public class DmdContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int uriType = sURIMatcher.match(uri);
-        int items = 0;
+        int items;
         switch (uriType) {
             case UPDATE_FEATURE_STATE:
-                String id = selectionArgs[0];
-                String skey = selectionArgs[1];
+                //String id = selectionArgs[0];
+                //String skey = selectionArgs[1];
                 //Tracer.d("DMDContentProvider.update","try to updated feature_state with device_id = "+id+" skey = "+skey+" selection="+selection);
                 items = mDB.getWritableDatabase().update("table_feature_state", values, selection, selectionArgs);
                 //Tracer.d("DMDContentProvider.update","Updated rows : "+items);

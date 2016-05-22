@@ -415,10 +415,11 @@ class Widgets_Manager {
 
         for (Entity_Room aListRoom : listRoom) {
             room = aListRoom;
-            int Id = room.getId();
+            int room_id = room.getId();
+            int area_id = room.getArea_id();
             String iconId = "unknown";
             try {
-                iconId = domodb.requestIcons(Id, "room").getValue();
+                iconId = domodb.requestIcons(room_id, "room").getValue();
             } catch (Exception e) {
                 Tracer.i(mytag, "No specific icon for this room");
                 //e.printStackTrace();
@@ -436,14 +437,14 @@ class Widgets_Manager {
             String name = room.getName();
             name = Graphics_Manager.Names_Agent(context, name);
 
-            Graphical_Room graph_room = new Graphical_Room(params, Tracer, context, Id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
+            Graphical_Room graph_room = new Graphical_Room(params, Tracer, context, area_id, room_id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
             tmpPan.addView(graph_room);
 
             //Fill List from value
             map = new HashMap<>();
             map.put("type", "room");
             map.put("name", name);
-            map.put("id", String.valueOf(Id));
+            map.put("id", String.valueOf(room_id));
             map.put("icon", Integer.toString(Graphics_Manager.Icones_Agent(room.getIcon_name(), 0)));
             Activity_Main.listItem.add(map);
 

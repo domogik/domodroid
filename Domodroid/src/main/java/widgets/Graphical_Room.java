@@ -53,6 +53,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private FrameLayout myself = null;
     private final Context context;
     private final int id_room;
+    private final int area_id;
     private tracerengine Tracer = null;
     private String mytag = "Graphical_Room";
     private String icon;
@@ -61,11 +62,12 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private final DomodroidDB domodb;
     private final SharedPreferences.Editor prefEditor;
 
-    public Graphical_Room(SharedPreferences params, tracerengine Trac, Context context, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
+    public Graphical_Room(SharedPreferences params, tracerengine Trac, Context context, int area_id, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
         this.myself = this;
         this.Tracer = Trac;
         this.id_room = id;
+        this.area_id = area_id;
         this.context = context;
         this.icon = icon;
         SharedPreferences params1 = params;
@@ -81,16 +83,10 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-/* #78 Todo when moving up/down room
         final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
                 context.getString(R.string.delete), context.getString(R.string.move_up), context.getString(R.string.move_down)};
         final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
                 R.drawable.ic_delete_black, R.drawable.ic_arrow_upward_black, R.drawable.ic_arrow_downward_black};
-*/
-        final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
-                context.getString(R.string.delete)};
-        final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
-                R.drawable.ic_delete_black};
         ListAdapter adapter = new ArrayAdapterWithIcon(context, String_list_action, Integer_list_action_icon);
         list_type_choice.setTitle(R.string.Room_longclic_menu_title);
         list_type_choice.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -197,13 +193,13 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             alert_list_icon.show();
         } else if (action.equals(context.getString(R.string.move_down))) {
             Tracer.d(mytag, "moving down");
-            Tracer.get_engine().move_one_room(id_room, 0, "room", "down");
+            Tracer.get_engine().move_one_room(id_room, area_id, "room", "down");
             prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
             common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
-            Tracer.get_engine().move_one_room(id_room, 0, "room", "up");
+            Tracer.get_engine().move_one_room(id_room, area_id, "room", "up");
             prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
             common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);

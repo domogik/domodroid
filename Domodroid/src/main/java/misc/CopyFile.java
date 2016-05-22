@@ -45,6 +45,7 @@ public class CopyFile {
                 out.write(buf, 0, len);
             }
             in.close();
+            out.flush();
             out.close();
             System.gc();
         }

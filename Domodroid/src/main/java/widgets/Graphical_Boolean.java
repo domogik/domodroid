@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -140,14 +141,15 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         TV_Timestamp = new TextView(context);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         //boolean on/off
         bool = new ImageView(context);
         bool.setImageResource(R.drawable.boolean_off);
 
         super.LL_infoPan.addView(state);
-        super.LL_featurePan.addView(TV_Timestamp);
         super.LL_featurePan.addView(bool);
+        super.LL_featurePan.addView(TV_Timestamp);
 
         Handler handler = new Handler() {
             @Override

@@ -146,10 +146,12 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         TV_Value = new TextView(context);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
 
         TV_Timestamp = new TextView(context);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);

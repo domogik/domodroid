@@ -277,6 +277,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         TV_Timestamp = new TextView(context);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         LL_featurePan.addView(seekBarOnOff);
         LL_featurePan.addView(TV_Timestamp);

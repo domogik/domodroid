@@ -148,13 +148,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         value = new TextView(context);
         value.setTextSize(28);
         value.setTextColor(Color.BLACK);
+        value.setGravity(Gravity.RIGHT);
+
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
         TV_Timestamp = new TextView(context);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
-
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         if (with_list) {
             //Exploit parameters

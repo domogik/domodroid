@@ -22,14 +22,12 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -256,6 +254,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         TV_Value = new TextView(context);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
+
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
         typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
@@ -264,6 +264,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         TV_Timestamp = new TextView(context);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         super.LL_featurePan.addView(TV_Value);
         super.LL_featurePan.addView(TV_Timestamp);

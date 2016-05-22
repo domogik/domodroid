@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -130,10 +131,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Value = new TextView(context);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
 
         TV_Timestamp = new TextView(context);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);

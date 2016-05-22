@@ -69,7 +69,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final int place_id;
     private final String mytag;
     final String name;
-    final String Timestamp = "";
+    final String Value_timestamp = "";
     private final String state_key;
     private int icon_status;
     private final Handler widgetHandler;

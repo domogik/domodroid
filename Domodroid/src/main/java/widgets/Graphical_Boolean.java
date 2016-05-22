@@ -17,33 +17,34 @@
  */
 package widgets;
 
-import org.json.JSONObject;
-
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.R;
-
-import database.WidgetUpdate;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Graphics_Manager;
+import database.WidgetUpdate;
+import misc.tracerengine;
 
 @SuppressWarnings("ALL")
 public class Graphical_Boolean extends Basic_Graphical_widget {
 
     private TextView state;
+    private TextView TV_Timestamp;
     private String value0;
     private String value1;
     private String Value_0;
@@ -136,11 +137,16 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             state.setText(stateS + " : " + Value_0);
         }
 
+        TV_Timestamp = new TextView(context);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+
         //boolean on/off
         bool = new ImageView(context);
         bool.setImageResource(R.drawable.boolean_off);
 
         super.LL_infoPan.addView(state);
+        super.LL_featurePan.addView(TV_Timestamp);
         super.LL_featurePan.addView(bool);
 
         Handler handler = new Handler() {
@@ -152,9 +158,22 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
                         return;
                     status = session.getValue();
                     String Value_timestamp = session.getTimestamp();
+
                     if (status != null) {
-                        Tracer.d(mytag, "Handler receives a new status <" + status + ">");
-                        Tracer.d(mytag, "Handler receives a new value at " + Value_timestamp);
+                        Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
+
+                        //Prepare timestamp conversion
+                        Calendar calendar = Calendar.getInstance();
+                        TimeZone tz = TimeZone.getDefault();
+                        calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        java.util.Date currenTimeZone;
+                        Long timestamp_long = Long.valueOf(Value_timestamp);
+                        timestamp_long = timestamp_long * 1000;
+                        currenTimeZone = new java.util.Date(timestamp_long);
+                        Value_timestamp = sdf.format(currenTimeZone);
+                        TV_Timestamp.setText(Value_timestamp);
+
                         try {
                             if (status.equals(value0) || status.equals("0")) {
                                 bool.setImageResource(R.drawable.boolean_off);

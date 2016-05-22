@@ -42,8 +42,11 @@ import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -59,6 +62,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
     private LinearLayout featurePan2;
     private TextView value;
+    private TextView TV_Timestamp;
     private Handler handler;
     private Message msg;
     private static String mytag = "Graphical_List";
@@ -147,6 +151,11 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
+        TV_Timestamp = new TextView(context);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+
+
         if (with_list) {
             //Exploit parameters
             JSONObject jparam = null;
@@ -221,6 +230,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
 
         LL_featurePan.addView(value);
+        LL_featurePan.addView(TV_Timestamp);
+
 
         handler = new Handler() {
             @Override
@@ -237,8 +248,21 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         return;
 
                     String new_val = session.getValue();
-                    String Timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Value_timestamp);
+
+                    //Prepare timestamp conversion
+                    Calendar calendar = Calendar.getInstance();
+                    TimeZone tz = TimeZone.getDefault();
+                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    java.util.Date currenTimeZone;
+                    Long timestamp_long = Long.valueOf(Value_timestamp);
+                    timestamp_long = timestamp_long * 1000;
+                    currenTimeZone = new java.util.Date(timestamp_long);
+                    Value_timestamp = sdf.format(currenTimeZone);
+                    TV_Timestamp.setText(Value_timestamp);
+
                     value.setText(getStringResourceByName(new_val));
                     //To have the icon colored as it has no state
                     change_this_icon(2);

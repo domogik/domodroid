@@ -23,6 +23,9 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.TimerTask;
 
 import Entity.Entity_Feature;
@@ -41,6 +44,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     private int mInitialColor, mDefaultColor;
     private String mKey;
+    private TextView TV_Timestamp;
 
     private LinearLayout featurePan2;
     private Color_Progress seekBarHueBar;
@@ -269,7 +273,13 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //Color result
         resultView = new Color_Result(context);
 
+        //Timestamp
+        TV_Timestamp = new TextView(context);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+
         LL_featurePan.addView(seekBarOnOff);
+        LL_featurePan.addView(TV_Timestamp);
         LL_infoPan.addView(state_key_view);
 
         color_LeftPan.addView(title1);
@@ -329,9 +339,23 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                     }    //kill the handler thread itself
 
                 } else if (msg.what == 9999) {
-                    if (session != null)
+                    if (session != null) {
                         argbS = session.getValue();
-                    else
+                        String Value_timestamp = session.getTimestamp();
+
+                        //Prepare timestamp conversion
+                        Calendar calendar = Calendar.getInstance();
+                        TimeZone tz = TimeZone.getDefault();
+                        calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        java.util.Date currenTimeZone;
+                        Long timestamp_long = Long.valueOf(Value_timestamp);
+                        timestamp_long = timestamp_long * 1000;
+                        currenTimeZone = new java.util.Date(timestamp_long);
+                        Value_timestamp = sdf.format(currenTimeZone);
+                        TV_Timestamp.setText(Value_timestamp);
+
+                    }else
                         return;
                     Tracer.d(mytag, "Handler receives a new value from state engine <" + argbS + ">");
 

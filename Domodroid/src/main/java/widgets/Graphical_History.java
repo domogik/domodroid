@@ -18,12 +18,10 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -40,7 +38,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
@@ -133,10 +130,16 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Value = new TextView(context);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
+
+        TV_Timestamp = new TextView(context);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
         super.LL_featurePan.addView(TV_Value);
+        super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
         Handler handler = new Handler() {
@@ -147,22 +150,22 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     if (session == null)
                         return;
                     String new_val = session.getValue();
-                    String Timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Timestamp);
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
                     TV_Value.setAnimation(animation);
+
                     //Prepare timestamp conversion
                     Calendar calendar = Calendar.getInstance();
                     TimeZone tz = TimeZone.getDefault();
                     calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     java.util.Date currenTimeZone;
-                    Long timestamp_long = Long.valueOf(Timestamp);
+                    Long timestamp_long = Long.valueOf(Value_timestamp);
                     timestamp_long = timestamp_long * 1000;
                     currenTimeZone = new java.util.Date(timestamp_long);
+                    Value_timestamp = sdf.format(currenTimeZone);
 
-                    Timestamp = sdf.format(currenTimeZone);
-
-                    display_sensor_info.display(Tracer, new_val, Timestamp, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
+                    display_sensor_info.display(Tracer, new_val, Value_timestamp, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);

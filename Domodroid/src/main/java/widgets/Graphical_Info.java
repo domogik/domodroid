@@ -148,8 +148,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         TV_Value.setTextColor(Color.BLACK);
 
         TV_Timestamp = new TextView(context);
-        TV_Timestamp.setTextSize(16);
-        TV_Timestamp.setTextColor(Color.RED);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
@@ -229,20 +229,21 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                         return;
 
                     String loc_Value = session.getValue();
-                    String Timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Timestamp);
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
+
                     //Prepare timestamp conversion
                     Calendar calendar = Calendar.getInstance();
                     TimeZone tz = TimeZone.getDefault();
                     calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     java.util.Date currenTimeZone;
-                    Long timestamp_long = Long.valueOf(Timestamp);
+                    Long timestamp_long = Long.valueOf(Value_timestamp);
                     timestamp_long = timestamp_long * 1000;
                     currenTimeZone = new java.util.Date(timestamp_long);
-                    Timestamp = sdf.format(currenTimeZone);
+                    Value_timestamp = sdf.format(currenTimeZone);
 
-                    display_sensor_info.display(Tracer, loc_Value,Timestamp , mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    display_sensor_info.display(Tracer, loc_Value,Value_timestamp , mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     //Todo display timestamp
 
                     //Change icon if in %

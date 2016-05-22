@@ -58,6 +58,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import Abstract.calcul;
@@ -260,7 +261,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
         typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
+        TV_Timestamp = new TextView(context);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+
         super.LL_featurePan.addView(TV_Value);
+        super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
         test_unite = "";
@@ -282,20 +288,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         return;
 
                     String new_val = session.getValue();
-                    String Timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Timestamp);
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
 
-                    Date now = new Date(Timestamp);
-                    String str = (String) DateUtils.getRelativeDateTimeString(
-                            (Context) context.getApplication().getApplicationContext(), // Suppose you are in an activity or other Context subclass
-                            now.getTime(), // The time to display
-                            DateUtils.MINUTE_IN_MILLIS, // The resolution. This will display only
-                            // minutes (no "3 seconds ago")
-                            DateUtils.WEEK_IN_MILLIS, // The maximum resolution at which the time will switch
-                            // to default date instead of spans. This will not
-                            // display "3 weeks ago" but a full date instead
-                            0); // Eventual flags
-                    display_sensor_info.display(Tracer, new_val, Timestamp, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    //Prepare timestamp conversion
+                    Calendar calendar = Calendar.getInstance();
+                    TimeZone tz = TimeZone.getDefault();
+                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    java.util.Date currenTimeZone;
+                    Long timestamp_long = Long.valueOf(Value_timestamp);
+                    timestamp_long = timestamp_long * 1000;
+                    currenTimeZone = new java.util.Date(timestamp_long);
+                    Value_timestamp = sdf.format(currenTimeZone);
+
+                    display_sensor_info.display(Tracer, new_val, Value_timestamp, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {

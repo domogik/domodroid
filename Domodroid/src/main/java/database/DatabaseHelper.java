@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
@@ -26,8 +27,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        com.orhanobut.logger.Logger.init("DatabaseHelper").methodCount(0);
-        Logger.i("DATABASE_NAME = " + DATABASE_NAME);
+        //com.orhanobut.logger.Logger.init("DatabaseHelper").methodCount(0);
+        //Logger.i("DATABASE_NAME = " + DATABASE_NAME);
+        Log.i("DatabaseHelper","DATABASE_NAME = " + DATABASE_NAME);
 
     }
 

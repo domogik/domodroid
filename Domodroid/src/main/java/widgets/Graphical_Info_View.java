@@ -281,7 +281,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setColor(Color.DKGRAY);
         paint.setAntiAlias(true);
         paint.setTextSize(size15);
-        can2.drawText("Loading Data ...", 10, 15, paint);
+        can2.drawText("Loading Data ...", size10, size15, paint);
     }
 
     private void drawGrid() {

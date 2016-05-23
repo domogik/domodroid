@@ -25,14 +25,13 @@ import android.os.Message;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -45,7 +44,7 @@ import misc.tracerengine;
 public class Graphical_Boolean extends Basic_Graphical_widget {
 
     private TextView state;
-    private TextView TV_Timestamp;
+    private RelativeTimeTextView TV_Timestamp;
     private String value0;
     private String value1;
     private String Value_0;
@@ -138,14 +137,19 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             state.setText(stateS + " : " + Value_0);
         }
 
-        TV_Timestamp = new TextView(context);
+        TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.RIGHT;
+
         //boolean on/off
         bool = new ImageView(context);
         bool.setImageResource(R.drawable.boolean_off);
+        bool.setLayoutParams(params);
 
         super.LL_infoPan.addView(state);
         super.LL_featurePan.addView(bool);
@@ -164,17 +168,11 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
 
-                        //Prepare timestamp conversion
-                        Calendar calendar = Calendar.getInstance();
-                        TimeZone tz = TimeZone.getDefault();
-                        calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        java.util.Date currenTimeZone;
-                        Long timestamp_long = Long.valueOf(Value_timestamp);
-                        timestamp_long = timestamp_long * 1000;
-                        currenTimeZone = new java.util.Date(timestamp_long);
-                        Value_timestamp = sdf.format(currenTimeZone);
-                        TV_Timestamp.setText(Value_timestamp);
+                        //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                        Long Value_timestamplong = null;
+                        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                        TV_Timestamp.setReferenceTime(Value_timestamplong);
 
                         try {
                             if (status.equals(value0) || status.equals("0")) {

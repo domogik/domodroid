@@ -333,7 +333,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
             paint.setPathEffect(null);
             paint.setAntiAlias(true);
             paint.setColor(Color.BLACK);
-            can.drawText(minf + temp_step * i + "", gridStopX + 5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            float right_value = minf + temp_step * i;
+            String s = String.format("%.2f", right_value);
+            can.drawText(s, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
         }
     }
 
@@ -376,8 +378,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 paint.setColor(Color.parseColor("#157C9E"));
                 paint.setTextSize(size10);
                 can.drawText(top_txt,
-                        gridStartX + (i * step) - 8,
-                        gridStopY + gridOffset - 20,
+                        gridStartX + (i * step) - size7,
+                        gridStopY + gridOffset - size15,
                         paint);
             } else if (step > 8 && (top == 3 ||
                     top == 6 ||

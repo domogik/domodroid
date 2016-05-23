@@ -38,15 +38,14 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -62,7 +61,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
     private LinearLayout featurePan2;
     private TextView value;
-    private TextView TV_Timestamp;
+    private RelativeTimeTextView TV_Timestamp;
     private Handler handler;
     private Message msg;
     private static String mytag = "Graphical_List";
@@ -153,7 +152,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
-        TV_Timestamp = new TextView(context);
+        TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -253,17 +252,11 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Value_timestamp);
 
-                    //Prepare timestamp conversion
-                    Calendar calendar = Calendar.getInstance();
-                    TimeZone tz = TimeZone.getDefault();
-                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    java.util.Date currenTimeZone;
-                    Long timestamp_long = Long.valueOf(Value_timestamp);
-                    timestamp_long = timestamp_long * 1000;
-                    currenTimeZone = new java.util.Date(timestamp_long);
-                    Value_timestamp = sdf.format(currenTimeZone);
-                    TV_Timestamp.setText(Value_timestamp);
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                    TV_Timestamp.setReferenceTime(Value_timestamplong);
 
                     value.setText(getStringResourceByName(new_val));
                     //To have the icon colored as it has no state

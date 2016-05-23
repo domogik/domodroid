@@ -17,19 +17,6 @@
  */
 package widgets;
 
-import Abstract.display_sensor_info;
-import Entity.Entity_Feature;
-import Entity.Entity_Map;
-import Entity.Entity_client;
-import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.R;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import database.WidgetUpdate;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -37,10 +24,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -53,10 +36,19 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
+import org.domogik.domodroid13.R;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import Abstract.display_sensor_info;
+import Entity.Entity_Feature;
+import Entity.Entity_Map;
+import Entity.Entity_client;
+import activities.Graphics_Manager;
+import database.WidgetUpdate;
+import misc.tracerengine;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
 
@@ -64,7 +56,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private TextView TV_Value;
-    private TextView TV_Timestamp;
+    private RelativeTimeTextView TV_Timestamp;
     private Graphical_Info_View canvas;
     private Message msg;
     private static String mytag;
@@ -148,7 +140,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
-        TV_Timestamp = new TextView(context);
+        TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -234,18 +226,12 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
 
-                    //Prepare timestamp conversion
-                    Calendar calendar = Calendar.getInstance();
-                    TimeZone tz = TimeZone.getDefault();
-                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    java.util.Date currenTimeZone;
-                    Long timestamp_long = Long.valueOf(Value_timestamp);
-                    timestamp_long = timestamp_long * 1000;
-                    currenTimeZone = new java.util.Date(timestamp_long);
-                    Value_timestamp = sdf.format(currenTimeZone);
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, loc_Value,Value_timestamp , mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
+                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     //Todo display timestamp
 
                     //Change icon if in %

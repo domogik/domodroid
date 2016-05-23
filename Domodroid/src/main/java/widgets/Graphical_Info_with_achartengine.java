@@ -39,6 +39,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.PointStyle;
@@ -56,7 +58,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import Abstract.calcul;
@@ -74,7 +75,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
     private LinearLayout chartContainer;
     private TextView TV_Value;
-    private TextView TV_Timestamp;
+    private RelativeTimeTextView TV_Timestamp;
     private int id;
 
     private Message msg;
@@ -261,7 +262,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
         typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
-        TV_Timestamp = new TextView(context);
+        TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -292,18 +293,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
 
-                    //Prepare timestamp conversion
-                    Calendar calendar = Calendar.getInstance();
-                    TimeZone tz = TimeZone.getDefault();
-                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    java.util.Date currenTimeZone;
-                    Long timestamp_long = Long.valueOf(Value_timestamp);
-                    timestamp_long = timestamp_long * 1000;
-                    currenTimeZone = new java.util.Date(timestamp_long);
-                    Value_timestamp = sdf.format(currenTimeZone);
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, new_val, Value_timestamp, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {

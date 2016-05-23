@@ -32,6 +32,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,7 +58,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
     private ListView listeChoices;
     private TextView TV_Value;
-    private TextView TV_Timestamp;
+    private RelativeTimeTextView TV_Timestamp;
     private TextView state;
     private int id;
     private static String mytag;
@@ -133,7 +135,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
-        TV_Timestamp = new TextView(context);
+        TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -157,18 +159,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
                     TV_Value.setAnimation(animation);
 
-                    //Prepare timestamp conversion
-                    Calendar calendar = Calendar.getInstance();
-                    TimeZone tz = TimeZone.getDefault();
-                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    java.util.Date currenTimeZone;
-                    Long timestamp_long = Long.valueOf(Value_timestamp);
-                    timestamp_long = timestamp_long * 1000;
-                    currenTimeZone = new java.util.Date(timestamp_long);
-                    Value_timestamp = sdf.format(currenTimeZone);
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, new_val, Value_timestamp, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);

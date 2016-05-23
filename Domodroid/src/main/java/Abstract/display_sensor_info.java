@@ -29,6 +29,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.domogik.domodroid13.R;
 
 import java.text.NumberFormat;
@@ -43,11 +45,11 @@ import misc.tracerengine;
 
 public abstract class display_sensor_info {
 
-    public static void display(tracerengine Tracer, String loc_Value, String Value_timestamp, String mytag, String parameters, TextView value, TextView timestamp,
+    public static void display(tracerengine Tracer, String loc_Value, Long Value_timestamp, String mytag, String parameters, TextView value, RelativeTimeTextView timestamp,
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        timestamp.setText(Value_timestamp);
+        timestamp.setReferenceTime(Value_timestamp);
         try {
             float formatedValue = 0;
             if (loc_Value != null) {

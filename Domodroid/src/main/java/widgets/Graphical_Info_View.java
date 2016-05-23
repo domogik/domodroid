@@ -109,6 +109,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final String password;
     private final float size15;
     private final float size10;
+    private final float size5;
+    private final float size7;
     private final float api_version;
     private Boolean SSL;
 
@@ -136,6 +138,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
         //Label Text size according to the screen size
         size15 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
         size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
+        size7 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 7, metrics);
+        size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
 
         handler = new Handler() {
             @Override
@@ -313,9 +317,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(size10);
         paint.setColor(Color.BLACK);
-        can.drawText(minf + "", gridStartX - valueOffset - (Float.toString(minf).length() * 5), gridStartY - gridOffset, paint);
-        can.drawText(maxf + "", gridStartX - valueOffset - (Float.toString(maxf).length() * 5), gridStopY + gridOffset, paint);
-        can.drawText(avgf + "", gridStartX - valueOffset - (Float.toString(avgf).length() * 5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
+        can.drawText(minf + "", gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
+        can.drawText(maxf + "", gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
+        can.drawText(avgf + "", gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
 
         //temp values
         DashPathEffect dashPath2 = new DashPathEffect(new float[]{3, 8}, 1);
@@ -859,11 +863,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
             avgf = avgf / values.size();
             avgf = calcul.Round_float(avgf);
 
-            gridStartX = Float.toString(maxf).length() * 7;
-            if (Float.toString(minf).length() * 7 > gridStartX)
-                gridStartX = Float.toString(minf).length() * 7;
-            if (Float.toString(avgf).length() * 7 > gridStartX)
-                gridStartX = Float.toString(avgf).length() * 7;
+            gridStartX = Float.toString(maxf).length() * size7;
+            if (Float.toString(minf).length() * size7 > gridStartX)
+                gridStartX = Float.toString(minf).length() * size7;
+            if (Float.toString(avgf).length() * size7 > gridStartX)
+                gridStartX = Float.toString(avgf).length() * size7;
             gridStopX = width - gridStartX;
             loaded = true;
             handler.sendEmptyMessage(0);

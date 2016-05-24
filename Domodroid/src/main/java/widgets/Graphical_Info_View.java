@@ -265,7 +265,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             drawValue();
             drawGraph();
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (loaded) {
             canvas.drawBitmap(buffer, 0, 0, new Paint());

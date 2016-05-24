@@ -104,7 +104,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
-        float api_version = params.getFloat("API_VERSION", 0);
 
         try {
             JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));

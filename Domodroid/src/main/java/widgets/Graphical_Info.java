@@ -127,9 +127,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         float size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, metrics);
 
         Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
-        String login = params.getString("http_auth_username", null);
-        String password = params.getString("http_auth_password", null);
-        float api_version = params.getFloat("API_VERSION", 0);
 
         //state key
         state_key_view = new TextView(context);
@@ -231,7 +228,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
-
 
                     display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     //Todo display timestamp

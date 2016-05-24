@@ -67,10 +67,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private String stateS = "";
     private String Value_0 = "0";
     private String Value_1 = "1";
-    private String login;
-    private String password;
-    private Boolean SSL;
-    private float api_version;
     private final Entity_Feature feature;
     private JSONObject jparam;
     private String command_id = null;
@@ -118,11 +114,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
-
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         //get parameters
 
@@ -408,7 +399,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      //JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
+                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

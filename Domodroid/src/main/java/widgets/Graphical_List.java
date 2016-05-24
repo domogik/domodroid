@@ -77,10 +77,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String cmd_requested = null;
     private String address;
     private String type;
-    private String login;
-    private String password;
-    private Boolean SSL;
-    private float api_version;
     private int id;
     private Entity_Feature feature;
     private String state_key;
@@ -126,10 +122,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         setOnClickListener(this);
 
         mytag = "Graphical_List (" + dev_id + ")";
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         //state key
         TextView state_key_view = new TextView(context);
@@ -328,7 +320,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                          Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                          JSONObject json_Ack = null;
                                          try {
-                                             new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
+                                             new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                              //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          } catch (Exception e) {
                                              Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

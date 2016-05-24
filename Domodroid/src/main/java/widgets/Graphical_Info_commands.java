@@ -63,10 +63,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private static FrameLayout myself = null;
     private Entity_client session = null;
     private Boolean realtime = false;
-    private String login;
-    private String password;
-    private float api_version;
-    private Boolean SSL;
     private int dpiClassification;
     private JSONObject jparam;
     private String command_id = null;
@@ -121,10 +117,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         float size120 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, metrics);
 
         Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         try {
             jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -219,7 +211,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
+                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          //Clean all text from allEds
                                          for (int i = 0; i < allEds.size(); i++) {

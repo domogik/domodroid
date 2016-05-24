@@ -72,7 +72,6 @@ import rinor.Rest_com;
 
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
-
     private LinearLayout chartContainer;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
@@ -88,8 +87,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private Entity_client session = null;
     private Boolean realtime = false;
     private GraphicalView mChart;
-    private String login;
-    private String password;
 
     private String step = "hour";
     private int limit = 6;        // items returned by Rinor on stats arrays when 'hour' average
@@ -112,7 +109,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private XYMultipleSeriesDataset dataset;
     private XYSeries nameSeries;
     private XYSeries EmptySeries;
-    private float api_version;
     private final Entity_Feature feature;
     private String state_key;
     private String parameters;
@@ -125,7 +121,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private String test_unite;
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
-    private Boolean SSL;
     private Float Float_graph_size;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
@@ -147,6 +142,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.url = url;
         this.session_type = session_type;
         this.params = params;
+
         onCreate();
     }
 
@@ -241,11 +237,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         multiRenderer.setGridColor(Color.BLACK, 0);
         //To allow on click method (called when pan or zoom aplied)
         multiRenderer.setClickEnabled(true);
-
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
 

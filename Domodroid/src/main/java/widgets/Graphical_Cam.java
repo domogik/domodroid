@@ -81,7 +81,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.name_cam = feature.getName();
         String state_key = feature.getState_key();
         mytag = "Graphical_Cam(" + dev_id + ")";
-        float api_version = params.getFloat("API_VERSION", 0);
         setOnClickListener(this);
         //To have the icon colored as it has no state
         change_this_icon(2);

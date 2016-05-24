@@ -64,10 +64,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private static String mytag;
     private Message msg;
     private String url = null;
-    private String login;
-    private String password;
-    private Boolean SSL;
-    private float api_version;
 
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
@@ -118,11 +114,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             stateS = state_key;
         }
         setOnClickListener(this);
-
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        SSL = params.getBoolean("ssl_activate", false);
-        api_version = params.getFloat("API_VERSION", 0);
 
         //state key
         TextView state_key_view = new TextView(context);

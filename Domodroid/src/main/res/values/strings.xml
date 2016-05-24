@@ -696,5 +696,5 @@
     <string name="service_destroyed">Service destroyed...</string>
     <string name="command_rejected">Command to server rejected</string>
     <string name="soon">Soon......</string>
-    <string name="option_graph_height">Size of the graph minimum 260</string>
+    <string name="option_graph_height">Size of the graph (min>260)</string>
 </resources>

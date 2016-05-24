@@ -74,16 +74,17 @@ public abstract class display_sensor_info {
                         //TODO find how to update the rotate when a new value is receive from events or mq
                         //remove the textView from parent LinearLayout
                         LL_featurePan.removeView(value);
+                        LL_featurePan.removeView(timestamp);
                         //Display an arrow with font-awesome
-                        value.setTypeface(typefaceawesome, Typeface.NORMAL);
-                        value.setText("\uf176");
+                        value.setTypeface(typefaceweather, Typeface.NORMAL);
+                        value.setText("\uf0b1");
                         //display the real value in smaller font
                         value1 = new TextView(context);
                         value1.setTextSize(14);
                         value1.setTextColor(Color.BLACK);
                         value1.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         //Create a rotate animation for arrow with formatedValue as angle
-                        RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                        RotateAnimation animation = new RotateAnimation(0.0f, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                         animation.setDuration(0);
                         animation.setFillEnabled(true);
                         animation.setFillAfter(true);
@@ -100,6 +101,7 @@ public abstract class display_sensor_info {
                         LL_Temp.addView(value1);
                         LL_Temp.addView(value);
                         LL_featurePan.addView(LL_Temp);
+                        LL_featurePan.addView(timestamp);
                         break;
                     default:
                         if (state_key.equalsIgnoreCase("current_wind_speed")) {

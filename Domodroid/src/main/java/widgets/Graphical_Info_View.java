@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -54,6 +55,7 @@ import rinor.Rest_com;
 
 public class Graphical_Info_View extends View implements OnClickListener {
 
+    private final String parameter;
     private int width;
     private Canvas can;
     private Canvas can2;
@@ -113,15 +115,25 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final float size7;
     private final float api_version;
     private Boolean SSL;
+    private String unit;
 
-    public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params) {
+    public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params, String parameters) {
         super(context);
         invalidate();
         this.Tracer = Trac;
+        this.parameter = parameters;
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
+
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameter.replaceAll("&quot;", "\""));
+            unit = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
 
         values = new Vector<>();
         activate = true;
@@ -317,14 +329,15 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(size10);
         paint.setColor(Color.BLACK);
-        can.drawText(minf + "", gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
-        can.drawText(maxf + "", gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
-        can.drawText(avgf + "", gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
+        can.drawText(minf + unit, gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
+        can.drawText(maxf + unit, gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
+        can.drawText(avgf + unit, gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
 
         //temp values
         DashPathEffect dashPath2 = new DashPathEffect(new float[]{3, 8}, 1);
         paint.setStyle(Paint.Style.FILL);
         float temp_step = (maxf - minf) / 6;
+
         for (int i = 1; i < 6; i++) {
             paint.setPathEffect(dashPath2);
             paint.setAntiAlias(false);
@@ -335,7 +348,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
             paint.setColor(Color.BLACK);
             float right_value = minf + temp_step * i;
             String s = String.format("%.2f", right_value);
-            can.drawText(s, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            //Todo add unit but they are displayed out of screen
+            //can.drawText(s + unit, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            can.drawText(s , gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
         }
     }
 

@@ -157,7 +157,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
-            canvas = new Graphical_Info_View(Tracer, context, params);
+            canvas = new Graphical_Info_View(Tracer, context, params, parameters);
             canvas.dev_id = dev_id;
             canvas.id = feature.getId();
             canvas.state_key = state_key;

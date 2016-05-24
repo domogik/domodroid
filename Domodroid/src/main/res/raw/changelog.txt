@@ -22,6 +22,11 @@
     $ 1.4
       % Version 19
       _ 2016-xx-xx
+      * New option to choose graph height in widget options.
+      * Lots of graph correction.
+      * Display timestamp and auto update it for sensor value.
+      * New menu layout.
+      * #52 Displaying sensor last value timestamp in widget.
       * Close #78 allow move up or down a room or an area.
       * Close #103 Handle mq listen on localhost when syncing.
       * Close #106 solved start in map.

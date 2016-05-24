@@ -126,6 +126,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
     private Boolean SSL;
+    private Float Float_graph_size;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -154,6 +155,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
+        String graph_size = params.getString("graph_size", "262.5");
+        this.Float_graph_size = Float.valueOf(graph_size);
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 
@@ -768,7 +771,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public void onClick(View arg0) {
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
             if (LL_background.getHeight() != sizeint) {
                 try {

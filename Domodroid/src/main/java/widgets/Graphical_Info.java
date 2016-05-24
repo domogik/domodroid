@@ -79,6 +79,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private String test_unite;
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
+    private float Float_graph_size;
 
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
@@ -109,7 +110,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
         mytag = "Graphical_Info (" + dev_id + ")";
-
+        String graph_size = params.getString("graph_size", "262.5");
+        this.Float_graph_size = Float.valueOf(graph_size);
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -305,7 +307,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     public void onClick(View arg0) {
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
             if (LL_background.getHeight() != sizeint) {
                 try {

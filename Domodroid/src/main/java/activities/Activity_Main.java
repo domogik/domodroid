@@ -135,6 +135,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra("Exit me", false)) {
+            finish();
+            return; // add this to prevent from doing unnecessary stuffs
+        }
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -231,7 +235,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             house_listener = new DialogInterface.OnDismissListener() {
                 public void onDismiss(DialogInterface dialog) {
                     //Redraw after house dialog closed.
-                    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+                    refresh();
                 }
             };
         }

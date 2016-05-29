@@ -154,12 +154,10 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                 url = session.getValue();
             if (!url.equals(null)) {
                 Intent intent = new Intent(context, Activity_Cam.class);
-                Tracer.e(mytag, "debuggiing camera back context=" + context.toString());
                 Bundle b = new Bundle();
                 b.putString("url", url);
                 //Tracer.i(mytag, "Opening camera at: " + url);
                 b.putString("name", name_cam);
-                //b.putString("history", Activity_Main.history.elementAt(Activity_Main.historyPosition)[0].toString() + ";" + Activity_Main.history.elementAt(Activity_Main.historyPosition)[1].toString());
                 b.putString("history", Activity_Main.history.toString());
                 b.putString("historyPosition", String.valueOf(Activity_Main.historyPosition));
                 intent.putExtras(b);

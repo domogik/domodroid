@@ -61,7 +61,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -933,6 +932,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 menu.findItem(R.id.menu_butler).setVisible(false);
             }
         }
+        menu.findItem(R.id.menu_exit).setVisible(!SP_params.getBoolean("START_ON_MAP", false));
 
         return true;
     }
@@ -941,12 +941,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
-        mainMenu = menu;
-        MenuItem menu_exit = menu.findItem(R.id.menu_exit);
-        if (SP_params.getBoolean("START_ON_MAP", false)) {
-            menu_exit.setCheckable(false);
-            menu_exit.setEnabled(false);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 

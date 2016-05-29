@@ -214,7 +214,11 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         startCacheEngine();        //Get reference to WidgetUpdate engine
         //When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
 
-        listFeature = widgetUpdate.requestFeatures();
+        try {
+            listFeature = widgetUpdate.requestFeatures();
+        } catch (Exception e) {
+            Tracer.e(mytag,e.toString());
+        }
 
         //listview feature
         ListView listview_feature = new ListView(this);
@@ -643,19 +647,20 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_map, menu);
-        mainMenu = menu;
-        MenuItem menu_map_exit = menu.findItem(R.id.map_menu_exit);
-        if (!params.getBoolean("START_ON_MAP", false)) {
-            menu_map_exit.setCheckable(false);
-            menu_map_exit.setEnabled(false);
-        }
-        return super.onCreateOptionsMenu(menu);
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.map_menu_exit).setVisible(params.getBoolean("START_ON_MAP", false));
+        return true;
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_map, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
             Tracer.d(mytag, "clic on drawertoggle");

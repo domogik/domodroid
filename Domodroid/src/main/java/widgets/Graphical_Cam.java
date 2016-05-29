@@ -158,8 +158,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                 b.putString("url", url);
                 //Tracer.i(mytag, "Opening camera at: " + url);
                 b.putString("name", name_cam);
-                b.putString("history", Activity_Main.history.toString());
-                b.putString("historyPosition", String.valueOf(Activity_Main.historyPosition));
                 intent.putExtras(b);
                 int requestCode = 1;
                 if (context.toString().contains("Main")) {

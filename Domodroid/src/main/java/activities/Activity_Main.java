@@ -96,8 +96,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ImageView appname;
 
     private ViewGroup VG_parent;
-    public static Vector<String[]> history;
-    public static int historyPosition;
+    private Vector<String[]> history;
+    private int historyPosition;
     private LinearLayout LL_house_map;
     private Basic_Graphical_zone house;
     private Basic_Graphical_zone map;
@@ -585,9 +585,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         end_of_init_requested = false;
 
         if (history != null)
+            Tracer.e(mytag, "OnactivityResult end of init history=" + history.toString() + " historyposition=" + historyPosition);
+        //todo #97 because on resume send us here.
+
+        if (!init_done) {
             history = null;        //Free resource
-        history = new Vector<>();
-        historyPosition = 0;
+            history = new Vector<>();
+        }
+
 
         //load widgets
         if (widgetHandler == null) {
@@ -596,7 +601,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 @Override
                 public void handleMessage(Message msg) {
                     //#107 around here
-                    Tracer.d("debug map bak", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
+                    Tracer.e("debug map bak", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
                         if (msg.getData().getBoolean("refresh")) {
                             refresh();
@@ -687,9 +692,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         } else {
             Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            loadWigets(0, "root");
-            historyPosition = 0;
-            history.add(historyPosition, new String[]{"0", "root"});
+            if (!init_done) {
+                historyPosition = 0;
+                history.add(historyPosition, new String[]{"0", "root"});
+                refresh();
+            }
         }
 
         init_done = true;
@@ -1026,9 +1033,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return false;
         } else if ((keyCode == 4) && historyPosition > 0) {
-            historyPosition--;
-            refresh();
-            return false;
+            if (history != null) {
+                Tracer.e("debug map bak", " history= " + history.toString() + " hystoryposition= " + historyPosition);
+                historyPosition--;
+                refresh();
+                return false;
+            } else {
+                Tracer.e(mytag, "history is null at this point");
+            }
         } else if ((keyCode == 82) && mainMenu != null) {
             mainMenu.performIdentifierAction(R.id.menu_overflow, 0);
         }
@@ -1110,19 +1122,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     }
 
     @Override
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-        Tracer.d(mytag, "OnactivityResult requestcode=" + requestCode + " resultcode=" + resultCode + " intent=" + data);
-        Bundle bundle = data.getExtras();
-        String history = bundle.getString("history");
-        String historyPosition = bundle.getString("historyPosition");
-        Tracer.d(mytag, "OnactivityResult room=" + history);
-        this.historyPosition = Integer.parseInt(historyPosition);
-        //#97 back from cam activity
-        //todo get back history vector from bundle of cam activity
-        //refresh();
+        Tracer.e(mytag, "OnactivityResult requestcode=" + requestCode + " resultcode=" + resultCode + " intent=" + data);
+        //because it will be follow by on resume() method
+        init_done = true;
     }
 }
 

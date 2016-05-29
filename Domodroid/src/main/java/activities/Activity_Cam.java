@@ -28,8 +28,6 @@ public class Activity_Cam extends AppCompatActivity {
     private TextView TV_frameRate;
     private final String mytag = this.getClass().getName();
     //todo add tracerengine here too handle log.
-    private String history;
-    private String historyPosition;
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -40,8 +38,6 @@ public class Activity_Cam extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         String name_cam = b.getString("name");
         String url = b.getString("url");
-        history = b.getString("history");
-        historyPosition = b.getString("historyPosition");
         //typedDimension
         float scale = getResources().getDisplayMetrics().density;
 
@@ -112,10 +108,6 @@ public class Activity_Cam extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = getIntent();
-        Log.d(mytag, "OnactivityResult history=" + intent.toString());
-        Log.d(mytag, "OnactivityResult history=" + history + " historyPosition=" + historyPosition);
-        intent.putExtra("history", history);
-        intent.putExtra("historyPosition", historyPosition);
         setResult(RESULT_OK, intent);
         finish();
     }

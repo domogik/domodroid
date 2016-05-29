@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -96,8 +97,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ImageView appname;
 
     private ViewGroup VG_parent;
-    private Vector<String[]> history;
-    private int historyPosition;
+    public static Vector<String[]> history;
+    public static int historyPosition;
     private LinearLayout LL_house_map;
     private Basic_Graphical_zone house;
     private Basic_Graphical_zone map;
@@ -134,6 +135,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra("Exit me", false)) {
+            finish();
+            return; // add this to prevent from doing unnecessary stuffs
+        }
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -230,7 +235,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             house_listener = new DialogInterface.OnDismissListener() {
                 public void onDismiss(DialogInterface dialog) {
                     //Redraw after house dialog closed.
-                    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+                    refresh();
                 }
             };
         }
@@ -937,6 +942,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
         mainMenu = menu;
+        MenuItem menu_exit = menu.findItem(R.id.menu_exit);
+        if (SP_params.getBoolean("START_ON_MAP", false)) {
+            menu_exit.setCheckable(false);
+            menu_exit.setEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -1102,10 +1112,23 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
         //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
         SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
-
         SP_prefEditor.commit();
+    }
 
+    @Override
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        Tracer.d(mytag, "OnactivityResult requestcode=" + requestCode + " resultcode=" + resultCode + " intent=" + data);
+        Bundle bundle = data.getExtras();
+        String history = bundle.getString("history");
+        String historyPosition = bundle.getString("historyPosition");
+        Tracer.d(mytag, "OnactivityResult room=" + history);
+        this.historyPosition = Integer.parseInt(historyPosition);
+        //#97 back from cam activity
+        //todo get back history vector from bundle of cam activity
+        //refresh();
     }
 }
 

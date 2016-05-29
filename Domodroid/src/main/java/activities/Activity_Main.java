@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -96,8 +97,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ImageView appname;
 
     private ViewGroup VG_parent;
-    private Vector<String[]> history;
-    private int historyPosition;
+    public static Vector<String[]> history;
+    public static int historyPosition;
     private LinearLayout LL_house_map;
     private Basic_Graphical_zone house;
     private Basic_Graphical_zone map;
@@ -1102,10 +1103,23 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
         //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
         SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
-
         SP_prefEditor.commit();
+    }
 
+    @Override
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        Tracer.d(mytag, "OnactivityResult requestcode=" + requestCode + " resultcode=" + resultCode + " intent=" + data);
+        Bundle bundle = data.getExtras();
+        String history = bundle.getString("history");
+        String historyPosition = bundle.getString("historyPosition");
+        Tracer.d(mytag, "OnactivityResult room=" + history);
+        this.historyPosition = Integer.parseInt(historyPosition);
+        //#97 back from cam activity
+        //todo get back history vector from bundle of cam activity
+        //refresh();
     }
 }
 

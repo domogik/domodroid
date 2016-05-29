@@ -1,10 +1,12 @@
 package activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -13,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
+
+import java.util.ArrayList;
 
 import video.MjpegInputStream;
 import video.MjpegView;
@@ -24,6 +28,8 @@ public class Activity_Cam extends AppCompatActivity {
     private TextView TV_frameRate;
     private final String mytag = this.getClass().getName();
     //todo add tracerengine here too handle log.
+    private String history;
+    private String historyPosition;
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -34,6 +40,8 @@ public class Activity_Cam extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         String name_cam = b.getString("name");
         String url = b.getString("url");
+        history = b.getString("history");
+        historyPosition = b.getString("historyPosition");
         //typedDimension
         float scale = getResources().getDisplayMetrics().density;
 
@@ -98,6 +106,17 @@ public class Activity_Cam extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         mv.stopPlayback();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        Log.d(mytag, "OnactivityResult history=" + intent.toString());
+        Log.d(mytag, "OnactivityResult history=" + history + " historyPosition=" + historyPosition);
+        intent.putExtra("history", history);
+        intent.putExtra("historyPosition", historyPosition);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

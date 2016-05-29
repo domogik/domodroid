@@ -32,6 +32,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Activity_Cam;
+import activities.Activity_Main;
 import database.WidgetUpdate;
 import misc.tracerengine;
 
@@ -49,6 +50,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private final SharedPreferences params;
     private final int session_type;
     private Boolean realtime = false;
+    Activity activity;
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -57,6 +59,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
+        this.activity = context;
         this.params = params;
         this.session_type = session_type;
         onCreate();
@@ -151,12 +154,21 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                 url = session.getValue();
             if (!url.equals(null)) {
                 Intent intent = new Intent(context, Activity_Cam.class);
+                Tracer.e(mytag, "debuggiing camera back context=" + context.toString());
                 Bundle b = new Bundle();
                 b.putString("url", url);
                 //Tracer.i(mytag, "Opening camera at: " + url);
                 b.putString("name", name_cam);
+                //b.putString("history", Activity_Main.history.elementAt(Activity_Main.historyPosition)[0].toString() + ";" + Activity_Main.history.elementAt(Activity_Main.historyPosition)[1].toString());
+                b.putString("history", Activity_Main.history.toString());
+                b.putString("historyPosition", String.valueOf(Activity_Main.historyPosition));
                 intent.putExtras(b);
-                context.startActivity(intent);
+                int requestCode = 1;
+                if (context.toString().contains("Main")) {
+                    activity.startActivityForResult(intent, requestCode);
+                } else if (context.toString().contains("Map")) {
+                    context.startActivity(intent);
+                }
             }
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());

@@ -1128,6 +1128,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             prefEditor.putFloat("API_VERSION", Rinor_Api_Version);
             prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
             prefEditor.putBoolean("SYNC", true);
+            publishProgress(91);
             Tracer.v(mytag, "Updating database tables with new House configuration");
             try {
                 db.insertArea(json_AreaList);
@@ -1135,14 +1136,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
+            publishProgress(92);
             try {
                 db.insertRoom(json_RoomList);
                 prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
+            publishProgress(93);
             if (Rinor_Api_Version >= 0.7f) {
                 try {
                     db.insertIcon(json_IconList);
@@ -1151,7 +1152,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e.toString());
                 }
             }
-
+            publishProgress(94);
             if (Rinor_Api_Version <= 0.6f) {
                 try {
                     db.insertFeature(json_FeatureList);
@@ -1165,14 +1166,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 //No need of db request method as feature only comes from rest
                 prefEditor.putString("FEATURE_LIST", json_FeatureList1.toString());
             }
-
+            publishProgress(95);
             try {
                 db.insertFeatureAssociation(json_FeatureAssociationList);
                 prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
+            publishProgress(96);
             if (Rinor_Api_Version <= 0.5f) {
                 try {
                     db.insertIcon(json_IconList);
@@ -1186,10 +1187,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     prefEditor.putBoolean("WIDGET_CHOICE", true);
                 prefEditor.putBoolean("BY_USAGE", by_usage);
             }
-
+            publishProgress(97);
             //Clear possible feature association with deleted device
             db.CleanFeatures_association();
-
+            publishProgress(98);
             //refresh cache address
             Cache_management.checkcache(Tracer, context);
             need_refresh = true;    // To notify main activity that screen must be refreshed

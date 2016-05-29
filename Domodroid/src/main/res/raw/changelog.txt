@@ -23,10 +23,13 @@
       % Version 19
       _ 2016-xx-xx
       * New option to choose graph height in widget options.
-      * Lots of graph correction.
+      * Lots of normal graph corrections.
       * Display timestamp and auto update it for sensor value.
       * New menu layout.
+      * Tell user when MQ is not well configured in domogik during sync.
       * #52 Displaying sensor last value timestamp in widget.
+      * Display exit program in menu Map/House.
+      * Close #97 Back from camera activity to last place.
       * Close #78 allow move up or down a room or an area.
       * Close #103 Handle mq listen on localhost when syncing.
       * Close #106 solved start in map.

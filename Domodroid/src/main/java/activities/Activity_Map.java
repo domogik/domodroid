@@ -647,6 +647,11 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_map, menu);
         mainMenu = menu;
+        MenuItem menu_map_exit = menu.findItem(R.id.map_menu_exit);
+        if (!params.getBoolean("START_ON_MAP", false)) {
+            menu_map_exit.setCheckable(false);
+            menu_map_exit.setEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -673,30 +678,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     mapView.setMoveMode(false);
                 }
                 return true;
-            case R.id.map_menu_help:
-                Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
-                dialog_help.show();
-                prefEditor.putBoolean("SPLASH", true);
-                prefEditor.commit();
-                return true;
-            case R.id.map_menu_del:
-                //case when user want to remove only one widget
-                if (list_usable_files.isEmpty()) {
-                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-                } else {
-                    if (!mapView.isRemoveMode()) {
-                        //if remove mode is select for the first time
-                        //say Mapview.java to turn on remove mode
-                        mapView.setMoveMode(false);
-                        mapView.setRemoveMode(true);
-                    } else {
-                        //Remove mode was active, return to normal mode
-                        //Turn menu text color back
-                        mapView.setRemoveMode(false);
-                    }
-                    panel.setOpen(false, true);
-                }
-                return true;
             case R.id.map_menu_move:
                 //case when user want to move one widget
                 // first step remove, second add the removed widget
@@ -719,6 +700,24 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     panel.setOpen(false, true);
                 }
                 return true;
+            case R.id.map_menu_del:
+                //case when user want to remove only one widget
+                if (list_usable_files.isEmpty()) {
+                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+                } else {
+                    if (!mapView.isRemoveMode()) {
+                        //if remove mode is select for the first time
+                        //say Mapview.java to turn on remove mode
+                        mapView.setMoveMode(false);
+                        mapView.setRemoveMode(true);
+                    } else {
+                        //Remove mode was active, return to normal mode
+                        //Turn menu text color back
+                        mapView.setRemoveMode(false);
+                    }
+                    panel.setOpen(false, true);
+                }
+                return true;
             case R.id.map_menu_del_all:
                 //case when user select remove all from menu
                 if (list_usable_files.isEmpty()) {
@@ -729,6 +728,19 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     mapView.clear_Widgets();
                     mapView.setRemoveMode(false);
                 }
+                return true;
+            case R.id.map_menu_help:
+                Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
+                dialog_help.show();
+                prefEditor.putBoolean("SPLASH", true);
+                prefEditor.commit();
+                return true;
+            case R.id.map_menu_exit:
+                Intent intent = new Intent(this, Activity_Main.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit me", true);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

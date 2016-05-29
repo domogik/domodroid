@@ -942,6 +942,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
         mainMenu = menu;
+        MenuItem menu_exit = menu.findItem(R.id.menu_exit);
+        if (SP_params.getBoolean("START_ON_MAP", false)) {
+            menu_exit.setCheckable(false);
+            menu_exit.setEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

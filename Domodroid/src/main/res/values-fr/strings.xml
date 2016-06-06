@@ -614,9 +614,19 @@
         <string name="Area_longclic_menu_title">Que voulez-vous faire avec cette zone?</string>
         <string name="Room_longclic_menu_title">Que voulez-vous faire avec cette pièce?</string>
         <string name="mq_domogik_conf_localhost">La MQ n\'écoute que sur localhost dans domogik.cfg. Cela ne fonctionnera pas correctement avec Domodroid.</string>
+        <string name="error_sending_command">Erreur lors de l\'envoi des commandes</string>
+        <string name="problm_with_mq_information">Problème pour recevoir les informations de la MQ</string>
         <string name="check_server_part_in_option">Vérifier la partie serveur dans les paramètres</string>
+        <string name="problem_geting_device_information">Problème pour recevoir les device.</string>
+        <string name="problem_geting_datatype_information">Problème lors de la réception des datatype.</string>
         <string name="Error">Erreur</string>
+        <string name="rinor_command_exception">Erreur de rest lors de l\'envoie de la commande</string>
+        <string name="error_decode_json_butler">Erreur avec le json du majordome</string>
         <string name="speech_not_supported">Synthèse vocale non supportée</string>
         <string name="service_destroyed">Service détruit</string>
-        <string name="soon">Bientôt......</string>
+        <string name="command_rejected">Commande rejetée</string>
+        <string name="soon">Prochainement......</string>
+        <string name="option_graph_height">Dimensions des graph (min&gt;260)</string>
+        <string name="just_now">A l\instant</string>
 </resources>
+

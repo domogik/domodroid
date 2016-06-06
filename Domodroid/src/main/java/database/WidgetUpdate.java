@@ -860,6 +860,7 @@ public class WidgetUpdate {
                 //value changed : has to notify clients....
                 Tracer.i(mytag, "cache engine update value changed for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
                 cache.get(cache_position).Value = Val;
+                cache.get(cache_position).Value_timestamp = Value_timestamp;
                 result = true;
                 if (cache.get(cache_position).clients_list != null) {
                     for (int j = 0; j < cache.get(cache_position).clients_list.size(); j++) {
@@ -906,7 +907,7 @@ public class WidgetUpdate {
         int pos = from + 1;
         if (pos >= cache.size() || pos < 0)
             pos = 0;
-
+        Tracer.e(mytag, "cache-size:" + cache.size());
         //Check if following entry in cache is the good one...
         for (int i = pos; i < cache.size(); i++) {
             if ((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {

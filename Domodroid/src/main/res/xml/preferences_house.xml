@@ -23,5 +23,10 @@
             android:key="device_sync_order"
             android:summary="@string/OPTION_only_0_4_more"
             android:title="@string/OPTION_Device_sync_organization" />
+        <CheckBoxPreference
+            android:key="BY_USAGE"
+            android:summaryOff="@string/usage_byhouse"
+            android:summaryOn="@string/usage_byusage"
+            android:title="@string/usage_byusagecheckbox" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -590,4 +590,5 @@
     <string name="Area_longclic_menu_title">Что вы хотите сделать с зоной?</string>
     <string name="Room_longclic_menu_title">Что вы хотите сделать с комнатой?</string>
     <string name="Error">Ошибка</string>
+    <string name="just_now">Только что</string>
 </resources>

@@ -84,7 +84,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     private final Boolean with_graph = true;
-    private Entity_client session = null;
     private Boolean realtime = false;
     private GraphicalView mChart;
 
@@ -345,9 +344,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(id, "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {
@@ -363,6 +362,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //updateTimer();	//Don't use anymore cyclic refresh....
 
     }
+
+
 
 
     @Override

@@ -82,7 +82,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String t8s;
     private String t9s = "";
     private final SharedPreferences params;
-    private Entity_client session = null;
     private Boolean realtime = false;
     private JSONObject jparam;
     private final Entity_Feature feature;
@@ -415,9 +414,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

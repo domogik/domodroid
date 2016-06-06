@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Abstract.common_method;
+import Entity.Entity_client;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import adapter.ArrayAdapterWithIcon;
@@ -73,12 +74,12 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final int place_id;
     private final String mytag;
     final String name;
-    final String Value_timestamp = "";
     private final String state_key;
     private int icon_status;
     private final Handler widgetHandler;
     private final DomodroidDB domodb;
     private final SharedPreferences.Editor prefEditor;
+    public Entity_client session = null;
 
     Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
@@ -292,5 +293,15 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.icon_status = icon_status;
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // View is now detached, and about to be destroyed
+        try {
+            Tracer.get_engine().unsubscribe(session);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

@@ -329,9 +329,9 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, Value_timestamp);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, Value_timestamp);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

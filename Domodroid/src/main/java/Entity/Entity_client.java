@@ -33,7 +33,7 @@ public class Entity_client {
     private Handler client_handler = null;
 
 
-    public Entity_client(int devId, String skey, String Name, Handler handler, int session_type, String timestamp) {
+    public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
         //super();
         this.devId = devId;
         this.skey = skey;
@@ -42,7 +42,6 @@ public class Entity_client {
         this.client_id = -1;    //Initially not connected
         this.client_type = session_type;
         this.miniwidget = false;    //By default, it's not a map widget
-        this.timestamp = timestamp;
     }
 
     /*

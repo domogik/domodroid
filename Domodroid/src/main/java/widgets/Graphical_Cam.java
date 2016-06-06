@@ -46,7 +46,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private static FrameLayout myself = null;
     private String name_cam;
     private final Entity_Feature feature;
-    private Entity_client session = null;
     private final SharedPreferences params;
     private final int session_type;
     private Boolean realtime = false;
@@ -130,9 +129,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 
         {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

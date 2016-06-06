@@ -64,7 +64,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
     private final String url;
     private String usage;
     private String address;
-    private Entity_client session = null;
     private Boolean realtime = false;
 
     public Graphical_Boolean(tracerengine Trac,
@@ -157,12 +156,11 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                String status;
-                if (msg.what == 9999) {
+                 if (msg.what == 9999) {
                     if (session == null)
                         return;
-                    status = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
+                     String status = session.getValue();
+                     String Value_timestamp = session.getTimestamp();
 
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
@@ -231,9 +229,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

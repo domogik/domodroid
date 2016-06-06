@@ -44,7 +44,6 @@ import java.util.List;
 
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
-import Entity.Entity_client;
 import activities.Graphics_Manager;
 import misc.tracerengine;
 import rinor.CallUrl;
@@ -61,7 +60,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private String url = null;
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
-    private Entity_client session = null;
     private Boolean realtime = false;
     private int dpiClassification;
     private JSONObject jparam;

@@ -63,7 +63,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     public Boolean with_graph = true;
-    private Entity_client session = null;
     private Boolean realtime = false;
     private final Entity_Feature feature;
     private String state_key;
@@ -280,9 +279,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, timestamp);
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, timestamp);
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {
@@ -298,6 +297,17 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....
 
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // View is now detached, and about to be destroyed
+        try {
+            Tracer.get_engine().unsubscribe(session);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void onClick(View arg0) {

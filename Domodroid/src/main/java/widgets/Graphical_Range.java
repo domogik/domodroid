@@ -68,7 +68,6 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private static String mytag;
     private Message msg;
 
-    private Entity_client session = null;
     private Boolean realtime = false;
     private String stateS = "";
     private String test_unite;
@@ -275,9 +274,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type, "Value_timestamp");
+                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
             }
             try {
                 if (Tracer.get_engine().subscribe(session)) {

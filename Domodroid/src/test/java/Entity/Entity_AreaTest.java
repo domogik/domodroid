@@ -29,7 +29,7 @@ public class Entity_AreaTest {
         Entity_Area area = new Entity_Area(null, null, null, null, 0, null);
         area.setName("Name");
         String name = area.getName();
-        Assert.assertEquals("Names", name);
+        Assert.assertEquals("Name", name);
     }
 
     @Test

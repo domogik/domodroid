@@ -585,7 +585,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         end_of_init_requested = false;
 
         if (history != null)
-            Tracer.e(mytag, "OnactivityResult end of init history=" + history.toString() + " historyposition=" + historyPosition);
+            Tracer.d(mytag, "OnactivityResult end of init history=" + history.toString() + " historyposition=" + historyPosition);
         //todo #97 because on resume send us here.
 
         if (!init_done) {
@@ -601,7 +601,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 @Override
                 public void handleMessage(Message msg) {
                     //#107 around here
-                    Tracer.e("debug map bak", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
+                    Tracer.d("debug map bak #107", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
                         if (msg.getData().getBoolean("refresh")) {
                             refresh();

@@ -23,4 +23,8 @@ before_install:
   - uname -a
 
 # Let's try to build...
-script: ./gradlew clean build
+script:
+- android list target
+- ./gradlew clean
+- ./gradlew assembleDebug
+- ./gradlew assembleDebugAndroidTest

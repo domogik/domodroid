@@ -26,5 +26,4 @@ before_install:
 script:
 - android list target
 - ./gradlew clean
-- ./gradlew assembleDebug
-- ./gradlew assembleDebugAndroidTest
+- ./gradlew test

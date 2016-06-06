@@ -907,8 +907,7 @@ public class WidgetUpdate {
         int pos = from + 1;
         if (pos >= cache.size() || pos < 0)
             pos = 0;
-        Tracer.e(mytag, "cache-size:" + cache.size());
-        //Check if following entry in cache is the good one...
+       //Check if following entry in cache is the good one...
         for (int i = pos; i < cache.size(); i++) {
             if ((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
                 return i;        //Bingo, the next one was the good one !

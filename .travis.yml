@@ -25,5 +25,5 @@ before_install:
 # Let's try to build...
 script:
 - android list target
-- ./gradlew clean
 - ./gradlew test
+- ./gradlew clean

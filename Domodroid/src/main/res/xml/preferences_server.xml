@@ -15,6 +15,7 @@
             android:summary="@string/OPTION_server_explain" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_IP_Title"
+            android:icon="@drawable/ic_ip_address"
             android:inputType="textUri"
             android:key="rinorIP"
             android:title="@string/OPTION_server_IP" />
@@ -30,16 +31,18 @@
             android:title="@string/OPTION_server_Path" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_http_user_Title"
+            android:icon="@drawable/ic_collaborator"
             android:key="http_auth_username"
             android:title="@string/OPTION_server_http_user" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_http_password_Title"
+            android:icon="@drawable/ic_https_black_24dp"
             android:inputType="textPassword"
             android:key="http_auth_password"
             android:password="true"
             android:title="@string/OPTION_server_http_password" />
         <CheckBoxPreference
-            android:icon="@drawable/ic_https_black_24dp"
+            android:icon="@drawable/ic_ssl"
             android:key="ssl_activate"
             android:summaryOff="No ssl use"
             android:summaryOn="Using https for Rest"
@@ -63,17 +66,20 @@
             android:shouldDisableView="true"
             android:title="@string/Rinor_URL" />
         <EditTextPreference
+            android:icon="@drawable/ic_mq"
             android:enabled="true"
             android:inputType="textUri"
             android:key="MQaddress"
             android:selectable="true"
             android:title="@string/MQ_address" />
         <EditTextPreference
+            android:icon="@drawable/ic_mq_sub"
             android:defaultValue="40412"
             android:inputType="number"
             android:key="MQsubport"
             android:title="@string/Mq_sub_port" />
         <EditTextPreference
+            android:icon="@drawable/ic_mq_pub"
             android:defaultValue="40411"
             android:inputType="number"
             android:key="MQpubport"

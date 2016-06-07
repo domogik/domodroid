@@ -44,6 +44,7 @@ public class Entity_Feature {
     private final Activity context;
     private tracerengine Tracer = null;
     private final SharedPreferences params;
+    public Boolean Develop;
 
     public Entity_Feature(SharedPreferences params, tracerengine Trac, Activity context, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
         this.device_feature_model_id = device_feature_model_id;
@@ -60,6 +61,11 @@ public class Entity_Feature {
         this.Tracer = Trac;
         this.context = context;
         this.params = params;
+        try {
+            Develop = params.getBoolean("DEV", false);
+        } catch (Exception e) {
+            Develop = false;
+        }
     }
 
     public int getId() {
@@ -74,19 +80,26 @@ public class Entity_Feature {
         return device;
     }
 
-    public void setDevice(JSONObject device) {
-        this.device = device;
-    }
+/*Not used
+        public void setDevice(JSONObject device) {
+            this.device = device;
+        }
+*/
 
     public String getDescription() {
+
         String return_value;
-        if (description.length() < 1 || description.equalsIgnoreCase("null")) {
-            return_value = name;
+        if (description != null) {
+            if (description.length() < 1 || description.equalsIgnoreCase("null")) {
+                return_value = name;
+            } else {
+                return_value = description;
+            }
         } else {
-            return_value = description;
+            return_value = name;
         }
         //add debug option to change label adding its Id
-        if (params.getBoolean("DEV", false))
+        if (Develop)
             return_value = return_value + " (" + id + ")";
 
         return return_value;
@@ -173,13 +186,17 @@ public class Entity_Feature {
     }
 
     public String getDevice_type() {
-        String[] model = device_type_id.split("\\.");
-        try {
-            return model[1];
-        } catch (Exception e) {
-            return model[0];
-        }
+        if (device_type_id != null) {
+            String[] model = device_type_id.split("\\.");
+            try {
+                return model[1];
+            } catch (Exception e) {
+                return model[0];
+            }
+        } else
+            return null;
     }
+
     public String getDevice_type_id() {
         return device_type_id;
     }

@@ -7,28 +7,35 @@ import org.junit.Test;
  * Created by tiki on 06/06/2016.
  */
 public class Entity_AreaTest {
+    Entity_Area area = new Entity_Area(null, null, null, null, 0, null);
 
     @Test
     public void testSetGetDescription() throws Exception {
-        Entity_Area area = new Entity_Area(null, null, null, null, 0, null);
-        area.setDescription("Description");
         String description = area.getDescription();
+        Assert.assertEquals(null, description);
+
+        area.setDescription("Description");
+        description = area.getDescription();
         Assert.assertEquals("Description", description);
     }
 
     @Test
     public void testSetGetId() throws Exception {
-        Entity_Area area = new Entity_Area(null, null, null, null, 0, null);
-        area.setId(125);
         Integer id = area.getId();
+        Assert.assertEquals(0, id, 0);
+
+        area.setId(125);
+        id = area.getId();
         Assert.assertEquals(125, id, 0);
     }
 
     @Test
     public void testSetGetName() throws Exception {
-        Entity_Area area = new Entity_Area(null, null, null, null, 0, null);
-        area.setName("Name");
         String name = area.getName();
+        Assert.assertEquals(null, name);
+
+        area.setName("Name");
+        name = area.getName();
         Assert.assertEquals("Name", name);
     }
 

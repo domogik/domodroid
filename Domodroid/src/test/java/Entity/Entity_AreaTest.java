@@ -21,7 +21,7 @@ public class Entity_AreaTest {
 
     @Test
     public void testSetGetId() throws Exception {
-        Integer id = area.getId();
+        int id = area.getId();
         Assert.assertEquals(0, id, 0);
 
         area.setId(125);

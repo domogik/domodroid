@@ -63,7 +63,7 @@ public class Entity_client {
         this.devId = devId;
     }
 
-    public void setSkey(String skey) {
+    public void setskey(String skey) {
         this.skey = skey;
     }
 

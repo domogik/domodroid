@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -30,6 +31,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
+import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
@@ -54,21 +57,17 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
 
     private ListView listeChoices;
-    private TextView value;
+    private TextView TV_Value;
+    private RelativeTimeTextView TV_Timestamp;
     private TextView state;
     private int id;
     private static String mytag;
     private Message msg;
     private String url = null;
-    private String login;
-    private String password;
-    private Boolean SSL;
-    private float api_version;
 
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
 
-    private Entity_client session = null;
     private Boolean realtime = false;
     private Animation animation;
     private final Entity_Feature feature;
@@ -115,24 +114,27 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
         setOnClickListener(this);
 
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        SSL = params.getBoolean("ssl_activate", false);
-        api_version = params.getFloat("API_VERSION", 0);
-
         //state key
         TextView state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
-        //value
-        value = new TextView(context);
-        value.setTextSize(28);
-        value.setTextColor(Color.BLACK);
+        //TV_Value
+        TV_Value = new TextView(context);
+        TV_Value.setTextSize(28);
+        TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
+
+        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
+
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
-        super.LL_featurePan.addView(value);
+        super.LL_featurePan.addView(TV_Value);
+        super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
         Handler handler = new Handler() {
@@ -142,12 +144,16 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 if (msg.what == 9999) {
                     if (session == null)
                         return;
-                    status = session.getValue();
-                    String loc_Value = session.getValue();
-                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    value.setAnimation(animation);
+                    String new_val = session.getValue();
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
+                    TV_Value.setAnimation(animation);
 
-                    display_sensor_info.display(Tracer, loc_Value, mytag, feature.getParameters(), value, context, LL_featurePan, null, null, state_key, null, null, null);
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);
@@ -175,7 +181,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         };
         //================================================================================
         /*
-         * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
@@ -188,8 +194,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    //each time our TV_Value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
                 }
 
             } catch (Exception e) {
@@ -228,24 +234,24 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 for (int i = itemArray.length(); i >= 0; i--) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("value", itemArray.getJSONObject(i).getString("value"));
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json value");
+                        Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
             } else if (api_version == 0.7f) {
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("value", itemArray.getJSONObject(i).getString("value_str"));
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json value");
+                        Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
             } else if (api_version >= 0.8f) {
@@ -258,13 +264,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("value", itemArray.getJSONObject(i).getString("value_str"));
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
                         currenTimeZone = new java.util.Date((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
                         map.put("date", sdf.format(currenTimeZone));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json value");
+                        Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
             }
@@ -275,7 +281,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
 
         SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
-                R.layout.item_history_in_graphical_history, new String[]{"value", "date"}, new int[]{R.id.phone_value, R.id.phone_date});
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.phone_value, R.id.phone_date});
         listeChoices.setAdapter(adapter_feature);
         listeChoices.setScrollingCacheEnabled(false);
     }

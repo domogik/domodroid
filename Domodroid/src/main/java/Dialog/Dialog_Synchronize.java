@@ -547,10 +547,16 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
                     prefEditor.putString("MQaddress", MQaddress);
                     // #103 if MQadress=localhost
-                    if (MQaddress.equals("localhost")) {
+                    if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1")) {
                         context.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(context, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else if (MQaddress.equals("*")){
+                        context.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -602,7 +608,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(25);
-                Tracer.e(mytag, "connected to a 0.4 or more Domogik Version");
+                Tracer.i(mytag, "connected to a 0.4 or more Domogik Version");
 
                 //todo #75 ask user how he want the default Area to be organize
                 //see https://github.com/domogik/domodroid/issues/75
@@ -1122,36 +1128,23 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             prefEditor.putFloat("API_VERSION", Rinor_Api_Version);
             prefEditor.putString("DOMOGIK-VERSION", domogik_Version);
             prefEditor.putBoolean("SYNC", true);
+            publishProgress(91);
             Tracer.v(mytag, "Updating database tables with new House configuration");
-            try
-
-            {
+            try {
                 db.insertArea(json_AreaList);
                 prefEditor.putString("AREA_LIST", db.request_json_Area().toString());
-            } catch (
-                    JSONException e
-                    )
-
-            {
+            } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
-            try
-
-            {
+            publishProgress(92);
+            try {
                 db.insertRoom(json_RoomList);
                 prefEditor.putString("ROOM_LIST", db.request_json_Room().toString());
-            } catch (
-                    JSONException e
-                    )
-
-            {
+            } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
-            if (Rinor_Api_Version >= 0.7f)
-
-            {
+            publishProgress(93);
+            if (Rinor_Api_Version >= 0.7f) {
                 try {
                     db.insertIcon(json_IconList);
                     prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
@@ -1159,10 +1152,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e.toString());
                 }
             }
-
-            if (Rinor_Api_Version <= 0.6f)
-
-            {
+            publishProgress(94);
+            if (Rinor_Api_Version <= 0.6f) {
                 try {
                     db.insertFeature(json_FeatureList);
                     //No need of db request method as feature only comes from rest
@@ -1171,29 +1162,19 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-            } else
-
-            {
+            } else {
                 //No need of db request method as feature only comes from rest
                 prefEditor.putString("FEATURE_LIST", json_FeatureList1.toString());
             }
-
-            try
-
-            {
+            publishProgress(95);
+            try {
                 db.insertFeatureAssociation(json_FeatureAssociationList);
                 prefEditor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
-            } catch (
-                    JSONException e
-                    )
-
-            {
+            } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
-
-            if (Rinor_Api_Version <= 0.5f)
-
-            {
+            publishProgress(96);
+            if (Rinor_Api_Version <= 0.5f) {
                 try {
                     db.insertIcon(json_IconList);
                     prefEditor.putString("ICON_LIST", db.request_json_Icon().toString());
@@ -1201,17 +1182,15 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     Tracer.e(mytag, e.toString());
                 }
                 prefEditor.putBoolean("BY_USAGE", false);
-            } else if (Rinor_Api_Version >= 0.6f)
-
-            {
+            } else if (Rinor_Api_Version >= 0.6f) {
                 if (Rinor_Api_Version >= 0.7f)
                     prefEditor.putBoolean("WIDGET_CHOICE", true);
                 prefEditor.putBoolean("BY_USAGE", by_usage);
             }
-
+            publishProgress(97);
             //Clear possible feature association with deleted device
             db.CleanFeatures_association();
-
+            publishProgress(98);
             //refresh cache address
             Cache_management.checkcache(Tracer, context);
             need_refresh = true;    // To notify main activity that screen must be refreshed

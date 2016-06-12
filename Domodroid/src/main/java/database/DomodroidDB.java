@@ -36,6 +36,10 @@ public class DomodroidDB {
         Tracer.i(mytag, "Instance started...");
     }
 
+    public DomodroidDB getDomodroidDB() {
+        return this;
+    }
+
     public void updateDb() {
         //That should clear all tables, except feature_map
         context.getContentResolver().delete(DmdContentProvider.CONTENT_URI_UPGRADE_FEATURE_STATE, null, null);

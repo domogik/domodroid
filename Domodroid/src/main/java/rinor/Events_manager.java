@@ -65,7 +65,7 @@ public class Events_manager {
 
     public static Events_manager getInstance(final Activity context) {
         if (instance == null) {
-            Logger.e("Creating instance........................");
+            Logger.i("Creating instance........................");
             instance = new Events_manager(context);
         }
         return instance;
@@ -213,7 +213,7 @@ public class Events_manager {
                                 if (result.contains("stored_value")) {
                                     try {
                                         JSONObject json_stats_04 = new JSONObject(result);
-                                        Tracer.d(mytag, "MQ Parsing result to jsonobject");
+                                        Tracer.v(mytag, "MQ Parsing result to jsonobject");
                                         //Tracer.d(mytag, json_stats_04.toString());
                                         String ticket = "1";
                                         String device_id = json_stats_04.get("sensor_id").toString();

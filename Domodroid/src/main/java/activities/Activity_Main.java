@@ -134,6 +134,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra("Exit me", false)) {
+            finish();
+            return; // add this to prevent from doing unnecessary stuffs
+        }
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -182,6 +186,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
 
+        //load default pref
         //Added by Doume
         try {
             File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
@@ -204,25 +209,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
-
-        String currlogpath = SP_params.getString("LOGNAME", "");
-        if (currlogpath.equals("")) {
-            //Not yet existing prefs : Configure debugging by default, to configure Tracer
-            currlogpath = Environment.getExternalStorageDirectory() + "/domodroid/.log/";
-            SP_prefEditor.putString("LOGPATH", currlogpath);
-            SP_prefEditor.putString("LOGNAME", "Domodroid.txt");
-            SP_prefEditor.putBoolean("SYSTEMLOG", false);
-            SP_prefEditor.putBoolean("TEXTLOG", false);
-            SP_prefEditor.putBoolean("SCREENLOG", false);
-            SP_prefEditor.putBoolean("LOGCHANGED", true);
-            SP_prefEditor.putBoolean("LOGAPPEND", false);
-        } else {
-            SP_prefEditor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
-        }
-        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
-        SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
-
-        SP_prefEditor.commit();
+        load_preferences();
 
         Tracer.set_profile(SP_params);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
@@ -247,7 +234,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             house_listener = new DialogInterface.OnDismissListener() {
                 public void onDismiss(DialogInterface dialog) {
                     //Redraw after house dialog closed.
-                    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+                    refresh();
                 }
             };
         }
@@ -288,7 +275,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         }
                         onResume();
                     } else {
-                        Tracer.e(mytag, "sync dialog end with no refresh !");
+                        Tracer.v(mytag, "sync dialog end with no refresh !");
 
                     }
                     ((Dialog_Synchronize) dialog).need_refresh = false;
@@ -313,7 +300,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
                     getSupportActionBar().setLogo(R.drawable.app_name4);
                 } else if (msg.what == 8000) {
-                    Tracer.e(mytag, "Request to display message : 8000");
+                    Tracer.d(mytag, "Request to display message : 8000");
                     /*
                     if(dialog_message == null) {
 						Create_message_box();
@@ -598,9 +585,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         end_of_init_requested = false;
 
         if (history != null)
+            Tracer.d(mytag, "OnactivityResult end of init history=" + history.toString() + " historyposition=" + historyPosition);
+        //todo #97 because on resume send us here.
+
+        if (!init_done) {
             history = null;        //Free resource
-        history = new Vector<>();
-        historyPosition = 0;
+            history = new Vector<>();
+        }
+
 
         //load widgets
         if (widgetHandler == null) {
@@ -608,6 +600,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             widgetHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
+                    //#107 around here
+                    Tracer.d("debug map bak #107", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
                         if (msg.getData().getBoolean("refresh")) {
                             refresh();
@@ -619,7 +613,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         }
                     } catch (Exception e) {
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
-                        Tracer.e(mytag, e.toString());
+                        Tracer.e("debug map bak", e.toString());
                     }
                 }
             };
@@ -637,32 +631,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 			T_starting.show();
 		}
 		*/
-        init_done = true;
-/* todo disable start on map to avoid crash
-        if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
-            //Solve #2029
-            if (SP_params.getBoolean("SYNC", false)) {
-                Tracer.v(mytag, "Direct start on Map requested...");
-                Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
-                INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
-                startActivity(INTENT_map);
-            } else {
-                if (AD_notSyncAlert == null)
-                    createAlert();
-                AD_notSyncAlert.show();
-            }
-        } else {
-*/
-        Tracer.force_Main = false;    //Reset flag 'called from Map view'
-        loadWigets(0, "root");
-        historyPosition = 0;
-        history.add(historyPosition, new String[]{"0", "root"});
-//        }
 
-        init_done = true;
         //dont_kill = false;	//By default, the onDestroy activity will also kill engines
+
         listePlace = (ListView) findViewById(R.id.listplace);
         try {
+            listItem = new ArrayList<>();
             adapter_map = new SimpleAdapter(getBaseContext(), listItem,
                     R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon});
             listePlace.setAdapter(adapter_map);
@@ -703,6 +677,30 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
+            //Solve #2029
+            if (SP_params.getBoolean("SYNC", false)) {
+                Tracer.v(mytag, "Direct start on Map requested...");
+                Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
+                INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
+                startActivity(INTENT_map);
+            } else {
+                if (AD_notSyncAlert == null)
+                    createAlert();
+                AD_notSyncAlert.show();
+            }
+        } else {
+            Tracer.force_Main = false;    //Reset flag 'called from Map view'
+            if (!init_done) {
+                historyPosition = 0;
+                history.add(historyPosition, new String[]{"0", "root"});
+                refresh();
+            }
+        }
+
+        init_done = true;
+
     }
 
 
@@ -941,6 +939,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 menu.findItem(R.id.menu_butler).setVisible(false);
             }
         }
+        menu.findItem(R.id.menu_exit).setVisible(!SP_params.getBoolean("START_ON_MAP", false));
 
         return true;
     }
@@ -949,7 +948,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
-        mainMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -1035,9 +1033,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return false;
         } else if ((keyCode == 4) && historyPosition > 0) {
-            historyPosition--;
-            refresh();
-            return false;
+            if (history != null) {
+                Tracer.e("debug map bak", " history= " + history.toString() + " hystoryposition= " + historyPosition);
+                historyPosition--;
+                refresh();
+                return false;
+            } else {
+                Tracer.e(mytag, "history is null at this point");
+            }
         } else if ((keyCode == 82) && mainMenu != null) {
             mainMenu.performIdentifierAction(R.id.menu_overflow, 0);
         }
@@ -1092,6 +1095,38 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         listePlace.setAdapter(new SimpleAdapter(getBaseContext(), listItem,
                 R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon}));
         Tracer.d(mytag, "Update navigation drawer listview");
+    }
+
+    private void load_preferences() {
+        //Load default value to avoid crash.
+        String currlogpath = SP_params.getString("LOGNAME", "");
+        if (currlogpath.equals("")) {
+            //Not yet existing prefs : Configure debugging by default, to configure Tracer
+            currlogpath = Environment.getExternalStorageDirectory() + "/domodroid/.log/";
+            SP_prefEditor.putString("LOGPATH", currlogpath);
+            SP_prefEditor.putString("LOGNAME", "Domodroid.txt");
+            SP_prefEditor.putBoolean("SYSTEMLOG", false);
+            SP_prefEditor.putBoolean("TEXTLOG", false);
+            SP_prefEditor.putBoolean("SCREENLOG", false);
+            SP_prefEditor.putBoolean("LOGCHANGED", true);
+            SP_prefEditor.putBoolean("LOGAPPEND", false);
+            //set other default value
+            SP_prefEditor.putBoolean("twocol_lanscape", true);
+            SP_prefEditor.putBoolean("twocol_portrait", true);
+        } else {
+            SP_prefEditor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
+        }
+        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
+        SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
+        SP_prefEditor.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Tracer.e(mytag, "OnactivityResult requestcode=" + requestCode + " resultcode=" + resultCode + " intent=" + data);
+        //because it will be follow by on resume() method
+        init_done = true;
     }
 }
 

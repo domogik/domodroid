@@ -32,6 +32,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Activity_Cam;
+import activities.Activity_Main;
 import database.WidgetUpdate;
 import misc.tracerengine;
 
@@ -45,10 +46,10 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private static FrameLayout myself = null;
     private String name_cam;
     private final Entity_Feature feature;
-    private Entity_client session = null;
     private final SharedPreferences params;
     private final int session_type;
     private Boolean realtime = false;
+    Activity activity;
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -57,6 +58,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.feature = feature;
         this.Tracer = Trac;
         this.context = context;
+        this.activity = context;
         this.params = params;
         this.session_type = session_type;
         onCreate();
@@ -81,7 +83,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         this.name_cam = feature.getName();
         String state_key = feature.getState_key();
         mytag = "Graphical_Cam(" + dev_id + ")";
-        float api_version = params.getFloat("API_VERSION", 0);
         setOnClickListener(this);
         //To have the icon colored as it has no state
         change_this_icon(2);
@@ -111,7 +112,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                     try {
                         finalize();
                     } catch (Throwable t) {
-                        Tracer.e(mytag,"Error in deleting container");
+                        Tracer.e(mytag, "Error in deleting container");
                     }    //kill the handler thread itself
                 }
 
@@ -157,7 +158,12 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                 //Tracer.i(mytag, "Opening camera at: " + url);
                 b.putString("name", name_cam);
                 intent.putExtras(b);
-                context.startActivity(intent);
+                int requestCode = 1;
+                if (context.toString().contains("Main")) {
+                    activity.startActivityForResult(intent, requestCode);
+                } else if (context.toString().contains("Map")) {
+                    context.startActivity(intent);
+                }
             }
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());

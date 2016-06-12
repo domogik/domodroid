@@ -214,7 +214,11 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         startCacheEngine();        //Get reference to WidgetUpdate engine
         //When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
 
-        listFeature = widgetUpdate.requestFeatures();
+        try {
+            listFeature = widgetUpdate.requestFeatures();
+        } catch (Exception e) {
+            Tracer.e(mytag,e.toString());
+        }
 
         //listview feature
         ListView listview_feature = new ListView(this);
@@ -472,12 +476,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     Tracer.i(mytag, "Image from new picker with uri that may crash");
                     selectFile = new File(getDriveFileAbsolutePath(this, uri));
                 }
-                Tracer.e(mytag, "selectfile");
+                Tracer.d(mytag, "selectfile");
                 fileName = selectFile.getName();
-                Tracer.e(mytag, "filename");
+                Tracer.d(mytag, "filename");
                 //filter for extension if not png or svg say it to user
                 String filenameArray[] = fileName.split("\\.");
-                Tracer.e(mytag, "split");
+                Tracer.d(mytag, "split");
                 //get file extension
                 extension = filenameArray[filenameArray.length - 1];
                 //put extension in lower case
@@ -643,14 +647,20 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_map, menu);
-        mainMenu = menu;
-        return super.onCreateOptionsMenu(menu);
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.map_menu_exit).setVisible(params.getBoolean("START_ON_MAP", false));
+        return true;
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_map, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
             Tracer.d(mytag, "clic on drawertoggle");
@@ -671,30 +681,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     dialog_feature.show();
                     mapView.setRemoveMode(false);
                     mapView.setMoveMode(false);
-                }
-                return true;
-            case R.id.map_menu_help:
-                Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
-                dialog_help.show();
-                prefEditor.putBoolean("SPLASH", true);
-                prefEditor.commit();
-                return true;
-            case R.id.map_menu_del:
-                //case when user want to remove only one widget
-                if (list_usable_files.isEmpty()) {
-                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
-                } else {
-                    if (!mapView.isRemoveMode()) {
-                        //if remove mode is select for the first time
-                        //say Mapview.java to turn on remove mode
-                        mapView.setMoveMode(false);
-                        mapView.setRemoveMode(true);
-                    } else {
-                        //Remove mode was active, return to normal mode
-                        //Turn menu text color back
-                        mapView.setRemoveMode(false);
-                    }
-                    panel.setOpen(false, true);
                 }
                 return true;
             case R.id.map_menu_move:
@@ -719,6 +705,24 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     panel.setOpen(false, true);
                 }
                 return true;
+            case R.id.map_menu_del:
+                //case when user want to remove only one widget
+                if (list_usable_files.isEmpty()) {
+                    Toast.makeText(this, getText(R.string.map_nothing), Toast.LENGTH_LONG).show();
+                } else {
+                    if (!mapView.isRemoveMode()) {
+                        //if remove mode is select for the first time
+                        //say Mapview.java to turn on remove mode
+                        mapView.setMoveMode(false);
+                        mapView.setRemoveMode(true);
+                    } else {
+                        //Remove mode was active, return to normal mode
+                        //Turn menu text color back
+                        mapView.setRemoveMode(false);
+                    }
+                    panel.setOpen(false, true);
+                }
+                return true;
             case R.id.map_menu_del_all:
                 //case when user select remove all from menu
                 if (list_usable_files.isEmpty()) {
@@ -729,6 +733,19 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                     mapView.clear_Widgets();
                     mapView.setRemoveMode(false);
                 }
+                return true;
+            case R.id.map_menu_help:
+                Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
+                dialog_help.show();
+                prefEditor.putBoolean("SPLASH", true);
+                prefEditor.commit();
+                return true;
+            case R.id.map_menu_exit:
+                Intent intent = new Intent(this, Activity_Main.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit me", true);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -805,7 +822,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             try {
                 if (metaCursor.moveToFirst()) {
                     filename = metaCursor.getString(0);
-                    Logger.e("filename=" + filename);
+                    Logger.i("filename=" + filename);
                 }
             } finally {
                 metaCursor.close();

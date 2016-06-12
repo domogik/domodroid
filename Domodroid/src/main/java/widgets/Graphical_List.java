@@ -38,6 +38,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,6 +61,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
     private LinearLayout featurePan2;
     private TextView value;
+    private RelativeTimeTextView TV_Timestamp;
     private Handler handler;
     private Message msg;
     private static String mytag = "Graphical_List";
@@ -66,7 +69,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     public final Boolean with_list = true;
-    private Entity_client session = null;
     private Boolean realtime = false;
     private String[] known_values;
     private ArrayList<HashMap<String, String>> listItem;
@@ -74,10 +76,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String cmd_requested = null;
     private String address;
     private String type;
-    private String login;
-    private String password;
-    private Boolean SSL;
-    private float api_version;
     private int id;
     private Entity_Feature feature;
     private String state_key;
@@ -123,10 +121,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         setOnClickListener(this);
 
         mytag = "Graphical_List (" + dev_id + ")";
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         //state key
         TextView state_key_view = new TextView(context);
@@ -144,8 +138,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         value = new TextView(context);
         value.setTextSize(28);
         value.setTextColor(Color.BLACK);
+        value.setGravity(Gravity.RIGHT);
+
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
+
+        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
 
         if (with_list) {
             //Exploit parameters
@@ -156,7 +157,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
                 command = jparam.getString("command");
                 commandValues = jparam.getJSONArray("commandValues");
-                Tracer.e(mytag, "Json command :" + commandValues);
+                Tracer.v(mytag, "Json command :" + commandValues);
             } catch (Exception e) {
                 command = "";
                 commandValues = null;
@@ -221,6 +222,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
 
         LL_featurePan.addView(value);
+        LL_featurePan.addView(TV_Timestamp);
+
 
         handler = new Handler() {
             @Override
@@ -236,9 +239,17 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     if (session == null)
                         return;
 
-                    String loc_Value = session.getValue();
-                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    value.setText(getStringResourceByName(loc_Value));
+                    String new_val = session.getValue();
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Value_timestamp);
+
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                    TV_Timestamp.setReferenceTime(Value_timestamplong);
+
+                    value.setText(getStringResourceByName(new_val));
                     //To have the icon colored as it has no state
                     change_this_icon(2);
 
@@ -308,7 +319,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                          Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                          JSONObject json_Ack = null;
                                          try {
-                                             new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
+                                             new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                              //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          } catch (Exception e) {
                                              Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

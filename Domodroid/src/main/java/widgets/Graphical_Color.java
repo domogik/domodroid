@@ -19,6 +19,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +43,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     private int mInitialColor, mDefaultColor;
     private String mKey;
+    private RelativeTimeTextView TV_Timestamp;
 
     private LinearLayout featurePan2;
     private Color_Progress seekBarHueBar;
@@ -79,12 +82,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String t8s;
     private String t9s = "";
     private final SharedPreferences params;
-    private Entity_client session = null;
     private Boolean realtime = false;
-    private String login;
-    private String password;
-    private Boolean SSL;
-    private float api_version;
     private JSONObject jparam;
     private final Entity_Feature feature;
     private String command_id = null;
@@ -135,11 +133,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         }
 
         setOnClickListener(this);
-
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
@@ -269,7 +262,14 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //Color result
         resultView = new Color_Result(context);
 
+        //Timestamp
+        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
+
         LL_featurePan.addView(seekBarOnOff);
+        LL_featurePan.addView(TV_Timestamp);
         LL_infoPan.addView(state_key_view);
 
         color_LeftPan.addView(title1);
@@ -329,11 +329,20 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                     }    //kill the handler thread itself
 
                 } else if (msg.what == 9999) {
-                    if (session != null)
+                    if (session != null) {
                         argbS = session.getValue();
-                    else
+                        String Value_timestamp = session.getTimestamp();
+
+                        Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
+
+                        //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                        Long Value_timestamplong = null;
+                        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                        TV_Timestamp.setReferenceTime(Value_timestamplong);
+
+                    } else
                         return;
-                    Tracer.d(mytag, "Handler receives a new value from state engine <" + argbS + ">");
 
                 }
                 switch (argbS) {
@@ -571,7 +580,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
+                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

@@ -112,7 +112,7 @@ public class WidgetUpdate {
 
     public static WidgetUpdate getInstance() {
         if (instance == null) {
-            Logger.e("Creating instance........................");
+            Logger.i("Creating instance........................");
             instance = new WidgetUpdate();
         }
         return instance;
@@ -210,7 +210,7 @@ public class WidgetUpdate {
                         callback_counts++;
                         Rinor_event event = eventsManager.get_event();
                         if (event != null) {
-                            Tracer.d(mytag, "Event from Events_Manager found, ticket : " + event.ticket_id + " # " + event.item);
+                            Tracer.v(mytag, "Event from Events_Manager found, ticket : " + event.ticket_id + " # " + event.item);
 
                             if (last_ticket == -1) {
                                 last_ticket = event.item;    //Initial synchro on item
@@ -223,7 +223,7 @@ public class WidgetUpdate {
 
                             mapView = null;
                             //mapView will be set by update_cache_device if at least one mini widget has to be notified
-                            update_cache_device(event.device_id, event.key, event.Value);
+                            update_cache_device(event.device_id, event.key, event.Value, event.Timestamp);
                             if (mapView != null) {
                                 //It was a mini widget, not yet notified : do it now..
                                 try {
@@ -269,7 +269,9 @@ public class WidgetUpdate {
                     AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
                     dialog_device_update.setTitle(context.getText(R.string.domogik_information));
                     dialog_device_update.setMessage(context.getText(R.string.device_update_message));
-                    dialog_device_update.show();
+                    if (!((Activity) context).isFinishing()) {
+                        dialog_device_update.show();
+                    }
                     //todo notify on map screen if a device change.
                 }
             }
@@ -386,7 +388,7 @@ public class WidgetUpdate {
     public void dump_cache() {
         String[] name = new String[]{"Main   ", "Map    ", "MapView", "???    "};
         int size = cache.size();
-        Tracer.e(mytag, "Dump of Cache , size = " + cache.size());
+        Tracer.v(mytag, "Dump of Cache , size = " + cache.size());
 
         while (locked) {
             //Somebody else is updating list...
@@ -410,7 +412,7 @@ public class WidgetUpdate {
                 if (clients_list != null)
                     clients_list_size = clients_list.size();
 
-                Tracer.e(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size);
+                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size);
                 if (clients_list_size > 0) {
                     for (int j = 0; j < clients_list_size; j++) {
                         if (clients_list.get(j) == null)
@@ -429,7 +431,7 @@ public class WidgetUpdate {
                         if (ctype == -1)
                             ctype = 3;
 
-                        Tracer.e(mytag, "           ==> entry : " + j + " owner : " + name[ctype]
+                        Tracer.v(mytag, "           ==> entry : " + j + " owner : " + name[ctype]
                                 + " client name : " + client_name
                                 + " type = " + type
                                 + " state = " + state);
@@ -441,7 +443,7 @@ public class WidgetUpdate {
         }    //End of loop on clients list, for a cache entry
 
         locked = false;
-        Tracer.e(mytag, "End of cache dump ");
+        Tracer.i(mytag, "End of cache dump ");
 
     }
 
@@ -699,11 +701,16 @@ public class WidgetUpdate {
         int dev_id = 0;
         String skey = null;
         String Val = null;
+        String Value_timestamp = null;
 
         JSONArray itemArray = null;
 
-        if (json_widget_state == null)
+        if (json_widget_state == null) {
+            if (parent[0] != null) {
+                parent[0].sendEmptyMessage(8001);    //Ask main to display message
+            }
             return 0;
+        }
         //Tracer.i(mytag, "Cache update : stats result <"+json_widget_state.toString()+">");
 
         try {
@@ -781,9 +788,22 @@ public class WidgetUpdate {
                 Tracer.e(mytag, e.toString());
                 to_process = false;
             }
+            try {
+                if (api_version <= 0.6f) {
+                    Value_timestamp = itemArray.getJSONObject(i).getString("timestamp");
+                } else if (api_version >= 0.7f) {
+                    //todo try to avoid problem with MQ
+                    Value_timestamp = itemArray.getJSONObject(i).getString("last_received");
+                    //dev_id = itemArray.getJSONObject(i).getInt("device_id");
+                }
+            } catch (Exception e) {
+                Tracer.e(mytag, "Cache update : No feature id ! ");
+                Tracer.e(mytag, e.toString());
+                to_process = false;
+            }
             // Try to put this in cache, now
             if (to_process) {
-                Boolean item_updated = update_cache_device(dev_id, skey, Val);    //insert, update or ignore new value for this feature
+                Boolean item_updated = update_cache_device(dev_id, skey, Val, Value_timestamp);    //insert, update or ignore new value for this feature
                 if (item_updated)
                     updated_items++;
             }
@@ -809,7 +829,7 @@ public class WidgetUpdate {
      * Update device value in cache, and eventually notify clients about change
      * This sequence must be protected against concurrent access
      */
-    private Boolean update_cache_device(int dev_id, String skey, String Val) {
+    private Boolean update_cache_device(int dev_id, String skey, String Val, String Value_timestamp) {
         if (cache == null)
             return false;
 
@@ -834,12 +854,13 @@ public class WidgetUpdate {
             last_position = cache_position;        //Keep the position, for next search
             if ((cache.get(cache_position).Value.equals(Val))) {
                 //value not changed
-                Tracer.i(mytag, "cache engine no value change for (" + dev_id + ") (" + skey + ") (" + Val + ")");
+                Tracer.i(mytag, "cache engine no value change for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
 
             } else {
                 //value changed : has to notify clients....
-                Tracer.i(mytag, "cache engine update value changed for (" + dev_id + ") (" + skey + ") (" + Val + ")");
+                Tracer.i(mytag, "cache engine update value changed for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
                 cache.get(cache_position).Value = Val;
+                cache.get(cache_position).Value_timestamp = Value_timestamp;
                 result = true;
                 if (cache.get(cache_position).clients_list != null) {
                     for (int j = 0; j < cache.get(cache_position).clients_list.size(); j++) {
@@ -847,6 +868,7 @@ public class WidgetUpdate {
                         Handler client = cache.get(cache_position).clients_list.get(j).getClientHandler();
                         if (client != null) {
                             cache.get(cache_position).clients_list.get(j).setValue(Val);    //update the session structure with new value
+                            cache.get(cache_position).clients_list.get(j).setTimestamp(Value_timestamp);    //update the session structure with new value
                             if (cache.get(cache_position).clients_list.get(j).is_Miniwidget()) {
                                 // This client is a mapView's miniwidget
                                 // Don't' notify it immediately
@@ -870,7 +892,7 @@ public class WidgetUpdate {
             // device not yet exist in cache
             // when creating a new cache entry, it can't have clients !
             Tracer.i(mytag, "cache engine inserting (" + dev_id + ") (" + skey + ") (" + Val + ")");
-            Cache_Feature_Element device = new Cache_Feature_Element(dev_id, skey, Val);
+            Cache_Feature_Element device = new Cache_Feature_Element(dev_id, skey, Val, Value_timestamp);
             cache.add(device);
             result = true;
         }
@@ -885,8 +907,7 @@ public class WidgetUpdate {
         int pos = from + 1;
         if (pos >= cache.size() || pos < 0)
             pos = 0;
-
-        //Check if following entry in cache is the good one...
+       //Check if following entry in cache is the good one...
         for (int i = pos; i < cache.size(); i++) {
             if ((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
                 return i;        //Bingo, the next one was the good one !
@@ -944,6 +965,7 @@ public class WidgetUpdate {
             if ((cache.get(i).DevId == device) && (cache.get(i).skey.equals(skey))) {
                 //found device in list
                 client.setValue(cache.get(i).Value);    //return current stat value
+                client.setTimestamp(cache.get(i).Value_timestamp);    //return current stat Value_timestamp
                 // Try to add this client to list
 
                 cache.get(i).add_client(client);    //The client structure will contain also last known value for this device
@@ -982,6 +1004,7 @@ public class WidgetUpdate {
             if ((cache.get(i).DevId == device) && (cache.get(i).skey.equals(skey))) {
                 //found device in list
                 client.setValue(cache.get(i).Value);    //return current stat value
+                client.setTimestamp(cache.get(i).Value_timestamp);    //return current stat value
                 // Try to remove this client from list
                 cache.get(i).remove_client(client);
                 Tracer.i(mytag, "cache engine release subscription OK for <" + client.getName() + "> Device (" + device + ") (" + skey + ")");

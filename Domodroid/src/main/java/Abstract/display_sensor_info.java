@@ -29,6 +29,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.domogik.domodroid13.R;
 
 import java.text.NumberFormat;
@@ -43,10 +45,11 @@ import misc.tracerengine;
 
 public abstract class display_sensor_info {
 
-    public static void display(tracerengine Tracer, String loc_Value, String mytag, String parameters, TextView value,
+    public static void display(tracerengine Tracer, String loc_Value, Long Value_timestamp, String mytag, String parameters, TextView value, RelativeTimeTextView timestamp,
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
+        timestamp.setReferenceTime(Value_timestamp);
         try {
             float formatedValue = 0;
             if (loc_Value != null) {
@@ -71,16 +74,17 @@ public abstract class display_sensor_info {
                         //TODO find how to update the rotate when a new value is receive from events or mq
                         //remove the textView from parent LinearLayout
                         LL_featurePan.removeView(value);
+                        LL_featurePan.removeView(timestamp);
                         //Display an arrow with font-awesome
-                        value.setTypeface(typefaceawesome, Typeface.NORMAL);
-                        value.setText("\uf176");
+                        value.setTypeface(typefaceweather, Typeface.NORMAL);
+                        value.setText("\uf0b1");
                         //display the real value in smaller font
                         value1 = new TextView(context);
                         value1.setTextSize(14);
                         value1.setTextColor(Color.BLACK);
                         value1.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         //Create a rotate animation for arrow with formatedValue as angle
-                        RotateAnimation animation = new RotateAnimation(0, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                        RotateAnimation animation = new RotateAnimation(0.0f, formatedValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                         animation.setDuration(0);
                         animation.setFillEnabled(true);
                         animation.setFillAfter(true);
@@ -97,6 +101,7 @@ public abstract class display_sensor_info {
                         LL_Temp.addView(value1);
                         LL_Temp.addView(value);
                         LL_featurePan.addView(LL_Temp);
+                        LL_featurePan.addView(timestamp);
                         break;
                     default:
                         if (state_key.equalsIgnoreCase("current_wind_speed")) {
@@ -212,7 +217,7 @@ public abstract class display_sensor_info {
                         loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
                         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
                         Date testDate = sdf.parse(loc_Value);
-                        Tracer.e(mytag + "Date conversion", "Works");
+                        Tracer.d(mytag + "Date conversion", "Works");
                         SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
                         String newFormat = formatter.format(testDate);
                         value.setText(newFormat);

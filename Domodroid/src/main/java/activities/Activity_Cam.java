@@ -1,10 +1,12 @@
 package activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -13,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
+
+import java.util.ArrayList;
 
 import video.MjpegInputStream;
 import video.MjpegView;
@@ -98,6 +102,13 @@ public class Activity_Cam extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         mv.stopPlayback();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        setResult(RESULT_OK, intent);
         finish();
     }
 

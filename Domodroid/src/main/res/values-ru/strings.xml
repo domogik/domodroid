@@ -531,8 +531,6 @@
     <string name="rename">Переименовать</string>
     <string name="change_icon">Изменить значок</string>
     <string name="delete">Удалить</string>
-    <string name="move">Переместить</string>
-    <string name="add">Добавить</string>
     <string name="events">События</string>
     <string name="Graph_achartengine">AChartengine график</string>
     <string name="Graph_normal">Нормальный график</string>
@@ -589,4 +587,8 @@
     <string name="drawer_open">Откр.</string>
     <string name="drawer_close">Закр.</string>
     <string name="Widget_longclic_menu_title">Что вы хотите сделать с виджетом?</string>
+    <string name="Area_longclic_menu_title">Что вы хотите сделать с зоной?</string>
+    <string name="Room_longclic_menu_title">Что вы хотите сделать с комнатой?</string>
+    <string name="Error">Ошибка</string>
+    <string name="just_now">Только что</string>
 </resources>

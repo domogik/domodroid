@@ -83,7 +83,7 @@ public class httpsUrl {
         return sb.toString();
     }
 
-    public static String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException, UnsupportedEncodingException {
+    public static String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
 

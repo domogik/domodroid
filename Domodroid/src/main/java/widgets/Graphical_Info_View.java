@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -54,6 +55,7 @@ import rinor.Rest_com;
 
 public class Graphical_Info_View extends View implements OnClickListener {
 
+    private final String parameter;
     private int width;
     private Canvas can;
     private Canvas can2;
@@ -109,17 +111,29 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final String password;
     private final float size15;
     private final float size10;
+    private final float size5;
+    private final float size7;
     private final float api_version;
     private Boolean SSL;
+    private String unit;
 
-    public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params) {
+    public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params, String parameters) {
         super(context);
         invalidate();
         this.Tracer = Trac;
+        this.parameter = parameters;
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
+
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameter.replaceAll("&quot;", "\""));
+            unit = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
 
         values = new Vector<>();
         activate = true;
@@ -136,6 +150,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
         //Label Text size according to the screen size
         size15 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, metrics);
         size10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, metrics);
+        size7 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 7, metrics);
+        size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
 
         handler = new Handler() {
             @Override
@@ -261,7 +277,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             drawValue();
             drawGraph();
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(mytag, e.toString());
         }
         if (loaded) {
             canvas.drawBitmap(buffer, 0, 0, new Paint());
@@ -277,7 +293,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setColor(Color.DKGRAY);
         paint.setAntiAlias(true);
         paint.setTextSize(size15);
-        can2.drawText("Loading Data ...", 10, 15, paint);
+        can2.drawText("Loading Data ...", size10, size15, paint);
     }
 
     private void drawGrid() {
@@ -313,14 +329,15 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(size10);
         paint.setColor(Color.BLACK);
-        can.drawText(minf + "", gridStartX - valueOffset - (Float.toString(minf).length() * 5), gridStartY - gridOffset, paint);
-        can.drawText(maxf + "", gridStartX - valueOffset - (Float.toString(maxf).length() * 5), gridStopY + gridOffset, paint);
-        can.drawText(avgf + "", gridStartX - valueOffset - (Float.toString(avgf).length() * 5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
+        can.drawText(minf + unit, gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
+        can.drawText(maxf + unit, gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
+        can.drawText(avgf + unit, gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
 
         //temp values
         DashPathEffect dashPath2 = new DashPathEffect(new float[]{3, 8}, 1);
         paint.setStyle(Paint.Style.FILL);
         float temp_step = (maxf - minf) / 6;
+
         for (int i = 1; i < 6; i++) {
             paint.setPathEffect(dashPath2);
             paint.setAntiAlias(false);
@@ -329,7 +346,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
             paint.setPathEffect(null);
             paint.setAntiAlias(true);
             paint.setColor(Color.BLACK);
-            can.drawText(minf + temp_step * i + "", gridStopX + 5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            float right_value = minf + temp_step * i;
+            String s = String.format("%.2f", right_value);
+            //Todo add unit but they are displayed out of screen
+            //can.drawText(s + unit, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            can.drawText(s , gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
         }
     }
 
@@ -372,8 +393,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 paint.setColor(Color.parseColor("#157C9E"));
                 paint.setTextSize(size10);
                 can.drawText(top_txt,
-                        gridStartX + (i * step) - 8,
-                        gridStopY + gridOffset - 20,
+                        gridStartX + (i * step) - size7,
+                        gridStopY + gridOffset - size15,
                         paint);
             } else if (step > 8 && (top == 3 ||
                     top == 6 ||
@@ -859,11 +880,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
             avgf = avgf / values.size();
             avgf = calcul.Round_float(avgf);
 
-            gridStartX = Float.toString(maxf).length() * 7;
-            if (Float.toString(minf).length() * 7 > gridStartX)
-                gridStartX = Float.toString(minf).length() * 7;
-            if (Float.toString(avgf).length() * 7 > gridStartX)
-                gridStartX = Float.toString(avgf).length() * 7;
+            gridStartX = Float.toString(maxf).length() * size7;
+            if (Float.toString(minf).length() * size7 > gridStartX)
+                gridStartX = Float.toString(minf).length() * size7;
+            if (Float.toString(avgf).length() * size7 > gridStartX)
+                gridStartX = Float.toString(avgf).length() * size7;
             gridStopX = width - gridStartX;
             loaded = true;
             handler.sendEmptyMessage(0);

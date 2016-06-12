@@ -14,7 +14,7 @@
         android:maxHeight="?actionBarSize"
         android:minHeight="?actionBarSize"
         app:logo="@drawable/icon_menu_options"
-        app:navigationIcon="?homeAsUpIndicator"
+        app:navigationIcon="@drawable/ic_arrow_back_white"
         app:theme="@style/AppBaseTheme"
         app:title="@string/action_settings"
         app:titleTextColor="#FFFFFF" />

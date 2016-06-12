@@ -68,13 +68,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private static String mytag;
     private Message msg;
 
-    private Entity_client session = null;
     private Boolean realtime = false;
     private String stateS = "";
-    private String login;
-    private String password;
-    private float api_version;
-    private Boolean SSL;
     private String test_unite;
     private String command_id = null;
     private String command_type = null;
@@ -119,10 +114,6 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
         //get parameters
         try {
@@ -238,6 +229,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                         } catch (Exception e) {
                             new_val = 0;
                         }
+                        String Timestamp = session.getTimestamp();
+                        Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
+
                         //#1649
                         //Value min and max should be the limit of the widget
                         if (new_val <= valueMin) {
@@ -348,7 +342,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
+                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

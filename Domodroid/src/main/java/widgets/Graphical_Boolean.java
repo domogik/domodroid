@@ -17,33 +17,34 @@
  */
 package widgets;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
+import org.domogik.domodroid13.R;
 import org.json.JSONObject;
 
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Graphics_Manager;
-
-import org.domogik.domodroid13.R;
-
 import database.WidgetUpdate;
-
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
-
 import misc.tracerengine;
-
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 @SuppressWarnings("ALL")
 public class Graphical_Boolean extends Basic_Graphical_widget {
 
     private TextView state;
+    private RelativeTimeTextView TV_Timestamp;
     private String value0;
     private String value1;
     private String Value_0;
@@ -63,7 +64,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
     private final String url;
     private String usage;
     private String address;
-    private Entity_client session = null;
     private Boolean realtime = false;
 
     public Graphical_Boolean(tracerengine Trac,
@@ -103,7 +103,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
-        float api_version = params.getFloat("API_VERSION", 0);
 
         try {
             JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -136,23 +135,41 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             state.setText(stateS + " : " + Value_0);
         }
 
+        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.RIGHT;
+
         //boolean on/off
         bool = new ImageView(context);
         bool.setImageResource(R.drawable.boolean_off);
+        bool.setLayoutParams(params);
 
         super.LL_infoPan.addView(state);
         super.LL_featurePan.addView(bool);
+        super.LL_featurePan.addView(TV_Timestamp);
 
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                String status;
-                if (msg.what == 9999) {
+                 if (msg.what == 9999) {
                     if (session == null)
                         return;
-                    status = session.getValue();
+                     String status = session.getValue();
+                     String Value_timestamp = session.getTimestamp();
+
                     if (status != null) {
-                        Tracer.d(mytag, "Handler receives a new status <" + status + ">");
+                        Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
+
+                        //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                        Long Value_timestamplong = null;
+                        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                        TV_Timestamp.setReferenceTime(Value_timestamplong);
 
                         try {
                             if (status.equals(value0) || status.equals("0")) {

@@ -28,6 +28,7 @@ public class Entity_client {
     private String skey;                // 	//
     private String currentState;        // last value exchanged with client
     private String client_name;            // To have a clear debugging !
+    private String timestamp;
     private Boolean miniwidget;
     private Handler client_handler = null;
 
@@ -62,7 +63,7 @@ public class Entity_client {
         this.devId = devId;
     }
 
-    public void setSkey(String skey) {
+    public void setskey(String skey) {
         this.skey = skey;
     }
 
@@ -72,6 +73,10 @@ public class Entity_client {
 
     public void setName(String Name) {
         this.client_name = Name;
+    }
+
+    public void setTimestamp(String Timestamp) {
+        this.timestamp = Timestamp;
     }
 
     public void setType(Boolean type) {
@@ -111,6 +116,10 @@ public class Entity_client {
 
     public String getName() {
         return client_name;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public Boolean is_Miniwidget() {

@@ -51,7 +51,7 @@ public class Preference extends PreferenceActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         AppBarLayout bar;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
             bar = (AppBarLayout) LayoutInflater.from(this).inflate(R.layout.toolbar_settings, root, false);
             root.addView(bar, 0);
@@ -85,10 +85,25 @@ public class Preference extends PreferenceActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreferenceManager.setDefaultValues(this, R.xml.preference, false);
-        addPreferencesFromResource(R.xml.preference);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
+        String action = getIntent().getAction();
+        if (action != null && action.equals("preferences_server")) {
+            addPreferencesFromResource(R.xml.preferences_server);
+        } else if (action != null && action.equals("preferences_widget")) {
+            addPreferencesFromResource(R.xml.preferences_widget);
+        } else if (action != null && action.equals("preferences_map")) {
+            addPreferencesFromResource(R.xml.preferences_map);
+        } else if (action != null && action.equals("preferences_house")) {
+            addPreferencesFromResource(R.xml.preferences_house);
+        } else if (action != null && action.equals("preferences_butler")) {
+            addPreferencesFromResource(R.xml.preferences_butler);
+        } else if (action != null && action.equals("preferences_debug")) {
+            addPreferencesFromResource(R.xml.preferences_debug);
+        } else {
+            addPreferencesFromResource(R.xml.preference);
+        }
+
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
             initSummary(getPreferenceScreen().getPreference(i));
@@ -109,9 +124,10 @@ public class Preference extends PreferenceActivity implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
-        updatePreferences(findPreference(key));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
         String temp = params.getString("rinorIP", "");
@@ -157,7 +173,11 @@ public class Preference extends PreferenceActivity implements
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
-        //this.onContentChanged();
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        updatePreferences(findPreference(key));
 
     }
 

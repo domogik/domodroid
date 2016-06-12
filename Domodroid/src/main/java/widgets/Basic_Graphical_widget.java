@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Abstract.common_method;
+import Entity.Entity_client;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import adapter.ArrayAdapterWithIcon;
@@ -62,6 +63,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final ImageView IV_img;
     private final TextView TV_name;
     private final int id;
+    final String login;
+    final String password;
+    final float api_version;
+    final boolean SSL;
     tracerengine Tracer = null;
     final Activity context;
     private String icon;
@@ -74,6 +79,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final Handler widgetHandler;
     private final DomodroidDB domodb;
     private final SharedPreferences.Editor prefEditor;
+    public Entity_client session = null;
 
     Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
@@ -89,6 +95,13 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         FrameLayout myself = this;
         this.name = name;
         this.state_key = state_key;
+
+        //global variable
+        login = params.getString("http_auth_username", null);
+        password = params.getString("http_auth_password", null);
+        api_version = params.getFloat("API_VERSION", 0);
+        SSL = params.getBoolean("ssl_activate", false);
+
         SharedPreferences params1 = params;
         this.widgetHandler = handler;
         domodb = new DomodroidDB(this.Tracer, this.context, params);
@@ -128,6 +141,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
         //feature panel
         LL_featurePan = new LinearLayout(context);
+        LL_featurePan.setOrientation(LinearLayout.VERTICAL);
         LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
         LL_featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         LL_featurePan.setPadding(0, 0, 20, 0);
@@ -191,7 +205,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "Customname Canceled.");
+                    Tracer.v(mytag, "Customname Canceled.");
                 }
             });
             alert.show();
@@ -214,7 +228,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    Tracer.e(mytag, "delete Canceled.");
+                    Tracer.v(mytag, "delete Canceled.");
                 }
             });
             alert.show();
@@ -279,5 +293,15 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.icon_status = icon_status;
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // View is now detached, and about to be destroyed
+        try {
+            Tracer.get_engine().unsubscribe(session);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

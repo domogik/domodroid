@@ -39,6 +39,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.PointStyle;
@@ -70,10 +72,9 @@ import rinor.Rest_com;
 
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
-
     private LinearLayout chartContainer;
-    private TextView value;
-    private TextView value1;
+    private TextView TV_Value;
+    private RelativeTimeTextView TV_Timestamp;
     private int id;
 
     private Message msg;
@@ -83,11 +84,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     private final Boolean with_graph = true;
-    private Entity_client session = null;
     private Boolean realtime = false;
     private GraphicalView mChart;
-    private String login;
-    private String password;
 
     private String step = "hour";
     private int limit = 6;        // items returned by Rinor on stats arrays when 'hour' average
@@ -110,7 +108,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private XYMultipleSeriesDataset dataset;
     private XYSeries nameSeries;
     private XYSeries EmptySeries;
-    private float api_version;
     private final Entity_Feature feature;
     private String state_key;
     private String parameters;
@@ -123,7 +120,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private String test_unite;
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
-    private Boolean SSL;
+    private Float Float_graph_size;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -144,6 +141,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.url = url;
         this.session_type = session_type;
         this.params = params;
+
         onCreate();
     }
 
@@ -152,6 +150,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
+        String graph_size = params.getString("graph_size", "262.5");
+        this.Float_graph_size = Float.valueOf(graph_size);
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 
@@ -214,7 +214,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         multiRenderer.setYLabelsAngle(-10);
         //Set X label text alignement
         multiRenderer.setXLabelsAlign(Align.CENTER);
-        //Set to make value of y axis left aligned
+        //Set to make TV_Value of y axis left aligned
         multiRenderer.setYLabelsAlign(Align.LEFT);
         //Disable zoom button
         multiRenderer.setZoomButtonsVisible(false);
@@ -228,7 +228,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //[panMinimumX, panMaximumX, panMinimumY, panMaximumY]
         //double[] panLimits={-5,26,0,0};
         //multiRenderer.setPanLimits(panLimits);
-        //Sets the selectable radius value around clickable points.
+        //Sets the selectable radius TV_Value around clickable points.
         multiRenderer.setSelectableBuffer(10);
         //Add grid
         multiRenderer.setShowGrid(true);
@@ -237,28 +237,31 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //To allow on click method (called when pan or zoom aplied)
         multiRenderer.setClickEnabled(true);
 
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
-
-        Tracer.e(mytag, "New instance for name = " + name + " state_key = " + state_key);
+        Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
 
         //state key
         state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
-        //value
-        value = new TextView(context);
-        value.setTextSize(28);
-        value.setTextColor(Color.BLACK);
+        //TV_Value
+        TV_Value = new TextView(context);
+        TV_Value.setTextSize(28);
+        TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
+
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
         typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
         typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
-        super.LL_featurePan.addView(value);
+        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp.setTextSize(10);
+        TV_Timestamp.setTextColor(Color.BLUE);
+        TV_Timestamp.setGravity(Gravity.RIGHT);
+
+        super.LL_featurePan.addView(TV_Value);
+        super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
         test_unite = "";
@@ -275,29 +278,35 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             public void handleMessage(Message msg) {
                 if (msg.what == 9999) {
                     //Message from widgetupdate
-                    //state_engine send us a signal to notify value changed
+                    //state_engine send us a signal to notify TV_Value changed
                     if (session == null)
                         return;
 
-                    String loc_Value = session.getValue();
-                    Tracer.d(mytag, "Handler receives a new value <" + loc_Value + ">");
-                    display_sensor_info.display(Tracer, loc_Value, mytag, parameters, value, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    String new_val = session.getValue();
+                    String Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
+
+                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
+                    Long Value_timestamplong = null;
+                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
-                        if (Float.parseFloat(loc_Value) >= 60) {
-                            //To have the icon colored if value beetwen 30 and 60
+                        if (Float.parseFloat(new_val) >= 60) {
+                            //To have the icon colored if TV_Value beetwen 30 and 60
                             change_this_icon(2);
-                        } else if (Float.parseFloat(loc_Value) >= 30) {
-                            //To have the icon colored if value >30
+                        } else if (Float.parseFloat(new_val) >= 30) {
+                            //To have the icon colored if TV_Value >30
                             change_this_icon(1);
                         } else {
-                            //To have the icon colored if value <30
+                            //To have the icon colored if TV_Value <30
                             change_this_icon(0);
                         }
                     } else {
                         // #93
-                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0") || loc_Value.equals("0.0")) {
+                        if (new_val.equals("off") || new_val.equals("false") || new_val.equals("0") || new_val.equals("0.0")) {
                             change_this_icon(0);
                             //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
                         } else {
@@ -327,7 +336,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         //================================================================================
         /*
-         * New mechanism to be notified by widgetupdate engine when our value is changed
+         * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
@@ -342,8 +351,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    //each time our TV_Value change, the engine will call handler
+                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -353,6 +362,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //updateTimer();	//Don't use anymore cyclic refresh....
 
     }
+
+
 
 
     @Override
@@ -487,7 +498,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 valueArray = json_GraphValues.getJSONArray("values");
             } catch (Exception e) {
                 //return null;
-                Tracer.e(mytag, "Error with json value");
+                Tracer.e(mytag, "Error with json TV_Value");
             }
         }
 
@@ -537,7 +548,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             EmptySeries.add(date1.getTime(), MathHelper.NULL_VALUE);
                         }
                         ruptur = false;
-                        nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+                        nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing TV_Value
                         j++;
                     }
                 } else if (hour == 23) {
@@ -547,12 +558,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         EmptySeries.add(date1.getTime(), MathHelper.NULL_VALUE);
                     }
                     ruptur = false;
-                    nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+                    nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing TV_Value
                     j++;
                 }
                 if (minf == 0)
                     minf = real_val.floatValue();
-                avgf += real_val;    // Get the real 'value'
+                avgf += real_val;    // Get the real 'TV_Value'
 
                 if (real_val > maxf) {
                     maxf = real_val.floatValue();
@@ -606,12 +617,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         Tracer.d(mytag, "Value=" + real_val);
                     }
                     ruptur = false;
-                    nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+                    nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing TV_Value
                     j++;
                 }
                 if (minf == 0)
                     minf = real_val.floatValue();
-                avgf += real_val;    // Get the real 'value'
+                avgf += real_val;    // Get the real 'TV_Value'
 
                 if (real_val > maxf) {
                     maxf = real_val.floatValue();
@@ -663,7 +674,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                             Tracer.d(mytag, "Value=" + real_val);
                         }
                         ruptur = false;
-                        nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+                        nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing TV_Value
                         j++;
                     }
                 } else if (week == 52) {
@@ -673,12 +684,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         EmptySeries.add(date1.getTime(), MathHelper.NULL_VALUE);
                     }
                     ruptur = false;
-                    nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing value
+                    nameSeries.add(date1.getTime(), real_val); //change to j to avoid missing TV_Value
                     j++;
                 }
                 if (minf == 0)
                     minf = real_val.floatValue();
-                avgf += real_val;    // Get the real 'value'
+                avgf += real_val;    // Get the real 'TV_Value'
 
                 if (real_val > maxf) {
                     maxf = real_val.floatValue();
@@ -713,7 +724,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                                       public void onClick(View v) {
                                           Tracer.i(mytag + "Pan or zoom", "New X range=[" + multiRenderer.getXAxisMin() + ", " + multiRenderer.getXAxisMax()
                                                   + "]");
-                                          //To get the start of the graph after a move and grab new value
+                                          //To get the start of the graph after a move and grab new TV_Value
                                           startTimestamp = ((new Date((long) multiRenderer.getXAxisMin())).getTime()) / 1000;
                                           currentTimestamp = ((new Date((long) multiRenderer.getXAxisMax())).getTime()) / 1000;
                                           Tracer.i(mytag, "Period from " + startTimestamp + " to " + currentTimestamp);
@@ -752,7 +763,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public void onClick(View arg0) {
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
             if (LL_background.getHeight() != sizeint) {
                 try {

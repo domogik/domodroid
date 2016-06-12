@@ -9,12 +9,14 @@ public class Cache_Feature_Element {
     public int DevId = -1;
     public String skey = null;
     public String Value = null;
+    public String Value_timestamp = null;
     public ArrayList<Entity_client> clients_list = null;
 
-    public Cache_Feature_Element(int devid, String skey, String value) {
+    public Cache_Feature_Element(int devid, String skey, String value, String Value_timestamp) {
         this.DevId = devid;
         this.skey = skey;
         this.Value = value;
+        this.Value_timestamp = Value_timestamp;
         clients_list = null;
     }
 
@@ -23,6 +25,7 @@ public class Cache_Feature_Element {
         if ((new_client.getDevId() == DevId) && (new_client.getskey().equals(skey))) {
             // Ok, the good one !
             new_client.setValue(Value);
+            new_client.setTimestamp(Value_timestamp);
             if (clients_list == null) {
                 clients_list = new ArrayList<>();
                 clients_list.add(new_client);

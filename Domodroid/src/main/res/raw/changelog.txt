@@ -21,7 +21,8 @@
   <body>
     $ 1.4
       % Version 19
-      _ 2016-xx-xx
+      _ 2016-06-12
+      * Correct bug on ICS and menu.
       * New option to choose graph height in widget options.
       * Lots of normal graph corrections.
       * Display timestamp and auto update it for sensor value.

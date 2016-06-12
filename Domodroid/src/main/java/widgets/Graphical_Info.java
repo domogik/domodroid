@@ -229,7 +229,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
                     display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-                    //Todo display timestamp
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {

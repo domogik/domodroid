@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 import org.domogik.domodroid13.R;
 import org.json.JSONObject;
 
+import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -165,12 +167,15 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
 
-                        //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                         Long Value_timestamplong = null;
                         Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                        TV_Timestamp.setReferenceTime(Value_timestamplong);
-
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.getDate(Value_timestamplong.toString()));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
                         try {
                             if (status.equals(value0) || status.equals("0")) {
                                 bool.setImageResource(R.drawable.boolean_off);

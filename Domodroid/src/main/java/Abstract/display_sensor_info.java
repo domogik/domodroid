@@ -19,8 +19,10 @@
 package Abstract;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.Gravity;
@@ -33,6 +35,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,7 +52,12 @@ public abstract class display_sensor_info {
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        timestamp.setReferenceTime(Value_timestamp);
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+        if (SP_params.getBoolean("widget_timestamp", false)) {
+            timestamp.setText(getDate(Value_timestamp.toString()));
+        } else {
+            timestamp.setReferenceTime(Value_timestamp);
+        }
         try {
             float formatedValue = 0;
             if (loc_Value != null) {
@@ -257,4 +265,13 @@ public abstract class display_sensor_info {
         }
     }
 
+    public static String getDate(String timeStampStr) {
+        try {
+            DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+            Date netDate = (new Date(Long.parseLong(timeStampStr)));
+            return sdf.format(netDate);
+        } catch (Exception ignored) {
+            return timeStampStr;
+        }
+    }
 }

@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -243,12 +245,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Value_timestamp);
 
-                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    TV_Timestamp.setReferenceTime(Value_timestamplong);
-
+                    SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                    if (SP_params.getBoolean("widget_timestamp", false)) {
+                        TV_Timestamp.setText(display_sensor_info.getDate(Value_timestamp.toString()));
+                    } else {
+                        TV_Timestamp.setReferenceTime(Value_timestamplong);
+                    }
                     value.setText(getStringResourceByName(new_val));
                     //To have the icon colored as it has no state
                     change_this_icon(2);

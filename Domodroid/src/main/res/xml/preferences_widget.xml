@@ -21,6 +21,11 @@
             android:summaryOn="@string/widgets_alternative"
             android:title="@string/widget_choice" />
         <CheckBoxPreference
+            android:key="widget_timestamp"
+            android:summaryOff="@string/option_widget_timestamp_ago"
+            android:summaryOn="@string/option_widget_timestamp_date"
+            android:title="@string/option_widget_timestamp_title" />
+        <CheckBoxPreference
             android:icon="@drawable/ic_timeline_black_24dp"
             android:key="Graph_CHOICE"
             android:summaryOff="@string/Graph_normal"

@@ -946,6 +946,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mainMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
         return super.onCreateOptionsMenu(menu);

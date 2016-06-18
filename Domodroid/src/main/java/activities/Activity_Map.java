@@ -217,7 +217,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         try {
             listFeature = widgetUpdate.requestFeatures();
         } catch (Exception e) {
-            Tracer.e(mytag,e.toString());
+            Tracer.e(mytag, e.toString());
         }
 
         //listview feature
@@ -655,12 +655,13 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mainMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_map, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-   @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
             Tracer.d(mytag, "clic on drawertoggle");

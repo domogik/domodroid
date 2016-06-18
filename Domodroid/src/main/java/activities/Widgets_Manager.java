@@ -227,13 +227,34 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                 }
             } else if (Value_type.equals("list")) {
-                Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
-                Graphical_List list = new Graphical_List(Tracer, context, URL,
-                        widgetSize, session_type, id, zone, params, feature, widgetHandler);
-                list.setLayoutParams(layout_param);
-                Graphical_List.container = tmpPan;
-                tmpPan.addView(list);
-                Tracer.i(mytag, "   ==> Graphical_List");
+                if (!feature.getDevice_feature_model_id().startsWith("DT_ColorRGB")) {
+                    Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
+                    Graphical_List list = new Graphical_List(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    list.setLayoutParams(layout_param);
+                    Graphical_List.container = tmpPan;
+                    tmpPan.addView(list);
+                    Tracer.i(mytag, "   ==> Graphical_List");
+                } else {
+                    if (!feature.getParameters().contains("command_type")) {
+                        Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
+                        info = new Graphical_Info(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
+                        info.setLayoutParams(layout_param);
+                        info.with_graph = true;
+                        Graphical_Info.container = tmpPan;
+                        tmpPan.addView(info);
+                        Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
+                    } else {
+                        Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
+                        Graphical_Color color = new Graphical_Color(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                        Graphical_Color.container = tmpPan;
+                        tmpPan.addView(color);
+                        Tracer.i(mytag, "   ==> Graphical_Color");
+                    }
+
+                }
             } else if (Value_type.equals("string") || Value_type.equals("datetime")) {
                 //New widget for callerID
                 if (feature.getDevice_feature_model_id().contains("call")) {
@@ -250,7 +271,7 @@ class Widgets_Manager {
                     tmpPan.addView(cam);
                     Tracer.i(mytag, "   ==> Graphical_Cam");
                 } else if (feature.getParameters().contains("command_type")) {
-                    if (State_key.equals("Set RGB color")) {
+                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB")) {
                         Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                         Graphical_Color color = new Graphical_Color(Tracer, context, URL,
                                 widgetSize, session_type, id, zone, params, feature, widgetHandler);

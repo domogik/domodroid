@@ -22,7 +22,8 @@
     $ 1.4
       % Version 21
       _ 2016-xx-xx
-
+      * #52 New widget option for timestamp display (from 3min ago/ since 06/11/2016 20h30).
+      * Close #112 menu button no more opening menu.
       % Version 20
       _ 2016-06-12
       * Correct bug on ICS and menu.

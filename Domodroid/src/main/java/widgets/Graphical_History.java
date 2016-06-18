@@ -254,18 +254,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     }
                 }
             } else if (api_version >= 0.8f) {
-                //Prepare timestamp conversion
-                Calendar calendar = Calendar.getInstance();
-                TimeZone tz = TimeZone.getDefault();
-                calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                java.util.Date currenTimeZone;
+                //Use abstract class to get timestamp conversion
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        currenTimeZone = new java.util.Date((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                        map.put("date", sdf.format(currenTimeZone));
+                        String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                        map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {

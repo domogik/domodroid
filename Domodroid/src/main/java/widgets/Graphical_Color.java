@@ -342,7 +342,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
                         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.getDate(Value_timestamplong.toString()));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }

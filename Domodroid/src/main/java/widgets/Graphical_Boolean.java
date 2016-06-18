@@ -158,11 +158,11 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                 if (msg.what == 9999) {
+                if (msg.what == 9999) {
                     if (session == null)
                         return;
-                     String status = session.getValue();
-                     String Value_timestamp = session.getTimestamp();
+                    String status = session.getValue();
+                    String Value_timestamp = session.getTimestamp();
 
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
@@ -172,7 +172,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
 
                         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.getDate(Value_timestamplong.toString()));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }

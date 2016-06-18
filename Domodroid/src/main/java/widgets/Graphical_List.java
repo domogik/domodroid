@@ -250,7 +250,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
                     SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
                     if (SP_params.getBoolean("widget_timestamp", false)) {
-                        TV_Timestamp.setText(display_sensor_info.getDate(Value_timestamp.toString()));
+                        TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), context));
                     } else {
                         TV_Timestamp.setReferenceTime(Value_timestamplong);
                     }

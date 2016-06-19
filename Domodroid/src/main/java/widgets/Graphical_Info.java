@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -48,6 +49,7 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Graphics_Manager;
 import database.WidgetUpdate;
+import misc.Color_Result;
 import misc.tracerengine;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
@@ -79,6 +81,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
     private float Float_graph_size;
+    private Color_Result resultView;
 
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
@@ -138,10 +141,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
+        //TV_Timestamp
         TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
+
+        //color view if need
+        resultView = new Color_Result(context);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
@@ -224,11 +231,30 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
 
-                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
+                        LL_featurePan.removeView(resultView);
+                        LL_featurePan.removeView(TV_Value);
+                        LL_featurePan.removeView(TV_Timestamp);
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color sting=" + loc_Value);
+                        loc_Value = "#" + loc_Value.toUpperCase();
+                        resultView.color = loc_Value;
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
+                        LL_featurePan.addView(resultView);
+                        LL_featurePan.addView(TV_Timestamp);
+
+                    } else {
+                        display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    }
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {

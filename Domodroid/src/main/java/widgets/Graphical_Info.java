@@ -234,7 +234,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
+                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                         LL_featurePan.removeView(resultView);
                         LL_featurePan.removeView(TV_Value);
                         LL_featurePan.removeView(TV_Timestamp);
@@ -243,6 +243,23 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                         Tracer.d(mytag, "debug_color sting=" + loc_Value);
                         loc_Value = "#" + loc_Value.toUpperCase();
                         resultView.color = loc_Value;
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
+                        LL_featurePan.addView(resultView);
+                        LL_featurePan.addView(TV_Timestamp);
+
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
+                        LL_featurePan.removeView(resultView);
+                        LL_featurePan.removeView(TV_Value);
+                        LL_featurePan.removeView(TV_Timestamp);
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color sting=" + loc_Value);
+                        resultView.colorrgb = loc_Value;
                         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
                             TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));

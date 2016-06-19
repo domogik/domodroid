@@ -76,6 +76,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     public int rgbHue = 0;
     private int rgbX = 0;
     private int rgbY = 0;
+    private int r, g, b;
 
     private TextView title7;
     private TextView title8;
@@ -374,7 +375,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         }
                         break;
                 }
-                int r, g, b;
                 int value_save = argb;
                 r = ((argb >> 16) & 0xFF);
                 g = ((argb >> 8) & 0xFF);
@@ -489,9 +489,12 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         argb = Color.HSVToColor(hsvCurrent);
         resultView.hsvCurrent = hsvCurrent;
         argbS = Integer.toHexString((argb >> 16) & 0xFF) + Integer.toHexString((argb >> 8) & 0xFF) + Integer.toHexString((argb) & 0xFF);
-        title7.setText(t7s + " : " + ((argb >> 16) & 0xFF));
-        title8.setText(t8s + " : " + ((argb >> 8) & 0xFF));
-        title9.setText(t9s + " : " + ((argb) & 0xFF));
+        r = ((argb >> 16) & 0xFF);
+        g = ((argb >> 8) & 0xFF);
+        b = ((argb) & 0xFF);
+        title7.setText(t7s + " : " + r);
+        title8.setText(t8s + " : " + g);
+        title9.setText(t9s + " : " + b);
         resultView.invalidate();
     }
 
@@ -542,10 +545,14 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      if (api_version >= 0.7f) {
                                          Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=";
                                          if ((argb != 0) && switch_state) {
-                                             String srgb = Integer.toHexString(argb);
-                                             if (srgb.length() > 6)
-                                                 srgb = srgb.substring(2);
-                                             Url2send += srgb;
+                                             if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                                                 String srgb = Integer.toHexString(argb);
+                                                 if (srgb.length() > 6)
+                                                     srgb = srgb.substring(2);
+                                                 Url2send += srgb;
+                                             } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
+                                                 Url2send += r + "," + g + "," + b;
+                                             }
                                          } else {
                                              String State = "";
                                              if (switch_state) {

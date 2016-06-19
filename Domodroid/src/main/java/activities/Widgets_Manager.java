@@ -271,7 +271,7 @@ class Widgets_Manager {
                     tmpPan.addView(cam);
                     Tracer.i(mytag, "   ==> Graphical_Cam");
                 } else if (feature.getParameters().contains("command_type")) {
-                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB")) {
+                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                         Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                         Graphical_Color color = new Graphical_Color(Tracer, context, URL,
                                 widgetSize, session_type, id, zone, params, feature, widgetHandler);

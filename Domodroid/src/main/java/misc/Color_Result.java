@@ -10,6 +10,7 @@ import android.view.View;
 public class Color_Result extends View {
     public float[] hsvCurrent = {1, 1, 1};
     private final Paint mPaint;
+    public String color;
 
     public Color_Result(Context context) {
         super(context);
@@ -18,7 +19,11 @@ public class Color_Result extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        mPaint.setColor(Color.HSVToColor(hsvCurrent));
+        if (color == null) {
+            mPaint.setColor(Color.HSVToColor(hsvCurrent));
+        } else {
+            mPaint.setColor(Color.parseColor(color));
+        }
         canvas.drawRect(0, 10, 100, 100, mPaint);
     }
 

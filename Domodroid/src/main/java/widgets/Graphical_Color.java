@@ -552,6 +552,23 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                                  Url2send += srgb;
                                              } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
                                                  Url2send += r + "," + g + "," + b;
+                                             } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
+                                                 int computedC, computedM, computedY;
+                                                 int minCMY;
+
+                                                 computedC = 1 - (r / 255);
+                                                 computedM = 1 - (g / 255);
+                                                 computedY = 1 - (b / 255);
+
+                                                 if (r == 0 && g == 0 && b == 0) {
+                                                     minCMY = 1;
+                                                 } else {
+                                                     minCMY = Math.min(computedC, Math.min(computedM, computedY));
+                                                 }
+                                                 computedC = (computedC - minCMY) / (1 - minCMY);
+                                                 computedM = (computedM - minCMY) / (1 - minCMY);
+                                                 computedY = (computedY - minCMY) / (1 - minCMY);
+                                                 Url2send += computedC + "," + computedM + "," + computedY + "," + minCMY;
                                              }
                                          } else {
                                              String State = "";

@@ -268,6 +268,22 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                         }
                         LL_featurePan.addView(resultView);
                         LL_featurePan.addView(TV_Timestamp);
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
+                        LL_featurePan.removeView(resultView);
+                        LL_featurePan.removeView(TV_Value);
+                        LL_featurePan.removeView(TV_Timestamp);
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color sting=" + loc_Value);
+                        resultView.colorCMYK = loc_Value;
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
+                        LL_featurePan.addView(resultView);
+                        LL_featurePan.addView(TV_Timestamp);
 
                     } else {
                         display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
@@ -292,7 +308,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
                         } else change_this_icon(2);
                     }
-                } else if (msg.what == 9998) {
+                } else if (msg.what == 9998)
+
+                {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
                     session = null;
@@ -319,7 +337,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null) {
+        if (cache_engine != null)
+
+        {
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {

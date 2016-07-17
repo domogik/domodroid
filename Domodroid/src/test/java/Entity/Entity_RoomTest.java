@@ -1,12 +1,14 @@
 package Entity;
 
+import android.test.AndroidTestCase;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Created by tiki on 06/06/2016.
  */
-public class Entity_RoomTest {
+public class Entity_RoomTest extends AndroidTestCase {
     Entity_Room room = new Entity_Room(null, null, null, 0, null, 0, null);
 
     @Test

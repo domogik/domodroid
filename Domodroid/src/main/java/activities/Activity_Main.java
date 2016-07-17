@@ -337,7 +337,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         VG_parent = (ViewGroup) findViewById(R.id.home_container);
 
         LL_house_map = new LinearLayout(this);
-        LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
 
@@ -354,7 +354,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 0, "", null);
         map.setPadding(5, 0, 0, 0);
 
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
 
         house.setLayoutParams(param);
         house.setOnClickListener(new OnClickListener() {

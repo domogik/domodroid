@@ -47,11 +47,11 @@ public class Activity_Cam extends AppCompatActivity {
 
         //video panel
         FrameLayout FL_viewPan = new FrameLayout(this);
-        FL_viewPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        FL_viewPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         //info panel
         LinearLayout LL_infoPan = new LinearLayout(this);
-        LL_infoPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        LL_infoPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         LL_infoPan.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         LL_infoPan.setPadding(0, 0, 0, 20);
 
@@ -71,7 +71,7 @@ public class Activity_Cam extends AppCompatActivity {
         TV_frameRate.setText(getText(R.string.frame_rate_default));
 
         mv = new MjpegViewAsync(this);
-        mv.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        mv.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
         LL_infoPan.addView(TV_name);
         LL_infoPan.addView(TV_frameRate);

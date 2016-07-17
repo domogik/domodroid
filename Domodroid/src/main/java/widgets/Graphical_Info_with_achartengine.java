@@ -467,7 +467,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         Vector<Vector<Float>> values = new Vector<>();
         chartContainer = new LinearLayout(context);
         // Getting a reference to LinearLayout of the MainActivity Layout
-        chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         chartContainer.setGravity(Gravity.CENTER_VERTICAL);
         chartContainer.setPadding((int) size5, (int) size10, (int) size5, (int) size10);
 
@@ -782,12 +782,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 } catch (JSONException e) {
                     Tracer.d(mytag, "Acharengine failed" + e.toString());
                 }
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
                 LL_background.addView(chartContainer);
 
             } else {
                 LL_background.removeView(chartContainer);
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             }
         }
     }

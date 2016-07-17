@@ -58,7 +58,7 @@ class Widgets_Manager {
         domodb.owner = "Widgets_Manager.loadActivWidgets";
         Entity_Feature[] listFeature = domodb.requestFeatures(id, zone);
 
-        LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
+        LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
         mainPan.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout leftPan = new LinearLayout(context);
@@ -345,7 +345,7 @@ class Widgets_Manager {
         Activity_Main.listItem = new ArrayList<>();
         HashMap<String, String> map = new HashMap<>();
 
-        LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
+        LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
         mainPan.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout leftPan = new LinearLayout(context);
@@ -425,7 +425,7 @@ class Widgets_Manager {
         map.put("icon", Integer.toString(R.drawable.ic_action_undo));
         Activity_Main.listItem.add(map);
 
-        LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
+        LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(context);
         mainPan.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout leftPan = new LinearLayout(context);

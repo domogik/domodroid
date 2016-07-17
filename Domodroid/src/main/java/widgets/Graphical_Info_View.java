@@ -331,9 +331,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(size10);
         paint.setColor(Color.BLACK);
-        can.drawText(minf + unit, gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
-        can.drawText(maxf + unit, gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
-        can.drawText(avgf + unit, gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
+        can.drawText(minf + " " + unit, gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
+        can.drawText(maxf + " " + unit, gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
+        can.drawText(avgf + " " + unit, gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
 
         //temp values
         DashPathEffect dashPath2 = new DashPathEffect(new float[]{3, 8}, 1);

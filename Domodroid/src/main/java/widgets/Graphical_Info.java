@@ -159,7 +159,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
             //feature panel 2 which will contain graphic
             featurePan2 = new LinearLayout(context);
-            featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
@@ -386,7 +386,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     e.printStackTrace();
                 }
 
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
                 LL_background.addView(featurePan2_buttons);
                 LL_background.addView(featurePan2);
                 canvas.activate = true;
@@ -394,7 +394,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             } else {
                 LL_background.removeView(featurePan2_buttons);
                 LL_background.removeView(featurePan2);
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
                 canvas.activate = false;    //notify Graphical_Info_View to stop its UpdateTimer
             }
         }

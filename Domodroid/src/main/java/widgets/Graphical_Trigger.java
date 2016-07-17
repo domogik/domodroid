@@ -145,7 +145,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 
         //button animated
         trigger = new Graphical_Trigger_Button(context);
-        trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+        trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         trigger.setOnClickListener(this);
 
         //unusable

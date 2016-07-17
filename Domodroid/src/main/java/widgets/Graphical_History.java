@@ -293,13 +293,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
             getlastvalue();
             Tracer.d(mytag, "addView(listeChoices)");
             LL_background.addView(listeChoices);
         } else {
             LL_background.removeView(listeChoices);
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         }
 
     }

@@ -158,17 +158,17 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
         //linearlayout horizontal body
         LinearLayout bodyPanHorizontal = new LinearLayout(context);
-        bodyPanHorizontal.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.CENTER_VERTICAL));
+        bodyPanHorizontal.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER_VERTICAL));
         bodyPanHorizontal.setOrientation(LinearLayout.HORIZONTAL);
 
         //right panel with different info and seekbars
         FrameLayout rightPan = new FrameLayout(context);
-        rightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        rightPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         rightPan.setPadding(0, 0, 10, 0);
 
         // panel
         LinearLayout leftPan = new LinearLayout(context);
-        leftPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.BOTTOM));
+        leftPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.BOTTOM));
         leftPan.setOrientation(LinearLayout.VERTICAL);
         leftPan.setGravity(Gravity.CENTER_VERTICAL);
         leftPan.setPadding(4, 5, 0, 0);
@@ -184,7 +184,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         seekBarVaria.setProgress(0);
         if (api_version < 0.7f)
             seekBarVaria.setMax(valueMax - valueMin);
-        seekBarVaria.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
+        seekBarVaria.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
         seekBarVaria.setProgressDrawable(getResources().getDrawable(R.drawable.bgseekbarvaria));
         seekBarVaria.setThumb(getResources().getDrawable(R.drawable.buttonseekbar));
         seekBarVaria.setThumbOffset(-3);

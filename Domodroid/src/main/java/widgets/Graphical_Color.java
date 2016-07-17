@@ -167,7 +167,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         featurePan2 = new LinearLayout(context);
         featurePan2.setOrientation(LinearLayout.HORIZONTAL);
         //featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-        featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         featurePan2.setGravity(Gravity.CENTER_VERTICAL);
         featurePan2.setPadding(20, 0, 0, 10);
 
@@ -259,7 +259,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //right panel
         LinearLayout color_RightPan = new LinearLayout(context);
         color_RightPan.setOrientation(LinearLayout.VERTICAL);
-        color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.RIGHT));
+        color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.RIGHT));
         color_RightPan.setPadding(20, 0, 0, 10);
 
         //Color result

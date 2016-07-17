@@ -118,6 +118,8 @@ public class Graphics_Manager {
                         return R.drawable.area_basement;
                     case "basement2":
                         return R.drawable.area_basement2;
+                    case "garage2":
+                        return R.drawable.area_garage2;
                     case "garden":
                         return R.drawable.area_garden;
                     case "ground_floor":
@@ -226,6 +228,8 @@ public class Graphics_Manager {
                         return R.drawable.area_basement;
                     case "basement2":
                         return R.drawable.area_basement2;
+                    case "garage2":
+                        return R.drawable.area_garage2;
                     case "garden":
                         return R.drawable.area_garden;
                     case "ground_floor":
@@ -337,6 +341,8 @@ public class Graphics_Manager {
                         return R.drawable.area_basement;
                     case "basement2":
                         return R.drawable.area_basement2;
+                    case "garage2":
+                        return R.drawable.area_garage2;
                     case "garden":
                         return R.drawable.area_garden;
                     case "ground_floor":
@@ -446,6 +452,8 @@ public class Graphics_Manager {
                         return R.drawable.area_basement;
                     case "basement2":
                         return R.drawable.area_basement2;
+                    case "garage2":
+                        return R.drawable.area_garage2;
                     case "garden":
                         return R.drawable.area_garden;
                     case "ground_floor":

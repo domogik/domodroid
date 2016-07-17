@@ -273,15 +273,7 @@ class Widgets_Manager {
 
                 }
             } else if (Value_type.equals("string") || Value_type.equals("datetime")) {
-                //New widget for callerID
-                if (feature.getDevice_feature_model_id().contains("call")) {
-                    Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
-                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
-                    info_with_history.setLayoutParams(layout_param);
-                    Graphical_History.container = tmpPan;
-                    tmpPan.addView(info_with_history);
-                    Tracer.i(mytag, "   ==> Graphical_history");
-                } else if (feature.getDevice_feature_model_id().contains("camera")) {
+                if (feature.getDevice_feature_model_id().contains("camera")) {
                     Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
                             widgetSize, session_type, id, zone, params, feature, widgetHandler);
                     Graphical_Cam.container = tmpPan;
@@ -303,6 +295,7 @@ class Widgets_Manager {
                         tmpPan.addView(info_commands);
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
+                    //New widget for callerID apply to all other string sensor
                 } else {
                     Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
                             widgetSize, session_type, id, zone, params, feature, widgetHandler);

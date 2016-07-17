@@ -22,6 +22,8 @@
     $ 1.4
       % Version 21
       _ 2016-xx-xx
+      * Change widget for all string to history like for call number to get last 5 value.
+      * #91 Graph display scaled unit.
       * #52 New widget option for timestamp display (from 3min ago/ since 06/11/2016 20h30).
       * Close #71 display color in sensor for DT_ColorRGB and DT_ColorRGBHexa.
       * Close #112 menu button no more opening menu.

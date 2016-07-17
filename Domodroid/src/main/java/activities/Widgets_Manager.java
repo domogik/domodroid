@@ -178,13 +178,30 @@ class Widgets_Manager {
                     tmpPan.addView(trigger);
                     Tracer.i(mytag, "   ==> Graphical_Trigger");
                 } else {
-                    info = new Graphical_Info(Tracer, context, URL,
-                            widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
-                    info.setLayoutParams(layout_param);
-                    info.with_graph = false;
-                    Graphical_Info.container = tmpPan;
-                    tmpPan.addView(info);
-                    Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
+                    if (params.getBoolean("Graph_CHOICE", false)) {
+                        Tracer.d(mytag, "add Graphical_Info_with_achartengine for " + label + " (" + DevId + ") key=" + State_key);
+                        Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                        info_with_achartengine.setLayoutParams(layout_param);
+                        Graphical_Info_with_achartengine.container = tmpPan;
+                        tmpPan.addView(info_with_achartengine);
+                    /* Todo when #89
+                    Graphical_Info_with_mpandroidchart info_with_mpandroidchart = new Graphical_Info_with_mpandroidchart(Tracer, context, URL,
+                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    info_with_mpandroidchart.setLayoutParams(layout_param);
+                    Graphical_Info_with_mpandroidchart.container = tmpPan;
+                    tmpPan.addView(info_with_mpandroidchart);
+                    Tracer.i(mytag, "   ==> Graphical_Info_with_achartengine + Graphic");
+                    */
+                    } else {
+                        info = new Graphical_Info(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
+                        info.setLayoutParams(layout_param);
+                        info.with_graph = false;
+                        Graphical_Info.container = tmpPan;
+                        tmpPan.addView(info);
+                        Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
+                    }
                 }
             } else if (State_key.equals("color")) {
                 Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
@@ -287,13 +304,12 @@ class Widgets_Manager {
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
                 } else {
-                    info = new Graphical_Info(Tracer, context, URL,
-                            widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
-                    info.setLayoutParams(layout_param);
-                    info.with_graph = false;
-                    Graphical_Info.container = tmpPan;
-                    tmpPan.addView(info);
-                    Tracer.i(mytag, "   ==> Graphical_Info + No graphic !!!");
+                    Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
+                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    info_with_history.setLayoutParams(layout_param);
+                    Graphical_History.container = tmpPan;
+                    tmpPan.addView(info_with_history);
+                    Tracer.i(mytag, "   ==> Graphical_history");
                 }
                 //used by knx.HVACMode 	HVACMode 	actuator 	knx.HVACMode
             } else if (Value_type.equals("video")) {

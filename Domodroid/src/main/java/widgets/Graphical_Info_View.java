@@ -115,7 +115,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final float size7;
     private final float api_version;
     private Boolean SSL;
-    private String unit;
+    private String unit = "";
 
     public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params, String parameters) {
         super(context);
@@ -134,6 +134,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
         } catch (JSONException jsonerror) {
             Tracer.i(mytag, "No unit for this feature");
         }
+        if (unit == "null")
+            unit = "";
 
         values = new Vector<>();
         activate = true;
@@ -350,7 +352,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             String s = String.format("%.2f", right_value);
             //Todo add unit but they are displayed out of screen
             //can.drawText(s + unit, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
-            can.drawText(s , gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            can.drawText(s, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
         }
     }
 

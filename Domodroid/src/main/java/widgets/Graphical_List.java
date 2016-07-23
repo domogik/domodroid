@@ -86,6 +86,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private final int session_type;
     private final SharedPreferences params;
 
+    private boolean isopen = false;
     public Graphical_List(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Feature feature, Handler handler) {
@@ -114,6 +115,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.parameters = feature.getParameters();
         this.id = feature.getId();
         this.address = feature.getAddress();
+        this.isopen = false;
 
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
@@ -387,7 +389,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
-            if (LL_background.getHeight() != sizeint) {
+            if (!isopen) {
+                this.isopen = true;
                 Tracer.d(mytag, "on click");
                 try {
                     LL_background.removeView(featurePan2);
@@ -399,6 +402,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 Tracer.d(mytag, "addView(featurePan2)");
                 LL_background.addView(featurePan2);
             } else {
+                this.isopen = false;
                 LL_background.removeView(featurePan2);
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             }

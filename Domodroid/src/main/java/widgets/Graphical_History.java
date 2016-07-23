@@ -75,6 +75,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
+    private boolean isopen = false;
+    private int nb_item_for_history;
 
     public Graphical_History(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -103,6 +105,14 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         this.dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
         this.id = feature.getId();
+        this.isopen = false;
+        try {
+            String params_nb_item_for_history = params.getString("history_length", "5");
+            this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
+        } catch (Exception e) {
+            Tracer.e(mytag, "Error getting number of item to display");
+            this.nb_item_for_history = 5;
+        }
         myself = this;
         String stateS = "";
         mytag = "Graphical_History(" + dev_id + ")";
@@ -218,12 +228,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
-                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/5/");
-                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/5/", login, password, 10000, SSL);
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 10000, SSL);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/5");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/5", login, password, 10000, SSL);
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 10000, SSL);
                 json_LastValues = new JSONObject();
                 json_LastValues.put("stats", json_LastValues_0_4);
 
@@ -282,22 +292,24 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
     public void onClick(View arg0) {
         //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-        float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+        float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
         int sizeint = (int) size;
-        if (LL_background.getHeight() != sizeint) {
+        int currentint = LL_background.getHeight();
+        if (!isopen) {
             Tracer.d(mytag, "on click");
+            this.isopen = true;
             try {
                 LL_background.removeView(listeChoices);
                 Tracer.d(mytag, "removeView(listeChoices)");
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
             getlastvalue();
             Tracer.d(mytag, "addView(listeChoices)");
             LL_background.addView(listeChoices);
         } else {
+            this.isopen = false;
             LL_background.removeView(listeChoices);
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         }

@@ -877,11 +877,11 @@ public class MapView extends View {
                         paint_color.setAntiAlias(true);
                         //paint_color.setStyle(Paint.Style.FILL_AND_STROKE);
                         paint_color.setStyle(Paint.Style.FILL);
-                        String argbS = states;
+                        String argbS;
                         //Process RGB value
                         if (states.equals("off")) {
                             argbS = "#000000";
-                        } else if (argbS.equals("on")) {
+                        } else if (states.equals("on")) {
                             argbS = params.getString("COLORRGB", "#FFFFFF");    //Restore last known color, White by default
                         } else {
                             //To avoid http://tracker.domogik.org/issues/1972 here
@@ -1128,11 +1128,9 @@ public class MapView extends View {
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
             } else {
-                info = new Graphical_Info(Tracer, context, URL,
-                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
-                Graphical_Info.container = (FrameLayout) panel_widget;
-                info.with_graph = false;
-                panel_widget.addView(info);
+                Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(info_with_history);
             }
         }
 

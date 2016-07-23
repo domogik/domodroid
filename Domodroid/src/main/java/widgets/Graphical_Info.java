@@ -83,6 +83,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private float Float_graph_size;
     private Color_Result resultView;
 
+    private boolean isopen = false;
+
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Feature feature, Handler handler) {
@@ -112,6 +114,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
         mytag = "Graphical_Info (" + dev_id + ")";
+        this.isopen = false;
         String graph_size = params.getString("graph_size", "262.5");
         this.Float_graph_size = Float.valueOf(graph_size);
         try {
@@ -377,7 +380,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
-            if (LL_background.getHeight() != sizeint) {
+            if (!isopen) {
+                this.isopen = true;
                 try {
                     LL_background.removeView(featurePan2_buttons);
                     LL_background.removeView(featurePan2);
@@ -392,6 +396,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                 canvas.activate = true;
                 canvas.updateTimer();
             } else {
+                this.isopen = false;
                 LL_background.removeView(featurePan2_buttons);
                 LL_background.removeView(featurePan2);
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));

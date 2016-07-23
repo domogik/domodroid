@@ -121,6 +121,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
     private Float Float_graph_size;
+    private boolean isopen = false;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -151,6 +152,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.parameters = feature.getParameters();
         this.id = feature.getId();
         String graph_size = params.getString("graph_size", "262.5");
+        this.isopen = false;
         this.Float_graph_size = Float.valueOf(graph_size);
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
@@ -764,7 +766,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
-            if (LL_background.getHeight() != sizeint) {
+            if (!isopen) {
+                this.isopen = true;
                 try {
                     LL_background.removeView(chartContainer);
 
@@ -786,6 +789,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 LL_background.addView(chartContainer);
 
             } else {
+                this.isopen = false;
                 LL_background.removeView(chartContainer);
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             }

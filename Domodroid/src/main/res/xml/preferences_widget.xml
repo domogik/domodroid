@@ -37,6 +37,12 @@
             android:inputType="number"
             android:key="graph_size"
             android:title="@string/option_graph_height" />
+        <EditTextPreference
+            android:defaultValue="5"
+            android:icon="@drawable/ic_drawer"
+            android:inputType="number"
+            android:key="history_length"
+            android:title="Number of item to display in history" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:icon="@drawable/ic_stay_current_landscape_black_24dp"

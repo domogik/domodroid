@@ -275,7 +275,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
 
         SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
-                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.phone_value, R.id.phone_date});
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
         listeChoices.setAdapter(adapter_feature);
         listeChoices.setScrollingCacheEnabled(false);
     }

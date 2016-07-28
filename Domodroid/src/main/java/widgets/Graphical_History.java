@@ -20,6 +20,7 @@ package widgets;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -36,6 +37,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -77,6 +79,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private final SharedPreferences params;
     private boolean isopen = false;
     private int nb_item_for_history;
+    private TextView state_key_view;
+    private String stateS;
+    private Typeface typefaceweather;
+    private Typeface typefaceawesome;
+
+    private String test_unite;
 
     public Graphical_History(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -114,7 +122,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             this.nb_item_for_history = 5;
         }
         myself = this;
-        String stateS = "";
         mytag = "Graphical_History(" + dev_id + ")";
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -122,10 +129,20 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
+        if (stateS.equals("null"))
+            stateS = state_key;
+        test_unite = "";
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            test_unite = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
         setOnClickListener(this);
 
         //state key
-        TextView state_key_view = new TextView(context);
+        state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -140,6 +157,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
@@ -162,7 +181,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);

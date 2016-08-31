@@ -134,7 +134,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         } catch (JSONException jsonerror) {
             Tracer.i(mytag, "No unit for this feature");
         }
-        if (unit == "null")
+        if (unit.equals("null"))
             unit = "";
 
         values = new Vector<>();

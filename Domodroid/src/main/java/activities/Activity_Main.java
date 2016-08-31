@@ -643,8 +643,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     HashMap<String, String> map = listItem.get(position);
-                    if (map.get("type") == "action") {
-                        if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
+                    if (map.get("type").equals("action")) {
+                        if (map.get("name").equals(context.getApplicationContext().getResources().getString(R.string.action_back))) {
                             Tracer.v(mytag, "clic move back in navigation drawer");
                             historyPosition--;
                             refresh();
@@ -653,7 +653,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
                         historyPosition++;
                         history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
-                        if (map.get("type") == "room") {
+                        if (map.get("type").equals("room")) {
                             //close navigationdrawer if select a room
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
@@ -664,7 +664,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     Tracer.d(mytag, " On Longclick Place selected at Position = " + position);
                     HashMap<String, String> map = listItem.get(position);
-                    if (map.get("type") == "action") {
+                    if (map.get("type").equals("action")) {
                         Tracer.d(mytag, "long clic on action button");
                         return false;
                     } else {

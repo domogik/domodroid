@@ -221,7 +221,6 @@
   <string name="isolated_thundershower">Lokaal Onweer</string>
   <string name="info3200">Niet mogelijk</string>
   <string name="not_available">Niet mogelijk</string>
-  <string name="info48">--</string>
   <string name="butler">butler</string>
   <string name="action_settings">Instellingen</string>
   <string name="title_activity_main">Domogik Butler</string>
@@ -240,4 +239,6 @@
   <string name="stop">Stop</string>
   <string name="rename">Herbenoem</string>
   <string name="delete">Verwijder</string>
+  <string name="temperature_c">Temperatuur °C</string>
+  <string name="temperature_f">Temperatuur °F</string>
 </resources>

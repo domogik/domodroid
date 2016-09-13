@@ -148,7 +148,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
 
         //boolean on/off
         bool = new ImageView(context);
-        bool.setImageResource(R.drawable.boolean_NA);
+        bool.setImageResource(R.drawable.boolean_na);
         bool.setLayoutParams(params);
 
         super.LL_infoPan.addView(state);
@@ -200,6 +200,10 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
                                     Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
                                 }
+                            } else{
+                                bool.setImageResource(R.drawable.boolean_na);
+                                change_this_icon(0);
+                                state.setText(stateS + " : " + "N/A");
                             }
                         } catch (Exception e) {
                             Tracer.e(mytag, "handler error device " + name);

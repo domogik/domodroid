@@ -148,7 +148,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
 
         //boolean on/off
         bool = new ImageView(context);
-        bool.setImageResource(R.drawable.boolean_off);
+        bool.setImageResource(R.drawable.boolean_NA);
         bool.setLayoutParams(params);
 
         super.LL_infoPan.addView(state);

@@ -30,6 +30,7 @@
       * Close #71 display color in sensor for DT_ColorRGB and DT_ColorRGBHexa.
       * Close #112 menu button no more opening menu.
       * Close #60 Map icon and text relative position.
+      * #52 Add option to select timestamp as date or ago time.
       % Version 20
       _ 2016-06-12
       * Correct bug on ICS and menu.

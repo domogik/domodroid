@@ -18,9 +18,11 @@
 package widgets;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -40,11 +42,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
@@ -180,7 +179,19 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    //TODO improve map opening
+                    if (feature.getDevice_feature_model_id().startsWith("DT_CoordD.")) {
+                        final String url = "http://google.com/maps/@" + new_val;
+                        TV_Value.setOnClickListener(new OnClickListener() {
+                                                        public void onClick(View v) {
+                                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                                            context.startActivity(intent);
+                                                        }
+                                                    }
 
+                        );
+
+                    }
                     display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //To have the icon colored as it has no state

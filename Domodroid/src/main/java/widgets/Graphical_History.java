@@ -201,10 +201,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                                                     }
 
                         );
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                        TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                        TV_Value.setText(new_val + " \uF064");
+                    } else {
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     }
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-                    TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
-                    TV_Value.setText(new_val + " \uF064");
+
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);

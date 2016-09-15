@@ -665,5 +665,6 @@
         <string name="osd_delay">Délais OSD</string>
         <string name="osd_row">Ligne OSD</string>
         <string name="osd_text">Texte OSD</string>
+        <string name="missing_maps_applications">Veuillez installer une application de Cartes</string>
 </resources>
 

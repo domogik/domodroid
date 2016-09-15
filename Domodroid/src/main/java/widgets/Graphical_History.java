@@ -190,18 +190,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         //final String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%s", new_val);
                         TV_Value.setOnClickListener(new OnClickListener() {
                                                         public void onClick(View v) {
-                                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                                                             try {
-                                                                context.startActivity(intent);
-                                                            } catch (ActivityNotFoundException ex) {
-                                                                try {
-                                                                    Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                                    context.startActivity(unrestrictedIntent);
-                                                                } catch (ActivityNotFoundException innerEx) {
-                                                                    //todo to translate
-                                                                    Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
-                                                                }
+                                                                Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                                context.startActivity(unrestrictedIntent);
+                                                            } catch (ActivityNotFoundException innerEx) {
+                                                                //todo to translate
+                                                                Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
                                                             }
                                                         }
                                                     }

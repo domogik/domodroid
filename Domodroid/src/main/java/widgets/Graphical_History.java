@@ -18,6 +18,7 @@
 package widgets;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -34,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
@@ -44,6 +46,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
@@ -181,11 +184,25 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
                     //TODO improve map opening
                     if (feature.getDevice_feature_model_id().startsWith("DT_CoordD.")) {
-                        final String url = "http://google.com/maps/@" + new_val;
+                        //final String uri = "http://google.com/maps/@" + new_val;
+                        //String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
+                        final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val);
+                        //final String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%s", new_val);
                         TV_Value.setOnClickListener(new OnClickListener() {
                                                         public void onClick(View v) {
-                                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                                            context.startActivity(intent);
+                                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                                                            try {
+                                                                context.startActivity(intent);
+                                                            } catch (ActivityNotFoundException ex) {
+                                                                try {
+                                                                    Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                                    context.startActivity(unrestrictedIntent);
+                                                                } catch (ActivityNotFoundException innerEx) {
+                                                                    //todo to translate
+                                                                    Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
+                                                                }
+                                                            }
                                                         }
                                                     }
 

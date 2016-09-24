@@ -262,7 +262,7 @@
         <string name="temperature">Température</string>
         <string name="tv">TV</string>
         <string name="ventilation">Ventilation</string>
-        <string name="water">Compteur d\'eau</string>
+        <string name="water">eau</string>
         <string name="water_tank">Cuves / Niveaux</string>
         <string name="window">Fenêtres</string>
         <string name="kitchen">Cuisine</string>
@@ -635,6 +635,10 @@
         <string name="make">Fabricant</string>
         <string name="odometer">Compteur kilométrique</string>
         <string name="position">Position</string>
+        <string name="ignition_status">Moteur</string>
+        <string name="highbeam_status">Feux de route</string>
+        <string name="lowbeam_status">Feux de croisement</string>
+        <string name="headlight_status">Feux de position</string>
         <string name="postal_code">Code postal</string>
         <string name="sensor_script_info_humidity">Script capteur humidité</string>
         <string name="sensor_script_info_openclose">Script capteur ouvert/fermé</string>

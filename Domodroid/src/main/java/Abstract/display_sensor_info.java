@@ -125,6 +125,9 @@ public abstract class display_sensor_info {
                         } else if (state_key.contains("temperature")) {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
+                        } else if (state_key.equalsIgnoreCase("weight")) {
+                            state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
+                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf24e;"), TextView.BufferType.SPANNABLE);
                         }
                         value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;

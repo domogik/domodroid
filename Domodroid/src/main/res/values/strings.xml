@@ -689,6 +689,10 @@
     <string name="fuel_level">Fuel Level</string>
     <string name="set_away">Set Away</string>
     <string name="away">Away</string>
+    <string name="bone">Bone</string>
+    <string name="muscle">Muscle</string>
+    <string name="fat">Fat</string>
+    <string name="weight">Weight</string>
     <string name="postal_code">Postal code</string>
     <string name="Widget_longclic_menu_title">What do you want to do with this widget?</string>
     <string name="action_back">Move back</string>

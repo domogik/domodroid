@@ -20,8 +20,12 @@
   </head>
   <body>
     $ 1.4
-      % Version 22
+      % Version 23
       _ 2016-xx-xx
+      % Version 22
+      _ 2016-09-25
+      * Some translation for xee and body blugin
+      * Really fix #114 Range widget do not display command name in 0.4+
       % Version 21
       _ 2016-xx-xx
 

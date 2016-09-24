@@ -173,11 +173,11 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         leftPan.setGravity(Gravity.CENTER_VERTICAL);
         leftPan.setPadding(4, 5, 0, 0);
 
-        state.setText(stateS);
-
         state = new TextView(context);
         state.setTextColor(Color.BLACK);
         state.setPadding(20, 0, 0, 0);
+        state.setText(stateS);
+
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 

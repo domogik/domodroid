@@ -186,30 +186,28 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     if (feature.getDevice_feature_model_id().startsWith("DT_CoordD.")) {
                         //final String uri = "http://google.com/maps/@" + new_val;
                         //String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
-                        final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val);
+                        final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")");
                         //final String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%s", new_val);
                         TV_Value.setOnClickListener(new OnClickListener() {
                                                         public void onClick(View v) {
-                                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                                                             try {
-                                                                context.startActivity(intent);
-                                                            } catch (ActivityNotFoundException ex) {
-                                                                try {
-                                                                    Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                                    context.startActivity(unrestrictedIntent);
-                                                                } catch (ActivityNotFoundException innerEx) {
-                                                                    //todo to translate
-                                                                    Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
-                                                                }
+                                                                Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                                context.startActivity(unrestrictedIntent);
+                                                            } catch (ActivityNotFoundException innerEx) {
+                                                                //todo to translate
+                                                                Toast.makeText(context, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
                                                             }
                                                         }
                                                     }
 
                         );
-
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                        TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                        TV_Value.setText(new_val + " \uF064");
+                    } else {
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     }
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);

@@ -680,6 +680,9 @@
     <string name="make">Make</string>
     <string name="carid">Car ID</string>
     <string name="ignition_status">Ignition Status</string>
+    <string name="highbeam_status">HighBeam Status</string>
+    <string name="lowbeam_status">LowBeam Status</string>
+    <string name="headlight_status">HeadLight Status</string>
     <string name="lock_status">Lock Status</string>
     <string name="odometer">Odometer</string>
     <string name="position">Position</string>

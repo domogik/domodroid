@@ -19,8 +19,11 @@
 package Abstract;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.Gravity;
@@ -33,6 +36,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,7 +53,12 @@ public abstract class display_sensor_info {
                                Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        timestamp.setReferenceTime(Value_timestamp);
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+        if (SP_params.getBoolean("widget_timestamp", false)) {
+            timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
+        } else {
+            timestamp.setReferenceTime(Value_timestamp);
+        }
         try {
             float formatedValue = 0;
             if (loc_Value != null) {
@@ -116,6 +125,9 @@ public abstract class display_sensor_info {
                         } else if (state_key.contains("temperature")) {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
+                        } else if (state_key.equalsIgnoreCase("weight")) {
+                            state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
+                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf24e;"), TextView.BufferType.SPANNABLE);
                         }
                         value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;
@@ -184,46 +196,24 @@ public abstract class display_sensor_info {
                 if (state_key.equalsIgnoreCase("current_sunset")) {
                     state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                     state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
-                    // Convert value to hour and in local language
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
-                    Date testDate = null;
-                    try {
-                        testDate = sdf.parse(loc_Value);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
-                    }
-                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                    String newFormat = formatter.format(testDate);
-                    value.setText(newFormat);
+                    value.setText(hour_convertion(Tracer, mytag, loc_Value));
                 } else if (state_key.equalsIgnoreCase("current_sunrise")) {
                     state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                     state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
-                    // Convert value to hour and in local language
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
-                    Date testDate = null;
-                    try {
-                        testDate = sdf.parse(loc_Value);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
-                    }
-                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                    String newFormat = formatter.format(testDate);
-                    value.setText(newFormat);
+                    value.setText(hour_convertion(Tracer, mytag, loc_Value));
                 } else if (state_key.equalsIgnoreCase("current_last_updated")) {
                     // convert value to translated date in locale settings
                     try {
                         loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
                         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
                         Date testDate = sdf.parse(loc_Value);
-                        Tracer.d(mytag + "Date conversion", "Works");
+                        Tracer.d(mytag + " Date conversion", "Works");
                         SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
                         String newFormat = formatter.format(testDate);
                         value.setText(newFormat);
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
+                        Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
                         value.setText(loc_Value);
                     }
                 } else if (state_key.equalsIgnoreCase("callerid")) {
@@ -257,4 +247,28 @@ public abstract class display_sensor_info {
         }
     }
 
+    public static String timestamp_convertion(String timeStampStr, Context context) {
+        try {
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+            DateFormat timeFormat = DateFormat.getTimeInstance();
+            Date netDate = (new Date(Long.parseLong(timeStampStr)));
+            return (dateFormat.format(netDate) + " - " + timeFormat.format(netDate));
+        } catch (Exception ignored) {
+            return timeStampStr;
+        }
+    }
+
+    public static String hour_convertion(tracerengine Tracer, String mytag, String hour) {
+        // Convert value to hour and in local language
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
+        Date testDate = null;
+        try {
+            testDate = sdf.parse(hour);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Tracer.e(mytag + "Date conversion", "Error: " + ex.toString());
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return formatter.format(testDate);
+    }
 }

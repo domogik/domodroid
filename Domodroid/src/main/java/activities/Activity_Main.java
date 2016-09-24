@@ -337,7 +337,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         VG_parent = (ViewGroup) findViewById(R.id.home_container);
 
         LL_house_map = new LinearLayout(this);
-        LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
 
@@ -354,7 +354,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 0, "", null);
         map.setPadding(5, 0, 0, 0);
 
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1.0f);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
 
         house.setLayoutParams(param);
         house.setOnClickListener(new OnClickListener() {
@@ -643,8 +643,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             listePlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     HashMap<String, String> map = listItem.get(position);
-                    if (map.get("type") == "action") {
-                        if (map.get("name") == context.getApplicationContext().getResources().getString(R.string.action_back)) {
+                    if (map.get("type").equals("action")) {
+                        if (map.get("name").equals(context.getApplicationContext().getResources().getString(R.string.action_back))) {
                             Tracer.v(mytag, "clic move back in navigation drawer");
                             historyPosition--;
                             refresh();
@@ -653,7 +653,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
                         historyPosition++;
                         history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
-                        if (map.get("type") == "room") {
+                        if (map.get("type").equals("room")) {
                             //close navigationdrawer if select a room
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
@@ -664,7 +664,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     Tracer.d(mytag, " On Longclick Place selected at Position = " + position);
                     HashMap<String, String> map = listItem.get(position);
-                    if (map.get("type") == "action") {
+                    if (map.get("type").equals("action")) {
                         Tracer.d(mytag, "long clic on action button");
                         return false;
                     } else {
@@ -946,6 +946,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mainMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main, menu);
         return super.onCreateOptionsMenu(menu);

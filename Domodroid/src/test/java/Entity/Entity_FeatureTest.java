@@ -1,18 +1,31 @@
 package Entity;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.test.AndroidTestCase;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Entity_FeatureTest {
-    Entity_Feature feature = new Entity_Feature(null, null, null, null, 0, 0, null, null, null, null, null, null, null, null);
+public class Entity_FeatureTest extends AndroidTestCase {
+    Entity_Feature client = new Entity_Feature(null, null, null, null, 0, 0, null, null, null, null, null, null, null, null);
+
+
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 
     @Test
     public void testSetGetId() throws Exception {
-        Integer Id = feature.getId();
+        Integer Id = client.getId();
         Assert.assertEquals(0, Id, 0);
 
-        feature.setId(125);
-        Id = feature.getId();
+        client.setId(125);
+        Id = client.getId();
         Assert.assertEquals(125, Id, 0);
     }
 
@@ -28,154 +41,164 @@ public class Entity_FeatureTest {
     */
     @Test
     public void testSetGetNormalDescription() throws Exception {
-        String description = feature.getDescription();
+        String description = client.getDescription();
         Assert.assertEquals(null, description);
 
-        feature.setName("Name");
-        description = feature.getDescription();
+        client.setName("Name");
+        description = client.getDescription();
         Assert.assertEquals("Name", description);
 
-        feature.setDescription("Description");
-        description = feature.getDescription();
+        client.setDescription("Description");
+        description = client.getDescription();
         Assert.assertEquals("Description", description);
 
-        feature.setName("Name");
-        feature.setDescription("");
-        description = feature.getDescription();
+        client.setName("Name");
+        client.setDescription("");
+        description = client.getDescription();
         Assert.assertEquals("Name", description);
 
-        feature.setDescription("Description");
-        feature.setId(125);
-        feature.Develop = true;
-        description = feature.getDescription();
+        client.setDescription("Description");
+        client.setId(125);
+        /* TODO find a way to handle share params in test
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+        SharedPreferences.Editor SP_prefEditor;
+        SP_prefEditor = SP_params.edit();
+        SP_prefEditor.putBoolean("DEV", true);
+        SP_prefEditor.commit();
+
+        description = client.getDescription();
         Assert.assertEquals("Description (125)", description);
 
-        feature.setName("Name");
-        feature.setDescription("");
-        feature.setId(125);
-        feature.Develop = true;
-        description = feature.getDescription();
+        client.setName("Name");
+        client.setDescription("");
+        client.setId(125);
+        client.Develop = true;
+        description = client.getDescription();
         Assert.assertEquals("Name (125)", description);
+        */
     }
 
 
     @Test
     public void testSetGetDevice_usage_id() throws Exception {
-        String device_usage_id = feature.getDevice_usage_id();
+        String device_usage_id = client.getDevice_usage_id();
         Assert.assertEquals(null, device_usage_id);
 
-        feature.setDevice_usage_id("Device_usage_id");
-        device_usage_id = feature.getDevice_usage_id();
+        client.setDevice_usage_id("Device_usage_id");
+        device_usage_id = client.getDevice_usage_id();
         Assert.assertEquals("Device_usage_id", device_usage_id);
     }
 
     @Test
     public void testGetAddress() throws Exception {
-        String address = feature.getAddress();
+        String address = client.getAddress();
         Assert.assertEquals(null, address);
 
-        feature.setAddress("Address");
-        address = feature.getAddress();
+        client.setAddress("Address");
+        address = client.getAddress();
         Assert.assertEquals("Address", address);
     }
 
     @Test
     public void testSetGetDevId() throws Exception {
-        Integer DevId = feature.getDevId();
+        Integer DevId = client.getDevId();
         Assert.assertEquals(0, DevId, 0);
 
-        feature.setDevId(125);
-        DevId = feature.getDevId();
+        client.setDevId(125);
+        DevId = client.getDevId();
         Assert.assertEquals(125, DevId, 0);
     }
 
     @Test
     public void testSetGetName() throws Exception {
-        String name = feature.getName();
+        String name = client.getName();
         Assert.assertEquals(null, name);
 
-        feature.setName("Name");
-        name = feature.getName();
+        client.setName("Name");
+        name = client.getName();
         Assert.assertEquals("Name", name);
     }
 
     @Test
     public void testGetDevice_feature_model_id() throws Exception {
-        String device_feature_model_id = feature.getDevice_feature_model_id();
+        String device_feature_model_id = client.getDevice_feature_model_id();
         Assert.assertEquals(null, device_feature_model_id);
 
-        feature.setDevice_feature_model_id("Device_feature_model_id");
-        device_feature_model_id = feature.getDevice_feature_model_id();
+        client.setDevice_feature_model_id("Device_feature_model_id");
+        device_feature_model_id = client.getDevice_feature_model_id();
         Assert.assertEquals("Device_feature_model_id", device_feature_model_id);
     }
 
     @Test
     public void testGetState_key() throws Exception {
-        String state_key = feature.getState_key();
+        String state_key = client.getState_key();
         Assert.assertEquals(null, state_key);
 
-        feature.setState_key("State_key");
-        state_key = feature.getState_key();
+        client.setState_key("State_key");
+        state_key = client.getState_key();
         Assert.assertEquals("State_key", state_key);
     }
 
     @Test
     public void testGetParameters() throws Exception {
-        String parameters = feature.getParameters();
+        String parameters = client.getParameters();
         Assert.assertEquals(null, parameters);
 
-        feature.setParameters("Parameters");
-        parameters = feature.getParameters();
+        client.setParameters("Parameters");
+        parameters = client.getParameters();
         Assert.assertEquals("Parameters", parameters);
     }
 
     @Test
     public void testGetValue_type() throws Exception {
-        String value_type = feature.getValue_type();
+        String value_type = client.getValue_type();
         Assert.assertEquals(null, value_type);
 
-        feature.setValue_type("Value_Type");
-        value_type = feature.getValue_type();
+        client.setValue_type("Value_Type");
+        value_type = client.getValue_type();
         Assert.assertEquals("Value_Type", value_type);
     }
 
     @Test
     public void testGeRessources() throws Exception {
-        Integer resources = feature.getRessources();
-        Assert.assertEquals(2.130837653E9, resources, 0);
+        Integer resources = client.getRessources();
+        //todo find a better way than static int
+        Assert.assertEquals(2.130837655E9, resources, 0);
 
-        feature.setDevice_usage_id("door");
-        feature.setState(0);
-        resources = feature.getRessources();
-        Assert.assertEquals(2.130837668E9, resources, 0);
+        client.setDevice_usage_id("door");
+        client.setState(0);
+        resources = client.getRessources();
+        //todo find a better way than static int
+        Assert.assertEquals(2.13083767E9, resources, 0);
 
-        feature.setState(1);
-        resources = feature.getRessources();
-        Assert.assertEquals(2.130837669E9, resources, 0);
+        client.setState(1);
+        resources = client.getRessources();
+        //todo find a better way than static int
+        Assert.assertEquals(2.130837671E9, resources, 0);
     }
 
 
     @Test
     public void testGetDevice_type() throws Exception {
-        String device_type = feature.getDevice_type();
+        String device_type = client.getDevice_type();
         Assert.assertEquals(null, device_type);
 
-        feature.setDevice_type_id("device_type");
-        device_type = feature.getDevice_type();
+        client.setDevice_type_id("device_type");
+        device_type = client.getDevice_type();
         Assert.assertEquals("device_type", device_type);
 
-        feature.setDevice_type_id("device_type.devicepart2");
-        device_type = feature.getDevice_type();
+        client.setDevice_type_id("device_type.devicepart2");
+        device_type = client.getDevice_type();
         Assert.assertEquals("devicepart2", device_type);
     }
 
     @Test
     public void testGetDevice_type_id() throws Exception {
-        String device_type_id = feature.getDevice_type_id();
+        String device_type_id = client.getDevice_type_id();
         Assert.assertEquals(null, device_type_id);
 
-        feature.setDevice_type_id("Device_Type_ID");
-        device_type_id = feature.getDevice_type_id();
+        client.setDevice_type_id("Device_Type_ID");
+        device_type_id = client.getDevice_type_id();
         Assert.assertEquals("Device_Type_ID", device_type_id);
     }
 

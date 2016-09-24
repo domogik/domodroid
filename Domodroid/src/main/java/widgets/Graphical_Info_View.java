@@ -115,7 +115,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final float size7;
     private final float api_version;
     private Boolean SSL;
-    private String unit;
+    private String unit = "";
 
     public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params, String parameters) {
         super(context);
@@ -134,6 +134,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
         } catch (JSONException jsonerror) {
             Tracer.i(mytag, "No unit for this feature");
         }
+        if (unit.equals("null"))
+            unit = "";
 
         values = new Vector<>();
         activate = true;
@@ -329,9 +331,10 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(size10);
         paint.setColor(Color.BLACK);
-        can.drawText(minf + unit, gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
-        can.drawText(maxf + unit, gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
-        can.drawText(avgf + unit, gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
+
+        can.drawText(String.format("%.2f", minf) + " " + unit, gridStartX - valueOffset - (Float.toString(minf).length() * size5), gridStartY - gridOffset, paint);
+        can.drawText(String.format("%.2f", maxf) + " " + unit, gridStartX - valueOffset - (Float.toString(maxf).length() * size5), gridStopY + gridOffset, paint);
+        can.drawText(String.format("%.2f", avgf) + " " + unit, gridStartX - valueOffset - (Float.toString(avgf).length() * size5), (gridStartY - gridOffset) - ((avgf - minf) * scale_values), paint);
 
         //temp values
         DashPathEffect dashPath2 = new DashPathEffect(new float[]{3, 8}, 1);
@@ -348,9 +351,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             paint.setColor(Color.BLACK);
             float right_value = minf + temp_step * i;
             String s = String.format("%.2f", right_value);
-            //Todo add unit but they are displayed out of screen
-            //can.drawText(s + unit, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
-            can.drawText(s , gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
+            can.drawText(s + " " + unit, gridStopX + size5, (gridStartY - gridOffset) - ((temp_step * i) * scale_values), paint);
         }
     }
 

@@ -1,5 +1,7 @@
 package Abstract;
 
+import android.annotation.SuppressLint;
+
 import org.apache.http.NameValuePair;
 
 import java.io.BufferedReader;
@@ -30,9 +32,11 @@ public class httpsUrl {
                             return null;
                         }
 
+                        @SuppressLint("TrustAllX509TrustManager")
                         public void checkClientTrusted(X509Certificate[] certs, String authType) {
                         }
 
+                        @SuppressLint("TrustAllX509TrustManager")
                         public void checkServerTrusted(X509Certificate[] certs, String authType) {
                         }
                     }
@@ -44,6 +48,7 @@ public class httpsUrl {
 
             // Create all-trusting host name verifier
             HostnameVerifier allHostsValid = new HostnameVerifier() {
+                @SuppressLint("BadHostnameVerifier")
                 public boolean verify(String hostname, SSLSession session) {
                     return true;
                 }

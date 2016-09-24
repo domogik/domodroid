@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.TimerTask;
 
+import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -74,6 +76,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     public int rgbHue = 0;
     private int rgbX = 0;
     private int rgbY = 0;
+    private int r, g, b;
 
     private TextView title7;
     private TextView title8;
@@ -164,7 +167,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         featurePan2 = new LinearLayout(context);
         featurePan2.setOrientation(LinearLayout.HORIZONTAL);
         //featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-        featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         featurePan2.setGravity(Gravity.CENTER_VERTICAL);
         featurePan2.setPadding(20, 0, 0, 10);
 
@@ -256,7 +259,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //right panel
         LinearLayout color_RightPan = new LinearLayout(context);
         color_RightPan.setOrientation(LinearLayout.VERTICAL);
-        color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, Gravity.RIGHT));
+        color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.RIGHT));
         color_RightPan.setPadding(20, 0, 0, 10);
 
         //Color result
@@ -335,12 +338,15 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
                         Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
 
-                        //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                         Long Value_timestamplong = null;
                         Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                        TV_Timestamp.setReferenceTime(Value_timestamplong);
-
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
                     } else
                         return;
 
@@ -369,7 +375,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         }
                         break;
                 }
-                int r, g, b;
                 int value_save = argb;
                 r = ((argb >> 16) & 0xFF);
                 g = ((argb >> 8) & 0xFF);
@@ -484,9 +489,12 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         argb = Color.HSVToColor(hsvCurrent);
         resultView.hsvCurrent = hsvCurrent;
         argbS = Integer.toHexString((argb >> 16) & 0xFF) + Integer.toHexString((argb >> 8) & 0xFF) + Integer.toHexString((argb) & 0xFF);
-        title7.setText(t7s + " : " + ((argb >> 16) & 0xFF));
-        title8.setText(t8s + " : " + ((argb >> 8) & 0xFF));
-        title9.setText(t9s + " : " + ((argb) & 0xFF));
+        r = ((argb >> 16) & 0xFF);
+        g = ((argb >> 8) & 0xFF);
+        b = ((argb) & 0xFF);
+        title7.setText(t7s + " : " + r);
+        title8.setText(t8s + " : " + g);
+        title9.setText(t9s + " : " + b);
         resultView.invalidate();
     }
 
@@ -537,10 +545,31 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      if (api_version >= 0.7f) {
                                          Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=";
                                          if ((argb != 0) && switch_state) {
-                                             String srgb = Integer.toHexString(argb);
-                                             if (srgb.length() > 6)
-                                                 srgb = srgb.substring(2);
-                                             Url2send += srgb;
+                                             if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                                                 String srgb = Integer.toHexString(argb);
+                                                 if (srgb.length() > 6)
+                                                     srgb = srgb.substring(2);
+                                                 Url2send += srgb;
+                                             } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
+                                                 Url2send += r + "," + g + "," + b;
+                                             } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
+                                                 int computedC, computedM, computedY;
+                                                 int minCMY;
+
+                                                 computedC = 1 - (r / 255);
+                                                 computedM = 1 - (g / 255);
+                                                 computedY = 1 - (b / 255);
+
+                                                 if (r == 0 && g == 0 && b == 0) {
+                                                     minCMY = 1;
+                                                 } else {
+                                                     minCMY = Math.min(computedC, Math.min(computedM, computedY));
+                                                 }
+                                                 computedC = (computedC - minCMY) / (1 - minCMY);
+                                                 computedM = (computedM - minCMY) / (1 - minCMY);
+                                                 computedY = (computedY - minCMY) / (1 - minCMY);
+                                                 Url2send += computedC + "," + computedM + "," + computedY + "," + minCMY;
+                                             }
                                          } else {
                                              String State = "";
                                              if (switch_state) {

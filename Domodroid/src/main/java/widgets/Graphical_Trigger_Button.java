@@ -24,7 +24,7 @@ public class Graphical_Trigger_Button extends LinearLayout {
 
         sign = new ImageView(context);
         sign.setImageResource(R.drawable.button_trigger_anim1);
-        sign.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, Gravity.CENTER));
+        sign.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, Gravity.CENTER));
         animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(2000);
         this.addView(sign);

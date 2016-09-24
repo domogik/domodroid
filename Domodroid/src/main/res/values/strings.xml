@@ -434,7 +434,7 @@
     <string name="isolated_thundershower">Isolated thundershower</string>
     <string name="info3200">Not available</string>
     <string name="not_available">Not available</string>
-    <string name="info48">--</string>
+    <string name="info48" translatable="false">--</string>
     <string name="rain">Rain</string>
 
     <string name="butler">butler</string>
@@ -526,7 +526,7 @@
     <string name="msg_status">Msg status</string>
     <string name="send_a_message">Send a message</string>
     <string name="position_degrees">Position degrees</string>
-    <string name="sensor_script_action">Sensor script action</string>
+    <string name="sensor_script_action">Sensor Script action</string>
     <string name="cmd_script_action">Cmd script action</string>
     <string name="battery_level">Battery level</string>
     <string name="thermostat_setpoint">Thermostat setpoint</string>
@@ -547,8 +547,8 @@
     <string name="active">Active</string>
     <string name="sms_sended">SMS sended</string>
     <string name="ok" tools:ignore="ButtonCase">Ok</string>
-    <string name="sensor_script_info_binary">Sensor script info binary</string>
-    <string name="sensor_script_info_number">Sensor script info number</string>
+    <string name="sensor_script_info_binary">Sensor Script info binary</string>
+    <string name="sensor_script_info_number">Sensor Script info number</string>
     <string name="send">Send</string>
     <string name="domogik_version">Domogik version:</string>
     <string name="frame_rate_default">Frame Rate: 0 Fps</string>
@@ -600,6 +600,7 @@
     <string name="luminance">Luminance</string>
     <string name="motion_sensor_level">Motion sensor level</string>
     <string name="temperature_c">Temperature °C</string>
+    <string name="temperature_f">Temperature °F</string>
     <string name="battery">Battery</string>
     <string name="rssi">Rssi</string>
     <string name="smoke">Smoke</string>
@@ -667,8 +668,8 @@
     <string name="virtual_motion">Virtual Motion</string>
     <string name="motion">Motion</string>
     <string name="no_motion">No motion</string>
-    <string name="am">AM</string>
-    <string name="pm">PM</string>
+    <string name="am" translatable="false">AM</string>
+    <string name="pm" translatable="false">PM</string>
     <string name="virtual_video">Virtual Video</string>
     <string name="domogik_information">Domogik information</string>
     <string name="domogik_error">Domogik error</string>
@@ -676,6 +677,23 @@
     <string name="stats_error">Error while try to get stats from Domogik</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="make">Make</string>
+    <string name="carid">Car ID</string>
+    <string name="ignition_status">Ignition Status</string>
+    <string name="highbeam_status">HighBeam Status</string>
+    <string name="lowbeam_status">LowBeam Status</string>
+    <string name="headlight_status">HeadLight Status</string>
+    <string name="lock_status">Lock Status</string>
+    <string name="odometer">Odometer</string>
+    <string name="position">Position</string>
+    <string name="fuel_level">Fuel Level</string>
+    <string name="set_away">Set Away</string>
+    <string name="away">Away</string>
+    <string name="bone">Bone</string>
+    <string name="muscle">Muscle</string>
+    <string name="fat">Fat</string>
+    <string name="weight">Weight</string>
+    <string name="postal_code">Postal code</string>
     <string name="Widget_longclic_menu_title">What do you want to do with this widget?</string>
     <string name="action_back">Move back</string>
     <string name="domodroid_list_of_place">Domodroid List of place</string>
@@ -689,7 +707,7 @@
     <string name="problem_geting_device_information">Problem geting device information</string>
     <string name="problem_geting_datatype_information">Problem geting datatype information</string>
     <string name="Error">"Error "</string>
-    <string name="event_manager_die">Event_manage die. Check Log</string>
+    <string name="event_manager_die">Event manager die. Check Log!</string>
     <string name="rinor_command_exception">Rinor exception sending command</string>
     <string name="error_decode_json_butler">Error while decoding json from the butler</string>
     <string name="speech_not_supported">Speech not supported</string>
@@ -697,5 +715,8 @@
     <string name="command_rejected">Command to server rejected</string>
     <string name="soon">Soon......</string>
     <string name="option_graph_height">Size of the graph (min>260)</string>
-    <string name="just_now">Just Now</string>
+    <string name="option_widget_timestamp_ago">Display timestamp as ago</string>
+    <string name="option_widget_timestamp_date">Display timestamp as date</string>
+    <string name="option_widget_timestamp_title">Timestamp display</string>
+    <string name="missing_maps_applications">Please install a maps application</string>
 </resources>

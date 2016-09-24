@@ -18,8 +18,12 @@
 package widgets;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -31,18 +35,18 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.TimeZone;
+import java.util.Locale;
 
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
@@ -75,6 +79,14 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
+    private boolean isopen = false;
+    private int nb_item_for_history;
+    private TextView state_key_view;
+    private String stateS;
+    private Typeface typefaceweather;
+    private Typeface typefaceawesome;
+
+    private String test_unite;
 
     public Graphical_History(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -103,8 +115,15 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         this.dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
         this.id = feature.getId();
+        this.isopen = false;
+        try {
+            String params_nb_item_for_history = params.getString("history_length", "5");
+            this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
+        } catch (Exception e) {
+            Tracer.e(mytag, "Error getting number of item to display");
+            this.nb_item_for_history = 5;
+        }
         myself = this;
-        String stateS = "";
         mytag = "Graphical_History(" + dev_id + ")";
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -112,10 +131,20 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
+        if (stateS.equals("null"))
+            stateS = state_key;
+        test_unite = "";
+        try {
+            //Basilic add, number feature has a unit parameter
+            JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+            test_unite = jparam.getString("unit");
+        } catch (JSONException jsonerror) {
+            Tracer.i(mytag, "No unit for this feature");
+        }
         setOnClickListener(this);
 
         //state key
-        TextView state_key_view = new TextView(context);
+        state_key_view = new TextView(context);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -130,6 +159,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
@@ -149,11 +180,34 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
                     TV_Value.setAnimation(animation);
 
-                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    //TODO improve map opening
+                    if (feature.getDevice_feature_model_id().startsWith("DT_CoordD.")) {
+                        //final String uri = "http://google.com/maps/@" + new_val;
+                        //String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
+                        final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")");
+                        //final String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%s", new_val);
+                        TV_Value.setOnClickListener(new OnClickListener() {
+                                                        public void onClick(View v) {
+                                                            try {
+                                                                Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                                context.startActivity(unrestrictedIntent);
+                                                            } catch (ActivityNotFoundException innerEx) {
+                                                                //todo to translate
+                                                                Toast.makeText(context, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+                                                    }
 
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, null, null, state_key, null, null, null);
+                        );
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                        TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                        TV_Value.setText(new_val + " \uF064");
+                    } else {
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    }
+
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);
@@ -219,12 +273,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
-                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/5/");
-                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/5/", login, password, 10000, SSL);
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 10000, SSL);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/5");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/5", login, password, 10000, SSL);
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 10000, SSL);
                 json_LastValues = new JSONObject();
                 json_LastValues.put("stats", json_LastValues_0_4);
 
@@ -255,18 +309,13 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     }
                 }
             } else if (api_version >= 0.8f) {
-                //Prepare timestamp conversion
-                Calendar calendar = Calendar.getInstance();
-                TimeZone tz = TimeZone.getDefault();
-                calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                java.util.Date currenTimeZone;
+                //Use abstract class to get timestamp conversion
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        currenTimeZone = new java.util.Date((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                        map.put("date", sdf.format(currenTimeZone));
+                        String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                        map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
@@ -281,31 +330,33 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
 
         SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
-                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.phone_value, R.id.phone_date});
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
         listeChoices.setAdapter(adapter_feature);
         listeChoices.setScrollingCacheEnabled(false);
     }
 
     public void onClick(View arg0) {
         //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-        float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+        float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
         int sizeint = (int) size;
-        if (LL_background.getHeight() != sizeint) {
+        int currentint = LL_background.getHeight();
+        if (!isopen) {
             Tracer.d(mytag, "on click");
+            this.isopen = true;
             try {
                 LL_background.removeView(listeChoices);
                 Tracer.d(mytag, "removeView(listeChoices)");
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
             getlastvalue();
             Tracer.d(mytag, "addView(listeChoices)");
             LL_background.addView(listeChoices);
         } else {
+            this.isopen = false;
             LL_background.removeView(listeChoices);
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         }
 
     }

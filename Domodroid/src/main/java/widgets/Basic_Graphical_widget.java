@@ -112,7 +112,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         LL_background = new LinearLayout(context);
         LL_background.setOrientation(LinearLayout.VERTICAL);
         if (widgetSize == 0)
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         else
             LL_background.setLayoutParams(new LayoutParams(widgetSize, LayoutParams.WRAP_CONTENT));
         LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", LL_background.getHeight()));
@@ -120,11 +120,11 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         //panel with border
         LL_topPan = new LinearLayout(context);
         LL_topPan.setOrientation(LinearLayout.HORIZONTAL);
-        LL_topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        LL_topPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
         //panel to set icon with padding left
         FrameLayout FL_imgPan = new FrameLayout(context);
-        FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+        FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         FL_imgPan.setPadding(5, 8, 10, 10);
 
         //icon
@@ -135,14 +135,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         //info panel
         LL_infoPan = new LinearLayout(context);
         LL_infoPan.setOrientation(LinearLayout.VERTICAL);
-        LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
+        LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
         LL_infoPan.setGravity(Gravity.CENTER_VERTICAL);
         LL_infoPan.setPadding(0, 0, 10, 0);
 
         //feature panel
         LL_featurePan = new LinearLayout(context);
         LL_featurePan.setOrientation(LinearLayout.VERTICAL);
-        LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT, 1));
+        LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
         LL_featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         LL_featurePan.setPadding(0, 0, 20, 0);
 

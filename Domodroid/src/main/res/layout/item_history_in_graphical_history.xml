@@ -13,7 +13,7 @@
         android:paddingLeft="10dp">
 
         <TextView
-            android:id="@+id/phone_value"
+            android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -30,7 +30,7 @@
         android:paddingLeft="5dp">
 
         <TextView
-            android:id="@+id/phone_date"
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#0000F0"

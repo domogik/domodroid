@@ -88,7 +88,7 @@ public class Com_Stats extends FrameLayout {
         LinearLayout background = new LinearLayout(context);
         background.setOrientation(LinearLayout.VERTICAL);
         if (widgetSize == 0)
-            background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         else
             background.setLayoutParams(new LayoutParams(widgetSize, LayoutParams.WRAP_CONTENT));
         background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", background.getHeight()));
@@ -96,7 +96,7 @@ public class Com_Stats extends FrameLayout {
         //panel with border
         LinearLayout topPan = new LinearLayout(context);
         topPan.setOrientation(LinearLayout.HORIZONTAL);
-        topPan.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        topPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         //topPan.setTextColor(Color.parseColor("#333333"));
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -48,6 +49,7 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Graphics_Manager;
 import database.WidgetUpdate;
+import misc.Color_Result;
 import misc.tracerengine;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
@@ -79,6 +81,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private Typeface typefaceweather;
     private Typeface typefaceawesome;
     private float Float_graph_size;
+    private Color_Result resultView;
+
+    private boolean isopen = false;
 
     public Graphical_Info(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
@@ -109,6 +114,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
         mytag = "Graphical_Info (" + dev_id + ")";
+        this.isopen = false;
         String graph_size = params.getString("graph_size", "262.5");
         this.Float_graph_size = Float.valueOf(graph_size);
         try {
@@ -138,10 +144,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
+        //TV_Timestamp
         TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
+
+        //color view if need
+        resultView = new Color_Result(context);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
@@ -152,7 +162,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
             //feature panel 2 which will contain graphic
             featurePan2 = new LinearLayout(context);
-            featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
@@ -224,12 +234,63 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
 
-                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-                    //Todo display timestamp
+                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                        LL_featurePan.removeView(resultView);
+                        LL_featurePan.removeView(TV_Value);
+                        LL_featurePan.removeView(TV_Timestamp);
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color sting=" + loc_Value);
+                        loc_Value = "#" + loc_Value.toUpperCase();
+                        resultView.color = loc_Value;
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
+                        LL_featurePan.addView(resultView);
+                        LL_featurePan.addView(TV_Timestamp);
+
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
+                        LL_featurePan.removeView(resultView);
+                        LL_featurePan.removeView(TV_Value);
+                        LL_featurePan.removeView(TV_Timestamp);
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color sting=" + loc_Value);
+                        resultView.colorrgb = loc_Value;
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
+                        LL_featurePan.addView(resultView);
+                        LL_featurePan.addView(TV_Timestamp);
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
+                        LL_featurePan.removeView(resultView);
+                        LL_featurePan.removeView(TV_Value);
+                        LL_featurePan.removeView(TV_Timestamp);
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color sting=" + loc_Value);
+                        resultView.colorCMYK = loc_Value;
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
+                        LL_featurePan.addView(resultView);
+                        LL_featurePan.addView(TV_Timestamp);
+
+                    } else {
+                        display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    }
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
@@ -250,7 +311,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                             //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
                         } else change_this_icon(2);
                     }
-                } else if (msg.what == 9998) {
+                } else if (msg.what == 9998)
+
+                {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
                     session = null;
@@ -277,7 +340,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null) {
+        if (cache_engine != null)
+
+        {
             if (api_version <= 0.6f) {
                 session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             } else if (api_version >= 0.7f) {
@@ -315,7 +380,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
-            if (LL_background.getHeight() != sizeint) {
+            if (!isopen) {
+                this.isopen = true;
                 try {
                     LL_background.removeView(featurePan2_buttons);
                     LL_background.removeView(featurePan2);
@@ -324,15 +390,16 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     e.printStackTrace();
                 }
 
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
                 LL_background.addView(featurePan2_buttons);
                 LL_background.addView(featurePan2);
                 canvas.activate = true;
                 canvas.updateTimer();
             } else {
+                this.isopen = false;
                 LL_background.removeView(featurePan2_buttons);
                 LL_background.removeView(featurePan2);
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
                 canvas.activate = false;    //notify Graphical_Info_View to stop its UpdateTimer
             }
         }

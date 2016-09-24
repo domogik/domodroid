@@ -61,7 +61,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //panel with border
         LL_background = new LinearLayout(context);
         if (widgetSize == 0)
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         else
             LL_background.setLayoutParams(new LayoutParams(widgetSize, LayoutParams.WRAP_CONTENT));
 
@@ -69,7 +69,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
 
         //panel to set img with padding left
         FrameLayout FL_imgPan = new FrameLayout(context);
-        FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+        FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         FL_imgPan.setPadding(5, 8, 10, 10);
         //img
         IV_img = new ImageView(context);
@@ -79,7 +79,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //info panel
         LinearLayout LL_infoPan = new LinearLayout(context);
         LL_infoPan.setOrientation(LinearLayout.VERTICAL);
-        LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         LL_infoPan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         LL_infoPan.setPadding(0, 0, 10, 0);
 

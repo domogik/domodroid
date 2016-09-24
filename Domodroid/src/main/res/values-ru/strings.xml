@@ -391,7 +391,6 @@
     <string name="isolated_thundershower">Местами гроза</string>
     <string name="info3200">Не доступен</string>
     <string name="not_available">Не доступен</string>
-    <string name="info48">--</string>
     <string name="rain">Дождь</string>
     <string name="butler">Дворецкий</string>
     <string name="action_settings">Настройки</string>
@@ -590,5 +589,5 @@
     <string name="Area_longclic_menu_title">Что вы хотите сделать с зоной?</string>
     <string name="Room_longclic_menu_title">Что вы хотите сделать с комнатой?</string>
     <string name="Error">Ошибка</string>
-    <string name="just_now">Только что</string>
+    <string name="temperature_f">Температура °F</string>
 </resources>

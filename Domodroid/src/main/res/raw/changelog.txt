@@ -20,6 +20,26 @@
   </head>
   <body>
     $ 1.4
+      % Version 23
+      _ 2016-xx-xx
+      % Version 22
+      _ 2016-09-25
+      * Some translation for xee and body blugin
+      * Really fix #114 Range widget do not display command name in 0.4+
+      % Version 21
+      _ 2016-09-24
+      * DT_coord handle to open also a maps app when touching the coord.
+      * DT_bool have a new icon N/A if no value instead of default "OFF"
+      * Close #114 Range widget do not display command name in 0.4+
+      * Close #113 weather bug widget for sunrise sunset
+      * Add an option for history widget to select how many value use want to see.
+      * Change widget for all string to history like for call number to get lasts values.
+      * #91 Graph display scaled unit.
+      * Close #52 New widget option for timestamp display (from 3min ago/ since 06/11/2016 20h30).
+      * Close #71 display color in sensor for DT_ColorRGB and DT_ColorRGBHexa.
+      * Close #112 menu button no more opening menu.
+      * Close #60 Map icon and text relative position.
+      * #52 Add option to select timestamp as date or ago time.
       % Version 20
       _ 2016-06-12
       * Correct bug on ICS and menu.

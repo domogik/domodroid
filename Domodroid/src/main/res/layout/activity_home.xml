@@ -23,25 +23,23 @@
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_launcher" />
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/background">
-
-        <ScrollView
-            android:id="@+id/ScrollView01"
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <!-- body -->
+        <LinearLayout
+            android:id="@+id/home_container"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <!-- body -->
-            <LinearLayout
-                android:id="@+id/home_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            </LinearLayout>
-        </ScrollView>
-    </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <!--Navigation Drawer-->
     <android.support.design.widget.NavigationView

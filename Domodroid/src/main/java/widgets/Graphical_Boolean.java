@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 import org.domogik.domodroid13.R;
 import org.json.JSONObject;
 
+import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -146,7 +148,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
 
         //boolean on/off
         bool = new ImageView(context);
-        bool.setImageResource(R.drawable.boolean_off);
+        bool.setImageResource(R.drawable.boolean_n_a);
         bool.setLayoutParams(params);
 
         super.LL_infoPan.addView(state);
@@ -156,21 +158,24 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                 if (msg.what == 9999) {
+                if (msg.what == 9999) {
                     if (session == null)
                         return;
-                     String status = session.getValue();
-                     String Value_timestamp = session.getTimestamp();
+                    String status = session.getValue();
+                    String Value_timestamp = session.getTimestamp();
 
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
 
-                        //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                         Long Value_timestamplong = null;
                         Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                        TV_Timestamp.setReferenceTime(Value_timestamplong);
-
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                        } else {
+                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        }
                         try {
                             if (status.equals(value0) || status.equals("0")) {
                                 bool.setImageResource(R.drawable.boolean_off);
@@ -195,6 +200,10 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
                                     Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
                                 }
+                            } else{
+                                bool.setImageResource(R.drawable.boolean_n_a);
+                                change_this_icon(0);
+                                state.setText(stateS + " : " + "N/A");
                             }
                         } catch (Exception e) {
                             Tracer.e(mytag, "handler error device " + name);

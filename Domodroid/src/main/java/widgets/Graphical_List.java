@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -84,6 +86,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private final int session_type;
     private final SharedPreferences params;
 
+    private boolean isopen = false;
     public Graphical_List(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Feature feature, Handler handler) {
@@ -112,6 +115,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.parameters = feature.getParameters();
         this.id = feature.getId();
         this.address = feature.getAddress();
+        this.isopen = false;
 
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
@@ -243,12 +247,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Value_timestamp);
 
-                    //Value_timestamp = timestamp_to_relative_time.get_relative_time(Value_timestamp);
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    TV_Timestamp.setReferenceTime(Value_timestamplong);
-
+                    SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                    if (SP_params.getBoolean("widget_timestamp", false)) {
+                        TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), context));
+                    } else {
+                        TV_Timestamp.setReferenceTime(Value_timestamplong);
+                    }
                     value.setText(getStringResourceByName(new_val));
                     //To have the icon colored as it has no state
                     change_this_icon(2);
@@ -382,7 +389,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
-            if (LL_background.getHeight() != sizeint) {
+            if (!isopen) {
+                this.isopen = true;
                 Tracer.d(mytag, "on click");
                 try {
                     LL_background.removeView(featurePan2);
@@ -394,6 +402,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 Tracer.d(mytag, "addView(featurePan2)");
                 LL_background.addView(featurePan2);
             } else {
+                this.isopen = false;
                 LL_background.removeView(featurePan2);
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             }

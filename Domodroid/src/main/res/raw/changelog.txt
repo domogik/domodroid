@@ -20,6 +20,8 @@
   </head>
   <body>
     $ 1.4
+      % Version 22
+      _ 2016-xx-xx
       % Version 21
       _ 2016-09-24
       * DT_coord handle to open also a maps app when touching the coord.

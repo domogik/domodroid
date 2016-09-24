@@ -640,6 +640,10 @@
         <string name="lowbeam_status">Feux de croisement</string>
         <string name="headlight_status">Feux de position</string>
         <string name="postal_code">Code postal</string>
+        <string name="weight">Poids</string>
+        <string name="bone">Os</string>
+        <string name="muscle">Muscle</string>
+        <string name="fat">Graisse</string>
         <string name="sensor_script_info_humidity">Script capteur humidité</string>
         <string name="sensor_script_info_openclose">Script capteur ouvert/fermé</string>
         <string name="sensor_script_info_string">Script capteur texte</string>

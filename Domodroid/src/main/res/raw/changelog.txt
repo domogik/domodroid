@@ -20,8 +20,6 @@
   </head>
   <body>
     $ 1.4
-      % Version 23
-      _ 2016-xx-xx
       % Version 22
       _ 2016-09-25
       * Some translation for xee and body blugin

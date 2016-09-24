@@ -1,6 +1,6 @@
 <manifest package="org.domogik.domodroid13"
-    android:versionCode="22"
-    android:versionName="1.4_android_studio"
+    android:versionCode="23"
+    android:versionName="1.4"
     xmlns:android="http://schemas.android.com/apk/res/android">
     
 	<uses-permission android:name="android.permission.INTERNET" />

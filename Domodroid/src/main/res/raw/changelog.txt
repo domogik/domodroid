@@ -24,7 +24,7 @@
       _ 2016-xx-xx
       % Version 22
       _ 2016-09-25
-      * Some translation for xee and body blugin
+      * Some translation for xee and body plugin
       * Really fix #114 Range widget do not display command name in 0.4+
       % Version 21
       _ 2016-09-24

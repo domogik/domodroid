@@ -288,7 +288,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 for (int i = itemArray.length(); i >= 0; i--) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        try {
+                           map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("TV_Value").toLowerCase())));
+                        } catch (Exception e1) {
+                            Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        }
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
@@ -296,26 +301,22 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
-            } else if (api_version == 0.7f) {
+            } else if (api_version >= 0.7f) {
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        map.put("date", itemArray.getJSONObject(i).getString("date"));
-                        listItem.add(map);
-                        Tracer.d(mytag, map.toString());
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json TV_Value");
-                    }
-                }
-            } else if (api_version >= 0.8f) {
-                //Use abstract class to get timestamp conversion
-                for (int i = 0; i < itemArray.length(); i++) {
-                    try {
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                        map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        try {
+                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("value_str").toLowerCase())));
+                        } catch (Exception e1) {
+                            Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("value_str"));
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
+                        }
+                        if (api_version == 0.7f) {
+                            map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        } else if (api_version >= 0.8f) {
+                            String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                            map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        }
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {

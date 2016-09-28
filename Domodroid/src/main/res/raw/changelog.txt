@@ -20,8 +20,12 @@
   </head>
   <body>
     $ 1.4
-      % Version 22
+      % Version 24
       _ 2016-xx-xx
+      % Version 23
+      _ 2016-09-25
+      * Some translation for xee and body plugin
+      * Really fix #114 Range widget do not display command name in 0.4+
       % Version 21
       _ 2016-09-24
       * DT_coord handle to open also a maps app when touching the coord.

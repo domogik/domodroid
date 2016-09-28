@@ -24,15 +24,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
@@ -41,10 +48,12 @@ import Entity.Entity_client;
 import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
+import rinor.Rest_com;
 
 @SuppressWarnings("ALL")
-public class Graphical_Boolean extends Basic_Graphical_widget {
+public class Graphical_Boolean extends Basic_Graphical_widget implements View.OnClickListener {
 
+    private ListView listeChoices;
     private TextView state;
     private RelativeTimeTextView TV_Timestamp;
     private String value0;
@@ -67,6 +76,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
     private String usage;
     private String address;
     private Boolean realtime = false;
+    private int nb_item_for_history;
+    private boolean isopen = false;
+    private int id;
 
     public Graphical_Boolean(tracerengine Trac,
                              final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -98,6 +110,15 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         mytag = "Graphical_Boolean(" + dev_id + ")";
+        this.id = feature.getId();
+        this.isopen = false;
+        try {
+            String params_nb_item_for_history = params.getString("history_length", "5");
+            this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
+        } catch (Exception e) {
+            Tracer.e(mytag, "Error getting number of item to display");
+            this.nb_item_for_history = 5;
+        }
 
         try {
             this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
@@ -125,6 +146,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
             this.Value_0 = value0;
             this.Value_1 = value1;
         }
+
+        setOnClickListener(this);
 
         //state
         state = new TextView(context);
@@ -256,6 +279,105 @@ public class Graphical_Boolean extends Basic_Graphical_widget {
         //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+
+    }
+
+    private void getlastvalue() {
+        JSONObject json_LastValues = null;
+        JSONArray itemArray = null;
+        listeChoices = new ListView(context);
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
+        try {
+            if (api_version <= 0.6f) {
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 10000, SSL);
+            } else if (api_version >= 0.7f) {
+                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/5");
+                //Don't forget old "dev_id"+"state_key" is replaced by "id"
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 10000, SSL);
+                json_LastValues = new JSONObject();
+                json_LastValues.put("stats", json_LastValues_0_4);
+
+            }
+            itemArray = json_LastValues.getJSONArray("stats");
+            if (api_version <= 0.6f) {
+                for (int i = itemArray.length(); i >= 0; i--) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            } else if (api_version == 0.7f) {
+                for (int i = 0; i < itemArray.length(); i++) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
+                        map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            } else if (api_version >= 0.8f) {
+                //Use abstract class to get timestamp conversion
+                for (int i = 0; i < itemArray.length(); i++) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
+                        String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                        map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            //return null;
+            Tracer.e(mytag, "Error fetching json object");
+        }
+
+        SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
+        listeChoices.setAdapter(adapter_feature);
+        listeChoices.setScrollingCacheEnabled(false);
+    }
+
+    public void onClick(View arg0) {
+        //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+        float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
+        int sizeint = (int) size;
+        int currentint = LL_background.getHeight();
+        if (!isopen) {
+            Tracer.d(mytag, "on click");
+            this.isopen = true;
+            try {
+                LL_background.removeView(listeChoices);
+                Tracer.d(mytag, "removeView(listeChoices)");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+            getlastvalue();
+            Tracer.d(mytag, "addView(listeChoices)");
+            LL_background.addView(listeChoices);
+        } else {
+            this.isopen = false;
+            LL_background.removeView(listeChoices);
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        }
+
+    }
 }
 
 

@@ -107,18 +107,7 @@ class Widgets_Manager {
             int update_timer = params.getInt("UPDATE_TIMER", 300);
 
             Tracer.i(mytag, "Call to process device : " + DevId + " Address : " + Address + " Value_type : " + Value_type + " Label : " + label + " Key : " + State_key);
-            //todo add missing datatype from 0.4
-            //String but carreful
-            //datetime done
-            //ColorCII
-            //Char
-            //DayOfWeek
-            //HVACVent
-            //HVACFan
-            //HVACMode
-            //HVACHeat
-            //UPSEvent
-            //UPSState
+
             Graphical_Binary onoff;
             Graphical_Binary_New onoff_New;
             Graphical_Info info;
@@ -320,7 +309,20 @@ class Widgets_Manager {
                     tmpPan.addView(info_commands);
                     Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                 }
-            }
+            } //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
+            // todo add missing datatype from 0.4 see all datatype that have no parent but values.
+            //String but carreful
+            //datetime done
+            //ColorCII
+            //Char
+            //DayOfWeek
+            //HVACVent
+            //HVACFan
+            //HVACMode
+            //HVACHeat
+            //UPSEvent
+            //UPSState
+            //DT_Char
 
             if (columns) {
                 if (counter == 0) {

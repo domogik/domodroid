@@ -553,7 +553,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Toast.makeText(context, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else if (MQaddress.equals("*")){
+                    } else if (MQaddress.equals("*")) {
                         context.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(context, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
@@ -851,10 +851,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             try {
                                 //get values
                                 JSONObject values = Json_data_type.getJSONObject(tempdata_type).getJSONObject("values");
-                                parameters.putOpt ("values", values.toString());
-                                //for (int length = 0; length < values.length(); length++) {
-                                //parameters.put("values" + values.names().get(length), values.getString((String) values.names().get(length)));
-                                //}
+                                parameters.putOpt("values", values.toString());
                                 Tracer.v(mytag, "dt_type: " + data_type + " as values: " + values.toString());
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO values for this dt_type: " + data_type);
@@ -1052,10 +1049,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             try {
                                 //get values
                                 JSONObject values = Json_data_type.getJSONObject(tempdata_type).getJSONObject("values");
-                                parameters.putOpt ("values", values.toString());
-                                //for (int length = 0; length < values.length(); length++) {
-                                    //parameters.put("values" + values.names().get(length), values.getString((String) values.names().get(length)));
-                                //}
+                                parameters.putOpt("values", values.toString());
                                 Tracer.v(mytag, "dt_type: " + data_type + " as values: " + values.toString());
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO values for this dt_type: " + data_type);

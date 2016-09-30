@@ -468,7 +468,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 try {
                     LL_background.removeView(featurePan2);
                     Tracer.d(mytag, "removeView(featurePan2)");
-
                 } catch (Exception e) {
                 }
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));

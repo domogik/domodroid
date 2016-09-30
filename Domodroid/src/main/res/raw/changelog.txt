@@ -23,6 +23,7 @@
       % Version 24
       _ 2016-xx-xx
       * Close #115 History for boolean widget with translation too
+      * #37 Widget_list for orphan datatype (sensor and command)
       % Version 23
       _ 2016-09-25
       * Some translation for xee and body plugin

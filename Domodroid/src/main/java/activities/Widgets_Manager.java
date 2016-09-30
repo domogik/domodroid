@@ -233,7 +233,7 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                 }
             } else if (Value_type.equals("list")) {
-                if (!feature.getDevice_feature_model_id().startsWith("DT_ColorRGB")) {
+                if (!feature.getDevice_feature_model_id().startsWith("DT_ColorRGB") && !feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK")) {
                     Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_List list = new Graphical_List(Tracer, context, URL,
                             widgetSize, session_type, id, zone, params, feature, widgetHandler);
@@ -310,7 +310,20 @@ class Widgets_Manager {
                     tmpPan.addView(info_commands);
                     Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                 }
-            } //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
+            } else {
+                Graphical_List.with_list = false;
+                Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
+                Graphical_List list = new Graphical_List(Tracer, context, URL,
+                        widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                list.setLayoutParams(layout_param);
+                Graphical_List.container = tmpPan;
+                tmpPan.addView(list);
+                Tracer.i(mytag, "   ==> Graphical_List");
+                if (!parameters.contains("command")) {
+                    Graphical_List.with_list = false;
+                }
+            }
+            //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
             // todo add missing datatype from 0.4 see all datatype that have no parent but values.
             //String but carreful
             //datetime done

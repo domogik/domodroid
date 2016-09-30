@@ -43,6 +43,7 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String url = null;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
-    public final Boolean with_list = true;
+    public static Boolean with_list = true;
     private Boolean realtime = false;
     private String[] known_values;
     private ArrayList<HashMap<String, String>> listItem;
@@ -84,9 +85,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String parameters;
     private int dev_id;
     private final int session_type;
+    private String command_id = null;
+    private String command_type = null;
     private final SharedPreferences params;
 
     private boolean isopen = false;
+
     public Graphical_List(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Feature feature, Handler handler) {
@@ -152,6 +156,23 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
+        JSONArray Values = null;
+        if (api_version >= 0.7f) {
+            //get values from json
+            //Exploit parameters
+            JSONObject jparam = null;
+            String command;
+            try {
+                jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+                Values = jparam.getJSONArray("values");
+                Tracer.v(mytag, "Json command :" + Values);
+            } catch (Exception e) {
+                command = "";
+                Values = null;
+                Tracer.e(mytag, "Json command error " + e.toString());
+            }
+        }
+
         if (with_list) {
             //Exploit parameters
             JSONObject jparam = null;
@@ -159,15 +180,26 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             JSONArray commandValues = null;
             try {
                 jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                command = jparam.getString("command");
-                commandValues = jparam.getJSONArray("commandValues");
-                Tracer.v(mytag, "Json command :" + commandValues);
+                if (api_version < 0.7f) {
+                    command = jparam.getString("command");
+                    commandValues = jparam.getJSONArray("commandValues");
+                    Tracer.v(mytag, "Json command :" + commandValues);
+                } else if (api_version >= 0.7f) {
+                    //get commands for domogik >= 0.4
+                    int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+                    if (number_of_command_parameters == 1) {
+                        command_id = jparam.getString("command_id");
+                        command_type = jparam.getString("command_type1");
+                        Tracer.v(mytag, "Json command_id :" + command_id + " & command_type :" + command_type);
+                    }
+                }
             } catch (Exception e) {
                 command = "";
                 commandValues = null;
                 Tracer.e(mytag, "Json command error " + e.toString());
-
             }
+
+            //used in previous version of domogik until 0.3
             if (commandValues != null) {
                 if (commandValues.length() > 0) {
                     if (known_values != null)
@@ -182,7 +214,23 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         }
                     }
                 }
+            }
+            // used after domogik 0.4
+            if (Values != null) {
+                if (Values.length() > 0) {
+                    if (known_values != null)
+                        known_values = null;
 
+                    known_values = new String[Values.length()];
+                    for (int i = 0; i < Values.length(); i++) {
+                        try {
+                            known_values[i] = Values.getString(i);
+                            known_values[i] = Values.getString(i);
+                        } catch (Exception e) {
+                            known_values[i] = "???";
+                        }
+                    }
+                }
             }
             //list of choices
             ListView listeChoices = new ListView(context);
@@ -193,7 +241,11 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("choice", getStringResourceByName(known_values[i]));
-                map.put("cmd_to_send", known_values[i]);
+                if (api_version >= 0.7f) {
+                    map.put("cmd_to_send", known_values[i]);
+                } else {
+                    map.put("cmd_to_send", known_values[i]);
+                }
                 listItem.add(map);
 
             }
@@ -319,7 +371,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                          String Url2send = "";
                                          //TODO change for 0.4
                                          if (api_version >= 0.7f) {
-                                             //Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
+                                             Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + cmd_requested;
                                          } else {
                                              Url2send = url + "command/" + type + "/" + address + "/" + cmd_requested;
                                          }

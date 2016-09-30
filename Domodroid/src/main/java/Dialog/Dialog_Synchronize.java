@@ -1034,13 +1034,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.e(mytag, e1.toString());
                             }
                             //For 0.4 make a loop until no more parent data_type
-                            //TODO get value0 and value1 from labels
-                            //Maybe list too....
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
                             String tempdata_type = data_type;
                             try {
+                                //get value0 and value1 from labels
                                 JSONObject labels = Json_data_type.getJSONObject(tempdata_type).getJSONObject("labels");
                                 for (int length = 0; length < labels.length(); length++) {
                                     parameters.putOpt("value" + labels.names().get(length), labels.getString((String) labels.names().get(length)));
@@ -1048,6 +1047,16 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.i(mytag, "dt_type: " + data_type + " as labels: " + labels.toString());
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO labels for this dt_type: " + data_type);
+                            }
+                            try {
+                                //get values
+                                JSONObject values = Json_data_type.getJSONObject(tempdata_type).getJSONObject("values");
+                                for (int length = 0; length < values.length(); length++) {
+                                    parameters.put("values" + values.names().get(length), values.getString((String) values.names().get(length)));
+                                }
+                                Tracer.v(mytag, "dt_type: " + data_type + " as values: " + values.toString());
+                            } catch (Exception e) {
+                                Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
                             while (!parent_again) {
                                 try {

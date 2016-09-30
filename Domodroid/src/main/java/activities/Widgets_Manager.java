@@ -262,7 +262,7 @@ class Widgets_Manager {
 
                 }
             } else if (Value_type.equals("string") || Value_type.equals("datetime")) {
-                //TODO for #117 handle parent ddt_datetime in a proper way
+                //TODO for #117 handle parent dt_datetime in a proper way
                 if (feature.getDevice_feature_model_id().contains("camera")) {
                     Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
                             widgetSize, session_type, id, zone, params, feature, widgetHandler);

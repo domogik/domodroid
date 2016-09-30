@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
@@ -74,6 +75,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     public static Boolean with_list = true;
     private Boolean realtime = false;
     private String[] known_values;
+    private String[] real_values;
+    JSONObject Values = null;
     private ArrayList<HashMap<String, String>> listItem;
     private TextView cmd_to_send = null;
     private String cmd_requested = null;
@@ -156,24 +159,22 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
-        JSONArray Values = null;
         if (api_version >= 0.7f) {
-            //get values from json
-            //Exploit parameters
+            //get values from json parameters
             JSONObject jparam = null;
-            String command;
             try {
                 jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                Values = jparam.getJSONArray("values");
-                Tracer.v(mytag, "Json command :" + Values);
+                String temp = jparam.getString("values");
+                Values = new JSONObject(temp.replaceAll("&quot;", "\""));
+                Tracer.d(mytag, "Json Values :" + Values);
             } catch (Exception e) {
-                command = "";
                 Values = null;
-                Tracer.e(mytag, "Json command error " + e.toString());
+                Tracer.e(mytag, "Json Values error " + e.toString());
             }
         }
 
         if (with_list) {
+            Tracer.v(mytag, "Json with_list :" + with_list.toString());
             //Exploit parameters
             JSONObject jparam = null;
             String command;
@@ -183,14 +184,14 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 if (api_version < 0.7f) {
                     command = jparam.getString("command");
                     commandValues = jparam.getJSONArray("commandValues");
-                    Tracer.v(mytag, "Json command :" + commandValues);
+                    Tracer.d(mytag, "Json command :" + commandValues);
                 } else if (api_version >= 0.7f) {
                     //get commands for domogik >= 0.4
                     int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
                     if (number_of_command_parameters == 1) {
                         command_id = jparam.getString("command_id");
                         command_type = jparam.getString("command_type1");
-                        Tracer.v(mytag, "Json command_id :" + command_id + " & command_type :" + command_type);
+                        Tracer.d(mytag, "Json command_id :" + command_id + " & command_type :" + command_type);
                     }
                 }
             } catch (Exception e) {
@@ -222,13 +223,22 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         known_values = null;
 
                     known_values = new String[Values.length()];
-                    for (int i = 0; i < Values.length(); i++) {
+                    real_values = new String[Values.length()];
+                    Iterator<String> iter = Values.keys();
+                    int i = 0;
+                    while (iter.hasNext()) {
+                        String key = iter.next();
                         try {
-                            known_values[i] = Values.getString(i);
-                            known_values[i] = Values.getString(i);
-                        } catch (Exception e) {
-                            known_values[i] = "???";
+                            known_values[i] = Values.get(key).toString();
+                            real_values[i] = key;
+                            Tracer.d(mytag, "Json key :" + key);
+                            Tracer.d(mytag, "Json value :" + known_values[i]);
+                        } catch (JSONException e) {
+                            known_values[i] = "N/A";
+                            real_values[i] = "";
+                            Tracer.e(mytag, "Json iteration ERROR:" + e.toString());
                         }
+                        i++;
                     }
                 }
             }
@@ -242,7 +252,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("choice", getStringResourceByName(known_values[i]));
                 if (api_version >= 0.7f) {
-                    map.put("cmd_to_send", known_values[i]);
+                    map.put("cmd_to_send", real_values[i]);
                 } else {
                     map.put("cmd_to_send", known_values[i]);
                 }
@@ -261,7 +271,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         HashMap<String, String> map = new HashMap<String, String>();
                         map = listItem.get(position);
                         cmd_requested = map.get("cmd_to_send");
-                        Tracer.d(mytag, "command selected at Position = " + position + "  Commande = " + cmd_requested);
+                        Tracer.d(mytag, "command selected at Position = " + position + "  Command = " + cmd_requested);
                         new CommandeThread().execute();
                     }
                 }
@@ -275,10 +285,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             featurePan2.setPadding(5, 10, 5, 10);
             featurePan2.addView(listeChoices);
 
+        } else {
+            Tracer.v(mytag, "Json with_list :" + with_list.toString());
         }
 
-        LL_featurePan.addView(value);
-        LL_featurePan.addView(TV_Timestamp);
+        super.LL_infoPan.addView(state_key_view);
+        super.LL_featurePan.addView(value);
+        super.LL_featurePan.addView(TV_Timestamp);
 
 
         handler = new Handler() {
@@ -308,7 +321,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     } else {
                         TV_Timestamp.setReferenceTime(Value_timestamplong);
                     }
-                    value.setText(getStringResourceByName(new_val));
+                    if (api_version > 0.7f) {
+                        try {
+                            value.setText(getStringResourceByName(Values.getString(new_val)));
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Can not convert new_val " + e.toString());
+                        }
+                    } else {
+                        value.setText(getStringResourceByName(new_val));
+                    }
                     //To have the icon colored as it has no state
                     change_this_icon(2);
 

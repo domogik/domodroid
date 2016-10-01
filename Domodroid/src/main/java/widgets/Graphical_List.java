@@ -64,7 +64,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
 
     private LinearLayout featurePan2;
-    private TextView value;
+    private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private Handler handler;
     private Message msg;
@@ -91,7 +91,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String command_id = null;
     private String command_type = null;
     private final SharedPreferences params;
-
+    private String stateS;
     private boolean isopen = false;
 
     public Graphical_List(tracerengine Trac,
@@ -134,8 +134,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         mytag = "Graphical_List (" + dev_id + ")";
 
         //state key
-        TextView state_key_view = new TextView(context);
-        String stateS;
+        final TextView state_key_view = new TextView(context);
         try {
             stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
         } catch (Exception e) {
@@ -146,10 +145,10 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //value
-        value = new TextView(context);
-        value.setTextSize(28);
-        value.setTextColor(Color.BLACK);
-        value.setGravity(Gravity.RIGHT);
+        TV_Value = new TextView(context);
+        TV_Value.setTextSize(28);
+        TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
@@ -250,7 +249,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             for (int i = 0; i < known_values.length; i++) {
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
                 HashMap<String, String> map = new HashMap<String, String>();
-                map.put("choice", getStringResourceByName(known_values[i]));
+                try {
+                    map.put("choice", getResources().getString(Graphics_Manager.getStringIdentifier(context, (known_values[i]).toLowerCase())));
+                } catch (Exception e) {
+                    Tracer.d(mytag, "no translation for: " + known_values[i]);
+                    map.put("choice", known_values[i]);
+                }
                 if (api_version >= 0.7f) {
                     map.put("cmd_to_send", real_values[i]);
                 } else {
@@ -290,7 +294,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
 
         super.LL_infoPan.addView(state_key_view);
-        super.LL_featurePan.addView(value);
+        super.LL_featurePan.addView(TV_Value);
         super.LL_featurePan.addView(TV_Timestamp);
 
 
@@ -323,12 +327,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     }
                     if (api_version > 0.7f) {
                         try {
-                            value.setText(getStringResourceByName(Values.getString(new_val)));
+                            display_sensor_info.display(Tracer, Values.getString(new_val), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                         } catch (Exception e) {
                             Tracer.e(mytag, "Can not convert new_val " + e.toString());
                         }
                     } else {
-                        value.setText(getStringResourceByName(new_val));
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                     }
                     //To have the icon colored as it has no state
                     change_this_icon(2);
@@ -423,22 +427,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             return null;
 
         }
-    }
-
-
-    private String getStringResourceByName(String stringName) {
-        String packageName = context.getPackageName();
-        String search = stringName.toLowerCase();
-        int resId = 0;
-
-        resId = getResources().getIdentifier(search, "string", packageName);
-        String result = "";
-        try {
-            result = context.getString(resId);
-        } catch (Exception e) {
-            result = stringName;
-        }
-        return result;
     }
 
 

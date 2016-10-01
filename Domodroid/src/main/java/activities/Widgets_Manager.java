@@ -89,25 +89,24 @@ class Widgets_Manager {
 
         for (Entity_Feature aListFeature : listFeature) {
             feature = aListFeature;
+            //-----add component-------
+            tmpPan = null;
+            tmpPan = new FrameLayout(context);
+            String label = feature.getDescription();
+            String Value_type = feature.getValue_type();
+            String Address = feature.getAddress();
+            String parameters = feature.getParameters();
+            String device_type_id = feature.getDevice_type_id();
+            String State_key = feature.getState_key();
+            String iconName = feature.getIcon_name();
+            int DevId = feature.getDevId();
+            int Id = feature.getId();
+            int Graph = params.getInt("GRAPH", 3);
+            String URL = params.getString("URL", "1.1.1.1");
+            int update_timer = params.getInt("UPDATE_TIMER", 300);
+
+            Tracer.i(mytag, "Call to process device : " + DevId + " Address : " + Address + " Value_type : " + Value_type + " Label : " + label + " Key : " + State_key);
             try {
-                //-----add component-------
-                tmpPan = null;
-                tmpPan = new FrameLayout(context);
-                String label = feature.getDescription();
-                String Value_type = feature.getValue_type();
-                String Address = feature.getAddress();
-                String parameters = feature.getParameters();
-                String device_type_id = feature.getDevice_type_id();
-                String State_key = feature.getState_key();
-                String iconName = feature.getIcon_name();
-                int DevId = feature.getDevId();
-                int Id = feature.getId();
-                int Graph = params.getInt("GRAPH", 3);
-                String URL = params.getString("URL", "1.1.1.1");
-                int update_timer = params.getInt("UPDATE_TIMER", 300);
-
-                Tracer.i(mytag, "Call to process device : " + DevId + " Address : " + Address + " Value_type : " + Value_type + " Label : " + label + " Key : " + State_key);
-
                 Graphical_Binary onoff;
                 Graphical_Binary_New onoff_New;
                 Graphical_Info info;

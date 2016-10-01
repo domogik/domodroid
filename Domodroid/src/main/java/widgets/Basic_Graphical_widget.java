@@ -80,6 +80,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final DomodroidDB domodb;
     private final SharedPreferences.Editor prefEditor;
     public Entity_client session = null;
+    public Typeface typefaceweather;
+    public Typeface typefaceawesome;
 
     Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
@@ -107,6 +109,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         domodb = new DomodroidDB(this.Tracer, this.context, params);
         prefEditor = params1.edit();
         setOnLongClickListener(this);
+
+        //Fonts
+        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         //panel with border
         LL_background = new LinearLayout(context);

@@ -78,8 +78,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private TextView state_key_view;
     private String stateS;
     private String test_unite;
-    private Typeface typefaceweather;
-    private Typeface typefaceawesome;
     private float Float_graph_size;
     private Color_Result resultView;
 
@@ -155,8 +153,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
-        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         if (with_graph) {
 

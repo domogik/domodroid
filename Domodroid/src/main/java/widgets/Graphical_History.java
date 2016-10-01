@@ -83,8 +83,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int nb_item_for_history;
     private TextView state_key_view;
     private String stateS;
-    private Typeface typefaceweather;
-    private Typeface typefaceawesome;
 
     private String test_unite;
 
@@ -159,8 +157,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
-        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 

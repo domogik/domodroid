@@ -118,8 +118,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private TextView state_key_view;
     private String stateS;
     private String test_unite;
-    private Typeface typefaceweather;
-    private Typeface typefaceawesome;
     private Float Float_graph_size;
     private boolean isopen = false;
 
@@ -254,8 +252,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
-        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);

@@ -329,6 +329,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         try {
                             display_sensor_info.display(Tracer, Values.getString(new_val), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                         } catch (Exception e) {
+                            display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                             Tracer.e(mytag, "Can not convert new_val " + e.toString());
                         }
                     } else {

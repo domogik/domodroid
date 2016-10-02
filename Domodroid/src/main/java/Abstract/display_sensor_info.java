@@ -54,10 +54,12 @@ public abstract class display_sensor_info {
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
-        if (SP_params.getBoolean("widget_timestamp", false)) {
-            timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
-        } else {
-            timestamp.setReferenceTime(Value_timestamp);
+        if (Value_timestamp != 0) {
+            if (SP_params.getBoolean("widget_timestamp", false)) {
+                timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
+            } else {
+                timestamp.setReferenceTime(Value_timestamp);
+            }
         }
         try {
             float formatedValue = 0;

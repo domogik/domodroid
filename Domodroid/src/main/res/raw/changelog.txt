@@ -22,6 +22,7 @@
     $ 1.4
       % Version 24
       _ 2016-xx-xx
+      * Do not open history view if it is empty
       * #37 Widget_list for orphan datatype (sensor and command)
       * Close #116 Values saved from datatype for use in Widget_list
       * Close #115 History for boolean widget with translation too

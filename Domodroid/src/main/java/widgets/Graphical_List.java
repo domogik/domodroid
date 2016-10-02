@@ -21,10 +21,12 @@ package widgets;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -184,7 +186,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
 
         if (with_list) {
-            Tracer.v(mytag, "Json with_list :" + with_list.toString());
             //Exploit parameters
             JSONObject jparam = null;
             String command;
@@ -210,7 +211,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 Tracer.e(mytag, "Json command error " + e.toString());
             }
 
-            //used in previous version of domogik until 0.3
+            //used in previous version of domogik until 0.3 if commands
             if (commandValues != null) {
                 if (commandValues.length() > 0) {
                     if (known_values != null)
@@ -226,6 +227,15 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     }
                 }
             }
+
+            // used after domogik 0.4 if commands need to display an open informations
+            if (command_id!= null){
+                TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                //TV_Value.setRotation(180f);
+                TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
+                //TV_Value.setText(R.string.open_show_command);
+            }
+
             // used after domogik 0.4
             if (Values != null) {
                 if (Values.length() > 0) {
@@ -272,7 +282,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     map.put("cmd_to_send", known_values[i]);
                 }
                 listItemCommands.add(map);
-
             }
 
 
@@ -300,8 +309,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             featurePan2.setPadding(5, 10, 5, 10);
             featurePan2.addView(LV_listCommands);
 
-        } else {
-            Tracer.v(mytag, "Json with_list :" + with_list.toString());
         }
 
         super.LL_infoPan.addView(state_key_view);
@@ -440,21 +447,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
     }
 
-
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         if (visibility == View.VISIBLE) {
 
         }
     }
-
-    public static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
-    }
-
 
     private void getlastvalue() {
         JSONObject json_LastValues = null;
@@ -548,7 +546,16 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
                 Tracer.d(mytag, "addView(featurePan2)");
                 super.LL_background.addView(featurePan2);
+                // used after domogik 0.4 if commands need to display an open informations
+                if (command_id!= null){
+                    TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                    TV_Value.setText(Html.fromHtml("&#xf139;"), TextView.BufferType.SPANNABLE);
+                }
             } else {
+                if (command_id!= null){
+                    TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                    TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
+                }
                 this.isopen = false;
                 super.LL_background.removeView(featurePan2);
                 super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -574,7 +581,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
                     LL_background.addView(LV_listChoices);
                     this.isopen = true;
-                }else{
+                } else {
                     Tracer.d(mytag, "history is empty nothing to display");
                 }
             } else {

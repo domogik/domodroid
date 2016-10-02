@@ -310,14 +310,14 @@ class Widgets_Manager {
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
                 } else {
-                    if (parameters.contains("command")) {
-                        Graphical_List.with_list = true;
-                    } else {
-                        Graphical_List.with_list = false;
-                    }
                     Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_List list = new Graphical_List(Tracer, context, URL,
                             widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    if (parameters.contains("command")) {
+                        list.with_list = true;
+                    } else {
+                        list.with_list = false;
+                    }
                     list.setLayoutParams(layout_param);
                     Graphical_List.container = tmpPan;
                     tmpPan.addView(list);

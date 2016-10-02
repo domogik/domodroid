@@ -719,4 +719,5 @@
     <string name="option_widget_timestamp_date">Display timestamp as date</string>
     <string name="option_widget_timestamp_title">Timestamp display</string>
     <string name="missing_maps_applications">Please install a maps application</string>
+    <string name="command_sent">Command sent to rest</string>
 </resources>

@@ -58,11 +58,14 @@ import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
+import rinor.Rest_com;
 
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
 
 
+    private ListView listeChoices;
+    private ListView listeCommands;
     private LinearLayout featurePan2;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
@@ -72,7 +75,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String url = null;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
-    public static Boolean with_list = true;
+    public Boolean with_list = true;
     private Boolean realtime = false;
     private String[] known_values;
     private String[] real_values;
@@ -93,6 +96,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private final SharedPreferences params;
     private String stateS;
     private boolean isopen = false;
+    private int nb_item_for_history;
 
     public Graphical_List(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -123,7 +127,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.id = feature.getId();
         this.address = feature.getAddress();
         this.isopen = false;
-
+        try {
+            String params_nb_item_for_history = params.getString("history_length", "5");
+            this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
+        } catch (Exception e) {
+            Tracer.e(mytag, "Error getting number of item to display");
+            this.nb_item_for_history = 5;
+        }
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
         String packageName = context.getPackageName();
@@ -242,7 +252,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 }
             }
             //list of choices
-            ListView listeChoices = new ListView(context);
+            listeCommands = new ListView(context);
 
             listItem = new ArrayList<HashMap<String, String>>();
             //list_usable_choices = new Vector<String>();
@@ -267,8 +277,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
             SimpleAdapter adapter_map = new SimpleAdapter(getContext(), listItem,
                     R.layout.item_choice, new String[]{"choice", "cmd_to_send"}, new int[]{R.id.choice, R.id.cmd_to_send});
-            listeChoices.setAdapter(adapter_map);
-            listeChoices.setOnItemClickListener(new OnItemClickListener() {
+            listeCommands.setAdapter(adapter_map);
+            listeCommands.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if ((position < listItem.size()) && (position > -1)) {
                         //process selected command
@@ -281,13 +291,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 }
             });
 
-            listeChoices.setScrollingCacheEnabled(false);
+            listeCommands.setScrollingCacheEnabled(false);
             //feature panel 2 which will contain list of selectable choices
             featurePan2 = new LinearLayout(context);
             featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
-            featurePan2.addView(listeChoices);
+            featurePan2.addView(listeCommands);
 
         } else {
             Tracer.v(mytag, "Json with_list :" + with_list.toString());
@@ -395,7 +405,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                  public void run() {
                                      if (cmd_requested != null) {
                                          String Url2send = "";
-                                         //TODO change for 0.4
                                          if (api_version >= 0.7f) {
                                              Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + cmd_requested;
                                          } else {
@@ -446,6 +455,82 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     }
 
 
+    private void getlastvalue() {
+        JSONObject json_LastValues = null;
+        JSONArray itemArray = null;
+        listeChoices = new ListView(context);
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
+        try {
+            if (api_version <= 0.6f) {
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 10000, SSL);
+            } else if (api_version >= 0.7f) {
+                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                //Don't forget old "dev_id"+"state_key" is replaced by "id"
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 10000, SSL);
+                json_LastValues = new JSONObject();
+                json_LastValues.put("stats", json_LastValues_0_4);
+
+            }
+            itemArray = json_LastValues.getJSONArray("stats");
+            if (api_version <= 0.6f) {
+                for (int i = itemArray.length(); i >= 0; i--) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        try {
+                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("TV_Value").toLowerCase())));
+                        } catch (Exception e1) {
+                            Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        }
+                        map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            } else if (api_version >= 0.7f) {
+                for (int i = 0; i < itemArray.length(); i++) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        String temp_value_str = "";
+                        try {
+                            temp_value_str = Values.getString(itemArray.getJSONObject(i).getString("value_str").toLowerCase());
+                        } catch (Exception e) {
+                            temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
+                        }
+                        try {
+                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), temp_value_str)));
+                        } catch (Exception e1) {
+                            Tracer.d(mytag, "no translation for: " + temp_value_str);
+                            map.put("TV_Value", temp_value_str);
+                        }
+                        if (api_version == 0.7f) {
+                            map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        } else if (api_version >= 0.8f) {
+                            String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                            map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        }
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            //return null;
+            Tracer.e(mytag, "Error fetching json object");
+        }
+
+        SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
+        listeChoices.setAdapter(adapter_feature);
+        listeChoices.setScrollingCacheEnabled(false);
+    }
+
     public void onClick(View v) {
         if (with_list) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
@@ -455,18 +540,42 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 this.isopen = true;
                 Tracer.d(mytag, "on click");
                 try {
-                    LL_background.removeView(featurePan2);
+                    super.LL_background.removeView(featurePan2);
                     Tracer.d(mytag, "removeView(featurePan2)");
                 } catch (Exception e) {
                 }
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
                 Tracer.d(mytag, "addView(featurePan2)");
-                LL_background.addView(featurePan2);
+                super.LL_background.addView(featurePan2);
             } else {
                 this.isopen = false;
-                LL_background.removeView(featurePan2);
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                super.LL_background.removeView(featurePan2);
+                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             }
+        } else {
+            //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+            float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
+            int sizeint = (int) size;
+            int currentint = LL_background.getHeight();
+            if (!isopen) {
+                Tracer.d(mytag, "on click");
+                this.isopen = true;
+                try {
+                    super.LL_background.removeView(listeChoices);
+                    Tracer.d(mytag, "removeView(listeChoices)");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                getlastvalue();
+                Tracer.d(mytag, "addView(listeChoices)");
+                super.LL_background.addView(listeChoices);
+            } else {
+                this.isopen = false;
+                super.LL_background.removeView(listeChoices);
+                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            }
+
         }
     }
 

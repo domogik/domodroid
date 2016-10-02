@@ -64,8 +64,9 @@ import rinor.Rest_com;
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
 
 
-    private ListView listeChoices;
-    private ListView listeCommands;
+    private ListView LV_listChoices;
+    private ListView LV_listCommands;
+    private ArrayList<HashMap<String, String>> listItem;
     private LinearLayout featurePan2;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
@@ -80,7 +81,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String[] known_values;
     private String[] real_values;
     JSONObject Values = null;
-    private ArrayList<HashMap<String, String>> listItem;
+    private ArrayList<HashMap<String, String>> listItemCommands;
     private TextView cmd_to_send = null;
     private String cmd_requested = null;
     private String address;
@@ -252,9 +253,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 }
             }
             //list of choices
-            listeCommands = new ListView(context);
+            LV_listCommands = new ListView(context);
 
-            listItem = new ArrayList<HashMap<String, String>>();
+            listItemCommands = new ArrayList<HashMap<String, String>>();
             //list_usable_choices = new Vector<String>();
             for (int i = 0; i < known_values.length; i++) {
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
@@ -270,20 +271,20 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 } else {
                     map.put("cmd_to_send", known_values[i]);
                 }
-                listItem.add(map);
+                listItemCommands.add(map);
 
             }
 
 
-            SimpleAdapter adapter_map = new SimpleAdapter(getContext(), listItem,
+            SimpleAdapter adapter_map = new SimpleAdapter(getContext(), listItemCommands,
                     R.layout.item_choice, new String[]{"choice", "cmd_to_send"}, new int[]{R.id.choice, R.id.cmd_to_send});
-            listeCommands.setAdapter(adapter_map);
-            listeCommands.setOnItemClickListener(new OnItemClickListener() {
+            LV_listCommands.setAdapter(adapter_map);
+            LV_listCommands.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if ((position < listItem.size()) && (position > -1)) {
+                    if ((position < listItemCommands.size()) && (position > -1)) {
                         //process selected command
                         HashMap<String, String> map = new HashMap<String, String>();
-                        map = listItem.get(position);
+                        map = listItemCommands.get(position);
                         cmd_requested = map.get("cmd_to_send");
                         Tracer.d(mytag, "command selected at Position = " + position + "  Command = " + cmd_requested);
                         new CommandeThread().execute();
@@ -291,13 +292,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 }
             });
 
-            listeCommands.setScrollingCacheEnabled(false);
+            LV_listCommands.setScrollingCacheEnabled(false);
             //feature panel 2 which will contain list of selectable choices
             featurePan2 = new LinearLayout(context);
             featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
-            featurePan2.addView(listeCommands);
+            featurePan2.addView(LV_listCommands);
 
         } else {
             Tracer.v(mytag, "Json with_list :" + with_list.toString());
@@ -458,8 +459,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private void getlastvalue() {
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
-        listeChoices = new ListView(context);
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
+        LV_listChoices = new ListView(context);
+        listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
@@ -527,8 +528,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
         SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
                 R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
-        listeChoices.setAdapter(adapter_feature);
-        listeChoices.setScrollingCacheEnabled(false);
+        LV_listChoices.setAdapter(adapter_feature);
+        LV_listChoices.setScrollingCacheEnabled(false);
     }
 
     public void onClick(View v) {
@@ -559,20 +560,26 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             int currentint = LL_background.getHeight();
             if (!isopen) {
                 Tracer.d(mytag, "on click");
-                this.isopen = true;
                 try {
-                    super.LL_background.removeView(listeChoices);
+                    super.LL_background.removeView(LV_listChoices);
                     Tracer.d(mytag, "removeView(listeChoices)");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                Tracer.d(mytag, "getting history");
                 getlastvalue();
-                Tracer.d(mytag, "addView(listeChoices)");
-                super.LL_background.addView(listeChoices);
+                Tracer.d(mytag, "history is: " + listItem);
+                if (!listItem.isEmpty()) {
+                    Tracer.d(mytag, "addView(listeChoices)");
+                    LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                    LL_background.addView(LV_listChoices);
+                    this.isopen = true;
+                }else{
+                    Tracer.d(mytag, "history is empty nothing to display");
+                }
             } else {
                 this.isopen = false;
-                super.LL_background.removeView(listeChoices);
+                super.LL_background.removeView(LV_listChoices);
                 super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             }
 

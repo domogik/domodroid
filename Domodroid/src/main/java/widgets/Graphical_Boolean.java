@@ -54,6 +54,7 @@ import rinor.Rest_com;
 public class Graphical_Boolean extends Basic_Graphical_widget implements View.OnClickListener {
 
     private ListView listeChoices;
+    private ArrayList<HashMap<String, String>> listItem;
     private TextView state;
     private RelativeTimeTextView TV_Timestamp;
     private String value0;
@@ -288,7 +289,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(context);
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
+        listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
@@ -391,17 +392,23 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         int currentint = LL_background.getHeight();
         if (!isopen) {
             Tracer.d(mytag, "on click");
-            this.isopen = true;
             try {
                 LL_background.removeView(listeChoices);
                 Tracer.d(mytag, "removeView(listeChoices)");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+            Tracer.d(mytag, "getting history");
             getlastvalue();
-            Tracer.d(mytag, "addView(listeChoices)");
-            LL_background.addView(listeChoices);
+            Tracer.d(mytag, "history is: " + listItem);
+            if (!listItem.isEmpty()) {
+                Tracer.d(mytag, "addView(listeChoices)");
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                LL_background.addView(listeChoices);
+                this.isopen = true;
+            } else {
+                Tracer.d(mytag, "history is empty nothing to display");
+            }
         } else {
             this.isopen = false;
             LL_background.removeView(listeChoices);

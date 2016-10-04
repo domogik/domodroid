@@ -84,5 +84,13 @@
             android:inputType="number"
             android:key="MQpubport"
             android:title="@string/Mq_pub_port" />
+        <Preference
+            android:persistent="false"
+            android:title="Auto config with qrcode">
+            <intent
+                android:targetPackage="org.domogik.domodroid13"
+                android:targetClass="activities.Preference"
+                android:action="scan_qrcode" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

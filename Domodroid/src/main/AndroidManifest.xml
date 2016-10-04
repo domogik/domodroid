@@ -40,10 +40,8 @@
         <activity android:name="activities.Activity_Map"
             android:theme="@style/AppTheme"
             android:configChanges="orientation"/>
-        <activity android:name="activities.SimpleScannerActivity"
-            android:theme="@style/AppTheme"
-            android:configChanges="orientation"/>
-        <service
+
+		<service
             android:name="mq.ZMQService"
 			 class="mq.ZMQService"
 			 android:exported="false"

@@ -67,4 +67,13 @@
             android:action="preferences_debug" />
     </Preference>
 
+    <Preference
+         android:persistent="false"
+        android:title="ESSAI">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.SimpleScannerActivity" />
+    </Preference>
+
 </PreferenceScreen>

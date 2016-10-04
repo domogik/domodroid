@@ -61,6 +61,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
 
     private ListView listeChoices;
+    private ArrayList<HashMap<String, String>> listItem;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private TextView state;
@@ -266,7 +267,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(context);
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
+        listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
@@ -285,7 +286,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                           map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("TV_Value").toLowerCase())));
+                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("TV_Value").toLowerCase())));
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
@@ -339,17 +340,23 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         int currentint = LL_background.getHeight();
         if (!isopen) {
             Tracer.d(mytag, "on click");
-            this.isopen = true;
             try {
                 LL_background.removeView(listeChoices);
                 Tracer.d(mytag, "removeView(listeChoices)");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+            Tracer.d(mytag, "getting history");
             getlastvalue();
-            Tracer.d(mytag, "addView(listeChoices)");
-            LL_background.addView(listeChoices);
+            Tracer.d(mytag, "history is: " + listItem);
+            if (!listItem.isEmpty()) {
+                Tracer.d(mytag, "addView(listeChoices)");
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                LL_background.addView(listeChoices);
+                this.isopen = true;
+            }else{
+                Tracer.d(mytag, "history is empty nothing to display");
+            }
         } else {
             this.isopen = false;
             LL_background.removeView(listeChoices);

@@ -323,7 +323,6 @@ class Widgets_Manager {
                     tmpPan.addView(list);
                     Tracer.i(mytag, "   ==> Graphical_List");
                 }
-                //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
                 // todo add missing datatype from 0.4 see all datatype that have no parent but values.
                 //String but carreful
                 //datetime done
@@ -348,6 +347,7 @@ class Widgets_Manager {
                     if (counter == 2) counter = 0;
                 } else ll.addView(tmpPan);
             } catch (Exception e) {
+                //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
                 Tracer.e(mytag, "Can not draw widget:" + e.toString());
             }
         }

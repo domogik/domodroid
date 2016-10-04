@@ -422,7 +422,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                          JSONObject json_Ack = null;
                                          try {
                                              new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
-                                             Hide();
+                                             Hide(true);
                                              //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          } catch (Exception e) {
                                              Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
@@ -448,7 +448,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
     }
 
-    private void Hide() {
+    private void Hide(Boolean command) {
         if (command_id != null) {
             TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
             TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
@@ -456,7 +456,10 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.isopen = false;
         super.LL_background.removeView(featurePan2);
         super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-        Toast.makeText(getContext(), R.string.command_sent, Toast.LENGTH_SHORT).show();
+        if (command) {
+            String text_to_display = context.getResources().getString(R.string.command_sent) + " " + state_key;
+            Toast.makeText(getContext(), text_to_display, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -564,7 +567,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     TV_Value.setText(Html.fromHtml("&#xf139;"), TextView.BufferType.SPANNABLE);
                 }
             } else {
-                Hide();
+                Hide(false);
             }
         } else {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804

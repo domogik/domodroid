@@ -17,10 +17,6 @@ import org.json.JSONObject;
 import misc.tracerengine;
 
 
-/**
- * Created by tiki on 05/10/2016.
- */
-
 public class config_with_qrcode extends AppCompatActivity {
     private static String contents;
     private final String mytag = this.getClass().getName();
@@ -59,17 +55,14 @@ public class config_with_qrcode extends AppCompatActivity {
                 } else if (title.equals("Qrcode is valid")) {
                     Tracer.d("preference", "We got a recult from qrcode scanner:" + contents);
                     try {
-                        Preference.fa.finish();
                         JSONObject jsonresult = null;
                         jsonresult = new JSONObject(contents);
-                        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(config_with_qrcode.this);
+                        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor prefEditor;
                         String admin_url = jsonresult.getString("admin_url");
-                        Tracer.e(mytag, "admin_url: " + admin_url);
                         String[] separated = admin_url.split("://");
                         String[] separatedbis = separated[1].split(":");
                         String admin_ip = separatedbis[0];
-                        Tracer.e(mytag, "rinor_IP: " + admin_ip);
                         String[] separatedter = separatedbis[1].split("/");
                         String rest_port = separatedter[0];
                         String rest_path = null;
@@ -79,15 +72,10 @@ public class config_with_qrcode extends AppCompatActivity {
                             rest_path = jsonresult.getString("rest_path");
                         }
                         //String rest_port = jsonresult.getString("rest_port");
-                        Tracer.e(mytag, "rest_port: " + rest_port);
                         String mq_ip = jsonresult.getString("mq_ip");
-                        Tracer.e(mytag, "mq_ip: " + mq_ip);
                         //String rest_path = jsonresult.getString("rest_path");
-                        Tracer.e(mytag, "rest_path: " + rest_path);
                         String mq_port_pubsub = jsonresult.getString("mq_port_pubsub");
-                        Tracer.e(mytag, "mq_port_pubsub: " + mq_port_pubsub);
                         String mq_port_req_rep = jsonresult.getString("mq_port_req_rep");
-                        Tracer.e(mytag, "mq_port_req_rep: " + mq_port_req_rep);
                         String rinor_IP = null;
                         Boolean SSL = null;
                         if (separated[0].toLowerCase().equals("http")) {
@@ -106,6 +94,16 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("MQsubport", mq_port_pubsub);
                         prefEditor.putString("MQpubport", mq_port_req_rep);
                         prefEditor.commit();
+
+                        Tracer.e(mytag, "rinor_IP: " + admin_ip);
+                        Tracer.e(mytag, "rinor_IP: " + params.getString("rinor_IP", "1.1.1.1"));
+
+                        Tracer.e(mytag, "admin_url: " + admin_url);
+                        Tracer.e(mytag, "rest_port: " + rest_port);
+                        Tracer.e(mytag, "mq_ip: " + mq_ip);
+                        Tracer.e(mytag, "rest_path: " + rest_path);
+                        Tracer.e(mytag, "mq_port_pubsub: " + mq_port_pubsub);
+                        Tracer.e(mytag, "mq_port_req_rep: " + mq_port_req_rep);
 
                         config_with_qrcode.this.finish();
 

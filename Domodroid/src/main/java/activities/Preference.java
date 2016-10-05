@@ -19,7 +19,6 @@
 package activities;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -46,11 +45,10 @@ import misc.tracerengine;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    private Preference myself = null;
+    public static Preference myself = null;
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
     private String action;
-    public static Activity fa;
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -91,7 +89,6 @@ public class Preference extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
-        fa = this;
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
@@ -119,16 +116,20 @@ public class Preference extends PreferenceActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (action == null || !action.equals("scan_qrcode")) {
+        if (action == null) {
             getPreferenceScreen().getSharedPreferences()
                     .registerOnSharedPreferenceChangeListener(this);
+        }
+        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+            initSummary(getPreferenceScreen().getPreference(i));
+
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (action == null || !action.equals("scan_qrcode")) {
+        if (action == null) {
             getPreferenceScreen().getSharedPreferences()
                     .unregisterOnSharedPreferenceChangeListener(this);
         }
@@ -139,12 +140,12 @@ public class Preference extends PreferenceActivity implements
         super.onDestroy();
 
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
-        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = params.getString("rinorIP", "");
         Boolean SSL = params.getBoolean("ssl_activate", false);
         SharedPreferences.Editor prefEditor;
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(this).edit();
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", "https://" + temp);
@@ -153,7 +154,7 @@ public class Preference extends PreferenceActivity implements
             }
             prefEditor.commit();
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(this).edit();
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", temp.replace("https://", ""));
@@ -183,11 +184,16 @@ public class Preference extends PreferenceActivity implements
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
+        Tracer.d(mytag, "End destroy activity");
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         updatePreferences(findPreference(key));
+        // show the current value in the settings screen
+        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+            initSummary(getPreferenceScreen().getPreference(i));
+        }
 
     }
 

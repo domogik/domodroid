@@ -663,6 +663,7 @@ public class WidgetUpdate {
                         //Will retry automatically in 2'05, if no events received
                         Tracer.e(mytag, "get stats : Rinor error <" + e.getMessage() + ">");
                         //Toast not available in asynctask
+                        // TODO handle "Host name may not be null" to avoid white page in domodroid
                         context.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(context, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();

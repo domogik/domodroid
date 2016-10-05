@@ -272,7 +272,7 @@ public class tracerengine {
     private static void syslog(int type, String tag, String msg) {
         if (tag == null)
             tag = "Null tag";
-        com.orhanobut.logger.Logger.init(tag).methodCount(5).hideThreadInfo().methodOffset(0);
+        com.orhanobut.logger.Logger.init(tag).methodCount(10).hideThreadInfo().methodOffset(0);
         switch (type) {
             case 0:
                 //Log.d(tag, msg);

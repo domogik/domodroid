@@ -20,12 +20,9 @@ package activities;
 
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -33,7 +30,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -43,8 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.domogik.domodroid13.R;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import Abstract.common_method;
 import database.Cache_management;
@@ -55,8 +49,8 @@ public class Preference extends PreferenceActivity implements
     private Preference myself = null;
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
-    private static String contents;
     private String action;
+    public static Activity fa;
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -97,20 +91,10 @@ public class Preference extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
+        fa = this;
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
-        } else if (action != null && action.equals("scan_qrcode")) {
-            try {
-                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");//for Qr code, its "QR_CODE_MODE" instead of "PRODUCT_MODE"
-                intent.putExtra("SAVE_HISTORY", false);//this stops saving ur barcode in barcode scanner app's history
-                startActivityForResult(intent, 0);
-
-            } catch (ActivityNotFoundException anfe) {
-                //on catch, show the download dialog
-                showDialog(Preference.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
-            }
         } else if (action != null && action.equals("preferences_widget")) {
             addPreferencesFromResource(R.xml.preferences_widget);
         } else if (action != null && action.equals("preferences_map")) {
@@ -124,11 +108,11 @@ public class Preference extends PreferenceActivity implements
         } else {
             addPreferencesFromResource(R.xml.preference);
         }
-        if (action == null || !action.equals("scan_qrcode")) {
-            // show the current value in the settings screen
-            for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
-                initSummary(getPreferenceScreen().getPreference(i));
-            }
+
+        // show the current value in the settings screen
+        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+            initSummary(getPreferenceScreen().getPreference(i));
+
         }
     }
 
@@ -227,71 +211,14 @@ public class Preference extends PreferenceActivity implements
         }
     }
 
-    private AlertDialog showDialog(final Activity act, final CharSequence title, CharSequence message, CharSequence buttonYes, final CharSequence buttonNo) {
-        final AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
-        downloadDialog.setTitle(title);
-        downloadDialog.setMessage(message);
-        downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (title.equals("No Scanner Found")) {
-                    Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    try {
-                        act.startActivity(intent);
-                    } catch (ActivityNotFoundException anfe) {
-
-                    }
-                } else if (title.equals("Qrcode is valid")) {
-                    Tracer.d("preference", "We got a recult from qrcode scanner:" + contents);
-                    try {
-                        JSONObject jsonreult = new JSONObject(contents);
-                        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(Preference.this);
-                        String admin_url = jsonreult.getString("admin_url");
-                        int rest_port = jsonreult.getInt("rest_port");
-                        String mq_ip = jsonreult.getString("mq_ip");
-                        String rest_path = jsonreult.getString("rest_path");
-                        int mq_port_pubsub = jsonreult.getInt("mq_port_pubsub");
-                        int mq_port_req_rep = jsonreult.getInt("mq_port_req_rep");
-                        SharedPreferences.Editor prefEditor;
-                        PreferenceManager.getDefaultSharedPreferences(Preference.this).edit();
-                        prefEditor = params.edit();
-                        if (admin_url.toLowerCase().startsWith("http://")) {
-                            prefEditor.putString("rinor_IP", admin_url.replace("http://", ""));
-                            prefEditor.putBoolean("ssl_activate", false);
-                        } else if (admin_url.toLowerCase().startsWith("https://")) {
-                            prefEditor.putString("rinor_IP", admin_url.replace("https://", ""));
-                            prefEditor.putBoolean("ssl_activate", true);
-                        }
-                        prefEditor.putInt("rinorPort", rest_port);
-                        prefEditor.putString("rinorPath", rest_path);
-                        prefEditor.putString("MQaddress", mq_ip);
-                        prefEditor.putInt("MQsubport", mq_port_pubsub);
-                        prefEditor.putInt("MQpubport", mq_port_req_rep);
-
-                        prefEditor.commit();
-                    } catch (JSONException e) {
-                        Tracer.e(mytag, "Error parsing answer of qrode to json: " + e.toString());
-                    }
-                }
-            }
-        });
-        downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        return downloadDialog.show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                contents = data.getStringExtra("SCAN_RESULT"); //this is the result
-                showDialog(Preference.this, "Qrcode is valid", contents, "OK", "No").show();
-            } else if (resultCode == RESULT_CANCELED) {
-                showDialog(Preference.this, "Qrcode results", "No results from qrcode scanner", "Yes", "No").show();
-            }
+    public void kill() {
+        if (Build.VERSION.SDK_INT >= 11) {
+            recreate();
+        } else {
+            Intent intent = getIntent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
         }
     }
+
 }

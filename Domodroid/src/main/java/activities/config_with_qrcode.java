@@ -86,7 +86,7 @@ public class config_with_qrcode extends AppCompatActivity {
                             SSL = true;
                         }
                         prefEditor = params.edit();
-                        prefEditor.putString("rinor_IP", rinor_IP);
+                        prefEditor.putString("rinorIP", rinor_IP);
                         prefEditor.putString("rinorPort", rest_port);
                         prefEditor.putString("rinorPath", rest_path);
                         prefEditor.putBoolean("ssl_activate", SSL);
@@ -94,17 +94,6 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("MQsubport", mq_port_pubsub);
                         prefEditor.putString("MQpubport", mq_port_req_rep);
                         prefEditor.commit();
-
-                        Tracer.e(mytag, "rinor_IP: " + admin_ip);
-                        Tracer.e(mytag, "rinor_IP: " + params.getString("rinor_IP", "1.1.1.1"));
-
-                        Tracer.e(mytag, "admin_url: " + admin_url);
-                        Tracer.e(mytag, "rest_port: " + rest_port);
-                        Tracer.e(mytag, "mq_ip: " + mq_ip);
-                        Tracer.e(mytag, "rest_path: " + rest_path);
-                        Tracer.e(mytag, "mq_port_pubsub: " + mq_port_pubsub);
-                        Tracer.e(mytag, "mq_port_req_rep: " + mq_port_req_rep);
-
                         config_with_qrcode.this.finish();
 
                     } catch (JSONException e) {

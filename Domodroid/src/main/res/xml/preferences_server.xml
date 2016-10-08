@@ -7,12 +7,19 @@
     <PreferenceCategory
         android:persistent="false"
         android:title="@string/OPTION_server_settings">
-        <Preference
+       <Preference
             android:enabled="false"
             android:icon="@drawable/ic_settings_applications_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/OPTION_server_explain" />
+        <Preference
+            android:persistent="false"
+            android:title="@string/OPTION_server_qrcode">
+            <intent
+                android:targetClass="activities.config_with_qrcode"
+                android:targetPackage="org.domogik.domodroid13" />
+        </Preference>
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_IP_Title"
             android:icon="@drawable/ic_ip_address"
@@ -84,12 +91,6 @@
             android:inputType="number"
             android:key="MQpubport"
             android:title="@string/Mq_pub_port" />
-        <Preference
-            android:persistent="false"
-            android:title="Auto config with qrcode">
-            <intent
-                android:targetClass="activities.config_with_qrcode"
-                android:targetPackage="org.domogik.domodroid13" />
-        </Preference>
+
     </PreferenceCategory>
 </PreferenceScreen>

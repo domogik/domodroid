@@ -721,4 +721,5 @@
     <string name="missing_maps_applications">Please install a maps application</string>
     <string name="command_sent">Command sent to rest:</string>
     <string name="toast_crash">Domodroid crash report notification</string>
+    <string name="OPTION_server_qrcode">Auto config server with qrcode</string>
 </resources>

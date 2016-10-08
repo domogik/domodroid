@@ -15,9 +15,9 @@ public class translate {
         //Set to lower case here to simplify other calls
         String temp_name = name.toLowerCase();
         //handle the fact that 'true/false' are reserved word and cant not been translate
-        if (temp_name == "false") {
+        if (temp_name.endsWith("false")) {
             temp_name = "False";
-        } else if (temp_name == "true") {
+        } else if (temp_name.equals("true")) {
             temp_name = "True";
         }
         //To avoid space or - in name in strings.xml

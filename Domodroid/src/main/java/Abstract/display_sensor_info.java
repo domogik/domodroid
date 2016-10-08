@@ -115,6 +115,7 @@ public abstract class display_sensor_info {
                         LL_featurePan.addView(timestamp);
                         break;
                     default:
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         if (state_key.equalsIgnoreCase("current_wind_speed")) {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf03e;"), TextView.BufferType.SPANNABLE);
@@ -131,7 +132,6 @@ public abstract class display_sensor_info {
                             state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf24e;"), TextView.BufferType.SPANNABLE);
                         }
-                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;
                 }
             } else {
@@ -164,6 +164,37 @@ public abstract class display_sensor_info {
                     }
                 } else if (state_key.equalsIgnoreCase("callerid")) {
                     value.setText(phone_convertion(Tracer, mytag, loc_Value));
+                } else if (state_key.toLowerCase().startsWith("rainlevel")) {
+                    //Add try catch to avoid other case that make #1794
+                    try {
+                        //use xml and weather fonts here
+                        value.setTypeface(typefaceweather, Typeface.NORMAL);
+                        switch (loc_Value) {
+                            case "0":
+                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                break;
+                            case "1":
+                                value.setText(context.getResources().getIdentifier("wi_cloud", "string", context.getPackageName()));
+                                break;
+                            case "5":
+                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
+                                break;
+                            case "3":
+                                value.setText(context.getResources().getIdentifier("wi_hail", "string", context.getPackageName()));
+                                break;
+                            case "4":
+                                value.setText(context.getResources().getIdentifier("wi_rain", "string", context.getPackageName()));
+                                break;
+                            default:
+                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                break;
+                        }
+
+                    } catch (Exception e1) {
+                        Tracer.e(mytag, "no translation for: " + loc_Value);
+                        e1.toString();
+                        value.setText(loc_Value);
+                    }
                 } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));
             }
         } catch (Exception e) {

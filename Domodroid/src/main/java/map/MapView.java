@@ -614,8 +614,7 @@ public class MapView extends View {
                     value = value1;
                 try {
                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    value = context.getString((Graphics_Manager.getStringIdentifier(getContext(),
-                            value.toLowerCase())));
+                    value = context.getString((Graphics_Manager.Translate(getContext(), value)));
                 } catch (Exception e1) {
                     Tracer.d(mytag, "no translation for: " + value);
                 }

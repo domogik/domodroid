@@ -618,7 +618,9 @@ public class Graphics_Manager {
         return R.drawable.map_led_off;
     }
 
-    public static int getStringIdentifier(Context context, String name) {
+    public static int Translate(Context context, String name) {
+        //Set to lower case here to simplify other calls
+        name = name.toLowerCase();
         //To avoid space or - in name in strings.xml
         name = name.replace(" ", "_");
         name = name.replace("-", "_");
@@ -782,7 +784,7 @@ public class Graphics_Manager {
                 usage = "door";
             return usage;
 
-        }else{
+        } else {
             return "";
         }
 

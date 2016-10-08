@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -116,7 +115,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         String graph_size = params.getString("graph_size", "262.5");
         this.Float_graph_size = Float.valueOf(graph_size);
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;

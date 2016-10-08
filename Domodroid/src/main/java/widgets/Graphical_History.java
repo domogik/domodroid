@@ -125,7 +125,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         myself = this;
         mytag = "Graphical_History(" + dev_id + ")";
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
@@ -286,7 +286,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("TV_Value").toLowerCase())));
+                            map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), itemArray.getJSONObject(i).getString("TV_Value"))));
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
@@ -303,7 +303,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("value_str").toLowerCase())));
+                            map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), itemArray.getJSONObject(i).getString("value_str"))));
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("value_str"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));

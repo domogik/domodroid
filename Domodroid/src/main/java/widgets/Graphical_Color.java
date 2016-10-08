@@ -144,7 +144,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //state key
         TextView state_key_view = new TextView(context);
         try {
-            state_key_view.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())));
+            state_key_view.setText(context.getResources().getString(Graphics_Manager.Translate(getContext(), state_key)));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             state_key_view.setText(state_key);

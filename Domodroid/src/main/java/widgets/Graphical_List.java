@@ -149,7 +149,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         //state key
         final TextView state_key_view = new TextView(context);
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
@@ -271,7 +271,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
                 HashMap<String, String> map = new HashMap<String, String>();
                 try {
-                    map.put("choice", getResources().getString(Graphics_Manager.getStringIdentifier(context, (known_values[i]).toLowerCase())));
+                    map.put("choice", getResources().getString(Graphics_Manager.Translate(context, (known_values[i]))));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + known_values[i]);
                     map.put("choice", known_values[i]);
@@ -492,7 +492,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), itemArray.getJSONObject(i).getString("TV_Value").toLowerCase())));
+                            map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), itemArray.getJSONObject(i).getString("TV_Value"))));
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
@@ -515,7 +515,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                             temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
                         }
                         try {
-                            map.put("TV_Value", context.getString(Graphics_Manager.getStringIdentifier(getContext(), temp_value_str)));
+                            map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), temp_value_str)));
                         } catch (Exception e1) {
                             Tracer.d(mytag, "no translation for: " + temp_value_str);
                             map.put("TV_Value", temp_value_str);

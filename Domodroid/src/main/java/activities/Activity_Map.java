@@ -237,7 +237,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                         map.put("type", feature.getValue_type());
                     }
                     try {
-                        map.put("state_key", getResources().getString(Graphics_Manager.getStringIdentifier(getApplicationContext(), feature.getState_key().toLowerCase())));
+                        map.put("state_key", getResources().getString(Graphics_Manager.Translate(getApplicationContext(), feature.getState_key())));
                     } catch (Exception e) {
                         Tracer.d(mytag, "no translation for: " + feature.getState_key());
                         map.put("state_key", feature.getState_key());

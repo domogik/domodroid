@@ -92,7 +92,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 
         String stateS;
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;

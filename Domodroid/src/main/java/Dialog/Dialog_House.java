@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 
 import org.domogik.domodroid13.R;
 
@@ -153,14 +152,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
         for (Entity_Feature feature : listFeature) {
             if (feature.getParameters().contains("command")) {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())));
+                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.Translate(getContext(), feature.getState_key())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), feature.getState_key().toLowerCase())));
+                    list_feature.add(feature.getName() + " " + context.getResources().getString(Graphics_Manager.Translate(getContext(), feature.getState_key())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     list_feature.add(feature.getName() + " " + feature.getState_key());
@@ -517,14 +516,14 @@ public class Dialog_House extends Dialog implements OnClickListener {
             map = new HashMap<>();
             if (feature.getParameters().contains("command")) {
                 try {
-                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())));
+                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(Graphics_Manager.Translate(context, feature.getState_key())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.getStringIdentifier(context, feature.getState_key().toLowerCase())));
+                    map.put("name", feature.getName() + " " + context.getResources().getString(Graphics_Manager.Translate(context, feature.getState_key())));
                 } catch (Exception e) {
                     Tracer.d(mytag, "no translation for: " + feature.getState_key());
                     map.put("name", feature.getName() + " " + feature.getState_key());

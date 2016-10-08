@@ -179,19 +179,19 @@ public abstract class display_sensor_info {
                     String PM = st.nextToken();
                     try {
                         AM = AM.replace("AM ", "");
-                        AM = context.getResources().getString(Graphics_Manager.getStringIdentifier(context, AM.toLowerCase()));
+                        AM = context.getResources().getString(Graphics_Manager.Translate(context, AM));
                     } catch (Exception amexception) {
                         Tracer.d(mytag, "no translation for: " + AM);
                     }
                     try {
                         PM = PM.replace("PM ", "");
-                        PM = context.getResources().getString(Graphics_Manager.getStringIdentifier(context, PM.toLowerCase()));
+                        PM = context.getResources().getString(Graphics_Manager.Translate(context, PM));
                     } catch (Exception pmexception) {
                         Tracer.d(mytag, "no translation for: " + PM);
                     }
                     value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
                 } else {
-                    value.setText(Graphics_Manager.getStringIdentifier(context, loc_Value.toLowerCase()));
+                    value.setText(Graphics_Manager.Translate(context, loc_Value));
                 }
             } catch (Exception e1) {
                 Tracer.d(mytag, "no translation for: " + loc_Value);

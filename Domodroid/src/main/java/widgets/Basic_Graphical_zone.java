@@ -94,7 +94,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //description
         TextView TV_description = new TextView(context);
         try {
-            TV_description.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), description.toLowerCase())));
+            TV_description.setText(context.getResources().getString(Graphics_Manager.Translate(getContext(), description)));
         } catch (Exception e) {
             String mytag = "Basic_Graphical_zone";
             tracer.d(mytag, "no translation for: " + name);

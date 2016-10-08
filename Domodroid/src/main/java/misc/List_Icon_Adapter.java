@@ -51,7 +51,7 @@ public class List_Icon_Adapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 
         try {
-            textView.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), values[position].toLowerCase())));
+            textView.setText(context.getResources().getString(Graphics_Manager.Translate(getContext(), values[position])));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + values[position]);
             textView.setText(values[position]);

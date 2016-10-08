@@ -2,31 +2,39 @@ package Abstract;
 
 import android.content.Context;
 
+import misc.tracerengine;
+
 /**
  * Created by tiki on 08/10/2016.
  */
 
-public class Translate {
+public class translate {
 
-    public static int do_translate(Context context, String name) {
+    public static int do_translate(Context context, tracerengine Tracer, String name) {
+        String mytag = "do_translate";
         //Set to lower case here to simplify other calls
-        name = name.toLowerCase();
+        String temp_name = name.toLowerCase();
         //handle the fact that 'true/false' are reserved word and cant not been translate
-        if (name == "false") {
-            name = "False";
-        } else if (name == "true") {
-            name = "True";
+        if (temp_name == "false") {
+            temp_name = "False";
+        } else if (temp_name == "true") {
+            temp_name = "True";
         }
         //To avoid space or - in name in strings.xml
-        name = name.replace(" ", "_");
-        name = name.replace("-", "_");
-        name = name.replace(":", "_");
-        name = name.replace("/", "_");
-        name = name.replace("(", "");
-        name = name.replace(")", "");
+        temp_name = temp_name.replace(" ", "_");
+        temp_name = temp_name.replace("-", "_");
+        temp_name = temp_name.replace(":", "_");
+        temp_name = temp_name.replace("/", "_");
+        temp_name = temp_name.replace("(", "");
+        temp_name = temp_name.replace(")", "");
         //To get a drawable R.Drawable
         //context.getResources().getIdentifier(name, "drawable", context.getPackageName());
         //To get a string from R.String
-        return context.getResources().getIdentifier(name, "string", context.getPackageName());
+        try {
+            return context.getResources().getIdentifier(temp_name, "string", context.getPackageName());
+        } catch (Exception e) {
+            Tracer.d(mytag, "no translation for: " + name);
+            return 0;
+        }
     }
 }

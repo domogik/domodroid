@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.domogik.domodroid13.R;
 
-import Abstract.Translate;
+import Abstract.translate;
 import activities.Graphics_Manager;
 
 import android.content.Context;
@@ -52,9 +52,8 @@ public class List_Icon_Adapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 
         try {
-            textView.setText(context.getResources().getString(Translate.do_translate(getContext(), values[position])));
+            textView.setText(context.getResources().getString(translate.do_translate(getContext(), Tracer, values[position])));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + values[position]);
             textView.setText(values[position]);
         }
         // change the icon for Windows and iPhone

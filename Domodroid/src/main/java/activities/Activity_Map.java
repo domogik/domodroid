@@ -59,7 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Dialog.Dialog_Map_Help;
 import Dialog.Dialog_Map_Move;
 import Entity.Entity_Feature;
@@ -238,9 +238,8 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                         map.put("type", feature.getValue_type());
                     }
                     try {
-                        map.put("state_key", getResources().getString(Translate.do_translate(getApplicationContext(), feature.getState_key())));
+                        map.put("state_key", getResources().getString(translate.do_translate(getApplicationContext(), Tracer, feature.getState_key())));
                     } catch (Exception e) {
-                        Tracer.d(mytag, "no translation for: " + feature.getState_key());
                         map.put("state_key", feature.getState_key());
                     }
                     map.put("icon", Integer.toString(feature.getRessources()));

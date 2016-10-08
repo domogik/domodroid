@@ -48,12 +48,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -126,9 +125,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         myself = this;
         mytag = "Graphical_History(" + dev_id + ")";
         try {
-            stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         if (stateS.equals("null"))
@@ -287,9 +285,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                            map.put("TV_Value", context.getString(Translate.do_translate(getContext(), itemArray.getJSONObject(i).getString("TV_Value"))));
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
                         } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                         }
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
@@ -304,9 +301,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                            map.put("TV_Value", context.getString(Translate.do_translate(getContext(), itemArray.getJSONObject(i).getString("value_str"))));
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("value_str"))));
                         } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("value_str"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
                         }
                         if (api_version == 0.7f) {
@@ -355,7 +351,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
                 LL_background.addView(listeChoices);
                 this.isopen = true;
-            }else{
+            } else {
                 Tracer.d(mytag, "history is empty nothing to display");
             }
         } else {

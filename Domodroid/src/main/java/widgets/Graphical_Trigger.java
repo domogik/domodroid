@@ -34,10 +34,9 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
-import activities.Graphics_Manager;
 import misc.tracerengine;
 import rinor.CallUrl;
 
@@ -93,9 +92,8 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 
         String stateS;
         try {
-            stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
 

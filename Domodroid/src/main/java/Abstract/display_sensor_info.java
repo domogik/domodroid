@@ -179,19 +179,23 @@ public abstract class display_sensor_info {
                     String PM = st.nextToken();
                     try {
                         AM = AM.replace("AM ", "");
-                        AM = context.getResources().getString(Translate.do_translate(context, AM));
+                        AM = context.getResources().getString(translate.do_translate(context, Tracer, AM));
                     } catch (Exception amexception) {
-                        Tracer.d(mytag, "no translation for: " + AM);
+
                     }
                     try {
                         PM = PM.replace("PM ", "");
-                        PM = context.getResources().getString(Translate.do_translate(context, PM));
+                        PM = context.getResources().getString(translate.do_translate(context, Tracer, PM));
                     } catch (Exception pmexception) {
-                        Tracer.d(mytag, "no translation for: " + PM);
+
                     }
                     value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
                 } else {
-                    value.setText(Translate.do_translate(context, loc_Value));
+                    try {
+                        value.setText(translate.do_translate(context, Tracer, loc_Value));
+                    } catch (Exception e1) {
+                        value.setText(loc_Value);
+                    }
                 }
             } catch (Exception e1) {
                 Tracer.d(mytag, "no translation for: " + loc_Value);

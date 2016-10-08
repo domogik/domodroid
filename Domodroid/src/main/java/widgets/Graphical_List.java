@@ -52,12 +52,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
@@ -150,9 +149,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         //state key
         final TextView state_key_view = new TextView(context);
         try {
-            stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         state_key_view.setText(stateS);
@@ -272,9 +270,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
                 HashMap<String, String> map = new HashMap<String, String>();
                 try {
-                    map.put("choice", getResources().getString(Translate.do_translate(context, (known_values[i]))));
+                    map.put("choice", getResources().getString(translate.do_translate(context, Tracer, (known_values[i]))));
                 } catch (Exception e) {
-                    Tracer.d(mytag, "no translation for: " + known_values[i]);
                     map.put("choice", known_values[i]);
                 }
                 if (api_version >= 0.7f) {
@@ -493,9 +490,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     try {
                         HashMap<String, String> map = new HashMap<>();
                         try {
-                            map.put("TV_Value", context.getString(Translate.do_translate(getContext(), itemArray.getJSONObject(i).getString("TV_Value"))));
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
                         } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + itemArray.getJSONObject(i).getString("TV_Value"));
                             map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                         }
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
@@ -516,9 +512,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                             temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
                         }
                         try {
-                            map.put("TV_Value", context.getString(Translate.do_translate(getContext(), temp_value_str)));
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
                         } catch (Exception e1) {
-                            Tracer.d(mytag, "no translation for: " + temp_value_str);
                             map.put("TV_Value", temp_value_str);
                         }
                         if (api_version == 0.7f) {

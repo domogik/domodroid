@@ -17,7 +17,7 @@
  */
 package widgets;
 
-import Abstract.Translate;
+import Abstract.translate;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import misc.tracerengine;
@@ -56,7 +56,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //this.session_type = session_type;
         this.setPadding(5, 5, 5, 5);
         this.widgetHandler = handler;
-        tracerengine tracer = Trac;
+        tracerengine Tracer = Trac;
         setOnClickListener(this);
 
         //panel with border
@@ -95,10 +95,9 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //description
         TextView TV_description = new TextView(context);
         try {
-            TV_description.setText(context.getResources().getString(Translate.do_translate(getContext(), description)));
+            TV_description.setText(context.getResources().getString(translate.do_translate(getContext(), Tracer, description)));
         } catch (Exception e) {
             String mytag = "Basic_Graphical_zone";
-            tracer.d(mytag, "no translation for: " + name);
             TV_description.setText(description);
         }
         TV_description.setTextSize(17);

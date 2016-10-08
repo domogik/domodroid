@@ -38,11 +38,10 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
@@ -110,9 +109,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         mytag = "Graphical_Binary_New(" + dev_id + ")";
 
         try {
-            this.stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
 
@@ -180,9 +178,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         params.weight = 0.5f;
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
-            ON.setText(context.getString(Translate.do_translate(getContext(), this.Value_1)));
+            ON.setText(context.getString(translate.do_translate(getContext(), Tracer, this.Value_1)));
         } catch (Exception e1) {
-            Tracer.d(mytag, "no translation for: " + this.Value_1);
             ON.setText(this.Value_1);
         }
         ON.setLayoutParams(params);
@@ -198,9 +195,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         //OFF.setBackgroundResource(R.drawable.boolean_off);
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
-            OFF.setText(context.getString(Translate.do_translate(getContext(), this.Value_0)));
+            OFF.setText(context.getString(translate.do_translate(getContext(), Tracer, this.Value_0)));
         } catch (Exception e1) {
-            Tracer.d(mytag, "no translation for: " + this.Value_0);
             OFF.setText(this.Value_0);
         }
         OFF.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
@@ -243,18 +239,16 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                             if (b.getString("message").equals(value0)) {
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + Value_0);
                                     state.setText(stateS + " : " + Value_0);
                                 }
                                 change_this_icon(0);
                             } else if (b.getString("message").equals(value1)) {
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
                                 }
                                 change_this_icon(2);
@@ -273,27 +267,24 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                                 if (new_val.equals(value0)) {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
+                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                     } catch (Exception e1) {
-                                        Tracer.d(mytag, "no translation for: " + Value_0);
                                         state.setText(stateS + " : " + Value_0);
                                     }
                                     change_this_icon(0);
                                 } else if (new_val.equals(value1)) {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
+                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                     } catch (Exception e1) {
-                                        Tracer.d(mytag, "no translation for: " + Value_1);
                                         state.setText(stateS + " : " + Value_1);
                                     }
                                     change_this_icon(2);
                                 } else {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), new_val)));
+                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, new_val)));
                                     } catch (Exception e1) {
-                                        Tracer.d(mytag, "no translation for: " + new_val);
                                         state.setText(stateS + " : " + new_val);
                                     }
                                 }
@@ -356,9 +347,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             change_this_icon(0);
             try {
                 Tracer.d(mytag, "Try to get value translate from R.STRING");
-                state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
+                state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
             } catch (Exception e1) {
-                Tracer.d(mytag, "no translation for: " + Value_0);
                 state.setText(stateS + " : " + Value_0);
             }
             if (api_version >= 0.7f) {
@@ -370,9 +360,8 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             change_this_icon(2);
             try {
                 Tracer.d(mytag, "Try to get value translate from R.STRING");
-                state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
+                state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
             } catch (Exception e1) {
-                Tracer.d(mytag, "no translation for: " + Value_1);
                 state.setText(stateS + " : " + Value_1);
             }
             if (api_version >= 0.7f) {

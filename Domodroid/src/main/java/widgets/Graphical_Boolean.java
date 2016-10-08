@@ -41,12 +41,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -123,9 +122,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         }
 
         try {
-            this.stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
 
@@ -156,9 +154,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         state.setTextColor(Color.BLACK);
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
-            state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
+            state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
         } catch (Exception e1) {
-            Tracer.d(mytag, "no translation for: " + Value_0);
             state.setText(stateS + " : " + Value_0);
         }
 
@@ -209,9 +206,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 change_this_icon(0);
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + Value_0);
                                     state.setText(stateS + " : " + Value_0);
                                 }
                             } else if (status.equals(value1) || status.equals("1")) {
@@ -220,9 +216,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 change_this_icon(2);
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
                                 }
                             } else {
@@ -310,23 +305,20 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                         HashMap<String, String> map = new HashMap<>();
                         if (itemArray.getJSONObject(i).getString("TV_Value").equals(value0) || itemArray.getJSONObject(i).getString("TV_Value").equals("0")) {
                             try {
-                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_0)));
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                             } catch (Exception e1) {
-                                Tracer.d(mytag, "no translation for: " + Value_0);
                                 map.put("TV_Value", Value_0);
                             }
                         } else if (itemArray.getJSONObject(i).getString("TV_Value").equals(value1) || itemArray.getJSONObject(i).getString("TV_Value").equals("1")) {
                             try {
-                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_1)));
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                             } catch (Exception e1) {
-                                Tracer.d(mytag, "no translation for: " + Value_1);
                                 map.put("TV_Value", Value_1);
                             }
                         } else {
                             try {
-                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), "N/A")));
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, "N/A")));
                             } catch (Exception e1) {
-                                Tracer.d(mytag, "no translation for: " + "N/A");
                                 map.put("TV_Value", "N/A");
                             }
                         }
@@ -343,23 +335,20 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                         HashMap<String, String> map = new HashMap<>();
                         if (itemArray.getJSONObject(i).getString("value_str").equals(value0) || itemArray.getJSONObject(i).getString("value_str").equals("0")) {
                             try {
-                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_0)));
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                             } catch (Exception e1) {
-                                Tracer.d(mytag, "no translation for: " + Value_0);
                                 map.put("TV_Value", Value_0);
                             }
                         } else if (itemArray.getJSONObject(i).getString("value_str").equals(value1) || itemArray.getJSONObject(i).getString("value_str").equals("1")) {
                             try {
-                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_1)));
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                             } catch (Exception e1) {
-                                Tracer.d(mytag, "no translation for: " + Value_1);
                                 map.put("TV_Value", Value_1);
                             }
                         } else {
                             try {
-                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), "N/A")));
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, "N/A")));
                             } catch (Exception e1) {
-                                Tracer.d(mytag, "no translation for: " + "N/A");
                                 map.put("TV_Value", "N/A");
                             }
                         }

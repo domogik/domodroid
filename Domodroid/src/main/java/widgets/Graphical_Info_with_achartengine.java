@@ -59,13 +59,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
-import Abstract.Translate;
+import Abstract.translate;
 import Abstract.calcul;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -156,9 +155,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 
         try {
-            stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         myself = this;
@@ -181,7 +179,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         dataset = new XYMultipleSeriesDataset();
         //Creating an  XYSeries for Income
         nameSeries = new TimeSeries(name);
-        EmptySeries = new TimeSeries(getResources().getString(Translate.do_translate(getContext(), "no_value")));
+        EmptySeries = new TimeSeries(getResources().getString(translate.do_translate(getContext(), Tracer, "no_value")));
         incomeRenderer.setColor(0xff0B909A);
         emptyRenderer.setColor(0xffff0000);
         incomeRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -199,7 +197,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //Remove default X axis label
         //multiRenderer.setXLabels(0);
         //Set X title
-        multiRenderer.setXTitle(getResources().getString(Translate.do_translate(getContext(), "time")));
+        multiRenderer.setXTitle(getResources().getString(translate.do_translate(getContext(), Tracer, "time")));
         //Remove default Y axis label
         multiRenderer.setYLabels(0);
         //Set X label text color
@@ -359,8 +357,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //updateTimer();	//Don't use anymore cyclic refresh....
 
     }
-
-
 
 
     @Override

@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.List;
 
 import Abstract.common_method;
-import Abstract.Translate;
 import Entity.Entity_client;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;

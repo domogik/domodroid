@@ -708,7 +708,11 @@ public class Graphics_Manager {
                     || usage.toLowerCase().equals("bbrhpjw") || usage.toLowerCase().equals("bbrhcjr") || usage.toLowerCase().equals("bbrhpjr")
                     )
                 usage = "electricity";
-            //RFXBNZ "temperature", "humidity", "battery", "luminosity", "pressure", "power", "energy", "water", "windspeed", "rainfall", "outflow",
+            //rainhour
+            if (usage.equals("rainForecastLocation") || usage.equals("rainForecastDate") || usage.equals("rainForecastTxt")
+                    || usage.startsWith("rainLevel") || usage.equals("rainInHour")|| usage.equals("heavyRainInHour"))
+                usage = "humidity";
+            // RFXBNZ "temperature", "humidity", "battery", "luminosity", "pressure", "power", "energy", "water", "windspeed", "rainfall", "outflow",
             // "voltage", "current", "homeeasy S_switch", "homeeasy_openclose", "x10_switch", "ati_remote", "generic"
             //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close", "smoke"
             if (usage.toLowerCase().equals("battery"))

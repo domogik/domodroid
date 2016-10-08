@@ -217,14 +217,4 @@ public class Preference extends PreferenceActivity implements
         }
     }
 
-    public void kill() {
-        if (Build.VERSION.SDK_INT >= 11) {
-            recreate();
-        } else {
-            Intent intent = getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-        }
-    }
-
 }

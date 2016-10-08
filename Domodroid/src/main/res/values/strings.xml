@@ -793,7 +793,7 @@
     <string name="year">Year</string>
     <string name="command_sent">Command sent to rest:</string>
     <string name="heavyRainInHour">heavy Rain In Hour</string>
-    <string name="raininhour">rain In Hour</string>
+    <string name="raininhour">Rain In Hour</string>
     <string name="rainlevel55mn">Rain level 55mn</string>
     <string name="rainlevel50mn">Rain level 50mn</string>
     <string name="rainlevel45mn">Rain level 45mn</string>
@@ -806,7 +806,7 @@
     <string name="rainlevel10mn">Rain level 10mn</string>
     <string name="rainlevel5mn">Rain level 5mn</string>
     <string name="rainlevel0mn">Rain level 0mn</string>
-    <string name="rainforecasttxt">Rain forecast Text</string>
-    <string name="rainforecastdate">Rain forecast date</string>
-    <string name="rainforecastlocation">Rain forecast location</string>
+    <string name="rainforecasttxt">Rain forecast Info</string>
+    <string name="rainforecastdate">Rain forecast Date</string>
+    <string name="rainforecastlocation">Rain forecast Location</string>
 </resources>

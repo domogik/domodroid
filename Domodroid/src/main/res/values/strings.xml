@@ -792,4 +792,21 @@
     <string name="True">True</string>
     <string name="year">Year</string>
     <string name="command_sent">Command sent to rest:</string>
+    <string name="heavyRainInHour">heavy Rain In Hour</string>
+    <string name="raininhour">rain In Hour</string>
+    <string name="rainlevel55mn">Rain level 55mn</string>
+    <string name="rainlevel50mn">Rain level 50mn</string>
+    <string name="rainlevel45mn">Rain level 45mn</string>
+    <string name="rainlevel40mn">Rain level 40mn</string>
+    <string name="rainlevel35mn">Rain level 35mn</string>
+    <string name="rainlevel30mn">Rain level 30mn</string>
+    <string name="rainlevel25mn">Rain level 25mn</string>
+    <string name="rainlevel20mn">Rain level 20mn</string>
+    <string name="rainlevel15mn">Rain level 15mn</string>
+    <string name="rainlevel10mn">Rain level 10mn</string>
+    <string name="rainlevel5mn">Rain level 5mn</string>
+    <string name="rainlevel0mn">Rain level 0mn</string>
+    <string name="rainforecasttxt">Rain forecast Text</string>
+    <string name="rainforecastdate">Rain forecast date</string>
+    <string name="rainforecastlocation">Rain forecast location</string>
 </resources>

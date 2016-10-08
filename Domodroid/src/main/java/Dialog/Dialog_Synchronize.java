@@ -565,7 +565,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 } catch (Exception e1) {
                     context.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, R.string.problm_with_mq_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.problem_with_mq_information, Toast.LENGTH_LONG).show();
                             Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });

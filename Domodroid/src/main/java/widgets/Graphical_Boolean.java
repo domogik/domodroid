@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Abstract.Translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -122,7 +123,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         }
 
         try {
-            this.stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
+            this.stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
@@ -155,7 +156,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         state.setTextColor(Color.BLACK);
         try {
             Tracer.d(mytag, "Try to get value translate from R.STRING");
-            state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+            state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
         } catch (Exception e1) {
             Tracer.d(mytag, "no translation for: " + Value_0);
             state.setText(stateS + " : " + Value_0);
@@ -208,7 +209,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 change_this_icon(0);
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + Value_0);
                                     state.setText(stateS + " : " + Value_0);
@@ -219,7 +220,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 change_this_icon(2);
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_1)));
+                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
@@ -309,21 +310,21 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                         HashMap<String, String> map = new HashMap<>();
                         if (itemArray.getJSONObject(i).getString("TV_Value").equals(value0) || itemArray.getJSONObject(i).getString("TV_Value").equals("0")) {
                             try {
-                                map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_0)));
                             } catch (Exception e1) {
                                 Tracer.d(mytag, "no translation for: " + Value_0);
                                 map.put("TV_Value", Value_0);
                             }
                         } else if (itemArray.getJSONObject(i).getString("TV_Value").equals(value1) || itemArray.getJSONObject(i).getString("TV_Value").equals("1")) {
                             try {
-                                map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), Value_1)));
+                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_1)));
                             } catch (Exception e1) {
                                 Tracer.d(mytag, "no translation for: " + Value_1);
                                 map.put("TV_Value", Value_1);
                             }
                         } else {
                             try {
-                                map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), "N/A")));
+                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), "N/A")));
                             } catch (Exception e1) {
                                 Tracer.d(mytag, "no translation for: " + "N/A");
                                 map.put("TV_Value", "N/A");
@@ -342,21 +343,21 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                         HashMap<String, String> map = new HashMap<>();
                         if (itemArray.getJSONObject(i).getString("value_str").equals(value0) || itemArray.getJSONObject(i).getString("value_str").equals("0")) {
                             try {
-                                map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_0)));
                             } catch (Exception e1) {
                                 Tracer.d(mytag, "no translation for: " + Value_0);
                                 map.put("TV_Value", Value_0);
                             }
                         } else if (itemArray.getJSONObject(i).getString("value_str").equals(value1) || itemArray.getJSONObject(i).getString("value_str").equals("1")) {
                             try {
-                                map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), Value_1)));
+                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), Value_1)));
                             } catch (Exception e1) {
                                 Tracer.d(mytag, "no translation for: " + Value_1);
                                 map.put("TV_Value", Value_1);
                             }
                         } else {
                             try {
-                                map.put("TV_Value", context.getString(Graphics_Manager.Translate(getContext(), "N/A")));
+                                map.put("TV_Value", context.getString(Translate.do_translate(getContext(), "N/A")));
                             } catch (Exception e1) {
                                 Tracer.d(mytag, "no translation for: " + "N/A");
                                 map.put("TV_Value", "N/A");

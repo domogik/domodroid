@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import Abstract.Translate;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Activity_Map;
@@ -614,7 +615,7 @@ public class MapView extends View {
                     value = value1;
                 try {
                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    value = context.getString((Graphics_Manager.Translate(getContext(), value)));
+                    value = context.getString((Translate.do_translate(getContext(), value)));
                 } catch (Exception e1) {
                     Tracer.d(mytag, "no translation for: " + value);
                 }

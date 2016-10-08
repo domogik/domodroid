@@ -791,4 +791,5 @@
     <string name="False">False</string>
     <string name="True">True</string>
     <string name="year">Year</string>
+    <string name="command_sent">Command sent to rest:</string>
 </resources>

@@ -42,6 +42,7 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Abstract.Translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -115,7 +116,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         String graph_size = params.getString("graph_size", "262.5");
         this.Float_graph_size = Float.valueOf(graph_size);
         try {
-            stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
+            stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;

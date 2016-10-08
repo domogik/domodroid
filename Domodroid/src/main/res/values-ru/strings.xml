@@ -37,7 +37,7 @@
     <string name="help_Text5">Связь через:\ndomogik-developers@lists.labs.libre-entreprise.org</string>
     <string name="help_Text6">Следуйте за нами на Twitter :\nhttps://twitter.com/domogik</string>
     <string name="help_Text7">https://twitter.com/newdomodroid</string>
-    <string name="splash_title">Милости просим в Domodroid 1.3 !</string>
+    <string name="splash_title">Милости просим в Domodroid 1.4 !</string>
     <string name="home_splash">В новой версии Domodroid включено много новых функций и улучшений, которые не были проверены по всем видам устройств Android. Если что-нибудь пойдет не так, вы можете связаться с разработчиком по адресу: http://wiki.domogik.org/Contact+and+support .</string>
     <string name="home_splash2">Пожалуйста, удалите данные кэша Domodroid из панели \"Управление приложениями\"  перед использованием новой версии.</string>
     <string name="reload_title">Резервная копия настроек существует!</string>
@@ -590,4 +590,5 @@
     <string name="Room_longclic_menu_title">Что вы хотите сделать с комнатой?</string>
     <string name="Error">Ошибка</string>
     <string name="temperature_f">Температура °F</string>
+    <string name="splash_title_old">Милости просим в Domodroid 1.3 !</string>
 </resources>

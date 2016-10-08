@@ -39,6 +39,7 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Abstract.Translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -110,7 +111,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
 
         try {
-            this.stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
+            this.stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
@@ -215,7 +216,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + Value_0);
                                     state.setText(stateS + " : " + Value_0);
@@ -224,7 +225,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                             } else if (b.getString("message").equals(value1)) {
                                 try {
                                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_1)));
+                                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
                                 } catch (Exception e1) {
                                     Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
@@ -245,7 +246,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 if (new_val.equals(value0)) {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+                                        state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
                                     } catch (Exception e1) {
                                         Tracer.d(mytag, "no translation for: " + Value_0);
                                         state.setText(stateS + " : " + Value_0);
@@ -254,7 +255,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 } else if (new_val.equals(value1)) {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_1)));
+                                        state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
                                     } catch (Exception e1) {
                                         Tracer.d(mytag, "no translation for: " + Value_1);
                                         state.setText(stateS + " : " + Value_1);
@@ -263,7 +264,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 } else {
                                     try {
                                         Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), new_val)));
+                                        state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), new_val)));
                                     } catch (Exception e1) {
                                         Tracer.d(mytag, "no translation for: " + new_val);
                                         state.setText(stateS + " : " + new_val);
@@ -330,7 +331,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 change_this_icon(0);
                 try {
                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_0)));
+                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_0)));
                 } catch (Exception e1) {
                     Tracer.d(mytag, "no translation for: " + Value_0);
                     state.setText(stateS + " : " + Value_0);
@@ -340,7 +341,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 change_this_icon(2);
                 try {
                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    state.setText(stateS + " : " + context.getString(Graphics_Manager.Translate(getContext(), Value_1)));
+                    state.setText(stateS + " : " + context.getString(Translate.do_translate(getContext(), Value_1)));
                 } catch (Exception e1) {
                     Tracer.d(mytag, "no translation for: " + Value_1);
                     state.setText(stateS + " : " + Value_1);

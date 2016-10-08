@@ -42,6 +42,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import Abstract.Translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import activities.Graphics_Manager;
@@ -102,7 +103,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         String stateS;
         mytag = "Graphical_Info_commands (" + dev_id + ")";
         try {
-            stateS = getResources().getString(Graphics_Manager.Translate(getContext(), state_key));
+            stateS = getResources().getString(Translate.do_translate(getContext(), state_key));
         } catch (Exception e) {
             Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
@@ -141,7 +142,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 String command_type_display = "";
                 try {
                     Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    command_type_display = getContext().getString(Graphics_Manager.Translate(getContext(), command_type[current_parameter]));
+                    command_type_display = getContext().getString(Translate.do_translate(getContext(), command_type[current_parameter]));
                 } catch (Exception e1) {
                     Tracer.d(mytag, "no translation for: " + command_type[current_parameter]);
                     command_type_display = command_type[current_parameter];
@@ -176,7 +177,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
         Button button_send = new Button(context);
         button_send.setMinWidth((int) (size60));
-        button_send.setText(context.getString(Graphics_Manager.Translate(getContext(), "send")));
+        button_send.setText(context.getString(Translate.do_translate(getContext(), "send")));
         button_send.setOnClickListener(new OnClickListener() {
                                            public void onClick(View v) {
                                                new CommandeThread().execute();

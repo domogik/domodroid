@@ -139,7 +139,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 //translate this command_type
                 String command_type_display = "";
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                     command_type_display = getContext().getString(translate.do_translate(getContext(), Tracer, command_type[current_parameter]));
                 } catch (Exception e1) {
                     command_type_display = command_type[current_parameter];

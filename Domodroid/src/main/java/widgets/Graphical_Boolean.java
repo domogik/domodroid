@@ -153,7 +153,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         state = new TextView(context);
         state.setTextColor(Color.BLACK);
         try {
-            Tracer.d(mytag, "Try to get value translate from R.STRING");
             state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
         } catch (Exception e1) {
             state.setText(stateS + " : " + Value_0);
@@ -205,7 +204,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 //note sure if it must be kept as set previously as default color.
                                 change_this_icon(0);
                                 try {
-                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                                     state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_0);
@@ -215,7 +213,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 //change color if statue=high to (usage, 2) means on
                                 change_this_icon(2);
                                 try {
-                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                                     state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_1);

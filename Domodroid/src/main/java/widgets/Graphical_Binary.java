@@ -213,7 +213,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 String Timestamp = session.getTimestamp();
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 try {
-                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                                     state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_0);
@@ -221,7 +220,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 new SBAnim(seekBarOnOff.getProgress(), 0).execute();
                             } else if (b.getString("message").equals(value1)) {
                                 try {
-                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                                     state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_1);
@@ -241,7 +239,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 if (new_val.equals(value0)) {
                                     try {
-                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
                                         state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + Value_0);
@@ -249,7 +246,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                     new SBAnim(seekBarOnOff.getProgress(), 0).execute();
                                 } else if (new_val.equals(value1)) {
                                     try {
-                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
                                         state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + Value_1);
@@ -257,7 +253,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                     new SBAnim(seekBarOnOff.getProgress(), 40).execute();
                                 } else {
                                     try {
-                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
                                         state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, new_val)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + new_val);
@@ -323,7 +318,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             case 0:
                 change_this_icon(0);
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                     state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                 } catch (Exception e1) {
                     state.setText(stateS + " : " + Value_0);
@@ -332,7 +326,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             case 40:
                 change_this_icon(2);
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                     state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                 } catch (Exception e1) {
                     state.setText(stateS + " : " + Value_1);

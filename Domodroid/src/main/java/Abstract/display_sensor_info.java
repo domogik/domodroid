@@ -170,7 +170,6 @@ public abstract class display_sensor_info {
             // It's probably a String that could not be converted to a float
             Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
             try {
-                Tracer.d(mytag, "Try to get value translate from R.STRING");
                 //todo #90
                 if (loc_Value.startsWith("AM") && loc_Value.contains("/PM")) {
                     Tracer.d(mytag, "Try to split: " + loc_Value + " in two parts to translate it");

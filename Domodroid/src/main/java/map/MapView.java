@@ -614,7 +614,6 @@ public class MapView extends View {
                 if (value.equals("1"))
                     value = value1;
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
                     value = context.getString((translate.do_translate(getContext(), Tracer, value)));
                 } catch (Exception e1) {
 

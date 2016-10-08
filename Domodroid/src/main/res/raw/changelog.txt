@@ -22,6 +22,8 @@
     $ 1.4
       % Version 24
       _ 2016-xx-xx
+      ! Important do not hesitate to use ACRA crash report to help developer correct those.
+      * #38 more sensor/command types in translation
       * #102 Adding method to read domogik QRCODE configuration
       * Close #118 Add ACRA crash reports feedback by mail
       * Do not open history view if it is empty

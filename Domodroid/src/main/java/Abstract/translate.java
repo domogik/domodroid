@@ -33,7 +33,7 @@ public class translate {
         try {
             return context.getResources().getIdentifier(temp_name, "string", context.getPackageName());
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + name);
+            Tracer.i(mytag, "no translation for: " + name);
             return 0;
         }
     }

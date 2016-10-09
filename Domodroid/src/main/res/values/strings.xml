@@ -809,4 +809,18 @@
     <string name="rainforecasttxt">Rain forecast Info</string>
     <string name="rainforecastdate">Rain forecast Date</string>
     <string name="rainforecastlocation">Rain forecast Location</string>
+    <string name="backyard">Backyard</string>
+    <string name="den">Den</string>
+    <string name="dining_room">Dining Room</string>
+    <string name="downstairs">Downstairs</string>
+    <string name="driveway">Driveway</string>
+    <string name="entryway">Entryway</string>
+    <string name="family_room">Family Room</string>
+    <string name="front_yard">Front Yard</string>
+    <string name="hallway">Hallway</string>
+    <string name="kids_room">Kids Room</string>
+    <string name="living_room">Living Room</string>
+    <string name="master_bedroom">Master  Bedroom</string>
+    <string name="outside">Outside</string>
+    <string name="upstairs">Upstairs</string>
 </resources>

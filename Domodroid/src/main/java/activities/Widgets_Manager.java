@@ -19,6 +19,7 @@ import Entity.Entity_Room;
 import database.DomodroidDB;
 import database.WidgetUpdate;
 import misc.tracerengine;
+import widgets.Basic_Graphical_widget;
 import widgets.Com_Stats;
 import widgets.Graphical_Area;
 import widgets.Graphical_Binary;
@@ -309,7 +310,11 @@ class Widgets_Manager {
                         tmpPan.addView(info_commands);
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
-                } else {
+                } else if (feature.getDevice_feature_model_id().startsWith("DT_HVACVent") || feature.getDevice_feature_model_id().startsWith("HVACFan")
+                        || feature.getDevice_feature_model_id().startsWith("DT_HVACMode") || feature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
+                        || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
+                        || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
+                        || feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
                     Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_List list = new Graphical_List(Tracer, context, URL,
                             widgetSize, session_type, id, zone, params, feature, widgetHandler);
@@ -322,6 +327,13 @@ class Widgets_Manager {
                     Graphical_List.container = tmpPan;
                     tmpPan.addView(list);
                     Tracer.i(mytag, "   ==> Graphical_List");
+                } else {
+                    Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, context, Tracer, id, context.getString(R.string.contact_devs), "", URL,
+                            widgetSize, 0, zone, mytag, null, widgetHandler);
+                    basic_widget.setLayoutParams(layout_param);
+                    tmpPan.addView(basic_widget);
+                    Tracer.i(mytag, "   ==> Basic widget not handle by dev");
+
                 }
                 // todo add missing datatype from 0.4 see all datatype that have no parent but values.
                 //String but carreful

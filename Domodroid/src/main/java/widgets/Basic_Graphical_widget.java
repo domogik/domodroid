@@ -83,7 +83,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     public Typeface typefaceweather;
     public Typeface typefaceawesome;
 
-    Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
+    public Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
         super(context);
         this.Tracer = Trac;
         this.context = context;

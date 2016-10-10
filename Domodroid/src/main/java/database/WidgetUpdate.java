@@ -6,9 +6,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -106,13 +107,13 @@ public class WidgetUpdate {
      *******************************************************************************/
     private WidgetUpdate() {
         super();
-        com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
+        //com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
 
     }
 
     public static WidgetUpdate getInstance() {
         if (instance == null) {
-            Logger.i("Creating instance........................");
+            Log.i("WidgetUpdate", "Creating instance........................");
             instance = new WidgetUpdate();
         }
         return instance;
@@ -122,7 +123,7 @@ public class WidgetUpdate {
     public Boolean init(tracerengine Trac, final Activity context, SharedPreferences params) {
         Boolean result = false;
         if (init_done) {
-            Logger.e("init already done");
+            Log.w("WidgetUpdate", "init already done");
             return true;
         }
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
@@ -641,7 +642,7 @@ public class WidgetUpdate {
 
                 if (request != null) {
                     JSONObject json_widget_state = null;
-                    JSONArray json_widget_state_0_4 = null;
+                    JSONArray json_widget_state_0_4;
                     stats_com.add(Stats_Com.STATS_SEND, request.length());
                     try {
                         if (api_version <= 0.6f) {
@@ -908,7 +909,7 @@ public class WidgetUpdate {
         int pos = from + 1;
         if (pos >= cache.size() || pos < 0)
             pos = 0;
-       //Check if following entry in cache is the good one...
+        //Check if following entry in cache is the good one...
         for (int i = pos; i < cache.size(); i++) {
             if ((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
                 return i;        //Bingo, the next one was the good one !

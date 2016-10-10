@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 
 class DatabaseHelper extends SQLiteOpenHelper {
@@ -29,7 +29,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         //com.orhanobut.logger.Logger.init("DatabaseHelper").methodCount(0);
         //Logger.i("DATABASE_NAME = " + DATABASE_NAME);
-        Log.i("DatabaseHelper","DATABASE_NAME = " + DATABASE_NAME);
+        Log.i("DatabaseHelper", "DATABASE_NAME = " + DATABASE_NAME);
 
     }
 
@@ -57,7 +57,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Logger.w("Upgrading database from version " + oldVersion + " to "
+        Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS table_area");
         db.execSQL("DROP TABLE IF EXISTS table_room");
@@ -70,7 +70,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Logger.w("Upgrading database from version " + oldVersion + " to "
+        Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS table_area");
         db.execSQL("DROP TABLE IF EXISTS table_room");

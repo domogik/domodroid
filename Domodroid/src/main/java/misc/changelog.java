@@ -21,10 +21,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.webkit.WebView;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 import org.domogik.domodroid13.R;
 
@@ -52,7 +53,7 @@ public class changelog {
      */
     public changelog(Context context) {
         this(context, PreferenceManager.getDefaultSharedPreferences(context));
-        com.orhanobut.logger.Logger.init("changelog").methodCount(0);
+        //com.orhanobut.logger.Logger.init("changelog").methodCount(0);
 
     }
 
@@ -69,16 +70,16 @@ public class changelog {
 
         // get version numbers
         this.lastVersion = sp.getString(VERSION_KEY, NO_VERSION);
-        Logger.d("lastVersion: " + lastVersion);
+        Log.d("Changelog", "lastVersion: " + lastVersion);
         try {
             this.thisVersion = Integer.toString(context.getPackageManager().getPackageInfo(context.getPackageName(),
                     0).versionCode);
         } catch (NameNotFoundException e) {
             this.thisVersion = NO_VERSION;
-            Logger.e("could not get version name from manifest!");
+            Log.e("Changelog", "could not get version name from manifest!");
             e.printStackTrace();
         }
-        Logger.d("appVersion: " + this.thisVersion);
+        Log.i("Changelog", "appVersion: " + this.thisVersion);
     }
 
     /**

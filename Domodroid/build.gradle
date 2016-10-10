@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 sourceCompatibility = 1.7 //changed from 1.6
 
 android {
-  buildToolsVersion "23.0.3"
+    buildToolsVersion "23.0.3"
     compileSdkVersion 23
 
     //only if you use Apache packages
@@ -20,8 +20,8 @@ android {
     defaultConfig {
         applicationId "org.domogik.domodroid13"
         minSdkVersion 8
-		targetSdkVersion 8
-		versionCode = 24
+        targetSdkVersion 8
+        versionCode = 24
         versionName = "1.4_android_studio"
     }
     compileOptions {
@@ -32,7 +32,7 @@ android {
 
         release {
             minifyEnabled false
-             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
     }

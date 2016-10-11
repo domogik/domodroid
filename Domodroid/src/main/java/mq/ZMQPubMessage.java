@@ -19,15 +19,6 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
     private ZMQ.Socket pub = null;
     private final String mytag = this.getClass().getName();
 
-    private static String getHostName() {
-        try {
-            Method getString = Build.class.getDeclaredMethod("getString", String.class);
-            getString.setAccessible(true);
-            return getString.invoke(null, "net.hostname").toString();
-        } catch (Exception ex) {
-            return "unknown";
-        }
-    }
 
     public ZMQPubMessage() {
         //com.orhanobut.logger.Logger.init("ZMQPubMessage").methodCount(0);
@@ -49,7 +40,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             jo.put("text", params[2]);
             jo.put("media", "speech");
             jo.put("identity", "domodroid");
-            jo.put("source", "terminal-android." + getHostName());
+            jo.put("source", "terminal-android." + Abstract.gethostname.getHostName());
             String msg = jo.toString();
             Log.d("ZMQPubMessage doInBgd", msg.toString());
             this.pub.connect(url);

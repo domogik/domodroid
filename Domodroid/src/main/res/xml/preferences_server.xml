@@ -91,6 +91,12 @@
             android:inputType="number"
             android:key="MQpubport"
             android:title="@string/Mq_pub_port" />
+        <EditTextPreference
+            android:defaultValue="40411"
+            android:icon="@drawable/ic_mq_pub"
+            android:inputType="number"
+            android:key="MQreq_repport"
+            android:title="@string/MQ_req_rep_port" />
 
     </PreferenceCategory>
 </PreferenceScreen>

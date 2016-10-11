@@ -824,4 +824,5 @@
     <string name="outside">Outside</string>
     <string name="upstairs">Upstairs</string>
     <string name="contact_devs">This Widget type is not handle for now contact devs</string>
+    <string name="MQ_req_rep_port">MQ req rep port</string>
 </resources>

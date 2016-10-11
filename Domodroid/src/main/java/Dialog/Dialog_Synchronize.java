@@ -545,6 +545,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQaddress = json_rinor.getJSONObject("mq").getString("ip");
                     String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
+                    String MQreq_repport = json_rinor.getJSONObject("mq").getString("req_rep_port");
                     prefEditor.putString("MQaddress", MQaddress);
                     // #103 if MQadress=localhost
                     if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1")) {
@@ -562,6 +563,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
                     prefEditor.putString("MQsubport", MQsubport);
                     prefEditor.putString("MQpubport", MQpubport);
+                    prefEditor.putString("MQreq_repport", MQreq_repport);
                 } catch (Exception e1) {
                     context.runOnUiThread(new Runnable() {
                         public void run() {

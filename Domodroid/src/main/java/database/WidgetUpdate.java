@@ -39,6 +39,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import misc.tracerengine;
+import mq.ZMQReqMessage;
 import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
@@ -651,6 +652,8 @@ public class WidgetUpdate {
                             Tracer.d(mytag, "json_widget_state for <0.6 API=");
                             Tracer.json(mytag, json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
+                            //todo change by == when device.get will work
+                            // else if (api_version == 0.7f) {
                             json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
@@ -658,6 +661,9 @@ public class WidgetUpdate {
                             json_widget_state.put("stats", json_widget_state_0_4);
                             Tracer.d(mytag, "json_widget_state for 0.7 API=");
                             Tracer.json(mytag, json_widget_state.toString());
+                        } else if (api_version >= 0.8f) {
+                            //todo will use this when device.get will work
+                            json_widget_state = zmqrequest();
                         }
                     } catch (final Exception e) {
                         //stats request cannot be completed (broken link or terminal in standby ?)
@@ -1221,6 +1227,26 @@ public class WidgetUpdate {
         return context;
     }
 
+    public JSONObject zmqrequest() throws JSONException {
+        ZMQReqMessage REQ = new ZMQReqMessage(myselfHandler);
+        String ip = sharedparams.getString("MQaddress", "");    // TODO : use a R. for the default value
+        String port = sharedparams.getString("MQreq_repport", "40410");    // TODO : use a R. for the default value
+        final String pub_url = "tcp://" + ip + ":" + port;
+        Log.d(mytag, "req address : " + pub_url);
+        JSONArray json_widget_state_0_5 = new JSONArray();
+
+        REQ.execute(pub_url, "device.get");
+        REQ = null;
+
+        Tracer.json(mytag, json_widget_state_0_5.toString());
+        JSONObject json_widget_state = new JSONObject();
+        // Create a false jsonarray like if it was domomgik 0.3
+        //(meaning provide value in an stats: array containing a list of value in jsonobject format)
+        json_widget_state.put("stats", json_widget_state_0_5);
+        Tracer.d(mytag, "json_widget_state for 0.8 API=");
+        Tracer.json(mytag, json_widget_state.toString());
+        return json_widget_state;
+    }
 
 }
 

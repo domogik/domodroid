@@ -1,4 +1,4 @@
-package Application;
+package application;
 
 import android.app.Application;
 
@@ -17,7 +17,7 @@ import org.domogik.domodroid13.R;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.toast_crash)
 
-public class DomodroidApplication extends Application {
+public class domodroidapplication extends Application {
 
     @Override
     public void onCreate() {

@@ -17,7 +17,7 @@ import org.domogik.domodroid13.R;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.toast_crash)
 
-public class domodroidapplication extends Application {
+public class domodroid extends Application {
 
     @Override
     public void onCreate() {

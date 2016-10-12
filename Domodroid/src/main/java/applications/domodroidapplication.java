@@ -1,4 +1,4 @@
-package application;
+package applications;
 
 import android.app.Application;
 

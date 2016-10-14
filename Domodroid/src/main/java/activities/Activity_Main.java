@@ -645,7 +645,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     if (map.get("type").equals("action")) {
                         if (map.get("name").equals(context.getApplicationContext().getResources().getString(R.string.action_back))) {
                             Tracer.v(mytag, "clic move back in navigation drawer");
-                            historyPosition--;
+                            if (historyPosition != 0) {
+                                historyPosition--;
+                            }
                             refresh();
                         }
                     } else {

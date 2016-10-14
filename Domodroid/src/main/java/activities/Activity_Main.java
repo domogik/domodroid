@@ -824,14 +824,23 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                             while (!WU_widgetUpdate.ready) {
                                 //Wait the widgetupdate to be ready or this widgets won't be refreshed
                             }
-                        } catch (Exception e1) {
-                            Tracer.e(mytag, e1.toString());
+                        } catch (Exception e) {
+                            Tracer.e(mytag, e.toString());
                         }
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
-                        LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
+                        int load_area;
+                        try {
+                            load_area = Integer.valueOf(SP_params.getString("load_area_at_start", "1"));
+                        } catch (Exception e) {
+                            Tracer.e(mytag, e.toString());
+                            load_area = 1;
+                        }
+                        //LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
+                        LL_room = WM_Agent.loadRoomWidgets(this, load_area, LL_room, SP_params);    //List of known usages 'as rooms'
                         VG_parent.addView(LL_room);
                         LL_activ.removeAllViews();
-                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
+                        //LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
+                        LL_activ = WM_Agent.loadActivWidgets(this, load_area, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                     }
                     VG_parent.addView(LL_activ);
                 /*Should never arrive in this type.

@@ -98,6 +98,7 @@ public class Preference extends PreferenceActivity implements
             addPreferencesFromResource(R.xml.preferences_map);
         } else if (action != null && action.equals("preferences_house")) {
             addPreferencesFromResource(R.xml.preferences_house);
+
         } else if (action != null && action.equals("preferences_butler")) {
             addPreferencesFromResource(R.xml.preferences_butler);
         } else if (action != null && action.equals("preferences_debug")) {
@@ -109,30 +110,26 @@ public class Preference extends PreferenceActivity implements
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
             initSummary(getPreferenceScreen().getPreference(i));
-
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (action == null) {
-            getPreferenceScreen().getSharedPreferences()
-                    .registerOnSharedPreferenceChangeListener(this);
-        }
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+        // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
             initSummary(getPreferenceScreen().getPreference(i));
-
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (action == null) {
-            getPreferenceScreen().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener(this);
-        }
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -190,10 +187,16 @@ public class Preference extends PreferenceActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         updatePreferences(findPreference(key));
+        if (key.equals("load_area_at_start")) {
+            SharedPreferences.Editor pref_editor = sharedPreferences.edit();
+            pref_editor.putBoolean("BY_USAGE", true);
+            pref_editor.commit();
+        }
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
             initSummary(getPreferenceScreen().getPreference(i));
         }
+
 
     }
 

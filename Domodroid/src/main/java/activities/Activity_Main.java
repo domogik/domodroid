@@ -586,7 +586,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         if (history != null)
             Tracer.d(mytag, "OnactivityResult end of init history=" + history.toString() + " historyposition=" + historyPosition);
-        //todo #97 because on resume send us here.
 
         if (!init_done) {
             history = null;        //Free resource

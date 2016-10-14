@@ -818,6 +818,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage
+                        // #33 here too
+                        // add try catch because on settings reload it crash
+                        try {
+                            while (!WU_widgetUpdate.ready) {
+                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
+                            }
+                        } catch (Exception e1) {
+                            Tracer.e(mytag, e1.toString());
+                        }
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
                         LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
                         VG_parent.addView(LL_room);

@@ -85,46 +85,42 @@ class Widgets_Manager {
             ll.addView(tmpPan);
             return ll;
         }
-        int size = listFeature.length;
-        Entity_Feature feature;
+        //int size = listFeature.length;
+        //Entity_Feature feature;
 
         for (Entity_Feature aListFeature : listFeature) {
-            feature = aListFeature;
+            //feature = aListFeature;
             //-----add component-------
-            tmpPan = null;
+            //tmpPan = null;
             tmpPan = new FrameLayout(context);
-            String label = feature.getDescription();
-            String Value_type = feature.getValue_type();
-            String Address = feature.getAddress();
-            String parameters = feature.getParameters();
-            String device_type_id = feature.getDevice_type_id();
-            String State_key = feature.getState_key();
-            String iconName = feature.getIcon_name();
-            int DevId = feature.getDevId();
-            int Id = feature.getId();
-            int Graph = params.getInt("GRAPH", 3);
+            String label = aListFeature.getDescription();
+            String Value_type = aListFeature.getValue_type();
+            String Address = aListFeature.getAddress();
+            String parameters = aListFeature.getParameters();
+            String device_type_id = aListFeature.getDevice_type_id();
+            String State_key = aListFeature.getState_key();
+            String iconName = aListFeature.getIcon_name();
+            int DevId = aListFeature.getDevId();
+            //int Id = feature.getId();
+            //int Graph = params.getInt("GRAPH", 3);
             String URL = params.getString("URL", "1.1.1.1");
             int update_timer = params.getInt("UPDATE_TIMER", 300);
 
             Tracer.i(mytag, "Call to process device : " + DevId + " Address : " + Address + " Value_type : " + Value_type + " Label : " + label + " Key : " + State_key);
             try {
-                Graphical_Binary onoff;
-                Graphical_Binary_New onoff_New;
-                Graphical_Info info;
-                Graphical_Info_commands info_commands;
                 if (Value_type.equals("binary")) {
-                    if (feature.getDevice_type().equals("rgb_leds") && (State_key.equals("command"))) {
+                    if (aListFeature.getDevice_type().equals("rgb_leds") && (State_key.equals("command"))) {
                         //ignore it : it'll have another device for Color, displaying the switch !)
                     } else {
                         if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                            onoff = new Graphical_Binary(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            Graphical_Binary onoff = new Graphical_Binary(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             Graphical_Binary.container = tmpPan;
                             tmpPan.addView(onoff);
                             Tracer.i(mytag, "   ==> Graphical_Binary");
                         } else {
-                            onoff_New = new Graphical_Binary_New(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             Graphical_Binary_New.container = tmpPan;
                             tmpPan.addView(onoff_New);
                             Tracer.i(mytag, "   ==> Graphical_Binary");
@@ -133,28 +129,28 @@ class Widgets_Manager {
                 } else if (Value_type.equals("boolean") || Value_type.equals("bool")) {
                     if (parameters.contains("command")) {
                         if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                            onoff = new Graphical_Binary(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            Graphical_Binary onoff = new Graphical_Binary(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             Graphical_Binary.container = tmpPan;
                             tmpPan.addView(onoff);
                             Tracer.i(mytag, "   ==> Graphical_Binary");
                         } else {
-                            onoff_New = new Graphical_Binary_New(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             Graphical_Binary_New.container = tmpPan;
                             tmpPan.addView(onoff_New);
                             Tracer.i(mytag, "   ==> Graphical_Binary");
                         }
                     } else {
                         Graphical_Boolean bool = new Graphical_Boolean(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         Graphical_Boolean.container = tmpPan;
                         tmpPan.addView(bool);
                         Tracer.i(mytag, "   ==> Graphical_Boolean");
                     }
-                } else if (Value_type.equals("range") || ((parameters.contains("command")) && (feature.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
+                } else if (Value_type.equals("range") || ((parameters.contains("command")) && (aListFeature.getDevice_feature_model_id().startsWith("DT_Scaling")))) {
                     Graphical_Range variator = new Graphical_Range(Tracer, context, URL,
-                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                     Graphical_Range.container = tmpPan;
                     tmpPan.addView(variator);
                     Tracer.i(mytag, "   ==> Graphical_Range");
@@ -162,7 +158,7 @@ class Widgets_Manager {
                     //#51 change widget for 0.4 if it's not a command
                     if (parameters.contains("command")) {
                         Graphical_Trigger trigger = new Graphical_Trigger(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         Graphical_Trigger.container = tmpPan;
                         tmpPan.addView(trigger);
                         Tracer.i(mytag, "   ==> Graphical_Trigger");
@@ -170,7 +166,7 @@ class Widgets_Manager {
                         if (params.getBoolean("Graph_CHOICE", false)) {
                             Tracer.d(mytag, "add Graphical_Info_with_achartengine for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             info_with_achartengine.setLayoutParams(layout_param);
                             Graphical_Info_with_achartengine.container = tmpPan;
                             tmpPan.addView(info_with_achartengine);
@@ -183,8 +179,8 @@ class Widgets_Manager {
                     Tracer.i(mytag, "   ==> Graphical_Info_with_achartengine + Graphic");
                     */
                         } else {
-                            info = new Graphical_Info(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
+                            Graphical_Info info = new Graphical_Info(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, update_timer, aListFeature, widgetHandler);
                             info.setLayoutParams(layout_param);
                             info.with_graph = false;
                             Graphical_Info.container = tmpPan;
@@ -195,14 +191,14 @@ class Widgets_Manager {
                 } else if (State_key.equals("color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_Color color = new Graphical_Color(Tracer, context, URL,
-                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                     Graphical_Color.container = tmpPan;
                     tmpPan.addView(color);
                     Tracer.i(mytag, "   ==> Graphical_Color");
                 } else if (Value_type.equals("number")) {
-                    if (feature.getParameters().contains("command_type")) {
-                        info_commands = new Graphical_Info_commands(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    if (aListFeature.getParameters().contains("command_type")) {
+                        Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         info_commands.setLayoutParams(layout_param);
                         Graphical_Info_commands.container = tmpPan;
                         tmpPan.addView(info_commands);
@@ -210,7 +206,7 @@ class Widgets_Manager {
                     } else if (params.getBoolean("Graph_CHOICE", false)) {
                         Tracer.d(mytag, "add Graphical_Info_with_achartengine for " + label + " (" + DevId + ") key=" + State_key);
                         Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         info_with_achartengine.setLayoutParams(layout_param);
                         Graphical_Info_with_achartengine.container = tmpPan;
                         tmpPan.addView(info_with_achartengine);
@@ -224,8 +220,8 @@ class Widgets_Manager {
                     */
                     } else {
                         Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
-                        info = new Graphical_Info(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
+                        Graphical_Info info = new Graphical_Info(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, update_timer, aListFeature, widgetHandler);
                         info.setLayoutParams(layout_param);
                         info.with_graph = true;
                         Graphical_Info.container = tmpPan;
@@ -233,19 +229,19 @@ class Widgets_Manager {
                         Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                     }
                 } else if (Value_type.equals("list")) {
-                    if (!feature.getDevice_feature_model_id().startsWith("DT_ColorRGB") && !feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK")) {
+                    if (!aListFeature.getDevice_feature_model_id().startsWith("DT_ColorRGB") && !aListFeature.getDevice_feature_model_id().startsWith("DT_ColorCMYK")) {
                         Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                         Graphical_List list = new Graphical_List(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         list.setLayoutParams(layout_param);
                         Graphical_List.container = tmpPan;
                         tmpPan.addView(list);
                         Tracer.i(mytag, "   ==> Graphical_List");
                     } else {
-                        if (!feature.getParameters().contains("command_type")) {
+                        if (!aListFeature.getParameters().contains("command_type")) {
                             Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
-                            info = new Graphical_Info(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, update_timer, feature, widgetHandler);
+                            Graphical_Info info = new Graphical_Info(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, update_timer, aListFeature, widgetHandler);
                             info.setLayoutParams(layout_param);
                             info.with_graph = true;
                             Graphical_Info.container = tmpPan;
@@ -254,7 +250,7 @@ class Widgets_Manager {
                         } else {
                             Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_Color color = new Graphical_Color(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             Graphical_Color.container = tmpPan;
                             tmpPan.addView(color);
                             Tracer.i(mytag, "   ==> Graphical_Color");
@@ -263,23 +259,23 @@ class Widgets_Manager {
                     }
                 } else if (Value_type.equals("string") || Value_type.equals("datetime")) {
                     //TODO for #117 handle parent dt_datetime in a proper way
-                    if (feature.getDevice_feature_model_id().contains("camera")) {
+                    if (aListFeature.getDevice_feature_model_id().contains("camera")) {
                         Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         Graphical_Cam.container = tmpPan;
                         tmpPan.addView(cam);
                         Tracer.i(mytag, "   ==> Graphical_Cam");
-                    } else if (feature.getParameters().contains("command_type")) {
-                        if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                    } else if (aListFeature.getParameters().contains("command_type")) {
+                        if (aListFeature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                             Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_Color color = new Graphical_Color(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             Graphical_Color.container = tmpPan;
                             tmpPan.addView(color);
                             Tracer.i(mytag, "   ==> Graphical_Color");
                         } else {
-                            info_commands = new Graphical_Info_commands(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                             info_commands.setLayoutParams(layout_param);
                             Graphical_Info_commands.container = tmpPan;
                             tmpPan.addView(info_commands);
@@ -288,7 +284,7 @@ class Widgets_Manager {
                         //New widget for callerID apply to all other string sensor
                     } else {
                         Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         info_with_history.setLayoutParams(layout_param);
                         Graphical_History.container = tmpPan;
                         tmpPan.addView(info_with_history);
@@ -298,26 +294,26 @@ class Widgets_Manager {
                 } else if (Value_type.equals("video")) {
                     if (!parameters.contains("command")) {
                         Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         Graphical_Cam.container = tmpPan;
                         tmpPan.addView(cam);
                         Tracer.i(mytag, "   ==> Graphical_Cam");
                     } else {
-                        info_commands = new Graphical_Info_commands(Tracer, context, URL,
-                                widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                        Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         info_commands.setLayoutParams(layout_param);
                         Graphical_Info_commands.container = tmpPan;
                         tmpPan.addView(info_commands);
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
-                } else if (feature.getDevice_feature_model_id().startsWith("DT_HVACVent") || feature.getDevice_feature_model_id().startsWith("HVACFan")
-                        || feature.getDevice_feature_model_id().startsWith("DT_HVACMode") || feature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
-                        || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
-                        || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
-                        || feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
+                } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_HVACVent") || aListFeature.getDevice_feature_model_id().startsWith("HVACFan")
+                        || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACMode") || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
+                        || aListFeature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || aListFeature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
+                        || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSState") || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
+                        || aListFeature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
                     Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_List list = new Graphical_List(Tracer, context, URL,
-                            widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                            widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                     if (parameters.contains("command")) {
                         list.with_list = true;
                     } else {

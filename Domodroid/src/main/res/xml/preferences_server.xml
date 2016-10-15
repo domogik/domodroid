@@ -7,13 +7,14 @@
     <PreferenceCategory
         android:persistent="false"
         android:title="@string/OPTION_server_settings">
-       <Preference
+        <Preference
             android:enabled="false"
             android:icon="@drawable/ic_settings_applications_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/OPTION_server_explain" />
         <Preference
+            android:icon="@drawable/ic_qr_code"
             android:persistent="false"
             android:title="@string/OPTION_server_qrcode">
             <intent

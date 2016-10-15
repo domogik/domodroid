@@ -20,8 +20,10 @@
   </head>
   <body>
     $ 1.4
-      % Version 24
+      % Version 25
       _ 2016-xx-xx
+      % Version 24
+      _ 2016-10-15
       ! Important do not hesitate to use ACRA crash report to help developer correct those.
       * #37 handle widget not existing
       * #38 more sensor/command types in translation

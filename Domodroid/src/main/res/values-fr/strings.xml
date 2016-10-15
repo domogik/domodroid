@@ -743,4 +743,8 @@
     <string name="master_bedroom">Chambre principale</string>
     <string name="outside">A l\'extérieur</string>
     <string name="upstairs">Etage supérieur</string>
+    <string name="qr_code_is_valid">Le Qrcode est valide:</string>
+    <string name="no_qrcode_scanner">Pas d\'applications pour lire les QRcode</string>
+    <string name="no_qrcode_question">Télécharger un lecteur de Qrcode depuis le market ?</string>
+    <string name="no_market_apps">"Pas d\'applications market sur cet appareil."</string>
 </resources>

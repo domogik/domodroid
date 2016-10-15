@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +35,7 @@ public class config_with_qrcode extends AppCompatActivity {
 
         } catch (ActivityNotFoundException anfe) {
             //on catch, show the download dialog
-            showDialog(config_with_qrcode.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+            showDialog(config_with_qrcode.this, getString(R.string.no_qrcode_scanner), getString(R.string.no_qrcode_question), getString(R.string.reloadOK), getString(R.string.reloadNO)).show();
         }
     }
 
@@ -44,7 +45,7 @@ public class config_with_qrcode extends AppCompatActivity {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 contents = data.getStringExtra("SCAN_RESULT"); //this is the result
-                showDialog(config_with_qrcode.this, "Qrcode is valid", contents, "OK", "No").show();
+                showDialog(config_with_qrcode.this, getString(R.string.qr_code_is_valid), contents, getString(R.string.ok), getString(R.string.reloadNO)).show();
             } else if (resultCode == RESULT_CANCELED) {
                 //showDialog(config_with_qrcode.this, "Qrcode results", "No results from qrcode scanner", "Yes", "No").show();
             }
@@ -57,17 +58,17 @@ public class config_with_qrcode extends AppCompatActivity {
         downloadDialog.setMessage(message);
         downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (title.equals("No Scanner Found")) {
+                if (title.equals(getString(R.string.no_qrcode_scanner))) {
                     Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     try {
                         act.startActivity(intent);
                     } catch (ActivityNotFoundException anfe) {
                         Tracer.e(mytag, "No market apps installed on this device: " + anfe.toString());
-                        showDialog(config_with_qrcode.this, "No market apps installed on this device", contents, "OK", "No").show();
+                        showDialog(config_with_qrcode.this, getString(R.string.no_market_apps), contents, getString(R.string.ok), getString(R.string.reloadNO)).show();
                     }
-                } else if (title.equals("Qrcode is valid")) {
-                    Tracer.d("preference", "We got a recult from qrcode scanner:" + contents);
+                } else if (title.equals(getString(R.string.qr_code_is_valid))) {
+                    Tracer.d("preference", "We got a result from qrcode scanner:" + contents);
                     try {
                         JSONObject jsonresult = null;
                         jsonresult = new JSONObject(contents);

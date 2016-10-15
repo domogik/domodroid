@@ -825,4 +825,8 @@
     <string name="upstairs">Upstairs</string>
     <string name="contact_devs">This Widget type is not handle for now contact devs</string>
     <string name="MQ_req_rep_port">MQ req rep port</string>
+    <string name="qr_code_is_valid">Qrcode is valid:</string>
+    <string name="no_qrcode_scanner">QRcode scanner apps not found</string>
+    <string name="no_qrcode_question">Download a scanner code activity from market ?</string>
+    <string name="no_market_apps">"No market apps installed on this device."</string>
 </resources>

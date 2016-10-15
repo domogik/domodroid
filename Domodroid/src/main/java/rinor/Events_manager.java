@@ -5,9 +5,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -65,7 +66,7 @@ public class Events_manager {
 
     public static Events_manager getInstance(final Activity context) {
         if (instance == null) {
-            Logger.i("Creating instance........................");
+            Log.i("Events_manager", "Creating instance........................");
             instance = new Events_manager(context);
         }
         return instance;
@@ -83,6 +84,7 @@ public class Events_manager {
 
         this.Tracer = Trac;
         this.engine_cache = engine_cache;
+//todo look it to avoid crash in certain case...
         //setOwner(owner, state_engine_handler);
         urlAccess = params.getString("URL", "1.1.1.1");
         login = params.getString("http_auth_username", null);
@@ -202,14 +204,15 @@ public class Events_manager {
                         subscriber.connect("tcp://" + MQaddress + ":" + MQsubport);
                         Tracer.d(mytag, "subscriber.connect (tcp://" + MQaddress + ":" + MQsubport + ")");
                         subscriber.subscribe("device-stats".getBytes());
-                        subscriber.subscribe("device.update".getBytes());
                         Tracer.d(mytag, "subscriber.subscribe(device-stats)");
+                        subscriber.subscribe("device.update".getBytes());
+                        Tracer.d(mytag, "subscriber.subscribe(device.update)");
 
                         while (alive) {
                             while (!sleeping) {
                                 String result = subscriber.recvStr(0);
-                                Logger.json("MQ information receive: ");
-                                Logger.json(result);
+                                Tracer.i(mytag, "MQ information receive: ");
+                                Tracer.i(mytag, result.toString());
                                 if (result.contains("stored_value")) {
                                     try {
                                         JSONObject json_stats_04 = new JSONObject(result);
@@ -231,6 +234,13 @@ public class Events_manager {
                                     }
                                 } else if (result.contains("device.update")) {
                                     Tracer.i(mytag, "New MQ message for device.update : " + result);
+                                    try {
+                                        JSONObject json_mq_update = new JSONObject(result);
+                                        Tracer.i(mytag, "New MQ message for device.update : " + json_mq_update.toString());
+
+                                    } catch (JSONException e) {
+                                        Tracer.i(mytag, "New MQ message for device.update : " + e.toString());
+                                    }
                                     if (state_engine_handler != null) {
                                         state_engine_handler.sendEmptyMessage(9903);
                                     }

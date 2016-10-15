@@ -54,10 +54,12 @@ public abstract class display_sensor_info {
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
-        if (SP_params.getBoolean("widget_timestamp", false)) {
-            timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
-        } else {
-            timestamp.setReferenceTime(Value_timestamp);
+        if (Value_timestamp != 0) {
+            if (SP_params.getBoolean("widget_timestamp", false)) {
+                timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
+            } else {
+                timestamp.setReferenceTime(Value_timestamp);
+            }
         }
         try {
             float formatedValue = 0;
@@ -113,6 +115,7 @@ public abstract class display_sensor_info {
                         LL_featurePan.addView(timestamp);
                         break;
                     default:
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         if (state_key.equalsIgnoreCase("current_wind_speed")) {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf03e;"), TextView.BufferType.SPANNABLE);
@@ -129,7 +132,6 @@ public abstract class display_sensor_info {
                             state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf24e;"), TextView.BufferType.SPANNABLE);
                         }
-                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;
                 }
             } else {
@@ -162,13 +164,43 @@ public abstract class display_sensor_info {
                     }
                 } else if (state_key.equalsIgnoreCase("callerid")) {
                     value.setText(phone_convertion(Tracer, mytag, loc_Value));
+                } else if (state_key.toLowerCase().startsWith("rainlevel")) {
+                    //Add try catch to avoid other case that make #1794
+                    try {
+                        //use xml and weather fonts here
+                        value.setTypeface(typefaceweather, Typeface.NORMAL);
+                        switch (loc_Value) {
+                            case "0":
+                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                break;
+                            case "1":
+                                value.setText(context.getResources().getIdentifier("wi_cloud", "string", context.getPackageName()));
+                                break;
+                            case "5":
+                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
+                                break;
+                            case "3":
+                                value.setText(context.getResources().getIdentifier("wi_hail", "string", context.getPackageName()));
+                                break;
+                            case "4":
+                                value.setText(context.getResources().getIdentifier("wi_rain", "string", context.getPackageName()));
+                                break;
+                            default:
+                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                break;
+                        }
+
+                    } catch (Exception e1) {
+                        Tracer.e(mytag, "no translation for: " + loc_Value);
+                        e1.toString();
+                        value.setText(loc_Value);
+                    }
                 } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));
             }
         } catch (Exception e) {
             // It's probably a String that could not be converted to a float
             Tracer.d(mytag, "Handler exception : new value <" + loc_Value + "> not numeric !");
             try {
-                Tracer.d(mytag, "Try to get value translate from R.STRING");
                 //todo #90
                 if (loc_Value.startsWith("AM") && loc_Value.contains("/PM")) {
                     Tracer.d(mytag, "Try to split: " + loc_Value + " in two parts to translate it");
@@ -177,19 +209,23 @@ public abstract class display_sensor_info {
                     String PM = st.nextToken();
                     try {
                         AM = AM.replace("AM ", "");
-                        AM = context.getResources().getString(Graphics_Manager.getStringIdentifier(context, AM.toLowerCase()));
+                        AM = context.getResources().getString(translate.do_translate(context, Tracer, AM));
                     } catch (Exception amexception) {
-                        Tracer.d(mytag, "no translation for: " + AM);
+
                     }
                     try {
                         PM = PM.replace("PM ", "");
-                        PM = context.getResources().getString(Graphics_Manager.getStringIdentifier(context, PM.toLowerCase()));
+                        PM = context.getResources().getString(translate.do_translate(context, Tracer, PM));
                     } catch (Exception pmexception) {
-                        Tracer.d(mytag, "no translation for: " + PM);
+
                     }
                     value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
                 } else {
-                    value.setText(Graphics_Manager.getStringIdentifier(context, loc_Value.toLowerCase()));
+                    try {
+                        value.setText(translate.do_translate(context, Tracer, loc_Value));
+                    } catch (Exception e1) {
+                        value.setText(loc_Value);
+                    }
                 }
             } catch (Exception e1) {
                 Tracer.d(mytag, "no translation for: " + loc_Value);

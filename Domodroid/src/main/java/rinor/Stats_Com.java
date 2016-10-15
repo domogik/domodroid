@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 import android.util.Log;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 public class Stats_Com {
     private static Stats_Com instance = null;
@@ -151,8 +151,8 @@ public class Stats_Com {
     }
 
     public void cancel() {
-        com.orhanobut.logger.Logger.init("Stats_Com").methodCount(0);
-        Logger.w("cancel requested !");
+        //com.orhanobut.logger.Logger.init("Stats_Com").methodCount(0);
+        Log.w("Stats_Com", "cancel requested !");
 
         if (timer != null)
             timer.cancel();

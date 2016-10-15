@@ -39,10 +39,10 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
@@ -110,9 +110,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
 
         try {
-            this.stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             this.stateS = state_key;
         }
 
@@ -214,19 +213,15 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 String Timestamp = session.getTimestamp();
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 try {
-                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + Value_0);
                                     state.setText(stateS + " : " + Value_0);
                                 }
                                 new SBAnim(seekBarOnOff.getProgress(), 0).execute();
                             } else if (b.getString("message").equals(value1)) {
                                 try {
-                                    Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
-                                    Tracer.d(mytag, "no translation for: " + Value_1);
                                     state.setText(stateS + " : " + Value_1);
                                 }
                                 new SBAnim(seekBarOnOff.getProgress(), 40).execute();
@@ -244,28 +239,22 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 if (new_val.equals(value0)) {
                                     try {
-                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                     } catch (Exception e1) {
-                                        Tracer.d(mytag, "no translation for: " + Value_0);
                                         state.setText(stateS + " : " + Value_0);
                                     }
                                     new SBAnim(seekBarOnOff.getProgress(), 0).execute();
                                 } else if (new_val.equals(value1)) {
                                     try {
-                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                     } catch (Exception e1) {
-                                        Tracer.d(mytag, "no translation for: " + Value_1);
                                         state.setText(stateS + " : " + Value_1);
                                     }
                                     new SBAnim(seekBarOnOff.getProgress(), 40).execute();
                                 } else {
                                     try {
-                                        Tracer.d(mytag, "Try to get value translate from R.STRING");
-                                        state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), new_val.toLowerCase())));
+                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, new_val)));
                                     } catch (Exception e1) {
-                                        Tracer.d(mytag, "no translation for: " + new_val);
                                         state.setText(stateS + " : " + new_val);
                                     }
                                     new SBAnim(seekBarOnOff.getProgress(), 0).execute();
@@ -329,20 +318,16 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             case 0:
                 change_this_icon(0);
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_0.toLowerCase())));
+                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                 } catch (Exception e1) {
-                    Tracer.d(mytag, "no translation for: " + Value_0);
                     state.setText(stateS + " : " + Value_0);
                 }
                 break;
             case 40:
                 change_this_icon(2);
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    state.setText(stateS + " : " + context.getString(Graphics_Manager.getStringIdentifier(getContext(), Value_1.toLowerCase())));
+                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                 } catch (Exception e1) {
-                    Tracer.d(mytag, "no translation for: " + Value_1);
                     state.setText(stateS + " : " + Value_1);
                 }
                 break;

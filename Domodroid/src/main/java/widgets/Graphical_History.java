@@ -48,11 +48,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import Abstract.translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -61,6 +61,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
 
     private ListView listeChoices;
+    private ArrayList<HashMap<String, String>> listItem;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private TextView state;
@@ -83,8 +84,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int nb_item_for_history;
     private TextView state_key_view;
     private String stateS;
-    private Typeface typefaceweather;
-    private Typeface typefaceawesome;
 
     private String test_unite;
 
@@ -126,9 +125,8 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         myself = this;
         mytag = "Graphical_History(" + dev_id + ")";
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         if (stateS.equals("null"))
@@ -159,8 +157,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
-        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
         animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
@@ -270,7 +266,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(context);
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
+        listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
@@ -288,7 +284,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                 for (int i = itemArray.length(); i >= 0; i--) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        try {
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                        } catch (Exception e1) {
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        }
                         map.put("date", itemArray.getJSONObject(i).getString("date"));
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
@@ -296,26 +296,21 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         Tracer.e(mytag, "Error getting json TV_Value");
                     }
                 }
-            } else if (api_version == 0.7f) {
+            } else if (api_version >= 0.7f) {
                 for (int i = 0; i < itemArray.length(); i++) {
                     try {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        map.put("date", itemArray.getJSONObject(i).getString("date"));
-                        listItem.add(map);
-                        Tracer.d(mytag, map.toString());
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json TV_Value");
-                    }
-                }
-            } else if (api_version >= 0.8f) {
-                //Use abstract class to get timestamp conversion
-                for (int i = 0; i < itemArray.length(); i++) {
-                    try {
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                        map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        try {
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("value_str"))));
+                        } catch (Exception e1) {
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
+                        }
+                        if (api_version == 0.7f) {
+                            map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        } else if (api_version >= 0.8f) {
+                            String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                            map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        }
                         listItem.add(map);
                         Tracer.d(mytag, map.toString());
                     } catch (Exception e) {
@@ -342,17 +337,23 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         int currentint = LL_background.getHeight();
         if (!isopen) {
             Tracer.d(mytag, "on click");
-            this.isopen = true;
             try {
                 LL_background.removeView(listeChoices);
                 Tracer.d(mytag, "removeView(listeChoices)");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+            Tracer.d(mytag, "getting history");
             getlastvalue();
-            Tracer.d(mytag, "addView(listeChoices)");
-            LL_background.addView(listeChoices);
+            Tracer.d(mytag, "history is: " + listItem);
+            if (!listItem.isEmpty()) {
+                Tracer.d(mytag, "addView(listeChoices)");
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                LL_background.addView(listeChoices);
+                this.isopen = true;
+            } else {
+                Tracer.d(mytag, "history is empty nothing to display");
+            }
         } else {
             this.isopen = false;
             LL_background.removeView(listeChoices);

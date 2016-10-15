@@ -7,12 +7,19 @@
     <PreferenceCategory
         android:persistent="false"
         android:title="@string/OPTION_server_settings">
-        <Preference
+       <Preference
             android:enabled="false"
             android:icon="@drawable/ic_settings_applications_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/OPTION_server_explain" />
+        <Preference
+            android:persistent="false"
+            android:title="@string/OPTION_server_qrcode">
+            <intent
+                android:targetClass="activities.config_with_qrcode"
+                android:targetPackage="org.domogik.domodroid13" />
+        </Preference>
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_IP_Title"
             android:icon="@drawable/ic_ip_address"
@@ -66,23 +73,30 @@
             android:shouldDisableView="true"
             android:title="@string/Rinor_URL" />
         <EditTextPreference
-            android:icon="@drawable/ic_mq"
             android:enabled="true"
+            android:icon="@drawable/ic_mq"
             android:inputType="textUri"
             android:key="MQaddress"
             android:selectable="true"
             android:title="@string/MQ_address" />
         <EditTextPreference
-            android:icon="@drawable/ic_mq_sub"
             android:defaultValue="40412"
+            android:icon="@drawable/ic_mq_sub"
             android:inputType="number"
             android:key="MQsubport"
             android:title="@string/Mq_sub_port" />
         <EditTextPreference
-            android:icon="@drawable/ic_mq_pub"
             android:defaultValue="40411"
+            android:icon="@drawable/ic_mq_pub"
             android:inputType="number"
             android:key="MQpubport"
             android:title="@string/Mq_pub_port" />
+        <EditTextPreference
+            android:defaultValue="40411"
+            android:icon="@drawable/ic_mq_pub"
+            android:inputType="number"
+            android:key="MQreq_repport"
+            android:title="@string/MQ_req_rep_port" />
+
     </PreferenceCategory>
 </PreferenceScreen>

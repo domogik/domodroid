@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +44,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import Abstract.translate;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Activity_Map;
@@ -55,6 +57,7 @@ import database.WidgetUpdate;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 import rinor.CallUrl;
+import widgets.Basic_Graphical_widget;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Binary_New;
 import widgets.Graphical_Boolean;
@@ -613,11 +616,9 @@ public class MapView extends View {
                 if (value.equals("1"))
                     value = value1;
                 try {
-                    Tracer.d(mytag, "Try to get value translate from R.STRING");
-                    value = context.getString((Graphics_Manager.getStringIdentifier(getContext(),
-                            value.toLowerCase())));
+                    value = context.getString((translate.do_translate(getContext(), Tracer, value)));
                 } catch (Exception e1) {
-                    Tracer.d(mytag, "no translation for: " + value);
+
                 }
                 if (value.equals("????"))
                     value = "";
@@ -930,7 +931,9 @@ public class MapView extends View {
                     } else {
                         // This widget is'nt alive anymore...
                         Tracer.e(mytag, "Could not draw " + featureMap.getId());
-                        canvasWidget = null; //?????
+                        //canvasWidget = null; //?????
+                        // comment from TIKISMOKE at 10/10/16 I do not know why this was add in past
+                        // but settings canvaswidget to null make next loop crash and hide all other widgets on this map.
                     }
                 }
 
@@ -1132,7 +1135,25 @@ public class MapView extends View {
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(info_with_history);
             }
+        } else if (feature.getDevice_feature_model_id().startsWith("DT_HVACVent") || feature.getDevice_feature_model_id().startsWith("HVACFan")
+                || feature.getDevice_feature_model_id().startsWith("DT_HVACMode") || feature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
+                || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
+                || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
+                || feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
+            Graphical_List list = new Graphical_List(Tracer, context, URL,
+                    widgetSize, 0, Id, zone, params, feature, handler);
+            if (parameters.contains("command")) {
+                list.with_list = true;
+            } else {
+                list.with_list = false;
+            }
+            panel_widget.addView(list);
+        } else {
+            Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, context, Tracer, Id, context.getString(R.string.contact_devs), "", URL,
+                    widgetSize, 0, zone, mytag, null, handler);
+            panel_widget.addView(basic_widget);
         }
+
 
     }
 

@@ -28,5 +28,11 @@
             android:summaryOff="@string/usage_byhouse"
             android:summaryOn="@string/usage_byusage"
             android:title="@string/usage_byusagecheckbox" />
+        <EditTextPreference
+            android:defaultValue="1"
+            android:dialogTitle="Default area to open"
+            android:inputType="number"
+            android:key="load_area_at_start"
+            android:title="Default area to open" />
     </PreferenceCategory>
 </PreferenceScreen>

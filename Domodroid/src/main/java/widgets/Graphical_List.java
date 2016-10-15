@@ -21,10 +21,12 @@ package widgets;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,26 +45,32 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
+import Abstract.translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
+import rinor.Rest_com;
 
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
 
 
+    private ListView LV_listChoices;
+    private ListView LV_listCommands;
+    private ArrayList<HashMap<String, String>> listItem;
     private LinearLayout featurePan2;
-    private TextView value;
+    private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private Handler handler;
     private Message msg;
@@ -70,10 +78,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String url = null;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
-    public final Boolean with_list = true;
+    public Boolean with_list = true;
     private Boolean realtime = false;
     private String[] known_values;
-    private ArrayList<HashMap<String, String>> listItem;
+    private String[] real_values;
+    JSONObject Values = null;
+    private ArrayList<HashMap<String, String>> listItemCommands;
     private TextView cmd_to_send = null;
     private String cmd_requested = null;
     private String address;
@@ -84,9 +94,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String parameters;
     private int dev_id;
     private final int session_type;
+    private String command_id = null;
+    private String command_type = null;
     private final SharedPreferences params;
-
+    private String stateS;
     private boolean isopen = false;
+    private int nb_item_for_history;
+
     public Graphical_List(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Feature feature, Handler handler) {
@@ -116,7 +130,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         this.id = feature.getId();
         this.address = feature.getAddress();
         this.isopen = false;
-
+        try {
+            String params_nb_item_for_history = params.getString("history_length", "5");
+            this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
+        } catch (Exception e) {
+            Tracer.e(mytag, "Error getting number of item to display");
+            this.nb_item_for_history = 5;
+        }
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
         String packageName = context.getPackageName();
@@ -127,22 +147,20 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         mytag = "Graphical_List (" + dev_id + ")";
 
         //state key
-        TextView state_key_view = new TextView(context);
-        String stateS;
+        final TextView state_key_view = new TextView(context);
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //value
-        value = new TextView(context);
-        value.setTextSize(28);
-        value.setTextColor(Color.BLACK);
-        value.setGravity(Gravity.RIGHT);
+        TV_Value = new TextView(context);
+        TV_Value.setTextSize(28);
+        TV_Value.setTextColor(Color.BLACK);
+        TV_Value.setGravity(Gravity.RIGHT);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
@@ -152,6 +170,20 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
 
+        if (api_version >= 0.7f) {
+            //get values from json parameters
+            JSONObject jparam = null;
+            try {
+                jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+                String temp = jparam.getString("values");
+                Values = new JSONObject(temp.replaceAll("&quot;", "\""));
+                Tracer.d(mytag, "Json Values :" + Values);
+            } catch (Exception e) {
+                Values = null;
+                Tracer.e(mytag, "Json Values error " + e.toString());
+            }
+        }
+
         if (with_list) {
             //Exploit parameters
             JSONObject jparam = null;
@@ -159,15 +191,26 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             JSONArray commandValues = null;
             try {
                 jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
-                command = jparam.getString("command");
-                commandValues = jparam.getJSONArray("commandValues");
-                Tracer.v(mytag, "Json command :" + commandValues);
+                if (api_version < 0.7f) {
+                    command = jparam.getString("command");
+                    commandValues = jparam.getJSONArray("commandValues");
+                    Tracer.d(mytag, "Json command :" + commandValues);
+                } else if (api_version >= 0.7f) {
+                    //get commands for domogik >= 0.4
+                    int number_of_command_parameters = jparam.getInt("number_of_command_parameters");
+                    if (number_of_command_parameters == 1) {
+                        command_id = jparam.getString("command_id");
+                        command_type = jparam.getString("command_type1");
+                        Tracer.d(mytag, "Json command_id :" + command_id + " & command_type :" + command_type);
+                    }
+                }
             } catch (Exception e) {
                 command = "";
                 commandValues = null;
                 Tracer.e(mytag, "Json command error " + e.toString());
-
             }
+
+            //used in previous version of domogik until 0.3 if commands
             if (commandValues != null) {
                 if (commandValues.length() > 0) {
                     if (known_values != null)
@@ -182,51 +225,93 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         }
                     }
                 }
+            }
 
+            // used after domogik 0.4 if commands need to display an open informations
+            if (command_id != null) {
+                TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                //TV_Value.setRotation(180f);
+                TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
+                //TV_Value.setText(R.string.open_show_command);
+            }
+
+            // used after domogik 0.4
+            if (Values != null) {
+                if (Values.length() > 0) {
+                    if (known_values != null)
+                        known_values = null;
+
+                    known_values = new String[Values.length()];
+                    real_values = new String[Values.length()];
+                    Iterator<String> iter = Values.keys();
+                    int i = 0;
+                    while (iter.hasNext()) {
+                        String key = iter.next();
+                        try {
+                            known_values[i] = Values.get(key).toString();
+                            real_values[i] = key;
+                            Tracer.d(mytag, "Json key :" + key);
+                            Tracer.d(mytag, "Json value :" + known_values[i]);
+                        } catch (JSONException e) {
+                            known_values[i] = "N/A";
+                            real_values[i] = "";
+                            Tracer.e(mytag, "Json iteration ERROR:" + e.toString());
+                        }
+                        i++;
+                    }
+                }
             }
             //list of choices
-            ListView listeChoices = new ListView(context);
+            LV_listCommands = new ListView(context);
 
-            listItem = new ArrayList<HashMap<String, String>>();
+            listItemCommands = new ArrayList<HashMap<String, String>>();
             //list_usable_choices = new Vector<String>();
             for (int i = 0; i < known_values.length; i++) {
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
                 HashMap<String, String> map = new HashMap<String, String>();
-                map.put("choice", getStringResourceByName(known_values[i]));
-                map.put("cmd_to_send", known_values[i]);
-                listItem.add(map);
-
+                try {
+                    map.put("choice", getResources().getString(translate.do_translate(context, Tracer, (known_values[i]))));
+                } catch (Exception e) {
+                    map.put("choice", known_values[i]);
+                }
+                if (api_version >= 0.7f) {
+                    map.put("cmd_to_send", real_values[i]);
+                } else {
+                    map.put("cmd_to_send", known_values[i]);
+                }
+                listItemCommands.add(map);
             }
 
 
-            SimpleAdapter adapter_map = new SimpleAdapter(getContext(), listItem,
+            SimpleAdapter adapter_map = new SimpleAdapter(getContext(), listItemCommands,
                     R.layout.item_choice, new String[]{"choice", "cmd_to_send"}, new int[]{R.id.choice, R.id.cmd_to_send});
-            listeChoices.setAdapter(adapter_map);
-            listeChoices.setOnItemClickListener(new OnItemClickListener() {
+            LV_listCommands.setAdapter(adapter_map);
+            LV_listCommands.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if ((position < listItem.size()) && (position > -1)) {
+                    if ((position < listItemCommands.size()) && (position > -1)) {
                         //process selected command
                         HashMap<String, String> map = new HashMap<String, String>();
-                        map = listItem.get(position);
+                        map = listItemCommands.get(position);
                         cmd_requested = map.get("cmd_to_send");
-                        Tracer.d(mytag, "command selected at Position = " + position + "  Commande = " + cmd_requested);
+                        Tracer.d(mytag, "command selected at Position = " + position + "  Command = " + cmd_requested);
                         new CommandeThread().execute();
                     }
                 }
             });
 
-            listeChoices.setScrollingCacheEnabled(false);
+            LV_listCommands.setScrollingCacheEnabled(false);
             //feature panel 2 which will contain list of selectable choices
             featurePan2 = new LinearLayout(context);
             featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
-            featurePan2.addView(listeChoices);
+            featurePan2.addView(LV_listCommands);
 
         }
 
-        LL_featurePan.addView(value);
-        LL_featurePan.addView(TV_Timestamp);
+        super.LL_infoPan.addView(state_key_view);
+        super.LL_featurePan.addView(TV_Value);
+        super.LL_featurePan.addView(TV_Timestamp);
 
 
         handler = new Handler() {
@@ -256,7 +341,16 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     } else {
                         TV_Timestamp.setReferenceTime(Value_timestamplong);
                     }
-                    value.setText(getStringResourceByName(new_val));
+                    if (api_version > 0.7f) {
+                        try {
+                            display_sensor_info.display(Tracer, Values.getString(new_val), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                        } catch (Exception e) {
+                            display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                            Tracer.e(mytag, "Can not convert new_val " + e.toString());
+                        }
+                    } else {
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                    }
                     //To have the icon colored as it has no state
                     change_this_icon(2);
 
@@ -317,9 +411,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                  public void run() {
                                      if (cmd_requested != null) {
                                          String Url2send = "";
-                                         //TODO change for 0.4
                                          if (api_version >= 0.7f) {
-                                             //Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
+                                             Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + cmd_requested;
                                          } else {
                                              Url2send = url + "command/" + type + "/" + address + "/" + cmd_requested;
                                          }
@@ -327,6 +420,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                          JSONObject json_Ack = null;
                                          try {
                                              new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
+                                             Hide(true);
                                              //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          } catch (Exception e) {
                                              Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
@@ -352,22 +446,19 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
     }
 
-
-    private String getStringResourceByName(String stringName) {
-        String packageName = context.getPackageName();
-        String search = stringName.toLowerCase();
-        int resId = 0;
-
-        resId = getResources().getIdentifier(search, "string", packageName);
-        String result = "";
-        try {
-            result = context.getString(resId);
-        } catch (Exception e) {
-            result = stringName;
+    private void Hide(Boolean command) {
+        if (command_id != null) {
+            TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+            TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
         }
-        return result;
+        this.isopen = false;
+        super.LL_background.removeView(featurePan2);
+        super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        if (command) {
+            String text_to_display = context.getResources().getString(R.string.command_sent) + " " + state_key;
+            Toast.makeText(getContext(), text_to_display, Toast.LENGTH_SHORT).show();
+        }
     }
-
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
@@ -376,13 +467,79 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
     }
 
-    public static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
-    }
+    private void getlastvalue() {
+        JSONObject json_LastValues = null;
+        JSONArray itemArray = null;
+        LV_listChoices = new ListView(context);
+        listItem = new ArrayList<>();
+        try {
+            if (api_version <= 0.6f) {
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 10000, SSL);
+            } else if (api_version >= 0.7f) {
+                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                //Don't forget old "dev_id"+"state_key" is replaced by "id"
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 10000, SSL);
+                json_LastValues = new JSONObject();
+                json_LastValues.put("stats", json_LastValues_0_4);
 
+            }
+            itemArray = json_LastValues.getJSONArray("stats");
+            if (api_version <= 0.6f) {
+                for (int i = itemArray.length(); i >= 0; i--) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        try {
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                        } catch (Exception e1) {
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                        }
+                        map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            } else if (api_version >= 0.7f) {
+                for (int i = 0; i < itemArray.length(); i++) {
+                    try {
+                        HashMap<String, String> map = new HashMap<>();
+                        String temp_value_str = "";
+                        try {
+                            temp_value_str = Values.getString(itemArray.getJSONObject(i).getString("value_str").toLowerCase());
+                        } catch (Exception e) {
+                            temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
+                        }
+                        try {
+                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
+                        } catch (Exception e1) {
+                            map.put("TV_Value", temp_value_str);
+                        }
+                        if (api_version == 0.7f) {
+                            map.put("date", itemArray.getJSONObject(i).getString("date"));
+                        } else if (api_version >= 0.8f) {
+                            String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                            map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                        }
+                        listItem.add(map);
+                        Tracer.d(mytag, map.toString());
+                    } catch (Exception e) {
+                        Tracer.e(mytag, "Error getting json TV_Value");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            //return null;
+            Tracer.e(mytag, "Error fetching json object");
+        }
+
+        SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
+                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
+        LV_listChoices.setAdapter(adapter_feature);
+        LV_listChoices.setScrollingCacheEnabled(false);
+    }
 
     public void onClick(View v) {
         if (with_list) {
@@ -393,19 +550,51 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 this.isopen = true;
                 Tracer.d(mytag, "on click");
                 try {
-                    LL_background.removeView(featurePan2);
+                    super.LL_background.removeView(featurePan2);
                     Tracer.d(mytag, "removeView(featurePan2)");
-
                 } catch (Exception e) {
                 }
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
+                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
                 Tracer.d(mytag, "addView(featurePan2)");
-                LL_background.addView(featurePan2);
+                super.LL_background.addView(featurePan2);
+                // used after domogik 0.4 if commands need to display an open informations
+                if (command_id != null) {
+                    TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                    TV_Value.setText(Html.fromHtml("&#xf139;"), TextView.BufferType.SPANNABLE);
+                }
+            } else {
+                Hide(false);
+            }
+        } else {
+            //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+            float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
+            int sizeint = (int) size;
+            int currentint = LL_background.getHeight();
+            if (!isopen) {
+                Tracer.d(mytag, "on click");
+                try {
+                    super.LL_background.removeView(LV_listChoices);
+                    Tracer.d(mytag, "removeView(listeChoices)");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Tracer.d(mytag, "getting history");
+                getlastvalue();
+                Tracer.d(mytag, "history is: " + listItem);
+                if (!listItem.isEmpty()) {
+                    Tracer.d(mytag, "addView(listeChoices)");
+                    LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                    LL_background.addView(LV_listChoices);
+                    this.isopen = true;
+                } else {
+                    Tracer.d(mytag, "history is empty nothing to display");
+                }
             } else {
                 this.isopen = false;
-                LL_background.removeView(featurePan2);
-                LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                super.LL_background.removeView(LV_listChoices);
+                super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             }
+
         }
     }
 

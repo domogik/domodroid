@@ -618,19 +618,6 @@ public class Graphics_Manager {
         return R.drawable.map_led_off;
     }
 
-    public static int getStringIdentifier(Context context, String name) {
-        //To avoid space or - in name in strings.xml
-        name = name.replace(" ", "_");
-        name = name.replace("-", "_");
-        name = name.replace(":", "_");
-        name = name.replace("(", "");
-        name = name.replace(")", "");
-        //To get a drawable R.Drawable
-        //context.getResources().getIdentifier(name, "drawable", context.getPackageName());
-        //To get a string from R.String
-        return context.getResources().getIdentifier(name, "string", context.getPackageName());
-    }
-
     private static String adapt_usage(String usage) {
         if (usage != null) {
             //todo adapt for 0.4 and + use final dt_type (open_close) for example to simplify.
@@ -721,7 +708,11 @@ public class Graphics_Manager {
                     || usage.toLowerCase().equals("bbrhpjw") || usage.toLowerCase().equals("bbrhcjr") || usage.toLowerCase().equals("bbrhpjr")
                     )
                 usage = "electricity";
-            //RFXBNZ "temperature", "humidity", "battery", "luminosity", "pressure", "power", "energy", "water", "windspeed", "rainfall", "outflow",
+            //rainhour
+            if (usage.equals("rainForecastLocation") || usage.equals("rainForecastDate") || usage.equals("rainForecastTxt")
+                    || usage.startsWith("rainLevel") || usage.equals("rainInHour")|| usage.equals("heavyRainInHour"))
+                usage = "humidity";
+            // RFXBNZ "temperature", "humidity", "battery", "luminosity", "pressure", "power", "energy", "water", "windspeed", "rainfall", "outflow",
             // "voltage", "current", "homeeasy S_switch", "homeeasy_openclose", "x10_switch", "ati_remote", "generic"
             //RFXCOM "temperature", "humidity", "battery", "rssi", "switch_lighting_2", "rssi_lighting_2","open_close", "rssi_open_close", "smoke"
             if (usage.toLowerCase().equals("battery"))
@@ -782,7 +773,7 @@ public class Graphics_Manager {
                 usage = "door";
             return usage;
 
-        }else{
+        } else {
             return "";
         }
 

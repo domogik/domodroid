@@ -204,6 +204,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             String mytag = "Dialog_Synchronize";
             try {
                 json_rinor = Rest_com.connect_jsonobject(Tracer, urlAccess, login, password, 3000, SSL);
+
+                publishProgress(2);
             } catch (Exception e) {
                 Tracer.e(mytag, "Error connecting to rinor");
                 json_rinor = null;
@@ -221,6 +223,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             String Rinor_Api_ver = "";
             try {
                 Rinor_Api_ver = json_rinor.getJSONObject("info").getString("REST_API_version");
+                publishProgress(4);
             } catch (Exception e) {
                 try {
                     Rinor_Api_ver = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("REST_API_version");
@@ -233,6 +236,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             String domogik_Version = "";
             try {
                 domogik_Version = json_rinor.getJSONObject("info").getString("Domogik_version");
+                publishProgress(6);
             } catch (Exception e) {
                 try {
                     domogik_Version = json_rinor.getJSONArray("rest").getJSONObject(0).getJSONObject("info").getString("Domogik_version");
@@ -252,7 +256,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_FeatureAssociationList = null;
             JSONObject json_IconList = null;
             Tracer.i(mytag, "urlAccess = <" + urlAccess + ">");
-
+            publishProgress(8);
             // grab a new method if sync by past that only erase what concern area id 1 if previous api >0.6f
             // and if syncing with the same api version
             if ((previous_api_version == Rinor_Api_Version) && (Rinor_Api_Version >= 0.6f)) {
@@ -295,6 +299,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
                     db.NewsyncDb();
                     Tracer.i(mytag, "Doing a sync update only, not erasing all");
+                    publishProgress(10);
                 } catch (Exception e) {
                     Tracer.e(mytag, e.toString());
                     db.updateDb();
@@ -304,6 +309,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 //Erase all tables contents EXCEPT maps coordinates !
                 db.updateDb();
                 Tracer.i(mytag, "Doing a full sync, erasing all !!!");
+                publishProgress(10);
             }
 
             if (Rinor_Api_Version <= 0.5f) {
@@ -371,7 +377,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     handler.sendMessage(msg);
                     return null;
                 }
-                publishProgress(100);
+                publishProgress(90);
 
             } else if (Rinor_Api_Version <= 0.6f) {
                 // Function special Basilic domogik 0.3
@@ -545,6 +551,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQaddress = json_rinor.getJSONObject("mq").getString("ip");
                     String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
+                    String MQreq_repport = json_rinor.getJSONObject("mq").getString("req_rep_port");
                     prefEditor.putString("MQaddress", MQaddress);
                     // #103 if MQadress=localhost
                     if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1")) {
@@ -553,7 +560,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Toast.makeText(context, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else if (MQaddress.equals("*")){
+                    } else if (MQaddress.equals("*")) {
                         context.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(context, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
@@ -562,10 +569,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
                     prefEditor.putString("MQsubport", MQsubport);
                     prefEditor.putString("MQpubport", MQpubport);
+                    prefEditor.putString("MQreq_repport", MQreq_repport);
+                    publishProgress(12);
                 } catch (Exception e1) {
                     context.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, R.string.problm_with_mq_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.problem_with_mq_information, Toast.LENGTH_LONG).show();
                             Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -589,6 +598,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     handler.sendMessage(msg);
                     return null;
                 }
+                publishProgress(14);
                 JSONObject Json_data_type = Rest_com.connect_jsonobject(Tracer, urlAccess + "datatype", login, password, 3000, SSL);
                 if (Json_data_type == null) {
                     // Cannot get data_type from Rinor server.....
@@ -834,13 +844,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.e(mytag, e1.toString());
                             }
                             //For 0.4 make a loop until no more parent data_type
-                            //TODO get value0 and value1 from labels
-                            //Maybe list too....
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
                             String tempdata_type = data_type;
                             try {
+                                //get value0 and value1 from labels
                                 JSONObject labels = Json_data_type.getJSONObject(tempdata_type).getJSONObject("labels");
                                 for (int length = 0; length < labels.length(); length++) {
                                     parameters.put("value" + labels.names().get(length), labels.getString((String) labels.names().get(length)));
@@ -848,6 +857,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.v(mytag, "dt_type: " + data_type + " as labels: " + labels.toString());
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO labels for this dt_type: " + data_type);
+                            }
+                            try {
+                                //get values
+                                JSONObject values = Json_data_type.getJSONObject(tempdata_type).getJSONObject("values");
+                                parameters.putOpt("values", values.toString());
+                                Tracer.v(mytag, "dt_type: " + data_type + " as values: " + values.toString());
+                            } catch (Exception e) {
+                                Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
                             while (!parent_again) {
                                 try {
@@ -1025,13 +1042,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.e(mytag, e1.toString());
                             }
                             //For 0.4 make a loop until no more parent data_type
-                            //TODO get value0 and value1 from labels
-                            //Maybe list too....
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
                             String tempdata_type = data_type;
                             try {
+                                //get value0 and value1 from labels
                                 JSONObject labels = Json_data_type.getJSONObject(tempdata_type).getJSONObject("labels");
                                 for (int length = 0; length < labels.length(); length++) {
                                     parameters.putOpt("value" + labels.names().get(length), labels.getString((String) labels.names().get(length)));
@@ -1039,6 +1055,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Tracer.i(mytag, "dt_type: " + data_type + " as labels: " + labels.toString());
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO labels for this dt_type: " + data_type);
+                            }
+                            try {
+                                //get values
+                                JSONObject values = Json_data_type.getJSONObject(tempdata_type).getJSONObject("values");
+                                parameters.putOpt("values", values.toString());
+                                Tracer.v(mytag, "dt_type: " + data_type + " as values: " + values.toString());
+                            } catch (Exception e) {
+                                Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
                             while (!parent_again) {
                                 try {
@@ -1105,7 +1129,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                         }
                     }
-                    publishProgress(90);
                     // for loop on feature list...
 
                     //Prepare list of rooms, and list of usable features
@@ -1116,8 +1139,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         Tracer.e(mytag, e.toString());
                     }
 
-
                 }
+                publishProgress(90);
+
 
             }
 

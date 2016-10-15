@@ -1,6 +1,8 @@
 package misc;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
+
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
 
 public class CopyFile {
@@ -16,14 +19,14 @@ public class CopyFile {
     // If targetLocation does not exist, it will be created.
     public static void copyDirectory(File sourceLocation, File targetLocation)
             throws IOException {
-        com.orhanobut.logger.Logger.init("CopyFile").methodCount(0);
+        //com.orhanobut.logger.Logger.init("CopyFile").methodCount(0);
 
         if (sourceLocation.isDirectory()) {
             try {
                 if (!targetLocation.exists()) {
                     boolean sucess = targetLocation.mkdir();
                     if (sucess == false)
-                        Logger.i("No " + targetLocation.toString() + " created");
+                        Log.i("CopyFile", "No " + targetLocation.toString() + " created");
                 }
                 String[] children = sourceLocation.list();
                 for (String aChildren : children) {
@@ -31,7 +34,7 @@ public class CopyFile {
                             new File(targetLocation, aChildren));
                 }
             } catch (Exception e) {
-                Logger.e("creating " + targetLocation.toString() + " error " + e.toString());
+                Log.e("CopyFile", "creating " + targetLocation.toString() + " error " + e.toString());
             }
         } else {
 

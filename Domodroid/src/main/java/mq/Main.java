@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class Main extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tts);
-        com.orhanobut.logger.Logger.init("MQ.Main").methodCount(0);
+        //com.orhanobut.logger.Logger.init("MQ.Main").methodCount(0);
 
         // Config
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -141,7 +142,7 @@ public class Main extends AppCompatActivity {
                     String ip = SP.getString("MQaddress", "");    // TODO : use a R. for the default value
                     String port = SP.getString("MQpubport", "40411");    // TODO : use a R. for the default value
                     String pub_url = "tcp://" + ip + ":" + port;
-                    Logger.d("Pub address : " + pub_url);
+                    Log.d("Main", "Pub address : " + pub_url);
                     pub.execute(pub_url, "interface.input", result.get(0));
                     pub = null;
                 }
@@ -193,17 +194,17 @@ public class Main extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.d("here");
+            Log.d("Main", "here");
             ZMQMessage message = intent.getParcelableExtra("message");
             String response = "";
             if (message != null) {
-                Logger.d("JSON received : ");
-                Logger.json(message.getMessage());
+                Log.d("Main", "JSON received : ");
+                Log.d("Main", message.getMessage());
                 try {
                     JSONObject jsonData = new JSONObject(message.getMessage());
                     response = (String) jsonData.get("text");
                 } catch (JSONException e) {
-                    Logger.e("Error while decoding json: ", e);
+                    Log.e("Main", "Error while decoding json: ", e);
                     Toast.makeText(this.context, R.string.error_decode_json_butler, Toast.LENGTH_SHORT).show();
                 }
                 //Toast.makeText(this.context, message.getMessage(), Toast.LENGTH_SHORT).show();
@@ -215,7 +216,7 @@ public class Main extends AppCompatActivity {
                 chatHistory.setSelection(arrayAdapter.getCount() - 1);
 
             } else {
-                Logger.d("Empty");
+                Log.d("Main", "Empty");
             }
         }
     }

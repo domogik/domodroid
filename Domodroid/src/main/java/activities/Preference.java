@@ -19,6 +19,7 @@
 package activities;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
@@ -44,9 +45,10 @@ import misc.tracerengine;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    private Preference myself = null;
+    public static Preference myself = null;
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
+    private String action;
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -87,7 +89,7 @@ public class Preference extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
-        String action = getIntent().getAction();
+        action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
         } else if (action != null && action.equals("preferences_widget")) {
@@ -113,8 +115,13 @@ public class Preference extends PreferenceActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        // show the current value in the settings screen
+        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+            initSummary(getPreferenceScreen().getPreference(i));
+        }
     }
 
     @Override
@@ -124,17 +131,53 @@ public class Preference extends PreferenceActivity implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        updatePreferences(findPreference(key));
+        if (key.equals("load_area_at_start")) {
+            SharedPreferences.Editor pref_editor = sharedPreferences.edit();
+            pref_editor.putBoolean("BY_USAGE", true);
+            pref_editor.commit();
+        }
+        // show the current value in the settings screen
+        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+            initSummary(getPreferenceScreen().getPreference(i));
+        }
+
+
+    }
+
+    private void initSummary(android.preference.Preference preference) {
+        if (preference instanceof PreferenceCategory) {
+            PreferenceCategory cat = (PreferenceCategory) preference;
+            for (int i = 0; i < cat.getPreferenceCount(); i++) {
+                initSummary(cat.getPreference(i));
+            }
+        } else {
+            updatePreferences(preference);
+        }
+    }
+
+    private void updatePreferences(android.preference.Preference preference) {
+        if (preference instanceof EditTextPreference) {
+            EditTextPreference editTextPref = (EditTextPreference) preference;
+            //Add to avoid password in clear in this view
+            if (!preference.getKey().equals("http_auth_password"))
+                preference.setSummary(editTextPref.getText());
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
-        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = params.getString("rinorIP", "");
         Boolean SSL = params.getBoolean("ssl_activate", false);
         SharedPreferences.Editor prefEditor;
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(this).edit();
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", "https://" + temp);
@@ -143,7 +186,7 @@ public class Preference extends PreferenceActivity implements
             }
             prefEditor.commit();
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(this).edit();
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", temp.replace("https://", ""));
@@ -173,32 +216,7 @@ public class Preference extends PreferenceActivity implements
         urlAccess = params.getString("URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
+        Tracer.d(mytag, "End destroy activity");
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
-        updatePreferences(findPreference(key));
-
-    }
-
-    private void initSummary(android.preference.Preference preference) {
-        if (preference instanceof PreferenceCategory) {
-            PreferenceCategory cat = (PreferenceCategory) preference;
-            for (int i = 0; i < cat.getPreferenceCount(); i++) {
-                initSummary(cat.getPreference(i));
-            }
-        } else {
-            updatePreferences(preference);
-        }
-    }
-
-    private void updatePreferences(android.preference.Preference preference) {
-        if (preference instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) preference;
-            //Add to avoid password in clear in this view
-            if (!preference.getKey().equals("http_auth_password"))
-                preference.setSummary(editTextPref.getText());
-        }
-    }
-
-} 
+}

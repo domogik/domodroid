@@ -2,9 +2,10 @@ package misc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,9 +59,9 @@ public class tracerengine {
     }
 
     public static tracerengine getInstance(SharedPreferences params, Context context) {
-        com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
+        //com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         if (instance == null) {
-            Logger.d("Creating instance........................");
+            Log.d("tracerengine", "Creating instance........................");
             instance = new tracerengine(context);
         }
         settings = params;
@@ -70,9 +71,9 @@ public class tracerengine {
     }
 
     public static tracerengine getInstance(Context context) {
-        com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
+        //com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         if (instance == null) {
-            Logger.d("Creating instance........................");
+            Log.d("tracerengine", "Creating instance........................");
             instance = new tracerengine(context);
         }
         return instance;
@@ -207,11 +208,11 @@ public class tracerengine {
      * Method writing messages to screen view
      */
     private static void screenlog(String tag, String msg) {
-        com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
+        //com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         try {
             Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Logger.e("Tracerengine ScreenLog: " + e.toString());
+            Log.e("tracerengine screenlog", "Tracerengine ScreenLog: " + e.toString());
         }
     }
 
@@ -260,7 +261,7 @@ public class tracerengine {
             } catch (IOException i) {
                 txtFile = null;        //Abort log to text file in future
                 to_txtFile = false;
-                Logger.e("Tracerengine FileLog: " + i.toString());
+                Log.e("tracerengine txtlog", "Tracerengine FileLog: " + i.toString());
             }
         }
     }
@@ -272,31 +273,31 @@ public class tracerengine {
     private static void syslog(int type, String tag, String msg) {
         if (tag == null)
             tag = "Null tag";
-        com.orhanobut.logger.Logger.init(tag).methodCount(5).hideThreadInfo().methodOffset(0);
+        //com.orhanobut.logger.Logger.init(tag).methodCount(3).hideThreadInfo().methodOffset(0);
         switch (type) {
             case 0:
-                //Log.d(tag, msg);
-                Logger.d(msg);
+                Log.d(tag, msg);
+                //Logger.d(msg);
                 break;
             case 1:
-                //Log.e(tag, msg);
-                Logger.e(msg);
+                Log.e(tag, msg);
+                //Logger.e(msg);
                 break;
             case 2:
-                //Log.i(tag, msg);
-                Logger.i(msg);
+                Log.i(tag, msg);
+                //Logger.i(msg);
                 break;
             case 3:
-                //Log.v(tag, msg);
-                Logger.v(msg);
+                Log.v(tag, msg);
+                //Logger.v(msg);
                 break;
             case 4:
-                //Log.w(tag, msg);
-                Logger.v(msg);
+                Log.w(tag, msg);
+                //Logger.v(msg);
                 break;
             case 5:
-                //Log.w(tag, msg);
-                Logger.json(msg);
+                Log.w(tag, msg);
+                //Logger.json(msg);
                 break;
 
         }

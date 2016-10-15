@@ -6,9 +6,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -38,6 +39,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import misc.tracerengine;
+import mq.ZMQReqMessage;
 import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
@@ -106,13 +108,13 @@ public class WidgetUpdate {
      *******************************************************************************/
     private WidgetUpdate() {
         super();
-        com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
+        //com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
 
     }
 
     public static WidgetUpdate getInstance() {
         if (instance == null) {
-            Logger.i("Creating instance........................");
+            Log.i("WidgetUpdate", "Creating instance........................");
             instance = new WidgetUpdate();
         }
         return instance;
@@ -122,7 +124,7 @@ public class WidgetUpdate {
     public Boolean init(tracerengine Trac, final Activity context, SharedPreferences params) {
         Boolean result = false;
         if (init_done) {
-            Logger.e("init already done");
+            Log.w("WidgetUpdate", "init already done");
             return true;
         }
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
@@ -641,7 +643,7 @@ public class WidgetUpdate {
 
                 if (request != null) {
                     JSONObject json_widget_state = null;
-                    JSONArray json_widget_state_0_4 = null;
+                    JSONArray json_widget_state_0_4;
                     stats_com.add(Stats_Com.STATS_SEND, request.length());
                     try {
                         if (api_version <= 0.6f) {
@@ -650,6 +652,8 @@ public class WidgetUpdate {
                             Tracer.d(mytag, "json_widget_state for <0.6 API=");
                             Tracer.json(mytag, json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
+                            //todo change by == when device.get will work
+                            // else if (api_version == 0.7f) {
                             json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
@@ -657,12 +661,16 @@ public class WidgetUpdate {
                             json_widget_state.put("stats", json_widget_state_0_4);
                             Tracer.d(mytag, "json_widget_state for 0.7 API=");
                             Tracer.json(mytag, json_widget_state.toString());
+                        } else if (api_version >= 0.8f) {
+                            //todo will use this when device.get will work
+                            json_widget_state = zmqrequest();
                         }
                     } catch (final Exception e) {
                         //stats request cannot be completed (broken link or terminal in standby ?)
                         //Will retry automatically in 2'05, if no events received
                         Tracer.e(mytag, "get stats : Rinor error <" + e.getMessage() + ">");
                         //Toast not available in asynctask
+                        // TODO handle "Host name may not be null" to avoid white page in domodroid
                         context.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(context, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
@@ -907,7 +915,7 @@ public class WidgetUpdate {
         int pos = from + 1;
         if (pos >= cache.size() || pos < 0)
             pos = 0;
-       //Check if following entry in cache is the good one...
+        //Check if following entry in cache is the good one...
         for (int i = pos; i < cache.size(); i++) {
             if ((cache.get(i).DevId == dev_id) && (cache.get(i).skey.equals(skey))) {
                 return i;        //Bingo, the next one was the good one !
@@ -1219,6 +1227,26 @@ public class WidgetUpdate {
         return context;
     }
 
+    public JSONObject zmqrequest() throws JSONException {
+        ZMQReqMessage REQ = new ZMQReqMessage(myselfHandler);
+        String ip = sharedparams.getString("MQaddress", "");    // TODO : use a R. for the default value
+        String port = sharedparams.getString("MQreq_repport", "40410");    // TODO : use a R. for the default value
+        final String pub_url = "tcp://" + ip + ":" + port;
+        Log.d(mytag, "req address : " + pub_url);
+        JSONArray json_widget_state_0_5 = new JSONArray();
+
+        REQ.execute(pub_url, "device.get");
+        REQ = null;
+
+        Tracer.json(mytag, json_widget_state_0_5.toString());
+        JSONObject json_widget_state = new JSONObject();
+        // Create a false jsonarray like if it was domomgik 0.3
+        //(meaning provide value in an stats: array containing a list of value in jsonobject format)
+        json_widget_state.put("stats", json_widget_state_0_5);
+        Tracer.d(mytag, "json_widget_state for 0.8 API=");
+        Tracer.json(mytag, json_widget_state.toString());
+        return json_widget_state;
+    }
 
 }
 

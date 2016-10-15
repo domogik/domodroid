@@ -25,7 +25,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -60,12 +59,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
+import Abstract.translate;
 import Abstract.calcul;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -118,8 +117,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private TextView state_key_view;
     private String stateS;
     private String test_unite;
-    private Typeface typefaceweather;
-    private Typeface typefaceawesome;
     private Float Float_graph_size;
     private boolean isopen = false;
 
@@ -158,9 +155,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 
         try {
-            stateS = getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase()));
+            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             stateS = state_key;
         }
         myself = this;
@@ -183,7 +179,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         dataset = new XYMultipleSeriesDataset();
         //Creating an  XYSeries for Income
         nameSeries = new TimeSeries(name);
-        EmptySeries = new TimeSeries(getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), "no_value")));
+        EmptySeries = new TimeSeries(getResources().getString(translate.do_translate(getContext(), Tracer, "no_value")));
         incomeRenderer.setColor(0xff0B909A);
         emptyRenderer.setColor(0xffff0000);
         incomeRenderer.setPointStyle(PointStyle.CIRCLE);
@@ -201,7 +197,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //Remove default X axis label
         //multiRenderer.setXLabels(0);
         //Set X title
-        multiRenderer.setXTitle(getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), "time")));
+        multiRenderer.setXTitle(getResources().getString(translate.do_translate(getContext(), Tracer, "time")));
         //Remove default Y axis label
         multiRenderer.setYLabels(0);
         //Set X label text color
@@ -254,8 +250,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
-        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);
@@ -363,8 +357,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //updateTimer();	//Don't use anymore cyclic refresh....
 
     }
-
-
 
 
     @Override

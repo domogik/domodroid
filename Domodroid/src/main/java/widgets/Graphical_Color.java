@@ -28,11 +28,11 @@ import org.json.JSONObject;
 
 import java.util.TimerTask;
 
+import Abstract.translate;
 import Abstract.display_sensor_info;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
-import activities.Graphics_Manager;
 import database.WidgetUpdate;
 import misc.Color_Progress;
 import misc.Color_RGBField;
@@ -144,9 +144,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //state key
         TextView state_key_view = new TextView(context);
         try {
-            state_key_view.setText(context.getResources().getString(Graphics_Manager.getStringIdentifier(getContext(), state_key.toLowerCase())));
+            state_key_view.setText(context.getResources().getString(translate.do_translate(getContext(), Tracer, state_key)));
         } catch (Exception e) {
-            Tracer.d(mytag, "no translation for: " + state_key);
             state_key_view.setText(state_key);
         }
         state_key_view.setTextColor(Color.parseColor("#333333"));

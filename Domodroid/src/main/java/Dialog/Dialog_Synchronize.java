@@ -739,20 +739,17 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
                     JSONArray listsensor = json_Sensors.names();
 
-                    //TODO Try to sort list sensors by sensors id
-                    Tracer.e(mytag, listsensor.toString());
-                    List<String> jsonValues = new ArrayList<String>();
-                    for (int y = 0; y < listsensor.length(); y++)
-                        try {
-                            jsonValues.add(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    Collections.sort(jsonValues);
-                    JSONArray sortedJsonArray = new JSONArray(jsonValues);
-                    Tracer.e(mytag, sortedJsonArray.toString());
-
-
+                    //Sort list sensors by sensors id
+                    List<String> sesnoridlist = new ArrayList<String>();
+                    if (list_sensors > 0) {
+                        for (int y = 0; y < list_sensors; y++)
+                            try {
+                                sesnoridlist.add(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
+                            } catch (JSONException e) {
+                                Tracer.e(mytag, "sorting error" + e.toString());
+                            }
+                        Collections.sort(sesnoridlist);
+                    }
                     //List all sensors
                     for (int y = 0; y < list_sensors; y++) {
                         try {
@@ -820,8 +817,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 //#85 here place_id was false
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
-                                Widget.put("id", k);
-                                k++;
+                                Widget.put("id", k + sesnoridlist.indexOf(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id")));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
@@ -915,6 +911,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                         }
                     }
+                    k = k + list_sensors;
                     //Create feature from commands
                     int list_commands = 0;
                     try {
@@ -932,8 +929,19 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         Tracer.e(mytag, e1.toString());
                     }
                     JSONArray listcommand = json_Commands.names();
+
+                    //Sort list commands by commands id
+                    List<String> commandidlist = new ArrayList<String>();
+                    if (list_commands > 0) {
+                        for (int y = 0; y < list_commands; y++)
+                            try {
+                                commandidlist.add(json_Commands.getJSONObject(listcommand.getString(y)).getString("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        Collections.sort(commandidlist);
+                    }
                     //List all commands
-                    //TODO Try to sort list commands by commands id
                     for (int y = 0; y < list_commands; y++) {
                         try {
                             //todo #75 reorder for the moment it his done by name
@@ -1013,8 +1021,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 //#85 here place_id was false
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1);
                                 Widget.put("device_feature_id", tempid);
-                                Widget.put("id", k);
-                                k++;
+                                Widget.put("id", k + commandidlist.indexOf(json_Commands.getJSONObject(listcommand.getString(y)).getString("id")));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
@@ -1147,6 +1154,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                         }
                     }
+                    k = k + list_commands;
                     // for loop on feature list...
 
                     //Prepare list of rooms, and list of usable features

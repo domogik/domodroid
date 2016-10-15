@@ -8,7 +8,7 @@ import misc.tracerengine;
  * Created by tiki on 08/10/2016.
  */
 
-public class translate {
+public abstract class translate {
 
     public static int do_translate(Context context, tracerengine Tracer, String name) {
         String mytag = "do_translate";

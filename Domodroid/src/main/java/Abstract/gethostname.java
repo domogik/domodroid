@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
  * Created by tiki on 11/10/2016.
  */
 
-public class gethostname {
+public abstract class gethostname {
 
     public static String getHostName() {
         try {

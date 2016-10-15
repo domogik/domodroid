@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 
-public class calcul {
+public abstract class calcul {
 
     public static double Round_double(double value) {
         if (2 < 0) throw new IllegalArgumentException();

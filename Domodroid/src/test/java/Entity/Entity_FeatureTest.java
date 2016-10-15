@@ -163,18 +163,18 @@ public class Entity_FeatureTest extends AndroidTestCase {
     public void testGeRessources() throws Exception {
         Integer resources = client.getRessources();
         //todo find a better way than static int
-        Assert.assertEquals(2.130837655E9, resources, 0);
+        Assert.assertEquals(2.130837656E9, resources, 0);
 
         client.setDevice_usage_id("door");
         client.setState(0);
         resources = client.getRessources();
         //todo find a better way than static int
-        Assert.assertEquals(2.13083767E9, resources, 0);
+        Assert.assertEquals(2.130837671E9, resources, 0);
 
         client.setState(1);
         resources = client.getRessources();
         //todo find a better way than static int
-        Assert.assertEquals(2.130837671E9, resources, 0);
+        Assert.assertEquals(2.130837672E9, resources, 0);
     }
 
 

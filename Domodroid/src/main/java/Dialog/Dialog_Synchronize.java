@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import activities.Activity_Main;
 import database.Cache_management;
@@ -736,6 +738,21 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         Tracer.e(mytag, e1.toString());
                     }
                     JSONArray listsensor = json_Sensors.names();
+
+                    //TODO Try to sort list sensors by sensors id
+                    Tracer.e(mytag, listsensor.toString());
+                    List<String> jsonValues = new ArrayList<String>();
+                    for (int y = 0; y < listsensor.length(); y++)
+                        try {
+                            jsonValues.add(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    Collections.sort(jsonValues);
+                    JSONArray sortedJsonArray = new JSONArray(jsonValues);
+                    Tracer.e(mytag, sortedJsonArray.toString());
+
+
                     //List all sensors
                     for (int y = 0; y < list_sensors; y++) {
                         try {
@@ -800,14 +817,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             JSONObject Widget = new JSONObject();
                             try {
                                 Widget.put("place_type", "room");
-                                //#85 here place_id wass false
+                                //#85 here place_id was false
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
                                 Widget.put("id", k);
+                                k++;
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            k++;
                             JSONObject device_feature = new JSONObject();
                             device_feature1 = new JSONObject();
                             String data_type = null;
@@ -916,6 +933,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
                     JSONArray listcommand = json_Commands.names();
                     //List all commands
+                    //TODO Try to sort list commands by commands id
                     for (int y = 0; y < list_commands; y++) {
                         try {
                             //todo #75 reorder for the moment it his done by name
@@ -996,10 +1014,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1);
                                 Widget.put("device_feature_id", tempid);
                                 Widget.put("id", k);
+                                k++;
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            k++;
                             String data_type = null;
                             try {
                                 data_type = json_Commands.getJSONObject(listcommand.getString(y)).getJSONArray("parameters").getJSONObject(0).getString("data_type");

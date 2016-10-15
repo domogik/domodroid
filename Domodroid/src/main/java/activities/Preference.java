@@ -98,7 +98,6 @@ public class Preference extends PreferenceActivity implements
             addPreferencesFromResource(R.xml.preferences_map);
         } else if (action != null && action.equals("preferences_house")) {
             addPreferencesFromResource(R.xml.preferences_house);
-
         } else if (action != null && action.equals("preferences_butler")) {
             addPreferencesFromResource(R.xml.preferences_butler);
         } else if (action != null && action.equals("preferences_debug")) {
@@ -130,6 +129,42 @@ public class Preference extends PreferenceActivity implements
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        updatePreferences(findPreference(key));
+        if (key.equals("load_area_at_start")) {
+            SharedPreferences.Editor pref_editor = sharedPreferences.edit();
+            pref_editor.putBoolean("BY_USAGE", true);
+            pref_editor.commit();
+        }
+        // show the current value in the settings screen
+        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
+            initSummary(getPreferenceScreen().getPreference(i));
+        }
+
+
+    }
+
+    private void initSummary(android.preference.Preference preference) {
+        if (preference instanceof PreferenceCategory) {
+            PreferenceCategory cat = (PreferenceCategory) preference;
+            for (int i = 0; i < cat.getPreferenceCount(); i++) {
+                initSummary(cat.getPreference(i));
+            }
+        } else {
+            updatePreferences(preference);
+        }
+    }
+
+    private void updatePreferences(android.preference.Preference preference) {
+        if (preference instanceof EditTextPreference) {
+            EditTextPreference editTextPref = (EditTextPreference) preference;
+            //Add to avoid password in clear in this view
+            if (!preference.getKey().equals("http_auth_password"))
+                preference.setSummary(editTextPref.getText());
+        }
     }
 
     @Override
@@ -182,42 +217,6 @@ public class Preference extends PreferenceActivity implements
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");
-    }
-
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
-        updatePreferences(findPreference(key));
-        if (key.equals("load_area_at_start")) {
-            SharedPreferences.Editor pref_editor = sharedPreferences.edit();
-            pref_editor.putBoolean("BY_USAGE", true);
-            pref_editor.commit();
-        }
-        // show the current value in the settings screen
-        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
-            initSummary(getPreferenceScreen().getPreference(i));
-        }
-
-
-    }
-
-    private void initSummary(android.preference.Preference preference) {
-        if (preference instanceof PreferenceCategory) {
-            PreferenceCategory cat = (PreferenceCategory) preference;
-            for (int i = 0; i < cat.getPreferenceCount(); i++) {
-                initSummary(cat.getPreference(i));
-            }
-        } else {
-            updatePreferences(preference);
-        }
-    }
-
-    private void updatePreferences(android.preference.Preference preference) {
-        if (preference instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) preference;
-            //Add to avoid password in clear in this view
-            if (!preference.getKey().equals("http_auth_password"))
-                preference.setSummary(editTextPref.getText());
-        }
     }
 
 }

@@ -38,6 +38,19 @@ public class config_with_qrcode extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                contents = data.getStringExtra("SCAN_RESULT"); //this is the result
+                showDialog(config_with_qrcode.this, "Qrcode is valid", contents, "OK", "No").show();
+            } else if (resultCode == RESULT_CANCELED) {
+                //showDialog(config_with_qrcode.this, "Qrcode results", "No results from qrcode scanner", "Yes", "No").show();
+            }
+        }
+    }
+
     private AlertDialog showDialog(final Activity act, final CharSequence title, CharSequence message, CharSequence buttonYes, final CharSequence buttonNo) {
         final AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
         downloadDialog.setTitle(title);
@@ -50,7 +63,8 @@ public class config_with_qrcode extends AppCompatActivity {
                     try {
                         act.startActivity(intent);
                     } catch (ActivityNotFoundException anfe) {
-
+                        Tracer.e(mytag, "No market apps installed on this device: " + anfe.toString());
+                        showDialog(config_with_qrcode.this, "No market apps installed on this device", contents, "OK", "No").show();
                     }
                 } else if (title.equals("Qrcode is valid")) {
                     Tracer.d("preference", "We got a recult from qrcode scanner:" + contents);
@@ -109,16 +123,5 @@ public class config_with_qrcode extends AppCompatActivity {
         return downloadDialog.show();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                contents = data.getStringExtra("SCAN_RESULT"); //this is the result
-                showDialog(config_with_qrcode.this, "Qrcode is valid", contents, "OK", "No").show();
-            } else if (resultCode == RESULT_CANCELED) {
-                showDialog(config_with_qrcode.this, "Qrcode results", "No results from qrcode scanner", "Yes", "No").show();
-            }
-        }
-    }
+
 }

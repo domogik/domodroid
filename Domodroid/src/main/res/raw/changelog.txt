@@ -33,6 +33,7 @@
       * Close #116 Values saved from datatype for use in Widget_list
       * Close #115 History for boolean widget with translation too
       * Update zeromq.jeromq to version 0.3.6
+      * Correct some bugs (sync progression, start in area crash on back)
       * Remove logger lib (https://github.com/orhanobut/logger) as it may crash when domodroid comes back from background due to too many requests.
       % Version 23
       _ 2016-09-25

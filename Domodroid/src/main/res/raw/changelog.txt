@@ -22,6 +22,7 @@
     $ 1.4
       % Version 25
       _ 2016-xx-xx
+      * Correct widget selector for DT_HVACFan
       * Sort sensor and commands at sync by sensor_id or command_id for 0.5
       % Version 24
       _ 2016-10-15

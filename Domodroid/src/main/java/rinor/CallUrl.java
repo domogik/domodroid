@@ -29,9 +29,13 @@ import javax.net.ssl.HttpsURLConnection;
 public class CallUrl extends AsyncTask<String, Void, String> {
     private final String mytag = this.getClass().getName();
     private boolean alreadyTriedAuthenticating = false;
+    private Stats_Com stats_com = Stats_Com.getInstance();
 
     @Override
     protected String doInBackground(String... uri) {
+        if (stats_com == null)
+            stats_com = Stats_Com.getInstance();
+        stats_com.wakeup();
         // TODO : use non deprecated functions
         String url = uri[0];
         final String login = uri[1];
@@ -49,11 +53,13 @@ public class CallUrl extends AsyncTask<String, Void, String> {
             try {
                 response = httpclient.execute(new HttpGet(url));
                 StatusLine statusLine = response.getStatusLine();
+                stats_com.add(Stats_Com.EVENTS_SEND, httpclient.getRequestInterceptorCount());
+                stats_com.add(Stats_Com.EVENTS_RCV, httpclient.getResponseInterceptorCount());
                 if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     response.getEntity().writeTo(out);
                     responseString = out.toString();
-                    out.close();
+                   out.close();
                 } else {
                     //Closes the connection.
                     try {
@@ -87,6 +93,8 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 int responseCode = urlConnection.getResponseCode();
                 responseMessage = urlConnection.getResponseMessage();
                 result = Abstract.httpsUrl.convertStreamToString(instream);
+                stats_com.add(Stats_Com.EVENTS_SEND, urlConnection.getContentLength());
+                stats_com.add(Stats_Com.EVENTS_RCV, responseMessage.length());
                 instream.close();
                 //} catch (HttpHostConnectException e) {
                 //    e.printStackTrace();

@@ -234,6 +234,7 @@ public class Events_manager {
                                     }
                                 } else if (result.contains("device.update")) {
                                     Tracer.i(mytag, "New MQ message for device.update : " + result);
+                                    stats_com.add(Stats_Com.EVENTS_RCV, result.length());
                                     try {
                                         JSONObject json_mq_update = new JSONObject(result);
                                         Tracer.i(mytag, "New MQ message for device.update : " + json_mq_update.toString());

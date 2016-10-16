@@ -1022,7 +1022,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 Intent helpI1 = new Intent(Activity_Main.this, Activity_About.class);
                 startActivity(helpI1);
                 return true;
-            /*todo disable until it works as in the past
             case R.id.menu_stats:
                 if (SP_params.getBoolean("SYNC", false)) {
                     loadWigets(0, "statistics");
@@ -1034,7 +1033,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     AD_notSyncAlert.show();
                 }
                 return true;
-            */
             case R.id.menu_sync:
                 // click on 'sync' button into Sliding_Drawer View
                 run_sync_dialog();        // And run a resync with Rinor server

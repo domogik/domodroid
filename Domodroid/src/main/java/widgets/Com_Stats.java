@@ -56,7 +56,7 @@ public class Com_Stats extends FrameLayout {
     private Message msg;
     public FrameLayout container = null;
 
-    private final Stats_Com stats = null;
+    private Stats_Com stats = null;
     private final TextView elapsed_period;
     private final TextView cumul_period;
     private final TextView cum_statsPR;
@@ -83,6 +83,7 @@ public class Com_Stats extends FrameLayout {
         String mytag = "Com_Stats";
         this.setPadding(5, 5, 5, 5);
         Tracer.i(mytag, "New instance");
+        stats = Stats_Com.getInstance();
 
         //panel with border
         LinearLayout background = new LinearLayout(context);
@@ -151,7 +152,7 @@ public class Com_Stats extends FrameLayout {
                         period_eventsBR.setText(Integer.toString(Stats_Com.periodic_events_recv_bytes));
                         period_eventsPS.setText(Integer.toString(Stats_Com.periodic_events_sent_packets));
                         period_eventsBS.setText(Integer.toString(Stats_Com.periodic_events_sent_bytes));
-                    }
+                   }
                 }
             }
 

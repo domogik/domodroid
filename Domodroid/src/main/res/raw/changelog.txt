@@ -22,6 +22,7 @@
     $ 1.4
       % Version 25
       _ 2016-xx-xx
+      * Close #120 Adding an ANR catch lib.
       * Close #105 statistics of server exchange are back
       * Correct widget selector for DT_HVACFan
       * Sort sensor and commands at sync by sensor_id or command_id for 0.5

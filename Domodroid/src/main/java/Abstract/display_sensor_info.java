@@ -192,7 +192,7 @@ public abstract class display_sensor_info {
 
                     } catch (Exception e1) {
                         Tracer.e(mytag, "no translation for: " + loc_Value);
-                        e1.toString();
+                        e1.printStackTrace();
                         value.setText(loc_Value);
                     }
                 } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));

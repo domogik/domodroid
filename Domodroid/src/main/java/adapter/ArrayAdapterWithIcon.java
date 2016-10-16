@@ -3,6 +3,7 @@ package adapter;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,9 @@ public class ArrayAdapterWithIcon extends ArrayAdapter<String> {
         imgs.recycle();
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
 

@@ -28,7 +28,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -77,6 +80,7 @@ public class WidgetUpdate {
     private String password;
     private Boolean SSL;
     private float api_version;
+    private String last_device_update;
     //
     // Table of handlers to notify
     // pos 0 = Main
@@ -137,6 +141,7 @@ public class WidgetUpdate {
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
         api_version = sharedparams.getFloat("API_VERSION", 0);
+        last_device_update = sharedparams.getString("last_device_update", null);
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -661,6 +666,45 @@ public class WidgetUpdate {
                             json_widget_state.put("stats", json_widget_state_0_4);
                             Tracer.d(mytag, "json_widget_state for 0.7 API=");
                             Tracer.json(mytag, json_widget_state.toString());
+                            if (api_version >= 0.8f) {
+                                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                try {
+                                    Date timestamplast_device_update = df.parse(last_device_update);
+                                } catch (Exception e) {
+                                    Tracer.e(mytag, "No saved date or error parsing it");
+                                    Date timestamplast_device_update = new Date();
+                                }
+                                try {
+                                    JSONArray json_device_state_0_4 = new JSONArray();
+                                    request = request.replace("sensor", "device");
+                                    json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
+                                    Tracer.e(mytag, "" + json_device_state_0_4.toString());
+                                    //todo test info_changed:
+                                    for (int i = 0; i < json_device_state_0_4.length(); i++) {
+                                        try {
+                                            String last_update = json_device_state_0_4.getJSONObject(i).getString("info_changed");
+                                            Tracer.d(mytag, "info_changed:" + last_update);
+                                            Date timestamplast_update = df.parse(last_update);
+                                            Tracer.d(mytag, "info_changed:" + timestamplast_update.toString());
+                                            //todo compare to lastest update
+                                        } catch (JSONException E) {
+                                            Tracer.e(mytag, "JSONException info_changed " + E);
+                                        } catch (Exception E) {
+                                            Tracer.e(mytag, "Exception info_changed:" + E);
+                                        }
+                                    }
+                                    //todo ask main to display message something changed since last update
+                                    if (last_device_update.equals("now")) {
+                                        if (parent[0] != null) {
+                                            parent[0].sendEmptyMessage(9903);    //Ask main to display message
+                                        }
+                                    }
+                                    //todo store last update in prefs for next start
+                                    // store last_device_update
+                                } catch (Exception e) {
+                                    Tracer.e(mytag, "no info-changed in the json, or not already saved");
+                                }
+                            }
                         } else if (api_version >= 0.8f) {
                             //todo will use this when device.get will work
                             json_widget_state = zmqrequest();
@@ -1045,7 +1089,7 @@ public class WidgetUpdate {
                     Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPut httpput = new HttpPut(sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                            + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
+                            + sharedparams.getString("rinorPath", "/") + "device/" + feature.getDevId());
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                     nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
                     httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));

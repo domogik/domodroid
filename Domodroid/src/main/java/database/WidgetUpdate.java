@@ -1,15 +1,12 @@
 package database;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-
-//import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,7 +25,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +43,8 @@ import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
 import rinor.Stats_Com;
+
+//import com.orhanobut.logger.Logger;
 
 public class WidgetUpdate {
     //implements Serializable {
@@ -273,12 +271,22 @@ public class WidgetUpdate {
                     //New or update device detected by MQ
                     //Notify on main screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
-                    AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
-                    dialog_device_update.setTitle(context.getText(R.string.domogik_information));
-                    dialog_device_update.setMessage(context.getText(R.string.device_update_message));
-                    if (!(context).isFinishing()) {
-                        dialog_device_update.show();
-                    }
+                    //Todo disable the dialog or replace by a toast here the dialog
+                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
+                    //dialog_device_update.setTitle(context.getText(R.string.domogik_information));
+                    //dialog_device_update.setMessage(context.getText(R.string.device_update_message));
+                    //if (!(context).isFinishing()) {
+                    //    dialog_device_update.show();
+                    //}
+
+                    //Todo disable the dialog or replace by a toast here the toast
+                    // Display message something changed since last update
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, context.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
                     //todo notify on map screen if a device change.
                 }
             }
@@ -666,43 +674,51 @@ public class WidgetUpdate {
                             json_widget_state.put("stats", json_widget_state_0_4);
                             Tracer.d(mytag, "json_widget_state for 0.7 API=");
                             Tracer.json(mytag, json_widget_state.toString());
+                            //todo move this part in 0.8 api under when MQ.Get will work
                             if (api_version >= 0.8f) {
-                                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                Date timestamplast_device_update;
+                                Date timestamplast_update = new Date();
+                                boolean newer = false;
                                 try {
-                                    Date timestamplast_device_update = df.parse(last_device_update);
+                                    timestamplast_device_update = df.parse(last_device_update);
                                 } catch (Exception e) {
                                     Tracer.e(mytag, "No saved date or error parsing it");
-                                    Date timestamplast_device_update = new Date();
+                                    timestamplast_device_update = new Date();
                                 }
                                 try {
                                     JSONArray json_device_state_0_4 = new JSONArray();
                                     request = request.replace("sensor", "device");
                                     json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
-                                    Tracer.e(mytag, "" + json_device_state_0_4.toString());
-                                    //todo test info_changed:
+                                    //test info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {
                                             String last_update = json_device_state_0_4.getJSONObject(i).getString("info_changed");
-                                            Tracer.d(mytag, "info_changed:" + last_update);
-                                            Date timestamplast_update = df.parse(last_update);
-                                            Tracer.d(mytag, "info_changed:" + timestamplast_update.toString());
-                                            //todo compare to lastest update
-                                        } catch (JSONException E) {
-                                            Tracer.e(mytag, "JSONException info_changed " + E);
+                                            timestamplast_update = df.parse(last_update);
+                                            //compare to latest update
+                                            if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
+                                                newer = true;
+                                                timestamplast_device_update = timestamplast_update;
+                                            }
                                         } catch (Exception E) {
+                                            timestamplast_update = new Date();
                                             Tracer.e(mytag, "Exception info_changed:" + E);
                                         }
                                     }
-                                    //todo ask main to display message something changed since last update
-                                    if (last_device_update.equals("now")) {
-                                        if (parent[0] != null) {
-                                            parent[0].sendEmptyMessage(9903);    //Ask main to display message
-                                        }
+                                    if (newer) {
+                                        //Display message something changed since last update
+                                        context.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast.makeText(context, R.string.device_update_message, Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                        //store last update in prefs for next start
+                                        SharedPreferences.Editor prefEditor = sharedparams.edit();
+                                        prefEditor.putString("last_device_update", df.format(timestamplast_device_update));
+                                        prefEditor.commit();
                                     }
-                                    //todo store last update in prefs for next start
-                                    // store last_device_update
                                 } catch (Exception e) {
-                                    Tracer.e(mytag, "no info-changed in the json, or not already saved");
+                                    Tracer.e(mytag, "Error trying to parse /device and info_changed");
                                 }
                             }
                         } else if (api_version >= 0.8f) {
@@ -1081,6 +1097,7 @@ public class WidgetUpdate {
             Tracer.d(mytag, "domodb is null");
             this.init(Tracer, context, sharedparams);
         }
+        boolean changed = false;
         try {
             domodb.update_name(id, new_desc, type);
             //Todo Move this method somewhere else and mak it reusable.
@@ -1095,6 +1112,7 @@ public class WidgetUpdate {
                     httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                     HttpResponse response = httpclient.execute(httpput);
                     Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
+                    changed = true;
                 } catch (IOException e) {
                     Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
                 }
@@ -1117,9 +1135,18 @@ public class WidgetUpdate {
                     os.close();
                     int responseCode = urlConnection.getResponseCode();
                     Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
+                    changed = true;
                 } catch (IOException e) {
                     Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
                 }
+            }
+            if (changed) {
+                //store last update in prefs for next start
+                SharedPreferences.Editor prefEditor = sharedparams.edit();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date tempdate = new Date();
+                prefEditor.putString("last_device_update", df.format(tempdate));
+                prefEditor.commit();
             }
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());

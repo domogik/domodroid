@@ -59,9 +59,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
-import Abstract.translate;
 import Abstract.calcul;
 import Abstract.display_sensor_info;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -148,9 +148,15 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
-        String graph_size = params.getString("graph_size", "262.5");
         this.isopen = false;
-        this.Float_graph_size = Float.valueOf(graph_size);
+        try {
+            int graphics_height_size = params.getInt("graphics_height_size", 262);
+            this.Float_graph_size = Float.valueOf(graphics_height_size);
+        } catch (Exception e) {
+            //This is due to old way to store it as a string
+            String graph_size = params.getString("graph_size", "262.5");
+            this.Float_graph_size = Float.valueOf(graph_size);
+        }
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 

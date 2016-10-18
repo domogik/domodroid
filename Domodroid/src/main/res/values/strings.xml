@@ -718,6 +718,7 @@
     <string name="command_rejected">Command to server rejected</string>
     <string name="soon">Soon......</string>
     <string name="option_graph_height">Size of the graph (min>260)</string>
+    <string name="option_graph_height_summary">Use it with precaution</string>
     <string name="option_widget_timestamp_ago">Display timestamp as ago</string>
     <string name="option_widget_timestamp_date">Display timestamp as date</string>
     <string name="option_widget_timestamp_title">Timestamp display</string>

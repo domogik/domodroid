@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,6 +67,7 @@ import widgets.Graphical_Info;
 import widgets.Graphical_Info_commands;
 import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
+import widgets.Graphical_Openstreetmap;
 import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
 
@@ -1130,6 +1130,10 @@ public class MapView extends View {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, context, URL,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
+            } else if (feature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
+                Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, context, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(Openstreetmap);
             } else {
                 Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
                         widgetSize, 0, Id, zone, params, feature, handler);

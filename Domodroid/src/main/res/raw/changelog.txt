@@ -22,9 +22,11 @@
     $ 1.4
       % Version 25
       _ 2016-xx-xx
+      * New widget including openstreetmap for current position when opening widget
       * minify and shrink resources (3.8Mo>2.9Mo)
-      * #109 Slider bar for graph size in preference
+      * #109 Slider bar for graph size in preference (bug in lib for max value)
       * #99 Handle new device created when offline
+      * Start working on #19
       * Close #120 Adding an ANR catch lib
       * Close #105 statistics of server exchange are back
       * Correct widget selector for DT_HVACFan

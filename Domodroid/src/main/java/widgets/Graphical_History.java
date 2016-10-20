@@ -18,12 +18,8 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -35,7 +31,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
@@ -46,10 +41,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
-import Abstract.translate;
 import Abstract.display_sensor_info;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -178,32 +172,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
-                    //TODO improve map opening
-                    if (feature.getDevice_feature_model_id().startsWith("DT_CoordD.")) {
-                        //final String uri = "http://google.com/maps/@" + new_val;
-                        //String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
-                        final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")");
-                        //final String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%s", new_val);
-                        TV_Value.setOnClickListener(new OnClickListener() {
-                                                        public void onClick(View v) {
-                                                            try {
-                                                                Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                                context.startActivity(unrestrictedIntent);
-                                                            } catch (ActivityNotFoundException innerEx) {
-                                                                //todo to translate
-                                                                Toast.makeText(context, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
-                                                            }
-                                                        }
-                                                    }
-
-                        );
-                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-                        TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
-                        TV_Value.setText(new_val + " \uF064");
-                    } else {
-                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-                    }
-
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //To have the icon colored as it has no state
                     change_this_icon(2);

@@ -32,6 +32,7 @@ import widgets.Graphical_Info;
 import widgets.Graphical_Info_commands;
 import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
+import widgets.Graphical_Openstreetmap;
 import widgets.Graphical_Range;
 import widgets.Graphical_Room;
 import widgets.Graphical_Trigger;
@@ -282,7 +283,15 @@ class Widgets_Manager {
                             Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                         }
                         //New widget for callerID apply to all other string sensor
+                    } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
+                        Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                        Openstreetmap.setLayoutParams(layout_param);
+                        Graphical_History.container = tmpPan;
+                        tmpPan.addView(Openstreetmap);
+                        Tracer.i(mytag, "   ==> Openstreetmap");
                     } else {
+                        Tracer.d(mytag, "feature model id:" + aListFeature.getDevice_feature_model_id().toString());
                         Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
                                 widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         info_with_history.setLayoutParams(layout_param);

@@ -712,10 +712,6 @@ public class WidgetUpdate {
                                                 Toast.makeText(context, R.string.device_update_message, Toast.LENGTH_LONG).show();
                                             }
                                         });
-                                        //store last update in prefs for next start
-                                        //SharedPreferences.Editor prefEditor = sharedparams.edit();
-                                        //prefEditor.putString("last_device_update", df.format(timestamplast_device_update));
-                                        //prefEditor.commit();
                                     }
                                 } catch (Exception e) {
                                     Tracer.e(mytag, "Error trying to parse /device and info_changed");

@@ -20,8 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import activities.Activity_Main;
@@ -50,6 +52,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private float previous_api_version = 0f;
     private boolean by_usage;
     private int progress;
+    private String last_device_update;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
         super(context);
@@ -64,6 +67,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
+        last_device_update = params.getString("last_device_update", null);
 
         handler = new Handler() {
             @Override
@@ -717,8 +721,46 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 publishProgress(55);
 
                 int list_size = 0;
-                if (json_FeatureList1 != null)
+                if (json_FeatureList1 != null) {
                     list_size = json_FeatureList1.length();
+                    if (Rinor_Api_Version >= 0.8f) {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date timestamplast_device_update;
+                        Date timestamplast_update = new Date();
+                        boolean newer = false;
+                        try {
+                            timestamplast_device_update = df.parse(last_device_update);
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "No saved date or error parsing it");
+                            timestamplast_device_update = new Date();
+                        }
+                        try {
+                            //test info_changed:
+                            for (int i = 0; i < json_FeatureList1.length(); i++) {
+                                try {
+                                    String last_update = json_FeatureList1.getJSONObject(i).getString("info_changed");
+                                    timestamplast_update = df.parse(last_update);
+                                    //compare to latest update
+                                    if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
+                                        newer = true;
+                                        timestamplast_device_update = timestamplast_update;
+                                    }
+                                } catch (Exception E) {
+                                    timestamplast_update = new Date();
+                                    Tracer.e(mytag, "Exception info_changed:" + E);
+                                }
+                            }
+                            if (newer) {
+                                //store last update in prefs for next start
+                                SharedPreferences.Editor prefEditor = params.edit();
+                                prefEditor.putString("last_device_update", df.format(timestamplast_device_update));
+                                prefEditor.commit();
+                            }
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Error trying to parse /device and info_changed");
+                        }
+                    }
+                }
                 Tracer.i(mytag, "Device list size = " + list_size);
                 for (int i = 0; i < list_size; i++) {
                     progress = 55 + (35 * i / list_size);

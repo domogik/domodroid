@@ -22,6 +22,7 @@
     $ 1.4
       % Version 25
       _ 2016-xx-xx
+      * #122 Start working on Metrics
       * New widget including openstreetmap for current position when opening widget
       * minify and shrink resources (3.8Mo>2.9Mo)
       * #109 Slider bar for graph size in preference (bug in lib for max value)

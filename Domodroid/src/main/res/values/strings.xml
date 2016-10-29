@@ -830,4 +830,5 @@
     <string name="no_qrcode_scanner">QRcode scanner apps not found</string>
     <string name="no_qrcode_question">Download a scanner code activity from market ?</string>
     <string name="no_market_apps">"No market apps installed on this device."</string>
+    <string name="base">Base</string>
 </resources>

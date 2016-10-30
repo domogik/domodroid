@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
 import com.github.anrwatchdog.ANRWatchDog;
 
@@ -37,12 +38,14 @@ public class domodroid extends Application {
         ACRA.init(this);
         new ANRWatchDog().start();
 
-        //get metrics every 30s
-        int repeatTime = 30;  //Repeat alarm time in seconds
-        AlarmManager processTimer = (AlarmManager)getSystemService(ALARM_SERVICE);
-        Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),repeatTime*1000, pendingIntent);
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("domodroid_metrics", true)) {
+            int repeatTime = 30;  //Repeat alarm time in seconds
+            AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            //get metrics every 30s
+            processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
 
+        }
     }
 }

@@ -326,7 +326,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     if (end_of_init_requested)
                         end_of_init();
                     PG_dialog_message.dismiss();
-                    //refresh view when initial cais ready #33
+                    //refresh view when initial cache ready #33
                     refresh();
                 }
             }

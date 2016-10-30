@@ -22,6 +22,9 @@
     $ 1.4
       % Version 25
       _ 2016-xx-xx
+      * Avoid ANR at start when calling rest.
+      * Avoid white page on start instead of dialog cache engine
+      * #33 finally really solved
       * #122 Start working on Metrics
       * New widget including openstreetmap for current position when opening widget
       * minify and shrink resources (3.8Mo>2.9Mo)

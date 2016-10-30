@@ -17,7 +17,9 @@
  */
 package activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -166,6 +168,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             getSupportActionBar().setDisplayHomeAsUpEnabled(true); // this sets the button visible
             getSupportActionBar().setHomeButtonEnabled(true); // makes it clickable
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
+        }
+        //Register metrics
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            int repeatTime = 30;  //Repeat alarm time in seconds
+            AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            //get metrics every 30s
+            processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
         }
 
         initView();

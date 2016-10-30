@@ -89,6 +89,13 @@ public class Preference extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setPreferenceScreen(null);
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
@@ -106,16 +113,7 @@ public class Preference extends PreferenceActivity implements
             addPreferencesFromResource(R.xml.preference);
         }
 
-        // show the current value in the settings screen
-        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
-            initSummary(getPreferenceScreen().getPreference(i));
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Set up a listener whenever a key changes
+        /// Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
         // show the current value in the settings screen

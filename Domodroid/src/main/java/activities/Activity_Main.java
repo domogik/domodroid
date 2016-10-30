@@ -326,6 +326,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     if (end_of_init_requested)
                         end_of_init();
                     PG_dialog_message.dismiss();
+                    //refresh view when initial cais ready #33
+                    refresh();
                 }
             }
         };
@@ -693,10 +695,16 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         } else {
             Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            if (!init_done) {
-                historyPosition = 0;
-                history.add(historyPosition, new String[]{"0", "root"});
-                refresh();
+            if (SP_params.getBoolean("SYNC", false)) {
+                if (!init_done) {
+                    historyPosition = 0;
+                    history.add(historyPosition, new String[]{"0", "root"});
+                    refresh();
+                }
+            } else {
+                if (AD_notSyncAlert == null)
+                    createAlert();
+                AD_notSyncAlert.show();
             }
         }
 
@@ -806,27 +814,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
                         VG_parent.addView(LL_area);    //and areas
                         LL_activ.removeAllViews();
-                        // #33 here
-                        // add try catch because on settings reload it crash
-                        try {
-                            while (!WU_widgetUpdate.ready) {
-                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
-                            }
-                        } catch (Exception e1) {
-                            Tracer.e(mytag, e1.toString());
-                        }
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage
-                        // #33 here too
-                        // add try catch because on settings reload it crash
-                        try {
-                            while (!WU_widgetUpdate.ready) {
-                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
-                            }
-                        } catch (Exception e) {
-                            Tracer.e(mytag, e.toString());
-                        }
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
                         int load_area;
                         try {

@@ -67,7 +67,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
-        last_device_update = params.getString("last_device_update", null);
+        last_device_update = params.getString("last_device_update", "1900-01-01 00:00:00");
 
         handler = new Handler() {
             @Override
@@ -752,7 +752,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             }
                             if (newer) {
                                 //store last update in prefs for next start
-                                SharedPreferences.Editor prefEditor = params.edit();
                                 prefEditor.putString("last_device_update", df.format(timestamplast_device_update));
                                 prefEditor.commit();
                             }

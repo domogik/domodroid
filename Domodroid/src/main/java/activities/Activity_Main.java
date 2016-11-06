@@ -17,7 +17,9 @@
  */
 package activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -467,6 +469,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
+        //get metrics every 30s
+        int repeatTime = 30;  //Repeat alarm time in seconds
+        AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
+
         Tracer.v(mytag + ".onResume", "Check if initialize requested !");
         if (!init_done) {
             Tracer.v(mytag + ".onResume", "Init not done!");
@@ -532,6 +541,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 			Tracer = null;
 		}
 		 */
+        //Stop metrics.
+        Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void Create_message_box() {

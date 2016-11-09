@@ -505,7 +505,7 @@ public class Events_manager {
             return null;
         } else {
             Rinor_event result = event_stack[stack_out];
-            Tracer.w(mytag, "Event unstacked from " + stack_out);
+            Tracer.d(mytag, "Event unstacked from " + stack_out);
             event_stack[stack_out] = null;        //free the entry
             return result;
         }

@@ -33,5 +33,7 @@ public class domodroid extends Application {
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
         new ANRWatchDog().start();
+
+
     }
 }

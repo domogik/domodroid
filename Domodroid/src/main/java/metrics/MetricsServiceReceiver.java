@@ -1,5 +1,6 @@
 package metrics;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import org.domogik.domodroid13.BuildConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 
 import static activities.Activity_Main.context;
 
@@ -24,6 +26,12 @@ import static activities.Activity_Main.context;
 
 public class MetricsServiceReceiver extends BroadcastReceiver {
     private final String mytag = this.getClass().getName();
+    ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+    Float freeSize = 0f;
+    Float totalAllocatedSize = 0f;
+    Float usedSize = -1f;
+    Float maxmemavailable = 0f;
+    DecimalFormat df = new DecimalFormat("#.##");
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -53,6 +61,29 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
             Log.e(mytag, "New timer Device:" + Device);
             String devicid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             Log.e(mytag, "New timer devicid:" + devicid);
+            try {
+                Runtime info = Runtime.getRuntime();
+                int availableProcessors = info.availableProcessors();
+                Log.e(mytag, "New timer availableProcessors: " + availableProcessors);
+                maxmemavailable = Float.valueOf(info.maxMemory());
+                maxmemavailable = maxmemavailable / 1024; //in KB
+                maxmemavailable = maxmemavailable / 1024; //in MB
+                Log.e(mytag, "New timer maxmemavailable: " + df.format(maxmemavailable) + "MB");
+                freeSize = Float.valueOf(info.freeMemory());
+                totalAllocatedSize = Float.valueOf(info.totalMemory());
+                usedSize = totalAllocatedSize - freeSize;
+                freeSize = freeSize / 1024; //in KB
+                freeSize = freeSize / 1024; //in MB
+                totalAllocatedSize = totalAllocatedSize / 1024; //in KB
+                totalAllocatedSize = totalAllocatedSize / 1024; //in MB
+                usedSize = usedSize / 1024; //in KB
+                usedSize = usedSize / 1024; //in MB
+                Log.e(mytag, "New timer totalAllocatedSize: " + df.format(totalAllocatedSize) + "MB");
+                Log.e(mytag, "New timer freeSize: " + df.format(freeSize) + "MB");
+                Log.e(mytag, "New timer usedSize: " + df.format(usedSize) + "MB");
+            } catch (Exception e) {
+                Log.e(mytag, "error getting used memory :" + e.toString());
+            }
             return null;
         }
     }

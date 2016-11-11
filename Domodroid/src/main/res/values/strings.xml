@@ -686,6 +686,11 @@
     <string name="highbeam_status">HighBeam Status</string>
     <string name="lowbeam_status">LowBeam Status</string>
     <string name="headlight_status">HeadLight Status</string>
+    <string name="left_indicator_status">Left Indicator Status</string>
+    <string name="right_indicator_status">Right Indicator Status</string>
+    <string name="hazard_lights_status">Hazard Lights Status</string>
+    <string name="rear_fog_lights_status">Rear Fog Lights Status</string>
+    <string name="fog_lights_status">Fog Lights Status</string>
     <string name="lock_status">Lock Status</string>
     <string name="odometer">Odometer</string>
     <string name="position">Position</string>

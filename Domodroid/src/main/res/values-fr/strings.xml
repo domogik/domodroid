@@ -638,8 +638,13 @@
     <string name="carid">Identifiant voiture</string>
     <string name="ignition_status">Moteur</string>
     <string name="highbeam_status">Feux de route</string>
-    <string name="lowbeam_status">Feux de croisement</string>
-    <string name="headlight_status">Feux de position</string>
+    <string name="lowbeam_status">Feux de position</string>
+    <string name="headlight_status">Feux de croisement</string>
+    <string name="left_indicator_status">Clignotant gauche</string>
+    <string name="right_indicator_status">Clignotant droit</string>
+    <string name="hazard_lights_status">Feux de détresse</string>
+    <string name="rear_fog_lights_status">Feux antibrouillard arrière</string>
+    <string name="fog_lights_status">Feux antibrouillard</string>
     <string name="lock_status">Etat fermeture</string>
     <string name="odometer">Compteur kilométrique</string>
     <string name="position">Position</string>

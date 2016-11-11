@@ -637,9 +637,9 @@
     <string name="make">Fabricant</string>
     <string name="carid">Identifiant voiture</string>
     <string name="ignition_status">Moteur</string>
-    <string name="highbeam_status">Feux de route</string>
+    <string name="highbeam_status">Feux de croisement</string>
     <string name="lowbeam_status">Feux de position</string>
-    <string name="headlight_status">Feux de croisement</string>
+    <string name="headlight_status">Feux de route</string>
     <string name="left_indicator_status">Clignotant gauche</string>
     <string name="right_indicator_status">Clignotant droit</string>
     <string name="hazard_lights_status">Feux de détresse</string>

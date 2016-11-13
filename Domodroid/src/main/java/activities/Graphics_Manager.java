@@ -785,7 +785,7 @@ public class Graphics_Manager {
                 usage = "door";
             //Xee
             if (usage.toLowerCase().equals("high_beam_status"))
-                usage = "higbeam";
+                usage = "highbeam";
             if (usage.toLowerCase().equals("low_beam_status"))
                 usage = "lowbeam";
             if (usage.toLowerCase().equals("head_light_status"))

@@ -784,11 +784,11 @@ public class Graphics_Manager {
             if (usage.toLowerCase().contains("opening_sensor") || usage.contains("opening.sensor") || usage.contains("opening-sensor") || usage.contains("door-window-sensor"))
                 usage = "door";
             //Xee
-            if (usage.toLowerCase().equals("highbeam_status"))
+            if (usage.toLowerCase().equals("high_beam_status"))
                 usage = "higbeam";
-            if (usage.toLowerCase().equals("lowbeam_status"))
+            if (usage.toLowerCase().equals("low_beam_status"))
                 usage = "lowbeam";
-            if (usage.toLowerCase().equals("headlight_status"))
+            if (usage.toLowerCase().equals("head_light_status"))
                 usage = "headlight";
             return usage;
 

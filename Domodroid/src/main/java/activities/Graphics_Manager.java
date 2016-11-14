@@ -785,11 +785,11 @@ public class Graphics_Manager {
                 usage = "door";
             //Xee
             if (usage.toLowerCase().equals("high_beam_status"))
-                usage = "highbeam";
-            if (usage.toLowerCase().equals("low_beam_status"))
                 usage = "lowbeam";
-            if (usage.toLowerCase().equals("head_light_status"))
+            if (usage.toLowerCase().equals("low_beam_status"))
                 usage = "headlight";
+            if (usage.toLowerCase().equals("head_light_status"))
+                usage = "highbeam";
             return usage;
 
         } else {

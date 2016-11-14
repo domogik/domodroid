@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 
+import Abstract.dmd_gettime;
+
 import static activities.Activity_Main.context;
 
 /**
@@ -84,6 +86,8 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
             } catch (Exception e) {
                 Log.e(mytag, "error getting used memory :" + e.toString());
             }
+            String gmtTime = dmd_gettime.GetUTCdatetimeAsString();
+            Log.e(mytag, "time stamp=" + gmtTime);
             return null;
         }
     }

@@ -702,7 +702,7 @@ public class WidgetUpdate {
                                             }
                                         } catch (Exception E) {
                                             timestamplast_update = new Date();
-                                            Tracer.e(mytag, "Exception info_changed:" + E);
+                                            Tracer.d(mytag, "Exception info_changed:" + E);
                                         }
                                     }
                                     if (newer) {

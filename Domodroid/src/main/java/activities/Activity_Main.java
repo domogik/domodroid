@@ -1119,7 +1119,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     }
 
     private void refresh() {
-        loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+        try {
+            loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+        }catch (Exception e){
+            Tracer.e(mytag,"Can not refresh this view");
+        }
     }
 
     public void update_navigation_menu() {

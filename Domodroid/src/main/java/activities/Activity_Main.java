@@ -130,6 +130,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ListView listePlace;
     private SimpleAdapter adapter_map;
 
+    private PendingIntent pendingIntent_for_metrics;
+    private Intent intent_for_metrics;
+    private AlarmManager processTimer_for_metrics;
     /**
      * Called when the activity is first created.
      */
@@ -172,11 +175,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         //Register metrics
         if (SP_params.getBoolean("domodroid_metrics", true)) {
             int repeatTime = 30;  //Repeat alarm time in seconds
-            AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
-            Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            processTimer_for_metrics = (AlarmManager) getSystemService(ALARM_SERVICE);
+            intent_for_metrics = new Intent(this, metrics.MetricsServiceReceiver.class);
+            pendingIntent_for_metrics = PendingIntent.getBroadcast(this, 0, intent_for_metrics, PendingIntent.FLAG_UPDATE_CURRENT);
             //get metrics every 30s
-            processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
+            processTimer_for_metrics.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent_for_metrics);
         }
 
         initView();
@@ -518,7 +521,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 WU_widgetUpdate.set_sleeping();    //Don't cancel the cache engine : only freeze it
             }
         }
-
+        //Stop metrics.
+        processTimer_for_metrics.cancel(pendingIntent_for_metrics);
     }
 
     @Override
@@ -551,10 +555,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 		}
 		 */
         //Stop metrics.
-        Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
+        processTimer_for_metrics.cancel(pendingIntent_for_metrics);
     }
 
     private void Create_message_box() {

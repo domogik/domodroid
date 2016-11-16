@@ -19,8 +19,8 @@ android {
 
     defaultConfig {
         applicationId "org.domogik.domodroid13"
-        minSdkVersion 8
-        targetSdkVersion 8
+        minSdkVersion 9
+        targetSdkVersion 9
         versionCode = 25
         versionName = "1.4_android_studio"
     }
@@ -30,7 +30,12 @@ android {
     }
     buildTypes {
 
+        debug {
+            testCoverageEnabled = true
+        }
+
         release {
+            testCoverageEnabled = true
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -68,4 +73,7 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
     // Test libraries
     testCompile 'junit:junit:4.12'
+    //codecov
+    //classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
 }
+//apply plugin: 'com.vanniktech.android.junit.jacoco'

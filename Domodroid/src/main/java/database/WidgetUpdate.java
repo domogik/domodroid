@@ -699,6 +699,7 @@ public class WidgetUpdate {
                                             if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
                                                 newer = true;
                                                 timestamplast_device_update = timestamplast_update;
+                                                Log.v(mytag, "device info_changed at: " + timestamplast_update.toString());
                                             }
                                         } catch (Exception E) {
                                             timestamplast_update = new Date();

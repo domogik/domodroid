@@ -744,10 +744,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                     if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
                                         newer = true;
                                         timestamplast_device_update = timestamplast_update;
+                                        Tracer.v(mytag, "device info_changed at: " + timestamplast_update.toString());
                                     }
                                 } catch (Exception E) {
                                     timestamplast_update = new Date();
-                                    Tracer.e(mytag, "Exception info_changed:" + E);
+                                    Tracer.d(mytag, "Exception info_changed:" + E);
                                 }
                             }
                             if (newer) {

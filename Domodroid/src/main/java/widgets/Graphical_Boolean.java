@@ -152,6 +152,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         //state
         state = new TextView(context);
         state.setTextColor(Color.BLACK);
+        //todo change to close #123
         try {
             state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
         } catch (Exception e1) {

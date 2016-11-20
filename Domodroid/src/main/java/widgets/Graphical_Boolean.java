@@ -152,12 +152,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         //state
         state = new TextView(context);
         state.setTextColor(Color.BLACK);
-        //todo change to close #123
-        try {
-            state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-        } catch (Exception e1) {
-            state.setText(stateS + " : " + Value_0);
-        }
+
+        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, "unknown")));
 
         TV_Timestamp = new RelativeTimeTextView(context, null);
         TV_Timestamp.setTextSize(10);

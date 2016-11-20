@@ -241,12 +241,11 @@ class Widgets_Manager {
                     } else {
                         if (!aListFeature.getParameters().contains("command_type")) {
                             Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
-                            Graphical_Info info = new Graphical_Info(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, update_timer, aListFeature, widgetHandler);
-                            info.setLayoutParams(layout_param);
-                            info.with_graph = true;
+                            Graphical_History history = new Graphical_History(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            history.setLayoutParams(layout_param);
                             Graphical_Info.container = tmpPan;
-                            tmpPan.addView(info);
+                            tmpPan.addView(history);
                             Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                         } else {
                             Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
@@ -290,6 +289,23 @@ class Widgets_Manager {
                         Graphical_History.container = tmpPan;
                         tmpPan.addView(Openstreetmap);
                         Tracer.i(mytag, "   ==> Openstreetmap");
+                    } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
+                        if (!aListFeature.getParameters().contains("command_type")) {
+                            Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
+                            Graphical_History history = new Graphical_History(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            history.setLayoutParams(layout_param);
+                            Graphical_Info.container = tmpPan;
+                            tmpPan.addView(history);
+                            Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
+                        } else {
+                            Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
+                            Graphical_Color color = new Graphical_Color(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            Graphical_Color.container = tmpPan;
+                            tmpPan.addView(color);
+                            Tracer.i(mytag, "   ==> Graphical_Color");
+                        }
                     } else {
                         Tracer.d(mytag, "feature model id:" + aListFeature.getDevice_feature_model_id().toString());
                         Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,

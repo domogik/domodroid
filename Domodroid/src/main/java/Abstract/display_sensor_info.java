@@ -199,14 +199,14 @@ public abstract class display_sensor_info {
                             case "1":
                                 value.setText(context.getResources().getIdentifier("wi_cloud", "string", context.getPackageName()));
                                 break;
-                            case "5":
-                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
-                                break;
                             case "3":
                                 value.setText(context.getResources().getIdentifier("wi_hail", "string", context.getPackageName()));
                                 break;
                             case "4":
                                 value.setText(context.getResources().getIdentifier("wi_rain", "string", context.getPackageName()));
+                                break;
+                            case "5":
+                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
                                 break;
                             default:
                                 value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
@@ -218,8 +218,6 @@ public abstract class display_sensor_info {
                         e1.printStackTrace();
                         value.setText(loc_Value);
                     }
-                } else if (state_key.toLowerCase().startsWith("rainlevel")) {
-
                 } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));
             }
         } catch (Exception e) {

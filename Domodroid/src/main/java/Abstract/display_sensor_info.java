@@ -114,6 +114,35 @@ public abstract class display_sensor_info {
                         LL_featurePan.addView(LL_Temp);
                         LL_featurePan.addView(timestamp);
                         break;
+                    case "°C":
+                    case "K":
+                    case "°F":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf055;"), TextView.BufferType.SPANNABLE);
+                        break;
+                    case "bar":
+                    case "mbar":
+                    case "Pa":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
+                        break;
+                    case "ms":
+                    case "s":
+                    case "min":
+                    case "h":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf08a;"), TextView.BufferType.SPANNABLE);
+                        break;
+                    case "Year":
+                    case "Month":
+                    case "Day":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf073;"), TextView.BufferType.SPANNABLE);
+                        break;
                     default:
                         value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         if (state_key.equalsIgnoreCase("current_wind_speed")) {
@@ -122,12 +151,6 @@ public abstract class display_sensor_info {
                         } else if (state_key.equalsIgnoreCase("current_humidity")) {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf07a;"), TextView.BufferType.SPANNABLE);
-                        } else if (state_key.equalsIgnoreCase("current_barometer_value")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
-                        } else if (state_key.contains("temperature")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
                         } else if (state_key.equalsIgnoreCase("weight")) {
                             state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf24e;"), TextView.BufferType.SPANNABLE);
@@ -195,6 +218,8 @@ public abstract class display_sensor_info {
                         e1.printStackTrace();
                         value.setText(loc_Value);
                     }
+                } else if (state_key.toLowerCase().startsWith("rainlevel")) {
+
                 } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));
             }
         } catch (Exception e) {

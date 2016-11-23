@@ -754,4 +754,17 @@
     <string name="no_qrcode_scanner">Pas d\'applications pour lire les QRcode</string>
     <string name="no_qrcode_question">Télécharger un lecteur de Qrcode depuis le market ?</string>
     <string name="no_market_apps">"Pas d\'applications market sur cet appareil."</string>
+    <string name="vigilancerisk">Risque de Vigilance</string>
+    <string name="vigilancecolor">Couleur de Vigilance</string>
+    <string name="vigilancedep">Département de Vigilance</string>
+    <string name="vigilancecolorthunderstorms">Couleur Vigilance Orages</string>
+    <string name="vigilancecolorwind">Couleur Vigilance Vent</string>
+    <string name="vigilancecolorsubmersion">Couleur Vigilance Vague submersion</string>
+    <string name="vigilancecoloravalanches">Couleur Vigilance Avalanches</string>
+    <string name="vigilancecolorrain">Couleur Vigilance Pluie</string>
+    <string name="vigilanceinfo">Info de Vigilance</string>
+    <string name="vigilancecolorcold">Couleur Vigilance Grand froid</string>
+    <string name="vigilancecolorflood">Couleur Vigilance Inondation</string>
+    <string name="vigilancecolorheat">Couleur Vigilance Canicule</string>
+    <string name="vigilancecolorsnow">Couleur Vigilance Neige</string>
 </resources>

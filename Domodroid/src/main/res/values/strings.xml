@@ -838,4 +838,17 @@
     <string name="no_qrcode_question">Download a scanner code activity from market ?</string>
     <string name="no_market_apps">"No market apps installed on this device."</string>
     <string name="base">Base</string>
+    <string name="vigilancerisk">Vigilance Risk</string>
+    <string name="vigilancecolor">Vigilance color</string>
+    <string name="vigilancedep">Vigilance Departement</string>
+    <string name="vigilancecolorthunderstorms">Vigilance color Thunderstorms</string>
+    <string name="vigilancecolorwind">Vigilance color Wind</string>
+    <string name="vigilancecolorsubmersion">Vigilance color Submersion</string>
+    <string name="vigilancecoloravalanches">Vigilance color Avalanches</string>
+    <string name="vigilancecolorrain">Vigilance color Rain</string>
+    <string name="vigilanceinfo">Vigilance Info</string>
+    <string name="vigilancecolorcold">Vigilance color Cold</string>
+    <string name="vigilancecolorflood">Vigilance color Flood</string>
+    <string name="vigilancecolorheat">Vigilance color Heat</string>
+    <string name="vigilancecolorsnow">Vigilance color Snow</string>
 </resources>

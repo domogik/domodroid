@@ -100,6 +100,7 @@ public class config_with_qrcode extends AppCompatActivity {
                             rinor_IP = admin_ip.replace("https://", "");
                             SSL = true;
                         }
+                        String butler_name = jsonresult.getString("butler_name");
                         prefEditor = params.edit();
                         prefEditor.putString("rinorIP", rinor_IP);
                         prefEditor.putString("rinorPort", rest_port);
@@ -108,6 +109,7 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("MQaddress", mq_ip);
                         prefEditor.putString("MQsubport", mq_port_pubsub);
                         prefEditor.putString("MQpubport", mq_port_req_rep);
+                        prefEditor.putString("dmg_butler_name", butler_name);
                         prefEditor.commit();
                         config_with_qrcode.this.finish();
 

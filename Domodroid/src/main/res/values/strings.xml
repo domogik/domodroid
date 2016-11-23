@@ -851,4 +851,7 @@
     <string name="vigilancecolorflood">Vigilance color Flood</string>
     <string name="vigilancecolorheat">Vigilance color Heat</string>
     <string name="vigilancecolorsnow">Vigilance color Snow</string>
+    <string name="no_vigilance">No vigilance</string>
+    <string name="too_many_sms_were_sent_in_too_little_time.">Too many SMS were sent in too little time.</string>
+    <string name="alive">Alive</string>
 </resources>

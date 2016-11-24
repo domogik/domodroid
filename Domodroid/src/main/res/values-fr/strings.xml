@@ -767,4 +767,6 @@
     <string name="vigilancecolorflood">Couleur Vigilance Inondation</string>
     <string name="vigilancecolorheat">Couleur Vigilance Canicule</string>
     <string name="vigilancecolorsnow">Couleur Vigilance Neige</string>
+    <string name="no_vigilance">Aucun risque</string>
+    <string name="contact_devs">Ceci n'est pas encore supporté, contacter les devs.</string>
 </resources>

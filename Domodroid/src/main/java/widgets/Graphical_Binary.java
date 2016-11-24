@@ -381,7 +381,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                     /*
                     try {

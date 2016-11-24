@@ -214,7 +214,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                          }
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                  }
 

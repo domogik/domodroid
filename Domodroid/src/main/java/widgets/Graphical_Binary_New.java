@@ -236,7 +236,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                             Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                             if (b.getString("message").equals(value0)) {
                                 try {
-                                   state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_0);
                                 }
@@ -385,7 +385,6 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                      /*
                                      try {
@@ -405,6 +404,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
             return null;
 
         }
+
     }
 
 

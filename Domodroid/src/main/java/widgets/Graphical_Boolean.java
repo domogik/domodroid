@@ -217,7 +217,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                             } else {
                                 bool.setImageResource(R.drawable.boolean_n_a);
                                 change_this_icon(0);
-                                state.setText(stateS + " : " + "N/A");
+                                state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, "unknown")));
                             }
                         } catch (Exception e) {
                             Tracer.e(mytag, "handler error device " + name);

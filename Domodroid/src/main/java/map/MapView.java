@@ -56,6 +56,7 @@ import database.WidgetUpdate;
 import misc.List_Icon_Adapter;
 import misc.tracerengine;
 import rinor.CallUrl;
+import rinor.send_command;
 import widgets.Basic_Graphical_widget;
 import widgets.Graphical_Binary;
 import widgets.Graphical_Binary_New;
@@ -1316,14 +1317,14 @@ public class MapView extends View {
                                                     try {
                                                         JSONObject jparam = new JSONObject(featureMap.getParameters());
                                                         command_id = jparam.getString("command_id");
-                                                        command_type = jparam.getString("command_type");
+                                                        command_type = jparam.getString("command_type1");
                                                         state_progress = "1";
-                                                        new CommandeThread().execute();
+                                                        send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
                                                     } catch (JSONException e) {
-                                                        Tracer.d(mytag, "No command_id for this device");
+                                                        Tracer.d(mytag, "No command_id or command_type for this device");
                                                     }
                                                 } else {
-                                                    new CommandeThread().execute();
+                                                    send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
                                                 }
                                             }
                                             break;
@@ -1360,13 +1361,13 @@ public class MapView extends View {
                                                 try {
                                                     JSONObject jparam = new JSONObject(parameters);
                                                     command_id = jparam.getString("command_id");
-                                                    command_type = jparam.getString("command_type");
-                                                    new CommandeThread().execute();
+                                                    command_type = jparam.getString("command_type1");
+                                                    send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
                                                 } catch (JSONException e) {
-                                                    Tracer.d(mytag, "No command_id for this device");
+                                                    Tracer.d(mytag, "No command_id or command_type for this device");
                                                 }
                                             } else {
-                                                new CommandeThread().execute();
+                                                send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
                                             }
                                             break;
                                         default:
@@ -1720,46 +1721,6 @@ public class MapView extends View {
 
     public void setMoveMode(boolean moveMode) {
         this.moveMode = moveMode;
-    }
-
-    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            Handler temphandler = new Handler(context.getMainLooper());
-            temphandler.post(new Runnable() {
-                                 public void run() {
-                                     String Url2send;
-                                     if (api_version >= 0.7f) {
-                                         Url2send = URL + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
-                                     } else {
-                                         Url2send = URL + "command/" + type + "/" + Address + "/" + state_progress;
-                                     }
-                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
-                                     JSONObject json_Ack = null;
-                                     try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", SSL.toString());
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
-                                     } catch (Exception e) {
-                                         Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                     }
-                                     /*
-                                     try {
-                                         Boolean ack = JSONParser.Ack(json_Ack);
-                                         if (!ack) {
-                                             Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
-                                             Toast.makeText(context, "Received error from Rinor", Toast.LENGTH_LONG).show();
-                                             handler.sendEmptyMessage(2);
-                                         }
-                                     } catch (Exception e) {
-                                         e.printStackTrace();
-                                     }
-                                     */
-                                 }
-                             }
-            );
-            return null;
-        }
-
     }
 
     private static float Round(float Rval, int Rpl) {

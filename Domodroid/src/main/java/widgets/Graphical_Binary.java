@@ -45,7 +45,6 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
-import rinor.CallUrl;
 import rinor.send_command;
 
 public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBarChangeListener {

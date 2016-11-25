@@ -21,15 +21,12 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +35,6 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import misc.tracerengine;
-import rinor.CallUrl;
 import rinor.send_command;
 
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {

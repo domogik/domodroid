@@ -31,7 +31,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -43,7 +42,6 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
-import rinor.CallUrl;
 import rinor.send_command;
 
 

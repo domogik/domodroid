@@ -20,7 +20,6 @@ package widgets;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,7 +43,6 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
-import rinor.CallUrl;
 import rinor.send_command;
 
 public class Graphical_Binary_New extends Basic_Graphical_widget implements OnClickListener {

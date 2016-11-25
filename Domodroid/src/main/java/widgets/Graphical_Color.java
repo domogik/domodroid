@@ -534,7 +534,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     }
 
     private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-
+        // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
             Handler temphandler = new Handler(context.getMainLooper());

@@ -479,7 +479,7 @@ public class Events_manager {
             stack_in = 0;
         if (event_stack[stack_in] == null) {
             //Position is free !
-            Tracer.w(mytag, "Event stacked at :" + stack_in);
+            Tracer.d(mytag, "Event stacked at :" + stack_in);
             event_stack[stack_in] = event;
             notify_engine(9900); //An event is available
         } else {

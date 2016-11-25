@@ -61,6 +61,7 @@ import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.CallUrl;
 import rinor.Rest_com;
+import rinor.send_command;
 
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
@@ -294,7 +295,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         map = listItemCommands.get(position);
                         cmd_requested = map.get("cmd_to_send");
                         Tracer.d(mytag, "command selected at Position = " + position + "  Command = " + cmd_requested);
-                        new CommandeThread().execute();
+                        send_command.send_it(Tracer, url, command_id, command_type, cmd_requested, login, password, SSL, api_version);
+
                     }
                 }
             });
@@ -400,50 +402,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....
 
-    }
-
-    public class CommandeThread extends AsyncTask<Void, Integer, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Handler temphandler = new Handler(context.getMainLooper());
-            temphandler.post(new Runnable() {
-                                 public void run() {
-                                     if (cmd_requested != null) {
-                                         String Url2send = "";
-                                         if (api_version >= 0.7f) {
-                                             Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + cmd_requested;
-                                         } else {
-                                             Url2send = url + "command/" + type + "/" + address + "/" + cmd_requested;
-                                         }
-                                         Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
-                                         JSONObject json_Ack = null;
-                                         try {
-                                             new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
-                                             Hide(true);
-                                             //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
-                                         } catch (Exception e) {
-                                             Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         }
-                /*
-                try {
-                    Boolean ack = JSONParser.Ack(json_Ack);
-                    if (!ack) {
-                        Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
-                        handler.sendEmptyMessage(2);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                */
-                                     }
-
-                                 }
-                             }
-            );
-            return null;
-
-        }
     }
 
     private void Hide(Boolean command) {

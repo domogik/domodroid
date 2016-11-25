@@ -39,6 +39,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import misc.tracerengine;
 import rinor.CallUrl;
+import rinor.send_command;
 
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
@@ -164,51 +165,12 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 
     }
 
-
-    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Handler temphandler = new Handler(context.getMainLooper());
-            temphandler.post(new Runnable() {
-                                 public void run() {
-                                     String Url2send;
-                                     if (api_version >= 0.7f) {
-                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=1";
-                                     } else {
-                                         Url2send = url + "command/" + type + "/" + address + "/" + command;
-                                     }
-                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
-                                     JSONObject json_Ack = null;
-                                     try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
-                                     } catch (Exception e) {
-                                         Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                     }
-                    /*
-                    try {
-						Boolean ack = JSONParser.Ack(json_Ack);
-						if(!ack){
-							Tracer.i(mytag,"Received error from Rinor : <"+json_Ack.toString()+">");
-							Toast.makeText(context, "Received error from Rinor",Toast.LENGTH_LONG).show();
-							handler.sendEmptyMessage(2);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					*/
-                                 }
-                             }
-            );
-            return null;
-
-        }
-    }
-
     public void onClick(View arg0) {
         trigger.startAnim();
-        new CommandeThread().execute();
+        if (api_version >= 0.7f) {
+            command = "=1";
+        }
+        send_command.send_it(Tracer, url, command_id, command_type, command, login, password, SSL, api_version);
     }
 
 }

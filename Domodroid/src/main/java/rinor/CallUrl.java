@@ -1,6 +1,7 @@
 package rinor;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -9,6 +10,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -74,8 +76,9 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                     }
                     throw new IOException(statusLine.getReasonPhrase());
                 }
-            } catch (SocketTimeoutException e) {
+            } catch (SocketTimeoutException | ConnectTimeoutException e) {
                 e.printStackTrace();
+                Log.e(mytag, url);
                 responseString = "ERROR";
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,7 +111,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 instream.close();
                 //} catch (HttpHostConnectException e) {
                 //    e.printStackTrace();
-            } catch (java.net.SocketTimeoutException e) {
+            } catch (java.net.SocketTimeoutException | java.net.ConnectException e) {
                 e.printStackTrace();
                 responseMessage = "ERROR";
             } catch (IOException e) {
@@ -121,14 +124,14 @@ public class CallUrl extends AsyncTask<String, Void, String> {
             return responseMessage;
         }
     }
-/*
+
     @Override
     protected void onPreExecute() {
         // This method will called during doInBackground is in process
         // Here you can for example show a ProgressDialog
+        Toast.makeText(context, R.string.command_sending, Toast.LENGTH_SHORT).show();
     }
 
-    */
     protected void onPostExecute(String string) {
         // onPostExecute is called when doInBackground finished
         // Here you can for example fill your Listview with the content loaded in doInBackground method
@@ -137,7 +140,5 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         } else {
             Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
         }
-
-
     }
 }

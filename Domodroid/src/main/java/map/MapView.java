@@ -1316,7 +1316,7 @@ public class MapView extends View {
                                                         JSONObject jparam = new JSONObject(featureMap.getParameters());
                                                         command_id = jparam.getString("command_id");
                                                         command_type = jparam.getString("command_type1");
-                                                        state_progress = "1";
+                                                        state_progress = "=1";
                                                         send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
                                                     } catch (JSONException e) {
                                                         Tracer.d(mytag, "No command_id or command_type for this device");

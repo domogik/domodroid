@@ -164,7 +164,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     public void onClick(View arg0) {
         trigger.startAnim();
         if (api_version >= 0.7f) {
-            command = "=1";
+            command = "1";
         }
         send_command.send_it(Tracer, url, command_id, command_type, command, login, password, SSL, api_version);
     }

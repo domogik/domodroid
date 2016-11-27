@@ -898,7 +898,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            //For 0.4 make a loop until no more parent data_type
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
@@ -921,6 +920,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
+                            //For 0.4 make a loop until no more parent data_type
                             while (!parent_again) {
                                 try {
                                     parent_type = Json_data_type.getJSONObject(tempdata_type).getString("parent");
@@ -1108,7 +1108,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            //For 0.4 make a loop until no more parent data_type
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
@@ -1131,6 +1130,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
+                            //For 0.4 make a loop until no more parent data_type
                             while (!parent_again) {
                                 try {
                                     parent_type = Json_data_type.getJSONObject(tempdata_type).getString("parent");

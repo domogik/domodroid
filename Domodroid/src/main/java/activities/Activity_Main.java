@@ -52,6 +52,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
 import org.domogik.domodroid13.R;
@@ -98,9 +99,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ImageView appname;
 
     private ViewGroup VG_parent;
+    private ScrollView SV_Main_ScrollView;
     private Vector<String[]> history;
     private int historyPosition;
     private LinearLayout LL_house_map;
+    private LinearLayout LL_area;
+    private LinearLayout LL_room;
+    private LinearLayout LL_activ;
     private Basic_Graphical_zone house;
     private Basic_Graphical_zone map;
 
@@ -349,6 +354,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        //Mains global scroll view
+        SV_Main_ScrollView = (ScrollView) findViewById(R.id.Main_ScrollView);
         //Parent view
         VG_parent = (ViewGroup) findViewById(R.id.home_container);
 
@@ -356,6 +363,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
+
+        LL_area = new LinearLayout(this);
+        LL_area.setOrientation(LinearLayout.VERTICAL);
+        LL_room = new LinearLayout(this);
+        LL_room.setOrientation(LinearLayout.VERTICAL);
+        LL_activ = new LinearLayout(this);
+        LL_activ.setOrientation(LinearLayout.VERTICAL);
 
         house = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "House"),
@@ -816,28 +830,24 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
         VG_parent.removeAllViews();
-        LinearLayout LL_area = new LinearLayout(this);
-        LL_area.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout LL_room = new LinearLayout(this);
-        LL_room.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout LL_activ = new LinearLayout(this);
-        LL_activ.setOrientation(LinearLayout.VERTICAL);
 
         LL_house_map.removeAllViews();
         LL_house_map.addView(house);
         LL_house_map.addView(map);
+        LL_area.removeAllViews();
+        LL_activ.removeAllViews();
+        LL_room.removeAllViews();
 
         try {
             int mytype = 0;
             switch (type) {
                 case "root":
-                    LL_area.removeAllViews();
                     VG_parent.addView(LL_house_map);    // House & map
                     if (!by_usage) {
                         // Version 0.2 or un-force by_usage : display house, map and areas
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
                         VG_parent.addView(LL_area);    //and areas
-                        LL_activ.removeAllViews();
+
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage
@@ -852,7 +862,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         //LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
                         LL_room = WM_Agent.loadRoomWidgets(this, load_area, LL_room, SP_params);    //List of known usages 'as rooms'
                         VG_parent.addView(LL_room);
-                        LL_activ.removeAllViews();
+
                         //LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                         LL_activ = WM_Agent.loadActivWidgets(this, load_area, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                     }
@@ -860,19 +870,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 /*Should never arrive in this type.
                 }else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
-				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
 				LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
 				VG_parent.addView(LL_area);	//and areas
-				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
 				 */
                     break;
                 case "statistics":
                     //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
-                    LL_area.removeAllViews();
-                    LL_activ.removeAllViews();
                     LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
                     VG_parent.addView(LL_activ);
 
@@ -882,24 +888,27 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     if (!by_usage) {
                         VG_parent.addView(LL_house_map);    // House & map
                     }
-                    LL_room.removeAllViews();
                     LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
-
                     VG_parent.addView(LL_room);
-                    LL_activ.removeAllViews();
-                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
 
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
                     VG_parent.addView(LL_activ);
 
                     break;
                 case "room":
-                    LL_activ.removeAllViews();
                     LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
                     VG_parent.addView(LL_activ);
                     break;
             }
             update_navigation_menu();
             Tracer.d(mytag, "List item= " + listItem.toString());
+            //redraw the scrollview at the top position of the screen
+            SV_Main_ScrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    SV_Main_ScrollView.scrollTo(0, 0);
+                }
+            });
         } catch (Exception e) {
             Tracer.e(mytag, "Can't load area/room or widgets");
             Tracer.e(mytag, e.toString());
@@ -1121,8 +1130,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private void refresh() {
         try {
             loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
-        }catch (Exception e){
-            Tracer.e(mytag,"Can not refresh this view");
+        } catch (Exception e) {
+            Tracer.e(mytag, "Can not refresh this view");
         }
     }
 

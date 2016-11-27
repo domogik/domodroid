@@ -15,6 +15,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1106,7 +1107,7 @@ public class WidgetUpdate {
                             + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                     nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
                     HttpResponse response = httpclient.execute(httpput);
                     Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
                     changed = true;

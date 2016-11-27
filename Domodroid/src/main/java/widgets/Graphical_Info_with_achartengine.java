@@ -30,6 +30,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -68,6 +69,8 @@ import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
+
+import static activities.Activity_Main.SV_Main_ScrollView;
 
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
@@ -785,6 +788,19 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 }
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
                 LL_background.addView(chartContainer);
+                this.chartContainer.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
+                        int action = event.getActionMasked();
+                        switch (action) {
+                            case MotionEvent.ACTION_UP:
+                                SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
             } else {
                 this.isopen = false;

@@ -27,6 +27,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -51,8 +52,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import Abstract.translate;
 import Abstract.display_sensor_info;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -60,6 +61,8 @@ import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
 import rinor.send_command;
+
+import static activities.Activity_Main.SV_Main_ScrollView;
 
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
@@ -299,7 +302,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 }
             });
 
-            LV_listCommands.setScrollingCacheEnabled(false);
+            //LV_listCommands.setScrollingCacheEnabled(false);
             //feature panel 2 which will contain list of selectable choices
             featurePan2 = new LinearLayout(context);
             featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -513,6 +516,19 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, sizeint));
                 Tracer.d(mytag, "addView(featurePan2)");
                 super.LL_background.addView(featurePan2);
+                this.LV_listCommands.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
+                        int action = event.getActionMasked();
+                        switch (action) {
+                            case MotionEvent.ACTION_UP:
+                                SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
+                        return false;
+                    }
+                });
                 // used after domogik 0.4 if commands need to display an open informations
                 if (command_id != null) {
                     TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);

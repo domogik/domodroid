@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -39,7 +40,6 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
@@ -59,6 +59,8 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
+
+import static activities.Activity_Main.SV_Main_ScrollView;
 
 public class Graphical_Openstreetmap extends Basic_Graphical_widget implements OnClickListener {
 
@@ -385,6 +387,19 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
             Tracer.d(mytag, "addView(osmMapview)");
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
             LL_background.addView(osmMapview);
+            this.osmMapview.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
+                    int action = event.getActionMasked();
+                    switch (action) {
+                        case MotionEvent.ACTION_UP:
+                            SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                    return false;
+                }
+            });
             this.isopen = true;
 
         } else {

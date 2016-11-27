@@ -99,7 +99,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ImageView appname;
 
     private ViewGroup VG_parent;
-    private ScrollView SV_Main_ScrollView;
+    public static ScrollView SV_Main_ScrollView;
     private Vector<String[]> history;
     private int historyPosition;
     private LinearLayout LL_house_map;

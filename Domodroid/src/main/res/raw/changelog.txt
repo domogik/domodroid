@@ -30,6 +30,7 @@
       * Close #128 navigate in place now always start on the top of screen
       * Close #126 for Breezy in weather widget
       * Close #123 unknown display instead of value off if no value from rest
+      * Close #121 renaming encoding issues
       * #33 finally really solved
       * #122 Start working on Metrics
       * New widget including openstreetmap for current position when opening widget

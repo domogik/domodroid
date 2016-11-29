@@ -718,8 +718,8 @@
     <string name="False">Faux</string>
     <string name="True">Vrai</string>
     <string name="year">Année</string>
-    <string name="command_sent">Commande envoyé à Rest!</string>
-    <string name="command_sending">Envoi de la commande à Rest...</string>
+    <string name="command_sent">Commande envoyé à rest!</string>
+    <string name="command_sending">Envoi de la commande à rest...</string>
     <string name="heavyraininhour">Pluie battante dans l\'heure</string>
     <string name="raininhour">Pluie dans l\'heure</string>
     <string name="rainlevel55mn">Niveau de pluie à 55min</string>

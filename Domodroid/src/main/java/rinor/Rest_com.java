@@ -58,7 +58,7 @@ public class Rest_com {
     @SuppressWarnings("null")
     public static JSONObject connect_jsonobject(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
 
-        JSONObject json = null;
+        JSONObject json = new JSONObject();
         if (!SSL) {
             try {
                 // Set timeout
@@ -130,7 +130,7 @@ public class Rest_com {
 
     @SuppressWarnings("null")
     public static JSONArray connect_jsonarray(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
-        JSONArray json = null;
+        JSONArray json = new JSONArray();
 
         if (!SSL) {
             try {

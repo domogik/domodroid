@@ -288,7 +288,7 @@ public class Events_manager {
                 }
                 //And send it to server....to create an event ticket
                 String request = ticket_request;
-                JSONObject event = null;
+                JSONObject event = new JSONObject();
                 Boolean ack = false;
                 Tracer.i(mytag, "ListenerThread starts the loop");
                 String ticket = "";

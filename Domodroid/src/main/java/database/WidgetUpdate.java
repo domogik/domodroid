@@ -668,7 +668,7 @@ public class WidgetUpdate {
                         } else if (api_version >= 0.7f) {
                             //todo change by == when device.get will work
                             // else if (api_version == 0.7f) {
-                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
+                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
@@ -690,7 +690,7 @@ public class WidgetUpdate {
                                 try {
                                     JSONArray json_device_state_0_4 = new JSONArray();
                                     request = request.replace("sensor", "device");
-                                    json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
+                                    json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                                     //test info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {

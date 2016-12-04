@@ -446,7 +446,7 @@ public class Events_manager {
                     try {
                         Tracer.w(mytag, "Freeing ticket <" + request + ">");
                         stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 3000, SSL);        //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 30000, SSL);        //Blocking request : we must have an answer to continue...
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {

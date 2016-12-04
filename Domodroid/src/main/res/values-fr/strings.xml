@@ -527,8 +527,8 @@
     <string name="sync_2_error_assoc">Domogik 2 ne peut pas charger base/feature_association/list</string>
     <string name="sync_2_error_ui">Domogik 2 ne peut pas charger base/ui_config/list</string>
     <string name="sync_3_error_feature">Domogik 3 ne peut pas charger base/feature/list</string>
-    <string name="sync_4_error_device">Domogik 4 ne peut pas charger la listes des devices. Vérifier votre configuration.</string>
-    <string name="sync_4_error_datatype">Domogik 4 ne peut pas charger la listes des datatype. Vérifier votre configuration.</string>
+    <string name="sync_4_error_device">Domogik ne peut pas charger la listes des devices. Vérifier votre configuration.</string>
+    <string name="sync_4_error_datatype">Domogik ne peut pas charger la listes des datatype. Vérifier votre configuration.</string>
     <string name="connection_error">Erreur de connexion.</string>
     <string name="sync_0">Chargement de la configuration… 0%</string>
     <string name="sync_load">Chargement de la configuration… </string>

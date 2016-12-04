@@ -507,8 +507,8 @@
     <string name="sync_2_error_assoc">Domogik 2 не может загрузить base/feature_association/list</string>
     <string name="sync_2_error_ui">Domogik 2 не может загрузить base/ui_config/list</string>
     <string name="sync_3_error_feature">Domogik 3 не может загрузить base/feature/list</string>
-    <string name="sync_4_error_device">Domogik 4 не может загрузить JSON устройств. Проверьте конфигурацию</string>
-    <string name="sync_4_error_datatype">Domogik 4 не может загрузить типы данных JSON. Проверьте конфигурацию</string>
+    <string name="sync_4_error_device">Domogik не может загрузить JSON устройств. Проверьте конфигурацию</string>
+    <string name="sync_4_error_datatype">Domogik не может загрузить типы данных JSON. Проверьте конфигурацию</string>
     <string name="connection_error">Ошибка соединения</string>
     <string name="sync_0">Загрузка конфигурации… 0%</string>
     <string name="sync_load">Загрузка конфигурации…</string>

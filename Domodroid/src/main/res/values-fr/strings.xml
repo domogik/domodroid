@@ -770,4 +770,6 @@
     <string name="vigilancecolorsnow">Couleur Vigilance Neige</string>
     <string name="no_vigilance">Aucun risque</string>
     <string name="contact_devs">Ceci n\'est pas encore supporté, contacter les devs.</string>
+    <string name="sms_not_sended">SMS pas envoyé</string>
+    <string name="too_many_sms_were_sent_in_too_little_time.">Trop de sms envoyé en trop peu de temps.</string>
 </resources>

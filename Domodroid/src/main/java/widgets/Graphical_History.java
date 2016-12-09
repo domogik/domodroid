@@ -291,6 +291,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     }
 
     private void getlastvalue() {
+        //todo do this in doinbackground
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(context);

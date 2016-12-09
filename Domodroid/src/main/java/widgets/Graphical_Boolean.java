@@ -276,6 +276,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
     }
 
     private void getlastvalue() {
+        //todo do this in doinbackground
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(context);

@@ -427,6 +427,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     }
 
     private void getlastvalue() {
+        //todo do this in doinbackground
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         LV_listChoices = new ListView(context);

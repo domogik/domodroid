@@ -138,6 +138,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private PendingIntent pendingIntent_for_metrics;
     private Intent intent_for_metrics;
     private AlarmManager processTimer_for_metrics;
+
     /**
      * Called when the activity is first created.
      */
@@ -496,12 +497,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     public void onResume() {
         super.onResume();
         //get metrics every 30s
-        int repeatTime = 30;  //Repeat alarm time in seconds
-        AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
-
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            int repeatTime = 30;  //Repeat alarm time in seconds
+            AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
+        }
         Tracer.v(mytag + ".onResume", "Check if initialize requested !");
         if (!init_done) {
             Tracer.v(mytag + ".onResume", "Init not done!");
@@ -536,7 +538,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         }
         //Stop metrics.
-        processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        }
     }
 
     @Override
@@ -569,7 +573,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 		}
 		 */
         //Stop metrics.
-        processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        }
     }
 
     private void Create_message_box() {

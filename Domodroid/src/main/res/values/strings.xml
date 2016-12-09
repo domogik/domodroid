@@ -549,7 +549,6 @@
     <string name="fog">Fog</string>
     <string name="inactive">Inactive</string>
     <string name="active">Active</string>
-    <string name="sms_sended">SMS sended</string>
     <string name="ok" tools:ignore="ButtonCase">Ok</string>
     <string name="sensor_script_info_binary">Sensor Script info binary</string>
     <string name="sensor_script_info_number">Sensor Script info number</string>
@@ -853,6 +852,8 @@
     <string name="vigilancecolorsnow">Vigilance color Snow</string>
     <string name="no_vigilance">No vigilance</string>
     <string name="too_many_sms_were_sent_in_too_little_time.">Too many SMS were sent in too little time.</string>
+    <string name="sms_sended">SMS sended</string>
+    <string name="sms_not_sended">SMS not sended</string>
     <string name="alive">Alive</string>
     <string name="command_sending">Sending command to rest...</string>
 </resources>

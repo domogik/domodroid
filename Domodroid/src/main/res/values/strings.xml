@@ -440,6 +440,7 @@
     <string name="not_available">Not available</string>
     <string name="info48" translatable="false">--</string>
     <string name="rain">Rain</string>
+    <string name="mostly_sunny">Mostly Sunny</string>
 
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>

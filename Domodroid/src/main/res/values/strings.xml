@@ -858,4 +858,6 @@
     <string name="alive">Alive</string>
     <string name="command_sending">Sending command to rest...</string>
     <string name="loading_data_from_rest">Loading values from rest...</string>
+    <string name="underscore">-</string>
+    <string name="widget_error">Something were wrong with</string>
 </resources>

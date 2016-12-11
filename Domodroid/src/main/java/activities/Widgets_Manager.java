@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
@@ -380,8 +381,9 @@ class Widgets_Manager {
                     if (counter == 2) counter = 0;
                 } else ll.addView(tmpPan);
             } catch (Exception e) {
-                //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
                 Tracer.e(mytag, "Can not draw widget:" + e.toString());
+                e.printStackTrace();
+                Toast.makeText(context, context.getString(R.string.widget_error) + " : " + label, Toast.LENGTH_SHORT).show();
             }
         }
         return ll;

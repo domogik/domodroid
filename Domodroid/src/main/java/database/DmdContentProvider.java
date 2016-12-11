@@ -63,6 +63,7 @@ public class DmdContentProvider extends ContentProvider {
     private static final int INSERT_FEATURE_STATE = 260;
     private static final int CLEAR_FEATURE_STATE = 261;
     private static final int CLEAR_one_FEATURE_STATE = 262;
+    private static final int CLEAR_appswidgets_in_appswidgets =263;
 
     private static final int UPDATE_FEATURE_STATE = 300;
     private static final int UPDATE_FEATURE_NAME = 301;
@@ -116,6 +117,7 @@ public class DmdContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI_CLEAR_one_feature_in_FEATURE_MAP = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/CLEAR_one_feature_in_FEATURE_MAP");
     public static final Uri CONTENT_URI_CLEAR_one_FEATURE_STATE = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/CLEAR_one_FEATURE_STATE");
     public static final Uri CONTENT_URI_CLEAR_one_place_type_in_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/CLEAR_one_place_type_in_FEATURE_ASSOCIATION");
+    public static final Uri CONTENT_URI_CLEAR_appswidgets_in_appswidgets = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/CLEAR_appswidgets_in_appswidgets");
 
     public static final Uri CONTENT_URI_UPDATE_FEATURE_STATE = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_STATE");
     public static final Uri CONTENT_URI_UPDATE_FEATURE_NAME = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/UPDATE_FEATURE_NAME");
@@ -351,6 +353,13 @@ public class DmdContentProvider extends ContentProvider {
                     mDB.getWritableDatabase().execSQL("DELETE FROM table_feature_association WHERE place_id=" + values.getAsString("place_id") + " AND place_type='" + values.getAsString("place_type") + "'");
                 } catch (SQLException e) {
                     Tracer.e(mytag, "Error deleting one_place_type_in_FEATURE_ASSOCIATION: " + e.toString());
+                }
+                break;
+            case CLEAR_appswidgets_in_appswidgets:
+                try {
+                    mDB.getWritableDatabase().execSQL("DELETE FROM table_appswidgets WHERE id=" + values.getAsString("id") + "'");
+                } catch (SQLException e) {
+                    Tracer.e(mytag, "Error deleting appswidgets_in_appswidgets: " + e.toString());
                 }
                 break;
             //Add a new select case to remove only one widget on map

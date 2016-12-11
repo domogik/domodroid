@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -67,8 +68,8 @@ import static activities.Activity_Main.SV_Main_ScrollView;
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
 
-
-    private ListView LV_listChoices;
+    private ListView LV_listChoices = new ListView(context);
+    ;
     private ListView LV_listCommands;
     private ArrayList<HashMap<String, String>> listItem;
     private LinearLayout featurePan2;
@@ -102,6 +103,8 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String stateS;
     private boolean isopen = false;
     private int nb_item_for_history;
+    private int currentint;
+    private int sizeint;
 
     public Graphical_List(tracerengine Trac,
                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
@@ -410,7 +413,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
             TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
         }
-        this.isopen = false;
+        isopen = false;
         super.LL_background.removeView(featurePan2);
         super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
         if (command) {
@@ -426,86 +429,12 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
     }
 
-    private void getlastvalue() {
-        //todo do this in doinbackground
-        JSONObject json_LastValues = null;
-        JSONArray itemArray = null;
-        LV_listChoices = new ListView(context);
-        listItem = new ArrayList<>();
-        try {
-            if (api_version <= 0.6f) {
-                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 30000, SSL);
-            } else if (api_version >= 0.7f) {
-                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
-                //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 30000, SSL);
-                json_LastValues = new JSONObject();
-                json_LastValues.put("stats", json_LastValues_0_4);
-
-            }
-            itemArray = json_LastValues.getJSONArray("stats");
-            if (api_version <= 0.6f) {
-                for (int i = itemArray.length(); i >= 0; i--) {
-                    try {
-                        HashMap<String, String> map = new HashMap<>();
-                        try {
-                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
-                        } catch (Exception e1) {
-                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
-                        }
-                        map.put("date", itemArray.getJSONObject(i).getString("date"));
-                        listItem.add(map);
-                        Tracer.d(mytag, map.toString());
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json TV_Value");
-                    }
-                }
-            } else if (api_version >= 0.7f) {
-                for (int i = 0; i < itemArray.length(); i++) {
-                    try {
-                        HashMap<String, String> map = new HashMap<>();
-                        String temp_value_str = "";
-                        try {
-                            temp_value_str = Values.getString(itemArray.getJSONObject(i).getString("value_str").toLowerCase());
-                        } catch (Exception e) {
-                            temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
-                        }
-                        try {
-                            map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
-                        } catch (Exception e1) {
-                            map.put("TV_Value", temp_value_str);
-                        }
-                        if (api_version == 0.7f) {
-                            map.put("date", itemArray.getJSONObject(i).getString("date"));
-                        } else if (api_version >= 0.8f) {
-                            String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                            map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
-                        }
-                        listItem.add(map);
-                        Tracer.d(mytag, map.toString());
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json TV_Value");
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            //return null;
-            Tracer.e(mytag, "Error fetching json object");
-        }
-
-        SimpleAdapter adapter_feature = new SimpleAdapter(this.context, listItem,
-                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
-        LV_listChoices.setAdapter(adapter_feature);
-        LV_listChoices.setScrollingCacheEnabled(false);
-    }
-
     public void onClick(View v) {
         if (with_list) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
-            int sizeint = (int) size;
+            sizeint = (int) size;
+            currentint = LL_background.getHeight();
             if (!isopen) {
                 this.isopen = true;
                 Tracer.d(mytag, "on click");
@@ -552,18 +481,10 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     e.printStackTrace();
                 }
                 Tracer.d(mytag, "getting history");
-                getlastvalue();
-                Tracer.d(mytag, "history is: " + listItem);
-                if (!listItem.isEmpty()) {
-                    Tracer.d(mytag, "addView(listeChoices)");
-                    LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
-                    LL_background.addView(LV_listChoices);
-                    this.isopen = true;
-                } else {
-                    Tracer.d(mytag, "history is empty nothing to display");
-                }
+                display_last_value sync = new display_last_value();
+                sync.execute();
             } else {
-                this.isopen = false;
+                isopen = false;
                 super.LL_background.removeView(LV_listChoices);
                 super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             }
@@ -571,6 +492,99 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
     }
 
+    private class display_last_value extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(context, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
+        }
+
+        protected Void doInBackground(Void... params) {
+            JSONObject json_LastValues = null;
+            JSONArray itemArray = null;
+            try {
+                if (api_version <= 0.6f) {
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                    json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 30000, SSL);
+                } else if (api_version >= 0.7f) {
+                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                    //Don't forget old "dev_id"+"state_key" is replaced by "id"
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 30000, SSL);
+                    json_LastValues = new JSONObject();
+                    json_LastValues.put("stats", json_LastValues_0_4);
+
+                }
+                itemArray = json_LastValues.getJSONArray("stats");
+                if (api_version <= 0.6f) {
+                    for (int i = itemArray.length(); i >= 0; i--) {
+                        try {
+                            HashMap<String, String> map = new HashMap<>();
+                            try {
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                            } catch (Exception e1) {
+                                map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                            }
+                            map.put("date", itemArray.getJSONObject(i).getString("date"));
+                            listItem.add(map);
+                            Tracer.d(mytag, map.toString());
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Error getting json TV_Value");
+                        }
+                    }
+                } else if (api_version >= 0.7f) {
+                    for (int i = 0; i < itemArray.length(); i++) {
+                        try {
+                            HashMap<String, String> map = new HashMap<>();
+                            String temp_value_str = "";
+                            try {
+                                temp_value_str = Values.getString(itemArray.getJSONObject(i).getString("value_str").toLowerCase());
+                            } catch (Exception e) {
+                                temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
+                            }
+                            try {
+                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
+                            } catch (Exception e1) {
+                                map.put("TV_Value", temp_value_str);
+                            }
+                            if (api_version == 0.7f) {
+                                map.put("date", itemArray.getJSONObject(i).getString("date"));
+                            } else if (api_version >= 0.8f) {
+                                String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                            }
+                            listItem.add(map);
+                            Tracer.d(mytag, map.toString());
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Error getting json TV_Value");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                //return null;
+                Tracer.e(mytag, "Error fetching json object");
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            SimpleAdapter adapter_feature = new SimpleAdapter(context, listItem,
+                    R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
+            LV_listChoices.setAdapter(adapter_feature);
+            LV_listChoices.setScrollingCacheEnabled(false);
+
+            Tracer.d(mytag, "history is: " + listItem);
+            if (!listItem.isEmpty()) {
+                Tracer.d(mytag, "addView(listeChoices)");
+                LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                LL_background.addView(LV_listChoices);
+                isopen = true;
+            } else {
+                Tracer.d(mytag, "history is empty nothing to display");
+            }
+        }
+
+    }
 }
 
 

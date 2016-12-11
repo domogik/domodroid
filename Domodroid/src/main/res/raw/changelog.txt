@@ -21,7 +21,7 @@
   <body>
     $ 1.4
       % Version 25
-      _ 2016-xx-xx
+      _ 2016-12-11
       * Works on #132 timeout or empty response form rest
       * Toasts when sending commands/widget crash/waiting data from rest
       * #131 Avoid ANR when calling history of a sensor

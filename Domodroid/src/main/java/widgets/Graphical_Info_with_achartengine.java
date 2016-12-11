@@ -30,6 +30,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -59,15 +60,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
-import Abstract.translate;
 import Abstract.calcul;
 import Abstract.display_sensor_info;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
+
+import static activities.Activity_Main.SV_Main_ScrollView;
 
 public class Graphical_Info_with_achartengine extends Basic_Graphical_widget implements OnClickListener {
 
@@ -148,9 +151,15 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
         this.id = feature.getId();
-        String graph_size = params.getString("graph_size", "262.5");
         this.isopen = false;
-        this.Float_graph_size = Float.valueOf(graph_size);
+        try {
+            int graphics_height_size = params.getInt("graphics_height_size", 262);
+            this.Float_graph_size = Float.valueOf(graphics_height_size);
+        } catch (Exception e) {
+            //This is due to old way to store it as a string
+            String graph_size = params.getString("graph_size", "262.5");
+            this.Float_graph_size = Float.valueOf(graph_size);
+        }
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 
@@ -466,14 +475,15 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         chartContainer.setPadding((int) size5, (int) size10, (int) size5, (int) size10);
 
         JSONObject json_GraphValues = null;
+        //todo #131 do this in asynctask
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
+                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
             } else if (api_version >= 0.7f) {
                 Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
+                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
             }
 
         } catch (Exception e) {
@@ -779,6 +789,19 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 }
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, sizeint));
                 LL_background.addView(chartContainer);
+                this.chartContainer.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
+                        int action = event.getActionMasked();
+                        switch (action) {
+                            case MotionEvent.ACTION_UP:
+                                SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
             } else {
                 this.isopen = false;

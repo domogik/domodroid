@@ -31,11 +31,10 @@
                 android:title="@string/house_settings"
                 app:showAsAction="never" />
             <!-- menu_stats -->
-<!--            <item
+            <item
                 android:id="@+id/menu_stats"
                 android:icon="@drawable/icon_menu_statistics"
                 android:title="@string/statistics" />
--->
             <!-- menu_about -->
             <item
                 android:id="@+id/menu_about"

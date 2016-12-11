@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
@@ -32,6 +33,7 @@ import widgets.Graphical_Info;
 import widgets.Graphical_Info_commands;
 import widgets.Graphical_Info_with_achartengine;
 import widgets.Graphical_List;
+import widgets.Graphical_Openstreetmap;
 import widgets.Graphical_Range;
 import widgets.Graphical_Room;
 import widgets.Graphical_Trigger;
@@ -240,12 +242,11 @@ class Widgets_Manager {
                     } else {
                         if (!aListFeature.getParameters().contains("command_type")) {
                             Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
-                            Graphical_Info info = new Graphical_Info(Tracer, context, URL,
-                                    widgetSize, session_type, id, zone, params, update_timer, aListFeature, widgetHandler);
-                            info.setLayoutParams(layout_param);
-                            info.with_graph = true;
+                            Graphical_History history = new Graphical_History(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            history.setLayoutParams(layout_param);
                             Graphical_Info.container = tmpPan;
-                            tmpPan.addView(info);
+                            tmpPan.addView(history);
                             Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                         } else {
                             Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
@@ -282,7 +283,32 @@ class Widgets_Manager {
                             Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                         }
                         //New widget for callerID apply to all other string sensor
+                    } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
+                        Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, context, URL,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                        Openstreetmap.setLayoutParams(layout_param);
+                        Graphical_History.container = tmpPan;
+                        tmpPan.addView(Openstreetmap);
+                        Tracer.i(mytag, "   ==> Openstreetmap");
+                    } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
+                        if (!aListFeature.getParameters().contains("command_type")) {
+                            Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
+                            Graphical_History history = new Graphical_History(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            history.setLayoutParams(layout_param);
+                            Graphical_Info.container = tmpPan;
+                            tmpPan.addView(history);
+                            Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
+                        } else {
+                            Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
+                            Graphical_Color color = new Graphical_Color(Tracer, context, URL,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            Graphical_Color.container = tmpPan;
+                            tmpPan.addView(color);
+                            Tracer.i(mytag, "   ==> Graphical_Color");
+                        }
                     } else {
+                        Tracer.d(mytag, "feature model id:" + aListFeature.getDevice_feature_model_id().toString());
                         Graphical_History info_with_history = new Graphical_History(Tracer, context, URL,
                                 widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         info_with_history.setLayoutParams(layout_param);
@@ -306,7 +332,7 @@ class Widgets_Manager {
                         tmpPan.addView(info_commands);
                         Tracer.i(mytag, "   ==> Graphical_Info_commands !!!");
                     }
-                } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_HVACVent") || aListFeature.getDevice_feature_model_id().startsWith("HVACFan")
+                } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_HVACVent") || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACFan")
                         || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACMode") || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
                         || aListFeature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || aListFeature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
                         || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSState") || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
@@ -355,8 +381,9 @@ class Widgets_Manager {
                     if (counter == 2) counter = 0;
                 } else ll.addView(tmpPan);
             } catch (Exception e) {
-                //TODO tell user a device (sensor or command is not handle and display only widget with the name to helps devs.
                 Tracer.e(mytag, "Can not draw widget:" + e.toString());
+                e.printStackTrace();
+                Toast.makeText(context, context.getString(R.string.widget_error) + " : " + label, Toast.LENGTH_SHORT).show();
             }
         }
         return ll;

@@ -31,7 +31,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -43,7 +42,7 @@ import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
 import misc.tracerengine;
-import rinor.CallUrl;
+import rinor.send_command;
 
 
 public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.OnSeekBarChangeListener {
@@ -321,51 +320,8 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     public void onStopTrackingTouch(SeekBar arg0) {
         //send the correct value by replacing it with a converted one.
         state_progress = arg0.getProgress() + valueMin;
-        new CommandeThread().execute();
+        send_command.send_it(Tracer, url, command_id, command_type, String.valueOf(state_progress), login, password, SSL, api_version);
         touching = false;
-    }
-
-
-    private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Handler temphandler = new Handler(context.getMainLooper());
-            temphandler.post(new Runnable() {
-                                 public void run() {
-                                     updating = 3;
-                                     String Url2send;
-                                     if (api_version >= 0.7f) {
-                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
-                                     } else {
-                                         Url2send = url + "command/" + type + "/" + address + "/" + state_progress;
-                                     }
-                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
-                                     JSONObject json_Ack = null;
-                                     try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password, 3000);
-                                     } catch (Exception e) {
-                                         Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
-                                     }
-                                     /*
-                                     try {
-                                         Boolean ack = JSONParser.Ack(json_Ack);
-                                         if (!ack) {
-                                             Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
-                                             Toast.makeText(context, "Received error from Rinor", Toast.LENGTH_LONG).show();
-                                             handler.sendEmptyMessage(2);
-                                         }
-                                     } catch (Exception e) {
-                                         e.printStackTrace();
-                                     }
-                                     */
-                                 }
-                             }
-            );
-            return null;
-        }
     }
 
     public class SBAnim extends AsyncTask<Void, Integer, Void> {

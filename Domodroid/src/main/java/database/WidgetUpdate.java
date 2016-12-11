@@ -1,15 +1,12 @@
 package database;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-
-//import com.orhanobut.logger.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -18,6 +15,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +26,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,6 +44,8 @@ import rinor.Events_manager;
 import rinor.Rest_com;
 import rinor.Rinor_event;
 import rinor.Stats_Com;
+
+//import com.orhanobut.logger.Logger;
 
 public class WidgetUpdate {
     //implements Serializable {
@@ -77,6 +79,7 @@ public class WidgetUpdate {
     private String password;
     private Boolean SSL;
     private float api_version;
+    private String last_device_update;
     //
     // Table of handlers to notify
     // pos 0 = Main
@@ -137,6 +140,7 @@ public class WidgetUpdate {
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
         api_version = sharedparams.getFloat("API_VERSION", 0);
+        last_device_update = sharedparams.getString("last_device_update", "1900-01-01 00:00:00");
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -268,12 +272,22 @@ public class WidgetUpdate {
                     //New or update device detected by MQ
                     //Notify on main screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
-                    AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
-                    dialog_device_update.setTitle(context.getText(R.string.domogik_information));
-                    dialog_device_update.setMessage(context.getText(R.string.device_update_message));
-                    if (!(context).isFinishing()) {
-                        dialog_device_update.show();
-                    }
+                    //Todo disable the dialog or replace by a toast here the dialog
+                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
+                    //dialog_device_update.setTitle(context.getText(R.string.domogik_information));
+                    //dialog_device_update.setMessage(context.getText(R.string.device_update_message));
+                    //if (!(context).isFinishing()) {
+                    //    dialog_device_update.show();
+                    //}
+
+                    //Todo disable the dialog or replace by a toast here the toast
+                    // Display message something changed since last update
+                    context.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, context.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
                     //todo notify on map screen if a device change.
                 }
             }
@@ -654,13 +668,57 @@ public class WidgetUpdate {
                         } else if (api_version >= 0.7f) {
                             //todo change by == when device.get will work
                             // else if (api_version == 0.7f) {
-                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 3000, SSL);
+                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
                             json_widget_state.put("stats", json_widget_state_0_4);
                             Tracer.d(mytag, "json_widget_state for 0.7 API=");
                             Tracer.json(mytag, json_widget_state.toString());
+                            //todo move this part in 0.8 api under when MQ.Get will work
+                            if (api_version >= 0.8f) {
+                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                Date timestamplast_device_update;
+                                Date timestamplast_update = new Date();
+                                boolean newer = false;
+                                try {
+                                    timestamplast_device_update = df.parse(last_device_update);
+                                } catch (Exception e) {
+                                    Tracer.e(mytag, "No saved date or error parsing it");
+                                    timestamplast_device_update = new Date();
+                                }
+                                try {
+                                    JSONArray json_device_state_0_4 = new JSONArray();
+                                    request = request.replace("sensor", "device");
+                                    json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    //test info_changed:
+                                    for (int i = 0; i < json_device_state_0_4.length(); i++) {
+                                        try {
+                                            String last_update = json_device_state_0_4.getJSONObject(i).getString("info_changed");
+                                            timestamplast_update = df.parse(last_update);
+                                            //compare to latest update
+                                            if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
+                                                newer = true;
+                                                timestamplast_device_update = timestamplast_update;
+                                                Log.v(mytag, "device info_changed at: " + timestamplast_update.toString());
+                                            }
+                                        } catch (Exception E) {
+                                            timestamplast_update = new Date();
+                                            Tracer.d(mytag, "Exception info_changed:" + E);
+                                        }
+                                    }
+                                    if (newer) {
+                                        //Display message something changed since last update
+                                        context.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast.makeText(context, R.string.device_update_message, Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    }
+                                } catch (Exception e) {
+                                    Tracer.e(mytag, "Error trying to parse /device and info_changed");
+                                }
+                            }
                         } else if (api_version >= 0.8f) {
                             //todo will use this when device.get will work
                             json_widget_state = zmqrequest();
@@ -1037,6 +1095,7 @@ public class WidgetUpdate {
             Tracer.d(mytag, "domodb is null");
             this.init(Tracer, context, sharedparams);
         }
+        boolean changed = false;
         try {
             domodb.update_name(id, new_desc, type);
             //Todo Move this method somewhere else and mak it reusable.
@@ -1048,9 +1107,10 @@ public class WidgetUpdate {
                             + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                     nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
                     HttpResponse response = httpclient.execute(httpput);
                     Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
+                    changed = true;
                 } catch (IOException e) {
                     Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
                 }
@@ -1073,9 +1133,18 @@ public class WidgetUpdate {
                     os.close();
                     int responseCode = urlConnection.getResponseCode();
                     Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
+                    changed = true;
                 } catch (IOException e) {
                     Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
                 }
+            }
+            if (changed) {
+                //store last update in prefs for next start
+                SharedPreferences.Editor prefEditor = sharedparams.edit();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date tempdate = new Date();
+                prefEditor.putString("last_device_update", df.format(tempdate));
+                prefEditor.commit();
             }
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());

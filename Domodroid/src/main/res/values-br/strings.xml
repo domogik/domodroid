@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?><!--
+    * This file is part of Domodroid.
+    *
+    * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
+    *
+    * Domodroid is free software: you can redistribute it and/or modify it under the
+    * terms of the GNU General Public License as published by the Free Software
+    * Foundation, either version 3 of the License, or (at your option) any later
+    * version.
+    *
+    * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
+    * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+    * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License along with
+    * Domodroid. If not, see <http://www.gnu.org/licenses/>.
+    -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Domodroid</string>
+    <string name="button2">Kenrouedad</string>
+    <string name="button4">Diwar-benn</string>
+    <string name="bt_next">War-lerc\'h</string>
+    <string name="bt_year">Warlene</string>
+    <string name="bt_month">Ar miz diwezhañ</string>
+    <string name="bt_week">Ar sizhun dremenet</string>
+    <string name="Ok">Mat eo</string>
+    <string name="help_Title">Domodroid</string>
+    <string name="help_Text5">Darempred dre listenn bostel: :\ndomogik-developers@lists.labs.libre-entreprise.org</string>
+    <string name="help_Text6">Kît war hon heul war dTwitter :\nhttps://twitter.com/domogik</string>
+    <string name="help_Text7">https://twitter.com/newdomodroid</string>
+    <string name="splash_title_old">Degemer mat war zDomodroid 1.3 !</string>
+    <string name="splash_title">Degemer mat war zDomodroid 1.4 !</string>
+    <string name="reloadOK">Ya</string>
+    <string name="reloadNO">Ket</string>
+    <string name="home_button4">Diwar-benn</string>
+    <string name="Rename_file_OK">Ya</string>
+    <string name="Rename_file_NO">Ket</string>
+    <string name="delete_map__OK">Ya</string>
+    <string name="delete_map__NO">Ket</string>
+    <string name="changelog_ok_button">Mat eo</string>
+</resources>

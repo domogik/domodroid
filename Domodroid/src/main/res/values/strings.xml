@@ -385,6 +385,7 @@
     <string name="smoky">Smoky</string>
     <string name="info23">Blustery</string>
     <string name="blustery">Blustery</string>
+    <string name="breezy">Breezy</string>
     <string name="info24">Windy</string>
     <string name="windy">Windy</string>
     <string name="info25">Cold</string>
@@ -439,6 +440,7 @@
     <string name="not_available">Not available</string>
     <string name="info48" translatable="false">--</string>
     <string name="rain">Rain</string>
+    <string name="mostly_sunny">Mostly Sunny</string>
 
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>
@@ -548,7 +550,6 @@
     <string name="fog">Fog</string>
     <string name="inactive">Inactive</string>
     <string name="active">Active</string>
-    <string name="sms_sended">SMS sended</string>
     <string name="ok" tools:ignore="ButtonCase">Ok</string>
     <string name="sensor_script_info_binary">Sensor Script info binary</string>
     <string name="sensor_script_info_number">Sensor Script info number</string>
@@ -564,8 +565,8 @@
     <string name="sync_2_error_assoc">Domogik 2 can\'t load base/feature_association/list</string>
     <string name="sync_2_error_ui">Domogik 2 can\'t load base/ui_config/list</string>
     <string name="sync_3_error_feature">Domogik 3 can\'t load base/feature/list</string>
-    <string name="sync_4_error_device">Domogik 4 can\'t load device json. Check your configuration</string>
-    <string name="sync_4_error_datatype">"Domogik 4 can\'t load datatype json. Check your configuration"</string>
+    <string name="sync_4_error_device">Domogik can\'t load device json. Check your configuration</string>
+    <string name="sync_4_error_datatype">"Domogik can\'t load datatype json. Check your configuration"</string>
     <string name="connection_error">Connection error</string>
     <string name="sync_0">Loading Configuration… 0%</string>
     <string name="sync_load">Loading Configuration…</string>
@@ -683,11 +684,17 @@
     <string name="make">Make</string>
     <string name="carid">Car ID</string>
     <string name="ignition_status">Ignition Status</string>
-    <string name="highbeam_status">HighBeam Status</string>
-    <string name="lowbeam_status">LowBeam Status</string>
-    <string name="headlight_status">HeadLight Status</string>
+    <string name="high_beam_status">HighBeam Status</string>
+    <string name="low_beam_status">LowBeam Status</string>
+    <string name="head_light_status">HeadLight Status</string>
+    <string name="left_indicator_status">Left Indicator Status</string>
+    <string name="right_indicator_status">Right Indicator Status</string>
+    <string name="hazard_lights_status">Hazard Lights Status</string>
+    <string name="rear_fog_lights_status">Rear Fog Lights Status</string>
+    <string name="front_fog_light_status">Front Fog Lights Status</string>
     <string name="lock_status">Lock Status</string>
     <string name="odometer">Odometer</string>
+    <string name="location">Location</string>
     <string name="position">Position</string>
     <string name="fuel_level">Fuel Level</string>
     <string name="set_away">Set Away</string>
@@ -718,6 +725,7 @@
     <string name="command_rejected">Command to server rejected</string>
     <string name="soon">Soon......</string>
     <string name="option_graph_height">Size of the graph (min>260)</string>
+    <string name="option_graph_height_summary">Use it with precaution</string>
     <string name="option_widget_timestamp_ago">Display timestamp as ago</string>
     <string name="option_widget_timestamp_date">Display timestamp as date</string>
     <string name="option_widget_timestamp_title">Timestamp display</string>
@@ -791,7 +799,7 @@
     <string name="False">False</string>
     <string name="True">True</string>
     <string name="year">Year</string>
-    <string name="command_sent">Command sent to rest:</string>
+    <string name="command_sent">Command sent to rest!</string>
     <string name="heavyraininhour">heavy Rain In Hour</string>
     <string name="raininhour">Rain In Hour</string>
     <string name="rainlevel55mn">Rain level 55mn</string>
@@ -823,10 +831,33 @@
     <string name="master_bedroom">Master  Bedroom</string>
     <string name="outside">Outside</string>
     <string name="upstairs">Upstairs</string>
-    <string name="contact_devs">This Widget type is not handle for now contact devs</string>
+    <string name="contact_devs">This one is not handle for now contact devs</string>
     <string name="MQ_req_rep_port">MQ req rep port</string>
     <string name="qr_code_is_valid">Qrcode is valid:</string>
     <string name="no_qrcode_scanner">QRcode scanner apps not found</string>
     <string name="no_qrcode_question">Download a scanner code activity from market ?</string>
     <string name="no_market_apps">"No market apps installed on this device."</string>
+    <string name="base">Base</string>
+    <string name="vigilancerisk">Vigilance Risk</string>
+    <string name="vigilancecolor">Vigilance color</string>
+    <string name="vigilancedep">Vigilance Departement</string>
+    <string name="vigilancecolorthunderstorms">Vigilance color Thunderstorms</string>
+    <string name="vigilancecolorwind">Vigilance color Wind</string>
+    <string name="vigilancecolorsubmersion">Vigilance color Submersion</string>
+    <string name="vigilancecoloravalanches">Vigilance color Avalanches</string>
+    <string name="vigilancecolorrain">Vigilance color Rain</string>
+    <string name="vigilanceinfo">Vigilance Info</string>
+    <string name="vigilancecolorcold">Vigilance color Cold</string>
+    <string name="vigilancecolorflood">Vigilance color Flood</string>
+    <string name="vigilancecolorheat">Vigilance color Heat</string>
+    <string name="vigilancecolorsnow">Vigilance color Snow</string>
+    <string name="no_vigilance">No vigilance</string>
+    <string name="too_many_sms_were_sent_in_too_little_time.">Too many SMS were sent in too little time.</string>
+    <string name="sms_sended">SMS sended</string>
+    <string name="sms_not_sended">SMS not sended</string>
+    <string name="alive">Alive</string>
+    <string name="command_sending">Sending command to rest...</string>
+    <string name="loading_data_from_rest">Loading values from rest...</string>
+    <string name="underscore"> - </string>
+    <string name="widget_error">Something were wrong with</string>
 </resources>

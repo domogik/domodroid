@@ -17,7 +17,9 @@
  */
 package activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +52,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
 import org.domogik.domodroid13.R;
@@ -96,9 +99,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private ImageView appname;
 
     private ViewGroup VG_parent;
+    public static ScrollView SV_Main_ScrollView;
     private Vector<String[]> history;
     private int historyPosition;
     private LinearLayout LL_house_map;
+    private LinearLayout LL_area;
+    private LinearLayout LL_room;
+    private LinearLayout LL_activ;
     private Basic_Graphical_zone house;
     private Basic_Graphical_zone map;
 
@@ -127,6 +134,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     public static ArrayList<HashMap<String, String>> listItem;
     private ListView listePlace;
     private SimpleAdapter adapter_map;
+
+    private PendingIntent pendingIntent_for_metrics;
+    private Intent intent_for_metrics;
+    private AlarmManager processTimer_for_metrics;
 
     /**
      * Called when the activity is first created.
@@ -166,6 +177,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             getSupportActionBar().setDisplayHomeAsUpEnabled(true); // this sets the button visible
             getSupportActionBar().setHomeButtonEnabled(true); // makes it clickable
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
+        }
+        //Register metrics
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            int repeatTime = 30;  //Repeat alarm time in seconds
+            processTimer_for_metrics = (AlarmManager) getSystemService(ALARM_SERVICE);
+            intent_for_metrics = new Intent(this, metrics.MetricsServiceReceiver.class);
+            pendingIntent_for_metrics = PendingIntent.getBroadcast(this, 0, intent_for_metrics, PendingIntent.FLAG_UPDATE_CURRENT);
+            //get metrics every 30s
+            processTimer_for_metrics.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent_for_metrics);
         }
 
         initView();
@@ -326,6 +346,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     if (end_of_init_requested)
                         end_of_init();
                     PG_dialog_message.dismiss();
+                    //refresh view when initial cache ready #33
+                    refresh();
                 }
             }
         };
@@ -333,6 +355,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        //Mains global scroll view
+        SV_Main_ScrollView = (ScrollView) findViewById(R.id.Main_ScrollView);
         //Parent view
         VG_parent = (ViewGroup) findViewById(R.id.home_container);
 
@@ -340,6 +364,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         LL_house_map.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         LL_house_map.setOrientation(LinearLayout.HORIZONTAL);
         LL_house_map.setPadding(5, 5, 5, 5);
+
+        LL_area = new LinearLayout(this);
+        LL_area.setOrientation(LinearLayout.VERTICAL);
+        LL_room = new LinearLayout(this);
+        LL_room.setOrientation(LinearLayout.VERTICAL);
+        LL_activ = new LinearLayout(this);
+        LL_activ.setOrientation(LinearLayout.VERTICAL);
 
         house = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "House"),
@@ -465,6 +496,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
+        //get metrics every 30s
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            int repeatTime = 30;  //Repeat alarm time in seconds
+            AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            processTimer.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent);
+        }
         Tracer.v(mytag + ".onResume", "Check if initialize requested !");
         if (!init_done) {
             Tracer.v(mytag + ".onResume", "Init not done!");
@@ -498,7 +537,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 WU_widgetUpdate.set_sleeping();    //Don't cancel the cache engine : only freeze it
             }
         }
-
+        //Stop metrics.
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        }
     }
 
     @Override
@@ -530,6 +572,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 			Tracer = null;
 		}
 		 */
+        //Stop metrics.
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        }
     }
 
     private void Create_message_box() {
@@ -693,10 +739,16 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         } else {
             Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            if (!init_done) {
-                historyPosition = 0;
-                history.add(historyPosition, new String[]{"0", "root"});
-                refresh();
+            if (SP_params.getBoolean("SYNC", false)) {
+                if (!init_done) {
+                    historyPosition = 0;
+                    history.add(historyPosition, new String[]{"0", "root"});
+                    refresh();
+                }
+            } else {
+                if (AD_notSyncAlert == null)
+                    createAlert();
+                AD_notSyncAlert.show();
             }
         }
 
@@ -784,49 +836,27 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
         VG_parent.removeAllViews();
-        LinearLayout LL_area = new LinearLayout(this);
-        LL_area.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout LL_room = new LinearLayout(this);
-        LL_room.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout LL_activ = new LinearLayout(this);
-        LL_activ.setOrientation(LinearLayout.VERTICAL);
 
         LL_house_map.removeAllViews();
         LL_house_map.addView(house);
         LL_house_map.addView(map);
+        LL_area.removeAllViews();
+        LL_activ.removeAllViews();
+        LL_room.removeAllViews();
 
         try {
             int mytype = 0;
             switch (type) {
                 case "root":
-                    LL_area.removeAllViews();
                     VG_parent.addView(LL_house_map);    // House & map
                     if (!by_usage) {
                         // Version 0.2 or un-force by_usage : display house, map and areas
                         LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
                         VG_parent.addView(LL_area);    //and areas
-                        LL_activ.removeAllViews();
-                        // #33 here
-                        // add try catch because on settings reload it crash
-                        try {
-                            while (!WU_widgetUpdate.ready) {
-                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
-                            }
-                        } catch (Exception e1) {
-                            Tracer.e(mytag, e1.toString());
-                        }
+
                         LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
                     } else {
                         // by_usage
-                        // #33 here too
-                        // add try catch because on settings reload it crash
-                        try {
-                            while (!WU_widgetUpdate.ready) {
-                                //Wait the widgetupdate to be ready or this widgets won't be refreshed
-                            }
-                        } catch (Exception e) {
-                            Tracer.e(mytag, e.toString());
-                        }
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
                         int load_area;
                         try {
@@ -838,7 +868,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         //LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
                         LL_room = WM_Agent.loadRoomWidgets(this, load_area, LL_room, SP_params);    //List of known usages 'as rooms'
                         VG_parent.addView(LL_room);
-                        LL_activ.removeAllViews();
+
                         //LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                         LL_activ = WM_Agent.loadActivWidgets(this, load_area, "area", LL_activ, SP_params, mytype);//add widgets in area 1
                     }
@@ -846,19 +876,15 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 /*Should never arrive in this type.
                 }else if(type.equals("house")) {
 				//Only possible if Version 0.2 or un-force by_usage (the 'house' is never proposed to be clicked)
-				LL_area.removeAllViews();
 				VG_parent.addView(LL_house_map);	// House & map
 				LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
 				VG_parent.addView(LL_area);	//and areas
-				LL_activ.removeAllViews();
 				LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ,SP_params, mytype);
 				VG_parent.addView(LL_activ);
 				 */
                     break;
                 case "statistics":
                     //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
-                    LL_area.removeAllViews();
-                    LL_activ.removeAllViews();
                     LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
                     VG_parent.addView(LL_activ);
 
@@ -868,24 +894,27 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     if (!by_usage) {
                         VG_parent.addView(LL_house_map);    // House & map
                     }
-                    LL_room.removeAllViews();
                     LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
-
                     VG_parent.addView(LL_room);
-                    LL_activ.removeAllViews();
-                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
 
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
                     VG_parent.addView(LL_activ);
 
                     break;
                 case "room":
-                    LL_activ.removeAllViews();
                     LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
                     VG_parent.addView(LL_activ);
                     break;
             }
             update_navigation_menu();
             Tracer.d(mytag, "List item= " + listItem.toString());
+            //redraw the scrollview at the top position of the screen
+            SV_Main_ScrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    SV_Main_ScrollView.scrollTo(0, 0);
+                }
+            });
         } catch (Exception e) {
             Tracer.e(mytag, "Can't load area/room or widgets");
             Tracer.e(mytag, e.toString());
@@ -1022,7 +1051,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 Intent helpI1 = new Intent(Activity_Main.this, Activity_About.class);
                 startActivity(helpI1);
                 return true;
-            /*todo disable until it works as in the past
             case R.id.menu_stats:
                 if (SP_params.getBoolean("SYNC", false)) {
                     loadWigets(0, "statistics");
@@ -1034,7 +1062,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     AD_notSyncAlert.show();
                 }
                 return true;
-            */
             case R.id.menu_sync:
                 // click on 'sync' button into Sliding_Drawer View
                 run_sync_dialog();        // And run a resync with Rinor server
@@ -1107,7 +1134,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     }
 
     private void refresh() {
-        loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+        try {
+            loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+        } catch (Exception e) {
+            Tracer.e(mytag, "Can not refresh this view");
+        }
     }
 
     public void update_navigation_menu() {

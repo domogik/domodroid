@@ -19,10 +19,10 @@ android {
 
     defaultConfig {
         applicationId "org.domogik.domodroid13"
-        minSdkVersion 8
-        targetSdkVersion 8
-        versionCode = 24
-        versionName = "1.4"
+        minSdkVersion 9
+        targetSdkVersion 9
+        versionCode = 25
+        versionName = "1.4_android_studio"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -30,8 +30,14 @@ android {
     }
     buildTypes {
 
+        debug {
+            testCoverageEnabled = true
+        }
+
         release {
-            minifyEnabled false
+            testCoverageEnabled = true
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -49,16 +55,25 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
     compile 'org.zeromq:jeromq:0.3.6'
     //compile 'com.github.orhanobut:logger:1.12'
     compile 'com.github.curioustechizen.android-ago:library:1.3.2'
     // Acra Application Crash Reports for Android libraries
     compile 'ch.acra:acra:4.9.0'
+    //Anr catch
+    compile 'com.github.anrwatchdog:anrwatchdog:1.3.0'
+    //slider preferences
+    compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
+    //Openstreetmap api lib
+    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
     // Test libraries
     testCompile 'junit:junit:4.12'
+    //codecov
+    //classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
 }
+//apply plugin: 'com.vanniktech.android.junit.jacoco'

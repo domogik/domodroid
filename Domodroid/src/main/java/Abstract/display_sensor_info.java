@@ -114,6 +114,35 @@ public abstract class display_sensor_info {
                         LL_featurePan.addView(LL_Temp);
                         LL_featurePan.addView(timestamp);
                         break;
+                    case "°C":
+                    case "K":
+                    case "°F":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf055;"), TextView.BufferType.SPANNABLE);
+                        break;
+                    case "bar":
+                    case "mbar":
+                    case "Pa":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
+                        break;
+                    case "ms":
+                    case "s":
+                    case "min":
+                    case "h":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf08a;"), TextView.BufferType.SPANNABLE);
+                        break;
+                    case "Year":
+                    case "Month":
+                    case "Day":
+                        value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
+                        state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf073;"), TextView.BufferType.SPANNABLE);
+                        break;
                     default:
                         value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         if (state_key.equalsIgnoreCase("current_wind_speed")) {
@@ -122,12 +151,6 @@ public abstract class display_sensor_info {
                         } else if (state_key.equalsIgnoreCase("current_humidity")) {
                             state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf07a;"), TextView.BufferType.SPANNABLE);
-                        } else if (state_key.equalsIgnoreCase("current_barometer_value")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf079;"), TextView.BufferType.SPANNABLE);
-                        } else if (state_key.contains("temperature")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf053;"), TextView.BufferType.SPANNABLE);
                         } else if (state_key.equalsIgnoreCase("weight")) {
                             state_key_view.setTypeface(typefaceawesome, Typeface.NORMAL);
                             state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf24e;"), TextView.BufferType.SPANNABLE);
@@ -176,14 +199,14 @@ public abstract class display_sensor_info {
                             case "1":
                                 value.setText(context.getResources().getIdentifier("wi_cloud", "string", context.getPackageName()));
                                 break;
-                            case "5":
-                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
-                                break;
                             case "3":
                                 value.setText(context.getResources().getIdentifier("wi_hail", "string", context.getPackageName()));
                                 break;
                             case "4":
                                 value.setText(context.getResources().getIdentifier("wi_rain", "string", context.getPackageName()));
+                                break;
+                            case "5":
+                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
                                 break;
                             default:
                                 value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
@@ -192,7 +215,7 @@ public abstract class display_sensor_info {
 
                     } catch (Exception e1) {
                         Tracer.e(mytag, "no translation for: " + loc_Value);
-                        e1.toString();
+                        e1.printStackTrace();
                         value.setText(loc_Value);
                     }
                 } else value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value));
@@ -221,42 +244,39 @@ public abstract class display_sensor_info {
                     }
                     value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
                 } else {
-                    try {
-                        value.setText(translate.do_translate(context, Tracer, loc_Value));
-                    } catch (Exception e1) {
-                        value.setText(loc_Value);
-                    }
-                }
+
+                        if (state_key.equalsIgnoreCase("current_sunset")) {
+                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
+                            value.setText(hour_convertion(Tracer, mytag, loc_Value));
+                        } else if (state_key.equalsIgnoreCase("current_sunrise")) {
+                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
+                            value.setText(hour_convertion(Tracer, mytag, loc_Value));
+                        } else if (state_key.equalsIgnoreCase("current_last_updated")) {
+                            // convert value to translated date in locale settings
+                            try {
+                                loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
+                                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
+                                Date testDate = sdf.parse(loc_Value);
+                                Tracer.d(mytag + " Date conversion", "Works");
+                                SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
+                                String newFormat = formatter.format(testDate);
+                                value.setText(newFormat);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
+                                value.setText(loc_Value);
+                            }
+                        } else if (state_key.equalsIgnoreCase("callerid")) {
+                            value.setText(phone_convertion(Tracer, mytag, loc_Value));
+                        } else {
+                            value.setText(translate.do_translate(context, Tracer, loc_Value));
+                        }
+                                    }
             } catch (Exception e1) {
                 Tracer.d(mytag, "no translation for: " + loc_Value);
-                if (state_key.equalsIgnoreCase("current_sunset")) {
-                    state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                    state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
-                    value.setText(hour_convertion(Tracer, mytag, loc_Value));
-                } else if (state_key.equalsIgnoreCase("current_sunrise")) {
-                    state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                    state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
-                    value.setText(hour_convertion(Tracer, mytag, loc_Value));
-                } else if (state_key.equalsIgnoreCase("current_last_updated")) {
-                    // convert value to translated date in locale settings
-                    try {
-                        loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
-                        Date testDate = sdf.parse(loc_Value);
-                        Tracer.d(mytag + " Date conversion", "Works");
-                        SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
-                        String newFormat = formatter.format(testDate);
-                        value.setText(newFormat);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
-                        value.setText(loc_Value);
-                    }
-                } else if (state_key.equalsIgnoreCase("callerid")) {
-                    value.setText(phone_convertion(Tracer, mytag, loc_Value));
-                } else {
-                    value.setText(loc_Value);
-                }
+                value.setText(loc_Value);
             }
         }
     }

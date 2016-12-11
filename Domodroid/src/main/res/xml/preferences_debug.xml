@@ -77,6 +77,12 @@
             android:summaryOff="Device id hide"
             android:summaryOn="Device id show"
             android:title="@string/network_Text18" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="domodroid_metrics"
+            android:summaryOff="Metrics disabled"
+            android:summaryOn="Metrics enabled"
+            android:title="Domodroid Metrics informations" />
 
     </PreferenceCategory>
 </PreferenceScreen>

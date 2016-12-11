@@ -1,13 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.domogik.domodroid13"
-    android:versionCode="24"
-    android:versionName="1.4">
+    package="org.domogik.domodroid13">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-sdk android:minSdkVersion="8" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -62,8 +59,12 @@
             android:name="mq.ZMQService"
             class="mq.ZMQService"
             android:exported="false"
-            android:process=":zmq_service"></service>
-
+            android:process=":zmq_service" />
+        <receiver android:name="metrics.MetricsServiceReceiver">
+            <intent-filter>
+                <action android:name="MetricsServiceReceiver" />
+            </intent-filter>
+        </receiver>
         <provider
             android:name="database.DmdContentProvider"
             android:authorities="database.DmdContentProvider"

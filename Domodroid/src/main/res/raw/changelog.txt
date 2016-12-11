@@ -20,8 +20,33 @@
   </head>
   <body>
     $ 1.4
-      % Version 24
+      % Version 25
       _ 2016-xx-xx
+      * Works on #132 timeout or empty response form rest
+      * Toasts when sending commands/widget crash/waiting data from rest
+      * #131 Avoid ANR when calling history of a sensor
+      * Avoid ANR at start when calling rest
+      * Avoid white page on start instead of dialog cache engine
+      * Re-Close #71 display color in sensor for DT_ColorRGBHexa
+      * Close #129 #22 Scroll command list, map or graph without scrolling main view
+      * Close #128 navigate in place now always start on the top of screen
+      * Close #126 for Breezy in weather widget
+      * Close #123 unknown display instead of value off if no value from rest
+      * Close #121 renaming encoding issues
+      * #33 finally really solved
+      * #122 Start working on Metrics
+      * New widget including openstreetmap for current position when opening widget
+      * minify and shrink resources (3.8Mo>2.9Mo)
+      * #109 Slider bar for graph size in preference (bug in lib for max value)
+      * Close #99 Handle new device created/modified when offline
+      * Start working on #19
+      * Close #120 Adding an ANR catch lib
+      * Close #105 statistics of server exchange are back
+      * Correct widget selector for DT_HVACFan
+      * Sort sensor and commands at sync by sensor_id or command_id for 0.5
+      * Still more translation #38 for sensors and commands
+      % Version 24
+      _ 2016-10-15
       ! Important do not hesitate to use ACRA crash report to help developer correct those.
       * #37 handle widget not existing
       * #38 more sensor/command types in translation

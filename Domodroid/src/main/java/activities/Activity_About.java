@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
 
 import misc.changelog;
@@ -63,8 +64,8 @@ public class Activity_About extends AppCompatActivity implements OnClickListener
             //set text in the activity_help versiontText textview
             //it's a concatenation of version from string.xml, the versionCode and versionName from AndroidManifest.xml
             String vcs = "??";
-            String vns = getVersionName();
-            int vc = getVersionCode();
+            String vns = BuildConfig.VERSION_NAME;
+            int vc = BuildConfig.VERSION_CODE;
             if (vc != -1)
                 vcs = Integer.toString(vc);
             TV_versionText.setText(pn + " " + vns + " " + getString(R.string.version) + "_" + vcs);
@@ -86,32 +87,6 @@ public class Activity_About extends AppCompatActivity implements OnClickListener
         super.onDestroy();
     }
 
-    private String getVersionName() {
-        //set a fake version
-        String version = "??";
-        try {
-            //get versionName from AndroidManifest.xml
-            PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
-            version = pi.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            Tracer.e(mytag, "Version name not found in package");
-        }
-        return version;
-    }
-
-    private int getVersionCode() {
-        //set a fake code
-        int version = -1;
-        String pn = getPackageName();
-        try {
-            //get versionCode from AndroidManifest.xml
-            PackageInfo pi = getPackageManager().getPackageInfo(pn, 0);
-            version = pi.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            Tracer.e(mytag, "Version number not found in package");
-        }
-        return version;
-    }
 
     public void onClick(View v) {
         changelog changelog = new changelog(this);

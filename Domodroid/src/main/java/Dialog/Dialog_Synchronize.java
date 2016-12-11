@@ -20,7 +20,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import activities.Activity_Main;
 import database.Cache_management;
@@ -48,6 +52,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private float previous_api_version = 0f;
     private boolean by_usage;
     private int progress;
+    private String last_device_update;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
         super(context);
@@ -62,6 +67,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
         SSL = params.getBoolean("ssl_activate", false);
+        last_device_update = params.getString("last_device_update", "1900-01-01 00:00:00");
 
         handler = new Handler() {
             @Override
@@ -203,14 +209,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_rinor;
             String mytag = "Dialog_Synchronize";
             try {
-                json_rinor = Rest_com.connect_jsonobject(Tracer, urlAccess, login, password, 3000, SSL);
+                json_rinor = Rest_com.connect_jsonobject(Tracer, urlAccess, login, password, 30000, SSL);
 
                 publishProgress(2);
             } catch (Exception e) {
                 Tracer.e(mytag, "Error connecting to rinor");
                 json_rinor = null;
             }
-            if (json_rinor == null) {
+            if (json_rinor == null || json_rinor.toString().equals("{}")) {
                 //Cannot connect to server...
                 Bundle b = new Bundle();
                 //Notify error to parent Dialog
@@ -313,8 +319,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             }
 
             if (Rinor_Api_Version <= 0.5f) {
-                json_AreaList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/area/list/", login, password, 3000, SSL);
-                if (json_AreaList == null) {
+                json_AreaList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/area/list/", login, password, 30000, SSL);
+                if (json_AreaList == null || json_AreaList.toString().equals("{}")) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
@@ -327,8 +333,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 Tracer.d(mytag, "AreaList = <" + json_AreaList.toString() + ">");
 
                 publishProgress(20);
-                json_RoomList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/room/list/", login, password, 3000, SSL);
-                if (json_RoomList == null) {
+                json_RoomList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/room/list/", login, password, 30000, SSL);
+                if (json_RoomList == null || json_RoomList.toString().equals("{}")) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
@@ -341,8 +347,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 Tracer.d(mytag, "RoomList = <" + json_RoomList.toString() + ">");
 
                 publishProgress(40);
-                json_FeatureList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature/list", login, password, 3000, SSL);
-                if (json_FeatureList == null) {
+                json_FeatureList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature/list", login, password, 30000, SSL);
+                if (json_FeatureList == null || json_FeatureList.toString().equals("{}")) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
@@ -354,8 +360,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 }
 
                 publishProgress(60);
-                json_FeatureAssociationList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature_association/list/", login, password, 3000, SSL);
-                if (json_FeatureAssociationList == null) {
+                json_FeatureAssociationList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature_association/list/", login, password, 30000, SSL);
+                if (json_FeatureAssociationList == null || json_FeatureAssociationList.toString().equals("{}")) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
@@ -366,8 +372,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(80);
-                json_IconList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/ui_config/list/", login, password, 3000, SSL);
-                if (json_IconList == null) {
+                json_IconList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/ui_config/list/", login, password, 30000, SSL);
+                if (json_IconList == null || json_IconList.toString().equals("{}")) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
@@ -381,8 +387,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
             } else if (Rinor_Api_Version <= 0.6f) {
                 // Function special Basilic domogik 0.3
-                json_FeatureList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature/list", login, password, 3000, SSL);
-                if (json_FeatureList == null) {
+                json_FeatureList = Rest_com.connect_jsonobject(Tracer, urlAccess + "base/feature/list", login, password, 30000, SSL);
+                if (json_FeatureList == null || json_FeatureList.toString().equals("{}")) {
                     // Cannot connect to Rinor server.....
                     Bundle b = new Bundle();
                     //Notify error to parent Dialog
@@ -580,8 +586,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     });
                     Tracer.e(mytag, "ERROR getting MQ information");
                 }
-                json_FeatureList1 = Rest_com.connect_jsonarray(Tracer, urlAccess + "device", login, password, 3000, SSL);
-                if (json_FeatureList1 == null) {
+                json_FeatureList1 = Rest_com.connect_jsonarray(Tracer, urlAccess + "device", login, password, 30000, SSL);
+                if (json_FeatureList1 == null || json_FeatureList1.toString().equals("[]")) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");
                     context.runOnUiThread(new Runnable() {
@@ -599,8 +605,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(14);
-                JSONObject Json_data_type = Rest_com.connect_jsonobject(Tracer, urlAccess + "datatype", login, password, 3000, SSL);
-                if (Json_data_type == null) {
+                JSONObject Json_data_type = Rest_com.connect_jsonobject(Tracer, urlAccess + "datatype", login, password, 30000, SSL);
+                if (Json_data_type == null || (Json_data_type.toString().equals("{}"))) {
                     // Cannot get data_type from Rinor server.....
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
                     context.runOnUiThread(new Runnable() {
@@ -715,8 +721,46 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 publishProgress(55);
 
                 int list_size = 0;
-                if (json_FeatureList1 != null)
+                if (json_FeatureList1 != null) {
                     list_size = json_FeatureList1.length();
+                    if (Rinor_Api_Version >= 0.8f) {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date timestamplast_device_update;
+                        Date timestamplast_update = new Date();
+                        boolean newer = false;
+                        try {
+                            timestamplast_device_update = df.parse(last_device_update);
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "No saved date or error parsing it");
+                            timestamplast_device_update = new Date();
+                        }
+                        try {
+                            //test info_changed:
+                            for (int i = 0; i < json_FeatureList1.length(); i++) {
+                                try {
+                                    String last_update = json_FeatureList1.getJSONObject(i).getString("info_changed");
+                                    timestamplast_update = df.parse(last_update);
+                                    //compare to latest update
+                                    if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
+                                        newer = true;
+                                        timestamplast_device_update = timestamplast_update;
+                                        Tracer.v(mytag, "device info_changed at: " + timestamplast_update.toString());
+                                    }
+                                } catch (Exception E) {
+                                    timestamplast_update = new Date();
+                                    Tracer.d(mytag, "Exception info_changed:" + E);
+                                }
+                            }
+                            if (newer) {
+                                //store last update in prefs for next start
+                                prefEditor.putString("last_device_update", df.format(timestamplast_device_update));
+                                prefEditor.commit();
+                            }
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Error trying to parse /device and info_changed");
+                        }
+                    }
+                }
                 Tracer.i(mytag, "Device list size = " + list_size);
                 for (int i = 0; i < list_size; i++) {
                     progress = 55 + (35 * i / list_size);
@@ -736,6 +780,18 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         Tracer.e(mytag, e1.toString());
                     }
                     JSONArray listsensor = json_Sensors.names();
+
+                    //Sort list sensors by sensors id
+                    List<String> sesnoridlist = new ArrayList<String>();
+                    if (list_sensors > 0) {
+                        for (int y = 0; y < list_sensors; y++)
+                            try {
+                                sesnoridlist.add(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
+                            } catch (JSONException e) {
+                                Tracer.e(mytag, "sorting error" + e.toString());
+                            }
+                        Collections.sort(sesnoridlist);
+                    }
                     //List all sensors
                     for (int y = 0; y < list_sensors; y++) {
                         try {
@@ -800,14 +856,13 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             JSONObject Widget = new JSONObject();
                             try {
                                 Widget.put("place_type", "room");
-                                //#85 here place_id wass false
+                                //#85 here place_id was false
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
-                                Widget.put("id", k);
+                                Widget.put("id", k + sesnoridlist.indexOf(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id")));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            k++;
                             JSONObject device_feature = new JSONObject();
                             device_feature1 = new JSONObject();
                             String data_type = null;
@@ -843,7 +898,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            //For 0.4 make a loop until no more parent data_type
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
@@ -866,6 +920,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
+                            //For 0.4 make a loop until no more parent data_type
                             while (!parent_again) {
                                 try {
                                     parent_type = Json_data_type.getJSONObject(tempdata_type).getString("parent");
@@ -898,6 +953,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                         }
                     }
+                    k = k + list_sensors;
                     //Create feature from commands
                     int list_commands = 0;
                     try {
@@ -915,6 +971,18 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         Tracer.e(mytag, e1.toString());
                     }
                     JSONArray listcommand = json_Commands.names();
+
+                    //Sort list commands by commands id
+                    List<String> commandidlist = new ArrayList<String>();
+                    if (list_commands > 0) {
+                        for (int y = 0; y < list_commands; y++)
+                            try {
+                                commandidlist.add(json_Commands.getJSONObject(listcommand.getString(y)).getString("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        Collections.sort(commandidlist);
+                    }
                     //List all commands
                     for (int y = 0; y < list_commands; y++) {
                         try {
@@ -995,11 +1063,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 //#85 here place_id was false
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1);
                                 Widget.put("device_feature_id", tempid);
-                                Widget.put("id", k);
+                                Widget.put("id", k + commandidlist.indexOf(json_Commands.getJSONObject(listcommand.getString(y)).getString("id")));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            k++;
                             String data_type = null;
                             try {
                                 data_type = json_Commands.getJSONObject(listcommand.getString(y)).getJSONArray("parameters").getJSONObject(0).getString("data_type");
@@ -1041,7 +1108,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
-                            //For 0.4 make a loop until no more parent data_type
                             JSONObject parameters = new JSONObject();
                             String parent_type = null;
                             boolean parent_again = false;
@@ -1064,6 +1130,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             } catch (Exception e) {
                                 Tracer.d(mytag, "NO values for this dt_type: " + data_type);
                             }
+                            //For 0.4 make a loop until no more parent data_type
                             while (!parent_again) {
                                 try {
                                     parent_type = Json_data_type.getJSONObject(tempdata_type).getString("parent");
@@ -1129,6 +1196,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                         }
                     }
+                    k = k + list_commands;
                     // for loop on feature list...
 
                     //Prepare list of rooms, and list of usable features

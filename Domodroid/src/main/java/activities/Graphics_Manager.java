@@ -50,6 +50,12 @@ public class Graphics_Manager {
                         return R.drawable.usage_door_off;
                     case "electricity":
                         return R.drawable.usage_electricity_off;
+                    case "lowbeam":
+                        return R.drawable.usage_lowbeam_off;
+                    case "highbeam":
+                        return R.drawable.usage_highbeam_off;
+                    case "headlight":
+                        return R.drawable.usage_headlight_off;
                     case "heating":
                         return R.drawable.usage_heating_off;
                     case "light":
@@ -275,6 +281,12 @@ public class Graphics_Manager {
                         return R.drawable.usage_electricity_on;
                     case "heating":
                         return R.drawable.usage_heating_on;
+                    case "lowbeam":
+                        return R.drawable.usage_lowbeam_on;
+                    case "highbeam":
+                        return R.drawable.usage_highbeam_on;
+                    case "headlight":
+                        return R.drawable.usage_headlight_on;
                     case "light":
                         return R.drawable.usage_light_on;
                     case "mirror":
@@ -710,7 +722,7 @@ public class Graphics_Manager {
                 usage = "electricity";
             //rainhour
             if (usage.equals("rainForecastLocation") || usage.equals("rainForecastDate") || usage.equals("rainForecastTxt")
-                    || usage.startsWith("rainLevel") || usage.equals("rainInHour")|| usage.equals("heavyRainInHour"))
+                    || usage.startsWith("rainLevel") || usage.equals("rainInHour") || usage.equals("heavyRainInHour"))
                 usage = "humidity";
             // RFXBNZ "temperature", "humidity", "battery", "luminosity", "pressure", "power", "energy", "water", "windspeed", "rainfall", "outflow",
             // "voltage", "current", "homeeasy S_switch", "homeeasy_openclose", "x10_switch", "ati_remote", "generic"
@@ -771,6 +783,13 @@ public class Graphics_Manager {
                 usage = "temperature";
             if (usage.toLowerCase().contains("opening_sensor") || usage.contains("opening.sensor") || usage.contains("opening-sensor") || usage.contains("door-window-sensor"))
                 usage = "door";
+            //Xee
+            if (usage.toLowerCase().equals("high_beam_status"))
+                usage = "lowbeam";
+            if (usage.toLowerCase().equals("low_beam_status"))
+                usage = "headlight";
+            if (usage.toLowerCase().equals("head_light_status"))
+                usage = "highbeam";
             return usage;
 
         } else {

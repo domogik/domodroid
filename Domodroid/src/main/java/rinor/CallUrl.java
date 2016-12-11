@@ -1,6 +1,8 @@
 package rinor;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -8,18 +10,23 @@ import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.domogik.domodroid13.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.net.SocketTimeoutException;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import static activities.Activity_Main.context;
 
 /**
  * Created by fritz on 07/09/15.
@@ -29,9 +36,13 @@ import javax.net.ssl.HttpsURLConnection;
 public class CallUrl extends AsyncTask<String, Void, String> {
     private final String mytag = this.getClass().getName();
     private boolean alreadyTriedAuthenticating = false;
+    private Stats_Com stats_com = Stats_Com.getInstance();
 
     @Override
     protected String doInBackground(String... uri) {
+        if (stats_com == null)
+            stats_com = Stats_Com.getInstance();
+        stats_com.wakeup();
         // TODO : use non deprecated functions
         String url = uri[0];
         final String login = uri[1];
@@ -45,10 +56,12 @@ public class CallUrl extends AsyncTask<String, Void, String> {
             DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
             httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
             HttpResponse response;
-            String responseString = null;
+            String responseString = "";
             try {
                 response = httpclient.execute(new HttpGet(url));
                 StatusLine statusLine = response.getStatusLine();
+                stats_com.add(Stats_Com.EVENTS_SEND, httpclient.getRequestInterceptorCount());
+                stats_com.add(Stats_Com.EVENTS_RCV, httpclient.getResponseInterceptorCount());
                 if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     response.getEntity().writeTo(out);
@@ -63,14 +76,20 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                     }
                     throw new IOException(statusLine.getReasonPhrase());
                 }
+            } catch (SocketTimeoutException | ConnectTimeoutException e) {
+                e.printStackTrace();
+                Log.e(mytag, url);
+                responseString = "ERROR";
             } catch (IOException e) {
+                e.printStackTrace();
                 //TODO Handle problems..
-                // Tracer.e(mytag, "Rinor exception sending command <"+e.getMessage()+">");
-                // Toast.makeText(context, "Rinor exception sending command", Toast.LENGTH_LONG).show();
+                if (e.getMessage().equals("NOT FOUND")) {
+                    responseString = "ERROR";
+                }
             }
             return responseString;
         } else {
-            String responseMessage = null;
+            String responseMessage = "";
             try {
                 if (url.startsWith("http://")) {
                     url = url.replace("http://", "https://");
@@ -87,27 +106,39 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 int responseCode = urlConnection.getResponseCode();
                 responseMessage = urlConnection.getResponseMessage();
                 result = Abstract.httpsUrl.convertStreamToString(instream);
+                stats_com.add(Stats_Com.EVENTS_SEND, urlConnection.getContentLength());
+                stats_com.add(Stats_Com.EVENTS_RCV, responseMessage.length());
                 instream.close();
                 //} catch (HttpHostConnectException e) {
                 //    e.printStackTrace();
-            } catch (IOException e) {
+            } catch (java.net.SocketTimeoutException | java.net.ConnectException e) {
                 e.printStackTrace();
+                responseMessage = "ERROR";
+            } catch (IOException e) {
+                //TODO Handle problems..
+                e.printStackTrace();
+                if (e.getMessage().equals("NOT FOUND")) {
+                    responseMessage = "ERROR";
+                }
             }
             return responseMessage;
         }
     }
-/*
+
     @Override
     protected void onPreExecute() {
         // This method will called during doInBackground is in process
         // Here you can for example show a ProgressDialog
+        Toast.makeText(context, R.string.command_sending, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onPostExecute(Long result) {
+    protected void onPostExecute(String string) {
         // onPostExecute is called when doInBackground finished
         // Here you can for example fill your Listview with the content loaded in doInBackground method
-
+        if (string.equals("ERROR")) {
+            Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
+        }
     }
-*/
 }

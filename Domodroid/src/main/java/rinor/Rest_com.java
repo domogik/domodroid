@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -58,7 +59,7 @@ public class Rest_com {
     @SuppressWarnings("null")
     public static JSONObject connect_jsonobject(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
 
-        JSONObject json = null;
+        JSONObject json = new JSONObject();
         if (!SSL) {
             try {
                 // Set timeout
@@ -130,7 +131,7 @@ public class Rest_com {
 
     @SuppressWarnings("null")
     public static JSONArray connect_jsonarray(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
-        JSONArray json = null;
+        JSONArray json = new JSONArray();
 
         if (!SSL) {
             try {
@@ -164,6 +165,8 @@ public class Rest_com {
                 Tracer.e(mytag, e.toString());
             } catch (ConnectTimeoutException e) {
                 Tracer.e(mytag, "Timeout connecting to domogik");
+            } catch (SocketTimeoutException e) {
+                Tracer.e(mytag, "SocketTimeoutException to domogik");
             } catch (IOException | JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
@@ -192,6 +195,8 @@ public class Rest_com {
                 Tracer.e(mytag, "Unable to resolve host");
             } catch (ConnectTimeoutException e) {
                 Tracer.e(mytag, "Timeout connecting to domogik");
+            } catch (SocketTimeoutException e) {
+                Tracer.e(mytag, "SocketTimeoutException to domogik");
             } catch (IOException | JSONException e) {
                 Tracer.e(mytag, e.toString());
             }

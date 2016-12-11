@@ -234,6 +234,7 @@ public class Events_manager {
                                     }
                                 } else if (result.contains("device.update")) {
                                     Tracer.i(mytag, "New MQ message for device.update : " + result);
+                                    stats_com.add(Stats_Com.EVENTS_RCV, result.length());
                                     try {
                                         JSONObject json_mq_update = new JSONObject(result);
                                         Tracer.i(mytag, "New MQ message for device.update : " + json_mq_update.toString());
@@ -287,7 +288,7 @@ public class Events_manager {
                 }
                 //And send it to server....to create an event ticket
                 String request = ticket_request;
-                JSONObject event = null;
+                JSONObject event = new JSONObject();
                 Boolean ack = false;
                 Tracer.i(mytag, "ListenerThread starts the loop");
                 String ticket = "";
@@ -445,7 +446,7 @@ public class Events_manager {
                     try {
                         Tracer.w(mytag, "Freeing ticket <" + request + ">");
                         stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 3000, SSL);        //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 30000, SSL);        //Blocking request : we must have an answer to continue...
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {
@@ -478,7 +479,7 @@ public class Events_manager {
             stack_in = 0;
         if (event_stack[stack_in] == null) {
             //Position is free !
-            Tracer.w(mytag, "Event stacked at :" + stack_in);
+            Tracer.d(mytag, "Event stacked at :" + stack_in);
             event_stack[stack_in] = event;
             notify_engine(9900); //An event is available
         } else {
@@ -504,7 +505,7 @@ public class Events_manager {
             return null;
         } else {
             Rinor_event result = event_stack[stack_out];
-            Tracer.w(mytag, "Event unstacked from " + stack_out);
+            Tracer.d(mytag, "Event unstacked from " + stack_out);
             event_stack[stack_out] = null;        //free the entry
             return result;
         }

@@ -57,6 +57,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
 
     private final String parameter;
     private int width;
+    private int height;
     private Canvas can;
     private Canvas can2;
     private final Vector<Vector<Float>> values;
@@ -116,6 +117,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final float api_version;
     private Boolean SSL;
     private String unit = "";
+    private Bitmap buffer;
+    private Bitmap text;
 
     public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params, String parameters) {
         super(context);
@@ -126,6 +129,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         password = params.getString("http_auth_password", null);
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
+
 
         try {
             //Basilic add, number feature has a unit parameter
@@ -260,17 +264,16 @@ public class Graphical_Info_View extends View implements OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         width = getMeasuredWidth();
-        int height = getMeasuredHeight();
+        height = getMeasuredHeight();
+        buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        can = new Canvas(buffer);
+        can2 = new Canvas(text);
+
         gridStartY = height - size15;
         gridStopY = size15;
         gridOffset = size15;
         valueOffset = size10;
-
-
-        Bitmap buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-        Bitmap text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-        can = new Canvas(buffer);
-        can2 = new Canvas(text);
 
         drawMessage();
 
@@ -295,7 +298,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         paint.setColor(Color.DKGRAY);
         paint.setAntiAlias(true);
         paint.setTextSize(size15);
-        can2.drawText("Loading Data ...", size10, size15, paint);
+        can2.drawText(getContext().getString(R.string.loading_data_from_rest), size10, size15, paint);
     }
 
     private void drawGrid() {
@@ -617,7 +620,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                 startTimestamp +
                                 "/to/" +
                                 currentTimestamp +
-                                "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
+                                "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
                     } else if (api_version >= 0.7f) {
                         Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                         //Don't forget old "dev_id"+"state_key" is replaced by "id"
@@ -626,7 +629,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                                 startTimestamp +
                                 "/to/" +
                                 currentTimestamp +
-                                "/interval/" + step + "/selector/avg", login, password, 10000, SSL);
+                                "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
                     }
                 } catch (Exception e) {
                     Tracer.d(mytag, "Could not get sensor history.");

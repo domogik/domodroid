@@ -187,7 +187,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     }
 
     private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-
+        // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
             Handler handler = new Handler(context.getMainLooper());
@@ -214,7 +214,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                          }
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
-                                         Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
                                      }
                                  }
 

@@ -475,6 +475,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         chartContainer.setPadding((int) size5, (int) size10, (int) size5, (int) size10);
 
         JSONObject json_GraphValues = null;
+        //todo #131 do this in asynctask
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");

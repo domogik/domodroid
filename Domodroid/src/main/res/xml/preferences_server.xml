@@ -93,7 +93,7 @@
             android:key="MQpubport"
             android:title="@string/Mq_pub_port" />
         <EditTextPreference
-            android:defaultValue="40411"
+            android:defaultValue="40410"
             android:icon="@drawable/ic_mq_pub"
             android:inputType="number"
             android:key="MQreq_repport"

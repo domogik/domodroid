@@ -245,35 +245,35 @@ public abstract class display_sensor_info {
                     value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
                 } else {
 
-                        if (state_key.equalsIgnoreCase("current_sunset")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
-                            value.setText(hour_convertion(Tracer, mytag, loc_Value));
-                        } else if (state_key.equalsIgnoreCase("current_sunrise")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
-                            value.setText(hour_convertion(Tracer, mytag, loc_Value));
-                        } else if (state_key.equalsIgnoreCase("current_last_updated")) {
-                            // convert value to translated date in locale settings
-                            try {
-                                loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
-                                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
-                                Date testDate = sdf.parse(loc_Value);
-                                Tracer.d(mytag + " Date conversion", "Works");
-                                SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
-                                String newFormat = formatter.format(testDate);
-                                value.setText(newFormat);
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                                Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
-                                value.setText(loc_Value);
-                            }
-                        } else if (state_key.equalsIgnoreCase("callerid")) {
-                            value.setText(phone_convertion(Tracer, mytag, loc_Value));
-                        } else {
-                            value.setText(translate.do_translate(context, Tracer, loc_Value));
+                    if (state_key.equalsIgnoreCase("current_sunset")) {
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
+                        value.setText(hour_convertion(Tracer, mytag, loc_Value));
+                    } else if (state_key.equalsIgnoreCase("current_sunrise")) {
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
+                        value.setText(hour_convertion(Tracer, mytag, loc_Value));
+                    } else if (state_key.equalsIgnoreCase("current_last_updated")) {
+                        // convert value to translated date in locale settings
+                        try {
+                            loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
+                            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
+                            Date testDate = sdf.parse(loc_Value);
+                            Tracer.d(mytag + " Date conversion", "Works");
+                            SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
+                            String newFormat = formatter.format(testDate);
+                            value.setText(newFormat);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
+                            value.setText(loc_Value);
                         }
-                                    }
+                    } else if (state_key.equalsIgnoreCase("callerid")) {
+                        value.setText(phone_convertion(Tracer, mytag, loc_Value));
+                    } else {
+                        value.setText(translate.do_translate(context, Tracer, loc_Value));
+                    }
+                }
             } catch (Exception e1) {
                 Tracer.d(mytag, "no translation for: " + loc_Value);
                 value.setText(loc_Value);
@@ -284,6 +284,8 @@ public abstract class display_sensor_info {
     public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
         try {
             String convert_phone = PhoneNumberUtils.formatNumber(phone);
+            // todo it remove the "-" like in jean-phillipe replace bye jeanphillipe
+            // Tracer.d(mytag, "phone convertion from:" + phone + " to " + convert_phone);
             return convert_phone;
         } catch (Exception ex) {
             ex.printStackTrace();

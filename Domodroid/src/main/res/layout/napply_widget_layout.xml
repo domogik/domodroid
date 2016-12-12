@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:background="@drawable/ic_sync_problem_black_24dp"
+        android:background="@drawable/domodroid"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"

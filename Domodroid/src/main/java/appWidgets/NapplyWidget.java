@@ -127,7 +127,7 @@ public class NapplyWidget extends AppWidgetProvider {
 
         for (int i : appWidgetIds) {
             ContentValues values = new ContentValues();
-            values.put("id", i);
+            values.put("widget_id", i);
             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_appswidgets_in_appswidgets, values);
         }
     }

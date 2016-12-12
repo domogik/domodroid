@@ -6,10 +6,13 @@ package appWidgets;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import database.DmdContentProvider;
 
 public class WidgetConfigure extends Activity {
 
@@ -61,6 +64,10 @@ public class WidgetConfigure extends Activity {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         NapplyWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, true);
         Log.e("Napply", "configureWidget N°:" + mAppWidgetId);
+
+        ContentValues values = new ContentValues();
+        values.put("widget_id", mAppWidgetId);
+        context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_appswidgets_in_appswidgets, values);
 
     }
 }

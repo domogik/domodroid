@@ -15,7 +15,7 @@ notifications:
   email: true
   irc: "irc.freenode.net#domogik"
   on_success: never
-  on_failure: always
+  on_failure: never
 
 before_install:
 
@@ -26,6 +26,7 @@ before_install:
   - ./gradlew -v
   - uname -a
 
+  - android update sdk --no-ui --filter build-tools-24.0.2,android-24,extra-android-m2repository
 # Let's try to build...
 script:
 - android list target

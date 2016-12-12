@@ -5,12 +5,20 @@ package appWidgets;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import org.domogik.domodroid13.R;
 
 import database.DmdContentProvider;
 
@@ -45,6 +53,21 @@ public class WidgetConfigure extends Activity {
             finish();
         }
 
+        LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View dialogView = mInflater.inflate(R.layout.widget_configuration, null);
+        final Context context = new ContextThemeWrapper(this, android.R.style.Theme_Holo_Light);
+
+        final AlertDialog dialog = new AlertDialog.Builder(context)
+                .setView(dialogView)
+                .show();
+        final ListView lv1 = (ListView) dialogView.findViewById(R.id.listview1); // nodes
+        final ListView lv2 = (ListView) dialogView.findViewById(R.id.listview2); // plugins
+        final ListView lv3 = (ListView) dialogView.findViewById(R.id.listview3); // period
+        if (DomodroidFoo) {
+            Toast.makeText(this, getString(R.string.not_sync), Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+            finish();
+        }
         configureWidget(getApplicationContext());
         Log.e("Napply", "configureWidget");
         // Make sure we pass back the original appWidgetId before closing the activity

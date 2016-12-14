@@ -10,7 +10,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import database.DmdContentProvider;
 public class WidgetConfigure extends Activity {
 
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private SharedPreferences SP_params;
 
     /**
      * Called when the activity is created
@@ -32,6 +35,7 @@ public class WidgetConfigure extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SP_params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // If the user closes window, don't create the widget
         setResult(RESULT_CANCELED);
@@ -57,16 +61,19 @@ public class WidgetConfigure extends Activity {
         final View dialogView = mInflater.inflate(R.layout.widget_configuration, null);
         final Context context = new ContextThemeWrapper(this, android.R.style.Theme_Holo_Light);
 
-        final AlertDialog dialog = new AlertDialog.Builder(context)
-                .setView(dialogView)
-                .show();
+        //final AlertDialog dialog = new AlertDialog.Builder(context)
+         //       .setView(dialogView)
+         //       .show();
         final ListView lv1 = (ListView) dialogView.findViewById(R.id.listview1); // nodes
         final ListView lv2 = (ListView) dialogView.findViewById(R.id.listview2); // plugins
         final ListView lv3 = (ListView) dialogView.findViewById(R.id.listview3); // period
-        if (DomodroidFoo) {
+        if (SP_params.getBoolean("SYNC", false)) {
+            Log.e("Napply", "SP_params.getBoolean,true");
             Toast.makeText(this, getString(R.string.not_sync), Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            //dialog.dismiss();
             finish();
+        }else {
+            Log.e("Napply", "SP_params.getBoolean,false");
         }
         configureWidget(getApplicationContext());
         Log.e("Napply", "configureWidget");

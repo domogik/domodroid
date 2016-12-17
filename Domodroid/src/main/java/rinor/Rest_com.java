@@ -24,6 +24,7 @@
 package rinor;
 
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -69,6 +70,7 @@ public class Rest_com {
                 DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                 httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
                 HttpGet httpget = new HttpGet(url);
+                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                 HttpResponse response;
                 String result = null;
                 response = httpclient.execute(httpget);
@@ -103,13 +105,12 @@ public class Rest_com {
                     url = url.replace("http://", "https://");
                 }
                 Tracer.d(mytag, "Url=" + url);
-                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(login, password.toCharArray());
                     }
-                });
-                String result = null;
+                });String result = null;
                 InputStream instream = urlConnection.getInputStream();
                 result = Abstract.httpsUrl.convertStreamToString(instream);
                 json = new JSONObject(result);
@@ -142,6 +143,7 @@ public class Rest_com {
                 DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                 httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
                 HttpGet httpget = new HttpGet(url);
+                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                 HttpResponse response;
                 String result = null;
                 response = httpclient.execute(httpget);
@@ -178,7 +180,7 @@ public class Rest_com {
                     url = url.replace("http://", "https://");
                 }
                 Tracer.d(mytag, "Url=" + url);
-                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(login, password.toCharArray());

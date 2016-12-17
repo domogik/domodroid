@@ -1,6 +1,7 @@
 package rinor;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -58,7 +59,9 @@ public class CallUrl extends AsyncTask<String, Void, String> {
             HttpResponse response;
             String responseString = "";
             try {
-                response = httpclient.execute(new HttpGet(url));
+                HttpGet httpget = new HttpGet(url);
+                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
+                response = httpclient.execute(httpget);
                 StatusLine statusLine = response.getStatusLine();
                 stats_com.add(Stats_Com.EVENTS_SEND, httpclient.getRequestInterceptorCount());
                 stats_com.add(Stats_Com.EVENTS_RCV, httpclient.getResponseInterceptorCount());
@@ -94,7 +97,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 if (url.startsWith("http://")) {
                     url = url.replace("http://", "https://");
                 }
-                final HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                final HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(login, password.toCharArray());

@@ -20,6 +20,9 @@
   </head>
   <body>
     $ 1.4
+      % Version 26
+      _ 2016-12-17
+      * Close #133 auth issue.
       % Version 25
       _ 2016-12-11
       * Works on #132 timeout or empty response form rest

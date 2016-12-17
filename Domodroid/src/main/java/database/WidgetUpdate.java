@@ -1119,7 +1119,7 @@ public class WidgetUpdate {
                     Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                     HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(
                             sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
+                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId(), login, password);
                     urlConnection.setRequestMethod("PUT");
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                     nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));

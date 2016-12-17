@@ -1,6 +1,7 @@
 package Abstract;
 
 import android.annotation.SuppressLint;
+import android.util.Base64;
 
 import org.apache.http.NameValuePair;
 
@@ -24,7 +25,7 @@ import javax.net.ssl.X509TrustManager;
 
 public abstract class httpsUrl {
     //todo add tracerengine here too handle log.
-    public static HttpsURLConnection setUpHttpsConnection(String urlString) {
+    public static HttpsURLConnection setUpHttpsConnection(String urlString, String login, String password) {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
@@ -59,7 +60,8 @@ public abstract class httpsUrl {
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setHostnameVerifier(allHostsValid);
             urlConnection.setSSLSocketFactory(sslContext.getSocketFactory());
-
+            final String basicAuth = "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP);
+            urlConnection.setRequestProperty("Authorization", basicAuth);
             return urlConnection;
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -20,6 +20,8 @@
   </head>
   <body>
     $ 1.4
+      % Version 27
+      _ 2017-xx-xx
       % Version 26
       _ 2016-12-17
       * Close #133 auth issue.

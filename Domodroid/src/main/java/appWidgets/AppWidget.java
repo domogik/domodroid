@@ -21,7 +21,7 @@ import org.domogik.domodroid13.R;
 
 import database.DmdContentProvider;
 
-public class NapplyWidget extends AppWidgetProvider {
+public class AppWidget extends AppWidgetProvider {
     public static final String ACTION_SHOW_NOTIFICATION = "org.domodroid13.appwidgets.SHOW_NOTIFICATION";
     private static final String ACTION_START_ACTIVITY = "org.domodroid13.appwidgets.START_ACTIVITY";
 
@@ -48,11 +48,11 @@ public class NapplyWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, boolean forceUpdate) {
 
         // Prepare widget views
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.napply_widget_layout);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
         views.setTextViewText(R.id.nap_time, "Allumer la lumière du salon");
 
         // Prepare intent to launch on widget click
-        Intent intent = new Intent(context, NapplyWidget.class);
+        Intent intent = new Intent(context, AppWidget.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setAction(ACTION_SHOW_NOTIFICATION);
         // Launch intent on widget click
@@ -60,13 +60,13 @@ public class NapplyWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.napply_widget, pendingIntent);
 
         // Action open Domodroid
-        Intent intent2 = new Intent(context, NapplyWidget.class);
+        Intent intent2 = new Intent(context, AppWidget.class);
         intent2.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent2.setAction(ACTION_START_ACTIVITY);
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, appWidgetId, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.nap_icon, pendingIntent2);
 
-        Log.e("Napply", "appWidgetId N°" + appWidgetId);
+        Log.e("AppWidget", "appWidgetId N°" + appWidgetId);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -82,7 +82,7 @@ public class NapplyWidget extends AppWidgetProvider {
 
                 case ACTION_SHOW_NOTIFICATION:
                     showNotification(context);
-                    Log.e("Napply", "ACTION_SHOW_NOTIFICATION");
+                    Log.e("AppWidget", "ACTION_SHOW_NOTIFICATION");
                     break;
                 case ACTION_START_ACTIVITY:
                     Bundle extras = intent.getExtras();
@@ -101,7 +101,7 @@ public class NapplyWidget extends AppWidgetProvider {
                         } catch (NullPointerException ex) {
                             ex.printStackTrace();
                         }
-                        Log.e("Napply", "ACTION_START_ACTIVITY");
+                        Log.e("AppWidget", "ACTION_START_ACTIVITY");
                         break;
                     }
             }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/napply_widget"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -15,7 +16,9 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:scaleType="fitStart" />
+        android:scaleType="fitStart"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
 
     <TextView
         android:id="@+id/nap_time"
@@ -25,4 +28,5 @@
         android:layout_centerVertical="true"
         android:background="@drawable/widget_bg"
         android:text="Erase me" />
+
 </RelativeLayout>

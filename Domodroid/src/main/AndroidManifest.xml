@@ -72,18 +72,18 @@
             android:authorities="database.DmdContentProvider"
             android:multiprocess="true" />
 
-        <!-- Napply widget -->
-        <receiver android:name="appWidgets.NapplyWidget">
+        <!-- AppWidets widget -->
+        <receiver android:name="appWidgets.AppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="org.domodroid13.appwidgets.SHOW_NOTIFICATION" />/>
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/napply_widget_meta" />
+                android:resource="@xml/app_widget_meta" />
         </receiver>
 
-        <!-- Configure activity -->
+        <!-- AppWidets Configure activity -->
         <activity
             android:name="appWidgets.WidgetConfigure"
             android:theme="@android:style/Theme.Dialog">

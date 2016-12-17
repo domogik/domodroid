@@ -55,7 +55,7 @@ public class WidgetUpdate {
 
     private boolean activated;
     private static Activity context;
-    private DomodroidDB domodb;
+    private static DomodroidDB domodb;
     private final String mytag = this.getClass().getName();
     private TimerTask doAsynchronousTask;
     private tracerengine Tracer = null;
@@ -1287,7 +1287,7 @@ public class WidgetUpdate {
         domodb.remove_one_place_type_in_Featureassociation(place_id, place_type);
     }
 
-    public Entity_Feature[] requestFeatures() {
+    public static Entity_Feature[] requestFeatures() {
         return domodb.requestFeatures();
 
     }

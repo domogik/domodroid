@@ -5,7 +5,6 @@ package appWidgets;
  */
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.app.AlertDialog;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -22,12 +22,15 @@ import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
+import Entity.Entity_Feature;
 import database.DmdContentProvider;
+import database.WidgetUpdate;
 
 public class WidgetConfigure extends Activity {
 
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private SharedPreferences SP_params;
+    private Entity_Feature[] listFeature;
 
     /**
      * Called when the activity is created
@@ -61,19 +64,28 @@ public class WidgetConfigure extends Activity {
         final View dialogView = mInflater.inflate(R.layout.widget_configuration, null);
         final Context context = new ContextThemeWrapper(this, android.R.style.Theme_Holo_Light);
 
-        //final AlertDialog dialog = new AlertDialog.Builder(context)
-         //       .setView(dialogView)
-         //       .show();
+        final AlertDialog dialog = new AlertDialog.Builder(context)
+               .setView(dialogView)
+               .show();
+
         final ListView lv1 = (ListView) dialogView.findViewById(R.id.listview1); // nodes
         final ListView lv2 = (ListView) dialogView.findViewById(R.id.listview2); // plugins
         final ListView lv3 = (ListView) dialogView.findViewById(R.id.listview3); // period
-        if (SP_params.getBoolean("SYNC", false)) {
-            Log.e("Napply", "SP_params.getBoolean,true");
-            Toast.makeText(this, getString(R.string.not_sync), Toast.LENGTH_SHORT).show();
-            //dialog.dismiss();
-            finish();
-        }else {
+
+        //Check if Domodroid is sync with a server
+        if (!SP_params.getBoolean("SYNC", false)) {
             Log.e("Napply", "SP_params.getBoolean,false");
+            Toast.makeText(this, getString(R.string.not_sync), Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+            finish();
+        } else {
+            Log.e("Napply", "SP_params.getBoolean,false");
+        }
+        try {
+            listFeature = WidgetUpdate.requestFeatures();
+            Log.e("Napply", "Listfeature size is "+String.valueOf(listFeature.length));
+        } catch (Exception e) {
+            Log.e("Napply", e.toString());
         }
         configureWidget(getApplicationContext());
         Log.e("Napply", "configureWidget");
@@ -92,7 +104,7 @@ public class WidgetConfigure extends Activity {
      */
     public void configureWidget(Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        NapplyWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, true);
+        AppWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, true);
         Log.e("Napply", "configureWidget N°:" + mAppWidgetId);
 
         ContentValues values = new ContentValues();

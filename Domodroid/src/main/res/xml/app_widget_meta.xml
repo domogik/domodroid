@@ -3,7 +3,7 @@
     android:widgetCategory="keyguard|home_screen"
     android:minWidth="36dp"
     android:minHeight="36dp"
-    android:initialLayout="@layout/napply_widget_layout"
+    android:initialLayout="@layout/app_widget_layout"
     android:updatePeriodMillis="300000"
     android:configure="appWidgets.WidgetConfigure" >
 </appwidget-provider>

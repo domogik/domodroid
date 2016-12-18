@@ -79,23 +79,17 @@ class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 2 && newVersion == 1) {
-            Log.w("DatabaseHelper", "Downgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will drop table for appwidgets");
-            db.execSQL("DROP TABLE IF EXISTS table_app_widgets");
-        } else {
-            Log.w("DatabaseHelper", "Downgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS table_area");
-            db.execSQL("DROP TABLE IF EXISTS table_room");
-            db.execSQL("DROP TABLE IF EXISTS table_icon");
-            db.execSQL("DROP TABLE IF EXISTS table_feature");
-            db.execSQL("DROP TABLE IF EXISTS table_feature_association");
-            db.execSQL("DROP TABLE IF EXISTS table_feature_state");
-            db.execSQL("DROP TABLE IF EXISTS table_feature_map");
-            db.execSQL("DROP TABLE IF EXISTS table_app_widgets");
-            onCreate(db);
-        }
+        Log.w("DatabaseHelper", "Downgrading database from version " + oldVersion + " to "
+                + newVersion + ", which will destroy all old data");
+        db.execSQL("DROP TABLE IF EXISTS table_area");
+        db.execSQL("DROP TABLE IF EXISTS table_room");
+        db.execSQL("DROP TABLE IF EXISTS table_icon");
+        db.execSQL("DROP TABLE IF EXISTS table_feature");
+        db.execSQL("DROP TABLE IF EXISTS table_feature_association");
+        db.execSQL("DROP TABLE IF EXISTS table_feature_state");
+        db.execSQL("DROP TABLE IF EXISTS table_feature_map");
+        db.execSQL("DROP TABLE IF EXISTS table_app_widgets");
+        onCreate(db);
     }
 
 

@@ -413,6 +413,11 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
             if (!listItem.isEmpty()) {
                 Tracer.d(mytag, "addView(listeChoices)");
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                try {
+                    LL_background.removeView(listeChoices);
+                } catch (Exception e) {
+                    //to avoid #135
+                }
                 LL_background.addView(listeChoices);
                 isopen = true;
             } else {

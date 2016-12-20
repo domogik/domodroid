@@ -21,7 +21,7 @@ android {
         applicationId "org.domogik.domodroid13"
         minSdkVersion 9
         targetSdkVersion 9
-        versionCode = 26
+        versionCode = 27
         versionName = "1.4"
     }
     compileOptions {

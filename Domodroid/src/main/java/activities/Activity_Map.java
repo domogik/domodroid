@@ -79,7 +79,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private Sliding_Drawer topPanel;
     public static Dialog dialog_feature;
     private Entity_Feature[] listFeature;
-    private HashMap<String, String> map;
+    private HashMap map;
 
     private Vector<String> list_usable_files;
     private MapView mapView;
@@ -244,6 +244,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                         map.put("state_key", feature.getState_key());
                     }
                     map.put("icon", Integer.toString(feature.getRessources()));
+                    map.put("feature_id", aListFeature.getId());
                     listItem1.add(map);
                 }
             }
@@ -260,15 +261,16 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             }
         }
         if ((listItem1 != null) && (listItem1.size() > 0)) {
-            SimpleAdapter adapter_feature = new SimpleAdapter(getBaseContext(), listItem1,
+            final SimpleAdapter adapter_feature = new SimpleAdapter(getBaseContext(), listItem1,
                     R.layout.item_feature_list_add_feature_map, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
             listview_feature.setAdapter(adapter_feature);
             listview_feature.setOnItemClickListener(new OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (position < listFeature.length) {
+                        HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature.getItem(position);
                         // It's a feature element
                         mapView.map_id = -1;
-                        mapView.temp_id = listFeature[position].getId();
+                        mapView.temp_id = (int) obj.get("feature_id");
                     } else {
                         //It's a map switch element
                         mapView.temp_id = -1;

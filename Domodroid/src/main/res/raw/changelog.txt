@@ -20,8 +20,11 @@
   </head>
   <body>
     $ 1.4
-      % Version 27
+      % Version 28
       _ 2017-xx-xx
+
+      % Version 27
+      _ 2017-12-20
       * Close #135 Crash on multiple open/close history.
       * Close #134 comma/point error in sending value for a number.
       % Version 26

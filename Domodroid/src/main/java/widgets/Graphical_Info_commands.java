@@ -32,9 +32,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +63,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private JSONObject jparam;
     private String command_id = null;
     private String command_type[] = null;
+    private String value_type = null;
     private List<EditText> allEds = null;
     private int number_of_command_parameters;
 
@@ -98,7 +97,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         String parameters = feature.getParameters();
         int dev_id = feature.getDevId();
         String state_key = feature.getState_key();
-        String value_type = feature.getValue_type();
+        value_type = feature.getValue_type();
         String stateS;
         mytag = "Graphical_Info_commands (" + dev_id + ")";
         try {
@@ -195,6 +194,14 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                              public void run() {
                                  String Url2send = "";
                                  if (api_version >= 0.7f) {
+                                     if (value_type.equals("number")) {
+                                         //#134 from here
+                                         for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
+                                             String temp_value = (allEds.get(current_parameter).getText().toString()).replace(",", ".");
+                                             allEds.get(current_parameter).setText(String.valueOf(temp_value));
+                                         }
+                                     }
+
                                      Url2send = url + "cmd/id/" + command_id + "?";
                                      for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
                                          Url2send += command_type[current_parameter] + "=" + URLEncoder.encode(allEds.get(current_parameter).getText().toString()) + "&";

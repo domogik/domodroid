@@ -577,6 +577,11 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             if (!listItem.isEmpty()) {
                 Tracer.d(mytag, "addView(listeChoices)");
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                try {
+                    LL_background.removeView(LV_listChoices);
+                } catch (Exception e) {
+                    //to avoid #135
+                }
                 LL_background.addView(LV_listChoices);
                 isopen = true;
             } else {

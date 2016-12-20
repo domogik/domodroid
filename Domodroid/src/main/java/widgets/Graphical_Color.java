@@ -668,6 +668,11 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     public void onClick(View arg0) {
         Tracer.i(mytag, "Touch....");
         if (featurePan2.getVisibility() == INVISIBLE) {
+            try {
+                LL_background.removeView(featurePan2);
+            } catch (Exception e) {
+                //to avoid #135
+            }
             LL_background.addView(featurePan2);
             featurePan2.setVisibility(VISIBLE);
             Tracer.i(mytag, "FeaturePan2 set to VISIBLE");

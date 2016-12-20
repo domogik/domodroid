@@ -130,6 +130,7 @@ public class WidgetConfigure extends Activity {
                             map.put("state_key", aListFeature.getState_key());
                         }
                         map.put("icon", Integer.toString(aListFeature.getRessources()));
+                        map.put("feature_id", aListFeature.getId());
                         listItem_commands.add(map);
                     }
                 } else {
@@ -145,6 +146,7 @@ public class WidgetConfigure extends Activity {
                             map.put("state_key", aListFeature.getState_key());
                         }
                         map.put("icon", Integer.toString(aListFeature.getRessources()));
+                        map.put("feature_id", aListFeature.getId());
                         listItem_sensors.add(map);
                     }
                     Log.e("WidgetConfigure", "this feature:" + aListFeature.getName() + " , " + aListFeature.getDevice_usage_id() + " is a sensor");
@@ -176,16 +178,22 @@ public class WidgetConfigure extends Activity {
                         lv2.setOnItemClickListener(new OnItemClickListener() {
                             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                                 Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + arg);
-                                device_feature_id_sensor = listFeature[position].getId();
-                                Log.e("WidgetConfigure", "feature id is : " + listFeature[position].getId());
+                                HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature_sensors.getItem(position);
+                                int name = (int) obj.get("feature_id");
+                                Log.e("WidgetConfigure", "feature_sensors=" + name);
+                                device_feature_id_sensor = name;
+
                                 lv2.setVisibility(View.GONE);
 
                                 lv3.setAdapter(adapter_feature_commands);
                                 lv3.setOnItemClickListener(new OnItemClickListener() {
                                     public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
                                         Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + arg);
-                                        device_feature_id_command = listFeature[position].getId();
-                                        Log.e("WidgetConfigure", "feature id is : " + listFeature[position].getId());
+                                        HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature_commands.getItem(position);
+                                        int name = (int) obj.get("feature_id");
+                                        Log.e("WidgetConfigure", "feature_commands=" + name);
+                                        device_feature_id_command = name;
+
                                         LinearLayout ll = (LinearLayout) findViewById(R.id.final_instructions);
 
                                         lv3.setVisibility(View.GONE);

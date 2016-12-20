@@ -949,6 +949,27 @@ public class DomodroidDB {
         return feature;
     }
 
+    public int request_feature_widgets_by_id(String id, String sensor_command) {
+        Cursor curs = null;
+        int feature_id = 0;
+        try {
+            Tracer.v(mytag + "(" + owner + ")", "requesting features by id" + id);
+            curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets, null, null, new String[]{(id)}, null);
+            curs.moveToFirst();
+            if (sensor_command.equals("sensor")) {
+                feature_id = curs.getInt(1);
+            } else if (sensor_command.equals("command")) {
+                feature_id = curs.getInt(2);
+            } else
+                feature_id = 0;
+        } catch (Exception e) {
+            Tracer.e(mytag + "(" + owner + ")", "request feature_id_sensor by id error");
+            Tracer.e(mytag, e.toString());
+        }
+        curs.close();
+        return feature_id;
+    }
+
     public String requestFeatureState(int device_id, String key) {
         String state = " ";
         String[] projection = {"value"};

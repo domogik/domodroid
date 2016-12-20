@@ -4,6 +4,7 @@ package appWidgets;
  * Created by tiki on 11/12/2016.
  */
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -11,8 +12,10 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -20,11 +23,18 @@ import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
+import Entity.Entity_Feature;
 import database.DmdContentProvider;
+import database.DomodroidDB;
+import misc.tracerengine;
 
 public class AppWidget extends AppWidgetProvider {
     public static final String ACTION_SHOW_NOTIFICATION = "org.domodroid13.appwidgets.SHOW_NOTIFICATION";
     private static final String ACTION_START_ACTIVITY = "org.domodroid13.appwidgets.START_ACTIVITY";
+    private static Entity_Feature feature;
+    private static DomodroidDB domodb;
+    private SharedPreferences SP_params;
+    private tracerengine Tracer = null;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -71,6 +81,7 @@ public class AppWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.nap_icon, pendingIntent2);
 
         Log.e("AppWidget", "appWidgetId N°" + appWidgetId);
+
 /*
 Todo get feature from sensor and command for this appswidgets
         Cursor sensor = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets_sensor, null, null, null, null);
@@ -80,6 +91,21 @@ Todo get feature from sensor and command for this appswidgets
         String command_id = command.getString(0);
         Log.e("AppWidget", "command_id N°" + command_id);
 */
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+        tracerengine Tracer = tracerengine.getInstance(SP_params, context);
+
+        if (domodb == null)
+            domodb = new DomodroidDB(Tracer, (Activity) context, SP_params);
+
+        int device_feature_id_sensor = domodb.request_feature_widgets_by_id(Integer.toString(appWidgetId), "sensor");
+        int device_feature_id_command = domodb.request_feature_widgets_by_id(Integer.toString(appWidgetId), "command");
+
+        Log.e("WidgetConfigure", "device_feature_id_sensor N°:" + device_feature_id_sensor);
+        Log.e("WidgetConfigure", "device_feature_id_command N°:" + device_feature_id_command);
+
+        Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(appWidgetId));
+        Tracer.e("AppWidget", "feature= " + feature.getName());
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 

@@ -38,6 +38,8 @@ public class DmdContentProvider extends ContentProvider {
     private static final int REQUEST_FEATURE_ASSOCIATION = 161;
     private static final int REQUEST_FEATURE_ASSOCIATION_ALL = 162;
     private static final int REQUEST_FEATURE_MAP_ALL = 163;
+    private static final int REQUEST_FEATURE_appswidgets_sensor = 164;
+    private static final int REQUEST_FEATURE_appswidgets_command = 165;
 
     private static final int INSERT_AREA = 200;
     private static final int CLEAR_AREA = 201;
@@ -91,6 +93,9 @@ public class DmdContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI_REQUEST_FEATURE_ASSOCIATION = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION");
     public static final Uri CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION_ALL");
     public static final Uri CONTENT_URI_REQUEST_FEATURE_MAP_ALL = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP_ALL");
+    public static final Uri CONTENT_URI_REQUEST_FEATURE_appswidgets_sensor = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_appswidgets_sensor");
+    public static final Uri CONTENT_URI_REQUEST_FEATURE_appswidgets_command = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/REQUEST_FEATURE_appswidgets_command");
+
 
     public static final Uri CONTENT_URI_INSERT_AREA = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/INSERT_AREA");
     public static final Uri CONTENT_URI_INSERT_ROOM = Uri.parse("content://" + AUTHORITY + "/" + DOMODROID_BASE_PATH + "/INSERT_ROOM");
@@ -150,6 +155,8 @@ public class DmdContentProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION", REQUEST_FEATURE_ASSOCIATION);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_ASSOCIATION_ALL", REQUEST_FEATURE_ASSOCIATION_ALL);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_MAP_ALL", REQUEST_FEATURE_MAP_ALL);
+        sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_appswidgets_sensor", REQUEST_FEATURE_appswidgets_sensor);
+        sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/REQUEST_FEATURE_appswidgets_command", REQUEST_FEATURE_appswidgets_command);
 
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_AREA", INSERT_AREA);
         sURIMatcher.addURI(AUTHORITY, DOMODROID_BASE_PATH + "/INSERT_ROOM", INSERT_ROOM);
@@ -738,7 +745,18 @@ public class DmdContentProvider extends ContentProvider {
                 //		" WHERE table_feature_state.device_id = '"+selectionArgs[0] + "' AND table_feature_state.key = '"+selectionArgs[1]+"' "
                 //
                 break;
-
+            case REQUEST_FEATURE_appswidgets_sensor:
+                cursor = mDB.getReadableDatabase().rawQuery(
+                        "SELECT device_feature_id_sensor FROM table_app_widgets " +
+                                " WHERE widget_id = " + selectionArgs[0]
+                        , null);
+                break;
+            case REQUEST_FEATURE_appswidgets_command:
+                cursor = mDB.getReadableDatabase().rawQuery(
+                        "SELECT device_feature_id_command FROM table_app_widgets " +
+                                " WHERE widget_id = " + selectionArgs[0]
+                        , null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI");
         }

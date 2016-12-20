@@ -11,6 +11,7 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -49,25 +50,36 @@ public class AppWidget extends AppWidgetProvider {
 
         // Prepare widget views
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
+
         views.setTextViewText(R.id.nap_time, "Allumer la lumière du salon");
 
         // Prepare intent to launch on widget click
         Intent intent = new Intent(context, AppWidget.class);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setAction(ACTION_SHOW_NOTIFICATION);
-        // Launch intent on widget click
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        views.setOnClickPendingIntent(R.id.napply_widget, pendingIntent);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.putExtra("id", appWidgetId);
+        // Launch intent on widget text click
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.nap_time, pendingIntent);
 
         // Action open Domodroid
         Intent intent2 = new Intent(context, AppWidget.class);
-        intent2.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent2.setAction(ACTION_START_ACTIVITY);
+        intent2.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        // Launch intent on widget icon click
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, appWidgetId, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.nap_icon, pendingIntent2);
 
         Log.e("AppWidget", "appWidgetId N°" + appWidgetId);
-
+/*
+Todo get feature from sensor and command for this appswidgets
+        Cursor sensor = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets_sensor, null, null, null, null);
+        Cursor command = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets_command, null, null, null, null);
+        String sensor_id = sensor.getString(0);
+        Log.e("AppWidget", "sensor_id N°" + sensor_id);
+        String command_id = command.getString(0);
+        Log.e("AppWidget", "command_id N°" + command_id);
+*/
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -78,18 +90,26 @@ public class AppWidget extends AppWidgetProvider {
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
         if (intent.getAction() != null) {
-            switch (intent.getAction()) {
-
-                case ACTION_SHOW_NOTIFICATION:
-                    showNotification(context);
-                    Log.e("AppWidget", "ACTION_SHOW_NOTIFICATION");
-                    break;
-                case ACTION_START_ACTIVITY:
-                    Bundle extras = intent.getExtras();
-                    if (extras != null) {
+            Bundle extras;
+            extras = intent.getExtras();
+            int widgetId;
+            if (extras != null) {
+                switch (intent.getAction()) {
+                    case ACTION_SHOW_NOTIFICATION:
                         try {
+                            widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+                            Log.e("AppWidget", "Id= " + widgetId);
+                            showNotification(context, widgetId);
+                            Log.e("AppWidget", "ACTION_SHOW_NOTIFICATION");
+                        } catch (NullPointerException ex) {
+                            ex.printStackTrace();
+                        }
+                        break;
+                    case ACTION_START_ACTIVITY:
+                        try {
+                            widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+                            Log.e("AppWidget", "Id= " + widgetId);
                             /*
-                            int widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
                             graphWidget = sqlite.dbHlpr.getGraphWidget(widgetId);
                             Intent intent2 = new Intent(context, Activity_GraphView.class);
                             intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -103,7 +123,7 @@ public class AppWidget extends AppWidgetProvider {
                         }
                         Log.e("AppWidget", "ACTION_START_ACTIVITY");
                         break;
-                    }
+                }
             }
         }
     }
@@ -113,10 +133,13 @@ public class AppWidget extends AppWidgetProvider {
      * Displays a notification message
      *
      * @param context
+     * @param widgetId
      */
 
-    protected void showNotification(Context context) {
-        CharSequence message = "Clique moi ! Clique moi ! Clique moi !";
+    protected void showNotification(Context context, int widgetId) {
+        Log.e("AppWidget", "Widgets selectionner " + widgetId);
+
+        CharSequence message = "Widgets selectionner: " + widgetId;
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, message, duration);
         toast.show();
@@ -131,4 +154,5 @@ public class AppWidget extends AppWidgetProvider {
             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_appswidgets_in_appswidgets, values);
         }
     }
+
 }

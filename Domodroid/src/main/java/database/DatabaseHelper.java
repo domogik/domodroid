@@ -22,7 +22,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_FEATURE_STATE = "CREATE TABLE table_feature_state (device_id INTEGER, key TEXT, value TEXT);";
     private static final String CREATE_TABLE_FEATURE_MAP = "CREATE TABLE table_feature_map (id, posx INTEGER, posy INTEGER, map TEXT);";
 
-    private static final String CREATE_TABLE_APP_WIDGETS = "CREATE TABLE table_app_widgets (widget_id, device_feature_id_sensor INTEGER, device_feature_id_command INTEGER);";
+    private static final String CREATE_TABLE_APP_WIDGETS = "CREATE TABLE table_app_widgets (widget_id INTEGER, device_feature_id_sensor INTEGER, device_feature_id_command INTEGER);";
 
     private static final String DATABASE_NAME = Environment.getExternalStorageDirectory() + "/domodroid/.conf/domodroid.db";
     private static final int DATABASE_VERSION = 2;
@@ -62,6 +62,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion == 1 && newVersion == 2) {
             Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will add table for appwidgets");
+            //drop before recreating it as it may crash when switching from different version (fdroid/dev/store/github...)
+            db.execSQL("DROP TABLE IF EXISTS table_app_widgets");
             db.execSQL(CREATE_TABLE_APP_WIDGETS);
         } else {
             Log.w("DatabaseHelper", "Upgrading database from version " + oldVersion + " to "

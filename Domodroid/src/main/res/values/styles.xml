@@ -29,9 +29,11 @@
     <style name="Widget">
         <item name="android:textColor">#fff</item>
     </style>
+
     <style name="Widget.Text">
         <item name="android:textSize">20dp</item>
         <item name="android:padding">7dp</item>
     </style>
+
 
 </resources>

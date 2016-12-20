@@ -20,9 +20,13 @@
   </head>
   <body>
     $ 1.4
-      % Version 26
+      % Version 27
       _ 2017-xx-xx
-
+      * Close #135 Crash on multiple open/close history.
+      * Close #134 comma/point error in sending value for a number.
+      % Version 26
+      _ 2016-12-17
+      * Close #133 auth issue.
       % Version 25
       _ 2016-12-11
       * Works on #132 timeout or empty response form rest

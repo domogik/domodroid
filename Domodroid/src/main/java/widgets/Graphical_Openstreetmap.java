@@ -386,6 +386,11 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
             display_position_on_map();
             Tracer.d(mytag, "addView(osmMapview)");
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+            try {
+                LL_background.removeView(osmMapview);
+            } catch (Exception e) {
+                //to avoid #135
+            }
             LL_background.addView(osmMapview);
             this.osmMapview.setOnTouchListener(new View.OnTouchListener() {
                 @Override

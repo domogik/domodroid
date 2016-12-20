@@ -399,6 +399,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             if (!listItem.isEmpty()) {
                 Tracer.d(mytag, "addView(listeChoices)");
                 LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+                try {
+                    LL_background.removeView(listeChoices);
+                } catch (Exception e) {
+                    //to avoid #135
+                }
                 LL_background.addView(listeChoices);
                 isopen = true;
             } else {

@@ -89,7 +89,17 @@ public class config_with_qrcode extends AppCompatActivity {
                         //String rest_port = jsonresult.getString("rest_port");
                         String mq_ip = jsonresult.getString("mq_ip");
                         //String rest_path = jsonresult.getString("rest_path");
-                        String mq_port_sub = jsonresult.getString("mq_port_pubsub");
+                        String mq_port_sub = "40412";
+                        try {
+                            mq_port_sub = jsonresult.getString("mq_port_pub");
+                        } catch (JSONException exec) {
+                            try {
+                                Tracer.e(mytag, "mq_port_pub not present in this qrcode");
+                                mq_port_sub = jsonresult.getString("mq_port_pubsub");
+                            } catch (JSONException exec2) {
+                                Tracer.e(mytag, "mq_port_pubsub not present in this qrcode");
+                            }
+                        }
                         String mq_port_pub = "40411";
                         try {
                             mq_port_pub = jsonresult.getString("mq_port_pub");

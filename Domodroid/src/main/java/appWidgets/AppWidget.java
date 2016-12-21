@@ -83,15 +83,9 @@ public class AppWidget extends AppWidgetProvider {
 
         Log.e("AppWidget", "appWidgetId N°" + appWidgetId);
 
-/*
-Todo get feature from sensor and command for this appswidgets
-        Cursor sensor = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets_sensor, null, null, null, null);
-        Cursor command = context.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets_command, null, null, null, null);
-        String sensor_id = sensor.getString(0);
-        Log.e("AppWidget", "sensor_id N°" + sensor_id);
-        String command_id = command.getString(0);
-        Log.e("AppWidget", "command_id N°" + command_id);
-*/
+        /*
+        Get feature from sensor and command for this appswidgets
+        */
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
         tracerengine Tracer = tracerengine.getInstance(SP_params, context);
         Activity activity = WidgetUpdate.getactivity();
@@ -105,8 +99,14 @@ Todo get feature from sensor and command for this appswidgets
         Log.e("WidgetConfigure", "device_feature_id_command N°:" + device_feature_id_command);
         try {
             Entity_Feature feature_sensor = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_sensor));
-            Entity_Feature feature_command = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_command));
             Tracer.e("AppWidget", "feature sensor= " + feature_sensor.getName());
+            views.setTextViewText(R.id.nap_time, feature_sensor.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.e("AppWidget", e.toString());
+        }
+        try {
+            Entity_Feature feature_command = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_command));
             Tracer.e("AppWidget", "feature command= " + feature_command.getName());
         } catch (Exception e) {
             e.printStackTrace();

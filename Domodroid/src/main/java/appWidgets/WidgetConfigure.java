@@ -248,8 +248,6 @@ public class WidgetConfigure extends Activity {
      */
 
     public void configureWidget(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        AppWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, true);
         Log.e("WidgetConfigure", "configureWidget N°:" + mAppWidgetId);
         Log.e("WidgetConfigure", "device_feature_id_sensor N°:" + device_feature_id_sensor);
         Log.e("WidgetConfigure", "device_feature_id_command N°:" + device_feature_id_command);
@@ -258,6 +256,9 @@ public class WidgetConfigure extends Activity {
         values.put("device_feature_id_sensor", device_feature_id_sensor);
         values.put("device_feature_id_command", device_feature_id_command);
         context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_appswidgets_in_appswidgets, values);
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        AppWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId, true);
 
     }
 }

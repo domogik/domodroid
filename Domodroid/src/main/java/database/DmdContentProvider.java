@@ -38,7 +38,7 @@ public class DmdContentProvider extends ContentProvider {
     private static final int REQUEST_FEATURE_ASSOCIATION = 161;
     private static final int REQUEST_FEATURE_ASSOCIATION_ALL = 162;
     private static final int REQUEST_FEATURE_MAP_ALL = 163;
-    private static final int REQUEST_FEATURE_appswidgets= 164;
+    private static final int REQUEST_FEATURE_appswidgets = 164;
 
     private static final int INSERT_AREA = 200;
     private static final int CLEAR_AREA = 201;
@@ -743,10 +743,7 @@ public class DmdContentProvider extends ContentProvider {
                 //
                 break;
             case REQUEST_FEATURE_appswidgets:
-                cursor = mDB.getReadableDatabase().rawQuery(
-                        "SELECT * FROM table_app_widgets " +
-                                " WHERE widget_id = " + selectionArgs[0]
-                        , null);
+                cursor = mDB.getReadableDatabase().rawQuery("SELECT * FROM table_app_widgets WHERE table_app_widgets.widget_id = " + selectionArgs[0], null);
                 break;
 
             default:

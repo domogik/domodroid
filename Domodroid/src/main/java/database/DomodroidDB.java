@@ -953,7 +953,7 @@ public class DomodroidDB {
         Cursor curs = null;
         int feature_id = 0;
         try {
-            Tracer.v(mytag + "(" + owner + ")", "requesting features by id" + id);
+            Tracer.v(mytag + "(" + owner + ")", "requesting feature_id_sensor for id " + id);
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets, null, null, new String[]{(id)}, null);
             curs.moveToFirst();
             if (sensor_command.equals("sensor")) {

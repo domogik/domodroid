@@ -13,7 +13,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -26,12 +25,14 @@ import org.domogik.domodroid13.R;
 import Entity.Entity_Feature;
 import database.DmdContentProvider;
 import database.DomodroidDB;
+import database.WidgetUpdate;
 import misc.tracerengine;
 
 public class AppWidget extends AppWidgetProvider {
     public static final String ACTION_SHOW_NOTIFICATION = "org.domodroid13.appwidgets.SHOW_NOTIFICATION";
     private static final String ACTION_START_ACTIVITY = "org.domodroid13.appwidgets.START_ACTIVITY";
-    private static Entity_Feature feature;
+    private static Entity_Feature feature_sensor;
+    private static Entity_Feature feature_command;
     private static DomodroidDB domodb;
     private SharedPreferences SP_params;
     private tracerengine Tracer = null;
@@ -93,19 +94,24 @@ Todo get feature from sensor and command for this appswidgets
 */
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
         tracerengine Tracer = tracerengine.getInstance(SP_params, context);
-
+        Activity activity = WidgetUpdate.getactivity();
         if (domodb == null)
-            domodb = new DomodroidDB(Tracer, (Activity) context, SP_params);
+            domodb = new DomodroidDB(Tracer, activity, SP_params);
 
         int device_feature_id_sensor = domodb.request_feature_widgets_by_id(Integer.toString(appWidgetId), "sensor");
         int device_feature_id_command = domodb.request_feature_widgets_by_id(Integer.toString(appWidgetId), "command");
 
         Log.e("WidgetConfigure", "device_feature_id_sensor N°:" + device_feature_id_sensor);
         Log.e("WidgetConfigure", "device_feature_id_command N°:" + device_feature_id_command);
-
-        Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(appWidgetId));
-        Tracer.e("AppWidget", "feature= " + feature.getName());
-
+        try {
+            Entity_Feature feature_sensor = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_sensor));
+            Entity_Feature feature_command = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_command));
+            Tracer.e("AppWidget", "feature sensor= " + feature_sensor.getName());
+            Tracer.e("AppWidget", "feature command= " + feature_command.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.e("AppWidget", e.toString());
+        }
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 

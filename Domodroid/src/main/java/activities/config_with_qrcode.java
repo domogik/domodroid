@@ -89,7 +89,13 @@ public class config_with_qrcode extends AppCompatActivity {
                         //String rest_port = jsonresult.getString("rest_port");
                         String mq_ip = jsonresult.getString("mq_ip");
                         //String rest_path = jsonresult.getString("rest_path");
-                        String mq_port_pubsub = jsonresult.getString("mq_port_pubsub");
+                        String mq_port_sub = jsonresult.getString("mq_port_pubsub");
+                        String mq_port_pub = "40411";
+                        try {
+                            mq_port_pub = jsonresult.getString("mq_port_pub");
+                        } catch (ArrayIndexOutOfBoundsException exec) {
+                            Tracer.e(mytag, "mq_port_pub not present in this qrcode");
+                        }
                         String mq_port_req_rep = jsonresult.getString("mq_port_req_rep");
                         String rinor_IP = null;
                         Boolean SSL = null;
@@ -107,8 +113,9 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("rinorPath", rest_path);
                         prefEditor.putBoolean("ssl_activate", SSL);
                         prefEditor.putString("MQaddress", mq_ip);
-                        prefEditor.putString("MQsubport", mq_port_pubsub);
-                        prefEditor.putString("MQpubport", mq_port_req_rep);
+                        prefEditor.putString("MQsubport", mq_port_sub);
+                        prefEditor.putString("MQpubport", mq_port_pub);
+                        prefEditor.putString("MQreq_repport", mq_port_req_rep);
                         prefEditor.putString("dmg_butler_name", butler_name);
                         prefEditor.commit();
                         config_with_qrcode.this.finish();

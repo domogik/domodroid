@@ -26,7 +26,7 @@ import misc.tracerengine;
 public class Events_manager {
     private static Events_manager instance;
     private tracerengine Tracer;
-    private static Activity context;
+    private static Activity activity;
     private Handler state_engine_handler;
     private Handler events_engine_handler;
     private ArrayList<Cache_Feature_Element> engine_cache;
@@ -57,17 +57,17 @@ public class Events_manager {
     /*******************************************************************************
      * Internal Constructor
      *******************************************************************************/
-    private Events_manager(final Activity context) {
+    private Events_manager(final Activity activity) {
         super();
-        this.context = context;
+        this.activity = activity;
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
         com_broken = false;
     }
 
-    public static Events_manager getInstance(final Activity context) {
+    public static Events_manager getInstance(final Activity activity) {
         if (instance == null) {
             Log.i("Events_manager", "Creating instance........................");
-            instance = new Events_manager(context);
+            instance = new Events_manager(activity);
         }
         return instance;
 
@@ -255,9 +255,9 @@ public class Events_manager {
                         zmqContext.term();
                     } else {
                         // Say user Mq conf as a problem
-                        context.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, R.string.events_error_mq, Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, R.string.events_error_mq, Toast.LENGTH_LONG).show();
                             }
                         });
                         Tracer.d(mytag, "error in MQ config");

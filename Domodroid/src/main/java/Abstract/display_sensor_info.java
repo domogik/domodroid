@@ -50,13 +50,13 @@ import misc.tracerengine;
 public abstract class display_sensor_info {
 
     public static void display(tracerengine Tracer, String loc_Value, Long Value_timestamp, String mytag, String parameters, TextView value, RelativeTimeTextView timestamp,
-                               Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
+                               Activity activity, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
         if (Value_timestamp != 0) {
             if (SP_params.getBoolean("widget_timestamp", false)) {
-                timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
+                timestamp.setText(timestamp_convertion(Value_timestamp.toString(), activity));
             } else {
                 timestamp.setReferenceTime(Value_timestamp);
             }
@@ -72,10 +72,10 @@ public abstract class display_sensor_info {
                 //#30 add Scale value if too big for byte, ko and Wh unit
                 switch (test_unite) {
                     case "b":
-                        value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
+                        value.setText(android.text.format.Formatter.formatFileSize(activity, Long.parseLong(loc_Value)));
                         break;
                     case "ko":
-                        value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
+                        value.setText(android.text.format.Formatter.formatFileSize(activity, Long.parseLong(loc_Value) * 1024));
                         break;
                     case "Wh":
                         //#30
@@ -90,7 +90,7 @@ public abstract class display_sensor_info {
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
                         value.setText("\uf0b1");
                         //display the real value in smaller font
-                        value1 = new TextView(context);
+                        value1 = new TextView(activity);
                         value1.setTextSize(14);
                         value1.setTextColor(Color.BLACK);
                         value1.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
@@ -107,7 +107,7 @@ public abstract class display_sensor_info {
                         value.setMinimumWidth(100);
                         value.setGravity(Gravity.CENTER);
                         //Create an empty linearlayout that will contains the value
-                        LinearLayout LL_Temp = new LinearLayout(context);
+                        LinearLayout LL_Temp = new LinearLayout(activity);
                         //Re-add the view in parent's one
                         LL_Temp.addView(value1);
                         LL_Temp.addView(value);
@@ -180,7 +180,7 @@ public abstract class display_sensor_info {
                     try {
                         //use xml and weather fonts here
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
-                        value.setText(Graphics_Manager.Names_conditioncodes(context, (int) formatedValue));
+                        value.setText(Graphics_Manager.Names_conditioncodes(activity, (int) formatedValue));
                     } catch (Exception e1) {
                         Tracer.i(mytag, "no translation for: " + loc_Value);
                         value.setText(loc_Value);
@@ -194,22 +194,22 @@ public abstract class display_sensor_info {
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
                         switch (loc_Value) {
                             case "0":
-                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_na", "string", activity.getPackageName()));
                                 break;
                             case "1":
-                                value.setText(context.getResources().getIdentifier("wi_cloud", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_cloud", "string", activity.getPackageName()));
                                 break;
                             case "3":
-                                value.setText(context.getResources().getIdentifier("wi_hail", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_hail", "string", activity.getPackageName()));
                                 break;
                             case "4":
-                                value.setText(context.getResources().getIdentifier("wi_rain", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_rain", "string", activity.getPackageName()));
                                 break;
                             case "5":
-                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_showers", "string", activity.getPackageName()));
                                 break;
                             default:
-                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_na", "string", activity.getPackageName()));
                                 break;
                         }
 
@@ -232,13 +232,13 @@ public abstract class display_sensor_info {
                     String PM = st.nextToken();
                     try {
                         AM = AM.replace("AM ", "");
-                        AM = context.getResources().getString(translate.do_translate(context, Tracer, AM));
+                        AM = activity.getResources().getString(translate.do_translate(activity, Tracer, AM));
                     } catch (Exception amexception) {
 
                     }
                     try {
                         PM = PM.replace("PM ", "");
-                        PM = context.getResources().getString(translate.do_translate(context, Tracer, PM));
+                        PM = activity.getResources().getString(translate.do_translate(activity, Tracer, PM));
                     } catch (Exception pmexception) {
 
                     }
@@ -271,7 +271,7 @@ public abstract class display_sensor_info {
                     } else if (state_key.equalsIgnoreCase("callerid")) {
                         value.setText(phone_convertion(Tracer, mytag, loc_Value));
                     } else {
-                        value.setText(translate.do_translate(context, Tracer, loc_Value));
+                        value.setText(translate.do_translate(activity, Tracer, loc_Value));
                     }
                 }
             } catch (Exception e1) {

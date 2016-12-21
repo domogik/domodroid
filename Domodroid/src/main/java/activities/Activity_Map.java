@@ -813,14 +813,14 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         startActivity(intent);
     }
 
-    private static String getDriveFileAbsolutePath(Activity context, Uri uri) {
+    private static String getDriveFileAbsolutePath(Activity activity, Uri uri) {
         if (uri == null) return null;
-        ContentResolver resolver = context.getContentResolver();
+        ContentResolver resolver = activity.getContentResolver();
         String filename = "";
         final String[] projection = {
                 MediaStore.MediaColumns.DISPLAY_NAME
         };
-        ContentResolver cr = context.getApplicationContext().getContentResolver();
+        ContentResolver cr = activity.getApplicationContext().getContentResolver();
         Cursor metaCursor = cr.query(uri, projection, null, null, null);
         if (metaCursor != null) {
             try {
@@ -834,7 +834,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         }
         FileInputStream input = null;
         FileOutputStream output = null;
-        String outputFilePath = new File(context.getCacheDir(), filename).getAbsolutePath();
+        String outputFilePath = new File(activity.getCacheDir(), filename).getAbsolutePath();
         try {
             ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "r");
             FileDescriptor fd = pfd.getFileDescriptor();

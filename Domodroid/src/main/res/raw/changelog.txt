@@ -22,7 +22,8 @@
     $ 1.4
       % Version 28
       _ 2017-xx-xx
-
+      * Close #137 Crash if mq if bad configured
+      * Close #136 MQ Sub port from QRCODE not handle correctly.
       % Version 27
       _ 2017-12-20
       * Close #135 Crash on multiple open/close history.

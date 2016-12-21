@@ -78,9 +78,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private JSONObject jparam;
 
     public Graphical_Range(tracerengine Trac,
-                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -89,9 +89,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     }
 
     public Graphical_Range(tracerengine Trac,
-                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -155,23 +155,23 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         type = model[0];
 
         //linearlayout horizontal body
-        LinearLayout bodyPanHorizontal = new LinearLayout(context);
+        LinearLayout bodyPanHorizontal = new LinearLayout(activity);
         bodyPanHorizontal.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER_VERTICAL));
         bodyPanHorizontal.setOrientation(LinearLayout.HORIZONTAL);
 
         //right panel with different info and seekbars
-        FrameLayout rightPan = new FrameLayout(context);
+        FrameLayout rightPan = new FrameLayout(activity);
         rightPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         rightPan.setPadding(0, 0, 10, 0);
 
         // panel
-        LinearLayout leftPan = new LinearLayout(context);
+        LinearLayout leftPan = new LinearLayout(activity);
         leftPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.BOTTOM));
         leftPan.setOrientation(LinearLayout.VERTICAL);
         leftPan.setGravity(Gravity.CENTER_VERTICAL);
         leftPan.setPadding(4, 5, 0, 0);
 
-        state = new TextView(context);
+        state = new TextView(activity);
         state.setTextColor(Color.BLACK);
         state.setPadding(20, 0, 0, 0);
         state.setText(stateS);
@@ -180,7 +180,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         animation.setDuration(1000);
 
         //first seekbar variator
-        seekBarVaria = new SeekBar(context);
+        seekBarVaria = new SeekBar(activity);
         seekBarVaria.setProgress(0);
         if (api_version < 0.7f)
             seekBarVaria.setMax(valueMax - valueMin);

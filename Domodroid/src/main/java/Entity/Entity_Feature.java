@@ -41,12 +41,12 @@ public class Entity_Feature {
     private String value_type;
     private String currentState;
     private int state;
-    private final Activity context;
+    private final Activity activity;
     private tracerengine Tracer = null;
     private final SharedPreferences params;
     public Boolean Develop;
 
-    public Entity_Feature(SharedPreferences params, tracerengine Trac, Activity context, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
+    public Entity_Feature(SharedPreferences params, tracerengine Trac, Activity activity, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
         this.device_feature_model_id = device_feature_model_id;
         this.id = id;
         this.devId = devId;
@@ -59,7 +59,7 @@ public class Entity_Feature {
         this.parameters = parameters;
         this.value_type = value_type;
         this.Tracer = Trac;
-        this.context = context;
+        this.activity = activity;
         this.params = params;
         try {
             Develop = params.getBoolean("DEV", false);
@@ -207,7 +207,7 @@ public class Entity_Feature {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
+        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
         domodb.owner = "entity_feature";
         try {
             iconName = domodb.requestIcons(id, "feature").getValue();

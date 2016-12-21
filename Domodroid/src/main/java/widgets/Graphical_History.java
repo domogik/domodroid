@@ -58,7 +58,7 @@ import rinor.Rest_com;
 public class Graphical_History extends Basic_Graphical_widget implements OnClickListener {
 
 
-    private ListView listeChoices = new ListView(context);
+    private ListView listeChoices = new ListView(activity);
     private ArrayList<HashMap<String, String>> listItem;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
@@ -89,9 +89,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int sizeint;
 
     public Graphical_History(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -100,9 +100,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     }
 
     public Graphical_History(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -143,20 +143,20 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         setOnClickListener(this);
 
         //color view if need
-        resultView = new Color_Result(context);
+        resultView = new Color_Result(activity);
 
         //state key
-        state_key_view = new TextView(context);
+        state_key_view = new TextView(activity);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //TV_Value
-        TV_Value = new TextView(context);
+        TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
-        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp = new RelativeTimeTextView(activity, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -191,9 +191,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         Tracer.d(mytag, "debug_color sting=" + new_val);
                         new_val = "#" + new_val.toUpperCase();
                         resultView.color = new_val;
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
@@ -208,9 +208,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         //16 means that you should interpret the string as 16-based (hexadecimal)
                         Tracer.d(mytag, "debug_color sting=" + new_val);
                         resultView.colorrgb = new_val;
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
@@ -224,9 +224,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         //16 means that you should interpret the string as 16-based (hexadecimal)
                         Tracer.d(mytag, "debug_color sting=" + new_val);
                         resultView.colorCMYK = new_val;
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
@@ -234,7 +234,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         LL_featurePan.addView(TV_Timestamp);
 
                     } else {
-                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     }
 
                     //To have the icon colored as it has no state
@@ -297,7 +297,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
     public void onClick(View arg0) {
         //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-        float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
+        float size = ((nb_item_for_history * 35) + 0.5f) * activity.getResources().getDisplayMetrics().density + 0.5f;
         sizeint = (int) size;
         currentint = LL_background.getHeight();
         listItem = new ArrayList<>();
@@ -325,7 +325,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(context, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
         }
 
         protected Void doInBackground(Void... params) {
@@ -349,7 +349,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         try {
                             HashMap<String, String> map = new HashMap<>();
                             try {
-                                map.put("TV_Value", context.getString(translate.do_translate(context, Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                                map.put("TV_Value", activity.getString(translate.do_translate(activity, Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
                             } catch (Exception e1) {
                                 map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                             }
@@ -365,7 +365,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         try {
                             HashMap<String, String> map = new HashMap<>();
                             try {
-                                map.put("TV_Value", context.getString(translate.do_translate(context, Tracer, itemArray.getJSONObject(i).getString("value_str"))));
+                                map.put("TV_Value", activity.getString(translate.do_translate(activity, Tracer, itemArray.getJSONObject(i).getString("value_str"))));
                             } catch (Exception e1) {
                                 map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
                             }
@@ -373,7 +373,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                                 map.put("date", itemArray.getJSONObject(i).getString("date"));
                             } else if (api_version >= 0.8f) {
                                 String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, activity));
                             }
                             listItem.add(map);
                             Tracer.d(mytag, map.toString());
@@ -390,7 +390,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
 
         protected void onPostExecute(Void result) {
-            SimpleAdapter adapter_feature = new SimpleAdapter(context, listItem,
+            SimpleAdapter adapter_feature = new SimpleAdapter(activity, listItem,
                     R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
             listeChoices.setAdapter(adapter_feature);
             listeChoices.setScrollingCacheEnabled(false);

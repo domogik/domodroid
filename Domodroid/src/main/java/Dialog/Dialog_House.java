@@ -41,7 +41,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
     //private final Spinner spinner_feature;
     //private final Spinner spinner_icon;
     private final SharedPreferences params;
-    private final Activity context;
+    private final Activity activity;
     private tracerengine Tracer = null;
     private int area_id = 0;
     private int room_id = 0;
@@ -58,15 +58,15 @@ public class Dialog_House extends Dialog implements OnClickListener {
     private final String mytag = this.getClass().getName();
     private final SharedPreferences.Editor prefEditor;
 
-    public Dialog_House(tracerengine Trac, SharedPreferences params, Activity context) {
-        super(context);
-        this.context = context;
+    public Dialog_House(tracerengine Trac, SharedPreferences params, Activity activity) {
+        super(activity);
+        this.activity = activity;
         this.params = params;
         this.Tracer = Trac;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
         prefEditor = this.params.edit();
-        domodb = new DomodroidDB(Tracer, context, params);
+        domodb = new DomodroidDB(Tracer, activity, params);
 
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
         cancelButton.setTag("house_cancel");
@@ -153,13 +153,13 @@ public class Dialog_House extends Dialog implements OnClickListener {
         for (Entity_Feature feature : listFeature) {
             if (feature.getParameters().contains("command")) {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(translate.do_translate(getContext(), Tracer, feature.getState_key())));
+                    list_feature.add(feature.getName() + " " + activity.getString(R.string.command) + "-" + activity.getResources().getString(translate.do_translate(getContext(), Tracer, feature.getState_key())));
                 } catch (Exception e) {
-                    list_feature.add(feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
+                    list_feature.add(feature.getName() + " " + activity.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    list_feature.add(feature.getName() + " " + context.getResources().getString(translate.do_translate(getContext(), Tracer, feature.getState_key())));
+                    list_feature.add(feature.getName() + " " + activity.getResources().getString(translate.do_translate(getContext(), Tracer, feature.getState_key())));
                 } catch (Exception e) {
                     list_feature.add(feature.getName() + " " + feature.getState_key());
                 }
@@ -182,7 +182,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
         List<String> list_icon = new ArrayList<>();
         String[] fiilliste;
-        fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
+        fiilliste = activity.getResources().getStringArray(R.array.icon_area_array);
         Collections.addAll(list_icon, fiilliste);
         final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
         list_icon_choice.setTitle(R.string.Wich_ICON_message);
@@ -203,15 +203,15 @@ public class Dialog_House extends Dialog implements OnClickListener {
         List<String> list_type = new ArrayList<>();
         List<String> list_type_icon = new ArrayList<>();
         if (!v.getTag().equals("add_icon")) {
-            list_type.add(context.getString(R.string.place_root));
+            list_type.add(activity.getString(R.string.place_root));
             list_type_icon.add("house");
         }
-        list_type.add(context.getString(R.string.area));
+        list_type.add(activity.getString(R.string.area));
         list_type_icon.add("area");
-        list_type.add(context.getString(R.string.place_room));
+        list_type.add(activity.getString(R.string.place_room));
         list_type_icon.add("map");
         if (!v.getTag().equals("add_widget")) {
-            list_type.add(context.getString(R.string.place_widget));
+            list_type.add(activity.getString(R.string.place_widget));
             list_type_icon.add("usage");
         }
 
@@ -226,18 +226,18 @@ public class Dialog_House extends Dialog implements OnClickListener {
                         Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
                         type = checkedItem.toString();
                         if (v.getTag().equals("add_widget")) {
-                            if (type.equals(context.getString(R.string.place_root)))
+                            if (type.equals(activity.getString(R.string.place_root)))
                                 v.setTag("add_widget_root");
-                            if (type.equals(context.getString(R.string.area)))
+                            if (type.equals(activity.getString(R.string.area)))
                                 v.setTag("add_widget_area");
-                            if (type.equals(context.getString(R.string.place_room)))
+                            if (type.equals(activity.getString(R.string.place_room)))
                                 v.setTag("add_widget_room");
                         } else if (v.getTag().equals("add_icon")) {
-                            if (type.equals(context.getString(R.string.area)))
+                            if (type.equals(activity.getString(R.string.area)))
                                 v.setTag("add_icon_area");
-                            if (type.equals(context.getString(R.string.place_room)))
+                            if (type.equals(activity.getString(R.string.place_room)))
                                 v.setTag("add_icon_room");
-                            if (type.equals(context.getString(R.string.place_widget)))
+                            if (type.equals(activity.getString(R.string.place_widget)))
                                 v.setTag("add_icon_widget");
                         }
                         dialog.dismiss();
@@ -262,7 +262,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("name", name.getText().toString());
                 values.put("description", "");
                 values.put("id", (lastid + 1));
-                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
+                activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
                 //#76
                 prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
@@ -291,7 +291,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 //put the next available id from db here
                 int lastid = domodb.requestlastidArea();
                 values.put("id", lastid + 1);
-                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
+                activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
                 //#76
                 prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
@@ -317,27 +317,27 @@ public class Dialog_House extends Dialog implements OnClickListener {
             public void onClick(DialogInterface dialog_customname, int whichButton) {
                 lastid = domodb.requestidlastFeature_association();
                 ContentValues values = new ContentValues();
-                if (type.equals(context.getString(R.string.place_root))) {
+                if (type.equals(activity.getString(R.string.place_root))) {
                     values.put("place_type", "root");
                     values.put("place_id", ("1"));
                 }
-                if (type.equals(context.getString(R.string.area))) {
+                if (type.equals(activity.getString(R.string.area))) {
                     values.put("place_type", "area");
                     values.put("place_id", (area_id));
                 }
-                if (type.equals(context.getString(R.string.place_room))) {
+                if (type.equals(activity.getString(R.string.place_room))) {
                     values.put("place_type", "room");
                     values.put("place_id", (room_id));
                 }
                 //device_feature_id must come from the selected  one in list
                 values.put("device_feature_id", (feature_id));
                 values.put("id", (lastid + 1));
-                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
+                activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
                 //#76
                 prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                 //A device as been add re-check the cache URL
-                Cache_management.checkcache(Tracer, context);
+                Cache_management.checkcache(Tracer, activity);
                 loadSpinnerData();
             }
         });
@@ -364,20 +364,20 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("value", icon);
                 //reference is the id of the area, room, or feature
                 int reference = 0;
-                if (type.equals(context.getString(R.string.area))) {
+                if (type.equals(activity.getString(R.string.area))) {
                     values.put("name", "area");
                     reference = area_id;
                 }
-                if (type.equals(context.getString(R.string.place_room))) {
+                if (type.equals(activity.getString(R.string.place_room))) {
                     values.put("name", "room");
                     reference = room_id;
                 }
-                if (type.equals(context.getString(R.string.place_widget))) {
+                if (type.equals(activity.getString(R.string.place_widget))) {
                     values.put("name", "feature");
                     reference = feature_id;
                 }
                 values.put("reference", reference);
-                context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                 //#76
                 prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
                 common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
@@ -515,13 +515,13 @@ public class Dialog_House extends Dialog implements OnClickListener {
             map = new HashMap<>();
             if (feature.getParameters().contains("command")) {
                 try {
-                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + context.getResources().getString(translate.do_translate(context, Tracer, feature.getState_key())));
+                    map.put("name", feature.getName() + " " + activity.getString(R.string.command) + "-" + activity.getResources().getString(translate.do_translate(activity, Tracer, feature.getState_key())));
                 } catch (Exception e) {
-                    map.put("name", feature.getName() + " " + context.getString(R.string.command) + "-" + feature.getState_key());
+                    map.put("name", feature.getName() + " " + activity.getString(R.string.command) + "-" + feature.getState_key());
                 }
             } else {
                 try {
-                    map.put("name", feature.getName() + " " + context.getResources().getString(translate.do_translate(context, Tracer, feature.getState_key())));
+                    map.put("name", feature.getName() + " " + activity.getResources().getString(translate.do_translate(activity, Tracer, feature.getState_key())));
                 } catch (Exception e) {
                     map.put("name", feature.getName() + " " + feature.getState_key());
                 }

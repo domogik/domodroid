@@ -147,7 +147,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + feature.getDevice_type() + "> value0 = " + value0 + "  value1 = " + value1);
 
         //state
-        state = new TextView(context);
+        state = new TextView(activity);
         state.setTextColor(Color.BLACK);
         state.setText(stateS);
 
@@ -155,7 +155,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         animation.setDuration(1000);
 
         //first seekbar on/off
-        seekBarOnOff = new SeekBar(context);
+        seekBarOnOff = new SeekBar(activity);
         seekBarOnOff.setProgress(0);
         seekBarOnOff.setMax(40);
         Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.bgseekbaronoff);
@@ -213,14 +213,14 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 String Timestamp = session.getTimestamp();
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 try {
-                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_0);
                                 }
                                 new SBAnim(seekBarOnOff.getProgress(), 0).execute();
                             } else if (b.getString("message").equals(value1)) {
                                 try {
-                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_1);
                                 }
@@ -239,21 +239,21 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 if (new_val.equals(value0)) {
                                     try {
-                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + Value_0);
                                     }
                                     new SBAnim(seekBarOnOff.getProgress(), 0).execute();
                                 } else if (new_val.equals(value1)) {
                                     try {
-                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + Value_1);
                                     }
                                     new SBAnim(seekBarOnOff.getProgress(), 40).execute();
                                 } else {
                                     try {
-                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, new_val)));
+                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, new_val)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + new_val);
                                     }
@@ -318,7 +318,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             case 0:
                 change_this_icon(0);
                 try {
-                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                 } catch (Exception e1) {
                     state.setText(stateS + " : " + Value_0);
                 }
@@ -326,7 +326,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             case 40:
                 change_this_icon(2);
                 try {
-                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                 } catch (Exception e1) {
                     state.setText(stateS + " : " + Value_1);
                 }

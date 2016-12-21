@@ -10,19 +10,19 @@ import android.preference.PreferenceManager;
 public class Cache_management {
     private static final String mytag = "Cache_management";
 
-    public static void checkcache(tracerengine Trac, Activity Context) {
+    public static void checkcache(tracerengine Trac, Activity activity) {
         // Change UrlAccess to make cache more light.
         // 1st need to change when this urlupdate his create.
         // 2nd need to check if this entity_feature exist somewhere (in feature_map or feature_assotiation)
         // 3rd add it in path only if it is the case.
         // So when a user will remove it from association or map it will be removed from cache
         // And when it will be add, it will get back in cache.
-        SharedPreferences sharedparams = PreferenceManager.getDefaultSharedPreferences(Context);
+        SharedPreferences sharedparams = PreferenceManager.getDefaultSharedPreferences(activity);
         float api_version = sharedparams.getFloat("API_VERSION", 0);
         String urlUpdate = "";
         if (api_version != 0) {
             if (api_version <= 0.6f) {
-                DomodroidDB db = new DomodroidDB(Trac, Context, sharedparams);
+                DomodroidDB db = new DomodroidDB(Trac, activity, sharedparams);
                 int[] listFeature_Association = db.requestAllFeatures_association();
                 Entity_Feature[] listFeature = db.requestFeatures();
                 urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "stats/multi/";
@@ -52,7 +52,7 @@ public class Cache_management {
                     WU_widgetUpdate.refreshNow();
                     Trac.d(mytag, "launching a widget update refresh");
                 } else {
-                    WU_widgetUpdate.init(Trac, Context, sharedparams);
+                    WU_widgetUpdate.init(Trac, activity, sharedparams);
                     Trac.d(mytag, "launching a widget update init");
                 }
             } else if (api_version >= 0.7f) {

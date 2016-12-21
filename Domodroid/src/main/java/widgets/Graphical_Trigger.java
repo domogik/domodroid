@@ -134,18 +134,18 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
 
-        TextView state = new TextView(context);
+        TextView state = new TextView(activity);
         state.setTextColor(Color.BLACK);
         state.setText(stateS);
         LL_infoPan.addView(state);
 
         //button animated
-        trigger = new Graphical_Trigger_Button(context);
+        trigger = new Graphical_Trigger_Button(activity);
         trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         trigger.setOnClickListener(this);
 
         //unusable
-        TextView unusable = new TextView(context);
+        TextView unusable = new TextView(activity);
         unusable.setText(R.string.unusable);
         unusable.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
         unusable.setTextColor(Color.BLACK);

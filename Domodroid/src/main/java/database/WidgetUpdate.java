@@ -54,7 +54,7 @@ public class WidgetUpdate {
     private SharedPreferences sharedparams;
 
     private boolean activated;
-    private static Activity context;
+    private static Activity activity;
     private static DomodroidDB domodb;
     private final String mytag = this.getClass().getName();
     private TimerTask doAsynchronousTask;
@@ -124,7 +124,7 @@ public class WidgetUpdate {
 
     }
 
-    public Boolean init(tracerengine Trac, final Activity context, SharedPreferences params) {
+    public Boolean init(tracerengine Trac, final Activity activity, SharedPreferences params) {
         Boolean result = false;
         if (init_done) {
             Log.w("WidgetUpdate", "init already done");
@@ -134,7 +134,7 @@ public class WidgetUpdate {
         sleeping = false;
         this.sharedparams = params;
         this.Tracer = Trac;
-        this.context = context;
+        this.activity = activity;
         activated = true;
         login = params.getString("http_auth_username", null);
         password = params.getString("http_auth_password", null);
@@ -152,7 +152,7 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        domodb = new DomodroidDB(Tracer, context, params);
+        domodb = new DomodroidDB(Tracer, activity, params);
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
@@ -203,7 +203,7 @@ public class WidgetUpdate {
                     // Cache engine being ready, we can start events manager
                     Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
                     if (eventsManager == null) {
-                        eventsManager = Events_manager.getInstance(context);
+                        eventsManager = Events_manager.getInstance(activity);
                     }
                     eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
                     /*
@@ -246,7 +246,7 @@ public class WidgetUpdate {
                     }
                 } else if (msg.what == 9901) {
                     // Events_Manager thread is dead....
-                    Toast.makeText(context, R.string.event_manager_die, Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.event_manager_die, Toast.LENGTH_LONG).show();
                     eventsManager = null;
                     init_done = false;
                     Tracer.i(mytag, "No more Events_Manager now ! ! ! ");
@@ -273,18 +273,18 @@ public class WidgetUpdate {
                     //Notify on main screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
                     //Todo disable the dialog or replace by a toast here the dialog
-                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
-                    //dialog_device_update.setTitle(context.getText(R.string.domogik_information));
-                    //dialog_device_update.setMessage(context.getText(R.string.device_update_message));
-                    //if (!(context).isFinishing()) {
+                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(activity);
+                    //dialog_device_update.setTitle(activity.getText(R.string.domogik_information));
+                    //dialog_device_update.setMessage(activity.getText(R.string.device_update_message));
+                    //if (!(activity).isFinishing()) {
                     //    dialog_device_update.show();
                     //}
 
                     //Todo disable the dialog or replace by a toast here the toast
                     // Display message something changed since last update
-                    context.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, context.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, activity.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
                         }
                     });
 
@@ -709,9 +709,9 @@ public class WidgetUpdate {
                                     }
                                     if (newer) {
                                         //Display message something changed since last update
-                                        context.runOnUiThread(new Runnable() {
+                                        activity.runOnUiThread(new Runnable() {
                                             public void run() {
-                                                Toast.makeText(context, R.string.device_update_message, Toast.LENGTH_LONG).show();
+                                                Toast.makeText(activity, R.string.device_update_message, Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
@@ -729,9 +729,9 @@ public class WidgetUpdate {
                         Tracer.e(mytag, "get stats : Rinor error <" + e.getMessage() + ">");
                         //Toast not available in asynctask
                         // TODO handle "Host name may not be null" to avoid white page in domodroid
-                        context.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
                             }
                         });
                         return null;
@@ -1093,7 +1093,7 @@ public class WidgetUpdate {
     public void descUpdate(int id, String new_desc, String type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         boolean changed = false;
         try {
@@ -1215,7 +1215,7 @@ public class WidgetUpdate {
         //in case domogik MQ problem
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         switch (type) {
             case "area":
@@ -1240,7 +1240,7 @@ public class WidgetUpdate {
     public void remove_one_icon(int id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_icon(id, place_type);
 
@@ -1252,7 +1252,7 @@ public class WidgetUpdate {
     public void remove_one_feature_association(int id, int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_feature_association(id, place_id, place_type);
     }
@@ -1263,7 +1263,7 @@ public class WidgetUpdate {
     public void remove_one_FeatureMap(int id, int posx, int posy, String mapname) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_FeatureMap(id, posx, posy, mapname);
     }
@@ -1271,7 +1271,7 @@ public class WidgetUpdate {
     public void remove_one_feature_in_FeatureMap(int id) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_feature_in_FeatureMap(id);
     }
@@ -1282,7 +1282,7 @@ public class WidgetUpdate {
     public void remove_one_place_type_in_Featureassociation(int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_place_type_in_Featureassociation(place_id, place_type);
     }
@@ -1293,7 +1293,7 @@ public class WidgetUpdate {
     }
 
     public static Activity getactivity() {
-        return context;
+        return activity;
     }
 
     public JSONObject zmqrequest() throws JSONException {

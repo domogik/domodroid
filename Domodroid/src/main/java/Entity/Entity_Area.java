@@ -28,17 +28,17 @@ public class Entity_Area {
     private String description;
     private int id;
     private String name;
-    private final Activity context;
+    private final Activity activity;
     private tracerengine Tracer = null;
     private final SharedPreferences params;
 
 
-    public Entity_Area(SharedPreferences params, tracerengine Trac, Activity context, String description, int id, String name) {
+    public Entity_Area(SharedPreferences params, tracerengine Trac, Activity activity, String description, int id, String name) {
         this.description = description;
         this.id = id;
         this.name = name;
         this.Tracer = Trac;
-        this.context = context;
+        this.activity = activity;
         this.params = params;
     }
 
@@ -68,7 +68,7 @@ public class Entity_Area {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb = new DomodroidDB(Tracer, context, params);
+        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
         domodb.owner = "entity_area";
         try {
             iconName = domodb.requestIcons(id, "area").getValue();

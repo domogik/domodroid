@@ -158,7 +158,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + type + "> value0 = " + value0 + "  value1 = " + value1);
 
         //state
-        state = new TextView(context);
+        state = new TextView(activity);
         state.setTextColor(Color.BLACK);
         state.setText(stateS);
         //		if(api_version>=0.7f)
@@ -168,7 +168,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         float dps = 40;
         int pixels = (int) (dps * scale + 0.5f);
         //first seekbar on/off
-        ON = new Button(context);
+        ON = new Button(activity);
         ON.setOnClickListener(this);
         ON.setHeight(pixels);
         //ON.setWidth(60);
@@ -176,7 +176,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.weight = 0.5f;
         try {
-            ON.setText(context.getString(translate.do_translate(getContext(), Tracer, this.Value_1)));
+            ON.setText(activity.getString(translate.do_translate(getContext(), Tracer, this.Value_1)));
         } catch (Exception e1) {
             ON.setText(this.Value_1);
         }
@@ -185,14 +185,14 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         //ON.setBackgroundResource(R.drawable.boolean_on);
         //ON.setPadding(10, 0, 10, 0);
 
-        OFF = new Button(context);
+        OFF = new Button(activity);
         OFF.setOnClickListener(this);
         OFF.setTag("OFF");
         OFF.setHeight(pixels);
         //OFF.setWidth(60);
         //OFF.setBackgroundResource(R.drawable.boolean_off);
         try {
-            OFF.setText(context.getString(translate.do_translate(getContext(), Tracer, this.Value_0)));
+            OFF.setText(activity.getString(translate.do_translate(getContext(), Tracer, this.Value_0)));
         } catch (Exception e1) {
             OFF.setText(this.Value_0);
         }
@@ -235,14 +235,14 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                             Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                             if (b.getString("message").equals(value0)) {
                                 try {
-                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_0);
                                 }
                                 change_this_icon(0);
                             } else if (b.getString("message").equals(value1)) {
                                 try {
-                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_1);
                                 }
@@ -261,21 +261,21 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
                                 if (new_val.equals(value0)) {
                                     try {
-                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + Value_0);
                                     }
                                     change_this_icon(0);
                                 } else if (new_val.equals(value1)) {
                                     try {
-                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + Value_1);
                                     }
                                     change_this_icon(2);
                                 } else {
                                     try {
-                                        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, new_val)));
+                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, new_val)));
                                     } catch (Exception e1) {
                                         state.setText(stateS + " : " + new_val);
                                     }
@@ -338,7 +338,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         if (v.getTag().equals("OFF")) {
             change_this_icon(0);
             try {
-                state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
             } catch (Exception e1) {
                 state.setText(stateS + " : " + Value_0);
             }
@@ -350,7 +350,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         } else if (v.getTag().equals("ON")) {
             change_this_icon(2);
             try {
-                state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
             } catch (Exception e1) {
                 state.setText(stateS + " : " + Value_1);
             }

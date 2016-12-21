@@ -93,7 +93,7 @@ public class config_with_qrcode extends AppCompatActivity {
                         String mq_port_pub = "40411";
                         try {
                             mq_port_pub = jsonresult.getString("mq_port_pub");
-                        } catch (ArrayIndexOutOfBoundsException exec) {
+                        } catch (Exception exec) {
                             Tracer.e(mytag, "mq_port_pub not present in this qrcode");
                         }
                         String mq_port_req_rep = jsonresult.getString("mq_port_req_rep");

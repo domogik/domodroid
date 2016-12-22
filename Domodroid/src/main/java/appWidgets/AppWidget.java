@@ -35,8 +35,9 @@ public class AppWidget extends AppWidgetProvider {
     private static Entity_Feature feature_sensor;
     private static Entity_Feature feature_command;
     private static DomodroidDB domodb;
-    private SharedPreferences SP_params;
-    private tracerengine Tracer = null;
+    private static SharedPreferences SP_params;
+    private static tracerengine Tracer = null;
+    private static Activity activity;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -87,9 +88,9 @@ public class AppWidget extends AppWidgetProvider {
         /*
         Get feature from sensor and command for this appswidgets
         */
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
-        tracerengine Tracer = tracerengine.getInstance(SP_params, context);
-        Activity activity = WidgetUpdate.getactivity();
+        SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+        Tracer = tracerengine.getInstance(SP_params, context);
+        activity = WidgetUpdate.getactivity();
         if (domodb == null)
             domodb = new DomodroidDB(Tracer, activity, SP_params);
 
@@ -99,16 +100,16 @@ public class AppWidget extends AppWidgetProvider {
         Log.e("WidgetConfigure", "device_feature_id_sensor N°:" + device_feature_id_sensor);
         Log.e("WidgetConfigure", "device_feature_id_command N°:" + device_feature_id_command);
         try {
-            Entity_Feature feature_sensor = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_sensor));
+            feature_sensor = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_sensor));
             Tracer.e("AppWidget", "feature sensor= " + feature_sensor.getName());
             views.setTextViewText(R.id.nap_time, feature_sensor.getName());
-            views.setImageViewResource(R.id.nap_icon, Graphics_Manager.Icones_Agent(feature_sensor.getIcon_name(), 0));
+            views.setImageViewResource(R.id.nap_icon, feature_sensor.getRessources());
         } catch (Exception e) {
             e.printStackTrace();
             Tracer.e("AppWidget", e.toString());
         }
         try {
-            Entity_Feature feature_command = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_command));
+            feature_command = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_command));
             Tracer.e("AppWidget", "feature command= " + feature_command.getName());
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,4 +190,7 @@ public class AppWidget extends AppWidgetProvider {
         }
     }
 
+    public static AppWidget getInstance(Context context) {
+        return null;
+    }
 }

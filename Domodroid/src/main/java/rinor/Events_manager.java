@@ -1,11 +1,17 @@
 package rinor;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 //import com.orhanobut.logger.Logger;
@@ -18,6 +24,7 @@ import org.zeromq.ZMQ;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import appWidgets.AppWidget;
 import database.Cache_Feature_Element;
 import database.JSONParser;
 import database.WidgetUpdate;
@@ -25,6 +32,7 @@ import misc.tracerengine;
 
 public class Events_manager {
     private static Events_manager instance;
+    private static Context context;
     private tracerengine Tracer;
     private static Activity activity;
     private Handler state_engine_handler;
@@ -65,6 +73,8 @@ public class Events_manager {
     }
 
     public static Events_manager getInstance(final Activity activity) {
+
+        context = activity.getBaseContext();
         if (instance == null) {
             Log.i("Events_manager", "Creating instance........................");
             instance = new Events_manager(activity);
@@ -229,6 +239,26 @@ public class Events_manager {
                                             Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                             Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                             put_event(to_stack);    //Put in stack, and notify cache engine
+
+                                            //update mainscreen widget
+                                            AppWidget appWidgetManager = AppWidget.getInstance(context);
+                                            ComponentName thisWidget = new ComponentName(context, AppWidget.class);
+/*
+                                                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
+                                                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.napply_widget);
+                                                int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, AppWidget.class));
+                                                AppWidget myWidget = new AppWidget();
+                                                myWidget.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+
+*/
+                                            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
+                                            remoteViews.setTextViewText(R.id.nap_time, "myText " + New_Value);
+                                            //remoteViews.setImageViewResource(R.id.nap_icon, feature_sensor.getRessources());
+
+                                            //appWidgetManager.updateAppWidget(thisWidget, remoteViews);
+
+
                                             stats_com.add(Stats_Com.EVENTS_RCV, result.length());
                                         } catch (JSONException e) {
                                             Tracer.e(mytag, "Error making the json from MQ result");

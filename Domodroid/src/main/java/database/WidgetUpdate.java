@@ -80,6 +80,8 @@ public class WidgetUpdate {
     private Boolean SSL;
     private float api_version;
     private String last_device_update;
+    private String last_sensor_update;
+
     //
     // Table of handlers to notify
     // pos 0 = Main
@@ -141,6 +143,7 @@ public class WidgetUpdate {
         SSL = params.getBoolean("ssl_activate", false);
         api_version = sharedparams.getFloat("API_VERSION", 0);
         last_device_update = sharedparams.getString("last_device_update", "1900-01-01 00:00:00");
+        last_sensor_update = sharedparams.getString("last_sensor_update", "1900-01-01 00:00:00");
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -272,7 +275,7 @@ public class WidgetUpdate {
                     //New or update device detected by MQ
                     //Notify on main screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
-                    //Todo disable the dialog or replace by a toast here the dialog
+                    //disable the dialog or replace by a toast: here the old dialog
                     //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(activity);
                     //dialog_device_update.setTitle(activity.getText(R.string.domogik_information));
                     //dialog_device_update.setMessage(activity.getText(R.string.device_update_message));
@@ -280,7 +283,7 @@ public class WidgetUpdate {
                     //    dialog_device_update.show();
                     //}
 
-                    //Todo disable the dialog or replace by a toast here the toast
+                    //disable the dialog or replace by a toast: here the toast
                     // Display message something changed since last update
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
@@ -666,9 +669,39 @@ public class WidgetUpdate {
                             Tracer.d(mytag, "json_widget_state for <0.6 API=");
                             Tracer.json(mytag, json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
-                            //todo change by == when device.get will work
+                            //todo change by == when device.get will work for 0.5
                             // else if (api_version == 0.7f) {
-                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            //get all sensors
+                            if (api_version == 0.9f) {
+                                /*
+                                //TODO load timestamp apps was closed
+                                //TODO load stored last_value
+                                //TODO load last_value since timestamp
+                                String strJson = sharedparams.getString("sensor_saved_value", "0");
+                                String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                                try {
+                                    if (strJson != null) {
+                                        JSONObject jsonData = new JSONObject(strJson);
+                                        Tracer.d(mytag, "load last_value from sharedprefs 0.9 API=" + jsonData.toString());
+                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        Date timestamplast_sensor_update;
+                                        boolean newer = false;
+                                        try {
+                                            timestamplast_sensor_update = df.parse(last_sensor_update);
+                                        } catch (Exception e) {
+                                            Tracer.e(mytag, "No saved date or error parsing it");
+                                            timestamplast_sensor_update = new Date();
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Tracer.d(mytag, "json_widget_state for 0.9 API failed");
+                                }
+                                request = request + "/" + Integer.parseInt(sensor_saved_timestamp);
+*/
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            } else {
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            }
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)

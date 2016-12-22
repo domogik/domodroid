@@ -576,6 +576,19 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         if (SP_params.getBoolean("domodroid_metrics", true)) {
             processTimer_for_metrics.cancel(pendingIntent_for_metrics);
         }
+        if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
+            //todo save last value to sharedparams to load them later
+            //todo save current time stamp to know when the pass was exit.
+            /*
+            for (entity_feature in entity){
+
+            }
+            */
+            SharedPreferences.Editor prefEditor = SP_params.edit();
+            //prefEditor.putString("sensor_saved_value", urlUpdate);
+            //prefEditor.putString("sensor_saved_timestamp", currentimestamp);
+            prefEditor.commit();
+        }
     }
 
     private void Create_message_box() {

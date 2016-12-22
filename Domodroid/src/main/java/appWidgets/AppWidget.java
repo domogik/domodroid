@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.domogik.domodroid13.R;
 
 import Entity.Entity_Feature;
+import activities.Graphics_Manager;
 import database.DmdContentProvider;
 import database.DomodroidDB;
 import database.WidgetUpdate;
@@ -101,6 +102,7 @@ public class AppWidget extends AppWidgetProvider {
             Entity_Feature feature_sensor = domodb.requestFeaturesbyid(Integer.toString(device_feature_id_sensor));
             Tracer.e("AppWidget", "feature sensor= " + feature_sensor.getName());
             views.setTextViewText(R.id.nap_time, feature_sensor.getName());
+            views.setImageViewResource(R.id.nap_icon, Graphics_Manager.Icones_Agent(feature_sensor.getIcon_name(), 0));
         } catch (Exception e) {
             e.printStackTrace();
             Tracer.e("AppWidget", e.toString());

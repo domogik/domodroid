@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/napply_widget"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -10,13 +11,10 @@
     <ImageView
         android:id="@+id/nap_icon"
         android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_height="fill_parent"
         android:adjustViewBounds="true"
-        android:background="@drawable/domodroid"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:scaleType="fitStart" />
+        android:scaleType="fitStart"
+        android:src="@drawable/domodroid" />
 
     <TextView
         android:id="@+id/nap_time"

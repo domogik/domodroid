@@ -9,6 +9,10 @@ import org.json.JSONObject;
 import org.zeromq.ZMQ;
 
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
+
+import misc.tracerengine;
+import rinor.Rest_com;
 
 /**
  * Created by mpunie on 13/05/2015.
@@ -41,8 +45,22 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             jo.put("media", "speech");
             jo.put("identity", "domodroid");
             jo.put("source", "terminal-android." + Abstract.gethostname.getHostName());
+            /*String msg = URLEncoder.encode(jo.toString());
+            Log.d("ZMQPubMessage doInBgd", URLEncoder.encode(jo.toString()));
+            */
             String msg = jo.toString();
             Log.d("ZMQPubMessage doInBgd", msg.toString());
+/*
+            String url1 = "http://192.168.0.63:40406/rest/butler/discuss?callback=foo&data=" + URLEncoder.encode(msg);
+            Log.d("ZMQPubMessage doInBgd", "answer= " + url.toString());
+            String login = "admin";
+            String password = "123";
+            int timeout = 30000;
+            Boolean SSL = Boolean.FALSE;
+            tracerengine Tracer = null;
+            String answer = Rest_com.connect_string(Tracer, url1, login, password, timeout, SSL);
+            Log.d("ZMQPubMessage doInBgd", "answer= " + answer);
+*/
             this.pub.connect(url);
             // we need this timeout to let zeromq connect to the publisher
             try {
@@ -57,11 +75,12 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             if (!this.pub.send(msg)) {
                 Log.e("ZMQPubMessage doInBgd", "Send of msg not ok: " + msg);
             }
+
             Log.d("ZMQPubMessage doInBgd", "End sending");
         } catch (JSONException e) {
             Log.d("ZMQPubMessage doInBgd", "json error:" + e);
-        } catch (Exception e) {
-            Log.d("ZMQPubMessage doInBgd", "error:" + e);
+            //} catch (Exception e) {
+            //   Log.d("ZMQPubMessage doInBgd", "error:" + e);
         }
         this.pub.close();
         return 1;

@@ -588,7 +588,7 @@ public class WidgetUpdate {
         // and arm the timer to do automatically this each 'update' seconds
         timer_flag = true;    //Cyclic timer is running...
         if (timer != null) {
-            Log.e("Timer debug","timer != null");
+            Log.e("Timer debug", "timer != null");
             timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
             // TODO: 23/12/2016 use the user option to update cyclic from rest
@@ -727,22 +727,23 @@ public class WidgetUpdate {
                                 Iterator i1 = json_widget_state_0_6.keys();
                                 Iterator i2 = jsonData_saved.keys();
                                 String tmp_key;
-                                while(i1.hasNext()) {
+                                while (i1.hasNext()) {
                                     tmp_key = (String) i1.next();
                                     mergedObj.put(tmp_key, json_widget_state_0_6.get(tmp_key));
                                 }
-                                while(i2.hasNext()) {
+                                while (i2.hasNext()) {
                                     tmp_key = (String) i2.next();
                                     mergedObj.put(tmp_key, jsonData_saved.get(tmp_key));
                                 }
                                 Log.e("#124 json combined", mergedObj.toString());
                             }
+                            //TODO load timestamp apps was closed
+                            //TODO load stored last_value
+                            //TODO load last_value since timestamp
+                            String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                            Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
                                 /*
-                                //TODO load timestamp apps was closed
-                                //TODO load stored last_value
-                                //TODO load last_value since timestamp
-                                String strJson = sharedparams.getString("sensor_saved_value", "0");
-                                String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                                 String strJson = sharedparams.getString("sensor_saved_value", "0");
                                 try {
                                     if (strJson != null) {
                                         JSONObject jsonData = new JSONObject(strJson);

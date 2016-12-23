@@ -576,7 +576,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         SharedPreferences.Editor prefEditor = SP_params.edit();
         prefEditor.putString("sensor_saved_value", cached_dump.toString());
-        //prefEditor.putString("sensor_saved_timestamp", currentimestamp);
+        long currentTimestamp = (System.currentTimeMillis() / 1000);
+        Log.e("#124", "sensor_saved_timestamp"+currentTimestamp);
+        prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
         prefEditor.commit();
         //}
         if (WU_widgetUpdate != null) {

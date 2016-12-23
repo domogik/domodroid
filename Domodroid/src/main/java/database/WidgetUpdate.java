@@ -436,6 +436,7 @@ public class WidgetUpdate {
                 Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size + " Value= :" + cache_entry.Value);
                 json_dump_current_cache.put("id", cache_entry.DevId);
                 json_dump_current_cache.put("last_value", cache_entry.Value);
+                json_dump_current_cache.put("last_received", cache_entry.Value_timestamp);
                 json_dump_cache.put(json_dump_current_cache);
             }
         }

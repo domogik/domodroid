@@ -243,17 +243,19 @@ public class Events_manager {
                                             //update mainscreen widget
                                             AppWidget appWidgetManager = AppWidget.getInstance(context);
                                             ComponentName thisWidget = new ComponentName(context, AppWidget.class);
-/*
-                                                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-                                                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.napply_widget);
+                                                //int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
+                                                //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.napply_widget);
                                                 int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, AppWidget.class));
                                                 AppWidget myWidget = new AppWidget();
                                                 myWidget.onUpdate(context, AppWidgetManager.getInstance(context), ids);
 
-*/
+
                                             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
                                             remoteViews.setTextViewText(R.id.nap_time, "myText " + New_Value);
+                                            Tracer.e("AppWidget", "remoteViews.setTextViewText(R.id.nap_time, myText);"+New_Value);
+
                                             //remoteViews.setImageViewResource(R.id.nap_icon, feature_sensor.getRessources());
 
                                             //appWidgetManager.updateAppWidget(thisWidget, remoteViews);

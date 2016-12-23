@@ -559,28 +559,28 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         this.WM_Agent = null;
         widgetHandler = null;
 
-        //if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
-        JSONArray cached_dump = null;
-        if (WU_widgetUpdate != null) {
-            Log.e("#124", "dump cache");
-            try {
-                cached_dump = WU_widgetUpdate.dump_cache_to_json();
-            } catch (JSONException e) {
-                e.printStackTrace();
+        if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
+            JSONArray cached_dump = null;
+            if (WU_widgetUpdate != null) {
+                Log.e("#124", "dump cache");
+                try {
+                    cached_dump = WU_widgetUpdate.dump_cache_to_json();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.e("#124", cached_dump.toString());
+                Log.e("#124", "dump cached");
             }
-            Log.e("#124", cached_dump.toString());
-            Log.e("#124", "dump cached");
-        }
-        //todo save last value to sharedparams to load them later
-        //todo save current time stamp to know when the pass was exit.
+            //todo save last value to sharedparams to load them later
+            //todo save current time stamp to know when the pass was exit.
 
-        SharedPreferences.Editor prefEditor = SP_params.edit();
-        prefEditor.putString("sensor_saved_value", cached_dump.toString());
-        long currentTimestamp = (System.currentTimeMillis() / 1000);
-        Log.e("#124", "sensor_saved_timestamp"+currentTimestamp);
-        prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
-        prefEditor.commit();
-        //}
+            SharedPreferences.Editor prefEditor = SP_params.edit();
+            prefEditor.putString("sensor_saved_value", cached_dump.toString());
+            long currentTimestamp = (System.currentTimeMillis() / 1000);
+            Log.e("#124", "sensor_saved_timestamp" + currentTimestamp);
+            prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
+            prefEditor.commit();
+        }
         if (WU_widgetUpdate != null) {
             WU_widgetUpdate.Disconnect(0);    //remove all pending subscribings
             if (!Tracer.Map_as_main) {

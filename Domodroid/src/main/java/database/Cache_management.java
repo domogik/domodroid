@@ -58,8 +58,11 @@ public class Cache_management {
             } else if (api_version >= 0.7f) {
                 if (api_version >= 0.7f)
                     urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "sensor/";
+                //todo for #124 but later
+                /*
                 if (api_version >= 0.9f)
                     urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "sensor/since/";
+                */
                 SharedPreferences.Editor prefEditor = sharedparams.edit();
                 prefEditor.putString("UPDATE_URL", urlUpdate);
                 //need_refresh = true;	// To notify main activity that screen must be refreshed

@@ -26,6 +26,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -701,78 +702,87 @@ public class WidgetUpdate {
 
                 if (request != null) {
                     JSONObject json_widget_state = null;
-                    JSONArray json_widget_state_0_4;
+                    JSONArray json_widget_state_0_4 = new JSONArray();
                     stats_com.add(Stats_Com.STATS_SEND, request.length());
                     try {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
                             json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
-                            Tracer.d(mytag, "json_widget_state for <0.6 API=");
-                            Tracer.json(mytag, json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
+                            json_widget_state = new JSONObject();
                             //todo change by == when device.get will work for 0.5
                             // else if (api_version == 0.7f) {
                             //get all sensors
-                            //if (api_version == 0.9f) {
-                            JSONObject json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL).getJSONObject(0);
-                            Log.e("#124 json from domogik", json_widget_state_0_6.toString());
+                            if (api_version < 0.9f) {
+                                //get all sensors from rest
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            } else if (api_version == 0.9f) {
+                                //load timestamp apps was closed
+                                String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                                Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
 
-                            String strJson = sharedparams.getString("sensor_saved_value", "0");
-                            if (strJson != null) {
-                                JSONArray jsonData = new JSONArray(strJson);
-                                JSONObject jsonData_saved = jsonData.getJSONObject(0);
-                                Log.e("#124 json saved", jsonData.toString());
-                                //I assume that your two JSONObjects are o1 and o2
-                                JSONObject mergedObj = new JSONObject();
-                                Iterator i1 = json_widget_state_0_6.keys();
-                                Iterator i2 = jsonData_saved.keys();
-                                String tmp_key;
-                                while (i1.hasNext()) {
-                                    tmp_key = (String) i1.next();
-                                    mergedObj.put(tmp_key, json_widget_state_0_6.get(tmp_key));
-                                }
-                                while (i2.hasNext()) {
-                                    tmp_key = (String) i2.next();
-                                    mergedObj.put(tmp_key, jsonData_saved.get(tmp_key));
-                                }
-                                Log.e("#124 json combined", mergedObj.toString());
-                            }
-                            //TODO load timestamp apps was closed
-                            //TODO load stored last_value
-                            //TODO load last_value since timestamp
-                            String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
-                            Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
-                                /*
-                                 String strJson = sharedparams.getString("sensor_saved_value", "0");
-                                try {
-                                    if (strJson != null) {
-                                        JSONObject jsonData = new JSONObject(strJson);
-                                        Tracer.d(mytag, "load last_value from sharedprefs 0.9 API=" + jsonData.toString());
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                        Date timestamplast_sensor_update;
-                                        boolean newer = false;
-                                        try {
-                                            timestamplast_sensor_update = df.parse(last_sensor_update);
-                                        } catch (Exception e) {
-                                            Tracer.e(mytag, "No saved date or error parsing it");
-                                            timestamplast_sensor_update = new Date();
-                                        }
+                                //Modify request to match the timestamp
+                                //todo if timestamp is null or 0 get the full sensor list
+                                String request_since = request + "/since/" + Integer.parseInt(sensor_saved_timestamp);
+                                JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request_since, login, password, 30000, SSL);
+                                Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
+
+                                String strJson = sharedparams.getString("sensor_saved_value", "0");
+                                if (strJson != null) {
+                                    //TODO load stored last_value
+                                    JSONArray jsonData = new JSONArray(strJson);
+                                    Log.e("#124 json saved", jsonData.toString());
+                                    String tmp_key;
+                                    for (int i = 0; i < json_widget_state_0_6.length(); i++) {
+                                        json_widget_state_0_4.put(json_widget_state_0_6.getJSONObject(i));
+                                        Log.e("#124", "json creating from domogik: " + json_widget_state_0_6.getJSONObject(i).toString());
+                                        Log.e("#124", "json creating from domogik: " + json_widget_state_0_4.length());
                                     }
-                                } catch (Exception e) {
-                                    Tracer.d(mytag, "json_widget_state for 0.9 API failed");
+                                    //TODO remove when ok
+                                    // Display message something changed since last update
+                                    final JSONArray finalJson_widget_state_0_ = json_widget_state_0_6;
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json length from rest sensor/since= " + finalJson_widget_state_0_.length(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    for (int i = 0; i < jsonData.length(); i++) {
+                                        json_widget_state_0_4.put(jsonData.getJSONObject(i));
+                                        Log.e("#124", "json creating from saved: " + jsonData.getJSONObject(i).toString());
+                                        Log.e("#124", "json creating from saved: " + json_widget_state_0_4.length());
+
+                                    }
+                                    //TODO remove when ok
+                                    //Display message something changed since last update
+                                    final JSONArray finalJson_widget_state_0_1 = jsonData;
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json length from from saved: " + finalJson_widget_state_0_1.length(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    Log.e("#124", "json combined: " + json_widget_state_0_4.toString());
+                                    //TODO remove when ok
+                                    final JSONArray finalJson_widget_state_0_2 = json_widget_state_0_4;
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json total: " + finalJson_widget_state_0_2.length(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Tracer.d(mytag, "#124 json saved is null");
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json saved is null", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });//get all sensors from rest
+                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                                 }
-                                request = request + "/" + Integer.parseInt(sensor_saved_timestamp);
-*/
-                            //    json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
-                            //} else {
-                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
-                            //}
-                            json_widget_state = new JSONObject();
-                            // Create a false jsonarray like if it was domomgik 0.3
+                            }
+                            // Create a false JSONObject like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
                             json_widget_state.put("stats", json_widget_state_0_4);
-                            Tracer.d(mytag, "json_widget_state for 0.7 API=");
-                            Tracer.json(mytag, json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for 0.7 API=" + json_widget_state.toString());
                             //todo move this part in 0.8 api under when MQ.Get will work
                             if (api_version >= 0.8f) {
                                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -789,6 +799,7 @@ public class WidgetUpdate {
                                     JSONArray json_device_state_0_4 = new JSONArray();
                                     request = request.replace("sensor", "device");
                                     json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    Tracer.d(mytag, "json_widget_deviec for 0.8 API=" + json_device_state_0_4.toString());
                                     //test info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {
@@ -798,10 +809,10 @@ public class WidgetUpdate {
                                             if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
                                                 newer = true;
                                                 timestamplast_device_update = timestamplast_update;
-                                                Log.v(mytag, "device info_changed at: " + timestamplast_update.toString());
+                                                Tracer.v(mytag, "device info_changed at: " + timestamplast_update.toString());
                                             }
-                                        } catch (Exception E) {
-                                            timestamplast_update = new Date();
+                                        } catch (ParseException E) {
+                                            //timestamplast_update = new Date();
                                             Tracer.d(mytag, "Exception info_changed:" + E);
                                         }
                                     }
@@ -817,10 +828,10 @@ public class WidgetUpdate {
                                     Tracer.e(mytag, "Error trying to parse /device and info_changed");
                                 }
                             }
-                        } else if (api_version >= 0.8f) {
+                        }/* else if (api_version >= 0.8f) {
                             //todo will use this when device.get will work
                             json_widget_state = zmqrequest();
-                        }
+                        }*/
                     } catch (final Exception e) {
                         //stats request cannot be completed (broken link or terminal in standby ?)
                         //Will retry automatically in 2'05, if no events received

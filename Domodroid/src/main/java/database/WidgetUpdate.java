@@ -29,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -166,7 +167,10 @@ public class WidgetUpdate {
 		 */
         Tracer.d(mytag, "cache engine starting timer for periodic cache update");
         Timer();        //and initiate the cyclic timer
-        new UpdateThread().execute();    //And force an immediate refresh
+
+        //Commented to avoid lunching 2 request one from the initial timer and the other below
+        new UpdateThread().execute();    //And force an immediate refresh on init
+
         this.callback_counts = 0;    //To force a refresh
         /*
         Boolean said = false;
@@ -404,6 +408,41 @@ public class WidgetUpdate {
         //dump_cache();	//During development, help to debug !
     }
 
+    public JSONArray dump_cache_to_json() throws JSONException {
+        JSONArray json_dump_cache = new JSONArray();
+
+        int size = cache.size();
+        Tracer.v(mytag, "Dump of Cache , size = " + cache.size());
+        while (locked) {
+            //Somebody else is updating list...
+            try {
+                Thread.sleep(10);        //Standby 10 milliseconds
+            } catch (Exception e) {
+                Tracer.e(mytag, e.toString());
+            }
+        }
+        locked = true;
+        for (int i = 0; i < size; i++) {
+            Cache_Feature_Element cache_entry = cache.get(i);
+            ArrayList<Entity_client> clients_list = null;
+            if (cache_entry == null) {
+                Tracer.e(mytag, "Cache entry # " + i + "   empty ! ");
+            } else {
+                JSONObject json_dump_current_cache = new JSONObject();
+                clients_list = cache_entry.clients_list;
+                int clients_list_size = 0;
+                if (clients_list != null)
+                    clients_list_size = clients_list.size();
+                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size + " Value= :" + cache_entry.Value);
+                json_dump_current_cache.put("id", cache_entry.DevId);
+                json_dump_current_cache.put("last_value", cache_entry.Value);
+                json_dump_cache.put(json_dump_current_cache);
+            }
+        }
+        locked = false;
+        return json_dump_cache;
+    }
+
     public void dump_cache() {
         String[] name = new String[]{"Main   ", "Map    ", "MapView", "???    "};
         int size = cache.size();
@@ -431,7 +470,7 @@ public class WidgetUpdate {
                 if (clients_list != null)
                     clients_list_size = clients_list.size();
 
-                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size);
+                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size + " Value= :" + cache_entry.Value);
                 if (clients_list_size > 0) {
                     for (int j = 0; j < clients_list_size; j++) {
                         if (clients_list.get(j) == null)
@@ -528,7 +567,7 @@ public class WidgetUpdate {
                     public void run() {
                         if (activated) {
                             try {
-                                new UpdateThread().execute();
+                                new UpdateThread().execute(); //on timer
                             } catch (Exception e) {
                                 Tracer.e(mytag, e.toString());
                             }
@@ -548,9 +587,10 @@ public class WidgetUpdate {
         // and arm the timer to do automatically this each 'update' seconds
         timer_flag = true;    //Cyclic timer is running...
         if (timer != null) {
+            Log.e("Timer debug","timer != null");
             timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
-
+            // TODO: 23/12/2016 use the user option to update cyclic from rest
             //timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
         }
     }
@@ -583,7 +623,7 @@ public class WidgetUpdate {
             //TODO : if sleep period too long (> 1'50) , we must force a refresh of cache values, because events have been 'masked' !
             if ((eventsManager != null) && eventsManager.cache_out_of_date) {
                 callback_counts = 0;
-                new UpdateThread().execute();    //Force an immediate cache refresh
+                new UpdateThread().execute();    //Force an immediate cache refresh on wakeup
                 eventsManager.cache_out_of_date = false;
             }
             if (ready) {
@@ -672,7 +712,30 @@ public class WidgetUpdate {
                             //todo change by == when device.get will work for 0.5
                             // else if (api_version == 0.7f) {
                             //get all sensors
-                            if (api_version == 0.9f) {
+                            //if (api_version == 0.9f) {
+                            JSONObject json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL).getJSONObject(0);
+                            Log.e("#124 json from domogik", json_widget_state_0_6.toString());
+
+                            String strJson = sharedparams.getString("sensor_saved_value", "0");
+                            if (strJson != null) {
+                                JSONArray jsonData = new JSONArray(strJson);
+                                JSONObject jsonData_saved = jsonData.getJSONObject(0);
+                                Log.e("#124 json saved", jsonData.toString());
+                                //I assume that your two JSONObjects are o1 and o2
+                                JSONObject mergedObj = new JSONObject();
+                                Iterator i1 = json_widget_state_0_6.keys();
+                                Iterator i2 = jsonData_saved.keys();
+                                String tmp_key;
+                                while(i1.hasNext()) {
+                                    tmp_key = (String) i1.next();
+                                    mergedObj.put(tmp_key, json_widget_state_0_6.get(tmp_key));
+                                }
+                                while(i2.hasNext()) {
+                                    tmp_key = (String) i2.next();
+                                    mergedObj.put(tmp_key, jsonData_saved.get(tmp_key));
+                                }
+                                Log.e("#124 json combined", mergedObj.toString());
+                            }
                                 /*
                                 //TODO load timestamp apps was closed
                                 //TODO load stored last_value
@@ -698,10 +761,10 @@ public class WidgetUpdate {
                                 }
                                 request = request + "/" + Integer.parseInt(sensor_saved_timestamp);
 */
-                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
-                            } else {
-                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
-                            }
+                            //    json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            //} else {
+                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            //}
                             json_widget_state = new JSONObject();
                             // Create a false jsonarray like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)

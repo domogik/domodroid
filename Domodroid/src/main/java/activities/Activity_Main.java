@@ -38,6 +38,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,6 +57,8 @@ import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
 import org.domogik.domodroid13.R;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -277,7 +280,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         VG_parent.removeAllViews();
                         if (WU_widgetUpdate == null) {
                             Tracer.i(mytag, "OnCreate WidgetUpdate is null startCacheengine!");
-                            startCacheEngine();
+                            startCacheEngine(); //if sync dialog is closed
                         }
                         Bundle b = new Bundle();
                         //Notify sync complete to parent Dialog
@@ -477,7 +480,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             //A config exists and a sync as been done by past.
             if (WU_widgetUpdate == null) {
                 Tracer.i(mytag, "OnCreate Params splash is false and WidgetUpdate is null startCacheengine!");
-                startCacheEngine();
+                startCacheEngine();//if sync is done on create
             }
         }
         // Changelog view
@@ -555,6 +558,27 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         super.onDestroy();
         this.WM_Agent = null;
         widgetHandler = null;
+
+        //if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
+        JSONArray cached_dump = null;
+        if (WU_widgetUpdate != null) {
+            Log.e("#124", "dump cache");
+            try {
+                cached_dump = WU_widgetUpdate.dump_cache_to_json();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("#124", cached_dump.toString());
+            Log.e("#124", "dump cached");
+        }
+        //todo save last value to sharedparams to load them later
+        //todo save current time stamp to know when the pass was exit.
+
+        SharedPreferences.Editor prefEditor = SP_params.edit();
+        prefEditor.putString("sensor_saved_value", cached_dump.toString());
+        //prefEditor.putString("sensor_saved_timestamp", currentimestamp);
+        prefEditor.commit();
+        //}
         if (WU_widgetUpdate != null) {
             WU_widgetUpdate.Disconnect(0);    //remove all pending subscribings
             if (!Tracer.Map_as_main) {
@@ -575,19 +599,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         //Stop metrics.
         if (SP_params.getBoolean("domodroid_metrics", true)) {
             processTimer_for_metrics.cancel(pendingIntent_for_metrics);
-        }
-        if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
-            //todo save last value to sharedparams to load them later
-            //todo save current time stamp to know when the pass was exit.
-            /*
-            for (entity_feature in entity){
-
-            }
-            */
-            SharedPreferences.Editor prefEditor = SP_params.edit();
-            //prefEditor.putString("sensor_saved_value", urlUpdate);
-            //prefEditor.putString("sensor_saved_timestamp", currentimestamp);
-            prefEditor.commit();
         }
     }
 

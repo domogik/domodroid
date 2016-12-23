@@ -59,6 +59,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             Boolean SSL = Boolean.FALSE;
             tracerengine Tracer = null;
             String answer = Rest_com.connect_string(Tracer, url1, login, password, timeout, SSL);
+            answer = answer.substring(answer.indexOf("(") + 1, answer.lastIndexOf(")"));
             Log.d("ZMQPubMessage doInBgd", "answer= " + answer);
 */
             this.pub.connect(url);

@@ -860,4 +860,5 @@
     <string name="loading_data_from_rest">Loading values from rest...</string>
     <string name="underscore"> - </string>
     <string name="widget_error">Something were wrong with</string>
+    <string name="domogik_admin_page">Domogik admin page</string>
 </resources>

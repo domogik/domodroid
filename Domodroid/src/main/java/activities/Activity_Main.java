@@ -1092,6 +1092,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 // click on 'sync' button into Sliding_Drawer View
                 run_sync_dialog();        // And run a resync with Rinor server
                 return true;
+            case R.id.menu_domogik_admin:
+                //lunch a webview of domogik admin
+                Intent intent = new Intent(context, webview_domogik_admin.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

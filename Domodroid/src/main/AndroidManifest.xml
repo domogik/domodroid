@@ -92,6 +92,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Domogik webview activity -->
+        <activity
+            android:name="activities.webview_domogik_admin"
+            android:configChanges="orientation"
+            android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>

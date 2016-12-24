@@ -797,10 +797,12 @@ public class WidgetUpdate {
                                 }
                                 try {
                                     JSONArray json_device_state_0_4 = new JSONArray();
+                                    //change url to get device instead of sensor
                                     request = request.replace("sensor", "device");
+                                    //Grab device list
                                     json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                                     Tracer.d(mytag, "json_widget_deviec for 0.8 API=" + json_device_state_0_4.toString());
-                                    //test info_changed:
+                                    //test if info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {
                                             String last_update = json_device_state_0_4.getJSONObject(i).getString("info_changed");

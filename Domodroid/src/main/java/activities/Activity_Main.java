@@ -1078,14 +1078,21 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 startActivity(helpI1);
                 return true;
             case R.id.menu_stats:
-                if (SP_params.getBoolean("SYNC", false)) {
-                    loadWigets(0, "statistics");
-                    historyPosition++;
-                    history.add(historyPosition, new String[]{"0", "statistics"});
-                } else {
-                    if (AD_notSyncAlert == null)
-                        createAlert();
-                    AD_notSyncAlert.show();
+                try {
+                    if (SP_params.getBoolean("SYNC", false)) {
+                        loadWigets(0, "statistics");
+                        historyPosition++;
+                        history.add(historyPosition, new String[]{"0", "statistics"});
+                    } else {
+                        if (AD_notSyncAlert == null)
+                            createAlert();
+                        AD_notSyncAlert.show();
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                    //todo find why java.lang.ArrayIndexOutOfBoundsException: 1 > 0
+                    //Maybe when not sync or because of  E/activities.Activity_Main(12801): Can not refresh this view
+
                 }
                 return true;
             case R.id.menu_sync:

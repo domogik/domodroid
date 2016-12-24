@@ -753,6 +753,8 @@ public class WidgetUpdate {
                                         Log.e("#124", "json creating from saved: " + json_widget_state_0_4.length());
 
                                     }
+                                    //#124 Todo compare saved value and load value from domogik to remove old ones.
+
                                     //TODO remove when ok
                                     //Display message something changed since last update
                                     final JSONArray finalJson_widget_state_0_1 = jsonData;

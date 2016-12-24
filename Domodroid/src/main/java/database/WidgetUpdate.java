@@ -30,7 +30,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -724,7 +723,7 @@ public class WidgetUpdate {
 
                                 //Modify request to match the timestamp
                                 //todo if timestamp is null or 0 get the full sensor list
-                                String request_since = request + "/since/" + Integer.parseInt(sensor_saved_timestamp);
+                                String request_since = request + "since/" + Integer.parseInt(sensor_saved_timestamp);
                                 JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request_since, login, password, 30000, SSL);
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
@@ -802,7 +801,13 @@ public class WidgetUpdate {
                                     //change url to get device instead of sensor
                                     request = request.replace("sensor", "device");
                                     //Grab device list
-                                    json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    if (api_version == 0.8f) {
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    } else if (api_version >= 0.9f) {
+                                        //todo be sure last_device_update is in the right timestamp format???
+                                        request = request + "since/" + last_device_update;
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    }
                                     Tracer.d(mytag, "json_widget_deviec for 0.8 API=" + json_device_state_0_4.toString());
                                     //test if info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {

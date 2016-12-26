@@ -155,8 +155,8 @@ public class MapView extends View {
         this.activity = activity;
         this.params = params;
         api_version = params.getFloat("API_VERSION", 0);
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
 
         //activated=true;

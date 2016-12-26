@@ -97,8 +97,8 @@ public class Events_manager {
 //todo look it to avoid crash in certain case...
         //setOwner(owner, state_engine_handler);
         urlAccess = params.getString("URL", "1.1.1.1");
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
         MQaddress = params.getString("MQaddress", null);

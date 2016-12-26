@@ -64,8 +64,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         message = (TextView) findViewById(R.id.message);
         cancelButton = (Button) findViewById(R.id.CancelButton);
         cancelButton.setOnClickListener(this);
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
         last_device_update = params.getString("last_device_update", "1900-01-01 00:00:00");
 

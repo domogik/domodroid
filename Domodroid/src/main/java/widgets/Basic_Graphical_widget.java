@@ -99,8 +99,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.state_key = state_key;
 
         //global variable
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
 

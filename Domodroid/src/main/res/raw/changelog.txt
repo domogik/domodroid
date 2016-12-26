@@ -22,8 +22,9 @@
     $ 1.4
       % Version 28
       _ 2017-xx-xx
+      * Replace null by Anonymous for default value of rest auth.
       * In menu add a link to open a webview to domogik's admin page
-      * Start working on #124
+      * Start working on #124 and same for device list
       * Close #137 Crash if mq if bad configured
       * Close #136 MQ Sub port from QRCODE not handle correctly.
       % Version 27

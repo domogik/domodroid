@@ -139,8 +139,8 @@ public class WidgetUpdate {
         this.Tracer = Trac;
         this.activity = activity;
         activated = true;
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
         api_version = sharedparams.getFloat("API_VERSION", 0);
         last_device_update = sharedparams.getString("last_device_update", "1900-01-01 00:00:00");

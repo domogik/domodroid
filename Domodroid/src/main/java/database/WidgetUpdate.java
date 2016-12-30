@@ -169,7 +169,7 @@ public class WidgetUpdate {
         Timer();        //and initiate the cyclic timer
 
         //Commented to avoid lunching 2 request one from the initial timer and the other below
-        new UpdateThread().execute();    //And force an immediate refresh on init
+        //new UpdateThread().execute();    //And force an immediate refresh on init
 
         this.callback_counts = 0;    //To force a refresh
         /*
@@ -554,7 +554,6 @@ public class WidgetUpdate {
     private void Timer() {
         timer = new Timer();
 
-
         final Handler loc_handler = new Handler();
         if (timer_flag)
             return;    //Don't run many cyclic timers !
@@ -568,6 +567,7 @@ public class WidgetUpdate {
                     public void run() {
                         if (activated) {
                             try {
+                                Tracer.d(mytag, "new UpdateThread().execute() from timer");
                                 new UpdateThread().execute(); //on timer
                             } catch (Exception e) {
                                 Tracer.e(mytag, e.toString());
@@ -588,11 +588,10 @@ public class WidgetUpdate {
         // and arm the timer to do automatically this each 'update' seconds
         timer_flag = true;    //Cyclic timer is running...
         if (timer != null) {
-            Log.e("Timer debug", "timer != null");
-            timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
+            //timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
-            // TODO: 23/12/2016 use the user option to update cyclic from rest
-            //timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
+            // dame but using the user option timer
+            timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
         }
     }
 
@@ -808,7 +807,7 @@ public class WidgetUpdate {
                                         request = request + "since/" + last_device_update;
                                         json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                                     }
-                                    Tracer.d(mytag, "json_widget_deviec for 0.8 API=" + json_device_state_0_4.toString());
+                                    Tracer.d(mytag, "json_widget_device for 0.8 API=" + json_device_state_0_4.toString());
                                     //test if info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {

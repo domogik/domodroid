@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sample="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/AppBaseTheme"
     android:title="Preferences"
@@ -55,12 +56,19 @@
             android:summaryOff="No ssl use"
             android:summaryOn="Using https for Rest"
             android:title="SSL option" />
-        <Preference
-            android:enabled="false"
+        <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="125"
+            android:inputType="number"
             android:key="UPDATE_TIMER"
             android:selectable="false"
             android:shouldDisableView="true"
-            android:title="@string/UPDATE_TIMER" />
+            android:summary="@string/UPDATE_TIMER"
+            android:title="@string/OPTION_server_Text2"
+            sample:msbp_dialogEnabled="true"
+            sample:msbp_interval="5"
+            sample:msbp_maxValue="600"
+            sample:msbp_measurementUnit="s"
+            sample:msbp_minValue="60" />
         <EditTextPreference
             android:enabled="false"
             android:key="UPDATE_URL"

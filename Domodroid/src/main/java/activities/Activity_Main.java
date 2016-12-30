@@ -558,7 +558,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         super.onDestroy();
         this.WM_Agent = null;
         widgetHandler = null;
-
         if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
             JSONArray cached_dump = null;
             if (WU_widgetUpdate != null) {
@@ -581,6 +580,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
             prefEditor.commit();
         }
+
+        //Stop metrics.
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        }
+
         if (WU_widgetUpdate != null) {
             WU_widgetUpdate.Disconnect(0);    //remove all pending subscribings
             if (!Tracer.Map_as_main) {
@@ -598,10 +603,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 			Tracer = null;
 		}
 		 */
-        //Stop metrics.
-        if (SP_params.getBoolean("domodroid_metrics", true)) {
-            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
-        }
     }
 
     private void Create_message_box() {
@@ -1059,7 +1060,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 }
                 //dont_kill = false;		//To force OnDestroy() to also kill engines
                 //And stop main program
-                this.finish();
+                finish();
+                /*todo uncomment this block to really quit the apps
+                //but it ctash in on destroy as some values are not initialize
+                Intent intent = new Intent(this, Activity_Main.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit me", true);
+                startActivity(intent);
+                */
                 return true;
             case R.id.menu_house_config:
                 Tracer.v(mytag + ".onclick()", "Call to House settings screen");
@@ -1100,9 +1108,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 run_sync_dialog();        // And run a resync with Rinor server
                 return true;
             case R.id.menu_domogik_admin:
-                //lunch a webview of domogik admin
-                Intent intent = new Intent(context, webview_domogik_admin.class);
-                startActivity(intent);
+                //launch a webview of domogik admin
+                Intent intent_webview = new Intent(context, webview_domogik_admin.class);
+                startActivity(intent_webview);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

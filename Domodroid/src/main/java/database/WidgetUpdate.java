@@ -168,7 +168,7 @@ public class WidgetUpdate {
         Tracer.d(mytag, "cache engine starting timer for periodic cache update");
         Timer();        //and initiate the cyclic timer
 
-        //Commented to avoid lunching 2 request one from the initial timer and the other below
+        //Commented to avoid launching 2 request one from the initial timer and the other below
         //new UpdateThread().execute();    //And force an immediate refresh on init
 
         this.callback_counts = 0;    //To force a refresh

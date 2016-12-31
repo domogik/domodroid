@@ -570,11 +570,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 Log.e("#124", cached_dump.toString());
                 Log.e("#124", "dump cached");
             }
-            //todo save last value to sharedparams to load them later
-            //todo save current time stamp to know when the pass was exit.
 
             SharedPreferences.Editor prefEditor = SP_params.edit();
+            // save last value to sharedparams to load them later
             prefEditor.putString("sensor_saved_value", cached_dump.toString());
+            // save current time stamp to know when the pass was exit.
             long currentTimestamp = (System.currentTimeMillis() / 1000);
             Log.e("#124", "sensor_saved_timestamp" + currentTimestamp);
             prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
@@ -758,6 +758,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 Tracer.v(mytag, "Direct start on Map requested...");
                 Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
                 INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
+                // todo for #125 wait cache ready
                 startActivity(INTENT_map);
             } else {
                 if (AD_notSyncAlert == null)

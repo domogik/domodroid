@@ -182,21 +182,21 @@ public class MapView extends View {
                         if (featureMap.getSession() != null) {
                             featureMap.setCurrentState(featureMap.getSession().getValue());
                         }
-
                     }
                     refreshMap();
-
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-
                     try {
                         finalize();
                     } catch (Throwable t) {
                         Tracer.d(mytag, "Could not finished");
                     }
-
-
+                } else if (msg.what == 8999) {
+                    //Cache engine is ready for use....
+                    if (Tracer != null)
+                        Tracer.i(mytag, "Cache engine has notified it's ready !");
+                    refreshMap();
                 }
             }
         };
@@ -732,7 +732,8 @@ public class MapView extends View {
                     if (!parameters.contains("command")) {
                         float formatedValue = 0;
                         if (value != null && !value.equals("")) {
-                            formatedValue = Round(Float.parseFloat(value), 2);
+                            //formatedValue = Round(Float.parseFloat(value), 2);
+                            formatedValue = Abstract.calcul.Round_float(Float.parseFloat(value), 2);
                             Tracer.v(mytag, " Round the value" + value + " to " + formatedValue);
 
                             try {
@@ -1719,13 +1720,6 @@ public class MapView extends View {
 
     public void setMoveMode(boolean moveMode) {
         this.moveMode = moveMode;
-    }
-
-    private static float Round(float Rval, int Rpl) {
-        float p = (float) Math.pow(10, Rpl);
-        Rval = Rval * p;
-        float tmp = Math.round(Rval);
-        return tmp / p;
     }
 
     public void set_navigationdraweropen(boolean navigationdraweropen) {

@@ -32,8 +32,8 @@ public abstract class calcul {
         return bd.doubleValue();
     }
 
-    public static float Round_float(float Rval) {
-        float p = (float) Math.pow(10, 2);
+    public static float Round_float(float Rval, int Rpl) {
+        float p = (float) Math.pow(10, Rpl);
         Rval = Rval * p;
         float tmp = Math.round(Rval);
         return tmp / p;

@@ -882,7 +882,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 e.printStackTrace();
             }
             avgf = avgf / values.size();
-            avgf = calcul.Round_float(avgf);
+            avgf = calcul.Round_float(avgf, 2);
 
             gridStartX = Float.toString(maxf).length() * size7;
             if (Float.toString(minf).length() * size7 > gridStartX)

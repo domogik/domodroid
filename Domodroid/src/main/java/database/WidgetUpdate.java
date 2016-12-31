@@ -313,7 +313,7 @@ public class WidgetUpdate {
      * Allow callers to set their handler in table
      */
     public void set_handler(Handler parent, int type) {
-        //type = 0 if View , or 1 if Map
+        //type = 0 if View , or 1 if Map, or 2 if MapView
         if ((type >= 0) && (type <= 2))
             WidgetUpdate.parent[type] = parent;
     }
@@ -591,7 +591,7 @@ public class WidgetUpdate {
             //timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
             // dame but using the user option timer
-            timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
+            timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300) * 1000);
         }
     }
 
@@ -626,9 +626,15 @@ public class WidgetUpdate {
                 new UpdateThread().execute();    //Force an immediate cache refresh on wakeup
                 eventsManager.cache_out_of_date = false;
             }
-            if (ready) {
+            if (ready) {    //Notify cache is ready
                 if (parent[0] != null) {
-                    parent[0].sendEmptyMessage(8999);    //Notify cache is ready
+                    parent[0].sendEmptyMessage(8999);
+                }
+                if (parent[1] != null) {
+                    parent[1].sendEmptyMessage(8999);
+                }
+                if (parent[2] != null) {
+                    parent[2].sendEmptyMessage(8999);
                 }
 
             }
@@ -666,6 +672,20 @@ public class WidgetUpdate {
             if (parent[0] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify Main activity....");
                 parent[0].sendEmptyMessage(8999);    //hide Toast message
+            } else {
+                Tracer.d(mytag, "cache engine ready  ! No Main activity....");
+            }
+            if (parent[1] != null) {
+                Tracer.d(mytag, "cache engine ready  ! Notify Map activity....");
+                parent[1].sendEmptyMessage(8999);    //hide Toast message
+            } else {
+                Tracer.d(mytag, "cache engine ready  ! No Map activity....");
+            }
+            if (parent[2] != null) {
+                Tracer.d(mytag, "cache engine ready  ! Notify MapView activity....");
+                parent[2].sendEmptyMessage(8999);    //hide Toast message
+            } else {
+                Tracer.d(mytag, "cache engine ready  ! No MapView activity....");
             }
             Tracer.d(mytag, "cache engine ready  ! Exiting Waiting thread ....");
             return null;
@@ -1130,7 +1150,6 @@ public class WidgetUpdate {
         if (!ready) {
             Tracer.i(mytag, "cache engine not yet ready : reject !");
             return result;
-
         }
 
         while (locked) {

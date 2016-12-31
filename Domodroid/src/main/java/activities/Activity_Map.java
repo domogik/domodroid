@@ -131,7 +131,8 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         prefEditor = params.edit();
         mapView = new MapView(Tracer, this, params);
         mapView.setParams(params);
-        mapView.setUpdate(params.getInt("UPDATE_TIMER", 300));
+        // not needed as it is already done in mapview
+        // mapView.setUpdate(params.getInt("UPDATE_TIMER", 300));
         setContentView(R.layout.activity_map);
         ViewGroup parent = (ViewGroup) findViewById(R.id.map_container);
 

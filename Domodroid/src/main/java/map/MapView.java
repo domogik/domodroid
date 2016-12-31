@@ -740,6 +740,7 @@ public class MapView extends View {
                                 //Basilic add, number feature has a unit parameter
                                 jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
                                 String test_unite = jparam.getString("unit");
+                                //todo centralise with display_sensor_info class
                                 //# 30 convert byte unit.
                                 switch (test_unite) {
                                     case "b":

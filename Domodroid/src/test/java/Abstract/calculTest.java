@@ -15,7 +15,7 @@ public class calculTest {
 
     @org.junit.Test
     public void testRound_float() throws Exception {
-        final float testRound_double = Abstract.calcul.Round_float((float) 19.990000000000);
+        final float testRound_double = Abstract.calcul.Round_float((float) 19.9909900000000,2);
         Assert.assertEquals(19.99, testRound_double, 0.001);
 
     }

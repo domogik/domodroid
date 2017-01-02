@@ -61,18 +61,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import Abstract.common_method;
+import Abstract.load_parameters;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
@@ -232,7 +228,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
-        load_preferences();
+        //load_preferences(); //moved to abstract
+        load_parameters.load_preferences(SP_params, SP_prefEditor);
 
         Tracer.set_profile(SP_params);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
@@ -515,7 +512,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 //cache_ready = false;
                 //try to solve 1rst launch and orientation problem
                 Tracer.v(mytag + ".onresume", "Init not done! and params Splash is false startCacheengine!");
-                //startCacheEngine();
+                startCacheEngine();
                 //end_of_init();		//Will be done when cache will be ready
             }
         } else {
@@ -753,12 +750,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
 
         if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
+            // todo for #125 wait cache ready
             //Solve #2029
             if (SP_params.getBoolean("SYNC", false)) {
                 Tracer.v(mytag, "Direct start on Map requested...");
                 Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
                 INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
-                // todo for #125 wait cache ready
                 startActivity(INTENT_map);
             } else {
                 if (AD_notSyncAlert == null)
@@ -794,7 +791,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         if (reload) {
             // If answer is 'yes', load preferences from backup
             Tracer.v(mytag, "reload settings..");
-            loadSharedPreferencesFromFile(backupprefs);
+            //loadSharedPreferencesFromFile(backupprefs); //moved to Abstract
+            if (load_parameters.loadSharedPreferencesFromFile(backupprefs, SP_prefEditor, Tracer)) {
+                LoadSelections();    // to set panel with known values
+            }
             run_sync_dialog();
 
         } else {
@@ -820,6 +820,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
     }
 
+    /*
     private void loadSharedPreferencesFromFile(File src) {
         ObjectInputStream input = null;
         try {
@@ -860,6 +861,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         }
     }
+    */
 
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
@@ -1195,6 +1197,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         Tracer.d(mytag, "Update navigation drawer listview");
     }
 
+    /*
     private void load_preferences() {
         //Load default value to avoid crash.
         String currlogpath = SP_params.getString("LOGNAME", "");
@@ -1218,6 +1221,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
         SP_prefEditor.commit();
     }
+    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

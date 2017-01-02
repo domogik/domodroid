@@ -22,6 +22,7 @@
     $ 1.4
       % Version 28
       _ 2017-xx-xx
+      * Close #125 Refresh widgets if start on map.
       * Correct the double domogik rest call at start.
       * Re-enable the timer period in menu and code.
       * Replace null by Anonymous for default value of rest auth.

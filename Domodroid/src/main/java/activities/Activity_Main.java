@@ -512,7 +512,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 //cache_ready = false;
                 //try to solve 1rst launch and orientation problem
                 Tracer.v(mytag + ".onresume", "Init not done! and params Splash is false startCacheengine!");
-                startCacheEngine();
+                //startCacheEngine();
                 //end_of_init();		//Will be done when cache will be ready
             }
         } else {
@@ -524,7 +524,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         }
         if (end_of_init_requested)
-            end_of_init();
+            refresh();
     }
 
     @Override
@@ -750,7 +750,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
 
         if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
-            // todo for #125 wait cache ready
+            //#125 wait cache ready
             //Solve #2029
             if (SP_params.getBoolean("SYNC", false)) {
                 Tracer.v(mytag, "Direct start on Map requested...");

@@ -24,7 +24,6 @@ import org.zeromq.ZMQ;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
-import appWidgets.AppWidget;
 import database.Cache_Feature_Element;
 import database.JSONParser;
 import database.WidgetUpdate;
@@ -239,28 +238,6 @@ public class Events_manager {
                                             Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
                                             Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
                                             put_event(to_stack);    //Put in stack, and notify cache engine
-
-                                            //update mainscreen widget
-                                            AppWidget appWidgetManager = AppWidget.getInstance(context);
-                                            ComponentName thisWidget = new ComponentName(context, AppWidget.class);
-
-                                                //int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-
-                                                //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.napply_widget);
-                                                int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, AppWidget.class));
-                                                AppWidget myWidget = new AppWidget();
-                                                myWidget.onUpdate(context, AppWidgetManager.getInstance(context), ids);
-
-
-                                            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
-                                            remoteViews.setTextViewText(R.id.nap_time, "myText " + New_Value);
-                                            Tracer.e("AppWidget", "remoteViews.setTextViewText(R.id.nap_time, myText);"+New_Value);
-
-                                            //remoteViews.setImageViewResource(R.id.nap_icon, feature_sensor.getRessources());
-
-                                            //appWidgetManager.updateAppWidget(thisWidget, remoteViews);
-
-
                                             stats_com.add(Stats_Com.EVENTS_RCV, result.length());
                                         } catch (JSONException e) {
                                             Tracer.e(mytag, "Error making the json from MQ result");

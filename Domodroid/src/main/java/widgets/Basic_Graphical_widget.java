@@ -68,7 +68,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     final float api_version;
     final boolean SSL;
     tracerengine Tracer = null;
-    final Activity context;
+    final Activity activity;
     private String icon;
     private final String place_type;
     private final int place_id;
@@ -83,10 +83,10 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     public Typeface typefaceweather;
     public Typeface typefaceawesome;
 
-    public Basic_Graphical_widget(SharedPreferences params, Activity context, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
-        super(context);
+    public Basic_Graphical_widget(SharedPreferences params, Activity activity, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
+        super(activity);
         this.Tracer = Trac;
-        this.context = context;
+        this.activity = activity;
         this.icon = icon;
         this.id = id;
         this.setPadding(5, 5, 5, 5);
@@ -99,23 +99,23 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.state_key = state_key;
 
         //global variable
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
 
         SharedPreferences params1 = params;
         this.widgetHandler = handler;
-        domodb = new DomodroidDB(this.Tracer, this.context, params);
+        domodb = new DomodroidDB(this.Tracer, this.activity, params);
         prefEditor = params1.edit();
         setOnLongClickListener(this);
 
         //Fonts
-        typefaceweather = Typeface.createFromAsset(context.getAssets(), "fonts/weathericons-regular-webfont.ttf");
-        typefaceawesome = Typeface.createFromAsset(context.getAssets(), "fonts/fontawesome-webfont.ttf");
+        typefaceweather = Typeface.createFromAsset(activity.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+        typefaceawesome = Typeface.createFromAsset(activity.getAssets(), "fonts/fontawesome-webfont.ttf");
 
         //panel with border
-        LL_background = new LinearLayout(context);
+        LL_background = new LinearLayout(activity);
         LL_background.setOrientation(LinearLayout.VERTICAL);
         if (widgetSize == 0)
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -124,36 +124,36 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         LL_background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", LL_background.getHeight()));
 
         //panel with border
-        LL_topPan = new LinearLayout(context);
+        LL_topPan = new LinearLayout(activity);
         LL_topPan.setOrientation(LinearLayout.HORIZONTAL);
         LL_topPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
         //panel to set icon with padding left
-        FrameLayout FL_imgPan = new FrameLayout(context);
+        FrameLayout FL_imgPan = new FrameLayout(activity);
         FL_imgPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         FL_imgPan.setPadding(5, 8, 10, 10);
 
         //icon
-        IV_img = new ImageView(context);
+        IV_img = new ImageView(activity);
         IV_img.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER));
         IV_img.setBackgroundResource(Graphics_Manager.Icones_Agent(icon, 0));
 
         //info panel
-        LL_infoPan = new LinearLayout(context);
+        LL_infoPan = new LinearLayout(activity);
         LL_infoPan.setOrientation(LinearLayout.VERTICAL);
         LL_infoPan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
         LL_infoPan.setGravity(Gravity.CENTER_VERTICAL);
         LL_infoPan.setPadding(0, 0, 10, 0);
 
         //feature panel
-        LL_featurePan = new LinearLayout(context);
+        LL_featurePan = new LinearLayout(activity);
         LL_featurePan.setOrientation(LinearLayout.VERTICAL);
         LL_featurePan.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1));
         LL_featurePan.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         LL_featurePan.setPadding(0, 0, 20, 0);
 
         //name of widgets
-        TV_name = new TextView(context);
+        TV_name = new TextView(activity);
         TV_name.setText(name);
         TV_name.setTextSize(14);
         TV_name.setTextColor(Color.BLACK);
@@ -172,11 +172,11 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
     public boolean onLongClick(View v) {
         final AlertDialog.Builder list_type_choice = new AlertDialog.Builder(getContext());
-        final String[] String_list_action = new String[]{context.getString(R.string.change_icon), context.getString(R.string.rename),
-                context.getString(R.string.delete), context.getString(R.string.move_up), context.getString(R.string.move_down)};
+        final String[] String_list_action = new String[]{activity.getString(R.string.change_icon), activity.getString(R.string.rename),
+                activity.getString(R.string.delete), activity.getString(R.string.move_up), activity.getString(R.string.move_down)};
         final Integer[] Integer_list_action_icon = new Integer[]{R.drawable.ic_rounded_corner_black, R.drawable.ic_description_black,
                 R.drawable.ic_delete_black, R.drawable.ic_arrow_upward_black, R.drawable.ic_arrow_downward_black};
-        ListAdapter adapter = new ArrayAdapterWithIcon(context, String_list_action, Integer_list_action_icon);
+        ListAdapter adapter = new ArrayAdapterWithIcon(activity, String_list_action, Integer_list_action_icon);
         list_type_choice.setTitle(R.string.Widget_longclic_menu_title);
         list_type_choice.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
@@ -192,9 +192,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
 
     @SuppressWarnings("Convert2Diamond")
     private void do_action(String action) {
-        if (action.equals(context.getString(R.string.rename))) {
+        if (action.equals(activity.getString(R.string.rename))) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-            alert.setTitle(context.getString(R.string.Rename_title) + " " + name + "-" + state_key);
+            alert.setTitle(activity.getString(R.string.Rename_title) + " " + name + "-" + state_key);
             alert.setMessage(R.string.Rename_message);
             // Set an EditText view to get user input
             final EditText input = new EditText(getContext());
@@ -215,9 +215,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                 }
             });
             alert.show();
-        } else if (action.equals(context.getString(R.string.delete))) {
+        } else if (action.equals(activity.getString(R.string.delete))) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-            alert.setTitle(context.getString(R.string.Delete_feature_title) + " " + name + "-" + state_key);
+            alert.setTitle(activity.getString(R.string.Delete_feature_title) + " " + name + "-" + state_key);
             alert.setMessage(R.string.Delete_feature_message);
             alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
@@ -227,7 +227,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
                     common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     //recheck cache element to remove those no more need.
-                    Cache_management.checkcache(Tracer, context);
+                    Cache_management.checkcache(Tracer, activity);
                     common_method.refresh_the_views(widgetHandler);
                     Snackbar.make(getRootView(), "Widget deleted", Snackbar.LENGTH_LONG).show();
                 }
@@ -238,14 +238,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                 }
             });
             alert.show();
-        } else if (action.equals(context.getString(R.string.change_icon))) {
+        } else if (action.equals(activity.getString(R.string.change_icon))) {
             final AlertDialog.Builder list_icon_choice = new AlertDialog.Builder(getContext());
             List<String> list_icon = new ArrayList<>();
             String[] fiilliste;
-            fiilliste = context.getResources().getStringArray(R.array.icon_area_array);
+            fiilliste = activity.getResources().getStringArray(R.array.icon_area_array);
             Collections.addAll(list_icon, fiilliste);
             final CharSequence[] char_list_icon = list_icon.toArray(new String[list_icon.size()]);
-            list_icon_choice.setTitle(context.getString(R.string.Wich_ICON_message) + " " + name + "-" + state_key);
+            list_icon_choice.setTitle(activity.getString(R.string.Wich_ICON_message) + " " + name + "-" + state_key);
             List_Icon_Adapter adapter = new List_Icon_Adapter(Tracer, getContext(), fiilliste, fiilliste);
             list_icon_choice.setAdapter(adapter, null);
             list_icon_choice.setSingleChoiceItems(char_list_icon, -1,
@@ -262,7 +262,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             //reference is the id of the area, room, or feature
                             int reference = id;
                             values.put("reference", reference);
-                            context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
+                            activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
                             common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
@@ -273,14 +273,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             );
             AlertDialog alert_list_icon = list_icon_choice.create();
             alert_list_icon.show();
-        } else if (action.equals(context.getString(R.string.move_down))) {
+        } else if (action.equals(activity.getString(R.string.move_down))) {
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "down");
             prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
             // #76
             common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
-        } else if (action.equals(context.getString(R.string.move_up))) {
+        } else if (action.equals(activity.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
             // #76

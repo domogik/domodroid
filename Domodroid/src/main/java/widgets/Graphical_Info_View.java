@@ -125,8 +125,8 @@ public class Graphical_Info_View extends View implements OnClickListener {
         invalidate();
         this.Tracer = Trac;
         this.parameter = parameters;
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         api_version = params.getFloat("API_VERSION", 0);
         SSL = params.getBoolean("ssl_activate", false);
 
@@ -882,7 +882,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 e.printStackTrace();
             }
             avgf = avgf / values.size();
-            avgf = calcul.Round_float(avgf);
+            avgf = calcul.Round_float(avgf, 2);
 
             gridStartX = Float.toString(maxf).length() * size7;
             if (Float.toString(minf).length() * size7 > gridStartX)

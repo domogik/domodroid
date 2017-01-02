@@ -212,7 +212,7 @@
     <string name="Rinor_URL">Url utilisée pour joindre Rest</string>
     <string name="MQ_address">Adresse de MQ</string>
     <string name="Mq_sub_port">Port sub de MQ</string>
-    <string name="Mq_pub_port">Port sub de MQ</string>
+    <string name="Mq_pub_port">Port pub de MQ</string>
     <string name="usage_byusagecheckbox">Forcer par usage pour 0.3:</string>
     <string name="usage_byusage">Organisation par usage ou device</string>
     <string name="usage_byhouse">Organisation comme maison</string>
@@ -773,4 +773,5 @@
     <string name="sms_not_sended">SMS pas envoyé</string>
     <string name="too_many_sms_were_sent_in_too_little_time.">Trop de sms envoyé en trop peu de temps.</string>
     <string name="loading_data_from_rest">Chargement des valeurs depuis rest....</string>
+    <string name="domogik_admin_page">Administration de domogik</string>
 </resources>

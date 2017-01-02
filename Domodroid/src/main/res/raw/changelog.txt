@@ -20,8 +20,18 @@
   </head>
   <body>
     $ 1.4
-      % Version 27
+      % Version 28
       _ 2017-xx-xx
+      * Close #125 Refresh widgets if start on map.
+      * Correct the double domogik rest call at start.
+      * Re-enable the timer period in menu and code.
+      * Replace null by Anonymous for default value of rest auth.
+      * In menu add a link to open a webview to domogik's admin page.
+      * Start working on #124 and same for device list.
+      * Close #137 Crash if mq if bad configured.
+      * Close #136 MQ Sub port from QRCODE not handle correctly.
+      % Version 27
+      _ 2017-12-20
       * Close #135 Crash on multiple open/close history.
       * Close #134 comma/point error in sending value for a number.
       % Version 26

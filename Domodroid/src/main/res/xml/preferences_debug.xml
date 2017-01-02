@@ -78,6 +78,11 @@
             android:summaryOn="Device id show"
             android:title="@string/network_Text18" />
         <CheckBoxPreference
+            android:key="SYNC"
+            android:summaryOff="@string/not_sync"
+            android:summaryOn="Sync with a server"
+            android:title="Is sync to debug if not" />
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="domodroid_metrics"
             android:summaryOff="Metrics disabled"

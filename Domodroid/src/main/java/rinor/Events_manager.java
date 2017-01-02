@@ -1,11 +1,17 @@
 package rinor;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 //import com.orhanobut.logger.Logger;
@@ -18,6 +24,7 @@ import org.zeromq.ZMQ;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import appWidgets.AppWidget;
 import database.Cache_Feature_Element;
 import database.JSONParser;
 import database.WidgetUpdate;
@@ -25,8 +32,9 @@ import misc.tracerengine;
 
 public class Events_manager {
     private static Events_manager instance;
+    private static Context context;
     private tracerengine Tracer;
-    private static Activity context;
+    private static Activity activity;
     private Handler state_engine_handler;
     private Handler events_engine_handler;
     private ArrayList<Cache_Feature_Element> engine_cache;
@@ -57,17 +65,19 @@ public class Events_manager {
     /*******************************************************************************
      * Internal Constructor
      *******************************************************************************/
-    private Events_manager(final Activity context) {
+    private Events_manager(final Activity activity) {
         super();
-        this.context = context;
+        this.activity = activity;
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
         com_broken = false;
     }
 
-    public static Events_manager getInstance(final Activity context) {
+    public static Events_manager getInstance(final Activity activity) {
+
+        context = activity.getBaseContext();
         if (instance == null) {
             Log.i("Events_manager", "Creating instance........................");
-            instance = new Events_manager(context);
+            instance = new Events_manager(activity);
         }
         return instance;
 
@@ -87,8 +97,8 @@ public class Events_manager {
 //todo look it to avoid crash in certain case...
         //setOwner(owner, state_engine_handler);
         urlAccess = params.getString("URL", "1.1.1.1");
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
         MQaddress = params.getString("MQaddress", null);
@@ -195,69 +205,101 @@ public class Events_manager {
             if (api_version >= 0.7f) {
                 if (MQaddress != null && MQsubport != null) {
                     if (!MQaddress.equals("") && !MQsubport.equals("")) {
-                        //TODO find a way to know when ZeroMQ didn't response anymore.
-                        ZMQ.Context zmqContext = ZMQ.context(1);
-                        ZMQ.Socket subscriber = zmqContext.socket(ZMQ.SUB);
-                        Tracer.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
-                        subscriber.setIdentity("domodroid".getBytes());
-                        Tracer.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
-                        subscriber.connect("tcp://" + MQaddress + ":" + MQsubport);
-                        Tracer.d(mytag, "subscriber.connect (tcp://" + MQaddress + ":" + MQsubport + ")");
-                        subscriber.subscribe("device-stats".getBytes());
-                        Tracer.d(mytag, "subscriber.subscribe(device-stats)");
-                        subscriber.subscribe("device.update".getBytes());
-                        Tracer.d(mytag, "subscriber.subscribe(device.update)");
+                        try {
+                            //TODO find a way to know when ZeroMQ didn't response anymore.
 
-                        while (alive) {
-                            while (!sleeping) {
-                                String result = subscriber.recvStr(0);
-                                Tracer.i(mytag, "MQ information receive: ");
-                                Tracer.i(mytag, result.toString());
-                                if (result.contains("stored_value")) {
-                                    try {
-                                        JSONObject json_stats_04 = new JSONObject(result);
-                                        Tracer.v(mytag, "MQ Parsing result to jsonobject");
-                                        //Tracer.d(mytag, json_stats_04.toString());
-                                        String ticket = "1";
-                                        String device_id = json_stats_04.get("sensor_id").toString();
-                                        String New_Value = json_stats_04.get("stored_value").toString();
-                                        String Timestamp = json_stats_04.get("timestamp").toString();
-                                        //TODO find a way to get the state_key of the feature by id=sensorid here!!
-                                        String New_Key = "";
-                                        Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
-                                        Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
-                                        put_event(to_stack);    //Put in stack, and notify cache engine
+                            ZMQ.Context zmqContext = ZMQ.context(1);
+                            ZMQ.Socket subscriber = zmqContext.socket(ZMQ.SUB);
+                            Tracer.d(mytag, "subscriber = zmqContext.socket(ZMQ.sub)");
+                            subscriber.setIdentity("domodroid".getBytes());
+                            Tracer.d(mytag, "subscriber.setIdentity(domodroid.getBytes())");
+                            subscriber.connect("tcp://" + MQaddress + ":" + MQsubport);
+                            Tracer.d(mytag, "subscriber.connect (tcp://" + MQaddress + ":" + MQsubport + ")");
+                            subscriber.subscribe("device-stats".getBytes());
+                            Tracer.d(mytag, "subscriber.subscribe(device-stats)");
+                            subscriber.subscribe("device.update".getBytes());
+                            Tracer.d(mytag, "subscriber.subscribe(device.update)");
+
+                            while (alive) {
+                                while (!sleeping) {
+                                    String result = subscriber.recvStr(0);
+                                    Tracer.i(mytag, "MQ information receive: ");
+                                    Tracer.i(mytag, result.toString());
+                                    if (result.contains("stored_value")) {
+                                        try {
+                                            JSONObject json_stats_04 = new JSONObject(result);
+                                            Tracer.v(mytag, "MQ Parsing result to jsonobject");
+                                            //Tracer.d(mytag, json_stats_04.toString());
+                                            String ticket = "1";
+                                            String device_id = json_stats_04.get("sensor_id").toString();
+                                            String New_Value = json_stats_04.get("stored_value").toString();
+                                            String Timestamp = json_stats_04.get("timestamp").toString();
+                                            //TODO find a way to get the state_key of the feature by id=sensorid here!!
+                                            String New_Key = "";
+                                            Tracer.v(mytag, "event ready : Ticket = MQ Device_id = " + device_id + " Key = " + New_Key + " Value = " + New_Value + " Timestamp = " + Timestamp);
+                                            Rinor_event to_stack = new Rinor_event(Integer.parseInt(ticket), event_item, Integer.parseInt(device_id), New_Key, New_Value, Timestamp);
+                                            put_event(to_stack);    //Put in stack, and notify cache engine
+
+                                            //update mainscreen widget
+                                            AppWidget appWidgetManager = AppWidget.getInstance(context);
+                                            ComponentName thisWidget = new ComponentName(context, AppWidget.class);
+
+                                                //int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
+                                                //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.napply_widget);
+                                                int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, AppWidget.class));
+                                                AppWidget myWidget = new AppWidget();
+                                                myWidget.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+
+
+                                            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
+                                            remoteViews.setTextViewText(R.id.nap_time, "myText " + New_Value);
+                                            Tracer.e("AppWidget", "remoteViews.setTextViewText(R.id.nap_time, myText);"+New_Value);
+
+                                            //remoteViews.setImageViewResource(R.id.nap_icon, feature_sensor.getRessources());
+
+                                            //appWidgetManager.updateAppWidget(thisWidget, remoteViews);
+
+
+                                            stats_com.add(Stats_Com.EVENTS_RCV, result.length());
+                                        } catch (JSONException e) {
+                                            Tracer.e(mytag, "Error making the json from MQ result");
+                                            Tracer.e(mytag, e.toString());
+                                        }
+                                    } else if (result.contains("device.update")) {
+                                        Tracer.i(mytag, "New MQ message for device.update : " + result);
                                         stats_com.add(Stats_Com.EVENTS_RCV, result.length());
-                                    } catch (JSONException e) {
-                                        Tracer.e(mytag, "Error making the json from MQ result");
-                                        Tracer.e(mytag, e.toString());
-                                    }
-                                } else if (result.contains("device.update")) {
-                                    Tracer.i(mytag, "New MQ message for device.update : " + result);
-                                    stats_com.add(Stats_Com.EVENTS_RCV, result.length());
-                                    try {
-                                        JSONObject json_mq_update = new JSONObject(result);
-                                        Tracer.i(mytag, "New MQ message for device.update : " + json_mq_update.toString());
+                                        try {
+                                            JSONObject json_mq_update = new JSONObject(result);
+                                            Tracer.i(mytag, "New MQ message for device.update : " + json_mq_update.toString());
 
-                                    } catch (JSONException e) {
-                                        Tracer.i(mytag, "New MQ message for device.update : " + e.toString());
+                                        } catch (JSONException e) {
+                                            Tracer.i(mytag, "New MQ message for device.update : " + e.toString());
+                                        }
+                                        if (state_engine_handler != null) {
+                                            state_engine_handler.sendEmptyMessage(9903);
+                                        }
                                     }
-                                    if (state_engine_handler != null) {
-                                        state_engine_handler.sendEmptyMessage(9903);
+                                    if (subscriber.getReceiveTimeOut() == 1) {
+                                        break;
                                     }
-                                }
-                                if (subscriber.getReceiveTimeOut() == 1) {
-                                    break;
                                 }
                             }
+                            subscriber.close();
+                            zmqContext.term();
+                        } catch (IllegalArgumentException e) {
+                            // Say user Mq conf as a problem
+                            activity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(activity, R.string.events_error_mq, Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
-                        subscriber.close();
-                        zmqContext.term();
                     } else {
                         // Say user Mq conf as a problem
-                        context.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, R.string.events_error_mq, Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, R.string.events_error_mq, Toast.LENGTH_LONG).show();
                             }
                         });
                         Tracer.d(mytag, "error in MQ config");
@@ -463,7 +505,27 @@ public class Events_manager {
                 state_engine_handler.sendEmptyMessage(9901);    //I'm going down....
             }
 
-            events_engine_handler.sendEmptyMessage(9999);    //Notify main thread to die
+            //events_engine_handler.sendEmptyMessage(9999);    //Notify main thread to die
+            /*comment as it make crash domodroid with:
+            FATAL EXCEPTION: AsyncTask #4
+            Process: org.domogik.domodroid13, PID: 2460
+            java.lang.RuntimeException: An error occurred while executing doInBackground()
+            at android.os.AsyncTask$3.done(AsyncTask.java:309)
+            at java.util.concurrent.FutureTask.finishCompletion(FutureTask.java:354)
+            at java.util.concurrent.FutureTask.setException(FutureTask.java:223)
+            at java.util.concurrent.FutureTask.run(FutureTask.java:242)
+            at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1113)
+            at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:588)
+            at java.lang.Thread.run(Thread.java:818)
+            Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'boolean android.os.Handler.sendEmptyMessage(int)' on a null object reference
+            at rinor.Events_manager$ListenerThread.doInBackground(Events_manager.java:466)
+            at rinor.Events_manager$ListenerThread.doInBackground(Events_manager.java:170)
+            at android.os.AsyncTask$2.call(AsyncTask.java:295)
+            at java.util.concurrent.FutureTask.run(FutureTask.java:237)
+            at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1113) 
+            at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:588) 
+            at java.lang.Thread.run(Thread.java:818) 
+            */
             listener = null;
             return null;    //And die myself
         }

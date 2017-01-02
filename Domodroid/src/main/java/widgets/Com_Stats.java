@@ -77,8 +77,8 @@ public class Com_Stats extends FrameLayout {
     private final TextView period_eventsPS;
     private final TextView period_eventsBS;
 
-    public Com_Stats(tracerengine Tracer, Activity context, int widgetSize) {
-        super(context);
+    public Com_Stats(tracerengine Tracer, Activity activity, int widgetSize) {
+        super(activity);
 
         String mytag = "Com_Stats";
         this.setPadding(5, 5, 5, 5);
@@ -86,7 +86,7 @@ public class Com_Stats extends FrameLayout {
         stats = Stats_Com.getInstance();
 
         //panel with border
-        LinearLayout background = new LinearLayout(context);
+        LinearLayout background = new LinearLayout(activity);
         background.setOrientation(LinearLayout.VERTICAL);
         if (widgetSize == 0)
             background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -95,12 +95,12 @@ public class Com_Stats extends FrameLayout {
         background.setBackgroundDrawable(Gradients_Manager.LoadDrawable("white", background.getHeight()));
 
         //panel with border
-        LinearLayout topPan = new LinearLayout(context);
+        LinearLayout topPan = new LinearLayout(activity);
         topPan.setOrientation(LinearLayout.HORIZONTAL);
         topPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         //topPan.setTextColor(Color.parseColor("#333333"));
 
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.com_stats_2, null);
 
         topPan.addView(view);

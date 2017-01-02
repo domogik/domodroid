@@ -89,7 +89,23 @@ public class config_with_qrcode extends AppCompatActivity {
                         //String rest_port = jsonresult.getString("rest_port");
                         String mq_ip = jsonresult.getString("mq_ip");
                         //String rest_path = jsonresult.getString("rest_path");
-                        String mq_port_pubsub = jsonresult.getString("mq_port_pubsub");
+                        String mq_port_sub = "40412";
+                        try {
+                            mq_port_sub = jsonresult.getString("mq_port_pub");
+                        } catch (JSONException exec) {
+                            try {
+                                Tracer.e(mytag, "mq_port_pub not present in this qrcode");
+                                mq_port_sub = jsonresult.getString("mq_port_pubsub");
+                            } catch (JSONException exec2) {
+                                Tracer.e(mytag, "mq_port_pubsub not present in this qrcode");
+                            }
+                        }
+                        String mq_port_pub = "40411";
+                        try {
+                            mq_port_pub = jsonresult.getString("mq_port_pub");
+                        } catch (JSONException exec) {
+                            Tracer.e(mytag, "mq_port_pub not present in this qrcode");
+                        }
                         String mq_port_req_rep = jsonresult.getString("mq_port_req_rep");
                         String rinor_IP = null;
                         Boolean SSL = null;
@@ -107,14 +123,15 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("rinorPath", rest_path);
                         prefEditor.putBoolean("ssl_activate", SSL);
                         prefEditor.putString("MQaddress", mq_ip);
-                        prefEditor.putString("MQsubport", mq_port_pubsub);
-                        prefEditor.putString("MQpubport", mq_port_req_rep);
+                        prefEditor.putString("MQsubport", mq_port_sub);
+                        prefEditor.putString("MQpubport", mq_port_pub);
+                        prefEditor.putString("MQreq_repport", mq_port_req_rep);
                         prefEditor.putString("dmg_butler_name", butler_name);
                         prefEditor.commit();
                         config_with_qrcode.this.finish();
 
                     } catch (JSONException e) {
-                        Tracer.e(mytag, "Error parsing answer of qrode to json: " + e.toString());
+                        Tracer.e(mytag, "Error parsing answer of qrcode to json: " + e.toString());
                     }
                 }
             }

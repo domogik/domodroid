@@ -59,96 +59,100 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
-            Float api_version = SP_params.getFloat("API_VERSION", 0);
             try {
-                tags.put("domogik_api_version", api_version.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String domogik_version = SP_params.getString("DOMOGIK-VERSION", "");
-            try {
-                tags.put("domogik_version", domogik_version);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String versionName = BuildConfig.VERSION_NAME;
-            try {
-                tags.put("domodroid_version_name", versionName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            int versionCode = BuildConfig.VERSION_CODE;
-            String vcs = "??";
-            if (versionCode != -1)
-                vcs = Integer.toString(versionCode);
-            try {
-                tags.put("domodroid_version_code", vcs);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            int Android_code = Build.VERSION.SDK_INT;
-            try {
-                tags.put("domodroid_sdk", String.valueOf(Android_code));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String Device = Build.DEVICE;
-            try {
-                tags.put("domodroid_device", Device);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String deviceid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            try {
-                metrics.put("id", deviceid);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            //process with update timer for new 30 sec
-            Log.e(mytag, "New timer " + executeTop());
-            try {
-                Runtime info = Runtime.getRuntime();
-                int availableProcessors = info.availableProcessors();
+                SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+
+                Float api_version = SP_params.getFloat("API_VERSION", 0);
                 try {
-                    tags.put("num_core", availableProcessors);
+                    tags.put("domogik_api_version", api_version.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                maxmemavailable = Float.valueOf(info.maxMemory());
-                maxmemavailable = maxmemavailable / 1024; //in KB
-                maxmemavailable = maxmemavailable / 1024; //in MB
-                measurements.put("memory_total", df.format(maxmemavailable));
-                measurements.put("unit", 1);
-                freeSize = Float.valueOf(info.freeMemory());
-                totalAllocatedSize = Float.valueOf(info.totalMemory());
-                usedSize = totalAllocatedSize - freeSize;
-                freeSize = freeSize / 1024; //in KB
-                freeSize = freeSize / 1024; //in MB
-                totalAllocatedSize = totalAllocatedSize / 1024; //in KB
-                totalAllocatedSize = totalAllocatedSize / 1024; //in MB
-                usedSize = usedSize / 1024; //in KB
-                usedSize = usedSize / 1024; //in MB
-                Log.e(mytag, "New timer totalAllocatedSize: " + df.format(totalAllocatedSize) + "MB");
-                Log.e(mytag, "New timer freeSize: " + df.format(freeSize) + "MB");
-                Log.e(mytag, "New timer usedSize: " + df.format(usedSize) + "MB");
-            } catch (JSONException e) {
+                String domogik_version = SP_params.getString("DOMOGIK-VERSION", "");
+                try {
+                    tags.put("domogik_version", domogik_version);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String versionName = BuildConfig.VERSION_NAME;
+                try {
+                    tags.put("domodroid_version_name", versionName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                int versionCode = BuildConfig.VERSION_CODE;
+                String vcs = "??";
+                if (versionCode != -1)
+                    vcs = Integer.toString(versionCode);
+                try {
+                    tags.put("domodroid_version_code", vcs);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                int Android_code = Build.VERSION.SDK_INT;
+                try {
+                    tags.put("domodroid_sdk", String.valueOf(Android_code));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String Device = Build.DEVICE;
+                try {
+                    tags.put("domodroid_device", Device);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String deviceid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                try {
+                    metrics.put("id", deviceid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //process with update timer for new 30 sec
+                Log.e(mytag, "New timer " + executeTop());
+                try {
+                    Runtime info = Runtime.getRuntime();
+                    int availableProcessors = info.availableProcessors();
+                    try {
+                        tags.put("num_core", availableProcessors);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    maxmemavailable = Float.valueOf(info.maxMemory());
+                    maxmemavailable = maxmemavailable / 1024; //in KB
+                    maxmemavailable = maxmemavailable / 1024; //in MB
+                    measurements.put("memory_total", df.format(maxmemavailable));
+                    measurements.put("unit", 1);
+                    freeSize = Float.valueOf(info.freeMemory());
+                    totalAllocatedSize = Float.valueOf(info.totalMemory());
+                    usedSize = totalAllocatedSize - freeSize;
+                    freeSize = freeSize / 1024; //in KB
+                    freeSize = freeSize / 1024; //in MB
+                    totalAllocatedSize = totalAllocatedSize / 1024; //in KB
+                    totalAllocatedSize = totalAllocatedSize / 1024; //in MB
+                    usedSize = usedSize / 1024; //in KB
+                    usedSize = usedSize / 1024; //in MB
+                    Log.e(mytag, "New timer totalAllocatedSize: " + df.format(totalAllocatedSize) + "MB");
+                    Log.e(mytag, "New timer freeSize: " + df.format(freeSize) + "MB");
+                    Log.e(mytag, "New timer usedSize: " + df.format(usedSize) + "MB");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.e(mytag, "error getting used memory :" + e.toString());
+                }
+                long millis = new Date().getTime();
+                String gmtTime = String.valueOf(millis);
+                gmtTime = gmtTime.substring(0, gmtTime.length() - 3) + "." + gmtTime.substring(gmtTime.length() - 3, gmtTime.length());
+                try {
+                    metrics.put("tags", tags);
+                    metrics.put("timestamp", gmtTime);
+                    metrics.put("measurements", measurements);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.e(mytag, "metrics=" + metrics.toString());
+            } catch (NullPointerException e) {
                 e.printStackTrace();
-            } catch (Exception e) {
-                Log.e(mytag, "error getting used memory :" + e.toString());
             }
-            long millis = new Date().getTime();
-            String gmtTime = String.valueOf(millis);
-            gmtTime = gmtTime.substring(0, gmtTime.length() - 3) + "." + gmtTime.substring(gmtTime.length() - 3, gmtTime.length());
-            try {
-                metrics.put("tags", tags);
-                metrics.put("timestamp", gmtTime);
-                metrics.put("measurements", measurements);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.e(mytag, "metrics=" + metrics.toString());
-
             //Try to send metrics to domogik metrics server
             //String result = POST("http://metrics.domogik.org/metrics/");
             //Log.e(mytag, "result=" + result);

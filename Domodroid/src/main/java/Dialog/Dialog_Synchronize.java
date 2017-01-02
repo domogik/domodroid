@@ -41,7 +41,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private SharedPreferences params;
     private LoadConfig sync;
     public Boolean need_refresh = false;
-    private final Activity context;
+    private final Activity activity;
     public Boolean reload = false;
     private DomodroidDB db = null;
     private tracerengine Tracer = null;
@@ -54,9 +54,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private int progress;
     private String last_device_update;
 
-    public Dialog_Synchronize(tracerengine Trac, final Activity context, SharedPreferences params) {
-        super(context);
-        this.context = context;
+    public Dialog_Synchronize(tracerengine Trac, final Activity activity, SharedPreferences params) {
+        super(activity);
+        this.activity = activity;
         this.Tracer = Trac;
         this.params = params;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -64,8 +64,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         message = (TextView) findViewById(R.id.message);
         cancelButton = (Button) findViewById(R.id.CancelButton);
         cancelButton.setOnClickListener(this);
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
         last_device_update = params.getString("last_device_update", "1900-01-01 00:00:00");
 
@@ -157,7 +157,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             prefEditor.commit();
             urlAccess = params.getString("URL", "1.1.1.1");
             if (db == null)
-                db = new DomodroidDB(Tracer, context, params);
+                db = new DomodroidDB(Tracer, activity, params);
             try {
                 previous_api_version = params.getFloat("API_VERSION", 0);
                 Tracer.d(mytag, "Previous Api version value exist");
@@ -177,15 +177,15 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
         @Override
         protected void onPreExecute() {
-            message.setText(context.getString(R.string.sync_0));
+            message.setText(activity.getString(R.string.sync_0));
             super.onPreExecute();
         }
 
         @Override
         protected void onPostExecute(Void result) {
             if (sync) {
-                Intent reload = new Intent(context, Activity_Main.class);
-                context.startActivity(reload);
+                Intent reload = new Intent(activity, Activity_Main.class);
+                activity.startActivity(reload);
             }
             super.onPostExecute(result);
 
@@ -193,7 +193,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            message.setText(String.format("%s %d%%", context.getString(R.string.sync_load), values[0]));
+            message.setText(String.format("%s %d%%", activity.getString(R.string.sync_load), values[0]));
             super.onProgressUpdate(values);
         }
 
@@ -561,15 +561,15 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     prefEditor.putString("MQaddress", MQaddress);
                     // #103 if MQadress=localhost
                     if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1")) {
-                        context.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
                             }
                         });
                     } else if (MQaddress.equals("*")) {
-                        context.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -578,10 +578,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     prefEditor.putString("MQreq_repport", MQreq_repport);
                     publishProgress(12);
                 } catch (Exception e1) {
-                    context.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, R.string.problem_with_mq_information, Toast.LENGTH_LONG).show();
-                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.problem_with_mq_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
                     Tracer.e(mytag, "ERROR getting MQ information");
@@ -590,10 +590,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 if (json_FeatureList1 == null || json_FeatureList1.toString().equals("[]")) {
                     // Cannot connect to Rinor server.....
                     Tracer.e(mytag, "Cannot connect to to grab device list");
-                    context.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, R.string.problem_geting_device_information, Toast.LENGTH_LONG).show();
-                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.problem_geting_device_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
                     Bundle b = new Bundle();
@@ -609,10 +609,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 if (Json_data_type == null || (Json_data_type.toString().equals("{}"))) {
                     // Cannot get data_type from Rinor server.....
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
-                    context.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, R.string.problem_geting_datatype_information, Toast.LENGTH_LONG).show();
-                            Toast.makeText(context, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.problem_geting_datatype_information, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.check_server_part_in_option, Toast.LENGTH_LONG).show();
                         }
                     });
                     Bundle b = new Bundle();
@@ -1284,7 +1284,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             db.CleanFeatures_association();
             publishProgress(98);
             //refresh cache address
-            Cache_management.checkcache(Tracer, context);
+            Cache_management.checkcache(Tracer, activity);
             need_refresh = true;    // To notify main activity that screen must be refreshed
             prefEditor.commit();
 

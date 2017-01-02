@@ -26,6 +26,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,8 +55,8 @@ public class WidgetUpdate {
     private SharedPreferences sharedparams;
 
     private boolean activated;
-    private static Activity context;
-    private DomodroidDB domodb;
+    private static Activity activity;
+    private static DomodroidDB domodb;
     private final String mytag = this.getClass().getName();
     private TimerTask doAsynchronousTask;
     private tracerengine Tracer = null;
@@ -80,6 +81,8 @@ public class WidgetUpdate {
     private Boolean SSL;
     private float api_version;
     private String last_device_update;
+    private String last_sensor_update;
+
     //
     // Table of handlers to notify
     // pos 0 = Main
@@ -124,7 +127,7 @@ public class WidgetUpdate {
 
     }
 
-    public Boolean init(tracerengine Trac, final Activity context, SharedPreferences params) {
+    public Boolean init(tracerengine Trac, final Activity activity, SharedPreferences params) {
         Boolean result = false;
         if (init_done) {
             Log.w("WidgetUpdate", "init already done");
@@ -134,13 +137,14 @@ public class WidgetUpdate {
         sleeping = false;
         this.sharedparams = params;
         this.Tracer = Trac;
-        this.context = context;
+        this.activity = activity;
         activated = true;
-        login = params.getString("http_auth_username", null);
-        password = params.getString("http_auth_password", null);
+        login = params.getString("http_auth_username", "Anonymous");
+        password = params.getString("http_auth_password", "");
         SSL = params.getBoolean("ssl_activate", false);
         api_version = sharedparams.getFloat("API_VERSION", 0);
         last_device_update = sharedparams.getString("last_device_update", "1900-01-01 00:00:00");
+        last_sensor_update = sharedparams.getString("last_sensor_update", "1900-01-01 00:00:00");
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -152,7 +156,7 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        domodb = new DomodroidDB(Tracer, context, params);
+        domodb = new DomodroidDB(Tracer, activity, params);
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
@@ -163,7 +167,10 @@ public class WidgetUpdate {
 		 */
         Tracer.d(mytag, "cache engine starting timer for periodic cache update");
         Timer();        //and initiate the cyclic timer
-        new UpdateThread().execute();    //And force an immediate refresh
+
+        //Commented to avoid launching 2 request one from the initial timer and the other below
+        //new UpdateThread().execute();    //And force an immediate refresh on init
+
         this.callback_counts = 0;    //To force a refresh
         /*
         Boolean said = false;
@@ -203,7 +210,7 @@ public class WidgetUpdate {
                     // Cache engine being ready, we can start events manager
                     Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
                     if (eventsManager == null) {
-                        eventsManager = Events_manager.getInstance(context);
+                        eventsManager = Events_manager.getInstance(activity);
                     }
                     eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
                     /*
@@ -246,7 +253,7 @@ public class WidgetUpdate {
                     }
                 } else if (msg.what == 9901) {
                     // Events_Manager thread is dead....
-                    Toast.makeText(context, R.string.event_manager_die, Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.event_manager_die, Toast.LENGTH_LONG).show();
                     eventsManager = null;
                     init_done = false;
                     Tracer.i(mytag, "No more Events_Manager now ! ! ! ");
@@ -272,19 +279,19 @@ public class WidgetUpdate {
                     //New or update device detected by MQ
                     //Notify on main screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
-                    //Todo disable the dialog or replace by a toast here the dialog
-                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(context);
-                    //dialog_device_update.setTitle(context.getText(R.string.domogik_information));
-                    //dialog_device_update.setMessage(context.getText(R.string.device_update_message));
-                    //if (!(context).isFinishing()) {
+                    //disable the dialog or replace by a toast: here the old dialog
+                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(activity);
+                    //dialog_device_update.setTitle(activity.getText(R.string.domogik_information));
+                    //dialog_device_update.setMessage(activity.getText(R.string.device_update_message));
+                    //if (!(activity).isFinishing()) {
                     //    dialog_device_update.show();
                     //}
 
-                    //Todo disable the dialog or replace by a toast here the toast
+                    //disable the dialog or replace by a toast: here the toast
                     // Display message something changed since last update
-                    context.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(context, context.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, activity.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
                         }
                     });
 
@@ -306,7 +313,7 @@ public class WidgetUpdate {
      * Allow callers to set their handler in table
      */
     public void set_handler(Handler parent, int type) {
-        //type = 0 if View , or 1 if Map
+        //type = 0 if View , or 1 if Map, or 2 if MapView
         if ((type >= 0) && (type <= 2))
             WidgetUpdate.parent[type] = parent;
     }
@@ -401,6 +408,42 @@ public class WidgetUpdate {
         //dump_cache();	//During development, help to debug !
     }
 
+    public JSONArray dump_cache_to_json() throws JSONException {
+        JSONArray json_dump_cache = new JSONArray();
+
+        int size = cache.size();
+        Tracer.v(mytag, "Dump of Cache , size = " + cache.size());
+        while (locked) {
+            //Somebody else is updating list...
+            try {
+                Thread.sleep(10);        //Standby 10 milliseconds
+            } catch (Exception e) {
+                Tracer.e(mytag, e.toString());
+            }
+        }
+        locked = true;
+        for (int i = 0; i < size; i++) {
+            Cache_Feature_Element cache_entry = cache.get(i);
+            ArrayList<Entity_client> clients_list = null;
+            if (cache_entry == null) {
+                Tracer.e(mytag, "Cache entry # " + i + "   empty ! ");
+            } else {
+                JSONObject json_dump_current_cache = new JSONObject();
+                clients_list = cache_entry.clients_list;
+                int clients_list_size = 0;
+                if (clients_list != null)
+                    clients_list_size = clients_list.size();
+                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size + " Value= :" + cache_entry.Value);
+                json_dump_current_cache.put("id", cache_entry.DevId);
+                json_dump_current_cache.put("last_value", cache_entry.Value);
+                json_dump_current_cache.put("last_received", cache_entry.Value_timestamp);
+                json_dump_cache.put(json_dump_current_cache);
+            }
+        }
+        locked = false;
+        return json_dump_cache;
+    }
+
     public void dump_cache() {
         String[] name = new String[]{"Main   ", "Map    ", "MapView", "???    "};
         int size = cache.size();
@@ -428,7 +471,7 @@ public class WidgetUpdate {
                 if (clients_list != null)
                     clients_list_size = clients_list.size();
 
-                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size);
+                Tracer.v(mytag, "Cache entry # " + i + "   DevID : " + cache_entry.DevId + " Skey : " + cache_entry.skey + " Clients # :" + clients_list_size + " Value= :" + cache_entry.Value);
                 if (clients_list_size > 0) {
                     for (int j = 0; j < clients_list_size; j++) {
                         if (clients_list.get(j) == null)
@@ -511,7 +554,6 @@ public class WidgetUpdate {
     private void Timer() {
         timer = new Timer();
 
-
         final Handler loc_handler = new Handler();
         if (timer_flag)
             return;    //Don't run many cyclic timers !
@@ -525,7 +567,8 @@ public class WidgetUpdate {
                     public void run() {
                         if (activated) {
                             try {
-                                new UpdateThread().execute();
+                                Tracer.d(mytag, "new UpdateThread().execute() from timer");
+                                new UpdateThread().execute(); //on timer
                             } catch (Exception e) {
                                 Tracer.e(mytag, e.toString());
                             }
@@ -545,10 +588,10 @@ public class WidgetUpdate {
         // and arm the timer to do automatically this each 'update' seconds
         timer_flag = true;    //Cyclic timer is running...
         if (timer != null) {
-            timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
+            //timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
-
-            //timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300)*1000);
+            // dame but using the user option timer
+            timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300) * 1000);
         }
     }
 
@@ -580,12 +623,18 @@ public class WidgetUpdate {
             //TODO : if sleep period too long (> 1'50) , we must force a refresh of cache values, because events have been 'masked' !
             if ((eventsManager != null) && eventsManager.cache_out_of_date) {
                 callback_counts = 0;
-                new UpdateThread().execute();    //Force an immediate cache refresh
+                new UpdateThread().execute();    //Force an immediate cache refresh on wakeup
                 eventsManager.cache_out_of_date = false;
             }
-            if (ready) {
+            if (ready) {    //Notify cache is ready
                 if (parent[0] != null) {
-                    parent[0].sendEmptyMessage(8999);    //Notify cache is ready
+                    parent[0].sendEmptyMessage(8999);
+                }
+                if (parent[1] != null) {
+                    parent[1].sendEmptyMessage(8999);
+                }
+                if (parent[2] != null) {
+                    parent[2].sendEmptyMessage(8999);
                 }
 
             }
@@ -623,6 +672,20 @@ public class WidgetUpdate {
             if (parent[0] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify Main activity....");
                 parent[0].sendEmptyMessage(8999);    //hide Toast message
+            } else {
+                Tracer.d(mytag, "cache engine ready  ! No Main activity....");
+            }
+            if (parent[1] != null) {
+                Tracer.d(mytag, "cache engine ready  ! Notify Map activity....");
+                parent[1].sendEmptyMessage(8999);    //hide Toast message
+            } else {
+                Tracer.d(mytag, "cache engine ready  ! No Map activity....");
+            }
+            if (parent[2] != null) {
+                Tracer.d(mytag, "cache engine ready  ! Notify MapView activity....");
+                parent[2].sendEmptyMessage(8999);    //hide Toast message
+            } else {
+                Tracer.d(mytag, "cache engine ready  ! No MapView activity....");
             }
             Tracer.d(mytag, "cache engine ready  ! Exiting Waiting thread ....");
             return null;
@@ -657,24 +720,89 @@ public class WidgetUpdate {
 
                 if (request != null) {
                     JSONObject json_widget_state = null;
-                    JSONArray json_widget_state_0_4;
+                    JSONArray json_widget_state_0_4 = new JSONArray();
                     stats_com.add(Stats_Com.STATS_SEND, request.length());
                     try {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
                             json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
-                            Tracer.d(mytag, "json_widget_state for <0.6 API=");
-                            Tracer.json(mytag, json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
-                            //todo change by == when device.get will work
-                            // else if (api_version == 0.7f) {
-                            json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
                             json_widget_state = new JSONObject();
-                            // Create a false jsonarray like if it was domomgik 0.3
+                            //todo change by == when device.get will work for 0.5
+                            // else if (api_version == 0.7f) {
+                            //get all sensors
+                            if (api_version < 0.9f) {
+                                //get all sensors from rest
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                            } else if (api_version == 0.9f) {
+                                //load timestamp apps was closed
+                                String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                                Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
+
+                                //Modify request to match the timestamp
+                                //todo if timestamp is null or 0 get the full sensor list
+                                String request_since = request + "since/" + Integer.parseInt(sensor_saved_timestamp);
+                                JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request_since, login, password, 30000, SSL);
+                                Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
+
+                                String strJson = sharedparams.getString("sensor_saved_value", "0");
+                                if (strJson != null) {
+                                    //TODO load stored last_value
+                                    JSONArray jsonData = new JSONArray(strJson);
+                                    Log.e("#124 json saved", jsonData.toString());
+                                    String tmp_key;
+                                    for (int i = 0; i < json_widget_state_0_6.length(); i++) {
+                                        json_widget_state_0_4.put(json_widget_state_0_6.getJSONObject(i));
+                                        Log.e("#124", "json creating from domogik: " + json_widget_state_0_6.getJSONObject(i).toString());
+                                        Log.e("#124", "json creating from domogik: " + json_widget_state_0_4.length());
+                                    }
+                                    //TODO remove when ok
+                                    // Display message something changed since last update
+                                    final JSONArray finalJson_widget_state_0_ = json_widget_state_0_6;
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json length from rest sensor/since= " + finalJson_widget_state_0_.length(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    for (int i = 0; i < jsonData.length(); i++) {
+                                        json_widget_state_0_4.put(jsonData.getJSONObject(i));
+                                        Log.e("#124", "json creating from saved: " + jsonData.getJSONObject(i).toString());
+                                        Log.e("#124", "json creating from saved: " + json_widget_state_0_4.length());
+
+                                    }
+                                    //#124 Todo compare saved value and load value from domogik to remove old ones.
+
+                                    //TODO remove when ok
+                                    //Display message something changed since last update
+                                    final JSONArray finalJson_widget_state_0_1 = jsonData;
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json length from from saved: " + finalJson_widget_state_0_1.length(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    Log.e("#124", "json combined: " + json_widget_state_0_4.toString());
+                                    //TODO remove when ok
+                                    final JSONArray finalJson_widget_state_0_2 = json_widget_state_0_4;
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json total: " + finalJson_widget_state_0_2.length(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Tracer.d(mytag, "#124 json saved is null");
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "json saved is null", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });//get all sensors from rest
+                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                }
+                            }
+                            // Create a false JSONObject like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
                             json_widget_state.put("stats", json_widget_state_0_4);
-                            Tracer.d(mytag, "json_widget_state for 0.7 API=");
-                            Tracer.json(mytag, json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for 0.7 API=" + json_widget_state.toString());
                             //todo move this part in 0.8 api under when MQ.Get will work
                             if (api_version >= 0.8f) {
                                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -689,9 +817,18 @@ public class WidgetUpdate {
                                 }
                                 try {
                                     JSONArray json_device_state_0_4 = new JSONArray();
+                                    //change url to get device instead of sensor
                                     request = request.replace("sensor", "device");
-                                    json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
-                                    //test info_changed:
+                                    //Grab device list
+                                    if (api_version == 0.8f) {
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    } else if (api_version >= 0.9f) {
+                                        //todo be sure last_device_update is in the right timestamp format???
+                                        request = request + "since/" + last_device_update;
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    }
+                                    Tracer.d(mytag, "json_widget_device for 0.8 API=" + json_device_state_0_4.toString());
+                                    //test if info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {
                                             String last_update = json_device_state_0_4.getJSONObject(i).getString("info_changed");
@@ -700,18 +837,18 @@ public class WidgetUpdate {
                                             if (timestamplast_update.compareTo(timestamplast_device_update) > 0) {
                                                 newer = true;
                                                 timestamplast_device_update = timestamplast_update;
-                                                Log.v(mytag, "device info_changed at: " + timestamplast_update.toString());
+                                                Tracer.v(mytag, "device info_changed at: " + timestamplast_update.toString());
                                             }
-                                        } catch (Exception E) {
-                                            timestamplast_update = new Date();
+                                        } catch (ParseException E) {
+                                            //timestamplast_update = new Date();
                                             Tracer.d(mytag, "Exception info_changed:" + E);
                                         }
                                     }
                                     if (newer) {
                                         //Display message something changed since last update
-                                        context.runOnUiThread(new Runnable() {
+                                        activity.runOnUiThread(new Runnable() {
                                             public void run() {
-                                                Toast.makeText(context, R.string.device_update_message, Toast.LENGTH_LONG).show();
+                                                Toast.makeText(activity, R.string.device_update_message, Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
@@ -719,19 +856,19 @@ public class WidgetUpdate {
                                     Tracer.e(mytag, "Error trying to parse /device and info_changed");
                                 }
                             }
-                        } else if (api_version >= 0.8f) {
+                        }/* else if (api_version >= 0.8f) {
                             //todo will use this when device.get will work
                             json_widget_state = zmqrequest();
-                        }
+                        }*/
                     } catch (final Exception e) {
                         //stats request cannot be completed (broken link or terminal in standby ?)
                         //Will retry automatically in 2'05, if no events received
                         Tracer.e(mytag, "get stats : Rinor error <" + e.getMessage() + ">");
                         //Toast not available in asynctask
                         // TODO handle "Host name may not be null" to avoid white page in domodroid
-                        context.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
                             }
                         });
                         return null;
@@ -1013,7 +1150,6 @@ public class WidgetUpdate {
         if (!ready) {
             Tracer.i(mytag, "cache engine not yet ready : reject !");
             return result;
-
         }
 
         while (locked) {
@@ -1093,7 +1229,7 @@ public class WidgetUpdate {
     public void descUpdate(int id, String new_desc, String type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         boolean changed = false;
         try {
@@ -1119,7 +1255,7 @@ public class WidgetUpdate {
                     Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                     HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(
                             sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
+                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId(), login, password);
                     urlConnection.setRequestMethod("PUT");
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                     nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
@@ -1215,7 +1351,7 @@ public class WidgetUpdate {
         //in case domogik MQ problem
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         switch (type) {
             case "area":
@@ -1240,7 +1376,7 @@ public class WidgetUpdate {
     public void remove_one_icon(int id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_icon(id, place_type);
 
@@ -1252,7 +1388,7 @@ public class WidgetUpdate {
     public void remove_one_feature_association(int id, int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_feature_association(id, place_id, place_type);
     }
@@ -1263,7 +1399,7 @@ public class WidgetUpdate {
     public void remove_one_FeatureMap(int id, int posx, int posy, String mapname) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_FeatureMap(id, posx, posy, mapname);
     }
@@ -1271,7 +1407,7 @@ public class WidgetUpdate {
     public void remove_one_feature_in_FeatureMap(int id) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_feature_in_FeatureMap(id);
     }
@@ -1282,18 +1418,18 @@ public class WidgetUpdate {
     public void remove_one_place_type_in_Featureassociation(int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, context, sharedparams);
+            this.init(Tracer, activity, sharedparams);
         }
         domodb.remove_one_place_type_in_Featureassociation(place_id, place_type);
     }
 
-    public Entity_Feature[] requestFeatures() {
+    public static Entity_Feature[] requestFeatures() {
         return domodb.requestFeatures();
 
     }
 
     public static Activity getactivity() {
-        return context;
+        return activity;
     }
 
     public JSONObject zmqrequest() throws JSONException {

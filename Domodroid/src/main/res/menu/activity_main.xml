@@ -22,7 +22,7 @@
             <!-- menu_butler -->
             <item
                 android:id="@+id/menu_butler"
-                android:icon="@drawable/icon_menu_butler"
+                android:icon="@drawable/ic_forum_black_24dp"
                 android:title="@string/butler" />
             <!-- menu_house_config -->
             <item
@@ -35,6 +35,11 @@
                 android:id="@+id/menu_stats"
                 android:icon="@drawable/icon_menu_statistics"
                 android:title="@string/statistics" />
+            <!-- menu_domogik_admin -->
+            <item
+                android:id="@+id/menu_domogik_admin"
+                android:icon="@drawable/icon_menu_domogik"
+                android:title="@string/domogik_admin_page" />
             <!-- menu_about -->
             <item
                 android:id="@+id/menu_about"

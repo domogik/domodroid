@@ -21,8 +21,8 @@ android {
         applicationId "org.domogik.domodroid13"
         minSdkVersion 9
         targetSdkVersion 9
-        versionCode = 26
-        versionName = "1.4_android_studio"
+        versionCode = 28
+        versionName = "1.4_appWidgets"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -35,7 +35,7 @@ android {
         }
 
         release {
-            testCoverageEnabled = true
+            testCoverageEnabled = false
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

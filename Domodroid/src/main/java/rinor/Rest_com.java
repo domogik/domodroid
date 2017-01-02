@@ -24,6 +24,7 @@
 package rinor;
 
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -69,6 +70,7 @@ public class Rest_com {
                 DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                 httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
                 HttpGet httpget = new HttpGet(url);
+                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                 HttpResponse response;
                 String result = null;
                 response = httpclient.execute(httpget);
@@ -93,6 +95,7 @@ public class Rest_com {
             } catch (ConnectTimeoutException e) {
                 Tracer.e(mytag, "Timeout connecting to domogik");
             } catch (Exception e) {
+                e.printStackTrace();
                 Tracer.e(mytag, e.toString());
             }
             return json;
@@ -103,7 +106,7 @@ public class Rest_com {
                     url = url.replace("http://", "https://");
                 }
                 Tracer.d(mytag, "Url=" + url);
-                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(login, password.toCharArray());
@@ -142,6 +145,7 @@ public class Rest_com {
                 DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                 httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
                 HttpGet httpget = new HttpGet(url);
+                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                 HttpResponse response;
                 String result = null;
                 response = httpclient.execute(httpget);
@@ -178,7 +182,7 @@ public class Rest_com {
                     url = url.replace("http://", "https://");
                 }
                 Tracer.d(mytag, "Url=" + url);
-                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url);
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(login, password.toCharArray());
@@ -203,6 +207,75 @@ public class Rest_com {
             return json;
 
         }
+    }
+
+    public static String connect_string(tracerengine Tracer, String url, final String login, final String password, int timeout, boolean SSL) {
+
+        if (!SSL) {
+            String result = null;
+            try {
+                // Set timeout
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+                HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+                DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
+                httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                HttpGet httpget = new HttpGet(url);
+                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
+                HttpResponse response;
+                response = httpclient.execute(httpget);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    HttpEntity entity = response.getEntity();
+                    if (entity != null) {
+                        InputStream instream = entity.getContent();
+                        result = Abstract.httpsUrl.convertStreamToString(instream);
+                        instream.close();
+                    }
+                } else if (response.getStatusLine().getStatusCode() == 204) {
+                    //TODO need to adapt for 0.4 since rest answer now with standard code
+                    //204,400,404 and else
+                } else {
+                    Tracer.d(mytag, "Resource not available>");
+                }
+            } catch (UnknownHostException e) {
+                Tracer.e(mytag, "Unable to resolve host");
+            } catch (ConnectTimeoutException e) {
+                Tracer.e(mytag, "Timeout connecting to domogik");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Tracer.e(mytag, e.toString());
+            }
+            return result;
+        } else {
+            String result = null;
+            try {
+                Tracer.d(mytag, "Start https connection");
+                if (url.startsWith("http://")) {
+                    url = url.replace("http://", "https://");
+                }
+                Tracer.d(mytag, "Url=" + url);
+                HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
+                Authenticator.setDefault(new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(login, password.toCharArray());
+                    }
+                });
+                InputStream instream = urlConnection.getInputStream();
+                result = Abstract.httpsUrl.convertStreamToString(instream);
+                instream.close();
+                //} catch (HttpHostConnectException e) {
+                //    e.printStackTrace();
+            } catch (UnknownHostException e) {
+                Tracer.e(mytag, "Unable to resolve host");
+            } catch (ConnectTimeoutException e) {
+                Tracer.e(mytag, "Timeout connecting to domogik");
+            } catch (IOException e) {
+                Tracer.e(mytag, e.toString());
+            }
+            return result;
+
+        }
+
     }
 
     public void setParams(SharedPreferences params) {

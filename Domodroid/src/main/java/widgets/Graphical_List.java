@@ -68,7 +68,7 @@ import static activities.Activity_Main.SV_Main_ScrollView;
 @SuppressWarnings("ALL")
 public class Graphical_List extends Basic_Graphical_widget implements OnClickListener {
 
-    private ListView LV_listChoices = new ListView(context);
+    private ListView LV_listChoices = new ListView(activity);
     ;
     private ListView LV_listCommands;
     private ArrayList<HashMap<String, String>> listItem;
@@ -107,9 +107,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private int sizeint;
 
     public Graphical_List(tracerengine Trac,
-                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                          final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -118,9 +118,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     }
 
     public Graphical_List(tracerengine Trac,
-                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                          final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -144,7 +144,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
-        String packageName = context.getPackageName();
+        String packageName = activity.getPackageName();
         this.myself = this;
         setOnLongClickListener(this);
         setOnClickListener(this);
@@ -152,7 +152,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         mytag = "Graphical_List (" + dev_id + ")";
 
         //state key
-        final TextView state_key_view = new TextView(context);
+        final TextView state_key_view = new TextView(activity);
         try {
             stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
@@ -162,7 +162,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //value
-        TV_Value = new TextView(context);
+        TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
@@ -170,7 +170,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
-        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp = new RelativeTimeTextView(activity, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -267,7 +267,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 }
             }
             //list of choices
-            LV_listCommands = new ListView(context);
+            LV_listCommands = new ListView(activity);
 
             listItemCommands = new ArrayList<HashMap<String, String>>();
             //list_usable_choices = new Vector<String>();
@@ -275,7 +275,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 //list_usable_choices.add(getStringResourceByName(known_values[i]));
                 HashMap<String, String> map = new HashMap<String, String>();
                 try {
-                    map.put("choice", getResources().getString(translate.do_translate(context, Tracer, (known_values[i]))));
+                    map.put("choice", getResources().getString(translate.do_translate(activity, Tracer, (known_values[i]))));
                 } catch (Exception e) {
                     map.put("choice", known_values[i]);
                 }
@@ -307,7 +307,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 
             //LV_listCommands.setScrollingCacheEnabled(false);
             //feature panel 2 which will contain list of selectable choices
-            featurePan2 = new LinearLayout(context);
+            featurePan2 = new LinearLayout(activity);
             featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
@@ -341,21 +341,21 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                     if (SP_params.getBoolean("widget_timestamp", false)) {
-                        TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), context));
+                        TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), activity));
                     } else {
                         TV_Timestamp.setReferenceTime(Value_timestamplong);
                     }
                     if (api_version > 0.7f) {
                         try {
-                            display_sensor_info.display(Tracer, Values.getString(new_val), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                            display_sensor_info.display(Tracer, Values.getString(new_val), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                         } catch (Exception e) {
-                            display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                            display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                             Tracer.e(mytag, "Can not convert new_val " + e.toString());
                         }
                     } else {
-                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
                     }
                     //To have the icon colored as it has no state
                     change_this_icon(2);
@@ -417,7 +417,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         super.LL_background.removeView(featurePan2);
         super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
         if (command) {
-            String text_to_display = context.getResources().getString(R.string.command_sent) + " " + state_key;
+            String text_to_display = activity.getResources().getString(R.string.command_sent) + " " + state_key;
             Toast.makeText(getContext(), text_to_display, Toast.LENGTH_SHORT).show();
         }
     }
@@ -432,7 +432,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     public void onClick(View v) {
         if (with_list) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = 262.5f * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = 262.5f * activity.getResources().getDisplayMetrics().density + 0.5f;
             sizeint = (int) size;
             currentint = LL_background.getHeight();
             if (!isopen) {
@@ -469,7 +469,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             }
         } else {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = ((nb_item_for_history * 35) + 0.5f) * activity.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
             int currentint = LL_background.getHeight();
             if (!isopen) {
@@ -497,7 +497,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(context, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
         }
 
         protected Void doInBackground(Void... params) {
@@ -521,7 +521,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         try {
                             HashMap<String, String> map = new HashMap<>();
                             try {
-                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                                map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
                             } catch (Exception e1) {
                                 map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                             }
@@ -543,7 +543,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                 temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
                             }
                             try {
-                                map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
+                                map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
                             } catch (Exception e1) {
                                 map.put("TV_Value", temp_value_str);
                             }
@@ -551,7 +551,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                 map.put("date", itemArray.getJSONObject(i).getString("date"));
                             } else if (api_version >= 0.8f) {
                                 String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, activity));
                             }
                             listItem.add(map);
                             Tracer.d(mytag, map.toString());
@@ -568,7 +568,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
 
         protected void onPostExecute(Void result) {
-            SimpleAdapter adapter_feature = new SimpleAdapter(context, listItem,
+            SimpleAdapter adapter_feature = new SimpleAdapter(activity, listItem,
                     R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
             LV_listChoices.setAdapter(adapter_feature);
             LV_listChoices.setScrollingCacheEnabled(false);

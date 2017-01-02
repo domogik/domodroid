@@ -72,9 +72,9 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private final SharedPreferences params;
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                    final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -83,9 +83,9 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     }
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                    final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -133,7 +133,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 command_data_type[current_parameter] = jparam.getString("command_data_type" + (current_parameter + 1));
                 Tracer.d(mytag, "command_type_" + current_parameter + "=" + command_type[current_parameter]);
                 Tracer.d(mytag, "command_data_type" + current_parameter + "=" + command_data_type[current_parameter]);
-                tv_edittext = new TextView(context);
+                tv_edittext = new TextView(activity);
                 tv_edittext.setTextSize(20.0f);
                 //translate this command_type
                 String command_type_display = "";
@@ -144,7 +144,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 }
                 command_type_display += " :";
                 tv_edittext.setText(command_type_display);
-                ed = new EditText(context);
+                ed = new EditText(activity);
                 allEds.add(ed);
                 if (value_type.equals("string"))
                     ed.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -153,7 +153,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 ed.setTextSize(18);
                 ed.setTextColor(Color.BLACK);
                 ed.setMinWidth((int) (size120));
-                featurePan2 = new LinearLayout(context);
+                featurePan2 = new LinearLayout(activity);
                 featurePan2.setPadding(5, 10, 5, 10);
                 featurePan2.addView(tv_edittext);
                 featurePan2.addView(ed);
@@ -165,14 +165,14 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         }
 
         //state key
-        TextView state_key_view = new TextView(context);
+        TextView state_key_view = new TextView(activity);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
 
-        Button button_send = new Button(context);
+        Button button_send = new Button(activity);
         button_send.setMinWidth((int) (size60));
-        button_send.setText(context.getString(translate.do_translate(getContext(), Tracer, "send")));
+        button_send.setText(activity.getString(translate.do_translate(getContext(), Tracer, "send")));
         button_send.setOnClickListener(new OnClickListener() {
                                            public void onClick(View v) {
                                                new CommandeThread().execute();
@@ -189,7 +189,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
-            Handler handler = new Handler(context.getMainLooper());
+            Handler handler = new Handler(activity.getMainLooper());
             handler.post(new Runnable() {
                              public void run() {
                                  String Url2send = "";

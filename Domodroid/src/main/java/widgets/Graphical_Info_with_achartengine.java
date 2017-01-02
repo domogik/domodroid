@@ -124,9 +124,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private boolean isopen = false;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                             final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.url = url;
         this.params = params;
@@ -135,9 +135,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     }
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                             final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.url = url;
         this.session_type = session_type;
@@ -247,12 +247,12 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
 
         //state key
-        state_key_view = new TextView(context);
+        state_key_view = new TextView(activity);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //TV_Value
-        TV_Value = new TextView(context);
+        TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
@@ -260,7 +260,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1000);
 
-        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp = new RelativeTimeTextView(activity, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -294,7 +294,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     Long Value_timestamplong = null;
                     Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
@@ -468,7 +468,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         multiRenderer.addSeriesRenderer(emptyRenderer);
 
         Vector<Vector<Float>> values = new Vector<>();
-        chartContainer = new LinearLayout(context);
+        chartContainer = new LinearLayout(activity);
         // Getting a reference to LinearLayout of the MainActivity Layout
         chartContainer.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         chartContainer.setGravity(Gravity.CENTER_VERTICAL);
@@ -721,7 +721,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         // Order of data series and chart type will be same
         String types = "dd-MM HH:mm";
         // Creating a Timed chart with the chart types specified in types array
-        mChart = ChartFactory.getTimeChartView(context, dataset, multiRenderer, types);
+        mChart = ChartFactory.getTimeChartView(activity, dataset, multiRenderer, types);
         mChart.setOnClickListener(new OnClickListener() {
                                       //on click is called when pan or zoom movement id ended
                                       public void onClick(View v) {
@@ -766,7 +766,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public void onClick(View arg0) {
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
             if (!isopen) {
                 this.isopen = true;

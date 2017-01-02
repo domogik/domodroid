@@ -104,7 +104,7 @@ public class WidgetConfigure extends Activity {
             listFeature = WidgetUpdate.requestFeatures();
             Log.e("WidgetConfigure", "Listfeature size is " + String.valueOf(listFeature.length));
         } catch (Exception e) {
-            Toast.makeText(this, "Domodroid is not lunch!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Domodroid is not launch!", Toast.LENGTH_SHORT).show();
             Log.e("WidgetConfigure Error", e.toString());
             e.printStackTrace();
             //dialog.dismiss();

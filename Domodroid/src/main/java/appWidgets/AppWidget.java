@@ -64,7 +64,8 @@ public class AppWidget extends AppWidgetProvider {
         // Prepare widget views
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_layout);
 
-        views.setTextViewText(R.id.nap_time, "Allumer la lumière du salon");
+        views.setTextViewText(R.id.nap_time, "Domodroid widget");
+        //views.setImageViewResource(R.id.nap_icon, R.drawable.domodroid);
 
         // Prepare intent to launch on widget click
         Intent intent = new Intent(context, AppWidget.class);

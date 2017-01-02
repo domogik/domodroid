@@ -149,9 +149,9 @@ public class MapView extends View {
     private final float dip20;
     private boolean navigationdraweropen;
 
-    public MapView(tracerengine Trac, Activity activity, SharedPreferences params) {
+    public MapView(tracerengine tracerengine, Activity activity, SharedPreferences params) {
         super(activity);
-        this.Tracer = Trac;
+        this.Tracer = tracerengine;
         this.activity = activity;
         this.params = params;
         api_version = params.getFloat("API_VERSION", 0);
@@ -196,7 +196,7 @@ public class MapView extends View {
                     //Cache engine is ready for use....
                     if (Tracer != null)
                         Tracer.i(mytag, "Cache engine has notified it's ready !");
-                    refreshMap();
+                    initMap();
                 }
             }
         };
@@ -207,14 +207,14 @@ public class MapView extends View {
     }
 
     private void startCacheEngine() {
-
+        Cache_management.checkcache(Tracer, activity);
         if (cache_engine == null) {
             Tracer.w(mytag, "Starting WidgetUpdate engine !");
             cache_engine = WidgetUpdate.getInstance();
             //MapView is'nt the first caller, so init is'nt required (already done by View)
             cache_engine.set_handler(handler, mytype);    //Put our main handler to cache engine (as MapView)
         }
-        tracerengine.set_engine(cache_engine);
+        Tracer.set_engine(cache_engine);
         Tracer.w(mytag, "WidgetUpdate engine connected !");
     }
 

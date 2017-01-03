@@ -3,6 +3,7 @@ package database;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -137,7 +138,7 @@ public class WidgetUpdate {
         sleeping = false;
         this.sharedparams = params;
         this.Tracer = Trac;
-        this.activity = activity;
+        WidgetUpdate.activity = activity;
         activated = true;
         login = params.getString("http_auth_username", "Anonymous");
         password = params.getString("http_auth_password", "");
@@ -726,6 +727,25 @@ public class WidgetUpdate {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
                             json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
+                            if (json_widget_state == null || (json_widget_state.toString().equals("{}"))) {
+                                // Cannot get data_type from Rinor server.....
+                                Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                activity.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                Bundle b = new Bundle();
+                                //Notify error to parent Dialog
+                                b.putString("message", "datatype");
+                                Message msg = new Message();
+                                msg.setData(b);
+                                //stop();
+                                //todo stop Widgetupdate
+                                //handler.sendMessage(msg);
+                                return null;
+                            }
                             Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
                             json_widget_state = new JSONObject();
@@ -735,15 +755,56 @@ public class WidgetUpdate {
                             if (api_version < 0.9f) {
                                 //get all sensors from rest
                                 json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                    // Cannot get data_type from Rinor server.....
+                                    Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    Bundle b = new Bundle();
+                                    //Notify error to parent Dialog
+                                    b.putString("message", "datatype");
+                                    Message msg = new Message();
+                                    msg.setData(b);
+                                    //todo stop Widgetupdate
+                                    //handler.sendMessage(msg);
+                                    return null;
+                                }
                             } else if (api_version == 0.9f) {
                                 //load timestamp apps was closed
                                 String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
                                 Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
 
                                 //Modify request to match the timestamp
-                                //todo if timestamp is null or 0 get the full sensor list
-                                String request_since = request + "since/" + Integer.parseInt(sensor_saved_timestamp);
+                                String request_since;
+                                //if timestamp is null or 0 get the full sensor list
+                                if (sensor_saved_timestamp.equals("0")) {
+                                    request_since = request;
+                                } else {
+                                    request_since = request + "since/" + sensor_saved_timestamp;
+                                }
                                 JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request_since, login, password, 30000, SSL);
+                                if (json_widget_state_0_6 == null || (json_widget_state_0_6.toString().equals("[]"))) {
+                                    // Cannot get data_type from Rinor server.....
+                                    Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    Bundle b = new Bundle();
+                                    //Notify error to parent Dialog
+                                    b.putString("message", "datatype");
+                                    Message msg = new Message();
+                                    msg.setData(b);
+                                    //todo stop Widgetupdate
+                                    //handler.sendMessage(msg);
+                                    return null;
+                                }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
                                 String strJson = sharedparams.getString("sensor_saved_value", "0");
@@ -797,6 +858,24 @@ public class WidgetUpdate {
                                         }
                                     });//get all sensors from rest
                                     json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                        // Cannot get data_type from Rinor server.....
+                                        Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                        activity.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                        Bundle b = new Bundle();
+                                        //Notify error to parent Dialog
+                                        b.putString("message", "datatype");
+                                        Message msg = new Message();
+                                        msg.setData(b);
+                                        //todo stop Widgetupdate
+                                        //handler.sendMessage(msg);
+                                        return null;
+                                    }
                                 }
                             }
                             // Create a false JSONObject like if it was domomgik 0.3
@@ -822,10 +901,46 @@ public class WidgetUpdate {
                                     //Grab device list
                                     if (api_version == 0.8f) {
                                         json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                        if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                            // Cannot get data_type from Rinor server.....
+                                            Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                            activity.runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                            Bundle b = new Bundle();
+                                            //Notify error to parent Dialog
+                                            b.putString("message", "datatype");
+                                            Message msg = new Message();
+                                            msg.setData(b);
+                                            //todo stop Widgetupdate
+                                            //handler.sendMessage(msg);
+                                            return null;
+                                        }
                                     } else if (api_version >= 0.9f) {
                                         //todo be sure last_device_update is in the right timestamp format???
                                         request = request + "since/" + last_device_update;
                                         json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                        if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                            // Cannot get data_type from Rinor server.....
+                                            Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                            activity.runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                            Bundle b = new Bundle();
+                                            //Notify error to parent Dialog
+                                            b.putString("message", "datatype");
+                                            Message msg = new Message();
+                                            msg.setData(b);
+                                            //todo stop Widgetupdate
+                                            //handler.sendMessage(msg);
+                                            return null;
+                                        }
                                     }
                                     Tracer.d(mytag, "json_widget_device for 0.8 API=" + json_device_state_0_4.toString());
                                     //test if info_changed:

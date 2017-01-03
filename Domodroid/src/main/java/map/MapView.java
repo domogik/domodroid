@@ -214,7 +214,7 @@ public class MapView extends View {
             //MapView is'nt the first caller, so init is'nt required (already done by View)
             cache_engine.set_handler(handler, mytype);    //Put our main handler to cache engine (as MapView)
         }
-        Tracer.set_engine(cache_engine);
+        tracerengine.set_engine(cache_engine);
         Tracer.w(mytag, "WidgetUpdate engine connected !");
     }
 
@@ -1147,11 +1147,7 @@ public class MapView extends View {
                 || feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
             Graphical_List list = new Graphical_List(Tracer, activity, URL,
                     widgetSize, 0, Id, zone, params, feature, handler);
-            if (parameters.contains("command")) {
-                list.with_list = true;
-            } else {
-                list.with_list = false;
-            }
+            list.with_list = parameters.contains("command");
             panel_widget.addView(list);
         } else {
             Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", URL,

@@ -181,7 +181,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     TV_Value.setAnimation(animation);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
                     if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                         LL_featurePan.removeView(resultView);
                         LL_featurePan.removeView(TV_Value);

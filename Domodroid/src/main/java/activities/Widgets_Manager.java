@@ -340,11 +340,7 @@ class Widgets_Manager {
                     Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_List list = new Graphical_List(Tracer, activity, URL,
                             widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
-                    if (parameters.contains("command")) {
-                        list.with_list = true;
-                    } else {
-                        list.with_list = false;
-                    }
+                    list.with_list = parameters.contains("command");
                     list.setLayoutParams(layout_param);
                     Graphical_List.container = tmpPan;
                     tmpPan.addView(list);

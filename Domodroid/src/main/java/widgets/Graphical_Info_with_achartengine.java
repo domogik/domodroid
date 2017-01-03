@@ -292,7 +292,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                     display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 

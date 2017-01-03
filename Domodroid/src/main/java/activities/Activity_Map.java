@@ -218,7 +218,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         //When back, the engine should be ready.... (mini widgets and widgets require it to connect !)
 
         try {
-            listFeature = widgetUpdate.requestFeatures();
+            listFeature = WidgetUpdate.requestFeatures();
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());
         }

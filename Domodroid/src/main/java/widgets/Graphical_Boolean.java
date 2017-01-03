@@ -294,8 +294,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                 e.printStackTrace();
             }
             Tracer.d(mytag, "getting history");
-            display_last_value sync = new display_last_value();
-            sync.execute();
+            new display_last_value().execute();
         } else {
             isopen = false;
             LL_background.removeView(listeChoices);
@@ -315,6 +314,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         protected Void doInBackground(Void... params) {
             JSONObject json_LastValues = null;
             JSONArray itemArray = null;
+            Tracer.i(mytag, "api_version =" + api_version);
+
             try {
                 if (api_version <= 0.6f) {
                     Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");

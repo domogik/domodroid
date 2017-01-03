@@ -100,7 +100,7 @@ public class Com_Stats extends FrameLayout {
         topPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         //topPan.setTextColor(Color.parseColor("#333333"));
 
-        LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.com_stats_2, null);
 
         topPan.addView(view);

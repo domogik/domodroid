@@ -170,7 +170,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             canvas.url = url;
             canvas.update = update;
 
-            LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             featurePan2_buttons = layoutInflater.inflate(R.layout.graph_buttons, null);
             View v = null;
 
@@ -232,7 +232,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                     display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 

@@ -338,7 +338,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
 
                         Long Value_timestamplong = null;
-                        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {

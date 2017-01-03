@@ -34,7 +34,7 @@ public class dmd_gettime {
 
         try
         {
-            dateToReturn = (Date)dateFormat.parse(StrDate);
+            dateToReturn = dateFormat.parse(StrDate);
         }
         catch (ParseException e)
         {

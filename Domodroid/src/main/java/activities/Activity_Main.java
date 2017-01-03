@@ -247,6 +247,16 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         appname = (ImageView) findViewById(R.id.app_name);
 
+        //todo try to solve history problems like in:
+        /*
+        STACK_TRACE=java.lang.NullPointerException: Attempt to invoke virtual method 'void java.util.Vector.add(int, java.lang.Object)' on a null object reference
+        at activities.Activity_Main.onOptionsItemSelected(Activity_Main.java:1096)
+        at android.app.Activity.onMenuItemSelected(Activity.java:3008)
+        at android.support.v4.b.l.onMenuItemSelected(FragmentActivity.java:403)
+        at android.support.v7.a.f.onMenuItemSelected(AppCompatActivity.java:189)
+         */
+        history = new Vector<>();
+
         LoadSelections();
 
         // Prepare a listener to know when the house organization dialog is closed...

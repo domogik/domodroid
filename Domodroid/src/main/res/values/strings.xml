@@ -902,6 +902,7 @@
     <string name="virtual_number">Virtual Number</string>
     <string name="virtual_string">virtual_string</string>
     <string name="virtual_colorrgb">Virtual ColorRGB</string>
+    <string name="virtual_colorrgbhexa">Virtual Colorrgbhexa</string>
     <string name="virtual_switch">Virtual Switch</string>
     <string name="set_virtual_string">Set Virtual String</string>
     <string name="set_virtual_number">Set Virtual Number</string>

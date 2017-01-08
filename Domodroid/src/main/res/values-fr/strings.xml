@@ -404,6 +404,8 @@
     <string name="info3200">Non disponible</string>
     <string name="not_available">Non disponible</string>
     <string name="rain">Pluie</string>
+    <string name="rain_and_snow">Pluie et neige</string>
+
     <string name="butler">Majordome</string>
     <string name="action_settings">Paramètres</string>
     <string name="title_activity_main">Domogik Majordome</string>

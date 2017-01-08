@@ -441,7 +441,7 @@
     <string name="info48" translatable="false">--</string>
     <string name="rain">Rain</string>
     <string name="mostly_sunny">Mostly Sunny</string>
-
+    <string name="rain_and_snow">Rain and snow</string>
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Domogik Butler</string>

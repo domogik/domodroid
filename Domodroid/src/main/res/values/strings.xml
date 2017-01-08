@@ -441,7 +441,7 @@
     <string name="info48" translatable="false">--</string>
     <string name="rain">Rain</string>
     <string name="mostly_sunny">Mostly Sunny</string>
-
+    <string name="rain_and_snow">Rain and snow</string>
     <string name="butler">butler</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Domogik Butler</string>
@@ -868,4 +868,23 @@
     <string name="underscore"> - </string>
     <string name="widget_error">Something were wrong with</string>
     <string name="domogik_admin_page">Domogik admin page</string>
+
+    <string name="play">Play</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="mute">Mute</string>
+    <string name="volup">Vol Up</string>
+    <string name="voldown">Vol Down</string>
+    <string name="bass">Bass</string>
+    <string name="volume">Volume</string>
+    <string name="treble">Treble</string>
+    <string name="loudness">Loudness</string>
+    <string name="play_mode">Play Mode</string>
+    <string name="current_title">Current Title</string>
+    <string name="current_stream">Current Stream</string>
+    <string name="current_radio_show">Current Radio Show</string>
+    <string name="current_album">Current Album</string>
+    <string name="current_creator">Current Creator</string>
+    <string name="current_duration">Current Duration</string>
+
 </resources>

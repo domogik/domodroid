@@ -27,13 +27,43 @@ public class Graphical_Trigger_Button extends LinearLayout {
         Log.e("eeeeeeeeeeeeeeeee", "" + icon_name);
         switch (icon_name) {
             case "send next":
-                sign.setImageResource(R.drawable.next);
+                sign.setImageResource(R.drawable.ic_skip_next_white_24dp);
                 //todo change animation style
                 animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration(2000);
                 break;
             case "send previous":
-                sign.setImageResource(R.drawable.previous);
+                sign.setImageResource(R.drawable.ic_skip_previous_white_24dp);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case "send vol up":
+                sign.setImageResource(R.drawable.ic_volume_up_white_24dp);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case "send vol down":
+                sign.setImageResource(R.drawable.ic_volume_down_white_24dp);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case "toggle mute":
+                sign.setImageResource(R.drawable.ic_volume_mute_white_24dp);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case "send play":
+                sign.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case "send stop":
+                sign.setImageResource(R.drawable.ic_stop_white_24dp);
                 //todo change animation style
                 animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration(2000);
@@ -60,10 +90,25 @@ public class Graphical_Trigger_Button extends LinearLayout {
                 if (msg.what == 0) {
                     switch (icon_name) {
                         case "send next":
-                            sign.setImageResource(R.drawable.next);
+                            sign.setImageResource(R.drawable.ic_skip_next_white_24dp);
                             break;
                         case "send previous":
-                            sign.setImageResource(R.drawable.previous);
+                            sign.setImageResource(R.drawable.ic_skip_previous_white_24dp);
+                            break;
+                        case "send vol up":
+                            sign.setImageResource(R.drawable.ic_volume_up_white_24dp);
+                            break;
+                        case "send vol down":
+                            sign.setImageResource(R.drawable.ic_volume_down_white_24dp);
+                            break;
+                        case "toggle mute":
+                            sign.setImageResource(R.drawable.ic_volume_mute_white_24dp);
+                            break;
+                        case "send play":
+                            sign.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                            break;
+                        case "send stop":
+                            sign.setImageResource(R.drawable.ic_stop_white_24dp);
                             break;
                         case "wake on lan":
                             sign.setImageResource(R.drawable.button_trigger_anim1);
@@ -75,10 +120,25 @@ public class Graphical_Trigger_Button extends LinearLayout {
                 } else if (msg.what == 1) {
                     switch (icon_name) {
                         case "send next":
-                            sign.setImageResource(R.drawable.next);
+                            sign.setImageResource(R.drawable.ic_skip_next_white_24dp);
                             break;
                         case "send previous":
-                            sign.setImageResource(R.drawable.previous);
+                            sign.setImageResource(R.drawable.ic_skip_previous_white_24dp);
+                            break;
+                        case "send vol up":
+                            sign.setImageResource(R.drawable.ic_volume_up_white_24dp);
+                            break;
+                        case "send vol down":
+                            sign.setImageResource(R.drawable.ic_volume_down_white_24dp);
+                            break;
+                        case "toggle mute":
+                            sign.setImageResource(R.drawable.ic_volume_mute_white_24dp);
+                            break;
+                        case "send play":
+                            sign.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                            break;
+                        case "send stop":
+                            sign.setImageResource(R.drawable.ic_stop_white_24dp);
                             break;
                         case "wake on lan":
                             sign.setImageResource(R.drawable.button_trigger_anim2);

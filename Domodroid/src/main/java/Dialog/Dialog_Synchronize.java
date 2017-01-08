@@ -560,19 +560,22 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQreq_repport = json_rinor.getJSONObject("mq").getString("req_rep_port");
                     prefEditor.putString("MQaddress", MQaddress);
                     // #103 if MQadress=localhost
-                    if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1")) {
+                    if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1") || MQaddress.equals("0.0.0.0")) {
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(activity, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
                             }
                         });
+                        //MQaddress = ""; //TODO save it as empty or just tell user the MQ will not work?
                     } else if (MQaddress.equals("*")) {
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(activity, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
                             }
                         });
+                        //MQaddress = ""; //TODO save it as empty or just tell user the MQ will not work?
                     }
+                    prefEditor.putString("MQaddress", MQaddress);
                     prefEditor.putString("MQsubport", MQsubport);
                     prefEditor.putString("MQpubport", MQpubport);
                     prefEditor.putString("MQreq_repport", MQreq_repport);

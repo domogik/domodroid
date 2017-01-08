@@ -761,8 +761,8 @@ public class Graphics_Manager {
             //TODO change this on with a sun up and down icon
             if (usage.contains("current_sunrise") || usage.equals("current_sunset"))
                 usage = "cron";
-            //WOL "wol"
-            if (usage.equals("wol"))
+            //WOL "wol" "Wake on Lan"
+            if (usage.equals("wol")||usage.equals("wake on lan"))
                 usage = "computer";
             //Yi
             if (usage.equals("yi"))

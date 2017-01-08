@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,7 +141,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         LL_infoPan.addView(state);
 
         //button animated
-        trigger = new Graphical_Trigger_Button(activity);
+        trigger = new Graphical_Trigger_Button(activity, feature.getIcon_name());
         trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         trigger.setOnClickListener(this);
 

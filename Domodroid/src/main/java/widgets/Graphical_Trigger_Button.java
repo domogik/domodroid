@@ -18,15 +18,37 @@ public class Graphical_Trigger_Button extends LinearLayout {
     private final Animation animation;
     private final ImageView sign;
 
-    public Graphical_Trigger_Button(Context context) {
+    public Graphical_Trigger_Button(Context context, final String icon_name) {
         super(context);
         setBackgroundResource(R.drawable.button_trigger_bg_up);
 
         sign = new ImageView(context);
-        sign.setImageResource(R.drawable.button_trigger_anim1);
+        switch (icon_name) {
+            case "next":
+               sign.setImageResource(R.drawable.next);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case " previous":
+                sign.setImageResource(R.drawable.previous);
+                //todo change animation style
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            case "wake on lan":
+                sign.setImageResource(R.drawable.button_trigger_anim1);
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+            default:
+                sign.setImageResource(R.drawable.button_trigger_anim1);
+                animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration(2000);
+                break;
+        }
         sign.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT, Gravity.CENTER));
-        animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(2000);
+
         this.addView(sign);
 
 
@@ -34,14 +56,41 @@ public class Graphical_Trigger_Button extends LinearLayout {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 0) {
-                    sign.setImageResource(R.drawable.button_trigger_anim1);
+                    switch (icon_name) {
+                        case "next":
+                            sign.setImageResource(R.drawable.next);
+                            break;
+                        case " previous":
+                            sign.setImageResource(R.drawable.previous);
+                            break;
+                        case "wake on lan":
+                            sign.setImageResource(R.drawable.button_trigger_anim1);
+                            break;
+                        default:
+                            sign.setImageResource(R.drawable.button_trigger_anim1);
+                            break;
+                    }
                 } else if (msg.what == 1) {
-                    sign.setImageResource(R.drawable.button_trigger_anim2);
+                    switch (icon_name) {
+                        case "next":
+                            sign.setImageResource(R.drawable.next);
+                            break;
+                        case " previous":
+                            sign.setImageResource(R.drawable.previous);
+                            break;
+                        case "wake on lan":
+                            sign.setImageResource(R.drawable.button_trigger_anim2);
+                            break;
+                        default:
+                            sign.setImageResource(R.drawable.button_trigger_anim2);
+                            break;
+                    }
                 }
 
             }
         };
     }
+
 
     private class SBAnim extends AsyncTask<Void, Integer, Void> {
 

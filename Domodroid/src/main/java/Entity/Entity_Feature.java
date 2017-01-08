@@ -218,7 +218,7 @@ public class Entity_Feature {
             //todo adapt for 0.4 and + use final dt_type (open_close) for example to simplify.
             //Dt_type are in table table_feature in column device_feature_model_id before first "."
             iconName = device_usage_id;
-        return iconName;
+        return iconName.toLowerCase();
     }
 
 }

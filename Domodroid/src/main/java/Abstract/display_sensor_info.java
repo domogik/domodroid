@@ -182,7 +182,7 @@ public abstract class display_sensor_info {
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
                         value.setText(Graphics_Manager.Names_conditioncodes(activity, (int) formatedValue));
                     } catch (Exception e1) {
-                        Tracer.i(mytag, "no translation for: " + loc_Value);
+                        Tracer.e(mytag, "no translation for condition-code: " + loc_Value);
                         value.setText(loc_Value);
                     }
                 } else if (state_key.equalsIgnoreCase("callerid")) {
@@ -214,7 +214,7 @@ public abstract class display_sensor_info {
                         }
 
                     } catch (Exception e1) {
-                        Tracer.e(mytag, "no translation for: " + loc_Value);
+                        Tracer.e(mytag, "no translation for rainlevel: " + loc_Value);
                         e1.printStackTrace();
                         value.setText(loc_Value);
                     }
@@ -275,7 +275,7 @@ public abstract class display_sensor_info {
                     }
                 }
             } catch (Exception e1) {
-                Tracer.d(mytag, "no translation for: " + loc_Value);
+                Tracer.d(mytag, "no translation for this STRING value: " + loc_Value);
                 value.setText(loc_Value);
             }
         }

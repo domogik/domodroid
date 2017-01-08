@@ -698,10 +698,12 @@ public class Graphics_Manager {
             // "sensor_energy", "sensor_water", "sensor_count", "sensor_uv", "sensor_windspeed", "sensor_rainfall", "sensor_outflow"
             // "sensor_voltage", "sensor_current", "sensor_homeeasy_switch", "sensor_homeeasy_openclose", "sensor_x10_switch"
             // "sensor_ati_remote", "sensor_generic"
-            // SONOS "play", "stop", "mute", "volup", "voldown", "next", "previous"
+            // SONOS "send play", "send stop", "toggle mute", "send vol up", "send vol down", "send next", "send previous"
             // "bass", "volume", "treble", "loudness", "state", "play_mode", "current_title", "current_stream", "current_radio_show", "current_album", "current_creator", "current_duration"
             if (usage.equals("bass") || usage.equals("volume") || usage.equals("treble") || usage.equals("loudness") || usage.equals("play_mode") || usage.equals("current_title")
                     || usage.equals("current_stream") || usage.equals("current_radio_show") || usage.equals("current_album") || usage.equals("current_creator") || usage.equals("current_duration"))
+                usage = "music";
+            if (usage.equals("send play") || usage.equals("send stop") || usage.equals("toggle mute") || usage.equals("send vol up") || usage.equals("send vol down") || usage.equals("send next") || usage.equals("send previous"))
                 usage = "music";
 
             // SCRIPT "sensor_script_action", "sensor_script_onoff", "sensor_script_info_number","sensor_script_info_temperature",

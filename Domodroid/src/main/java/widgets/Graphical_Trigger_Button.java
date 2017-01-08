@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -23,14 +24,15 @@ public class Graphical_Trigger_Button extends LinearLayout {
         setBackgroundResource(R.drawable.button_trigger_bg_up);
 
         sign = new ImageView(context);
+        Log.e("eeeeeeeeeeeeeeeee", "" + icon_name);
         switch (icon_name) {
-            case "next":
-               sign.setImageResource(R.drawable.next);
+            case "send next":
+                sign.setImageResource(R.drawable.next);
                 //todo change animation style
                 animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration(2000);
                 break;
-            case " previous":
+            case "send previous":
                 sign.setImageResource(R.drawable.previous);
                 //todo change animation style
                 animation = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -57,10 +59,10 @@ public class Graphical_Trigger_Button extends LinearLayout {
             public void handleMessage(Message msg) {
                 if (msg.what == 0) {
                     switch (icon_name) {
-                        case "next":
+                        case "send next":
                             sign.setImageResource(R.drawable.next);
                             break;
-                        case " previous":
+                        case "send previous":
                             sign.setImageResource(R.drawable.previous);
                             break;
                         case "wake on lan":
@@ -72,10 +74,10 @@ public class Graphical_Trigger_Button extends LinearLayout {
                     }
                 } else if (msg.what == 1) {
                     switch (icon_name) {
-                        case "next":
+                        case "send next":
                             sign.setImageResource(R.drawable.next);
                             break;
-                        case " previous":
+                        case "send previous":
                             sign.setImageResource(R.drawable.previous);
                             break;
                         case "wake on lan":

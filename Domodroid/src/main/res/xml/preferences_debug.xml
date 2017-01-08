@@ -88,6 +88,13 @@
             android:summaryOff="Metrics disabled"
             android:summaryOn="Metrics enabled"
             android:title="Domodroid Metrics informations" />
-
+        <Preference
+            android:icon="@drawable/ic_bug_report_black_24dp"
+            android:persistent="false"
+            android:title="LOGVIEW">
+            <intent
+                android:targetClass="logging.LogActivity"
+                android:targetPackage="org.domogik.domodroid13" />
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

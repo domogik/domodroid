@@ -886,5 +886,8 @@
     <string name="current_album">Current Album</string>
     <string name="current_creator">Current Creator</string>
     <string name="current_duration">Current Duration</string>
+    <string name="erase_log_file">Erase log file ?</string>
+    <string name="sure_question">Sure ?</string>
+    <string name="reload">Reload</string>
 
 </resources>

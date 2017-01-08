@@ -70,7 +70,7 @@ dependencies {
     //slider preferences
     compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     //Openstreetmap api lib
-    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
+    compile 'org.osmdroid:osmdroid-android:5.6.2'
     // Test libraries
     testCompile 'junit:junit:4.12'
     //codecov

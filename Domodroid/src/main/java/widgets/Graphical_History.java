@@ -66,7 +66,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int id;
     private static String mytag;
     private Message msg;
-    private String url = null;
 
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
@@ -331,12 +330,12 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             JSONArray itemArray = null;
             try {
                 if (api_version <= 0.6f) {
-                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                    json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                    json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
                 } else if (api_version >= 0.7f) {
-                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
                     //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
                     json_LastValues = new JSONObject();
                     json_LastValues.put("stats", json_LastValues_0_4);
 

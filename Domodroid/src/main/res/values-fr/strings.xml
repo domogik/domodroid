@@ -684,6 +684,10 @@
     <string name="option_widget_timestamp_date">Affiché l\'orodatage par date</string>
     <string name="option_widget_timestamp_title">Affichage horodatage</string>
     <string name="missing_maps_applications">Veuillez installer une application de Cartes</string>
+    <string name="auto">Auto</string>
+    <string name="comfort">Confort</string>
+    <string name="comfort__1">Confort-1</string>
+    <string name="comfort__2">Confort-2</string>
     <string name="unknown">Inconnu</string>
     <string name="speed_1">Vitesse 1</string>
     <string name="speed_2">Vitesse 2</string>
@@ -782,4 +786,18 @@
     <string name="too_many_sms_were_sent_in_too_little_time.">Trop de sms envoyé en trop peu de temps.</string>
     <string name="loading_data_from_rest">Chargement des valeurs depuis rest....</string>
     <string name="domogik_admin_page">Administration de domogik</string>
+    <string name="next">Suiv.</string>
+    <string name="previous">Préc.</string>
+    <string name="volume">Volume</string>
+    <string name="virtual_binary">Binaire Virtuel</string>
+    <string name="_1_wire_temperature">Température 1-Wire</string>
+    <string name="virtual_number">Nombre virtuel</string>
+    <string name="virtual_string">Texte virtuel</string>
+    <string name="virtual_colorrgb">Couleur rgb virtuelle</string>
+    <string name="virtual_colorrgbhexa">Couleur rgbhexa virtuelle</string>
+    <string name="virtual_switch">Interrupteur virtuel</string>
+    <string name="value">Valeur</string>
+    <string name="Switch">Interrupteur</string>
+    <string name="engine_speed">Vitesse Moteur</string>
+    <string name="vehicle_speed">Vitesse Véhicule</string>
 </resources>

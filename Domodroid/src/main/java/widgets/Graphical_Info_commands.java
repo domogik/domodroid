@@ -44,7 +44,6 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import misc.tracerengine;
-import rinor.CallUrl;
 import rinor.send_command;
 
 @SuppressWarnings("Convert2Diamond")
@@ -72,7 +71,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     private final SharedPreferences params;
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                    final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
@@ -190,7 +189,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
             Handler handler = new Handler(activity.getMainLooper());
             handler.post(new Runnable() {
                              public void run() {
-                                 String Url2send = "";
+                                 String state_progress = "";
                                  if (api_version >= 0.7f) {
                                      if (value_type.equals("number")) {
                                          //#134 from here
@@ -199,21 +198,18 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                              allEds.get(current_parameter).setText(String.valueOf(temp_value));
                                          }
                                      }
-
-                                     Url2send ="cmd/id/" + command_id + "?";
                                      for (int current_parameter = 0; current_parameter < number_of_command_parameters; current_parameter++) {
-                                         Url2send += command_type[current_parameter] + "=" + URLEncoder.encode(allEds.get(current_parameter).getText().toString()) + "&";
+                                         state_progress = command_type[current_parameter] + "=" + URLEncoder.encode(allEds.get(current_parameter).getText().toString()) + "&";
                                      }
                                      //remove last &
-                                     if (Url2send.endsWith("&")) {
-                                         Url2send = Url2send.substring(0, Url2send.length() - 1);
+                                     if (state_progress.endsWith("&")) {
+                                         state_progress = state_progress.substring(0, state_progress.length() - 1);
                                      }
-                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
+                                     Tracer.i(mytag, "Sending to Rinor : <" + state_progress + ">");
                                      JSONObject json_Ack = null;
                                      try {
                                          //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
-                                         send_command.send_it_without_address(activity, Tracer, Url2send, api_version);
-
+                                         send_command.send_it(activity, Tracer, command_id, null, state_progress, api_version);
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          //Clean all text from allEds
                                          for (int i = 0; i < allEds.size(); i++) {

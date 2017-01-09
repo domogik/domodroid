@@ -21,19 +21,19 @@ import rinor.Rest_com;
 public class getlastvalues {
 
     public static void getlastvalue(Activity activity, tracerengine Tracer, float api_version, ArrayList listItem, ListView listeChoices, String mytag, int dev_id,
-                                    String url, String state_key, int nb_item_for_history, String login, String password, Boolean SSL, int id) {
+                                    String state_key, int nb_item_for_history, String login, String password, Boolean SSL, int id) {
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(activity);
         listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
-                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
             } else if (api_version >= 0.7f) {
-                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/5");
+                Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/last/5");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
+                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
                 json_LastValues = new JSONObject();
                 json_LastValues.put("stats", json_LastValues_0_4);
 

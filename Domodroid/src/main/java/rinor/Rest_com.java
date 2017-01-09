@@ -24,10 +24,7 @@
 package rinor;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
@@ -57,8 +54,6 @@ import java.net.UnknownHostException;
 import javax.net.ssl.HttpsURLConnection;
 
 import misc.tracerengine;
-
-import static activities.Activity_Main.context;
 
 
 public class Rest_com {
@@ -322,3 +317,13 @@ public class Rest_com {
     }
 
 }
+/*Todo replace by a simpler method
+      try (
+
+            String response = new CallUrl().execute(url, login, password, "3000", String.valueOf(SSL)).get();
+            json = new JSONArray(response);
+        } catch (Exception e) {
+            Tracer.e(mytag, e.toString());
+        }
+        return json;
+  */

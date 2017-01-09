@@ -718,10 +718,11 @@ public class WidgetUpdate {
 
                 String request = sharedparams.getString("UPDATE_URL", null);
                 String URL = sharedparams.getString("URL", "1.1.1.1");
-                //Because in old time it was the fullr request that was used and saved, not only the real UPDATE_PATH
-                try{
+                //Because in old time it was the full request that was used and saved, not only the real UPDATE_PATH
+                //like "https://192.168.0.1:40406/rest/sensor" instead of just "sensor"
+                try {
                     request = request.replace(URL, "");
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     request = sharedparams.getString("UPDATE_URL", null);
                 }

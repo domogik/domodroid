@@ -203,8 +203,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_rinor;
             String mytag = "Dialog_Synchronize";
             try {
-                json_rinor = Rest_com.connect_jsonobject(activity, Tracer, "", 3000);
-
+                json_rinor = Rest_com.connect_jsonobject(activity, Tracer, "", 30000);
                 publishProgress(2);
             } catch (Exception e) {
                 Tracer.e(mytag, "Error connecting to rinor");
@@ -341,7 +340,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 Tracer.d(mytag, "RoomList = <" + json_RoomList.toString() + ">");
 
                 publishProgress(40);
-                json_FeatureList = Rest_com.connect_jsonobject(activity, Tracer,  "base/feature/list", 30000);
+                json_FeatureList = Rest_com.connect_jsonobject(activity, Tracer, "base/feature/list", 30000);
                 if (json_FeatureList == null || json_FeatureList.toString().equals("{}")) {
                     //Cannot connect to server...
                     Bundle b = new Bundle();
@@ -381,7 +380,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
             } else if (Rinor_Api_Version <= 0.6f) {
                 // Function special Basilic domogik 0.3
-                json_FeatureList = Rest_com.connect_jsonobject(activity, Tracer,  "base/feature/list", 30000);
+                json_FeatureList = Rest_com.connect_jsonobject(activity, Tracer, "base/feature/list", 30000);
                 if (json_FeatureList == null || json_FeatureList.toString().equals("{}")) {
                     // Cannot connect to Rinor server.....
                     Bundle b = new Bundle();
@@ -602,7 +601,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     return null;
                 }
                 publishProgress(14);
-                JSONObject Json_data_type = Rest_com.connect_jsonobject(activity, Tracer,  "datatype", 30000);
+                JSONObject Json_data_type = Rest_com.connect_jsonobject(activity, Tracer, "datatype", 30000);
                 if (Json_data_type == null || (Json_data_type.toString().equals("{}"))) {
                     // Cannot get data_type from Rinor server.....
                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");

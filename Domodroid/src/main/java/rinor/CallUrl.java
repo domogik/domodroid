@@ -50,83 +50,87 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         final String password = uri[2];
         int timeout = Integer.parseInt(uri[3]);
         Boolean SSL = Boolean.valueOf(uri[4]);
-        if (!SSL) {
-            HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
-            HttpConnectionParams.setSoTimeout(httpParameters, timeout);
-            DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
-            httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-            HttpResponse response;
-            String responseString = "";
-            try {
-                Log.e("CallUrl", "url=" + url.toString());
-                HttpGet httpget = new HttpGet(url);
-                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
-                response = httpclient.execute(httpget);
-                StatusLine statusLine = response.getStatusLine();
-                stats_com.add(Stats_Com.EVENTS_SEND, httpclient.getRequestInterceptorCount());
-                stats_com.add(Stats_Com.EVENTS_RCV, httpclient.getResponseInterceptorCount());
-                if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    response.getEntity().writeTo(out);
-                    responseString = out.toString();
-                    out.close();
-                } else {
-                    //Closes the connection.
-                    try {
-                        response.getEntity().getContent().close();
-                    } catch (Exception e1) {
-                        //TODO Handle problems..
+        if (Abstract.Connectivity.IsInternetAvailable()) {
+            if (!SSL) {
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+                HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+                DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
+                httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                HttpResponse response;
+                String responseString = "";
+                try {
+                    Log.e("CallUrl", "url=" + url.toString());
+                    HttpGet httpget = new HttpGet(url);
+                    httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
+                    response = httpclient.execute(httpget);
+                    StatusLine statusLine = response.getStatusLine();
+                    stats_com.add(Stats_Com.EVENTS_SEND, httpclient.getRequestInterceptorCount());
+                    stats_com.add(Stats_Com.EVENTS_RCV, httpclient.getResponseInterceptorCount());
+                    if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        response.getEntity().writeTo(out);
+                        responseString = out.toString();
+                        out.close();
+                    } else {
+                        //Closes the connection.
+                        try {
+                            response.getEntity().getContent().close();
+                        } catch (Exception e1) {
+                            //TODO Handle problems..
+                        }
+                        throw new IOException(statusLine.getReasonPhrase());
                     }
-                    throw new IOException(statusLine.getReasonPhrase());
-                }
-            } catch (SocketTimeoutException | ConnectTimeoutException e) {
-                e.printStackTrace();
-                Log.e(mytag, url);
-                responseString = "ERROR";
-            } catch (IOException e) {
-                e.printStackTrace();
-                //TODO Handle problems..
-                if (e.getMessage().equals("NOT FOUND")) {
+                } catch (SocketTimeoutException | ConnectTimeoutException e) {
+                    e.printStackTrace();
+                    Log.e(mytag, url);
                     responseString = "ERROR";
-                }
-            }
-            return responseString;
-        } else {
-            String responseMessage = "";
-            try {
-                if (url.startsWith("http://")) {
-                    url = url.replace("http://", "https://");
-                }
-                final HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
-                Authenticator.setDefault(new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(login, password.toCharArray());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //TODO Handle problems..
+                    if (e.getMessage().equals("NOT FOUND")) {
+                        responseString = "ERROR";
                     }
-                });
-                String result = null;
-                InputStream instream = urlConnection.getInputStream();
-                // Read response headers
-                int responseCode = urlConnection.getResponseCode();
-                responseMessage = urlConnection.getResponseMessage();
-                result = Abstract.httpsUrl.convertStreamToString(instream);
-                stats_com.add(Stats_Com.EVENTS_SEND, urlConnection.getContentLength());
-                stats_com.add(Stats_Com.EVENTS_RCV, responseMessage.length());
-                instream.close();
-                //} catch (HttpHostConnectException e) {
-                //    e.printStackTrace();
-            } catch (java.net.SocketTimeoutException | java.net.ConnectException e) {
-                e.printStackTrace();
-                responseMessage = "ERROR";
-            } catch (IOException e) {
-                //TODO Handle problems..
-                e.printStackTrace();
-                if (e.getMessage().equals("NOT FOUND")) {
-                    responseMessage = "ERROR";
                 }
+                return responseString;
+            } else {
+                String responseMessage = "";
+                try {
+                    if (url.startsWith("http://")) {
+                        url = url.replace("http://", "https://");
+                    }
+                    final HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
+                    Authenticator.setDefault(new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(login, password.toCharArray());
+                        }
+                    });
+                    String result = null;
+                    InputStream instream = urlConnection.getInputStream();
+                    // Read response headers
+                    int responseCode = urlConnection.getResponseCode();
+                    responseMessage = urlConnection.getResponseMessage();
+                    result = Abstract.httpsUrl.convertStreamToString(instream);
+                    stats_com.add(Stats_Com.EVENTS_SEND, urlConnection.getContentLength());
+                    stats_com.add(Stats_Com.EVENTS_RCV, responseMessage.length());
+                    instream.close();
+                    //} catch (HttpHostConnectException e) {
+                    //    e.printStackTrace();
+                } catch (java.net.SocketTimeoutException | java.net.ConnectException e) {
+                    e.printStackTrace();
+                    responseMessage = "ERROR";
+                } catch (IOException e) {
+                    //TODO Handle problems..
+                    e.printStackTrace();
+                    if (e.getMessage().equals("NOT FOUND")) {
+                        responseMessage = "ERROR";
+                    }
+                }
+                return responseMessage;
             }
-            return responseMessage;
         }
+        Log.e(mytag, "NO CONNECTION");
+        return "";
     }
 
     @Override

@@ -28,8 +28,8 @@ import org.json.JSONObject;
 
 import java.util.TimerTask;
 
-import Abstract.translate;
 import Abstract.display_sensor_info;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -38,7 +38,6 @@ import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
 import misc.tracerengine;
-import rinor.CallUrl;
 import rinor.send_command;
 
 public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBarChangeListener, OnClickListener {
@@ -62,8 +61,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String argbS = "";
     private Message msg;
     private static String mytag;
-    private String type;
-    private String address;
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     private Boolean switch_state = false;
@@ -93,7 +90,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private final int session_type;
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
@@ -103,7 +100,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     }
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
@@ -117,7 +114,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
         String state_key = feature.getState_key();
-        this.address = feature.getAddress();
+        command_id = feature.getAddress();
         mytag = "Graphical_Color(" + dev_id + ")";
 
         String value0;
@@ -136,8 +133,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         setOnClickListener(this);
 
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
-        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + type + ">");
+        command_type = model[0];
+        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> command_type = <" + command_type + ">");
 
         //state key
         TextView state_key_view = new TextView(activity);
@@ -538,17 +535,16 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             Handler temphandler = new Handler(activity.getMainLooper());
             temphandler.post(new Runnable() {
                                  public void run() {
-                                     String Url2send = "";
+                                     String state_progress = "";
                                      if (api_version >= 0.7f) {
-                                         Url2send = "cmd/id/" + command_id + "?" + command_type + "=";
                                          if ((argb != 0) && switch_state) {
                                              if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                                                  String srgb = Integer.toHexString(argb);
                                                  if (srgb.length() > 6)
                                                      srgb = srgb.substring(2);
-                                                 Url2send += srgb;
+                                                 state_progress = srgb;
                                              } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
-                                                 Url2send += r + "," + g + "," + b;
+                                                 state_progress = r + "," + g + "," + b;
                                              } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
                                                  int computedC, computedM, computedY;
                                                  int minCMY;
@@ -565,49 +561,46 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                                  computedC = (computedC - minCMY) / (1 - minCMY);
                                                  computedM = (computedM - minCMY) / (1 - minCMY);
                                                  computedY = (computedY - minCMY) / (1 - minCMY);
-                                                 Url2send += computedC + "," + computedM + "," + computedY + "," + minCMY;
+                                                 state_progress = computedC + "," + computedM + "," + computedY + "," + minCMY;
                                              }
                                          } else {
-                                             String State = "";
                                              if (switch_state) {
                                                  //To see
-                                                 State = "000000";
+                                                 state_progress = "000000";
                                              } else {
-                                                 State = "000000";
+                                                 state_progress = "000000";
                                                  seekBarHueBar.setProgress(255);
                                                  seekBarRGBXBar.setProgress(0);
                                                  seekBarRGBYBar.setProgress(0);
                                              }
-                                             Url2send += State;
                                          }
                                      } else {
-                                         Url2send = "command/" + type + "/" + address + "/setcolor/";
+                                         // in 0.7 api
+                                         // Url2send = "cmd/id/" + command_id + "?" + command_type + "=" + value;
+                                         // in 0.6 api
+                                         // Url2send = "command/" + type + "/" + address + "/setcolor/" + value;
                                          if ((argb != 0) && switch_state) {
                                              String srgb = Integer.toHexString(argb);
                                              if (srgb.length() > 6)
                                                  srgb = srgb.substring(2);
-                                             Url2send += "#" + srgb;
+                                             state_progress = "#" + srgb;
                                          } else {
-                                             String State = "";
                                              if (switch_state) {
-                                                 State = "000000";
+                                                 state_progress = "000000";
 
                                              } else {
-                                                 State = "000000";
+                                                 state_progress = "000000";
                                                  seekBarHueBar.setProgress(255);
                                                  seekBarRGBXBar.setProgress(0);
                                                  seekBarRGBYBar.setProgress(0);
                                              }
-                                             Url2send += State;
                                          }
                                      }
                                      updating = 1;
-
-                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
                                          //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
-                                         send_command.send_it_without_address(activity, Tracer, Url2send, api_version);
+                                         send_command.send_it(activity, Tracer, command_id, command_type, String.valueOf(state_progress), api_version);
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

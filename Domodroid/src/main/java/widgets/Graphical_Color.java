@@ -39,6 +39,7 @@ import misc.Color_RGBField;
 import misc.Color_Result;
 import misc.tracerengine;
 import rinor.CallUrl;
+import rinor.send_command;
 
 public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBarChangeListener, OnClickListener {
 
@@ -53,7 +54,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private Color_Progress seekBarRGBYBar;
     private Color_RGBField rgbView;
     private Color_Result resultView;
-    private final String url;
     private Animation animation;
     private boolean touching;
     private int updating = 0;
@@ -93,22 +93,20 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private final int session_type;
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -542,7 +540,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                  public void run() {
                                      String Url2send = "";
                                      if (api_version >= 0.7f) {
-                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=";
+                                         Url2send = "cmd/id/" + command_id + "?" + command_type + "=";
                                          if ((argb != 0) && switch_state) {
                                              if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                                                  String srgb = Integer.toHexString(argb);
@@ -583,7 +581,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                              Url2send += State;
                                          }
                                      } else {
-                                         Url2send = url + "command/" + type + "/" + address + "/setcolor/";
+                                         Url2send = "command/" + type + "/" + address + "/setcolor/";
                                          if ((argb != 0) && switch_state) {
                                              String srgb = Integer.toHexString(argb);
                                              if (srgb.length() > 6)
@@ -608,7 +606,8 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
+                                         //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
+                                         send_command.send_it_without_address(activity, Tracer, Url2send, api_version);
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");

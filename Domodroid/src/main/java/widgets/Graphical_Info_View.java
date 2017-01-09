@@ -17,6 +17,7 @@
  */
 package widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -76,7 +77,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
     public int dev_id;
     public int id;
     public String state_key;
-    public String url;
     public Thread thread;
     //public int period;
     public int update;
@@ -119,9 +119,11 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private String unit = "";
     private Bitmap buffer;
     private Bitmap text;
+    final Activity activity;
 
-    public Graphical_Info_View(tracerengine Trac, Context context, SharedPreferences params, String parameters) {
+    public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, SharedPreferences params, String parameters) {
         super(context);
+        this.activity = activity;
         invalidate();
         this.Tracer = Trac;
         this.parameter = parameters;
@@ -613,23 +615,23 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 JSONObject json_GraphValues = null;
                 try {
                     if (api_version <= 0.6f) {
-                        Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                        json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" +
+                        Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
+                        json_GraphValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id + "/" +
                                 state_key +
                                 "/from/" +
                                 startTimestamp +
                                 "/to/" +
                                 currentTimestamp +
-                                "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
+                                "/interval/" + step + "/selector/avg", 30000);
                     } else if (api_version >= 0.7f) {
-                        Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
+                        Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                         //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                        json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "sensorhistory/id/" + id +
+                        json_GraphValues = Rest_com.connect_jsonobject(activity, Tracer, "sensorhistory/id/" + id +
                                 "/from/" +
                                 startTimestamp +
                                 "/to/" +
                                 currentTimestamp +
-                                "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
+                                "/interval/" + step + "/selector/avg", 30000);
                     }
                 } catch (Exception e) {
                     Tracer.d(mytag, "Could not get sensor history.");

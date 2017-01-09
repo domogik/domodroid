@@ -53,7 +53,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private SeekBar seekBarOnOff;
     private String address;
     private String state_progress;
-    private final String url;
     private String value0;
     private String value1;
     private String type;
@@ -78,22 +77,20 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private final SharedPreferences params;
 
     public Graphical_Binary(tracerengine Trac,
-                            final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                             final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Binary(tracerengine Trac,
-                            final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                             final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -356,7 +353,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
             }
             arg0.setProgress(40);
         }
-        send_command.send_it(Tracer, url, command_id, command_type, state_progress, login, password, SSL, api_version);
+        send_command.send_it(activity, Tracer, command_id, command_type, state_progress, api_version);
         touching = false;
     }
 

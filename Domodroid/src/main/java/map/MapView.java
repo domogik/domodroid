@@ -134,11 +134,7 @@ public class MapView extends View {
     private final int mytype = 2;
     private WidgetUpdate cache_engine = null;
     private final float scale;
-    private final String login;
-    private final String password;
-    private Boolean SSL;
     private String Address;
-    private String URL;
     private String state_progress;
     //Declare this flag globally
     private boolean longclic = false;
@@ -155,9 +151,6 @@ public class MapView extends View {
         this.activity = activity;
         this.params = params;
         api_version = params.getFloat("API_VERSION", 0);
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
-        SSL = params.getBoolean("ssl_activate", false);
 
         //activated=true;
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -953,7 +946,6 @@ public class MapView extends View {
             panel_widget.removeAllViews();
         }
         String label = feature.getDescription();
-        String URL = params.getString("URL", "1.1.1.1");
         String parameters = feature.getParameters();
         String device_type_id = feature.getDevice_type_id();
         String State_key = feature.getState_key();
@@ -996,12 +988,12 @@ public class MapView extends View {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    onoff = new Graphical_Binary(Tracer, activity, URL,
+                    onoff = new Graphical_Binary(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
-                    onoff_New = new Graphical_Binary_New(Tracer, activity, URL,
+                    onoff_New = new Graphical_Binary_New(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
@@ -1011,37 +1003,37 @@ public class MapView extends View {
         } else if (feature.getValue_type().equals("boolean") || feature.getValue_type().equals("bool")) {
             if (parameters.contains("command")) {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    onoff = new Graphical_Binary(Tracer, activity, URL,
+                    onoff = new Graphical_Binary(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
-                    onoff_New = new Graphical_Binary_New(Tracer, activity, URL,
+                    onoff_New = new Graphical_Binary_New(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
             } else {
-                Graphical_Boolean bool = new Graphical_Boolean(Tracer, activity, URL,
+                Graphical_Boolean bool = new Graphical_Boolean(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Boolean.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
         } else if (feature.getValue_type().equals("range")) {
-            Graphical_Range variator = new Graphical_Range(Tracer, activity, URL,
+            Graphical_Range variator = new Graphical_Range(Tracer, activity,
                     widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_Range.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
             if (parameters.contains("command")) {
-                Graphical_Trigger trigger = new Graphical_Trigger(Tracer, activity, URL,
+                Graphical_Trigger trigger = new Graphical_Trigger(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
-                info = new Graphical_Info(Tracer, activity, URL,
+                info = new Graphical_Info(Tracer, activity,
                         widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
@@ -1053,12 +1045,12 @@ public class MapView extends View {
             if (parameters.contains("command")) {
                 //display range widget for DT_scaling command with number
                 if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")) {
-                    Graphical_Range variator = new Graphical_Range(Tracer, activity, URL,
+                    Graphical_Range variator = new Graphical_Range(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Range.container = (FrameLayout) panel_widget;
                     panel_widget.addView(variator);
                 } else {
-                    info_commands = new Graphical_Info_commands(Tracer, activity, URL,
+                    info_commands = new Graphical_Info_commands(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
@@ -1066,7 +1058,7 @@ public class MapView extends View {
 
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
-                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity, URL,
+                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
@@ -1079,28 +1071,28 @@ public class MapView extends View {
                 */
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
-                info = new Graphical_Info(Tracer, activity, URL,
+                info = new Graphical_Info(Tracer, activity,
                         widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else if (feature.getValue_type().equals("list")) {
-            Graphical_List list = new Graphical_List(Tracer, activity, URL,
+            Graphical_List list = new Graphical_List(Tracer, activity,
                     widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_List.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
-            colorw = new Graphical_Color(Tracer, activity, URL,
+            colorw = new Graphical_Color(Tracer, activity,
                     widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_Color.container = (FrameLayout) panel_widget;
             panel_widget.addView(colorw);
         } else if (feature.getValue_type().equals("video")) {
             if (!parameters.contains("command")) {
-                Graphical_Cam cam = new Graphical_Cam(Tracer, activity, URL,
+                Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
             } else {
-                info_commands = new Graphical_Info_commands(Tracer, activity, URL,
+                info_commands = new Graphical_Info_commands(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
@@ -1109,34 +1101,34 @@ public class MapView extends View {
         } else if (feature.getValue_type().equals("string")) {
             Tracer.i(mytag, "parameters=" + parameters);
             if (feature.getDevice_feature_model_id().contains("call")) {
-                Graphical_History info_with_history = new Graphical_History(Tracer, activity, URL,
+                Graphical_History info_with_history = new Graphical_History(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(info_with_history);
             } else if (feature.getDevice_feature_model_id().contains("camera")) {
-                Graphical_Cam cam = new Graphical_Cam(Tracer, activity, URL,
+                Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
             } else if (parameters.contains("command")) {
                 if (State_key.equals("Set RGB color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
-                    colorw = new Graphical_Color(Tracer, activity, URL,
+                    colorw = new Graphical_Color(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     panel_widget.addView(colorw);
                 } else {
-                    info_commands = new Graphical_Info_commands(Tracer, activity, URL,
+                    info_commands = new Graphical_Info_commands(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     panel_widget.addView(info_commands);
                 }
             } else if (feature.getValue_type().equals("video")) {
-                Graphical_Cam cam = new Graphical_Cam(Tracer, activity, URL,
+                Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
             } else if (feature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
-                Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, activity, URL,
+                Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(Openstreetmap);
             } else {
-                Graphical_History info_with_history = new Graphical_History(Tracer, activity, URL,
+                Graphical_History info_with_history = new Graphical_History(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(info_with_history);
             }
@@ -1145,12 +1137,12 @@ public class MapView extends View {
                 || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
                 || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
                 || feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
-            Graphical_List list = new Graphical_List(Tracer, activity, URL,
+            Graphical_List list = new Graphical_List(Tracer, activity,
                     widgetSize, 0, Id, zone, params, feature, handler);
             list.with_list = parameters.contains("command");
             panel_widget.addView(list);
         } else {
-            Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", URL,
+            Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",
                     widgetSize, 0, zone, mytag, null, handler);
             panel_widget.addView(basic_widget);
         }
@@ -1307,7 +1299,6 @@ public class MapView extends View {
                                             //#51 change widget for 0.4 if it's not a command
                                             if (featureMap.getParameters().contains("command")) {
                                                 Tracer.d(mytag, "This is a Trigger launching it");
-                                                this.URL = params.getString("URL", "1.1.1.1");
                                                 this.Address = featureMap.getAddress();
                                                 if (api_version >= 0.7f) {
                                                     try {
@@ -1315,12 +1306,15 @@ public class MapView extends View {
                                                         command_id = jparam.getString("command_id");
                                                         command_type = jparam.getString("command_type1");
                                                         state_progress = "1";
-                                                        send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                        //send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                        send_command.send_it(activity, Tracer, command_id, command_type, state_progress, api_version);
+
                                                     } catch (JSONException e) {
                                                         Tracer.d(mytag, "No command_id or command_type for this device");
                                                     }
                                                 } else {
-                                                    send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                    //send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                    send_command.send_it(activity, Tracer, command_id, command_type, state_progress, api_version);
                                                 }
                                             }
                                             break;
@@ -1348,7 +1342,6 @@ public class MapView extends View {
                                                     break;
                                             }
 
-                                            this.URL = params.getString("URL", "1.1.1.1");
                                             this.Address = featureMap.getAddress();
                                             String[] model = featureMap.getDevice_type_id().split("\\.");
                                             this.type = model[0];
@@ -1358,12 +1351,14 @@ public class MapView extends View {
                                                     JSONObject jparam = new JSONObject(parameters);
                                                     command_id = jparam.getString("command_id");
                                                     command_type = jparam.getString("command_type1");
-                                                    send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                    //send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                    send_command.send_it(activity, Tracer, command_id, command_type, state_progress, api_version);
                                                 } catch (JSONException e) {
                                                     Tracer.d(mytag, "No command_id or command_type for this device");
                                                 }
                                             } else {
-                                                send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                //send_command.send_it(Tracer, URL, command_id, command_type, state_progress, login, password, SSL, api_version);
+                                                send_command.send_it(activity, Tracer, command_id, command_type, state_progress, api_version);
                                             }
                                             break;
                                         default:

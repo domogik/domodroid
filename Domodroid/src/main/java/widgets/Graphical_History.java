@@ -89,22 +89,20 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int sizeint;
 
     public Graphical_History(tracerengine Trac,
-                             final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_History(tracerengine Trac,
-                             final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -334,11 +332,11 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
             try {
                 if (api_version <= 0.6f) {
                     Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                    json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 30000, SSL);
+                    json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
                 } else if (api_version >= 0.7f) {
                     Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
                     //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 30000, SSL);
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
                     json_LastValues = new JSONObject();
                     json_LastValues.put("stats", json_LastValues_0_4);
 

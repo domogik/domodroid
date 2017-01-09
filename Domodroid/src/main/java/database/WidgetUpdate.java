@@ -726,7 +726,7 @@ public class WidgetUpdate {
                     try {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
-                            json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
+                            json_widget_state = Rest_com.connect_jsonobject(activity, Tracer, request,   300000);
                             if (json_widget_state == null || (json_widget_state.toString().equals("{}"))) {
                                 // Cannot get data_type from Rinor server.....
                                 Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
@@ -754,7 +754,7 @@ public class WidgetUpdate {
                             //get all sensors
                             if (api_version < 0.9f) {
                                 //get all sensors from rest
-                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request,   30000);
                                 if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                     // Cannot get data_type from Rinor server.....
                                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
@@ -786,7 +786,7 @@ public class WidgetUpdate {
                                 } else {
                                     request_since = request + "since/" + sensor_saved_timestamp;
                                 }
-                                JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request_since, login, password, 30000, SSL);
+                                JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(activity, Tracer, request_since, 30000);
                                 if (json_widget_state_0_6 == null || (json_widget_state_0_6.toString().equals("[]"))) {
                                     // Cannot get data_type from Rinor server.....
                                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
@@ -857,7 +857,7 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, "json saved is null", Toast.LENGTH_SHORT).show();
                                         }
                                     });//get all sensors from rest
-                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request,  30000);
                                     if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                         // Cannot get data_type from Rinor server.....
                                         Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
@@ -900,7 +900,7 @@ public class WidgetUpdate {
                                     request = request.replace("sensor", "device");
                                     //Grab device list
                                     if (api_version == 0.8f) {
-                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                         if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                             // Cannot get data_type from Rinor server.....
                                             Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
@@ -922,7 +922,7 @@ public class WidgetUpdate {
                                     } else if (api_version >= 0.9f) {
                                         //todo be sure last_device_update is in the right timestamp format???
                                         request = request + "since/" + last_device_update;
-                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                         if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                             // Cannot get data_type from Rinor server.....
                                             Tracer.e(mytag, "Cannot get sensors from Rinor server.....");

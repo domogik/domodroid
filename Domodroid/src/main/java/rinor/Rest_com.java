@@ -67,17 +67,15 @@ public class Rest_com {
 
     @SuppressWarnings("null")
     public static JSONObject connect_jsonobject(Activity activity, tracerengine Tracer, String request, int timeout) {
-        Log.e("connect_jsonobject","");
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        Log.e("connect_jsonobject","SharedPreferences");
-
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
         final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
         final String URL = SP_params.getString("URL", "1.1.1.1");
-        String url = URL + request;
 
+        String url = URL + request;
         JSONObject json = new JSONObject();
+
         if (Abstract.Connectivity.IsInternetAvailable()) {
             if (!SSL) {
                 try {
@@ -87,11 +85,15 @@ public class Rest_com {
                     HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                     DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                     httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                    Log.e("connect_jsonobject", "url=" + url.toString());
+
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                     HttpResponse response;
                     String result = null;
                     response = httpclient.execute(httpget);
+                    Log.e("connect_jsonobject", "response=" + response.toString());
+
                     if (response.getStatusLine().getStatusCode() == 200) {
                         HttpEntity entity = response.getEntity();
                         if (entity != null) {
@@ -171,6 +173,8 @@ public class Rest_com {
                     HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                     DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                     httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                    Log.e("connect_jsonarray", "url=" + url.toString());
+
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                     HttpResponse response;
@@ -257,6 +261,7 @@ public class Rest_com {
                     HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                     DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                     httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                    Log.e("connect_string", "url=" + url.toString());
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                     HttpResponse response;

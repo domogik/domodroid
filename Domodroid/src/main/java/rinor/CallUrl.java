@@ -59,6 +59,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
             HttpResponse response;
             String responseString = "";
             try {
+                Log.e("CallUrl", "url=" + url.toString());
                 HttpGet httpget = new HttpGet(url);
                 httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                 response = httpclient.execute(httpget);

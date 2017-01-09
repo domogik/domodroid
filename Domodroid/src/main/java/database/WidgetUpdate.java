@@ -717,6 +717,15 @@ public class WidgetUpdate {
                     Tracer.d(mytag, "Request to server for stats update...");
 
                 String request = sharedparams.getString("UPDATE_URL", null);
+                String URL = sharedparams.getString("URL", "1.1.1.1");
+                //Because in old time it was the fullr request that was used and saved, not only the real UPDATE_PATH
+                try{
+                    request = request.replace(URL, "");
+                }catch (Exception e){
+                    e.printStackTrace();
+                    request = sharedparams.getString("UPDATE_URL", null);
+                }
+
                 Tracer.i(mytag, "urlupdate saved = " + request);
 
                 if (request != null) {
@@ -726,7 +735,7 @@ public class WidgetUpdate {
                     try {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
-                            json_widget_state = Rest_com.connect_jsonobject(activity, Tracer, request,   300000);
+                            json_widget_state = Rest_com.connect_jsonobject(activity, Tracer, request, 300000);
                             if (json_widget_state == null || (json_widget_state.toString().equals("{}"))) {
                                 // Cannot get data_type from Rinor server.....
                                 Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
@@ -754,7 +763,7 @@ public class WidgetUpdate {
                             //get all sensors
                             if (api_version < 0.9f) {
                                 //get all sensors from rest
-                                json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request,   30000);
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                 if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                     // Cannot get data_type from Rinor server.....
                                     Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
@@ -857,7 +866,7 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, "json saved is null", Toast.LENGTH_SHORT).show();
                                         }
                                     });//get all sensors from rest
-                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request,  30000);
+                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                     if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                         // Cannot get data_type from Rinor server.....
                                         Tracer.e(mytag, "Cannot get sensors from Rinor server.....");

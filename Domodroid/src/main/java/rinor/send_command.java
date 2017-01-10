@@ -25,7 +25,7 @@ public class send_command {
         if (api_version >= 0.7f) {
             if (command_type == null) {
                 //when the command contains mutiple value
-                Url2send = URL + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
+                Url2send = URL + "cmd/id/" + command_id + "?" + state_progress;
             } else {
                 Url2send = URL + "cmd/id/" + command_id + "?" + command_type + "=" + state_progress;
             }

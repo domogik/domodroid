@@ -35,7 +35,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -48,7 +47,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -62,179 +60,23 @@ public class Rest_com {
 
     @SuppressWarnings("null")
     public static JSONObject connect_jsonobject(Activity activity, tracerengine Tracer, String request, int timeout) {
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        final String login = SP_params.getString("http_auth_username", "Anonymous");
-        final String password = SP_params.getString("http_auth_password", "");
-        final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
-        final String URL = SP_params.getString("URL", "1.1.1.1");
-
-        String url = URL + request;
-        JSONObject json = new JSONObject();
-
-        if (Abstract.Connectivity.IsInternetAvailable()) {
-            if (!SSL) {
-                try {
-                    // Set timeout
-                    HttpParams httpParameters = new BasicHttpParams();
-                    HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
-                    HttpConnectionParams.setSoTimeout(httpParameters, timeout);
-                    DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
-                    httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-                    Log.e("connect_jsonobject", "url=" + url.toString());
-
-                    HttpGet httpget = new HttpGet(url);
-                    httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
-                    HttpResponse response;
-                    String result = null;
-                    response = httpclient.execute(httpget);
-                    Log.e("connect_jsonobject", "response=" + response.toString());
-
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        HttpEntity entity = response.getEntity();
-                        if (entity != null) {
-                            InputStream instream = entity.getContent();
-                            result = Abstract.httpsUrl.convertStreamToString(instream);
-                            json = new JSONObject(result);
-                            instream.close();
-                        }
-                    } else if (response.getStatusLine().getStatusCode() == 204) {
-                        //TODO need to adapt for 0.4 since rest answer now with standard code
-                        //204,400,404 and else
-                        json = new JSONObject();
-                        json.put("status", "204 NO CONTENT");
-                    } else {
-                        Tracer.d(mytag, "Resource not available>");
-                    }
-                } catch (UnknownHostException e) {
-                    Tracer.e(mytag, "Unable to resolve host");
-                } catch (ConnectTimeoutException e) {
-                    Tracer.e(mytag, "Timeout connecting to domogik");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Tracer.e(mytag, e.toString());
-                }
-                return json;
-            } else {
-                try {
-                    Tracer.d(mytag, "Start https connection");
-                    if (url.startsWith("http://")) {
-                        url = url.replace("http://", "https://");
-                    }
-                    Tracer.d(mytag, "Url=" + url);
-                    HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
-                    Authenticator.setDefault(new Authenticator() {
-                        protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(login, password.toCharArray());
-                        }
-                    });
-                    String result = null;
-                    InputStream instream = urlConnection.getInputStream();
-                    result = Abstract.httpsUrl.convertStreamToString(instream);
-                    json = new JSONObject(result);
-                    instream.close();
-                    //} catch (HttpHostConnectException e) {
-                    //    e.printStackTrace();
-                } catch (UnknownHostException e) {
-                    Tracer.e(mytag, "Unable to resolve host");
-                } catch (ConnectTimeoutException e) {
-                    Tracer.e(mytag, "Timeout connecting to domogik");
-                } catch (IOException | JSONException e) {
-                    Tracer.e(mytag, e.toString());
-                }
-                return json;
-
-            }
+        JSONObject json = null;
+        try {
+            json = new JSONObject(connect_string(activity, Tracer, request, timeout));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        Log.e(mytag, "NO CONNECTION");
         return json;
     }
 
     @SuppressWarnings("null")
     public static JSONArray connect_jsonarray(Activity activity, tracerengine Tracer, String request, int timeout) {
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        final String login = SP_params.getString("http_auth_username", "Anonymous");
-        final String password = SP_params.getString("http_auth_password", "");
-        final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
-        final String URL = SP_params.getString("URL", "1.1.1.1");
-        String url = URL + request;
-
-        JSONArray json = new JSONArray();
-        if (Abstract.Connectivity.IsInternetAvailable()) {
-            if (!SSL) {
-                try {
-                    // Set timeout
-                    HttpParams httpParameters = new BasicHttpParams();
-                    HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
-                    HttpConnectionParams.setSoTimeout(httpParameters, timeout);
-                    DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
-                    httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-                    Log.e("connect_jsonarray", "url=" + url.toString());
-
-                    HttpGet httpget = new HttpGet(url);
-                    httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
-                    HttpResponse response;
-                    String result = null;
-                    response = httpclient.execute(httpget);
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        HttpEntity entity = response.getEntity();
-                        if (entity != null) {
-                            InputStream instream = entity.getContent();
-                            result = Abstract.httpsUrl.convertStreamToString(instream);
-                            json = new JSONArray(result);
-                            instream.close();
-                        }
-                    } else {
-                        Tracer.d(mytag, "Resource not available>");
-                    }
-
-                } catch (UnknownHostException e) {
-                    json = new JSONArray();
-                    json.put("Error ; Unknown host");
-                    Tracer.e(mytag, "Unable to resolve host");
-                } catch (HttpHostConnectException e) {
-                    Tracer.e(mytag, e.toString());
-                } catch (ConnectTimeoutException e) {
-                    Tracer.e(mytag, "Timeout connecting to domogik");
-                } catch (SocketTimeoutException e) {
-                    Tracer.e(mytag, "SocketTimeoutException to domogik");
-                } catch (IOException | JSONException e) {
-                    Tracer.e(mytag, e.toString());
-                }
-                return json;
-            } else {
-                try {
-                    Tracer.d(mytag, "Start https connection");
-                    if (url.startsWith("http://")) {
-                        url = url.replace("http://", "https://");
-                    }
-                    Tracer.d(mytag, "Url=" + url);
-                    HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
-                    Authenticator.setDefault(new Authenticator() {
-                        protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication(login, password.toCharArray());
-                        }
-                    });
-                    String result = null;
-                    InputStream instream = urlConnection.getInputStream();
-                    result = Abstract.httpsUrl.convertStreamToString(instream);
-                    json = new JSONArray(result);
-                    instream.close();
-                    //} catch (HttpHostConnectException e) {
-                    //    e.printStackTrace();
-                } catch (UnknownHostException e) {
-                    Tracer.e(mytag, "Unable to resolve host");
-                } catch (ConnectTimeoutException e) {
-                    Tracer.e(mytag, "Timeout connecting to domogik");
-                } catch (SocketTimeoutException e) {
-                    Tracer.e(mytag, "SocketTimeoutException to domogik");
-                } catch (IOException | JSONException e) {
-                    Tracer.e(mytag, e.toString());
-                }
-                return json;
-
-            }
+        JSONArray json = null;
+        try {
+            json = new JSONArray(connect_string(activity, Tracer, request, timeout));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        Log.e(mytag, "NO CONNECTION");
         return json;
     }
 

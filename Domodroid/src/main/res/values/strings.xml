@@ -922,7 +922,7 @@
     <string name="systolic_blood_pressure">Systolic Blood Pressure</string>
     <string name="heart_pulse">Heart Pulse</string>
     <string name="lastname">Last name</string>
-    <string name="firstname">Firs tname</string>
+    <string name="firstname">First name</string>
     <string name="id">Id</string>
     <string name="level_number">Level Number</string>
     <string name="rear_fog_light_status">Rear Fog Light</string>
@@ -933,7 +933,7 @@
     <string name="intermittent_wiper_status">Intermittent Wiper</string>
     <string name="manual_wiper_status">Manual Wiper</string>
     <string name="low_speed_wiper_status">Low Speed Wiper</string>
-    <string name="high_speed_wiper_status">High Speed wwiper</string>
+    <string name="high_speed_wiper_status">High Speed Wiper</string>
     <string name="auto_rear_wiper_status">Auto Rear Wiper</string>
     <string name="manual_rear_wiper_status">Manual Rear Wiper</string>
 </resources>

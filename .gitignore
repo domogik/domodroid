@@ -24,3 +24,5 @@ Thumbs.db
 gradlew
 #gradlew.bat
 local.properties
+
+*.apk

@@ -19,7 +19,6 @@
 package activities;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
@@ -205,6 +204,17 @@ public class Preference extends PreferenceActivity implements
         else
             format_urlAccess = urlAccess.concat("/");
         prefEditor.putString("URL", format_urlAccess);
+
+        String external_urlAccess = params.getString("rinor_external_IP", "1.1.1.1") + ":" + params.getString("rinor_external_Port", "40405") + params.getString("rinorPath", "/");
+        external_urlAccess = external_urlAccess.replaceAll("[\r\n]+", "");
+        external_urlAccess = external_urlAccess.replaceAll(" ", "%20");
+        String external_format_urlAccess;
+        if (external_urlAccess.lastIndexOf("/") == external_urlAccess.length() - 1)
+            external_format_urlAccess = external_urlAccess;
+        else
+            external_format_urlAccess = external_urlAccess.concat("/");
+        prefEditor.putString("external_URL", external_format_urlAccess);
+
         prefEditor.commit();
 
         //Save to file
@@ -212,6 +222,7 @@ public class Preference extends PreferenceActivity implements
         common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
+        external_urlAccess = params.getString("external_URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");

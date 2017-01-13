@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -46,6 +47,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
+import java.net.InetAddress;
 import java.net.PasswordAuthentication;
 import java.net.UnknownHostException;
 
@@ -80,16 +82,50 @@ public class Rest_com {
         return json;
     }
 
-    public static String connect_string(Activity activity, tracerengine Tracer, String request, int timeout) {
+    public static String connect_string(final Activity activity, tracerengine Tracer, String request, int timeout) {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
         final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
-        final String URL = SP_params.getString("URL", "1.1.1.1");
-        String url = URL + request;
+
+        String url = null;
 
         String result = "";
         if (Abstract.Connectivity.IsInternetAvailable()) {
+            if (Abstract.Connectivity.on_prefered_Wifi) {
+                url = SP_params.getString("URL", "1.1.1.1") + request;
+                Log.e("connect_string", "on_prefered_Wifi");
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "On wifi ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }//else
+            if (Abstract.Connectivity.on_other_network) {
+                url = SP_params.getString("Rinor_external_URL", "1.1.1.1") + request;
+                Log.e("connect_string", "on_other_network");
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "On other network", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            try {
+                InetAddress.getByName(url).isReachable(timeout);
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "Host is reachable", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (IOException e) {
+                Log.e("connect_string", "InetAddress.getByName(url).isReachable(timeout)");
+                e.printStackTrace();
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "Host unreachable", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             if (!SSL) {
                 try {
                     // Set timeout
@@ -155,6 +191,11 @@ public class Rest_com {
             }
         }
         Log.e(mytag, "NO CONNECTION");
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
+            }
+        });
         return result;
     }
 

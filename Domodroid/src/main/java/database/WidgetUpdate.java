@@ -743,7 +743,6 @@ public class WidgetUpdate {
                                 activity.runOnUiThread(new Runnable() {
                                     public void run() {
                                         Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
-                                        Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
                                     }
                                 });
                                 Bundle b = new Bundle();
@@ -771,7 +770,6 @@ public class WidgetUpdate {
                                     activity.runOnUiThread(new Runnable() {
                                         public void run() {
                                             Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
-                                            Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
                                         }
                                     });
                                     Bundle b = new Bundle();
@@ -803,7 +801,6 @@ public class WidgetUpdate {
                                     activity.runOnUiThread(new Runnable() {
                                         public void run() {
                                             Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
-                                            Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
                                         }
                                     });
                                     Bundle b = new Bundle();
@@ -874,7 +871,6 @@ public class WidgetUpdate {
                                         activity.runOnUiThread(new Runnable() {
                                             public void run() {
                                                 Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
-                                                Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                         Bundle b = new Bundle();
@@ -917,7 +913,6 @@ public class WidgetUpdate {
                                             activity.runOnUiThread(new Runnable() {
                                                 public void run() {
                                                     Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
-                                                    Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                             Bundle b = new Bundle();
@@ -939,7 +934,6 @@ public class WidgetUpdate {
                                             activity.runOnUiThread(new Runnable() {
                                                 public void run() {
                                                     Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
-                                                    Toast.makeText(activity, "", Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                             Bundle b = new Bundle();

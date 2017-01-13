@@ -14,6 +14,7 @@ public class Color_Result extends View {
     public String color = null;
     public String colorrgb = null;
     public String colorCMYK = null;
+    public String colorCII = null;
 
     public Color_Result(Context context) {
         super(context);
@@ -23,7 +24,7 @@ public class Color_Result extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         try {
-            if (color == null && colorrgb == null && colorCMYK == null) {
+            if (color == null && colorrgb == null && colorCMYK == null && colorCII == null) {
                 mPaint.setColor(Color.HSVToColor(hsvCurrent));
             } else if (colorrgb != null) {
                 String[] parsecolor = colorrgb.split(",");
@@ -31,7 +32,7 @@ public class Color_Result extends View {
                 int green = Integer.parseInt(parsecolor[1]);
                 int blue = Integer.parseInt(parsecolor[2]);
                 mPaint.setColor(Color.rgb(red, green, blue));
-            } else if (colorrgb != null) {
+            } else if (colorCMYK != null) {
                 String[] parsecolor = colorCMYK.split(",");
                 int C = Integer.parseInt(parsecolor[0]);
                 int M = Integer.parseInt(parsecolor[1]);
@@ -41,6 +42,35 @@ public class Color_Result extends View {
                 int green = ((255 - M) * (255 - K)) / 255;
                 int blue = ((255 - Y) * (255 - K)) / 255;
                 mPaint.setColor(Color.rgb(red, green, blue));
+            } else if (colorCII != null) {
+                Log.e("Color log", colorCII);
+                switch (colorCII.toLowerCase()) {
+                    case "b":
+                        colorCII = "blue";
+                        break;
+                    case "br":
+                        colorCII = "maroon";
+                        break;
+                    case "g":
+                        colorCII = "green";
+                        break;
+                    case "o":
+                        colorCII = "#FF6600";
+                        break;
+                    case "bk":
+                        colorCII = "black";
+                        break;
+                    case "r":
+                        colorCII = "red";
+                        break;
+                    case "w":
+                        colorCII = "white";
+                        break;
+                    case "y":
+                        colorCII = "yellow";
+                        break;
+                }
+                mPaint.setColor(Color.parseColor(colorCII));
             } else if (color != null) {
                 mPaint.setColor(Color.parseColor(color));
             }

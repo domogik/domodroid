@@ -151,7 +151,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         //state key
         final TextView state_key_view = new TextView(activity);
         try {
-            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+            stateS = getResources().getString(translate.do_translate(activity, Tracer, state_key));
         } catch (Exception e) {
             stateS = state_key;
         }
@@ -522,7 +522,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         try {
                             HashMap<String, String> map = new HashMap<>();
                             try {
-                                map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                                map.put("TV_Value", activity.getString(translate.do_translate(activity, Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
                             } catch (Exception e1) {
                                 map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                             }
@@ -544,7 +544,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                 temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
                             }
                             try {
-                                map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
+                                map.put("TV_Value", activity.getString(translate.do_translate(activity, Tracer, temp_value_str)));
                             } catch (Exception e1) {
                                 map.put("TV_Value", temp_value_str);
                             }

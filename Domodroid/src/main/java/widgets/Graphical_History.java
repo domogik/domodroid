@@ -179,57 +179,41 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
                     Long Value_timestamplong = null;
                     Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                    if (feature.getDevice_feature_model_id().startsWith("DT_Color")) {
                         LL_featurePan.removeView(resultView);
                         LL_featurePan.removeView(TV_Value);
                         LL_featurePan.removeView(TV_Timestamp);
-                        //Color result
-                        //16 means that you should interpret the string as 16-based (hexadecimal)
-                        Tracer.d(mytag, "debug_color sting=" + new_val);
-                        new_val = "#" + new_val.toUpperCase();
-                        resultView.color = new_val;
                         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
                             TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
-                        LL_featurePan.addView(resultView);
-                        LL_featurePan.addView(TV_Timestamp);
+                        if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                            //Color result
+                            //16 means that you should interpret the string as 16-based (hexadecimal)
+                            Tracer.d(mytag, "debug_color RGBHexa=" + new_val);
+                            new_val = "#" + new_val.toUpperCase();
+                            resultView.color = new_val;
+                        } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
+                            //Color result
+                            //16 means that you should interpret the string as 16-based (hexadecimal)
+                            Tracer.d(mytag, "debug_color RGB=" + new_val);
+                            resultView.colorrgb = new_val;
 
-                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
-                        LL_featurePan.removeView(resultView);
-                        LL_featurePan.removeView(TV_Value);
-                        LL_featurePan.removeView(TV_Timestamp);
-                        //Color result
-                        //16 means that you should interpret the string as 16-based (hexadecimal)
-                        Tracer.d(mytag, "debug_color sting=" + new_val);
-                        resultView.colorrgb = new_val;
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
-                        if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-                        } else {
-                            TV_Timestamp.setReferenceTime(Value_timestamplong);
+                        } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
+                            //Color result
+                            //16 means that you should interpret the string as 16-based (hexadecimal)
+                            Tracer.d(mytag, "debug_color CMYK=" + new_val);
+                            resultView.colorCMYK = new_val;
+                        } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCII.")) {
+                            //Color result
+                            //16 means that you should interpret the string as 16-based (hexadecimal)
+                            Tracer.d(mytag, "debug_color ColorCII=" + new_val);
+                            resultView.colorCII = new_val;
                         }
                         LL_featurePan.addView(resultView);
                         LL_featurePan.addView(TV_Timestamp);
-                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
-                        LL_featurePan.removeView(resultView);
-                        LL_featurePan.removeView(TV_Value);
-                        LL_featurePan.removeView(TV_Timestamp);
-                        //Color result
-                        //16 means that you should interpret the string as 16-based (hexadecimal)
-                        Tracer.d(mytag, "debug_color sting=" + new_val);
-                        resultView.colorCMYK = new_val;
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
-                        if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-                        } else {
-                            TV_Timestamp.setReferenceTime(Value_timestamplong);
-                        }
-                        LL_featurePan.addView(resultView);
-                        LL_featurePan.addView(TV_Timestamp);
-
                     } else {
                         display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
                     }
@@ -387,10 +371,19 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         }
 
         protected void onPostExecute(Void result) {
-            SimpleAdapter adapter_feature = new SimpleAdapter(activity, listItem,
-                    R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
-            listeChoices.setAdapter(adapter_feature);
-            listeChoices.setScrollingCacheEnabled(false);
+            if (feature.getDevice_feature_model_id().startsWith("DT_Color")) {
+                //TODO change to display color in history
+                SimpleAdapter adapter_feature = new SimpleAdapter(activity, listItem,
+                        R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
+                listeChoices.setAdapter(adapter_feature);
+                listeChoices.setScrollingCacheEnabled(false);
+            } else {
+                SimpleAdapter adapter_feature = new SimpleAdapter(activity, listItem,
+                        R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
+                listeChoices.setAdapter(adapter_feature);
+                listeChoices.setScrollingCacheEnabled(false);
+            }
+
 
             Tracer.d(mytag, "history is: " + listItem);
             if (!listItem.isEmpty()) {

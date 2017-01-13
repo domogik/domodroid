@@ -143,6 +143,7 @@ class Widgets_Manager {
                             Tracer.i(mytag, "   ==> Graphical_Binary");
                         }
                     } else {
+                        //sensor parts
                         Graphical_Boolean bool = new Graphical_Boolean(Tracer, activity,
                                 widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
                         Graphical_Boolean.container = tmpPan;
@@ -164,6 +165,7 @@ class Widgets_Manager {
                         tmpPan.addView(trigger);
                         Tracer.i(mytag, "   ==> Graphical_Trigger");
                     } else {
+                        //sensor parts
                         if (params.getBoolean("Graph_CHOICE", false)) {
                             Tracer.d(mytag, "add Graphical_Info_with_achartengine for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, activity,
@@ -239,7 +241,9 @@ class Widgets_Manager {
                         tmpPan.addView(list);
                         Tracer.i(mytag, "   ==> Graphical_List");
                     } else {
+                        //This is a DT_ColorRGB or DT_ColorCMYK
                         if (!aListFeature.getParameters().contains("command_type")) {
+                            //sensor parts
                             Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_History history = new Graphical_History(Tracer, activity,
                                     widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
@@ -248,6 +252,7 @@ class Widgets_Manager {
                             tmpPan.addView(history);
                             Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
                         } else {
+                            //color parts
                             Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_Color color = new Graphical_Color(Tracer, activity,
                                     widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
@@ -291,6 +296,7 @@ class Widgets_Manager {
                         Tracer.i(mytag, "   ==> Openstreetmap");
                     } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
                         if (!aListFeature.getParameters().contains("command_type")) {
+                            //sensor parts
                             Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
                             Graphical_History history = new Graphical_History(Tracer, activity,
                                     widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
@@ -334,8 +340,7 @@ class Widgets_Manager {
                 } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_HVACVent") || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACFan")
                         || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACMode") || aListFeature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
                         || aListFeature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || aListFeature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
-                        || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSState") || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
-                        || aListFeature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
+                        || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSState") || aListFeature.getDevice_feature_model_id().startsWith("DT_UPSEvent")) {
                     Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_List list = new Graphical_List(Tracer, activity,
                             widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
@@ -344,6 +349,24 @@ class Widgets_Manager {
                     Graphical_List.container = tmpPan;
                     tmpPan.addView(list);
                     Tracer.i(mytag, "   ==> Graphical_List");
+                } else if (aListFeature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
+                    if (!parameters.contains("command")) {
+                        Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
+                        Graphical_History history = new Graphical_History(Tracer, activity,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                        history.setLayoutParams(layout_param);
+                        Graphical_Info.container = tmpPan;
+                        tmpPan.addView(history);
+                        Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
+                    } else {
+                        Tracer.d(mytag, "add Graphical_List for " + label + " (" + DevId + ") key=" + State_key);
+                        Graphical_List list = new Graphical_List(Tracer, activity,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                        list.setLayoutParams(layout_param);
+                        Graphical_List.container = tmpPan;
+                        tmpPan.addView(list);
+                        Tracer.i(mytag, "   ==> Graphical_List");
+                    }
                 } else {
                     Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, id,
                             activity.getString(R.string.contact_devs), "", "",
@@ -351,6 +374,7 @@ class Widgets_Manager {
                     basic_widget.setLayoutParams(layout_param);
                     tmpPan.addView(basic_widget);
                     Tracer.i(mytag, "   ==> Basic widget not handle by dev");
+
 
                 }
                 // todo add missing datatype from 0.4 see all datatype that have no parent but values.
@@ -382,6 +406,7 @@ class Widgets_Manager {
                 Toast.makeText(activity, activity.getString(R.string.widget_error) + " : " + label, Toast.LENGTH_SHORT).show();
             }
         }
+
         return ll;
     }
 

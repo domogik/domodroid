@@ -656,6 +656,8 @@ public class Graphics_Manager {
             //GENERIC "temperature", "humidity", "rgb_color", "rgb_command", "osd_command", "osd_text", "osd_row", "osd_column", "osd_delay"
             // "set_rgb_color", "send_text", "pressure", "co2", "tvoc", "insolation",
             //GEOLOC "position_degrees"
+            //HUE "light", "brightness", "reachable",
+            // "Set brightness", "Set ON", "Get light status", "Get brightness value"
             //IPX800 "state", "input", "count"
             //IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
             //K8056 "sensor_switch_relay", "cmd_switch_relay"
@@ -705,7 +707,6 @@ public class Graphics_Manager {
                 usage = "music";
             if (usage.equals("send play") || usage.equals("send stop") || usage.equals("toggle mute") || usage.equals("send vol up") || usage.equals("send vol down") || usage.equals("send next") || usage.equals("send previous"))
                 usage = "music";
-
             // SCRIPT "sensor_script_action", "sensor_script_onoff", "sensor_script_info_number","sensor_script_info_temperature",
             // "sensor_script_info_humidity", "sensor_script_info_binary", "sensor_script_info", "sensor_script_info_switch",
             // "sensor_script_info_openclose", "sensor_script_info_string",

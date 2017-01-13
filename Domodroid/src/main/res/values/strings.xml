@@ -936,4 +936,5 @@
     <string name="high_speed_wiper_status">High Speed Wiper</string>
     <string name="auto_rear_wiper_status">Auto Rear Wiper</string>
     <string name="manual_rear_wiper_status">Manual Rear Wiper</string>
+    <string name="reachable">Reachable</string>
 </resources>

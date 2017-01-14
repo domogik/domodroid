@@ -22,7 +22,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 9
         versionCode = 28
-        versionName = "1.4_android_studio_new_rest_method"
+        versionName = "1.4_android_studio"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

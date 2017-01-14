@@ -978,22 +978,17 @@ public class MapView extends View {
         }
 
 
-        Graphical_Binary_New onoff_New;
-        Graphical_Info info;
-        Graphical_Info_commands info_commands;
-        Graphical_Binary onoff;
-        Graphical_Color colorw;
         if (feature.getValue_type().equals("binary")) {
             if (type.equals("rgb_leds") && (State_key.equals("command"))) {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    onoff = new Graphical_Binary(Tracer, activity,
+                    Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
-                    onoff_New = new Graphical_Binary_New(Tracer, activity,
+                    Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
@@ -1003,12 +998,12 @@ public class MapView extends View {
         } else if (feature.getValue_type().equals("boolean") || feature.getValue_type().equals("bool")) {
             if (parameters.contains("command")) {
                 if (!params.getBoolean("WIDGET_CHOICE", false)) {
-                    onoff = new Graphical_Binary(Tracer, activity,
+                    Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
-                    onoff_New = new Graphical_Binary_New(Tracer, activity,
+                    Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Binary_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
@@ -1033,7 +1028,7 @@ public class MapView extends View {
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
-                info = new Graphical_Info(Tracer, activity,
+                Graphical_Info info = new Graphical_Info(Tracer, activity,
                         widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
@@ -1050,7 +1045,7 @@ public class MapView extends View {
                     Graphical_Range.container = (FrameLayout) panel_widget;
                     panel_widget.addView(variator);
                 } else {
-                    info_commands = new Graphical_Info_commands(Tracer, activity,
+                    Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     Graphical_Info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
@@ -1071,7 +1066,7 @@ public class MapView extends View {
                 */
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
-                info = new Graphical_Info(Tracer, activity,
+                Graphical_Info info = new Graphical_Info(Tracer, activity,
                         widgetSize, 0, Id, zone, params, update_timer, feature, handler);
                 Graphical_Info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
@@ -1082,7 +1077,7 @@ public class MapView extends View {
             Graphical_List.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
-            colorw = new Graphical_Color(Tracer, activity,
+            Graphical_Color colorw = new Graphical_Color(Tracer, activity,
                     widgetSize, 0, Id, zone, params, feature, handler);
             Graphical_Color.container = (FrameLayout) panel_widget;
             panel_widget.addView(colorw);
@@ -1092,7 +1087,7 @@ public class MapView extends View {
                         widgetSize, 0, Id, zone, params, feature, handler);
                 panel_widget.addView(cam);
             } else {
-                info_commands = new Graphical_Info_commands(Tracer, activity,
+                Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
                         widgetSize, 0, Id, zone, params, feature, handler);
                 Graphical_Info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
@@ -1111,11 +1106,11 @@ public class MapView extends View {
             } else if (parameters.contains("command")) {
                 if (State_key.equals("Set RGB color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
-                    colorw = new Graphical_Color(Tracer, activity,
+                    Graphical_Color colorw = new Graphical_Color(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     panel_widget.addView(colorw);
                 } else {
-                    info_commands = new Graphical_Info_commands(Tracer, activity,
+                    Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
                             widgetSize, 0, Id, zone, params, feature, handler);
                     panel_widget.addView(info_commands);
                 }
@@ -1135,12 +1130,22 @@ public class MapView extends View {
         } else if (feature.getDevice_feature_model_id().startsWith("DT_HVACVent") || feature.getDevice_feature_model_id().startsWith("DT_HVACFan")
                 || feature.getDevice_feature_model_id().startsWith("DT_HVACMode") || feature.getDevice_feature_model_id().startsWith("DT_HVACHeat")
                 || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
-                || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")
-                || feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
+                || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")) {
             Graphical_List list = new Graphical_List(Tracer, activity,
                     widgetSize, 0, Id, zone, params, feature, handler);
             list.with_list = parameters.contains("command");
             panel_widget.addView(list);
+        } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
+            if (!parameters.contains("command")) {
+                Graphical_History info_with_history = new Graphical_History(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(info_with_history);
+            } else {
+                Graphical_List list = new Graphical_List(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                list.with_list = parameters.contains("command");
+                panel_widget.addView(list);
+            }
         } else {
             Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",
                     widgetSize, 0, zone, mytag, null, handler);

@@ -171,6 +171,7 @@ public class Preference extends PreferenceActivity implements
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = params.getString("rinorIP", "");
+        String extrenal_temp = params.getString("rinorexternal_IP", "");
         Boolean SSL = params.getBoolean("ssl_activate", false);
         SharedPreferences.Editor prefEditor;
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
@@ -178,8 +179,10 @@ public class Preference extends PreferenceActivity implements
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", "https://" + temp);
+                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp);
             } else {
                 prefEditor.putString("rinor_IP", "http://" + temp);
+                prefEditor.putString("rinor_external_IP", "http://" + extrenal_temp);
             }
             prefEditor.commit();
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
@@ -187,8 +190,10 @@ public class Preference extends PreferenceActivity implements
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", temp.replace("https://", ""));
+                prefEditor.putString("rinor_external_IP", extrenal_temp.replace("https://", ""));
             } else {
                 prefEditor.putString("rinor_IP", temp.replace("http://", ""));
+                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp.replace("http://", ""));
             }
             prefEditor.commit();
         }

@@ -38,7 +38,7 @@
             android:dialogTitle="OPTION_server_external_IP_Title"
             android:icon="@drawable/ic_ip_address"
             android:inputType="textUri"
-            android:key="rinor_external_IP"
+            android:key="rinorexternal_IP"
             android:title="OPTION_server_external_IP" />
         <EditTextPreference
             android:defaultValue="40405"
@@ -81,6 +81,10 @@
             sample:msbp_maxValue="600"
             sample:msbp_measurementUnit="s"
             sample:msbp_minValue="60" />
+        <EditTextPreference
+            android:dialogTitle="Local WIFI SSID"
+            android:key="prefered_wifi_ssid"
+            android:title="Prefered wifi network SSID" />
         <EditTextPreference
             android:enabled="false"
             android:key="UPDATE_URL"

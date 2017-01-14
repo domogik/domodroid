@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/AppBaseTheme"
+    android:title="Preferences"
+    tools:context="activities.Activity_Main">
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="MQ configuration">
+        <EditTextPreference
+            android:enabled="true"
+            android:icon="@drawable/ic_mq"
+            android:inputType="textUri"
+            android:key="MQaddress"
+            android:selectable="true"
+            android:title="@string/MQ_address" />
+        <EditTextPreference
+            android:defaultValue="40412"
+            android:icon="@drawable/ic_mq_sub"
+            android:inputType="number"
+            android:key="MQsubport"
+            android:title="@string/Mq_sub_port" />
+        <EditTextPreference
+            android:defaultValue="40411"
+            android:icon="@drawable/ic_mq_pub"
+            android:inputType="number"
+            android:key="MQpubport"
+            android:title="@string/Mq_pub_port" />
+        <EditTextPreference
+            android:defaultValue="40410"
+            android:icon="@drawable/ic_mq_pub"
+            android:inputType="number"
+            android:key="MQreq_repport"
+            android:title="@string/MQ_req_rep_port" />
+    </PreferenceCategory>
+</PreferenceScreen>

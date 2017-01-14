@@ -98,6 +98,8 @@ public class Preference extends PreferenceActivity implements
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
+        } else if (action != null && action.equals("preferences_mq")) {
+            addPreferencesFromResource(R.xml.preferences_mq);
         } else if (action != null && action.equals("preferences_widget")) {
             addPreferencesFromResource(R.xml.preferences_widget);
         } else if (action != null && action.equals("preferences_map")) {

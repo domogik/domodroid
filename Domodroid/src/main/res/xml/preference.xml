@@ -17,6 +17,15 @@
     </Preference>
 
     <Preference
+        android:persistent="false"
+        android:title="MQ configuration">
+        <intent
+            android:targetPackage="org.domogik.domodroid13"
+            android:targetClass="activities.Preference"
+            android:action="preferences_mq" />
+    </Preference>
+
+    <Preference
         android:icon="@drawable/ic_widgets_black_24dp"
         android:persistent="false"
         android:title="@string/usage_settings">

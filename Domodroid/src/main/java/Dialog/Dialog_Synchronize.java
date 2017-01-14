@@ -1208,14 +1208,13 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 
             }
-            /*TODO when available in rest
-            if (Rinor_Api_Version > 0.9f) {
+            //TODO #141 when available in rest
+            /*if (Rinor_Api_Version > 0.9f) {
                 try {
-                    String External_port = json_rinor.getJSONObject("mq").getString("ip");
-                    String External_IP = json_rinor.getJSONObject("mq").getString("sub_port");
-
-                    prefEditor.putString("rinor_external_Port", External_port);
+                    String External_port = json_rinor.getJSONObject("external").getString("external_ip");
+                    String External_IP = json_rinor.getJSONObject("external").getString("external_port");
                     prefEditor.putString("rinor_external_IP", External_IP);
+                    prefEditor.putString("rinor_external_Port", External_port);
                 } catch (Exception e1) {
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
@@ -1224,8 +1223,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     });
                     Tracer.e(mytag, "ERROR getting external IP PORT information");
                 }
-            }
-            */
+            }*/
 
             // Common sequence for all versions sync
 

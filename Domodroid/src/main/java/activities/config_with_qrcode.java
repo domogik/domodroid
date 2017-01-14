@@ -135,7 +135,7 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("MQpubport", mq_port_pub);
                         prefEditor.putString("MQreq_repport", mq_port_req_rep);
                         prefEditor.putString("dmg_butler_name", butler_name);
-                        prefEditor.putString("rinor_external_IP", External_IP);
+                        prefEditor.putString("rinorexternal_IP", External_IP);
                         prefEditor.putString("rinor_external_Port", External_port);
                         prefEditor.commit();
                         config_with_qrcode.this.finish();

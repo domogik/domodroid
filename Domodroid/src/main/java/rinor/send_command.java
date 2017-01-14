@@ -28,7 +28,7 @@ public class send_command {
             URL = SP_params.getString("URL", "1.1.1.1");
         } else {
             //If connected to default SSID use external adress
-            URL = SP_params.getString("Rinor_external_URL", "1.1.1.1");
+            URL = SP_params.getString("external_URL", "1.1.1.1");
         }
         if (api_version >= 0.7f) {
             if (command_type == null) {

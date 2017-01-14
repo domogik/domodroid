@@ -130,7 +130,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
             }
         }
         Log.e(mytag, "NO CONNECTION");
-        return "";
+        return "NO CONNECTION";
     }
 
     @Override
@@ -145,6 +145,8 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         // Here you can for example fill your Listview with the content loaded in doInBackground method
         if (string.equals("ERROR")) {
             Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
+        } else if (string.equals("NO CONNECTION")) {
+            Toast.makeText(context, "NO connection to send command", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
         }

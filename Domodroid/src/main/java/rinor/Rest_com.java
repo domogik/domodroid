@@ -47,7 +47,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
-import java.net.InetAddress;
 import java.net.PasswordAuthentication;
 import java.net.UnknownHostException;
 
@@ -91,40 +90,14 @@ public class Rest_com {
         String url = null;
 
         String result = "";
+        //check if device is connected
         if (Abstract.Connectivity.IsInternetAvailable()) {
             if (Abstract.Connectivity.on_prefered_Wifi) {
+                //If connected to default SSID use local adress
                 url = SP_params.getString("URL", "1.1.1.1") + request;
-                Log.e("connect_string", "on_prefered_Wifi");
-                activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(activity, "On wifi ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }//else
-            if (Abstract.Connectivity.on_other_network) {
-                url = SP_params.getString("Rinor_external_URL", "1.1.1.1") + request;
-                Log.e("connect_string", "on_other_network");
-                activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(activity, "On other network", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-            try {
-                InetAddress.getByName(url).isReachable(timeout);
-                activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(activity, "Host is reachable", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (IOException e) {
-                Log.e("connect_string", "InetAddress.getByName(url).isReachable(timeout)");
-                e.printStackTrace();
-                activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(activity, "Host unreachable", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            } else {
+                //If not connected to default SSID use external adress
+                url = SP_params.getString("external_URL", "1.1.1.1") + request;
             }
             if (!SSL) {
                 try {
@@ -189,14 +162,15 @@ public class Rest_com {
                 return result;
 
             }
+        } else {
+            Tracer.e(mytag, "NO CONNECTION");
+            activity.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
+                }
+            });
+            return result;
         }
-        Log.e(mytag, "NO CONNECTION");
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
-            }
-        });
-        return result;
     }
 
 }

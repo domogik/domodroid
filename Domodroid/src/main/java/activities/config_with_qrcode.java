@@ -116,15 +116,15 @@ public class config_with_qrcode extends AppCompatActivity {
                             rinor_IP = admin_ip.replace("https://", "");
                             SSL = true;
                         }
-                        String External_port = "";
                         String External_IP = "";
+                        String External_port = "";
                         try {
-                            External_port = jsonresult.getString("external_ip");
-                            External_IP = jsonresult.getString("external_port");
+                            External_IP = jsonresult.getString("u'external_ip'").replace("u'","").replace("'","");
+                            External_port = jsonresult.getString("u'external_port'").replace("u'","").replace("'","");
                         } catch (Exception e1) {
                             Tracer.e(mytag, "ERROR getting external IP PORT information");
                         }
-                        String butler_name = jsonresult.getString("butler_name");
+                        String butler_name = jsonresult.getString("butler_name").replace("u'","").replace("'","");
                         prefEditor = params.edit();
                         prefEditor.putString("rinorIP", rinor_IP);
                         prefEditor.putString("rinorPort", rest_port);

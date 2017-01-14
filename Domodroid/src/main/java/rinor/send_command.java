@@ -13,15 +13,23 @@ import misc.tracerengine;
 
 public class send_command {
 
-    public static void send_it(Activity activity, tracerengine Tracer, String command_id, String command_type, String state_progress, float api_version) {
+    public static void send_it(final Activity activity, tracerengine Tracer, String command_id, String command_type, String state_progress, float api_version) {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
         final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
-        final String URL = SP_params.getString("URL", "1.1.1.1");
 
         String mytag = "send_it";
         String Url2send;
+
+        String URL = null;
+        if (Abstract.Connectivity.on_prefered_Wifi) {
+            //If connected to default SSID use local adress
+            URL = SP_params.getString("URL", "1.1.1.1");
+        } else {
+            //If connected to default SSID use external adress
+            URL = SP_params.getString("Rinor_external_URL", "1.1.1.1");
+        }
         if (api_version >= 0.7f) {
             if (command_type == null) {
                 //when the command contains mutiple value

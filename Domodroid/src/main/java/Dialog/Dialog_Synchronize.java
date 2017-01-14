@@ -1208,6 +1208,24 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
 
             }
+            /*TODO when available in rest
+            if (Rinor_Api_Version > 0.9f) {
+                try {
+                    String External_port = json_rinor.getJSONObject("mq").getString("ip");
+                    String External_IP = json_rinor.getJSONObject("mq").getString("sub_port");
+
+                    prefEditor.putString("rinor_external_Port", External_port);
+                    prefEditor.putString("rinor_external_IP", External_IP);
+                } catch (Exception e1) {
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Could not get external IP PORT configuration", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    Tracer.e(mytag, "ERROR getting external IP PORT information");
+                }
+            }
+            */
 
             // Common sequence for all versions sync
 

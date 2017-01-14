@@ -403,7 +403,30 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 if (SP_params.getBoolean("SYNC", false)) {
                     loadWigets(0, "root");
                     historyPosition++;
-                    history.add(historyPosition, new String[]{"0", "root"});
+                    try {
+                        history.add(historyPosition, new String[]{"0", "root"});
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                        //Todo solved this bug:
+                        /*
+                        STACK_TRACE=java.lang.ArrayIndexOutOfBoundsException: length=0; index=2
+at java.util.Vector.arrayIndexOutOfBoundsException(Vector.java:907)
+at java.util.Vector.insertElementAt(Vector.java:590)
+at java.util.Vector.add(Vector.java:140)
+at activities.Activity_Main$8.onClick(Activity_Main.java:396)
+at android.view.View.performClick(View.java:5207)
+at android.view.View$PerformClick.run(View.java:21177)
+at android.os.Handler.handleCallback(Handler.java:739)
+at android.os.Handler.dispatchMessage(Handler.java:95)
+at android.os.Looper.loop(Looper.java:148)
+at android.app.ActivityThread.main(ActivityThread.java:5441)
+at java.lang.reflect.Method.invoke(Native Method)
+at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:738)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
+                         */
+                    }
+
                 } else {
                     if (AD_notSyncAlert == null)
                         createAlert();

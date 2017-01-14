@@ -1352,54 +1352,70 @@ public class WidgetUpdate {
         }
         boolean changed = false;
         try {
-            domodb.update_name(id, new_desc, type);
-            //Todo Move this method somewhere else and mak it reusable.
-            if (!sharedparams.getBoolean("ssl_activate", false)) {
-                try {
-                    Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPut httpput = new HttpPut(sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                            + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-                    nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
-                    HttpResponse response = httpclient.execute(httpput);
-                    Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
-                    changed = true;
-                } catch (IOException e) {
-                    Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
+            if (Abstract.Connectivity.IsInternetAvailable()) {
+                String url = null;
+                if (Abstract.Connectivity.on_prefered_Wifi) {
+                    //If connected to default SSID use local adress
+                    url = sharedparams.getString("URL", "1.1.1.1");
+                } else {
+                    //If not connected to default SSID use external adress
+                    url = sharedparams.getString("external_URL", "1.1.1.1");
+                }
+
+                //Todo Move this method somewhere else and make it reusable.
+                if (!sharedparams.getBoolean("ssl_activate", false)) {
+                    try {
+                        Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpPut httpput = new HttpPut(url + "/device/" + feature.getDevId());
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        nameValuePairs.add(new BasicNameValuePair("description", new_desc));
+                        httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+                        HttpResponse response = httpclient.execute(httpput);
+                        Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
+                        changed = true;
+                    } catch (IOException e) {
+                        Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
+                    }
+                } else {
+                    try {
+                        Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                        HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url + "/device/" + feature.getDevId(), login, password);
+                        urlConnection.setRequestMethod("PUT");
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        nameValuePairs.add(new BasicNameValuePair("description", new_desc));
+                        String result = null;
+                        urlConnection.setDoOutput(true);
+                        OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
+                        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(Abstract.httpsUrl.getQuery(nameValuePairs));
+                        writer.flush();
+                        writer.close();
+                        os.close();
+                        int responseCode = urlConnection.getResponseCode();
+                        Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
+                        changed = true;
+                    } catch (IOException e) {
+                        Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
+                    }
+                }
+                if (changed) {
+                    //update db
+                    domodb.update_name(id, new_desc, type);
+                    //store last update in prefs for next start
+                    SharedPreferences.Editor prefEditor = sharedparams.edit();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date tempdate = new Date();
+                    prefEditor.putString("last_device_update", df.format(tempdate));
+                    prefEditor.commit();
                 }
             } else {
-                try {
-                    Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
-                    HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(
-                            sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId(), login, password);
-                    urlConnection.setRequestMethod("PUT");
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-                    nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                    String result = null;
-                    urlConnection.setDoOutput(true);
-                    OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(Abstract.httpsUrl.getQuery(nameValuePairs));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    int responseCode = urlConnection.getResponseCode();
-                    Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
-                    changed = true;
-                } catch (IOException e) {
-                    Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
-                }
-            }
-            if (changed) {
-                //store last update in prefs for next start
-                SharedPreferences.Editor prefEditor = sharedparams.edit();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date tempdate = new Date();
-                prefEditor.putString("last_device_update", df.format(tempdate));
-                prefEditor.commit();
+                Tracer.e(mytag, "NO CONNECTION");
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());

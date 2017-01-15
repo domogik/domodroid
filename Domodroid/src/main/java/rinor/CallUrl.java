@@ -58,7 +58,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                 httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
                 HttpResponse response;
-                String responseString = "";
+                String responseString = "ERROR";
                 try {
                     Log.e("CallUrl", "url=" + url.toString());
                     HttpGet httpget = new HttpGet(url);
@@ -94,7 +94,8 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 }
                 return responseString;
             } else {
-                String responseMessage = "";
+                Log.d(mytag, "Start https connection");
+                String responseMessage = "ERROR";
                 try {
                     if (url.startsWith("http://")) {
                         url = url.replace("http://", "https://");

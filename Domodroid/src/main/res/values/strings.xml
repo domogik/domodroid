@@ -936,4 +936,16 @@
     <string name="high_speed_wiper_status">High Speed Wiper</string>
     <string name="auto_rear_wiper_status">Auto Rear Wiper</string>
     <string name="manual_rear_wiper_status">Manual Rear Wiper</string>
+    <string name="reachable">Reachable</string>
+    <string name="no_connection_send_command">NO connection to send command</string>
+    <string name="Rest_204_error">204 ERROR No Content</string>
+    <string name="ressource_not_available">Resource not available http code:</string>
+    <string name="host_un_resolvable">Unable to resolve host</string>
+    <string name="timout_rest">Timeout connecting to domogik</string>
+    <string name="rest_host_connection_exception">Host connection exception</string>
+    <string name="rest_connection_error">Connection Error</string>
+    <string name="rest_io_connection_error">IOException Connection Error</string>
+    <string name="no_connection">NO connection</string>
+    <string name="rest_error_getting_sensors">Cannot get sensors from Rinor server</string>
+    <string name="rest_error_getting_device">Cannot get device list from Rinor server</string>
 </resources>

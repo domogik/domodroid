@@ -63,10 +63,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final ImageView IV_img;
     private final TextView TV_name;
     private final int id;
-    final String login;
-    final String password;
     final float api_version;
-    final boolean SSL;
     tracerengine Tracer = null;
     final Activity activity;
     private String icon;
@@ -99,15 +96,11 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.state_key = state_key;
 
         //global variable
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
         api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
 
-        SharedPreferences params1 = params;
         this.widgetHandler = handler;
         domodb = new DomodroidDB(this.Tracer, this.activity, params);
-        prefEditor = params1.edit();
+        prefEditor = params.edit();
         setOnLongClickListener(this);
 
         //Fonts

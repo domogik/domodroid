@@ -3,6 +3,7 @@ package database;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -137,7 +138,7 @@ public class WidgetUpdate {
         sleeping = false;
         this.sharedparams = params;
         this.Tracer = Trac;
-        this.activity = activity;
+        WidgetUpdate.activity = activity;
         activated = true;
         login = params.getString("http_auth_username", "Anonymous");
         password = params.getString("http_auth_password", "");
@@ -716,6 +717,16 @@ public class WidgetUpdate {
                     Tracer.d(mytag, "Request to server for stats update...");
 
                 String request = sharedparams.getString("UPDATE_URL", null);
+                String URL = sharedparams.getString("URL", "1.1.1.1");
+                //Because in old time it was the full request that was used and saved, not only the real UPDATE_PATH
+                //like "https://192.168.0.1:40406/rest/sensor" instead of just "sensor"
+                try {
+                    request = request.replace(URL, "");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    request = sharedparams.getString("UPDATE_URL", null);
+                }
+
                 Tracer.i(mytag, "urlupdate saved = " + request);
 
                 if (request != null) {
@@ -725,7 +736,25 @@ public class WidgetUpdate {
                     try {
                         if (api_version <= 0.6f) {
                             //Set timeout very high as tickets is a long process
-                            json_widget_state = Rest_com.connect_jsonobject(Tracer, request, login, password, 300000, SSL);
+                            json_widget_state = Rest_com.connect_jsonobject(activity, Tracer, request, 300000);
+                            if (json_widget_state == null || (json_widget_state.toString().equals("{}"))) {
+                                // Cannot get data_type from Rinor server.....
+                                Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                activity.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                Bundle b = new Bundle();
+                                //Notify error to parent Dialog
+                                b.putString("message", "datatype");
+                                Message msg = new Message();
+                                msg.setData(b);
+                                //stop();
+                                //todo stop Widgetupdate
+                                //handler.sendMessage(msg);
+                                return null;
+                            }
                             Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
                         } else if (api_version >= 0.7f) {
                             json_widget_state = new JSONObject();
@@ -734,16 +763,55 @@ public class WidgetUpdate {
                             //get all sensors
                             if (api_version < 0.9f) {
                                 //get all sensors from rest
-                                json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
+                                if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                    // Cannot get data_type from Rinor server.....
+                                    Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    Bundle b = new Bundle();
+                                    //Notify error to parent Dialog
+                                    b.putString("message", "datatype");
+                                    Message msg = new Message();
+                                    msg.setData(b);
+                                    //todo stop Widgetupdate
+                                    //handler.sendMessage(msg);
+                                    return null;
+                                }
                             } else if (api_version == 0.9f) {
                                 //load timestamp apps was closed
                                 String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
                                 Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
 
                                 //Modify request to match the timestamp
-                                //todo if timestamp is null or 0 get the full sensor list
-                                String request_since = request + "since/" + Integer.parseInt(sensor_saved_timestamp);
-                                JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(Tracer, request_since, login, password, 30000, SSL);
+                                String request_since;
+                                //if timestamp is null or 0 get the full sensor list
+                                if (sensor_saved_timestamp.equals("0")) {
+                                    request_since = request;
+                                } else {
+                                    request_since = request + "since/" + sensor_saved_timestamp;
+                                }
+                                JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(activity, Tracer, request_since, 30000);
+                                if (json_widget_state_0_6 == null || (json_widget_state_0_6.toString().equals("[]"))) {
+                                    // Cannot get data_type from Rinor server.....
+                                    Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    Bundle b = new Bundle();
+                                    //Notify error to parent Dialog
+                                    b.putString("message", "datatype");
+                                    Message msg = new Message();
+                                    msg.setData(b);
+                                    //todo stop Widgetupdate
+                                    //handler.sendMessage(msg);
+                                    return null;
+                                }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
                                 String strJson = sharedparams.getString("sensor_saved_value", "0");
@@ -796,7 +864,24 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, "json saved is null", Toast.LENGTH_SHORT).show();
                                         }
                                     });//get all sensors from rest
-                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                    json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
+                                    if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                        // Cannot get data_type from Rinor server.....
+                                        Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                        activity.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                        Bundle b = new Bundle();
+                                        //Notify error to parent Dialog
+                                        b.putString("message", "datatype");
+                                        Message msg = new Message();
+                                        msg.setData(b);
+                                        //todo stop Widgetupdate
+                                        //handler.sendMessage(msg);
+                                        return null;
+                                    }
                                 }
                             }
                             // Create a false JSONObject like if it was domomgik 0.3
@@ -821,11 +906,45 @@ public class WidgetUpdate {
                                     request = request.replace("sensor", "device");
                                     //Grab device list
                                     if (api_version == 0.8f) {
-                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
+                                        if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                            // Cannot get data_type from Rinor server.....
+                                            Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                            activity.runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                            Bundle b = new Bundle();
+                                            //Notify error to parent Dialog
+                                            b.putString("message", "datatype");
+                                            Message msg = new Message();
+                                            msg.setData(b);
+                                            //todo stop Widgetupdate
+                                            //handler.sendMessage(msg);
+                                            return null;
+                                        }
                                     } else if (api_version >= 0.9f) {
                                         //todo be sure last_device_update is in the right timestamp format???
                                         request = request + "since/" + last_device_update;
-                                        json_device_state_0_4 = Rest_com.connect_jsonarray(Tracer, request, login, password, 30000, SSL);
+                                        json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
+                                        if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
+                                            // Cannot get data_type from Rinor server.....
+                                            Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                            activity.runOnUiThread(new Runnable() {
+                                                public void run() {
+                                                    Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                            Bundle b = new Bundle();
+                                            //Notify error to parent Dialog
+                                            b.putString("message", "datatype");
+                                            Message msg = new Message();
+                                            msg.setData(b);
+                                            //todo stop Widgetupdate
+                                            //handler.sendMessage(msg);
+                                            return null;
+                                        }
                                     }
                                     Tracer.d(mytag, "json_widget_device for 0.8 API=" + json_device_state_0_4.toString());
                                     //test if info_changed:
@@ -1233,54 +1352,70 @@ public class WidgetUpdate {
         }
         boolean changed = false;
         try {
-            domodb.update_name(id, new_desc, type);
-            //Todo Move this method somewhere else and mak it reusable.
-            if (!sharedparams.getBoolean("ssl_activate", false)) {
-                try {
-                    Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPut httpput = new HttpPut(sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                            + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId());
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-                    nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                    httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
-                    HttpResponse response = httpclient.execute(httpput);
-                    Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
-                    changed = true;
-                } catch (IOException e) {
-                    Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
+            if (Abstract.Connectivity.IsInternetAvailable()) {
+                String url = null;
+                if (Abstract.Connectivity.on_prefered_Wifi) {
+                    //If connected to default SSID use local adress
+                    url = sharedparams.getString("URL", "1.1.1.1");
+                } else {
+                    //If not connected to default SSID use external adress
+                    url = sharedparams.getString("external_URL", "1.1.1.1");
+                }
+
+                //Todo Move this method somewhere else and make it reusable.
+                if (!sharedparams.getBoolean("ssl_activate", false)) {
+                    try {
+                        Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpPut httpput = new HttpPut(url + "/device/" + feature.getDevId());
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        nameValuePairs.add(new BasicNameValuePair("description", new_desc));
+                        httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+                        HttpResponse response = httpclient.execute(httpput);
+                        Tracer.d(mytag, "Renaming to Domogik without SSL response=" + response.getStatusLine().toString());
+                        changed = true;
+                    } catch (IOException e) {
+                        Tracer.e(mytag, "Renaming to Domogik without SSL error " + e.toString());
+                    }
+                } else {
+                    try {
+                        Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
+                        HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url + "/device/" + feature.getDevId(), login, password);
+                        urlConnection.setRequestMethod("PUT");
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        nameValuePairs.add(new BasicNameValuePair("description", new_desc));
+                        String result = null;
+                        urlConnection.setDoOutput(true);
+                        OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
+                        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(Abstract.httpsUrl.getQuery(nameValuePairs));
+                        writer.flush();
+                        writer.close();
+                        os.close();
+                        int responseCode = urlConnection.getResponseCode();
+                        Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
+                        changed = true;
+                    } catch (IOException e) {
+                        Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
+                    }
+                }
+                if (changed) {
+                    //update db
+                    domodb.update_name(id, new_desc, type);
+                    //store last update in prefs for next start
+                    SharedPreferences.Editor prefEditor = sharedparams.edit();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date tempdate = new Date();
+                    prefEditor.putString("last_device_update", df.format(tempdate));
+                    prefEditor.commit();
                 }
             } else {
-                try {
-                    Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
-                    HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(
-                            sharedparams.getString("rinor_IP", "1.1.1.1") + ":" + sharedparams.getString("rinorPort", "40405")
-                                    + sharedparams.getString("rinorPath", "/") + "/device/" + feature.getDevId(), login, password);
-                    urlConnection.setRequestMethod("PUT");
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-                    nameValuePairs.add(new BasicNameValuePair("description", feature.getDescription()));
-                    String result = null;
-                    urlConnection.setDoOutput(true);
-                    OutputStream os = new BufferedOutputStream(urlConnection.getOutputStream());
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(Abstract.httpsUrl.getQuery(nameValuePairs));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    int responseCode = urlConnection.getResponseCode();
-                    Tracer.d(mytag, "Renaming to Domogik with SSL response=" + responseCode);
-                    changed = true;
-                } catch (IOException e) {
-                    Tracer.e(mytag, "Renaming to Domogik with SSL error " + e.toString());
-                }
-            }
-            if (changed) {
-                //store last update in prefs for next start
-                SharedPreferences.Editor prefEditor = sharedparams.edit();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date tempdate = new Date();
-                prefEditor.putString("last_device_update", df.format(tempdate));
-                prefEditor.commit();
+                Tracer.e(mytag, "NO CONNECTION");
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());

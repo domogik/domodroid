@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
@@ -32,10 +33,26 @@ public class webview_domogik_admin extends Activity {
         webSettings.setJavaScriptEnabled(true);
 
         myWebView.setWebViewClient(new WebViewClient());
-        if (SP_params.getBoolean("SSL", false)) {
-            myWebView.loadUrl("https://" + SP_params.getString("rinorIP", "") + ":" + SP_params.getString("rinorPort", ""));
+        if (Abstract.Connectivity.IsInternetAvailable()) {
+            String url;
+            String port;
+            if (Abstract.Connectivity.on_prefered_Wifi) {
+                //If connected to default SSID use local adress
+                url = SP_params.getString("rinorIP", "1.1.1.1");
+                port = SP_params.getString("rinorPort", "");
+            } else {
+                //If not connected to default SSID use external adress
+                url = SP_params.getString("rinorexternal_IP", "1.1.1.1");
+                port = SP_params.getString("rinor_external_Port", "");
+            }
+            if (SP_params.getBoolean("SSL", false)) {
+                myWebView.loadUrl("https://" + url + ":" + port);
+            } else {
+                myWebView.loadUrl("http://" + url + ":" + port);
+            }
         } else {
-            myWebView.loadUrl("http://" + SP_params.getString("rinorIP", "") + ":" + SP_params.getString("rinorPort", ""));
+            Toast.makeText(this, "NO connection", Toast.LENGTH_LONG).show();
+            this.finish();
         }
 
     }

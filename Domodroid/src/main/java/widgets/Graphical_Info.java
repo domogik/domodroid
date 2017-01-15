@@ -71,7 +71,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private String parameters;
     private final int session_type;
     private final SharedPreferences params;
-    private String url = null;
     private int dpiClassification;
     private final int update;
     private TextView state_key_view;
@@ -82,11 +81,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private boolean isopen = false;
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         this.update = update;
@@ -94,11 +92,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     }
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         this.update = update;
@@ -163,14 +160,13 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
-            canvas = new Graphical_Info_View(Tracer, activity, params, parameters);
+            canvas = new Graphical_Info_View(activity, Tracer, activity, params, parameters);
             canvas.dev_id = dev_id;
             canvas.id = feature.getId();
             canvas.state_key = state_key;
-            canvas.url = url;
             canvas.update = update;
 
-            LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             featurePan2_buttons = layoutInflater.inflate(R.layout.graph_buttons, null);
             View v = null;
 
@@ -232,7 +228,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                     display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 

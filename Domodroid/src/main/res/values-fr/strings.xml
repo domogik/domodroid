@@ -404,6 +404,7 @@
     <string name="info3200">Non disponible</string>
     <string name="not_available">Non disponible</string>
     <string name="rain">Pluie</string>
+    <string name="rain_and_snow">Pluie et neige</string>
     <string name="butler">Majordome</string>
     <string name="action_settings">Paramètres</string>
     <string name="title_activity_main">Domogik Majordome</string>
@@ -511,7 +512,6 @@
     <string name="fog">Brouillard</string>
     <string name="inactive">Inactif</string>
     <string name="active">Actif</string>
-    <string name="sms_sended">SMS envoyé</string>
     <string name="ok" tools:ignore="ButtonCase">Ok</string>
     <string name="sensor_script_info_binary">Script capteur binaire</string>
     <string name="sensor_script_info_number">Script capteur numérique</string>
@@ -638,8 +638,8 @@
     <string name="make">Fabricant</string>
     <string name="carid">Identifiant voiture</string>
     <string name="ignition_status">Moteur</string>
-    <string name="low_beam_status">Feux de position</string>
     <string name="high_beam_status">Feux de croisement</string>
+    <string name="low_beam_status">Feux de position</string>
     <string name="head_light_status">Feux de route</string>
     <string name="left_indicator_status">Clignotant gauche</string>
     <string name="right_indicator_status">Clignotant droit</string>
@@ -648,8 +648,8 @@
     <string name="front_fog_light_status">Feux antibrouillard avant</string>
     <string name="lock_status">Etat fermeture</string>
     <string name="odometer">Compteur kilométrique</string>
-    <string name="position">Position</string>
     <string name="location">Position</string>
+    <string name="position">Position</string>
     <string name="fuel_level">Niveau de carburant</string>
     <string name="set_away">Définir absent</string>
     <string name="away">Parti</string>
@@ -683,6 +683,10 @@
     <string name="option_widget_timestamp_date">Affiché l\'orodatage par date</string>
     <string name="option_widget_timestamp_title">Affichage horodatage</string>
     <string name="missing_maps_applications">Veuillez installer une application de Cartes</string>
+    <string name="auto">Auto</string>
+    <string name="comfort">Confort</string>
+    <string name="comfort__1">Confort-1</string>
+    <string name="comfort__2">Confort-2</string>
     <string name="unknown">Inconnu</string>
     <string name="speed_1">Vitesse 1</string>
     <string name="speed_2">Vitesse 2</string>
@@ -702,7 +706,7 @@
     <string name="cool">Climatisation</string>
     <string name="fan_only">Ventilation seule</string>
     <string name="blue">Bleu</string>
-    <string name="brown">marron</string>
+    <string name="brown">Marron</string>
     <string name="green">Vert</string>
     <string name="orange">Orange</string>
     <string name="black">Noir</string>
@@ -719,7 +723,6 @@
     <string name="True">Vrai</string>
     <string name="year">Année</string>
     <string name="command_sent">Commande envoyé à rest!</string>
-    <string name="command_sending">Envoi de la commande à rest...</string>
     <string name="heavyraininhour">Pluie battante dans l\'heure</string>
     <string name="raininhour">Pluie dans l\'heure</string>
     <string name="rainlevel55mn">Niveau de pluie à 55min</string>
@@ -751,10 +754,11 @@
     <string name="master_bedroom">Chambre principale</string>
     <string name="outside">A l\'extérieur</string>
     <string name="upstairs">Etage supérieur</string>
+    <string name="contact_devs">Ceci n\'est pas encore supporté, contacter les devs.</string>
     <string name="qr_code_is_valid">Le Qrcode est valide:</string>
     <string name="no_qrcode_scanner">Pas d\'applications pour lire les QRcode</string>
     <string name="no_qrcode_question">Télécharger un lecteur de Qrcode depuis le market ?</string>
-    <string name="no_market_apps">"Pas d\'applications market sur cet appareil."</string>
+    <string name="no_market_apps">Pas d\'applications market sur cet appareil.</string>
     <string name="vigilancerisk">Risque de Vigilance</string>
     <string name="vigilancecolor">Couleur de Vigilance</string>
     <string name="vigilancedep">Département de Vigilance</string>
@@ -768,7 +772,6 @@
     <string name="vigilancecolorflood">Couleur Vigilance Inondation</string>
     <string name="vigilancecolorheat">Couleur Vigilance Canicule</string>
     <string name="vigilancecolorsnow">Couleur Vigilance Neige</string>
-    <string name="no_vigilance">Aucun risque</string>
     <string name="wind">Vent</string>
     <string name="flood">Inondation</string>
     <string name="snow_ice">Neige/verglas</string>
@@ -776,9 +779,25 @@
     <string name="intense_cold">Grand froid</string>
     <string name="avalanches">Avalanches</string>
     <string name="submersion_wave">Vague submersion</string>
-    <string name="contact_devs">Ceci n\'est pas encore supporté, contacter les devs.</string>
-    <string name="sms_not_sended">SMS pas envoyé</string>
+    <string name="no_vigilance">Aucun risque</string>
     <string name="too_many_sms_were_sent_in_too_little_time.">Trop de sms envoyé en trop peu de temps.</string>
+    <string name="sms_sended">SMS envoyé</string>
+    <string name="sms_not_sended">SMS pas envoyé</string>
+    <string name="command_sending">Envoi de la commande à rest...</string>
     <string name="loading_data_from_rest">Chargement des valeurs depuis rest....</string>
     <string name="domogik_admin_page">Administration de domogik</string>
+    <string name="next">Suiv.</string>
+    <string name="previous">Préc.</string>
+    <string name="volume">Volume</string>
+    <string name="virtual_binary">Binaire Virtuel</string>
+    <string name="_1_wire_temperature">Température 1-Wire</string>
+    <string name="virtual_number">Nombre virtuel</string>
+    <string name="virtual_string">Texte virtuel</string>
+    <string name="virtual_colorrgb">Couleur rgb virtuelle</string>
+    <string name="virtual_colorrgbhexa">Couleur rgbhexa virtuelle</string>
+    <string name="virtual_switch">Interrupteur virtuel</string>
+    <string name="value">Valeur</string>
+    <string name="Switch">Interrupteur</string>
+    <string name="engine_speed">Vitesse Moteur</string>
+    <string name="vehicle_speed">Vitesse Véhicule</string>
 </resources>

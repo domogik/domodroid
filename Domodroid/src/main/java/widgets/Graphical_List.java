@@ -78,7 +78,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private Handler handler;
     private Message msg;
     private static String mytag = "Graphical_List";
-    private String url = null;
     public static FrameLayout container = null;
     public static FrameLayout myself = null;
     public Boolean with_list = true;
@@ -107,22 +106,20 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private int sizeint;
 
     public Graphical_List(tracerengine Trac,
-                          final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_List(tracerengine Trac,
-                          final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                           final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -154,7 +151,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         //state key
         final TextView state_key_view = new TextView(activity);
         try {
-            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+            stateS = getResources().getString(translate.do_translate(activity, Tracer, state_key));
         } catch (Exception e) {
             stateS = state_key;
         }
@@ -299,7 +296,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         map = listItemCommands.get(position);
                         cmd_requested = map.get("cmd_to_send");
                         Tracer.d(mytag, "command selected at Position = " + position + "  Command = " + cmd_requested);
-                        send_command.send_it(Tracer, url, command_id, command_type, cmd_requested, login, password, SSL, api_version);
+                        send_command.send_it(activity, Tracer, command_id, command_type, cmd_requested, api_version);
 
                     }
                 }
@@ -505,12 +502,16 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             JSONArray itemArray = null;
             try {
                 if (api_version <= 0.6f) {
-                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                    json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 30000, SSL);
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                    json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id +
+                            "/" + state_key +
+                            "/last/" + nb_item_for_history +
+                            "/", 30000);
                 } else if (api_version >= 0.7f) {
-                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
                     //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 30000, SSL);
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + id +
+                            "/last/" + nb_item_for_history + "", 30000);
                     json_LastValues = new JSONObject();
                     json_LastValues.put("stats", json_LastValues_0_4);
 
@@ -521,7 +522,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                         try {
                             HashMap<String, String> map = new HashMap<>();
                             try {
-                                map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
+                                map.put("TV_Value", activity.getString(translate.do_translate(activity, Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
                             } catch (Exception e1) {
                                 map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
                             }
@@ -543,7 +544,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                                 temp_value_str = itemArray.getJSONObject(i).getString("value_str").toLowerCase();
                             }
                             try {
-                                map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, temp_value_str)));
+                                map.put("TV_Value", activity.getString(translate.do_translate(activity, Tracer, temp_value_str)));
                             } catch (Exception e1) {
                                 map.put("TV_Value", temp_value_str);
                             }

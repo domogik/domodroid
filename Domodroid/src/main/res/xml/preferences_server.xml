@@ -35,6 +35,18 @@
             android:key="rinorPort"
             android:title="@string/OPTION_server_PORT" />
         <EditTextPreference
+            android:dialogTitle="OPTION_server_external_IP_Title"
+            android:icon="@drawable/ic_ip_address"
+            android:inputType="textUri"
+            android:key="rinorexternal_IP"
+            android:title="OPTION_server_external_IP" />
+        <EditTextPreference
+            android:defaultValue="40405"
+            android:dialogTitle="OPTION_server_external_PORT_Title"
+            android:inputType="number"
+            android:key="rinor_external_Port"
+            android:title="OPTION_server_external_PORT" />
+        <EditTextPreference
             android:dialogTitle="@string/OPTION_server_Path_Title"
             android:key="rinorPath"
             android:title="@string/OPTION_server_Path" />
@@ -70,6 +82,10 @@
             sample:msbp_measurementUnit="s"
             sample:msbp_minValue="60" />
         <EditTextPreference
+            android:dialogTitle="Local WIFI SSID"
+            android:key="prefered_wifi_ssid"
+            android:title="Prefered wifi network SSID" />
+        <EditTextPreference
             android:enabled="false"
             android:key="UPDATE_URL"
             android:selectable="false"
@@ -82,30 +98,10 @@
             android:shouldDisableView="true"
             android:title="@string/Rinor_URL" />
         <EditTextPreference
-            android:enabled="true"
-            android:icon="@drawable/ic_mq"
-            android:inputType="textUri"
-            android:key="MQaddress"
-            android:selectable="true"
-            android:title="@string/MQ_address" />
-        <EditTextPreference
-            android:defaultValue="40412"
-            android:icon="@drawable/ic_mq_sub"
-            android:inputType="number"
-            android:key="MQsubport"
-            android:title="@string/Mq_sub_port" />
-        <EditTextPreference
-            android:defaultValue="40411"
-            android:icon="@drawable/ic_mq_pub"
-            android:inputType="number"
-            android:key="MQpubport"
-            android:title="@string/Mq_pub_port" />
-        <EditTextPreference
-            android:defaultValue="40410"
-            android:icon="@drawable/ic_mq_pub"
-            android:inputType="number"
-            android:key="MQreq_repport"
-            android:title="@string/MQ_req_rep_port" />
-
+            android:enabled="false"
+            android:key="external_URL"
+            android:selectable="false"
+            android:shouldDisableView="true"
+            android:title="Rinor_external_URL" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -42,7 +42,6 @@ public class Events_manager {
     private int stack_out = -1;
     private int event_item = 0;
     private final int stack_size = 500;
-    private String urlAccess;
     private ListenerThread listener = null;
     private Boolean alive = false;
     public Boolean cache_out_of_date = false;
@@ -52,9 +51,6 @@ public class Events_manager {
     private Boolean init_done = false;
     private Boolean com_broken = false;
     private Boolean sleeping = false;
-    private String login;
-    private String password;
-    private Boolean SSL;
     private float api_version;
     private String MQaddress;
     private String MQsubport;
@@ -94,12 +90,8 @@ public class Events_manager {
 
         this.Tracer = Trac;
         this.engine_cache = engine_cache;
-//todo look it to avoid crash in certain case...
+        //todo look it to avoid crash in certain case...
         //setOwner(owner, state_engine_handler);
-        urlAccess = params.getString("URL", "1.1.1.1");
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
-        SSL = params.getBoolean("ssl_activate", false);
         api_version = params.getFloat("API_VERSION", 0);
         MQaddress = params.getString("MQaddress", null);
         MQsubport = params.getString("MQsubport", null);
@@ -320,7 +312,7 @@ public class Events_manager {
             } else if (api_version <= 0.6f) {
                 //This is for 0.3 version
                 //Build the list of devices concerned by ticket request
-                String ticket_request = urlAccess + "events/request/new";
+                String ticket_request = "events/request/new";
                 for (int i = 0; i < engine_cache.size(); i++) {
                     String skey = engine_cache.get(i).skey;
                     if (!(skey.equals("_") && !(skey.equals("command")))) {
@@ -384,7 +376,7 @@ public class Events_manager {
                     Tracer.w(mytag, "Requesting server <" + request + ">");
                     try {
                         //Set timeout very high as tickets is a long process
-                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 30000, SSL); //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(activity, Tracer, request, 30000); //Blocking request : we must have an answer to continue...
                         error = 0;
                     } catch (Exception e) {
                         error = 1;
@@ -441,7 +433,7 @@ public class Events_manager {
                                         break;
                                     }
                                     if ((ticket != null) && (!ticket.equals("")))
-                                        request = urlAccess + "events/request/get/" + ticket;    //Use the ticket on next query
+                                        request = "events/request/get/" + ticket;    //Use the ticket on next query
                                     else {
                                         ticket = "";
                                         request = ticket_request;    //Create a new ticket on next query
@@ -484,11 +476,11 @@ public class Events_manager {
                 }    //Infinite loop of thread
                 // Try to free the ticket, if available
                 if (!ticket.equals("")) {
-                    request = urlAccess + "events/request/free/" + ticket;    //Use the ticket #
+                    request = "events/request/free/" + ticket;    //Use the ticket #
                     try {
                         Tracer.w(mytag, "Freeing ticket <" + request + ">");
                         stats_com.add(Stats_Com.EVENTS_SEND, request.length());
-                        event = Rest_com.connect_jsonobject(Tracer, request, login, password, 30000, SSL);        //Blocking request : we must have an answer to continue...
+                        event = Rest_com.connect_jsonobject(activity, Tracer, request, 30000);        //Blocking request : we must have an answer to continue...
                         stats_com.add(Stats_Com.EVENTS_RCV, event.length());
                         Tracer.w(mytag, "Received on free ticket = <" + event.toString() + ">");
                     } catch (Exception e) {

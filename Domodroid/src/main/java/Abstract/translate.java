@@ -19,6 +19,8 @@ public abstract class translate {
             temp_name = "False";
         } else if (temp_name.equals("true")) {
             temp_name = "True";
+        }else if (temp_name.equals("switch")) {
+            temp_name = "Switch";
         }
         //To avoid space or - in name in strings.xml
         temp_name = temp_name.replace(" ", "_");
@@ -27,14 +29,18 @@ public abstract class translate {
         temp_name = temp_name.replace("/", "_");
         temp_name = temp_name.replace("(", "");
         temp_name = temp_name.replace(")", "");
+        //handle start with a number as it is not allow by android
+        if (Character.isDigit(temp_name.charAt(0))) {
+            temp_name = "_" + temp_name;
+        }
+        // TODO for #144 handle some plugins function like concatenation with a comma or point of multiple value
         //To get a drawable R.Drawable
         //context.getResources().getIdentifier(name, "drawable", context.getPackageName());
         //To get a string from R.String
-        try {
-            return context.getResources().getIdentifier(temp_name, "string", context.getPackageName());
-        } catch (Exception e) {
-            Tracer.i(mytag, "no translation for: " + name);
-            return 0;
-        }
+        int newstring = context.getResources().getIdentifier(temp_name, "string", context.getPackageName());
+        //Catch untranslated value
+        if (newstring == 0 && !name.equals(""))
+            Tracer.e(mytag, "no translation for: " + name + " parse as: " + temp_name);
+        return newstring;
     }
 }

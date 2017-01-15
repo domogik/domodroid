@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_reload"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="Recharger" />
+    <item
+        android:id="@+id/menu_empty"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="Vider" />
+</menu>

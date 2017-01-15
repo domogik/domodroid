@@ -73,7 +73,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private int id;
     private static String mytag;
     private Message msg;
-    private String url = null;
 
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
@@ -93,22 +92,20 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private String test_unite;
 
     public Graphical_Openstreetmap(tracerengine Trac,
-                                   final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                    final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Openstreetmap(tracerengine Trac,
-                                   final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity,  int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                    final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -183,7 +180,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
                     TV_Value.setAnimation(animation);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
                     final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")");
                     TV_Value.setOnClickListener(new OnClickListener() {
                                                     public void onClick(View v) {

@@ -108,7 +108,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }
                 //process with update timer for new 30 sec
-                Log.e(mytag, "New timer " + executeTop());
+                Log.d(mytag, "New timer " + executeTop());
                 try {
                     Runtime info = Runtime.getRuntime();
                     int availableProcessors = info.availableProcessors();
@@ -131,13 +131,13 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                     totalAllocatedSize = totalAllocatedSize / 1024; //in MB
                     usedSize = usedSize / 1024; //in KB
                     usedSize = usedSize / 1024; //in MB
-                    Log.e(mytag, "New timer totalAllocatedSize: " + df.format(totalAllocatedSize) + "MB");
-                    Log.e(mytag, "New timer freeSize: " + df.format(freeSize) + "MB");
-                    Log.e(mytag, "New timer usedSize: " + df.format(usedSize) + "MB");
+                    Log.d(mytag, "New timer totalAllocatedSize: " + df.format(totalAllocatedSize) + "MB");
+                    Log.d(mytag, "New timer freeSize: " + df.format(freeSize) + "MB");
+                    Log.d(mytag, "New timer usedSize: " + df.format(usedSize) + "MB");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
-                    Log.e(mytag, "error getting used memory :" + e.toString());
+                    Log.d(mytag, "error getting used memory :" + e.toString());
                 }
                 long millis = new Date().getTime();
                 String gmtTime = String.valueOf(millis);
@@ -149,7 +149,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.e(mytag, "metrics=" + metrics.toString());
+                Log.d(mytag, "metrics=" + metrics.toString());
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }

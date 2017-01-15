@@ -19,7 +19,6 @@
 package activities;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
@@ -99,6 +98,8 @@ public class Preference extends PreferenceActivity implements
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
+        } else if (action != null && action.equals("preferences_mq")) {
+            addPreferencesFromResource(R.xml.preferences_mq);
         } else if (action != null && action.equals("preferences_widget")) {
             addPreferencesFromResource(R.xml.preferences_widget);
         } else if (action != null && action.equals("preferences_map")) {
@@ -172,6 +173,7 @@ public class Preference extends PreferenceActivity implements
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = params.getString("rinorIP", "");
+        String extrenal_temp = params.getString("rinorexternal_IP", "");
         Boolean SSL = params.getBoolean("ssl_activate", false);
         SharedPreferences.Editor prefEditor;
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
@@ -179,8 +181,10 @@ public class Preference extends PreferenceActivity implements
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", "https://" + temp);
+                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp);
             } else {
                 prefEditor.putString("rinor_IP", "http://" + temp);
+                prefEditor.putString("rinor_external_IP", "http://" + extrenal_temp);
             }
             prefEditor.commit();
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
@@ -188,8 +192,10 @@ public class Preference extends PreferenceActivity implements
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", temp.replace("https://", ""));
+                prefEditor.putString("rinor_external_IP", extrenal_temp.replace("https://", ""));
             } else {
                 prefEditor.putString("rinor_IP", temp.replace("http://", ""));
+                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp.replace("http://", ""));
             }
             prefEditor.commit();
         }
@@ -205,6 +211,17 @@ public class Preference extends PreferenceActivity implements
         else
             format_urlAccess = urlAccess.concat("/");
         prefEditor.putString("URL", format_urlAccess);
+
+        String external_urlAccess = params.getString("rinor_external_IP", "1.1.1.1") + ":" + params.getString("rinor_external_Port", "40405") + params.getString("rinorPath", "/");
+        external_urlAccess = external_urlAccess.replaceAll("[\r\n]+", "");
+        external_urlAccess = external_urlAccess.replaceAll(" ", "%20");
+        String external_format_urlAccess;
+        if (external_urlAccess.lastIndexOf("/") == external_urlAccess.length() - 1)
+            external_format_urlAccess = external_urlAccess;
+        else
+            external_format_urlAccess = external_urlAccess.concat("/");
+        prefEditor.putString("external_URL", external_format_urlAccess);
+
         prefEditor.commit();
 
         //Save to file
@@ -212,6 +229,7 @@ public class Preference extends PreferenceActivity implements
         common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
+        external_urlAccess = params.getString("external_URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");

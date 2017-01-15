@@ -116,7 +116,15 @@ public class config_with_qrcode extends AppCompatActivity {
                             rinor_IP = admin_ip.replace("https://", "");
                             SSL = true;
                         }
-                        String butler_name = jsonresult.getString("butler_name");
+                        String External_IP = "";
+                        String External_port = "";
+                        try {
+                            External_IP = jsonresult.getString("u'external_ip'").replace("u'","").replace("'","");
+                            External_port = jsonresult.getString("u'external_port'").replace("u'","").replace("'","");
+                        } catch (Exception e1) {
+                            Tracer.e(mytag, "ERROR getting external IP PORT information");
+                        }
+                        String butler_name = jsonresult.getString("butler_name").replace("u'","").replace("'","");
                         prefEditor = params.edit();
                         prefEditor.putString("rinorIP", rinor_IP);
                         prefEditor.putString("rinorPort", rest_port);
@@ -127,6 +135,8 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefEditor.putString("MQpubport", mq_port_pub);
                         prefEditor.putString("MQreq_repport", mq_port_req_rep);
                         prefEditor.putString("dmg_butler_name", butler_name);
+                        prefEditor.putString("rinorexternal_IP", External_IP);
+                        prefEditor.putString("rinor_external_Port", External_port);
                         prefEditor.commit();
                         config_with_qrcode.this.finish();
 

@@ -81,7 +81,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
     private Message msg;
     private static String mytag = "";
-    private String url = null;
 
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
@@ -124,22 +123,20 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private boolean isopen = false;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                             final Entity_Feature feature, Handler handler) {
         super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity activity, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                                             final Entity_Map feature_map, Handler handler) {
         super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
 
@@ -292,7 +289,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                     display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
@@ -478,12 +475,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //todo #131 do this in asynctask
         try {
             if (api_version <= 0.6f) {
-                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
-                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
+                json_GraphValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id +
+                        "/" + state_key +
+                        "/from/" + startTimestamp +
+                        "/to/" + currentTimestamp +
+                        "/interval/" + step +
+                        "/selector/avg", 30000);
             } else if (api_version >= 0.7f) {
-                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
+                Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(Tracer, url + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg", login, password, 30000, SSL);
+                json_GraphValues = Rest_com.connect_jsonobject(activity, Tracer, "sensorhistory/id/" + id +
+                        "/from/" + startTimestamp +
+                        "/to/" + currentTimestamp +
+                        "/interval/" + step +
+                        "/selector/avg", 30000);
             }
 
         } catch (Exception e) {

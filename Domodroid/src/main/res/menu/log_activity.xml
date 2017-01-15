@@ -3,11 +3,11 @@
     <item
         android:id="@+id/menu_reload"
         android:orderInCategory="100"
-        app:showAsAction="always"
-        android:title="Recharger" />
+        android:title="Recharger"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_empty"
         android:orderInCategory="100"
-        app:showAsAction="always"
-        android:title="Vider" />
+        android:title="Vider"
+        app:showAsAction="always" />
 </menu>

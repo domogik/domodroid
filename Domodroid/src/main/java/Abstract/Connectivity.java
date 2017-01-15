@@ -39,10 +39,15 @@ public class Connectivity {
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                         String ssid = wifiInfo.getSSID().replace("\"", "");
-                        if (ssid.equals(PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).getString("prefered_wifi_ssid", ""))) {
+                        String preferd_wifi = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).getString("prefered_wifi_ssid", "");
+                        if (ssid.equals(preferd_wifi)) {
                             on_prefered_Wifi = true;
                         } else {
                             on_prefered_Wifi = false;
+                        }
+                        //handle the case where user do not set is local SSID in options
+                        if (preferd_wifi.equals("")) {
+                            on_prefered_Wifi = true;
                         }
                     }
                 }

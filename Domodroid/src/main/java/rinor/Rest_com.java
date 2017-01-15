@@ -36,6 +36,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -110,7 +111,7 @@ public class Rest_com {
                     Log.e("connect_string", "url=" + url.toString());
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
-                    HttpResponse response;
+                    final HttpResponse response;
                     response = httpclient.execute(httpget);
                     if (response.getStatusLine().getStatusCode() == 200) {
                         HttpEntity entity = response.getEntity();
@@ -122,16 +123,48 @@ public class Rest_com {
                     } else if (response.getStatusLine().getStatusCode() == 204) {
                         //TODO need to adapt for 0.4 since rest answer now with standard code
                         //204,400,404 and else
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(activity, "204 ERROR No Content", Toast.LENGTH_LONG).show();
+                            }
+                        });
                     } else {
-                        Tracer.d(mytag, "Resource not available>");
+                        Tracer.d(mytag, "Resource not available");
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(activity, "Resource not available http code:" + response.getStatusLine().getStatusCode(), Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                 } catch (UnknownHostException e) {
                     Tracer.e(mytag, "Unable to resolve host");
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Unable to resolve host", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (ConnectTimeoutException e) {
                     Tracer.e(mytag, "Timeout connecting to domogik");
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Timeout connecting to domogik", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (HttpHostConnectException e) {
+                    Tracer.e(mytag, "Host connection exception");
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Host connection exception", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                     Tracer.e(mytag, e.toString());
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 return result;
             } else {
@@ -150,14 +183,42 @@ public class Rest_com {
                     InputStream instream = urlConnection.getInputStream();
                     result = Abstract.httpsUrl.convertStreamToString(instream);
                     instream.close();
-                    //} catch (HttpHostConnectException e) {
-                    //    e.printStackTrace();
                 } catch (UnknownHostException e) {
                     Tracer.e(mytag, "Unable to resolve host");
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Unable to resolve host", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (ConnectTimeoutException e) {
                     Tracer.e(mytag, "Timeout connecting to domogik");
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Timeout connecting to domogik", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (HttpHostConnectException e) {
+                    Tracer.e(mytag, "Host connection exception");
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Host connection exception", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (IOException e) {
                     Tracer.e(mytag, e.toString());
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "IOException Connection Error", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Tracer.e(mytag, e.toString());
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 return result;
 

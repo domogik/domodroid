@@ -22,6 +22,13 @@
     $ 1.4
       % Version 28
       _ 2017-xx-xx
+      ! Important fill the local wifi SSID in server option to be used as local network otherwise the external address will be used.
+      * Handle connectivity to switch from internal to external domogik ip/port.
+      * Added external domogik rest option.
+      * Move MQ options in a new submenu.
+      * Handle DT_colorCII.
+      * Close #143 Missing Yahoo weather translation.
+      * Close #135 Multiple open/close view make crash as view is not removed first. .
       * Close #125 Refresh widgets if start on map.
       * Correct the double domogik rest call at start.
       * Re-enable the timer period in menu and code.

@@ -499,7 +499,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 // open server config view
                 Intent helpI = new Intent(Activity_Main.this, Preference.class);
                 //todo #94
-                startActivity(helpI);
+                //startActivity(helpI);
             }
         } else {
             // It's not the 1st use after fresh install

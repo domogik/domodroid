@@ -742,7 +742,7 @@ public class WidgetUpdate {
                                 Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
                                 activity.runOnUiThread(new Runnable() {
                                     public void run() {
-                                        Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                     }
                                 });
                                 Bundle b = new Bundle();
@@ -766,10 +766,10 @@ public class WidgetUpdate {
                                 json_widget_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                 if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                     // Cannot get data_type from Rinor server.....
-                                    Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                    Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
                                     activity.runOnUiThread(new Runnable() {
                                         public void run() {
-                                            Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                         }
                                     });
                                     Bundle b = new Bundle();
@@ -797,10 +797,10 @@ public class WidgetUpdate {
                                 JSONArray json_widget_state_0_6 = Rest_com.connect_jsonarray(activity, Tracer, request_since, 30000);
                                 if (json_widget_state_0_6 == null || (json_widget_state_0_6.toString().equals("[]"))) {
                                     // Cannot get data_type from Rinor server.....
-                                    Tracer.e(mytag, "Cannot get data_type from Rinor server.....");
+                                    Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
                                     activity.runOnUiThread(new Runnable() {
                                         public void run() {
-                                            Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                         }
                                     });
                                     Bundle b = new Bundle();
@@ -870,7 +870,7 @@ public class WidgetUpdate {
                                         Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
                                         activity.runOnUiThread(new Runnable() {
                                             public void run() {
-                                                Toast.makeText(activity, "Cannot get sensors from Rinor server", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                             }
                                         });
                                         Bundle b = new Bundle();
@@ -909,10 +909,10 @@ public class WidgetUpdate {
                                         json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                         if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                             // Cannot get data_type from Rinor server.....
-                                            Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
+                                            Tracer.e(mytag, "Cannot get device list from Rinor server.....");
                                             activity.runOnUiThread(new Runnable() {
                                                 public void run() {
-                                                    Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity, R.string.rest_error_getting_device, Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                             Bundle b = new Bundle();
@@ -933,7 +933,7 @@ public class WidgetUpdate {
                                             Tracer.e(mytag, "Cannot get sensors from Rinor server.....");
                                             activity.runOnUiThread(new Runnable() {
                                                 public void run() {
-                                                    Toast.makeText(activity, "Cannot get device list from Rinor server", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity, R.string.rest_error_getting_device, Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                             Bundle b = new Bundle();
@@ -1413,7 +1413,7 @@ public class WidgetUpdate {
                 Tracer.e(mytag, "NO CONNECTION");
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_LONG).show();
                     }
                 });
             }

@@ -51,7 +51,7 @@ public class webview_domogik_admin extends Activity {
                 myWebView.loadUrl("http://" + url + ":" + port);
             }
         } else {
-            Toast.makeText(this, "NO connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_LONG).show();
             this.finish();
         }
 

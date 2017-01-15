@@ -41,6 +41,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,14 +126,14 @@ public class Rest_com {
                         //204,400,404 and else
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(activity, "204 ERROR No Content", Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, R.string.Rest_204_error, Toast.LENGTH_LONG).show();
                             }
                         });
                     } else {
                         Tracer.d(mytag, "Resource not available");
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(activity, "Resource not available http code:" + response.getStatusLine().getStatusCode(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity, R.string.ressource_not_available + response.getStatusLine().getStatusCode(), Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -140,21 +141,21 @@ public class Rest_com {
                     Tracer.e(mytag, "Unable to resolve host");
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Unable to resolve host", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (ConnectTimeoutException e) {
                     Tracer.e(mytag, "Timeout connecting to domogik");
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Timeout connecting to domogik", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.timout_rest, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (HttpHostConnectException e) {
                     Tracer.e(mytag, "Host connection exception");
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Host connection exception", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (Exception e) {
@@ -162,7 +163,7 @@ public class Rest_com {
                     Tracer.e(mytag, e.toString());
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.rest_connection_error, Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -187,28 +188,28 @@ public class Rest_com {
                     Tracer.e(mytag, "Unable to resolve host");
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Unable to resolve host", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (ConnectTimeoutException e) {
                     Tracer.e(mytag, "Timeout connecting to domogik");
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Timeout connecting to domogik", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.timout_rest, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (HttpHostConnectException e) {
                     Tracer.e(mytag, "Host connection exception");
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Host connection exception", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (IOException e) {
                     Tracer.e(mytag, e.toString());
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "IOException Connection Error", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.rest_io_connection_error, Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (Exception e) {
@@ -216,7 +217,7 @@ public class Rest_com {
                     Tracer.e(mytag, e.toString());
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.rest_connection_error, Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -227,7 +228,7 @@ public class Rest_com {
             Tracer.e(mytag, "NO CONNECTION");
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(activity, "NO connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, R.string.no_connection, Toast.LENGTH_LONG).show();
                 }
             });
             return result;

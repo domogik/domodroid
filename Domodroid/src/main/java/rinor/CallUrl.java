@@ -146,7 +146,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         if (string.equals("ERROR")) {
             Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
         } else if (string.equals("NO CONNECTION")) {
-            Toast.makeText(context, "NO connection to send command", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.no_connection_send_command, Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
         }

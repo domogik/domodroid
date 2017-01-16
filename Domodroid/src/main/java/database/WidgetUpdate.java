@@ -887,7 +887,7 @@ public class WidgetUpdate {
                             // Create a false JSONObject like if it was domomgik 0.3
                             //(meaning provide value in an stats: array containing a list of value in jsonobject format)
                             json_widget_state.put("stats", json_widget_state_0_4);
-                            Tracer.d(mytag, "json_widget_state for 0.7 API=" + json_widget_state.toString());
+                            Tracer.d(mytag, "json_widget_state for API >0.7 =" + json_widget_state.toString());
                             //todo move this part in 0.8 api under when MQ.Get will work
                             if (api_version >= 0.8f) {
                                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

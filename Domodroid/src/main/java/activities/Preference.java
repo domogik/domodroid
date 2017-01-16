@@ -19,8 +19,14 @@
 package activities;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -29,6 +35,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +44,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.domogik.domodroid13.R;
+
+import java.util.List;
 
 import Abstract.common_method;
 import database.Cache_management;
@@ -48,6 +57,7 @@ public class Preference extends PreferenceActivity implements
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
     private String action;
+    private WifiManager mWifiManager;
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -88,7 +98,7 @@ public class Preference extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
-
+        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override
@@ -98,6 +108,9 @@ public class Preference extends PreferenceActivity implements
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
+            registerReceiver(mWifiScanReceiver,
+                    new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            mWifiManager.startScan();
         } else if (action != null && action.equals("preferences_mq")) {
             addPreferencesFromResource(R.xml.preferences_mq);
         } else if (action != null && action.equals("preferences_widget")) {
@@ -233,6 +246,26 @@ public class Preference extends PreferenceActivity implements
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");
+        unregisterReceiver(mWifiScanReceiver);
     }
 
+
+    private final BroadcastReceiver mWifiScanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+                List<ScanResult> mScanResults = mWifiManager.getScanResults();
+                // add your logic here
+                Log.e("Preference", mScanResults.toString());
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < mScanResults.size(); i++) {
+                    sb.append(new Integer(i + 1).toString() + ".");
+                    sb.append((mScanResults.get(i)).SSID);
+                    sb.append("\n");
+                    Log.e("Preference", sb.toString());
+                }
+
+            }
+        }
+    };
 }

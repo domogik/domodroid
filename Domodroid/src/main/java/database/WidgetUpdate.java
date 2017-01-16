@@ -1367,7 +1367,7 @@ public class WidgetUpdate {
                     try {
                         Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                         HttpClient httpclient = new DefaultHttpClient();
-                        HttpPut httpput = new HttpPut(url + "/device/" + feature.getDevId());
+                        HttpPut httpput = new HttpPut(url + "device/" + feature.getDevId());
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                         nameValuePairs.add(new BasicNameValuePair("description", new_desc));
                         httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
@@ -1380,7 +1380,7 @@ public class WidgetUpdate {
                 } else {
                     try {
                         Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
-                        HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url + "/device/" + feature.getDevId(), login, password);
+                        HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url + "device/" + feature.getDevId(), login, password);
                         urlConnection.setRequestMethod("PUT");
                         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
                         nameValuePairs.add(new BasicNameValuePair("description", new_desc));

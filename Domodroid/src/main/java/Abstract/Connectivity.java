@@ -30,7 +30,6 @@ public class Connectivity {
             if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
                 if (ni.isConnected()) {
                     on_other_network = true;
-                    Log.e(mytag, "Connected to other data");
                 }
             if (ni.getTypeName().equalsIgnoreCase("WIFI"))
                 if (ni.isConnected()) {

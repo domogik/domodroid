@@ -756,7 +756,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     } else {
                         loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
                         historyPosition++;
-                        history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                        try {
+                            history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                            //Todo solved this bug:
+                        }
                         if (map.get("type").equals("room")) {
                             //close navigationdrawer if select a room
                             mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -800,7 +806,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             if (SP_params.getBoolean("SYNC", false)) {
                 if (!init_done) {
                     historyPosition = 0;
-                    history.add(historyPosition, new String[]{"0", "root"});
+                    try {
+                        history.add(historyPosition, new String[]{"0", "root"});
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                        //Todo solved this bug:
+                    }
                     refresh();
                 }
             } else {
@@ -1126,7 +1138,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     if (SP_params.getBoolean("SYNC", false)) {
                         loadWigets(0, "statistics");
                         historyPosition++;
-                        history.add(historyPosition, new String[]{"0", "statistics"});
+                        try {
+                            history.add(historyPosition, new String[]{"0", "statistics"});
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                            //Todo solved this bug:
+                        }
                     } else {
                         if (AD_notSyncAlert == null)
                             createAlert();

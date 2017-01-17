@@ -41,7 +41,7 @@ public class send_command {
             Url2send = URL + "command/" + command_type + "/" + command_id + "/" + state_progress;
         }
         try {
-            new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
+            new CallUrl().execute(Url2send, login, password, "30000", String.valueOf(SSL));
             Tracer.d(mytag, "Sending the command...");
         } catch (Exception e) {
             Tracer.e(mytag, "ERROR while sending the command");

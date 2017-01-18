@@ -657,7 +657,7 @@ public class Graphics_Manager {
             // "set_rgb_color", "send_text", "pressure", "co2", "tvoc", "insolation",
             //GEOLOC "position_degrees"
             //HUE "light", "brightness", "reachable",
-            // "Set brightness", "Set ON", "Get light status", "Get brightness value"
+            // "Set brightness", "Set ON", "Send alert"
             //IPX800 "state", "input", "count"
             //IRTRANS "send_bintimings", "send_raw", "send_hexa", "code_ir","ack_ir_cmd"
             //K8056 "sensor_switch_relay", "cmd_switch_relay"

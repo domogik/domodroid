@@ -256,7 +256,7 @@ public class Preference extends PreferenceActivity implements
             if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
                 List<ScanResult> mScanResults = mWifiManager.getScanResults();
                 // add your logic here
-                Log.e("Preference", mScanResults.toString());
+                Log.e("Preference scan results", mScanResults.toString());
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < mScanResults.size(); i++) {
                     sb.append(new Integer(i + 1).toString() + ".");

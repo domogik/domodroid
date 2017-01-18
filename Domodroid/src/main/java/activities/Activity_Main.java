@@ -26,6 +26,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -279,6 +283,22 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
+                        /*
+                        //todo #141 ask user if it's is prefered wifi SSID.
+                        ConnectivityManager connectivityManager
+                                = (ConnectivityManager) (context.getSystemService(Context.CONNECTIVITY_SERVICE));
+                        NetworkInfo[] netInfo = connectivityManager.getAllNetworkInfo();
+                        for (NetworkInfo ni : netInfo) {
+                            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                                if (ni.isConnected()) {
+                                    WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+                                    WifiInfo wifiInfo;
+                                    wifiInfo = wifiManager.getConnectionInfo();
+                                    String ssid = wifiInfo.getSSID().replace("\"", "");
+                                    SP_prefEditor.putString("prefered_wifi_ssid",ssid);
+                                            SP_prefEditor.commit();
+                                }
+                        }*/
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
                         common_method.save_params_to_file(Tracer, SP_prefEditor, mytag, getApplicationContext());

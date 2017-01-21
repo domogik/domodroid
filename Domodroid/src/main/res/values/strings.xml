@@ -188,6 +188,7 @@
     <string name="map_autozoom_off">Image set to normal size</string>
 
     <string name="OPTION_server_settings">Server configuration</string>
+    <string name="OPTION_server_qrcode">Auto config server with qrcode</string>
     <string name="OPTION_server_bt_apply">Apply changes</string>
     <string name="OPTION_server_bt_cancel">Cancel</string>
     <string name="OPTION_server_explain">This screen allow server configuration</string>
@@ -200,19 +201,35 @@
     <string name="OPTION_server_Path">Access path</string>
     <string name="OPTION_server_Path_Title">Type path of domogik</string>
     <string name="OPTION_server_Path_Hint">/</string>
+    <string name="OPTION_rest_ssl_option">SSL option</string>
+    <string name="OPTION_no_ssl_use">No ssl use</string>
+    <string name="OPTION_rest_ssl_use">Using https for Rest</string>
+
+    <string name="OPTION_server_external_IP">Domogik external IP Address</string>
+    <string name="OPTION_server_external_IP_Title">SET externalIP or Address</string>
+    <string name="OPTION_server_external_IP_Hint">http://address-rinor</string>
+    <string name="OPTION_server_external_PORT_Title">Type external port of domogik</string>
+    <string name="OPTION_server_external_PORT">Domogik external Port</string>
+    <string name="OPTION_rest_external_ssl_option">Outisde SSL option</string>
+    <string name="OPTION_no_external_ssl_use">No outside ssl use</string>
+    <string name="OPTION_rest_external_ssl_use">Using https when outside</string>
+
     <string name="OPTION_server_Text2">Auto-Update Timer:</string>
     <string name="OPTION_server_Text3">2 Secondes</string>
     <string name="OPTION_server_http_user">Username</string>
     <string name="OPTION_server_http_user_Title">Type your username</string>
     <string name="OPTION_server_http_password">Http auth password</string>
     <string name="OPTION_server_http_password_Title">Type your http auth password</string>
+
+    <string name="OPTION_local_wifi_title">Local WIFI SSID</string>
+    <string name="OPTION_local_wifi">Prefered wifi network SSID</string>
+
     <string name="OPTION_butler_settings">Butler configuration</string>
     <string name="OPTION_butler_name">Butler name</string>
     <string name="OPTION_butler_name_desc">Set the Domogik Butler name</string>
     <string name="OPTION_your_name">Your name</string>
     <string name="OPTION_your_name_desc">Set your name</string>
     <string name="OPTION_butler_explain">This screen allow butler configuration</string>
-    <string name="OPTION_server_qrcode">Auto config server with qrcode</string>
 
     <string name="toast_crash">Domodroid crash</string>
     <string name="usage_settings">Widget configuration</string>
@@ -236,6 +253,7 @@
     <string name="UPDATE_TIMER">Update Timer if no events or mq</string>
     <string name="UPDATE_URL">Url used by update method</string>
     <string name="Rinor_URL">Url used by contact rest</string>
+    <string name="Rinor_external_URL">External Url used by contact rest</string>
     <string name="MQ_address">MQ address</string>
     <string name="Mq_sub_port">MQ sub port</string>
     <string name="Mq_pub_port">MQ pub port</string>

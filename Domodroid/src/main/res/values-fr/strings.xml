@@ -190,7 +190,7 @@
     <string name="OPTION_your_name">Votre nom</string>
     <string name="OPTION_your_name_desc">Définissez votre nom</string>
     <string name="OPTION_butler_explain">Cet écran permet la configuration du majordome</string>
-    <string name="OPTION_server_qrcode">Configuration automatique via QRcode</string>
+    <string name="OPTION_server_qrcode">Conf. auto. via QRcode</string>
     <string name="toast_crash">Domodroid a planté</string>
     <string name="usage_settings">Configurer Widget</string>
     <string name="usage_bt_apply">Appliquer</string>

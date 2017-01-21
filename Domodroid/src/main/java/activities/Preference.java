@@ -246,7 +246,12 @@ public class Preference extends PreferenceActivity implements
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");
-        unregisterReceiver(mWifiScanReceiver);
+        try {
+            //because if not registered it crash.
+            unregisterReceiver(mWifiScanReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 

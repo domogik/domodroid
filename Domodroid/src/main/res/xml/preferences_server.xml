@@ -34,6 +34,12 @@
             android:inputType="number"
             android:key="rinorPort"
             android:title="@string/OPTION_server_PORT" />
+        <CheckBoxPreference
+            android:icon="@drawable/ic_ssl"
+            android:key="ssl_activate"
+            android:summaryOff="No ssl use"
+            android:summaryOn="Using https for Rest"
+            android:title="SSL option" />
         <EditTextPreference
             android:dialogTitle="OPTION_server_external_IP_Title"
             android:icon="@drawable/ic_ip_address"
@@ -46,6 +52,12 @@
             android:inputType="number"
             android:key="rinor_external_Port"
             android:title="OPTION_server_external_PORT" />
+        <CheckBoxPreference
+            android:icon="@drawable/ic_ssl"
+            android:key="ssl_external_activate"
+            android:summaryOff="No ssl use when outside"
+            android:summaryOn="Using https for Rest outside call"
+            android:title="SSL external option" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_Path_Title"
             android:key="rinorPath"
@@ -62,12 +74,6 @@
             android:key="http_auth_password"
             android:password="true"
             android:title="@string/OPTION_server_http_password" />
-        <CheckBoxPreference
-            android:icon="@drawable/ic_ssl"
-            android:key="ssl_activate"
-            android:summaryOff="No ssl use"
-            android:summaryOn="Using https for Rest"
-            android:title="SSL option" />
         <com.pavelsikun.seekbarpreference.SeekBarPreference
             android:defaultValue="125"
             android:inputType="number"

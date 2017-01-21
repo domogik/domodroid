@@ -17,7 +17,7 @@ public class send_command {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
-        final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
+        Boolean SSL = false;
 
         String mytag = "send_it";
         String Url2send;
@@ -26,9 +26,11 @@ public class send_command {
         if (Abstract.Connectivity.on_prefered_Wifi) {
             //If connected to default SSID use local adress
             URL = SP_params.getString("URL", "1.1.1.1");
+            SSL = SP_params.getBoolean("ssl_activate", false);
         } else {
             //If connected to default SSID use external adress
             URL = SP_params.getString("external_URL", "1.1.1.1");
+            SSL = SP_params.getBoolean("ssl_external_activate", false);
         }
         if (api_version >= 0.7f) {
             if (command_type == null) {

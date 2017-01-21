@@ -124,12 +124,19 @@ public class config_with_qrcode extends AppCompatActivity {
                         } catch (Exception e1) {
                             Tracer.e(mytag, "ERROR getting external IP PORT information");
                         }
+                        Boolean external_ssl=false;
+                        try {
+                            external_ssl = jsonresult.getBoolean("u'external_ssl'");
+                        } catch (Exception e1) {
+                            Tracer.e(mytag, "ERROR getting external SSL information");
+                        }
                         String butler_name = jsonresult.getString("butler_name").replace("u'","").replace("'","");
                         prefEditor = params.edit();
                         prefEditor.putString("rinorIP", rinor_IP);
                         prefEditor.putString("rinorPort", rest_port);
                         prefEditor.putString("rinorPath", rest_path);
                         prefEditor.putBoolean("ssl_activate", SSL);
+                        prefEditor.putBoolean("ssl_external_activate", external_ssl);
                         prefEditor.putString("MQaddress", mq_ip);
                         prefEditor.putString("MQsubport", mq_port_sub);
                         prefEditor.putString("MQpubport", mq_port_pub);

@@ -1354,16 +1354,19 @@ public class WidgetUpdate {
         try {
             if (Abstract.Connectivity.IsInternetAvailable()) {
                 String url = null;
+                Boolean SSL = false;
                 if (Abstract.Connectivity.on_prefered_Wifi) {
                     //If connected to default SSID use local adress
                     url = sharedparams.getString("URL", "1.1.1.1");
+                    SSL = sharedparams.getBoolean("ssl_activate", false);
                 } else {
                     //If not connected to default SSID use external adress
                     url = sharedparams.getString("external_URL", "1.1.1.1");
+                    SSL = sharedparams.getBoolean("ssl_external_activate", false);
                 }
 
                 //Todo Move this method somewhere else and make it reusable.
-                if (!sharedparams.getBoolean("ssl_activate", false)) {
+                if (!SSL) {
                     try {
                         Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                         HttpClient httpclient = new DefaultHttpClient();

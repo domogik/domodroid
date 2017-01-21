@@ -36,19 +36,23 @@ public class webview_domogik_admin extends Activity {
         if (Abstract.Connectivity.IsInternetAvailable()) {
             String url;
             String port;
+            Boolean SSL = false;
+
             if (Abstract.Connectivity.on_prefered_Wifi) {
                 //If connected to default SSID use local adress
                 url = SP_params.getString("rinorIP", "1.1.1.1");
                 port = SP_params.getString("rinorPort", "");
+                SSL = SP_params.getBoolean("ssl_activate", false);
             } else {
                 //If not connected to default SSID use external adress
                 url = SP_params.getString("rinorexternal_IP", "1.1.1.1");
                 port = SP_params.getString("rinor_external_Port", "");
+                SSL = SP_params.getBoolean("ssl_external_activate", false);
             }
-            if (SP_params.getBoolean("SSL", false)) {
-                myWebView.loadUrl("https://" + url + ":" + port);
-            } else {
+            if (!SSL) {
                 myWebView.loadUrl("http://" + url + ":" + port);
+            } else {
+                myWebView.loadUrl("https://" + url + ":" + port);
             }
         } else {
             Toast.makeText(this, R.string.no_connection, Toast.LENGTH_LONG).show();

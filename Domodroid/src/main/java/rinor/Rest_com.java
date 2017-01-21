@@ -87,7 +87,7 @@ public class Rest_com {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
-        final Boolean SSL = SP_params.getBoolean("ssl_activate", false);
+        Boolean SSL = false;
 
         String url = null;
 
@@ -97,9 +97,11 @@ public class Rest_com {
             if (Abstract.Connectivity.on_prefered_Wifi) {
                 //If connected to default SSID use local adress
                 url = SP_params.getString("URL", "1.1.1.1") + request;
+                SSL = SP_params.getBoolean("ssl_activate", false);
             } else {
                 //If not connected to default SSID use external adress
                 url = SP_params.getString("external_URL", "1.1.1.1") + request;
+                SSL = SP_params.getBoolean("ssl_external_activate", false);
             }
             if (!SSL) {
                 try {

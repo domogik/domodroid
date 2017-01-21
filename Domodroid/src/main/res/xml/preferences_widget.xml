@@ -59,7 +59,7 @@
             android:icon="@drawable/ic_drawer"
             android:inputType="number"
             android:key="history_length"
-            android:title="Number of item to display in history" />
+            android:title="@string/history_item_number" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:icon="@drawable/ic_stay_current_landscape_black_24dp"

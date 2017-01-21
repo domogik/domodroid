@@ -18,7 +18,7 @@
 
     <Preference
         android:persistent="false"
-        android:title="MQ configuration">
+        android:title="@string/mq_settings">
         <intent
             android:targetPackage="org.domogik.domodroid13"
             android:targetClass="activities.Preference"
@@ -48,7 +48,6 @@
     <Preference
         android:icon="@drawable/ic_home_black_24dp"
         android:persistent="false"
-        android:summary="@string/soon"
         android:title="@string/house_settings">
         <intent
             android:targetPackage="org.domogik.domodroid13"

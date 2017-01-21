@@ -967,4 +967,8 @@
     <string name="rest_error_getting_sensors">Cannot get sensors from Rinor server</string>
     <string name="rest_error_getting_device">Cannot get device list from Rinor server</string>
     <string name="send_alert">Send alert</string>
+    <string name="history_item_number">Nb value to display in history</string>
+    <string name="LOGVIEW">Show log file</string>
+    <string name="default_area_at_start">Default area to open</string>
+    <string name="mq_settings">MQ configuration</string>
 </resources>

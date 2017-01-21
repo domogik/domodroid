@@ -77,21 +77,25 @@
             android:summaryOff="Device id hide"
             android:summaryOn="Device id show"
             android:title="@string/network_Text18" />
+        <!-- TO DEBUG ONLY
         <CheckBoxPreference
             android:key="SYNC"
             android:summaryOff="@string/not_sync"
             android:summaryOn="Sync with a server"
             android:title="Is sync to debug if not" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="domodroid_metrics"
-            android:summaryOff="Metrics disabled"
-            android:summaryOn="Metrics enabled"
-            android:title="Domodroid Metrics informations" />
+         -->
+        <!-- Not handle by server for now
+       <CheckBoxPreference
+           android:defaultValue="true"
+           android:key="domodroid_metrics"
+           android:summaryOff="Metrics disabled"
+           android:summaryOn="Metrics enabled"
+           android:title="Domodroid Metrics informations" />
+        -->
         <Preference
             android:icon="@drawable/ic_bug_report_black_24dp"
             android:persistent="false"
-            android:title="LOGVIEW">
+            android:title="@string/LOGVIEW">
             <intent
                 android:targetClass="logging.LogActivity"
                 android:targetPackage="org.domogik.domodroid13" />

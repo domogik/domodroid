@@ -29,10 +29,10 @@
             android:title="@string/usage_byusagecheckbox" />
         <EditTextPreference
             android:defaultValue="1"
-            android:dialogTitle="Default area to open"
+            android:dialogTitle="@string/default_area_at_start"
             android:inputType="number"
             android:key="load_area_at_start"
             android:summary="@string/soon"
-            android:title="Default area to open" />
+            android:title="@string/default_area_at_start" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -49,7 +49,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
+import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -106,12 +108,12 @@ public class Rest_com {
             if (!SSL) {
                 try {
                     // Set timeout
+                    Tracer.d(mytag, "Url=" + url);
                     HttpParams httpParameters = new BasicHttpParams();
                     HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
                     HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                     DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                     httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-                    Log.e("connect_string", "url=" + url.toString());
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                     final HttpResponse response;
@@ -131,6 +133,8 @@ public class Rest_com {
                                 Toast.makeText(activity, R.string.Rest_204_error, Toast.LENGTH_LONG).show();
                             }
                         });
+                    } else if (response.getStatusLine().getStatusCode() == 301) {
+                        //Todo handle redirection
                     } else {
                         Tracer.d(mytag, "Resource not available");
                         activity.runOnUiThread(new Runnable() {
@@ -183,9 +187,16 @@ public class Rest_com {
                             return new PasswordAuthentication(login, password.toCharArray());
                         }
                     });
-                    InputStream instream = urlConnection.getInputStream();
-                    result = Abstract.httpsUrl.convertStreamToString(instream);
-                    instream.close();
+                    if (urlConnection.getResponseCode() == 200) {
+                        InputStream instream = urlConnection.getInputStream();
+                        result = Abstract.httpsUrl.convertStreamToString(instream);
+                        instream.close();
+                    } else if (urlConnection.getResponseCode() == 301) {
+                        //Todo handle redirection
+                    } else {
+                        Tracer.e(mytag, "urlConnection.getResponseCode() == " + urlConnection.getResponseCode());
+                    }
+
                 } catch (UnknownHostException e) {
                     Tracer.e(mytag, "Unable to resolve host");
                     activity.runOnUiThread(new Runnable() {
@@ -223,6 +234,7 @@ public class Rest_com {
                         }
                     });
                 }
+                Tracer.d(mytag, "result https connection = " + result);
                 return result;
 
             }

@@ -609,25 +609,25 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         this.WM_Agent = null;
         widgetHandler = null;
         if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
+            SharedPreferences.Editor prefEditor = SP_params.edit();
             JSONArray cached_dump = null;
             if (WU_widgetUpdate != null) {
-                Log.e("#124", "dump cache");
+                Tracer.d("#124", "dump cache");
                 try {
                     cached_dump = WU_widgetUpdate.dump_cache_to_json();
+                    // save last value to sharedparams to load them later
+                    prefEditor.putString("sensor_saved_value", cached_dump.toString());
+                    Tracer.d("#124", cached_dump.toString());
+                    Tracer.d("#124", "dump cached");
+                    // save current time stamp to know when the pass was exit.
+                    long currentTimestamp = (System.currentTimeMillis() / 1000);
+                    Tracer.d("#124", "sensor_saved_timestamp" + currentTimestamp);
+                    prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
                 } catch (JSONException e) {
+                    Tracer.e("#124", "sensor_saved at exit error");
                     e.printStackTrace();
                 }
-                Log.e("#124", cached_dump.toString());
-                Log.e("#124", "dump cached");
             }
-
-            SharedPreferences.Editor prefEditor = SP_params.edit();
-            // save last value to sharedparams to load them later
-            prefEditor.putString("sensor_saved_value", cached_dump.toString());
-            // save current time stamp to know when the pass was exit.
-            long currentTimestamp = (System.currentTimeMillis() / 1000);
-            Log.e("#124", "sensor_saved_timestamp" + currentTimestamp);
-            prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
             prefEditor.commit();
         }
 

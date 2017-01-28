@@ -26,10 +26,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -42,7 +38,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -730,6 +725,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                         } else if (!msg.getData().getBoolean("refresh")) {
                             historyPosition++;
                             loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
+                            //redraw the scrollview at the top position of the screen
+                            SV_Main_ScrollView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SV_Main_ScrollView.scrollTo(0, 0);
+                                }
+                            });
                             Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
                             history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
                         }
@@ -774,6 +776,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                             refresh();
                         }
                     } else {
+                        //redraw the scrollview at the top position of the screen
+                        SV_Main_ScrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                SV_Main_ScrollView.scrollTo(0, 0);
+                            }
+                        });
                         loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
                         historyPosition++;
                         try {
@@ -1003,13 +1012,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             }
             update_navigation_menu();
             Tracer.d(mytag, "List item= " + listItem.toString());
-            //redraw the scrollview at the top position of the screen
-            SV_Main_ScrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    SV_Main_ScrollView.scrollTo(0, 0);
-                }
-            });
         } catch (Exception e) {
             Tracer.e(mytag, "Can't load area/room or widgets");
             Tracer.e(mytag, e.toString());

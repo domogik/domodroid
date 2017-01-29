@@ -1045,7 +1045,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             //It is used to have not the same id for a sensor and a commands
                             int tempid = 0;
                             try {
-                                tempid = (json_Commands.getJSONObject(listcommand.getString(y)).getInt("id"));
+                                tempid = json_Commands.getJSONObject(listcommand.getString(y)).getInt("id");
                             } catch (NumberFormatException | JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }

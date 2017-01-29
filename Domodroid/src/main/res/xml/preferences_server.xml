@@ -87,9 +87,10 @@
             sample:msbp_maxValue="600"
             sample:msbp_measurementUnit="s"
             sample:msbp_minValue="60" />
-        <EditTextPreference
+        <ListPreference
             android:dialogTitle="@string/OPTION_local_wifi_title"
             android:key="prefered_wifi_ssid"
+            android:summary="@string/OPTION_local_wifi_summary"
             android:title="@string/OPTION_local_wifi" />
         <EditTextPreference
             android:enabled="false"

@@ -34,8 +34,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.preference.ListPreference;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +45,7 @@ import android.widget.ListView;
 
 import org.domogik.domodroid13.R;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import Abstract.common_method;
@@ -58,6 +59,10 @@ public class Preference extends PreferenceActivity implements
     private static tracerengine Tracer = null;
     private String action;
     private WifiManager mWifiManager;
+    CharSequence[] entries = null;
+    CharSequence[] entryValues = null;
+    ListPreference prefListAnim;
+
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -111,6 +116,15 @@ public class Preference extends PreferenceActivity implements
             registerReceiver(mWifiScanReceiver,
                     new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             mWifiManager.startScan();
+            prefListAnim = (ListPreference) findPreference("prefered_wifi_ssid");
+
+            entries = new String[1];
+            entryValues = new String[1];
+            entries[0] = getString(R.string.wait_wifi_scan_result);
+            entryValues[0] = "";
+            prefListAnim.setEntries(entries);
+            prefListAnim.setEntryValues(entryValues);
+
         } else if (action != null && action.equals("preferences_mq")) {
             addPreferencesFromResource(R.xml.preferences_mq);
         } else if (action != null && action.equals("preferences_widget")) {
@@ -260,16 +274,14 @@ public class Preference extends PreferenceActivity implements
         public void onReceive(Context c, Intent intent) {
             if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
                 List<ScanResult> mScanResults = mWifiManager.getScanResults();
-                // add your logic here
-                Log.e("Preference scan results", mScanResults.toString());
-                StringBuilder sb = new StringBuilder();
+                entries = new String[mScanResults.size()];
+                entryValues = new String[mScanResults.size()];
                 for (int i = 0; i < mScanResults.size(); i++) {
-                    sb.append(new Integer(i + 1).toString() + ".");
-                    sb.append((mScanResults.get(i)).SSID);
-                    sb.append("\n");
-                    Log.e("Preference", sb.toString());
+                    entries[i] = (mScanResults.get(i)).SSID;
+                    entryValues[i] = (mScanResults.get(i)).SSID;
                 }
-
+                prefListAnim.setEntries(entries);
+                prefListAnim.setEntryValues(entryValues);
             }
         }
     };

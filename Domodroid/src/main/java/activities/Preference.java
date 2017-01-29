@@ -45,7 +45,6 @@ import android.widget.ListView;
 
 import org.domogik.domodroid13.R;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import Abstract.common_method;
@@ -60,8 +59,7 @@ public class Preference extends PreferenceActivity implements
     private String action;
     private WifiManager mWifiManager;
     CharSequence[] entries = null;
-    CharSequence[] entryValues = null;
-    ListPreference prefListAnim;
+    ListPreference prefered_wifi_ssid;
 
 
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -116,14 +114,12 @@ public class Preference extends PreferenceActivity implements
             registerReceiver(mWifiScanReceiver,
                     new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             mWifiManager.startScan();
-            prefListAnim = (ListPreference) findPreference("prefered_wifi_ssid");
+            prefered_wifi_ssid = (ListPreference) findPreference("prefered_wifi_ssid");
 
             entries = new String[1];
-            entryValues = new String[1];
             entries[0] = getString(R.string.wait_wifi_scan_result);
-            entryValues[0] = "";
-            prefListAnim.setEntries(entries);
-            prefListAnim.setEntryValues(entryValues);
+            prefered_wifi_ssid.setEntries(entries);
+            prefered_wifi_ssid.setEntryValues(entries);
 
         } else if (action != null && action.equals("preferences_mq")) {
             addPreferencesFromResource(R.xml.preferences_mq);
@@ -275,13 +271,11 @@ public class Preference extends PreferenceActivity implements
             if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
                 List<ScanResult> mScanResults = mWifiManager.getScanResults();
                 entries = new String[mScanResults.size()];
-                entryValues = new String[mScanResults.size()];
                 for (int i = 0; i < mScanResults.size(); i++) {
                     entries[i] = (mScanResults.get(i)).SSID;
-                    entryValues[i] = (mScanResults.get(i)).SSID;
                 }
-                prefListAnim.setEntries(entries);
-                prefListAnim.setEntryValues(entryValues);
+                prefered_wifi_ssid.setEntries(entries);
+                prefered_wifi_ssid.setEntryValues(entries);
             }
         }
     };

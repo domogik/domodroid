@@ -89,6 +89,7 @@
             sample:msbp_minValue="60" />
         <ListPreference
             android:dialogTitle="@string/OPTION_local_wifi_title"
+            android:icon="@drawable/ic_perm_scan_wifi_black_24dp"
             android:key="prefered_wifi_ssid"
             android:summary="@string/OPTION_local_wifi_summary"
             android:title="@string/OPTION_local_wifi" />

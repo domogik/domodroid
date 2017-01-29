@@ -778,15 +778,15 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     JSONArray listsensor = json_Sensors.names();
 
                     //Sort list sensors by sensors id
-                    List<String> sesnoridlist = new ArrayList<String>();
+                    List<Integer> sensoridlist = new ArrayList<Integer>();
                     if (list_sensors > 0) {
                         for (int y = 0; y < list_sensors; y++)
                             try {
-                                sesnoridlist.add(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
+                                sensoridlist.add(json_Sensors.getJSONObject(listsensor.getString(y)).getInt("id"));
                             } catch (JSONException e) {
                                 Tracer.e(mytag, "sorting error" + e.toString());
                             }
-                        Collections.sort(sesnoridlist);
+                        Collections.sort(sensoridlist);
                     }
                     //List all sensors
                     for (int y = 0; y < list_sensors; y++) {
@@ -855,7 +855,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 //#85 here place_id was false
                                 Widget.put("place_id", numberofroom + list_usage.indexOf(usage) + 1); //id_rooms);
                                 Widget.put("device_feature_id", json_Sensors.getJSONObject(listsensor.getString(y)).getString("id"));
-                                Widget.put("id", k + sesnoridlist.indexOf(json_Sensors.getJSONObject(listsensor.getString(y)).getString("id")));
+                                Widget.put("id", k + sensoridlist.indexOf(json_Sensors.getJSONObject(listsensor.getString(y)).getInt("id")));
                             } catch (JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }
@@ -969,11 +969,11 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     JSONArray listcommand = json_Commands.names();
 
                     //Sort list commands by commands id
-                    List<String> commandidlist = new ArrayList<String>();
+                    List<Integer> commandidlist = new ArrayList<Integer>();
                     if (list_commands > 0) {
                         for (int y = 0; y < list_commands; y++)
                             try {
-                                commandidlist.add(json_Commands.getJSONObject(listcommand.getString(y)).getString("id"));
+                                commandidlist.add(json_Commands.getJSONObject(listcommand.getString(y)).getInt("id"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -1045,7 +1045,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             //It is used to have not the same id for a sensor and a commands
                             int tempid = 0;
                             try {
-                                tempid = Integer.parseInt(json_Commands.getJSONObject(listcommand.getString(y)).getString("id"));
+                                tempid = (json_Commands.getJSONObject(listcommand.getString(y)).getInt("id"));
                             } catch (NumberFormatException | JSONException e1) {
                                 Tracer.e(mytag, e1.toString());
                             }

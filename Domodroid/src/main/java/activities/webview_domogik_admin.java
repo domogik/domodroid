@@ -2,9 +2,11 @@ package activities;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -32,7 +34,7 @@ public class webview_domogik_admin extends Activity {
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        myWebView.setWebViewClient(new WebViewClient());
+        myWebView.setWebViewClient(new MyWebViewClient());
         if (Abstract.Connectivity.IsInternetAvailable()) {
             String url;
             String port;
@@ -71,5 +73,13 @@ public class webview_domogik_admin extends Activity {
         // If it wasn't the Back key or there's no web page history, bubble up to the default
         // system behavior (probably exit the activity)
         return super.onKeyDown(keyCode, event);
+    }
+    private class MyWebViewClient extends WebViewClient {
+        //Allow to open webview even if untrusted SSL cert
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler,
+                                       SslError error) {
+            handler.proceed();
+        }
     }
 }

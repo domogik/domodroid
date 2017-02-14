@@ -367,6 +367,40 @@ class Widgets_Manager {
                         tmpPan.addView(list);
                         Tracer.i(mytag, "   ==> Graphical_List");
                     }
+                } else if (Value_type.equals("scaling")) {
+                    if (!parameters.contains("command")) {
+                        if (params.getBoolean("Graph_CHOICE", false)) {
+                            Tracer.d(mytag, "add Graphical_Info_with_achartengine for " + label + " (" + DevId + ") key=" + State_key);
+                            Graphical_Info_with_achartengine info_with_achartengine = new Graphical_Info_with_achartengine(Tracer, activity,
+                                    widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                            info_with_achartengine.setLayoutParams(layout_param);
+                            Graphical_Info_with_achartengine.container = tmpPan;
+                            tmpPan.addView(info_with_achartengine);
+                    /* Todo when #89
+                    Graphical_Info_with_mpandroidchart info_with_mpandroidchart = new Graphical_Info_with_mpandroidchart(Tracer, activity, URL,
+                    widgetSize, session_type, id, zone, params, feature, widgetHandler);
+                    info_with_mpandroidchart.setLayoutParams(layout_param);
+                    Graphical_Info_with_mpandroidchart.container = tmpPan;
+                    tmpPan.addView(info_with_mpandroidchart);
+                    Tracer.i(mytag, "   ==> Graphical_Info_with_achartengine + Graphic");
+                    */
+                        } else {
+                            Tracer.d(mytag, "add Graphical_Info for " + label + " (" + DevId + ") key=" + State_key);
+                            Graphical_Info info = new Graphical_Info(Tracer, activity,
+                                    widgetSize, session_type, id, zone, params, update_timer, aListFeature, widgetHandler);
+                            info.setLayoutParams(layout_param);
+                            info.with_graph = true;
+                            Graphical_Info.container = tmpPan;
+                            tmpPan.addView(info);
+                            Tracer.i(mytag, "   ==> Graphical_Info + Graphic");
+                        }
+                    } else {
+                        Graphical_Range variator = new Graphical_Range(Tracer, activity,
+                                widgetSize, session_type, id, zone, params, aListFeature, widgetHandler);
+                        Graphical_Range.container = tmpPan;
+                        tmpPan.addView(variator);
+                        Tracer.i(mytag, "   ==> Graphical_Range");
+                    }
                 } else {
                     Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, id,
                             activity.getString(R.string.contact_devs), "", "",

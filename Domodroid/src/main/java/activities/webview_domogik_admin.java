@@ -81,7 +81,7 @@ public class webview_domogik_admin extends Activity {
         //Allow to open webview even if untrusted SSL cert
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
             builder.setMessage(R.string.notification_error_ssl_cert_invalid);
             builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
                 @Override

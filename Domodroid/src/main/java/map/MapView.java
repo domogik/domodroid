@@ -922,6 +922,101 @@ public class MapView extends View {
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
                                     paint_text);
 
+                    } else if (featureMap.getValue_type().equals("scaling")) {
+                        if (!parameters.contains("command")) {
+                            float formatedValue = 0;
+                            if (value != null && !value.equals("")) {
+                                //formatedValue = Round(Float.parseFloat(value), 2);
+                                formatedValue = Abstract.calcul.Round_float(Float.parseFloat(value), 2);
+                                Tracer.v(mytag, " Round the value" + value + " to " + formatedValue);
+
+                                try {
+                                    //Basilic add, number feature has a unit parameter
+                                    jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
+                                    String test_unite = jparam.getString("unit");
+                                    //todo centralise with display_sensor_info class
+                                    //# 30 convert byte unit.
+                                    switch (test_unite) {
+                                        case "b":
+                                            value = android.text.format.Formatter.formatFileSize(activity, Long.parseLong(value));
+                                            break;
+                                        case "ko":
+                                            value = android.text.format.Formatter.formatFileSize(activity, Long.parseLong(value) * 1024);
+                                            break;
+                                        default:
+                                            value = formatedValue + " " + test_unite;
+                                            break;
+                                    }
+                                } catch (JSONException e) {
+                                    //Basilic : no sure that the key state was the better way to find unit
+                                    if (featureMap.getState_key().equalsIgnoreCase("temperature"))
+                                        value = featureMap.getCurrentState() + " °C";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("pressure"))
+                                        value = featureMap.getCurrentState() + " hPa";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("humidity"))
+                                        value = featureMap.getCurrentState() + " %";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("percent"))
+                                        value = featureMap.getCurrentState() + " %";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("visibility"))
+                                        value = featureMap.getCurrentState() + " km";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("chill"))
+                                        value = featureMap.getCurrentState() + " °C";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("speed"))
+                                        value = featureMap.getCurrentState() + " km/h";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("drewpoint"))
+                                        value = featureMap.getCurrentState() + " °C";
+                                    else if (featureMap.getState_key().equalsIgnoreCase("condition-code") || featureMap.getState_key().toLowerCase().contains("condition_code") || featureMap.getState_key().toLowerCase().contains("current_code")) {
+                                        //Add try catch to avoid other case that make #1794
+                                        try {
+                                            //todo use xml and weather fonts here
+                                            //typeface apply to canvas paint_text
+                                            Typeface typeface = Typeface.createFromAsset(activity.getAssets(), "fonts/weathericons-regular-webfont.ttf");
+                                            paint_text.setTypeface(typeface);
+                                            value = activity.getString(Graphics_Manager.Names_conditioncodes(getContext(), Integer.parseInt(featureMap.getCurrentState())));
+                                        } catch (Exception e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    }
+                                }
+                                if (value == null)
+                                    value = "";
+
+                                for (int j = 1; j < 5; j++)
+                                    paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                                paint_text.setTextSize(texsize * scale + 0.5f + 4);
+                                if (featureMap != null) {
+                                    Tracer.d(mytag, "Drawing value for " + label + "Value = " + value + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+                                    canvasWidget.drawText(value,
+                                            (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                            (featureMap.getPosy() * currentScale) + text_Offset_Y - (10 * (int) scale),
+                                            paint_text);
+                                    paint_text.setTextSize(texsize * scale + 0.5f - 1);
+                                    paint_text.setTypeface(Typeface.DEFAULT);
+                                    Tracer.d(mytag, "Drawing label " + label + " X = " + featureMap.getPosx() + " Y = " + featureMap.getPosy());
+
+                                }
+                            }
+                            if (!params.getBoolean("HIDE", false))
+                                canvasWidget.drawText(label,
+                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
+                                        paint_text);
+                        } else {
+                            //scaling with commands
+                            for (int j = 1; j < 5; j++)
+                                paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
+                            paint_text.setTextSize(texsize * scale + 0.5f - 2);
+                            canvasWidget.drawText(value,
+                                    (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                    (featureMap.getPosy() * currentScale) + text_Offset_Y,
+                                    paint_text);
+                            if (!params.getBoolean("HIDE", false)) {
+                                canvasWidget.drawText(label,
+                                        (featureMap.getPosx() * currentScale) + text_Offset_X,
+                                        (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
+                                        paint_text);
+                            }
+                        }
                     } else {
                         // This widget is'nt alive anymore...
                         Tracer.e(mytag, "Could not draw " + featureMap.getId());
@@ -1145,6 +1240,50 @@ public class MapView extends View {
                         widgetSize, 0, Id, zone, params, feature, handler);
                 list.with_list = parameters.contains("command");
                 panel_widget.addView(list);
+            }
+        } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
+            if (!parameters.contains("command")) {
+                Graphical_History info_with_history = new Graphical_History(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(info_with_history);
+            } else {
+                Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                panel_widget.addView(info_commands);
+            }
+        } else if (feature.getValue_type().equals("scaling")) {
+            if (parameters.contains("command")) {
+                //display range widget for DT_scaling command with number
+                if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")) {
+                    Graphical_Range variator = new Graphical_Range(Tracer, activity,
+                            widgetSize, 0, Id, zone, params, feature, handler);
+                    Graphical_Range.container = (FrameLayout) panel_widget;
+                    panel_widget.addView(variator);
+                } else {
+                    Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
+                            widgetSize, 0, Id, zone, params, feature, handler);
+                    Graphical_Info_commands.container = (FrameLayout) panel_widget;
+                    panel_widget.addView(info_commands);
+                }
+
+            } else if (params.getBoolean("Graph_CHOICE", false)) {
+                Tracer.i(mytag, "Graphical_Info_with_achartengine created");
+                Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
+                panel_widget.addView(info1);
+                /*todo when #89
+                Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
+                Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, activity, URL,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
+                panel_widget.addView(info1);
+                */
+            } else {
+                Graphical_Range variator = new Graphical_Range(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Range.container = (FrameLayout) panel_widget;
+                panel_widget.addView(variator);
             }
         } else {
             Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",

@@ -1145,7 +1145,6 @@ public class MapView extends View {
                     Graphical_Info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
                 }
-
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
@@ -1254,18 +1253,10 @@ public class MapView extends View {
         } else if (feature.getValue_type().equals("scaling")) {
             if (parameters.contains("command")) {
                 //display range widget for DT_scaling command with number
-                if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")) {
-                    Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Range.container = (FrameLayout) panel_widget;
-                    panel_widget.addView(variator);
-                } else {
-                    Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Info_commands.container = (FrameLayout) panel_widget;
-                    panel_widget.addView(info_commands);
-                }
-
+                Graphical_Range variator = new Graphical_Range(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, feature, handler);
+                Graphical_Range.container = (FrameLayout) panel_widget;
+                panel_widget.addView(variator);
             } else if (params.getBoolean("Graph_CHOICE", false)) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
@@ -1280,10 +1271,10 @@ public class MapView extends View {
                 panel_widget.addView(info1);
                 */
             } else {
-                Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Range.container = (FrameLayout) panel_widget;
-                panel_widget.addView(variator);
+                Graphical_Info info = new Graphical_Info(Tracer, activity,
+                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
+                Graphical_Info.container = (FrameLayout) panel_widget;
+                panel_widget.addView(info);
             }
         } else {
             Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",

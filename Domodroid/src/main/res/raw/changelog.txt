@@ -20,8 +20,10 @@
   </head>
   <body>
     $ 1.4
-      % Version 28
+      % Version 29
       _ 2017-xx-xx
+      % Version 28
+      _ 2017-02-15
       ! Important fill the local wifi SSID in server option to be used as local network otherwise external access will never work.
       * Handle connectivity to switch from internal to external domogik ip/port.
       * Added external domogik rest option.

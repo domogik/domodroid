@@ -82,7 +82,30 @@ public class webview_domogik_admin extends Activity {
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
             AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
-            builder.setMessage(R.string.notification_error_ssl_cert_invalid);
+            int message ;
+            switch(error.getPrimaryError()) {
+                case SslError.SSL_DATE_INVALID:
+                    message = R.string.notification_error_ssl_date_invalid;
+                    break;
+                case SslError.SSL_EXPIRED:
+                    message = R.string.notification_error_ssl_expired;
+                    break;
+                case SslError.SSL_IDMISMATCH:
+                    message = R.string.notification_error_ssl_idmismatch;
+                    break;
+                case SslError.SSL_INVALID:
+                    message = R.string.notification_error_ssl_invalid;
+                    break;
+                case SslError.SSL_NOTYETVALID:
+                    message = R.string.notification_error_ssl_not_yet_valid;
+                    break;
+                case SslError.SSL_UNTRUSTED:
+                    message = R.string.notification_error_ssl_untrusted;
+                    break;
+                default:
+                    message = R.string.notification_error_ssl_cert_invalid;
+            }
+            builder.setMessage(message);
             builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

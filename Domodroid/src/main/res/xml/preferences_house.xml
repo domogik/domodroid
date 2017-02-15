@@ -28,6 +28,7 @@
             android:summaryOn="@string/usage_byusage"
             android:title="@string/usage_byusagecheckbox" />
         <EditTextPreference
+            android:enabled="false"
             android:defaultValue="1"
             android:dialogTitle="@string/default_area_at_start"
             android:inputType="number"

@@ -1,10 +1,12 @@
 package activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -74,12 +76,29 @@ public class webview_domogik_admin extends Activity {
         // system behavior (probably exit the activity)
         return super.onKeyDown(keyCode, event);
     }
+
     private class MyWebViewClient extends WebViewClient {
         //Allow to open webview even if untrusted SSL cert
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler,
-                                       SslError error) {
-            handler.proceed();
+        public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.notification_error_ssl_cert_invalid);
+            builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    handler.proceed();
+                }
+            });
+            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    handler.cancel();
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
+
+
 }

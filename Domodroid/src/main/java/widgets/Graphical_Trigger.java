@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +42,6 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
 
     private Graphical_Trigger_Button trigger;
     private String address;
-    private final String url;
     private Handler handler;
     private Thread threadCommande;
     private String type;
@@ -59,22 +59,20 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private JSONObject jparam;
 
     public Graphical_Trigger(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Trigger(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -134,18 +132,18 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         String[] model = feature.getDevice_type_id().split("\\.");
         type = model[0];
 
-        TextView state = new TextView(context);
+        TextView state = new TextView(activity);
         state.setTextColor(Color.BLACK);
         state.setText(stateS);
         LL_infoPan.addView(state);
 
         //button animated
-        trigger = new Graphical_Trigger_Button(context);
+        trigger = new Graphical_Trigger_Button(activity, feature.getIcon_name());
         trigger.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         trigger.setOnClickListener(this);
 
         //unusable
-        TextView unusable = new TextView(context);
+        TextView unusable = new TextView(activity);
         unusable.setText(R.string.unusable);
         unusable.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
         unusable.setTextColor(Color.BLACK);
@@ -166,7 +164,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         if (api_version >= 0.7f) {
             command = "1";
         }
-        send_command.send_it(Tracer, url, command_id, command_type, command, login, password, SSL, api_version);
+        send_command.send_it(activity, Tracer, command_id, command_type, command, api_version);
     }
 
 }

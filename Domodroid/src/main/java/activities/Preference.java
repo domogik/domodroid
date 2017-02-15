@@ -19,9 +19,14 @@
 package activities;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -29,6 +34,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.preference.ListPreference;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,6 +44,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.domogik.domodroid13.R;
+
+import java.util.List;
 
 import Abstract.common_method;
 import database.Cache_management;
@@ -49,6 +57,10 @@ public class Preference extends PreferenceActivity implements
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
     private String action;
+    private WifiManager mWifiManager;
+    CharSequence[] entries = null;
+    ListPreference prefered_wifi_ssid;
+
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -89,7 +101,7 @@ public class Preference extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
-
+        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override
@@ -99,6 +111,18 @@ public class Preference extends PreferenceActivity implements
         action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
+            registerReceiver(mWifiScanReceiver,
+                    new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            mWifiManager.startScan();
+            prefered_wifi_ssid = (ListPreference) findPreference("prefered_wifi_ssid");
+
+            entries = new String[1];
+            entries[0] = getString(R.string.wait_wifi_scan_result);
+            prefered_wifi_ssid.setEntries(entries);
+            prefered_wifi_ssid.setEntryValues(entries);
+
+        } else if (action != null && action.equals("preferences_mq")) {
+            addPreferencesFromResource(R.xml.preferences_mq);
         } else if (action != null && action.equals("preferences_widget")) {
             addPreferencesFromResource(R.xml.preferences_widget);
         } else if (action != null && action.equals("preferences_map")) {
@@ -172,6 +196,7 @@ public class Preference extends PreferenceActivity implements
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String temp = params.getString("rinorIP", "");
+        String extrenal_temp = params.getString("rinorexternal_IP", "");
         Boolean SSL = params.getBoolean("ssl_activate", false);
         SharedPreferences.Editor prefEditor;
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
@@ -179,8 +204,10 @@ public class Preference extends PreferenceActivity implements
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", "https://" + temp);
+                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp);
             } else {
                 prefEditor.putString("rinor_IP", "http://" + temp);
+                prefEditor.putString("rinor_external_IP", "http://" + extrenal_temp);
             }
             prefEditor.commit();
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
@@ -188,8 +215,10 @@ public class Preference extends PreferenceActivity implements
             prefEditor = params.edit();
             if (SSL) {
                 prefEditor.putString("rinor_IP", temp.replace("https://", ""));
+                prefEditor.putString("rinor_external_IP", extrenal_temp.replace("https://", ""));
             } else {
                 prefEditor.putString("rinor_IP", temp.replace("http://", ""));
+                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp.replace("http://", ""));
             }
             prefEditor.commit();
         }
@@ -205,6 +234,17 @@ public class Preference extends PreferenceActivity implements
         else
             format_urlAccess = urlAccess.concat("/");
         prefEditor.putString("URL", format_urlAccess);
+
+        String external_urlAccess = params.getString("rinor_external_IP", "1.1.1.1") + ":" + params.getString("rinor_external_Port", "40405") + params.getString("rinorPath", "/");
+        external_urlAccess = external_urlAccess.replaceAll("[\r\n]+", "");
+        external_urlAccess = external_urlAccess.replaceAll(" ", "%20");
+        String external_format_urlAccess;
+        if (external_urlAccess.lastIndexOf("/") == external_urlAccess.length() - 1)
+            external_format_urlAccess = external_urlAccess;
+        else
+            external_format_urlAccess = external_urlAccess.concat("/");
+        prefEditor.putString("external_URL", external_format_urlAccess);
+
         prefEditor.commit();
 
         //Save to file
@@ -212,9 +252,31 @@ public class Preference extends PreferenceActivity implements
         common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
+        external_urlAccess = params.getString("external_URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");
+        try {
+            //because if not registered it crash.
+            unregisterReceiver(mWifiScanReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
+
+    private final BroadcastReceiver mWifiScanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+                List<ScanResult> mScanResults = mWifiManager.getScanResults();
+                entries = new String[mScanResults.size()];
+                for (int i = 0; i < mScanResults.size(); i++) {
+                    entries[i] = (mScanResults.get(i)).SSID;
+                }
+                prefered_wifi_ssid.setEntries(entries);
+                prefered_wifi_ssid.setEntryValues(entries);
+            }
+        }
+    };
 }

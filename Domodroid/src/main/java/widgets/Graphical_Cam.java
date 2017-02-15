@@ -39,7 +39,6 @@ import misc.tracerengine;
 public class Graphical_Cam extends Basic_Graphical_widget implements OnClickListener {
 
     private String url;
-    private final Context context;
     private static String mytag;
     private tracerengine Tracer = null;
     public static FrameLayout container = null;
@@ -52,25 +51,24 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     Activity activity;
 
     public Graphical_Cam(tracerengine Trac,
-                         final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                          final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.Tracer = Trac;
-        this.context = context;
-        this.activity = context;
+        this.activity = activity;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Cam(tracerengine Trac,
-                         final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                          final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.Tracer = Trac;
-        this.context = context;
+        this.activity = activity;
         this.params = params;
         this.session_type = session_type;
         onCreate();
@@ -152,17 +150,17 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
             if (url.equals("Mjpeg video url") || url.equals("Virtual Video"))
                 url = session.getValue();
             if (!url.equals(null)) {
-                Intent intent = new Intent(context, Activity_Cam.class);
+                Intent intent = new Intent(activity, Activity_Cam.class);
                 Bundle b = new Bundle();
                 b.putString("url", url);
                 //Tracer.i(mytag, "Opening camera at: " + url);
                 b.putString("name", name_cam);
                 intent.putExtras(b);
                 int requestCode = 1;
-                if (context.toString().contains("Main")) {
+                if (activity.toString().contains("Main")) {
                     activity.startActivityForResult(intent, requestCode);
-                } else if (context.toString().contains("Map")) {
-                    context.startActivity(intent);
+                } else if (activity.toString().contains("Map")) {
+                    activity.startActivity(intent);
                 }
             }
         } catch (Exception e) {

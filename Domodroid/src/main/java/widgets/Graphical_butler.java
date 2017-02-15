@@ -18,32 +18,30 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import misc.tracerengine;
-import mq.Main;
-
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
+import misc.tracerengine;
+import mq.Main;
+
 public class Graphical_butler extends Basic_Graphical_widget implements OnClickListener {
 
     private final String url;
-    private final Context context;
+    private final Activity activity;
     private static String mytag;
     private tracerengine Tracer = null;
     private static final FrameLayout container = null;
     private final String name_butler;
 
-    public Graphical_butler(tracerengine Trac, Activity context, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type,
+    public Graphical_butler(tracerengine Trac, Activity activity, int id, int dev_id, String name, String state_key, String url, String usage, int widgetSize, int session_type, int place_id, String place_type,
                             SharedPreferences params, Handler handler) {
-        super(params, context, Trac, id, name, state_key, usage, widgetSize, place_id, place_type, mytag, container, handler);
-        this.context = context;
+        super(params, activity, Trac, id, name, state_key, usage, widgetSize, place_id, place_type, mytag, container, handler);
+        this.activity = activity;
         this.Tracer = Trac;
         this.name_butler = name;
         this.url = url;
@@ -58,13 +56,13 @@ public class Graphical_butler extends Basic_Graphical_widget implements OnClickL
 
     public void onClick(View v) {
         if (!url.equals(null)) {
-            Intent intent = new Intent(context, Main.class);
+            Intent intent = new Intent(activity, Main.class);
             Bundle b = new Bundle();
             b.putString("url", url);
             Tracer.v(mytag, "" + url);
             b.putString("name", name_butler);
             intent.putExtras(b);
-            context.startActivity(intent);
+            activity.startActivity(intent);
         }
     }
 }

@@ -52,12 +52,10 @@ import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
 
-import static activities.Activity_Main.context;
-
 @SuppressWarnings("ALL")
 public class Graphical_Boolean extends Basic_Graphical_widget implements View.OnClickListener {
 
-    private ListView listeChoices = new ListView(context);
+    private ListView listeChoices = new ListView(activity);
     private ArrayList<HashMap<String, String>> listItem;
     private TextView state;
     private RelativeTimeTextView TV_Timestamp;
@@ -77,7 +75,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
     private int dev_id;
     private final int session_type;
     private final SharedPreferences params;
-    private final String url;
     private String usage;
     private String address;
     private Boolean realtime = false;
@@ -88,22 +85,20 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
     private int sizeint;
 
     public Graphical_Boolean(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Boolean(tracerengine Trac,
-                             final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                              final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -156,12 +151,12 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         setOnClickListener(this);
 
         //state
-        state = new TextView(context);
+        state = new TextView(activity);
         state.setTextColor(Color.BLACK);
 
-        state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, "unknown")));
+        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, "unknown")));
 
-        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp = new RelativeTimeTextView(activity, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -171,7 +166,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         params.gravity = Gravity.RIGHT;
 
         //boolean on/off
-        bool = new ImageView(context);
+        bool = new ImageView(activity);
         bool.setImageResource(R.drawable.boolean_n_a);
         bool.setLayoutParams(params);
 
@@ -194,9 +189,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                         Long Value_timestamplong = null;
                         Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
@@ -207,7 +202,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 //note sure if it must be kept as set previously as default color.
                                 change_this_icon(0);
                                 try {
-                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_0);
                                 }
@@ -216,14 +211,14 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 //change color if statue=high to (usage, 2) means on
                                 change_this_icon(2);
                                 try {
-                                    state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     state.setText(stateS + " : " + Value_1);
                                 }
                             } else {
                                 bool.setImageResource(R.drawable.boolean_n_a);
                                 change_this_icon(0);
-                                state.setText(stateS + " : " + context.getString(translate.do_translate(getContext(), Tracer, "unknown")));
+                                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, "unknown")));
                             }
                         } catch (Exception e) {
                             Tracer.e(mytag, "handler error device " + name);
@@ -283,7 +278,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
 
     public void onClick(View arg0) {
         //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-        float size = ((nb_item_for_history * 35) + 0.5f) * context.getResources().getDisplayMetrics().density + 0.5f;
+        float size = ((nb_item_for_history * 35) + 0.5f) * activity.getResources().getDisplayMetrics().density + 0.5f;
         sizeint = (int) size;
         currentint = LL_background.getHeight();
         listItem = new ArrayList<>();
@@ -296,8 +291,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                 e.printStackTrace();
             }
             Tracer.d(mytag, "getting history");
-            display_last_value sync = new display_last_value();
-            sync.execute();
+            new display_last_value().execute();
         } else {
             isopen = false;
             LL_background.removeView(listeChoices);
@@ -311,20 +305,22 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(context, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
         }
 
         protected Void doInBackground(Void... params) {
             JSONObject json_LastValues = null;
             JSONArray itemArray = null;
+            Tracer.i(mytag, "api_version =" + api_version);
+
             try {
                 if (api_version <= 0.6f) {
-                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                    json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 30000, SSL);
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                    json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
                 } else if (api_version >= 0.7f) {
-                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
                     //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 30000, SSL);
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
                     json_LastValues = new JSONObject();
                     json_LastValues.put("stats", json_LastValues_0_4);
 
@@ -336,19 +332,19 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                             HashMap<String, String> map = new HashMap<>();
                             if (itemArray.getJSONObject(i).getString("TV_Value").equals(value0) || itemArray.getJSONObject(i).getString("TV_Value").equals("0")) {
                                 try {
-                                    map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                    map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     map.put("TV_Value", Value_0);
                                 }
                             } else if (itemArray.getJSONObject(i).getString("TV_Value").equals(value1) || itemArray.getJSONObject(i).getString("TV_Value").equals("1")) {
                                 try {
-                                    map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                    map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     map.put("TV_Value", Value_1);
                                 }
                             } else {
                                 try {
-                                    map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, "N/A")));
+                                    map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, "N/A")));
                                 } catch (Exception e1) {
                                     map.put("TV_Value", "N/A");
                                 }
@@ -366,19 +362,19 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                             HashMap<String, String> map = new HashMap<>();
                             if (itemArray.getJSONObject(i).getString("value_str").equals(value0) || itemArray.getJSONObject(i).getString("value_str").equals("0")) {
                                 try {
-                                    map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                                    map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
                                 } catch (Exception e1) {
                                     map.put("TV_Value", Value_0);
                                 }
                             } else if (itemArray.getJSONObject(i).getString("value_str").equals(value1) || itemArray.getJSONObject(i).getString("value_str").equals("1")) {
                                 try {
-                                    map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                                    map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
                                 } catch (Exception e1) {
                                     map.put("TV_Value", Value_1);
                                 }
                             } else {
                                 try {
-                                    map.put("TV_Value", context.getString(translate.do_translate(getContext(), Tracer, "N/A")));
+                                    map.put("TV_Value", activity.getString(translate.do_translate(getContext(), Tracer, "N/A")));
                                 } catch (Exception e1) {
                                     map.put("TV_Value", "N/A");
                                 }
@@ -387,7 +383,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                                 map.put("date", itemArray.getJSONObject(i).getString("date"));
                             } else if (api_version >= 0.8f) {
                                 String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, context));
+                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, activity));
                             }
                             listItem.add(map);
                             Tracer.d(mytag, map.toString());
@@ -404,7 +400,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         }
 
         protected void onPostExecute(Void result) {
-            SimpleAdapter adapter_feature = new SimpleAdapter(context, listItem,
+            SimpleAdapter adapter_feature = new SimpleAdapter(activity, listItem,
                     R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
             listeChoices.setAdapter(adapter_feature);
             listeChoices.setScrollingCacheEnabled(false);

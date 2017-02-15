@@ -71,7 +71,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private String parameters;
     private final int session_type;
     private final SharedPreferences params;
-    private String url = null;
     private int dpiClassification;
     private final int update;
     private TextView state_key_view;
@@ -82,11 +81,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private boolean isopen = false;
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         this.update = update;
@@ -94,11 +92,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     }
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
                           final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         this.update = update;
@@ -135,18 +132,18 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         Tracer.i(mytag, "New instance for name = " + name + " state_key = " + state_key);
 
         //state key
-        state_key_view = new TextView(context);
+        state_key_view = new TextView(activity);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //TV_Value
-        TV_Value = new TextView(context);
+        TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
         //TV_Timestamp
-        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp = new RelativeTimeTextView(activity, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -158,19 +155,18 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         if (with_graph) {
 
             //feature panel 2 which will contain graphic
-            featurePan2 = new LinearLayout(context);
+            featurePan2 = new LinearLayout(activity);
             featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
-            canvas = new Graphical_Info_View(Tracer, context, params, parameters);
+            canvas = new Graphical_Info_View(activity, Tracer, activity, params, parameters);
             canvas.dev_id = dev_id;
             canvas.id = feature.getId();
             canvas.state_key = state_key;
-            canvas.url = url;
             canvas.update = update;
 
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             featurePan2_buttons = layoutInflater.inflate(R.layout.graph_buttons, null);
             View v = null;
 
@@ -232,9 +228,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
 
                     Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
-                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, context, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
 
                     //Change icon if in %
                     if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
@@ -322,7 +318,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     public void onClick(View arg0) {
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-            float size = Float_graph_size * context.getResources().getDisplayMetrics().density + 0.5f;
+            float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;
             int sizeint = (int) size;
             if (!isopen) {
                 this.isopen = true;

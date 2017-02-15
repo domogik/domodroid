@@ -28,8 +28,8 @@ import org.json.JSONObject;
 
 import java.util.TimerTask;
 
-import Abstract.translate;
 import Abstract.display_sensor_info;
+import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -38,7 +38,7 @@ import misc.Color_Progress;
 import misc.Color_RGBField;
 import misc.Color_Result;
 import misc.tracerengine;
-import rinor.CallUrl;
+import rinor.send_command;
 
 public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBarChangeListener, OnClickListener {
 
@@ -53,7 +53,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private Color_Progress seekBarRGBYBar;
     private Color_RGBField rgbView;
     private Color_Result resultView;
-    private final String url;
     private Animation animation;
     private boolean touching;
     private int updating = 0;
@@ -62,8 +61,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String argbS = "";
     private Message msg;
     private static String mytag;
-    private String type;
-    private String address;
     public static FrameLayout container = null;
     private static FrameLayout myself = null;
     private Boolean switch_state = false;
@@ -93,22 +90,20 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private final int session_type;
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Feature feature, Handler handler) {
-        super(params, context, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.url = url;
         this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity context, String url, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
                            final Entity_Map feature_map, Handler handler) {
-        super(params, context, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
-        this.url = url;
         this.session_type = session_type;
         this.params = params;
         onCreate();
@@ -119,7 +114,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
         String state_key = feature.getState_key();
-        this.address = feature.getAddress();
+        command_id = feature.getAddress();
         mytag = "Graphical_Color(" + dev_id + ")";
 
         String value0;
@@ -138,20 +133,20 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         setOnClickListener(this);
 
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
-        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + type + ">");
+        command_type = model[0];
+        Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> command_type = <" + command_type + ">");
 
         //state key
-        TextView state_key_view = new TextView(context);
+        TextView state_key_view = new TextView(activity);
         try {
-            state_key_view.setText(context.getResources().getString(translate.do_translate(getContext(), Tracer, state_key)));
+            state_key_view.setText(activity.getResources().getString(translate.do_translate(getContext(), Tracer, state_key)));
         } catch (Exception e) {
             state_key_view.setText(state_key);
         }
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
         //first seekbar on/off
-        seekBarOnOff = new SeekBar(context);
+        seekBarOnOff = new SeekBar(activity);
         seekBarOnOff.setProgress(0);
         seekBarOnOff.setMax(100);
         Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.bgseekbaronoff);
@@ -163,7 +158,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         seekBarOnOff.setTag("onoff");
 
         //feature panel 2
-        featurePan2 = new LinearLayout(context);
+        featurePan2 = new LinearLayout(activity);
         featurePan2.setOrientation(LinearLayout.HORIZONTAL);
         //featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
         featurePan2.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -171,55 +166,55 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         featurePan2.setPadding(20, 0, 0, 10);
 
         //left panel
-        LinearLayout color_LeftPan = new LinearLayout(context);
+        LinearLayout color_LeftPan = new LinearLayout(activity);
         color_LeftPan.setOrientation(LinearLayout.VERTICAL);
         //color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.FILL_PARENT,1));
         color_LeftPan.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
         color_LeftPan.setPadding(0, 0, 0, 10);
 
-        TextView title1 = new TextView(context);
-        title1.setText(context.getString(R.string.Hue));
+        TextView title1 = new TextView(activity);
+        title1.setText(activity.getString(R.string.Hue));
         title1.setTextSize(10);
         title1.setTextColor(Color.parseColor("#333333"));
-        TextView title2 = new TextView(context);
-        title2.setText(context.getString(R.string.Sat));
+        TextView title2 = new TextView(activity);
+        title2.setText(activity.getString(R.string.Sat));
         title2.setTextSize(10);
         title2.setTextColor(Color.parseColor("#333333"));
-        TextView title3 = new TextView(context);
-        title3.setText(context.getString(R.string.Bright));
+        TextView title3 = new TextView(activity);
+        title3.setText(activity.getString(R.string.Bright));
         title3.setTextSize(10);
         title3.setTextColor(Color.parseColor("#333333"));
-        //TextView title4 = new TextView(context);
+        //TextView title4 = new TextView(activity);
         //title4.setText("Luminosity");
         //title4.setTextSize(10);
         //title4.setTextColor(Color.parseColor("#333333"));
-        TextView title5 = new TextView(context);
-        title5.setText(context.getString(R.string.Field));
+        TextView title5 = new TextView(activity);
+        title5.setText(activity.getString(R.string.Field));
         title5.setTextSize(10);
         title5.setTextColor(Color.parseColor("#333333"));
-        TextView title6 = new TextView(context);
-        title6.setText(context.getString(R.string.Curcolor));
+        TextView title6 = new TextView(activity);
+        title6.setText(activity.getString(R.string.Curcolor));
         title6.setTextSize(10);
         title6.setTextColor(Color.parseColor("#333333"));
-        title7 = new TextView(context);
-        t7s = context.getString(R.string.Red);
+        title7 = new TextView(activity);
+        t7s = activity.getString(R.string.Red);
         title7.setText(t7s + " : 255");
         title7.setTextSize(10);
         title7.setTextColor(Color.parseColor("#333333"));
-        title8 = new TextView(context);
-        t8s = context.getString(R.string.Green);
+        title8 = new TextView(activity);
+        t8s = activity.getString(R.string.Green);
         title8.setText(t8s + " : 0");
         title8.setTextSize(10);
         title8.setTextColor(Color.parseColor("#333333"));
-        title9 = new TextView(context);
-        t9s = context.getString(R.string.Blue);
+        title9 = new TextView(activity);
+        t9s = activity.getString(R.string.Blue);
         title9.setText(t9s + " : 0");
         title9.setTextSize(10);
         title9.setTextColor(Color.parseColor("#333333"));
 
 
         //seekbar huebar
-        seekBarHueBar = new Color_Progress(Tracer, context, 0, 0);
+        seekBarHueBar = new Color_Progress(Tracer, activity, 0, 0);
         seekBarHueBar.setProgress(0);
         seekBarHueBar.setMax(255);
         seekBarHueBar.setProgressDrawable(null);
@@ -227,7 +222,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         seekBarHueBar.setTag("hue");
 
         //seekbar rgbbarX
-        seekBarRGBXBar = new Color_Progress(Tracer, context, 1, 0);
+        seekBarRGBXBar = new Color_Progress(Tracer, activity, 1, 0);
         seekBarRGBXBar.setProgress(0);
         seekBarRGBXBar.setMax(255);
         seekBarRGBXBar.setProgressDrawable(null);
@@ -235,7 +230,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         seekBarRGBXBar.setTag("rgbx");
 
         //seekbar rgbbarY
-        seekBarRGBYBar = new Color_Progress(Tracer, context, 2, 0);
+        seekBarRGBYBar = new Color_Progress(Tracer, activity, 2, 0);
         seekBarRGBYBar.setProgress(0);
         seekBarRGBYBar.setMax(255);
         seekBarRGBYBar.setProgressDrawable(null);
@@ -243,7 +238,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         seekBarRGBYBar.setTag("rgby");
 
         //seekbar powerbar
-        Color_Progress seekBarPowerBar = new Color_Progress(Tracer, context, 3, 0);
+        Color_Progress seekBarPowerBar = new Color_Progress(Tracer, activity, 3, 0);
         seekBarPowerBar.setProgress(0);
         seekBarPowerBar.setMax(255);
         seekBarPowerBar.setProgressDrawable(null);
@@ -256,16 +251,16 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //rgbView.drawRGBField();
 
         //right panel
-        LinearLayout color_RightPan = new LinearLayout(context);
+        LinearLayout color_RightPan = new LinearLayout(activity);
         color_RightPan.setOrientation(LinearLayout.VERTICAL);
         color_RightPan.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.RIGHT));
         color_RightPan.setPadding(20, 0, 0, 10);
 
         //Color result
-        resultView = new Color_Result(context);
+        resultView = new Color_Result(activity);
 
         //Timestamp
-        TV_Timestamp = new RelativeTimeTextView(context, null);
+        TV_Timestamp = new RelativeTimeTextView(activity, null);
         TV_Timestamp.setTextSize(10);
         TV_Timestamp.setTextColor(Color.BLUE);
         TV_Timestamp.setGravity(Gravity.RIGHT);
@@ -338,11 +333,11 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
 
                         Long Value_timestamplong = null;
-                        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
                         if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), context));
+                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
@@ -537,20 +532,19 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
-            Handler temphandler = new Handler(context.getMainLooper());
+            Handler temphandler = new Handler(activity.getMainLooper());
             temphandler.post(new Runnable() {
                                  public void run() {
-                                     String Url2send = "";
+                                     String state_progress = "";
                                      if (api_version >= 0.7f) {
-                                         Url2send = url + "cmd/id/" + command_id + "?" + command_type + "=";
                                          if ((argb != 0) && switch_state) {
                                              if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
                                                  String srgb = Integer.toHexString(argb);
                                                  if (srgb.length() > 6)
                                                      srgb = srgb.substring(2);
-                                                 Url2send += srgb;
+                                                 state_progress = srgb;
                                              } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
-                                                 Url2send += r + "," + g + "," + b;
+                                                 state_progress = r + "," + g + "," + b;
                                              } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
                                                  int computedC, computedM, computedY;
                                                  int minCMY;
@@ -567,48 +561,46 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                                  computedC = (computedC - minCMY) / (1 - minCMY);
                                                  computedM = (computedM - minCMY) / (1 - minCMY);
                                                  computedY = (computedY - minCMY) / (1 - minCMY);
-                                                 Url2send += computedC + "," + computedM + "," + computedY + "," + minCMY;
+                                                 state_progress = computedC + "," + computedM + "," + computedY + "," + minCMY;
                                              }
                                          } else {
-                                             String State = "";
                                              if (switch_state) {
                                                  //To see
-                                                 State = "000000";
+                                                 state_progress = "000000";
                                              } else {
-                                                 State = "000000";
+                                                 state_progress = "000000";
                                                  seekBarHueBar.setProgress(255);
                                                  seekBarRGBXBar.setProgress(0);
                                                  seekBarRGBYBar.setProgress(0);
                                              }
-                                             Url2send += State;
                                          }
                                      } else {
-                                         Url2send = url + "command/" + type + "/" + address + "/setcolor/";
+                                         // in 0.7 api
+                                         // Url2send = "cmd/id/" + command_id + "?" + command_type + "=" + value;
+                                         // in 0.6 api
+                                         // Url2send = "command/" + type + "/" + address + "/setcolor/" + value;
                                          if ((argb != 0) && switch_state) {
                                              String srgb = Integer.toHexString(argb);
                                              if (srgb.length() > 6)
                                                  srgb = srgb.substring(2);
-                                             Url2send += "#" + srgb;
+                                             state_progress = "#" + srgb;
                                          } else {
-                                             String State = "";
                                              if (switch_state) {
-                                                 State = "000000";
+                                                 state_progress = "000000";
 
                                              } else {
-                                                 State = "000000";
+                                                 state_progress = "000000";
                                                  seekBarHueBar.setProgress(255);
                                                  seekBarRGBXBar.setProgress(0);
                                                  seekBarRGBYBar.setProgress(0);
                                              }
-                                             Url2send += State;
                                          }
                                      }
                                      updating = 1;
-
-                                     Tracer.i(mytag, "Sending to Rinor : <" + Url2send + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
+                                         //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
+                                         send_command.send_it(activity, Tracer, command_id, command_type, String.valueOf(state_progress), api_version);
                                          //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
@@ -618,7 +610,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                         Boolean ack = JSONParser.Ack(json_Ack);
                                          if (!ack) {
                                              Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
-                                             Toast.makeText(context, "Received error from Rinor", Toast.LENGTH_LONG).show();
+                                             Toast.makeText(activity, "Received error from Rinor", Toast.LENGTH_LONG).show();
                                              handler.sendEmptyMessage(2);
                                          }
                                      } catch (Exception e) {

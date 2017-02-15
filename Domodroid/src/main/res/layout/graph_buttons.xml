@@ -2,72 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="25dp"
-	android:orientation="horizontal">
+    android:orientation="horizontal">
 
     <Button
         android:id="@+id/bt_prev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
         android:tag="Prev"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/bt_prev"
-        android:textSize="6sp"
-		android:layout_weight="0.1" />
+        android:textSize="6sp" />
 
-	<Button
-	    android:id="@+id/bt_next"
-	    android:tag="Next"
+    <Button
+        android:id="@+id/bt_next"
         android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/bt_next"
-	    android:textSize="6sp"
-		android:layout_weight="0.1" />
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:tag="Next"
+        android:text="@string/bt_next"
+        android:textSize="6sp" />
 
-	<Button
-	    android:id="@+id/bt_year"
-	    android:tag="Year"
+    <Button
+        android:id="@+id/bt_year"
         android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-		android:text="@string/bt_year"
-	    android:textSize="6sp"
-		android:layout_weight="0.1" />
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:tag="Year"
+        android:text="@string/bt_year"
+        android:textSize="6sp" />
 
-	<Button
+    <Button
         android:id="@+id/bt_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
         android:tag="Month"
+        android:text="@string/bt_month"
+        android:textSize="6sp" />
+
+    <Button
+        android:id="@+id/bt_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       	android:text="@string/bt_month"
-        android:textSize="6sp"
-		android:layout_weight="0.1" />
+        android:layout_weight="0.1"
+        android:tag="Week"
+        android:text="@string/bt_week"
+        android:textSize="6sp" />
 
-	<Button
-	    android:id="@+id/bt_week"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:tag="Week"
-	    android:text="@string/bt_week"
-	    android:textSize="6sp"
-		android:layout_weight="0.1" />
-
-	<Button
+    <Button
         android:id="@+id/bt_day"
-        android:tag="Day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       	android:text="@string/bt_day"
-        android:textSize="6sp"
-		android:layout_weight="0.1" />
+        android:layout_weight="0.1"
+        android:tag="Day"
+        android:text="@string/bt_day"
+        android:textSize="6sp" />
 
-	<EditText
-	    android:id="@+id/period"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:gravity="center"
-	    android:textSize="6sp"
-		android:inputType="text"
-		android:layout_weight="0.05">
+    <EditText
+        android:id="@+id/period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.05"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="text"
+        android:textSize="6sp">
 
-	</EditText>
+    </EditText>
 
 </LinearLayout>

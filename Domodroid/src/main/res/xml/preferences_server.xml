@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sample="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/AppBaseTheme"
     android:title="Preferences"
@@ -9,10 +10,9 @@
         android:title="@string/OPTION_server_settings">
         <Preference
             android:enabled="false"
-            android:icon="@drawable/ic_settings_applications_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
-            android:summary="@string/OPTION_server_explain" />
+            android:summary="EASY configuration" />
         <Preference
             android:icon="@drawable/ic_qr_code"
             android:persistent="false"
@@ -21,6 +21,17 @@
                 android:targetClass="activities.config_with_qrcode"
                 android:targetPackage="org.domogik.domodroid13" />
         </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="@string/OPTION_server_settings">
+        <Preference
+            android:enabled="false"
+            android:icon="@drawable/ic_settings_applications_black_24dp"
+            android:selectable="false"
+            android:shouldDisableView="false"
+            android:summary="@string/OPTION_server_explain" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_IP_Title"
             android:icon="@drawable/ic_ip_address"
@@ -33,6 +44,55 @@
             android:inputType="number"
             android:key="rinorPort"
             android:title="@string/OPTION_server_PORT" />
+        <CheckBoxPreference
+            android:icon="@drawable/ic_ssl"
+            android:key="ssl_activate"
+            android:summaryOff="@string/OPTION_no_ssl_use"
+            android:summaryOn="@string/OPTION_rest_ssl_use"
+            android:title="@string/OPTION_rest_ssl_option" />
+        <ListPreference
+            android:dialogTitle="@string/OPTION_local_wifi_title"
+            android:icon="@drawable/ic_perm_scan_wifi_black_24dp"
+            android:key="prefered_wifi_ssid"
+            android:summary="@string/OPTION_local_wifi_summary"
+            android:title="@string/OPTION_local_wifi" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="OUTSIDE_server_settings">
+        <Preference
+            android:enabled="false"
+           android:selectable="false"
+            android:shouldDisableView="false"
+            android:summary="External options" />
+        <EditTextPreference
+            android:dialogTitle="@string/OPTION_server_external_IP_Title"
+            android:icon="@drawable/ic_ip_address"
+            android:inputType="textUri"
+            android:key="rinorexternal_IP"
+            android:title="@string/OPTION_server_external_IP" />
+        <EditTextPreference
+            android:defaultValue="40405"
+            android:dialogTitle="@string/OPTION_server_external_PORT_Title"
+            android:inputType="number"
+            android:key="rinor_external_Port"
+            android:title="@string/OPTION_server_external_PORT" />
+        <CheckBoxPreference
+            android:icon="@drawable/ic_ssl"
+            android:key="ssl_external_activate"
+            android:summaryOff="@string/OPTION_no_external_ssl_use"
+            android:summaryOn="@string/OPTION_rest_external_ssl_use"
+            android:title="@string/OPTION_rest_external_ssl_option" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="Common server_settings">
+        <Preference
+            android:enabled="false"
+            android:selectable="false"
+            android:shouldDisableView="false"
+            android:summary="Global options" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_Path_Title"
             android:key="rinorPath"
@@ -49,18 +109,23 @@
             android:key="http_auth_password"
             android:password="true"
             android:title="@string/OPTION_server_http_password" />
-        <CheckBoxPreference
-            android:icon="@drawable/ic_ssl"
-            android:key="ssl_activate"
-            android:summaryOff="No ssl use"
-            android:summaryOn="Using https for Rest"
-            android:title="SSL option" />
-        <Preference
-            android:enabled="false"
+        <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="125"
+            android:inputType="number"
             android:key="UPDATE_TIMER"
             android:selectable="false"
             android:shouldDisableView="true"
-            android:title="@string/UPDATE_TIMER" />
+            android:summary="@string/UPDATE_TIMER"
+            android:title="@string/OPTION_server_Text2"
+            sample:msbp_dialogEnabled="true"
+            sample:msbp_interval="5"
+            sample:msbp_maxValue="600"
+            sample:msbp_measurementUnit="s"
+            sample:msbp_minValue="60" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="Check server settings">
         <EditTextPreference
             android:enabled="false"
             android:key="UPDATE_URL"
@@ -74,30 +139,10 @@
             android:shouldDisableView="true"
             android:title="@string/Rinor_URL" />
         <EditTextPreference
-            android:enabled="true"
-            android:icon="@drawable/ic_mq"
-            android:inputType="textUri"
-            android:key="MQaddress"
-            android:selectable="true"
-            android:title="@string/MQ_address" />
-        <EditTextPreference
-            android:defaultValue="40412"
-            android:icon="@drawable/ic_mq_sub"
-            android:inputType="number"
-            android:key="MQsubport"
-            android:title="@string/Mq_sub_port" />
-        <EditTextPreference
-            android:defaultValue="40411"
-            android:icon="@drawable/ic_mq_pub"
-            android:inputType="number"
-            android:key="MQpubport"
-            android:title="@string/Mq_pub_port" />
-        <EditTextPreference
-            android:defaultValue="40411"
-            android:icon="@drawable/ic_mq_pub"
-            android:inputType="number"
-            android:key="MQreq_repport"
-            android:title="@string/MQ_req_rep_port" />
-
+            android:enabled="false"
+            android:key="external_URL"
+            android:selectable="false"
+            android:shouldDisableView="true"
+            android:title="@string/Rinor_external_URL" />
     </PreferenceCategory>
 </PreferenceScreen>

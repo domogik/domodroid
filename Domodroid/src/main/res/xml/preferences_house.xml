@@ -7,7 +7,6 @@
     <PreferenceCategory
         android:icon="@drawable/ic_home_black_24dp"
         android:persistent="false"
-        android:summary="@string/soon"
         android:title="@string/house_settings">
 
         <Preference
@@ -30,9 +29,10 @@
             android:title="@string/usage_byusagecheckbox" />
         <EditTextPreference
             android:defaultValue="1"
-            android:dialogTitle="Default area to open"
+            android:dialogTitle="@string/default_area_at_start"
             android:inputType="number"
             android:key="load_area_at_start"
-            android:title="Default area to open" />
+            android:summary="@string/soon"
+            android:title="@string/default_area_at_start" />
     </PreferenceCategory>
 </PreferenceScreen>

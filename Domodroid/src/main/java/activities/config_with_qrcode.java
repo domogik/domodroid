@@ -78,18 +78,43 @@ public class config_with_qrcode extends AppCompatActivity {
                         String[] separated = admin_url.split("://");
                         String[] separatedbis = separated[1].split(":");
                         String admin_ip = separatedbis[0];
-                        String[] separatedter = separatedbis[1].split("/");
-                        String rest_port = separatedter[0];
                         String rest_path = null;
+                        String rest_port = null;
                         try {
+                            String[] separatedter = separatedbis[1].split("/");
+                            rest_port = separatedter[0];
                             rest_path = separatedter[1] + jsonresult.getString("rest_path");
                         } catch (ArrayIndexOutOfBoundsException exec) {
-                            rest_path = jsonresult.getString("rest_path");
+                            try {
+                                rest_port = jsonresult.getString("rest_port");
+                            } catch (Exception e) {
+                                rest_port = "";
+                            }
+                            try {
+                                rest_path = jsonresult.getString("rest_path");
+                            } catch (Exception e) {
+                                rest_path = "";
+                            }
                         }
-                        //String rest_port = jsonresult.getString("rest_port");
                         String mq_ip = jsonresult.getString("mq_ip");
                         //String rest_path = jsonresult.getString("rest_path");
-                        String mq_port_pubsub = jsonresult.getString("mq_port_pubsub");
+                        String mq_port_sub = "40412";
+                        try {
+                            mq_port_sub = jsonresult.getString("mq_port_pub");
+                        } catch (JSONException exec) {
+                            try {
+                                Tracer.e(mytag, "mq_port_pub not present in this qrcode");
+                                mq_port_sub = jsonresult.getString("mq_port_pubsub");
+                            } catch (JSONException exec2) {
+                                Tracer.e(mytag, "mq_port_pubsub not present in this qrcode");
+                            }
+                        }
+                        String mq_port_pub = "40411";
+                        try {
+                            mq_port_pub = jsonresult.getString("mq_port_pub");
+                        } catch (JSONException exec) {
+                            Tracer.e(mytag, "mq_port_pub not present in this qrcode");
+                        }
                         String mq_port_req_rep = jsonresult.getString("mq_port_req_rep");
                         String rinor_IP = null;
                         Boolean SSL = null;
@@ -100,21 +125,41 @@ public class config_with_qrcode extends AppCompatActivity {
                             rinor_IP = admin_ip.replace("https://", "");
                             SSL = true;
                         }
-                        String butler_name = jsonresult.getString("butler_name");
+                        String External_IP = "";
+                        String External_port = "";
+                        try {
+                            External_IP = jsonresult.getString("u'external_ip'").replace("u'", "").replace("'", "");
+                            External_port = jsonresult.getString("u'external_port'").replace("u'", "").replace("'", "");
+                        } catch (Exception e1) {
+                            Tracer.e(mytag, "ERROR getting external IP PORT information");
+                        }
+                        Boolean external_ssl = false;
+                        try {
+                            if (jsonresult.getString("u'external_ssl'").toLowerCase().equals("u'y'")) {
+                                external_ssl = true;
+                            }
+                        } catch (Exception e1) {
+                            Tracer.e(mytag, "ERROR getting external SSL information");
+                        }
+                        String butler_name = jsonresult.getString("butler_name").replace("u'", "").replace("'", "");
                         prefEditor = params.edit();
                         prefEditor.putString("rinorIP", rinor_IP);
                         prefEditor.putString("rinorPort", rest_port);
                         prefEditor.putString("rinorPath", rest_path);
                         prefEditor.putBoolean("ssl_activate", SSL);
+                        prefEditor.putBoolean("ssl_external_activate", external_ssl);
                         prefEditor.putString("MQaddress", mq_ip);
-                        prefEditor.putString("MQsubport", mq_port_pubsub);
-                        prefEditor.putString("MQpubport", mq_port_req_rep);
+                        prefEditor.putString("MQsubport", mq_port_sub);
+                        prefEditor.putString("MQpubport", mq_port_pub);
+                        prefEditor.putString("MQreq_repport", mq_port_req_rep);
                         prefEditor.putString("dmg_butler_name", butler_name);
+                        prefEditor.putString("rinorexternal_IP", External_IP);
+                        prefEditor.putString("rinor_external_Port", External_port);
                         prefEditor.commit();
                         config_with_qrcode.this.finish();
 
                     } catch (JSONException e) {
-                        Tracer.e(mytag, "Error parsing answer of qrode to json: " + e.toString());
+                        Tracer.e(mytag, "Error parsing answer of qrcode to json: " + e.toString());
                     }
                 }
             }

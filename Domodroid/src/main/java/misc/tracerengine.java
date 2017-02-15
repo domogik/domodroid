@@ -210,7 +210,12 @@ public class tracerengine {
     private static void screenlog(String tag, String msg) {
         //com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         try {
-            Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
+            //Todo find a way to be sure toast works 100%
+            //activity.runOnUiThread(new Runnable() {
+                //public void run() {
+                    Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
+               // }
+            //});
         } catch (Exception e) {
             Log.e("tracerengine screenlog", "Tracerengine ScreenLog: " + e.toString());
         }

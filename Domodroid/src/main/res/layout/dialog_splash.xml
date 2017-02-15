@@ -1,39 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" android:layout_height="fill_parent"
-	android:orientation="vertical" android:gravity="center"
-	android:background="#222222">
-	<FrameLayout android:layout_height="wrap_content"
-		android:id="@+id/frameLayout1" android:layout_width="fill_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:background="#222222"
+    android:gravity="center"
+    android:orientation="vertical">
 
-		<TextView android:text="@string/splash_title"  android:id="@+id/textView1"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:textColor="#DDDDDD" android:textSize="20sp"
-			android:layout_gravity="center" />
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-	</FrameLayout>
-	<ScrollView android:layout_height="wrap_content" android:id="@+id/scrollView1"
-		android:layout_width="fill_parent">
-		<LinearLayout android:id="@+id/linearLayout1"
-			android:orientation="vertical" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:gravity="center">
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/splash_title"
+            android:textColor="#DDDDDD"
+            android:textSize="20sp" />
 
-			<TextView android:text="@string/home_splash" 
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:paddingTop="10dip" android:paddingLeft="5dip" android:paddingRight="5dip" android:textColor="#999999"
-				android:textSize="15sp" android:gravity="center" />
-				<TextView android:text="@string/home_splash2" 
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:paddingTop="20dip" android:paddingLeft="5dip" android:paddingRight="5dip" android:textColor="#999999"
-				android:textSize="15sp" android:gravity="center" />
+    </FrameLayout>
 
-				<Button
-				    android:id="@+id/OkButton"
-				    android:layout_width="100dip"
-				    android:layout_height="wrap_content"
-				    android:layout_marginTop="20dip"
-				    android:text="@string/Ok" />
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-		</LinearLayout>
-	</ScrollView>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="5dip"
+                android:paddingRight="5dip"
+                android:paddingTop="10dip"
+                android:text="@string/home_splash"
+                android:textColor="#999999"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="5dip"
+                android:paddingRight="5dip"
+                android:paddingTop="20dip"
+                android:text="@string/home_splash2"
+                android:textColor="#999999"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/OkButton"
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:text="@string/Ok" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

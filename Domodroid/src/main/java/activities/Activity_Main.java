@@ -56,20 +56,18 @@ import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
 import org.domogik.domodroid13.R;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import Abstract.common_method;
+import Abstract.load_parameters;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
@@ -229,7 +227,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
-        load_preferences();
+        //load_preferences(); //moved to abstract
+        load_parameters.load_preferences(SP_params, SP_prefEditor);
 
         Tracer.set_profile(SP_params);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
@@ -246,6 +245,16 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
 
         appname = (ImageView) findViewById(R.id.app_name);
+
+        //todo try to solve history problems like in:
+        /*
+        STACK_TRACE=java.lang.NullPointerException: Attempt to invoke virtual method 'void java.util.Vector.add(int, java.lang.Object)' on a null object reference
+        at activities.Activity_Main.onOptionsItemSelected(Activity_Main.java:1096)
+        at android.app.Activity.onMenuItemSelected(Activity.java:3008)
+        at android.support.v4.b.l.onMenuItemSelected(FragmentActivity.java:403)
+        at android.support.v7.a.f.onMenuItemSelected(AppCompatActivity.java:189)
+         */
+        history = new Vector<>();
 
         LoadSelections();
 
@@ -269,6 +278,22 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
+                        /*
+                        //todo #141 ask user if it's is prefered wifi SSID.
+                        ConnectivityManager connectivityManager
+                                = (ConnectivityManager) (context.getSystemService(Context.CONNECTIVITY_SERVICE));
+                        NetworkInfo[] netInfo = connectivityManager.getAllNetworkInfo();
+                        for (NetworkInfo ni : netInfo) {
+                            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                                if (ni.isConnected()) {
+                                    WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+                                    WifiInfo wifiInfo;
+                                    wifiInfo = wifiManager.getConnectionInfo();
+                                    String ssid = wifiInfo.getSSID().replace("\"", "");
+                                    SP_prefEditor.putString("prefered_wifi_ssid",ssid);
+                                            SP_prefEditor.commit();
+                                }
+                        }*/
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
                         common_method.save_params_to_file(Tracer, SP_prefEditor, mytag, getApplicationContext());
@@ -277,7 +302,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         VG_parent.removeAllViews();
                         if (WU_widgetUpdate == null) {
                             Tracer.i(mytag, "OnCreate WidgetUpdate is null startCacheengine!");
-                            startCacheEngine();
+                            startCacheEngine(); //if sync dialog is closed
                         }
                         Bundle b = new Bundle();
                         //Notify sync complete to parent Dialog
@@ -393,7 +418,30 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 if (SP_params.getBoolean("SYNC", false)) {
                     loadWigets(0, "root");
                     historyPosition++;
-                    history.add(historyPosition, new String[]{"0", "root"});
+                    try {
+                        history.add(historyPosition, new String[]{"0", "root"});
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                        //Todo solved this bug:
+                        /*
+                        STACK_TRACE=java.lang.ArrayIndexOutOfBoundsException: length=0; index=2
+at java.util.Vector.arrayIndexOutOfBoundsException(Vector.java:907)
+at java.util.Vector.insertElementAt(Vector.java:590)
+at java.util.Vector.add(Vector.java:140)
+at activities.Activity_Main$8.onClick(Activity_Main.java:396)
+at android.view.View.performClick(View.java:5207)
+at android.view.View$PerformClick.run(View.java:21177)
+at android.os.Handler.handleCallback(Handler.java:739)
+at android.os.Handler.dispatchMessage(Handler.java:95)
+at android.os.Looper.loop(Looper.java:148)
+at android.app.ActivityThread.main(ActivityThread.java:5441)
+at java.lang.reflect.Method.invoke(Native Method)
+at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:738)
+at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
+                         */
+                    }
+
                 } else {
                     if (AD_notSyncAlert == null)
                         createAlert();
@@ -466,7 +514,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 // open server config view
                 Intent helpI = new Intent(Activity_Main.this, Preference.class);
                 //todo #94
-                startActivity(helpI);
+                //startActivity(helpI);
             }
         } else {
             // It's not the 1st use after fresh install
@@ -477,7 +525,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             //A config exists and a sync as been done by past.
             if (WU_widgetUpdate == null) {
                 Tracer.i(mytag, "OnCreate Params splash is false and WidgetUpdate is null startCacheengine!");
-                startCacheEngine();
+                startCacheEngine();//if sync is done on create
             }
         }
         // Changelog view
@@ -524,7 +572,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         }
         if (end_of_init_requested)
-            end_of_init();
+            refresh();
     }
 
     @Override
@@ -555,6 +603,34 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         super.onDestroy();
         this.WM_Agent = null;
         widgetHandler = null;
+        if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
+            SharedPreferences.Editor prefEditor = SP_params.edit();
+            JSONArray cached_dump = null;
+            if (WU_widgetUpdate != null) {
+                Tracer.d("#124", "dump cache");
+                try {
+                    cached_dump = WU_widgetUpdate.dump_cache_to_json();
+                    // save last value to sharedparams to load them later
+                    prefEditor.putString("sensor_saved_value", cached_dump.toString());
+                    Tracer.d("#124", cached_dump.toString());
+                    Tracer.d("#124", "dump cached");
+                    // save current time stamp to know when the pass was exit.
+                    long currentTimestamp = (System.currentTimeMillis() / 1000);
+                    Tracer.d("#124", "sensor_saved_timestamp" + currentTimestamp);
+                    prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
+                } catch (JSONException e) {
+                    Tracer.e("#124", "sensor_saved at exit error");
+                    e.printStackTrace();
+                }
+            }
+            prefEditor.commit();
+        }
+
+        //Stop metrics.
+        if (SP_params.getBoolean("domodroid_metrics", true)) {
+            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
+        }
+
         if (WU_widgetUpdate != null) {
             WU_widgetUpdate.Disconnect(0);    //remove all pending subscribings
             if (!Tracer.Map_as_main) {
@@ -572,10 +648,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 			Tracer = null;
 		}
 		 */
-        //Stop metrics.
-        if (SP_params.getBoolean("domodroid_metrics", true)) {
-            processTimer_for_metrics.cancel(pendingIntent_for_metrics);
-        }
     }
 
     private void Create_message_box() {
@@ -653,6 +725,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         } else if (!msg.getData().getBoolean("refresh")) {
                             historyPosition++;
                             loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
+                            //redraw the scrollview at the top position of the screen
+                            SV_Main_ScrollView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SV_Main_ScrollView.scrollTo(0, 0);
+                                }
+                            });
                             Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
                             history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
                         }
@@ -697,9 +776,22 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                             refresh();
                         }
                     } else {
+                        //redraw the scrollview at the top position of the screen
+                        SV_Main_ScrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                SV_Main_ScrollView.scrollTo(0, 0);
+                            }
+                        });
                         loadWigets(Integer.parseInt(map.get("id")), map.get("type"));
                         historyPosition++;
-                        history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                        try {
+                            history.add(historyPosition, new String[]{map.get("id"), map.get("type")});
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                            //Todo solved this bug:
+                        }
                         if (map.get("type").equals("room")) {
                             //close navigationdrawer if select a room
                             mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -726,6 +818,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
 
         if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
+            //#125 wait cache ready
             //Solve #2029
             if (SP_params.getBoolean("SYNC", false)) {
                 Tracer.v(mytag, "Direct start on Map requested...");
@@ -742,7 +835,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             if (SP_params.getBoolean("SYNC", false)) {
                 if (!init_done) {
                     historyPosition = 0;
-                    history.add(historyPosition, new String[]{"0", "root"});
+                    try {
+                        history.add(historyPosition, new String[]{"0", "root"});
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                        Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                        //Todo solved this bug:
+                    }
                     refresh();
                 }
             } else {
@@ -766,7 +865,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         if (reload) {
             // If answer is 'yes', load preferences from backup
             Tracer.v(mytag, "reload settings..");
-            loadSharedPreferencesFromFile(backupprefs);
+            //loadSharedPreferencesFromFile(backupprefs); //moved to Abstract
+            if (load_parameters.loadSharedPreferencesFromFile(backupprefs, SP_prefEditor, Tracer)) {
+                LoadSelections();    // to set panel with known values
+            }
             run_sync_dialog();
 
         } else {
@@ -792,6 +894,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
     }
 
+    /*
     private void loadSharedPreferencesFromFile(File src) {
         ObjectInputStream input = null;
         try {
@@ -832,6 +935,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
         }
     }
+    */
 
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
@@ -908,13 +1012,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
             update_navigation_menu();
             Tracer.d(mytag, "List item= " + listItem.toString());
-            //redraw the scrollview at the top position of the screen
-            SV_Main_ScrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    SV_Main_ScrollView.scrollTo(0, 0);
-                }
-            });
         } catch (Exception e) {
             Tracer.e(mytag, "Can't load area/room or widgets");
             Tracer.e(mytag, e.toString());
@@ -1033,7 +1130,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 }
                 //dont_kill = false;		//To force OnDestroy() to also kill engines
                 //And stop main program
-                this.finish();
+                finish();
+                /*todo uncomment this block to really quit the apps
+                //but it ctash in on destroy as some values are not initialize
+                Intent intent = new Intent(this, Activity_Main.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit me", true);
+                startActivity(intent);
+                */
                 return true;
             case R.id.menu_house_config:
                 Tracer.v(mytag + ".onclick()", "Call to House settings screen");
@@ -1052,19 +1156,37 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 startActivity(helpI1);
                 return true;
             case R.id.menu_stats:
-                if (SP_params.getBoolean("SYNC", false)) {
-                    loadWigets(0, "statistics");
-                    historyPosition++;
-                    history.add(historyPosition, new String[]{"0", "statistics"});
-                } else {
-                    if (AD_notSyncAlert == null)
-                        createAlert();
-                    AD_notSyncAlert.show();
+                try {
+                    if (SP_params.getBoolean("SYNC", false)) {
+                        loadWigets(0, "statistics");
+                        historyPosition++;
+                        try {
+                            history.add(historyPosition, new String[]{"0", "statistics"});
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            Tracer.e("mytag", "ArrayIndexOutOfBoundsException when adding history navigation");
+                            //Todo solved this bug:
+                        }
+                    } else {
+                        if (AD_notSyncAlert == null)
+                            createAlert();
+                        AD_notSyncAlert.show();
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                    //todo find why java.lang.ArrayIndexOutOfBoundsException: 1 > 0
+                    //Maybe when not sync or because of  E/activities.Activity_Main(12801): Can not refresh this view
+
                 }
                 return true;
             case R.id.menu_sync:
                 // click on 'sync' button into Sliding_Drawer View
                 run_sync_dialog();        // And run a resync with Rinor server
+                return true;
+            case R.id.menu_domogik_admin:
+                //launch a webview of domogik admin
+                Intent intent_webview = new Intent(context, webview_domogik_admin.class);
+                startActivity(intent_webview);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -1148,6 +1270,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         Tracer.d(mytag, "Update navigation drawer listview");
     }
 
+    /*
     private void load_preferences() {
         //Load default value to avoid crash.
         String currlogpath = SP_params.getString("LOGNAME", "");
@@ -1171,6 +1294,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
         SP_prefEditor.commit();
     }
+    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

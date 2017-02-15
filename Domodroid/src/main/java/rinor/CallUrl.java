@@ -12,6 +12,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -50,82 +51,73 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         final String password = uri[2];
         int timeout = Integer.parseInt(uri[3]);
         Boolean SSL = Boolean.valueOf(uri[4]);
-        if (!SSL) {
-            HttpParams httpParameters = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
-            HttpConnectionParams.setSoTimeout(httpParameters, timeout);
-            DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
-            httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-            HttpResponse response;
-            String responseString = "";
-            try {
-                HttpGet httpget = new HttpGet(url);
-                httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
-                response = httpclient.execute(httpget);
-                StatusLine statusLine = response.getStatusLine();
-                stats_com.add(Stats_Com.EVENTS_SEND, httpclient.getRequestInterceptorCount());
-                stats_com.add(Stats_Com.EVENTS_RCV, httpclient.getResponseInterceptorCount());
-                if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    response.getEntity().writeTo(out);
-                    responseString = out.toString();
-                    out.close();
-                } else {
-                    //Closes the connection.
-                    try {
-                        response.getEntity().getContent().close();
-                    } catch (Exception e1) {
-                        //TODO Handle problems..
+        String result = "";
+        if (Abstract.Connectivity.IsInternetAvailable()) {
+            String responseString = "ERROR";
+            if (!SSL) {
+                try {
+                    // Set timeout
+                    HttpParams httpParameters = new BasicHttpParams();
+                    HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+                    HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+                    DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
+                    httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
+                    Log.e("connect_string", "url=" + url.toString());
+                    HttpGet httpget = new HttpGet(url);
+                    httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
+                    final HttpResponse response;
+                    response = httpclient.execute(httpget);
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        result = "200";
+                    } else if (response.getStatusLine().getStatusCode() == 204) {
+                        //TODO need to adapt for 0.4 since rest answer now with standard code
+                        //204,400,404 and else
+                        result = "204";
+                    } else {
+                        result = String.valueOf(response.getStatusLine().getStatusCode());
                     }
-                    throw new IOException(statusLine.getReasonPhrase());
+                } catch (UnknownHostException e) {
+                    result = "UnknownHostException";
+                } catch (ConnectTimeoutException e) {
+                    result = "ConnectTimeoutException";
+                } catch (HttpHostConnectException e) {
+                    result = "HttpHostConnectException";
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (SocketTimeoutException | ConnectTimeoutException e) {
-                e.printStackTrace();
-                Log.e(mytag, url);
-                responseString = "ERROR";
-            } catch (IOException e) {
-                e.printStackTrace();
-                //TODO Handle problems..
-                if (e.getMessage().equals("NOT FOUND")) {
-                    responseString = "ERROR";
-                }
-            }
-            return responseString;
-        } else {
-            String responseMessage = "";
-            try {
-                if (url.startsWith("http://")) {
-                    url = url.replace("http://", "https://");
-                }
-                final HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
-                Authenticator.setDefault(new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(login, password.toCharArray());
+                return result;
+            } else {
+                try {
+                    if (url.startsWith("http://")) {
+                        url = url.replace("http://", "https://");
                     }
-                });
-                String result = null;
-                InputStream instream = urlConnection.getInputStream();
-                // Read response headers
-                int responseCode = urlConnection.getResponseCode();
-                responseMessage = urlConnection.getResponseMessage();
-                result = Abstract.httpsUrl.convertStreamToString(instream);
-                stats_com.add(Stats_Com.EVENTS_SEND, urlConnection.getContentLength());
-                stats_com.add(Stats_Com.EVENTS_RCV, responseMessage.length());
-                instream.close();
-                //} catch (HttpHostConnectException e) {
-                //    e.printStackTrace();
-            } catch (java.net.SocketTimeoutException | java.net.ConnectException e) {
-                e.printStackTrace();
-                responseMessage = "ERROR";
-            } catch (IOException e) {
-                //TODO Handle problems..
-                e.printStackTrace();
-                if (e.getMessage().equals("NOT FOUND")) {
-                    responseMessage = "ERROR";
+                    HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url, login, password);
+                    Authenticator.setDefault(new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(login, password.toCharArray());
+                        }
+                    });
+                    InputStream instream = urlConnection.getInputStream();
+                    // Read response headers
+                    result = String.valueOf(urlConnection.getResponseCode());
+                    instream.close();
+                } catch (UnknownHostException e) {
+                    result = "UnknownHostException";
+                } catch (ConnectTimeoutException e) {
+                    result = "ConnectTimeoutException";
+                } catch (HttpHostConnectException e) {
+                    result = "HttpHostConnectException";
+                } catch (IOException e) {
+                    result = "IOException";
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                return result;
+
             }
             return responseMessage;
         }
+        return "NO CONNECTION";
     }
 
     @Override
@@ -136,12 +128,32 @@ public class CallUrl extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String string) {
+        Log.e(mytag, "Response from rest is: " + string);
         // onPostExecute is called when doInBackground finished
-        // Here you can for example fill your Listview with the content loaded in doInBackground method
-        if (string.equals("ERROR")) {
-            Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
+        // switch send command answer
+        switch (string) {
+            case "ERROR":
+                Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.rest_connection_error, Toast.LENGTH_LONG).show();
+                break;
+            case "NO CONNECTION":
+                Toast.makeText(context, R.string.no_connection_send_command, Toast.LENGTH_LONG).show();
+                break;
+            case "UnknownHostException":
+                Toast.makeText(context, R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
+                break;
+            case "ConnectTimeoutException":
+                Toast.makeText(context, R.string.timout_rest, Toast.LENGTH_LONG).show();
+                break;
+            case "HttpHostConnectException":
+                Toast.makeText(context, R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
+                break;
+            case "IOException":
+                Toast.makeText(context, R.string.rest_io_connection_error, Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

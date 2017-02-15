@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.domogik.domodroid13">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -71,7 +73,18 @@
             android:authorities="database.DmdContentProvider"
             android:multiprocess="true" />
 
+        <!-- Domogik webview activity -->
+        <activity
+            android:name="activities.webview_domogik_admin"
+            android:configChanges="orientation"
+            android:theme="@style/AppTheme" />
 
+        <!-- Domodroid LogView -->
+        <service android:name="logging.LogService" />
+        <activity
+            android:name="logging.LogActivity"
+            android:configChanges="orientation"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

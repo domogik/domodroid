@@ -50,13 +50,13 @@ import misc.tracerengine;
 public abstract class display_sensor_info {
 
     public static void display(tracerengine Tracer, String loc_Value, Long Value_timestamp, String mytag, String parameters, TextView value, RelativeTimeTextView timestamp,
-                               Activity context, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
+                               Activity activity, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
         if (Value_timestamp != 0) {
             if (SP_params.getBoolean("widget_timestamp", false)) {
-                timestamp.setText(timestamp_convertion(Value_timestamp.toString(), context));
+                timestamp.setText(timestamp_convertion(Value_timestamp.toString(), activity));
             } else {
                 timestamp.setReferenceTime(Value_timestamp);
             }
@@ -64,7 +64,7 @@ public abstract class display_sensor_info {
         try {
             float formatedValue = 0;
             if (loc_Value != null) {
-                formatedValue = calcul.Round_float(Float.parseFloat(loc_Value));
+                formatedValue = calcul.Round_float(Float.parseFloat(loc_Value), 2);
                 Tracer.v(mytag, " Round_float the value: " + loc_Value + " to " + formatedValue);
             }
             if (!test_unite.equals("")) {
@@ -72,10 +72,10 @@ public abstract class display_sensor_info {
                 //#30 add Scale value if too big for byte, ko and Wh unit
                 switch (test_unite) {
                     case "b":
-                        value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value)));
+                        value.setText(android.text.format.Formatter.formatFileSize(activity, Long.parseLong(loc_Value)));
                         break;
                     case "ko":
-                        value.setText(android.text.format.Formatter.formatFileSize(context, Long.parseLong(loc_Value) * 1024));
+                        value.setText(android.text.format.Formatter.formatFileSize(activity, Long.parseLong(loc_Value) * 1024));
                         break;
                     case "Wh":
                         //#30
@@ -90,7 +90,7 @@ public abstract class display_sensor_info {
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
                         value.setText("\uf0b1");
                         //display the real value in smaller font
-                        value1 = new TextView(context);
+                        value1 = new TextView(activity);
                         value1.setTextSize(14);
                         value1.setTextColor(Color.BLACK);
                         value1.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
@@ -107,7 +107,7 @@ public abstract class display_sensor_info {
                         value.setMinimumWidth(100);
                         value.setGravity(Gravity.CENTER);
                         //Create an empty linearlayout that will contains the value
-                        LinearLayout LL_Temp = new LinearLayout(context);
+                        LinearLayout LL_Temp = new LinearLayout(activity);
                         //Re-add the view in parent's one
                         LL_Temp.addView(value1);
                         LL_Temp.addView(value);
@@ -180,9 +180,9 @@ public abstract class display_sensor_info {
                     try {
                         //use xml and weather fonts here
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
-                        value.setText(Graphics_Manager.Names_conditioncodes(context, (int) formatedValue));
+                        value.setText(Graphics_Manager.Names_conditioncodes(activity, (int) formatedValue));
                     } catch (Exception e1) {
-                        Tracer.i(mytag, "no translation for: " + loc_Value);
+                        Tracer.e(mytag, "no translation for condition-code: " + loc_Value);
                         value.setText(loc_Value);
                     }
                 } else if (state_key.equalsIgnoreCase("callerid")) {
@@ -194,27 +194,27 @@ public abstract class display_sensor_info {
                         value.setTypeface(typefaceweather, Typeface.NORMAL);
                         switch (loc_Value) {
                             case "0":
-                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_na", "string", activity.getPackageName()));
                                 break;
                             case "1":
-                                value.setText(context.getResources().getIdentifier("wi_cloud", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_cloud", "string", activity.getPackageName()));
                                 break;
                             case "3":
-                                value.setText(context.getResources().getIdentifier("wi_hail", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_hail", "string", activity.getPackageName()));
                                 break;
                             case "4":
-                                value.setText(context.getResources().getIdentifier("wi_rain", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_rain", "string", activity.getPackageName()));
                                 break;
                             case "5":
-                                value.setText(context.getResources().getIdentifier("wi_showers", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_showers", "string", activity.getPackageName()));
                                 break;
                             default:
-                                value.setText(context.getResources().getIdentifier("wi_na", "string", context.getPackageName()));
+                                value.setText(activity.getResources().getIdentifier("wi_na", "string", activity.getPackageName()));
                                 break;
                         }
 
                     } catch (Exception e1) {
-                        Tracer.e(mytag, "no translation for: " + loc_Value);
+                        Tracer.e(mytag, "no translation for rainlevel: " + loc_Value);
                         e1.printStackTrace();
                         value.setText(loc_Value);
                     }
@@ -232,50 +232,50 @@ public abstract class display_sensor_info {
                     String PM = st.nextToken();
                     try {
                         AM = AM.replace("AM ", "");
-                        AM = context.getResources().getString(translate.do_translate(context, Tracer, AM));
+                        AM = activity.getResources().getString(translate.do_translate(activity, Tracer, AM));
                     } catch (Exception amexception) {
 
                     }
                     try {
                         PM = PM.replace("PM ", "");
-                        PM = context.getResources().getString(translate.do_translate(context, Tracer, PM));
+                        PM = activity.getResources().getString(translate.do_translate(activity, Tracer, PM));
                     } catch (Exception pmexception) {
 
                     }
                     value.setText(R.string.am + " " + AM + "/" + R.string.pm + " " + PM);
                 } else {
 
-                        if (state_key.equalsIgnoreCase("current_sunset")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
-                            value.setText(hour_convertion(Tracer, mytag, loc_Value));
-                        } else if (state_key.equalsIgnoreCase("current_sunrise")) {
-                            state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
-                            state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
-                            value.setText(hour_convertion(Tracer, mytag, loc_Value));
-                        } else if (state_key.equalsIgnoreCase("current_last_updated")) {
-                            // convert value to translated date in locale settings
-                            try {
-                                loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
-                                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
-                                Date testDate = sdf.parse(loc_Value);
-                                Tracer.d(mytag + " Date conversion", "Works");
-                                SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
-                                String newFormat = formatter.format(testDate);
-                                value.setText(newFormat);
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                                Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
-                                value.setText(loc_Value);
-                            }
-                        } else if (state_key.equalsIgnoreCase("callerid")) {
-                            value.setText(phone_convertion(Tracer, mytag, loc_Value));
-                        } else {
-                            value.setText(translate.do_translate(context, Tracer, loc_Value));
+                    if (state_key.equalsIgnoreCase("current_sunset")) {
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf052;"), TextView.BufferType.SPANNABLE);
+                        value.setText(hour_convertion(Tracer, mytag, loc_Value));
+                    } else if (state_key.equalsIgnoreCase("current_sunrise")) {
+                        state_key_view.setTypeface(typefaceweather, Typeface.NORMAL);
+                        state_key_view.setText(Html.fromHtml(stateS + " " + "&#xf051;"), TextView.BufferType.SPANNABLE);
+                        value.setText(hour_convertion(Tracer, mytag, loc_Value));
+                    } else if (state_key.equalsIgnoreCase("current_last_updated")) {
+                        // convert value to translated date in locale settings
+                        try {
+                            loc_Value = loc_Value.substring(0, loc_Value.lastIndexOf(" "));
+                            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a", Locale.ENGLISH);
+                            Date testDate = sdf.parse(loc_Value);
+                            Tracer.d(mytag + " Date conversion", "Works");
+                            SimpleDateFormat formatter = new SimpleDateFormat("EEE dd MMM yyyy HH:mm", Locale.getDefault());
+                            String newFormat = formatter.format(testDate);
+                            value.setText(newFormat);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            Tracer.e(mytag + " Date conversion", "Error: " + ex.toString());
+                            value.setText(loc_Value);
                         }
-                                    }
+                    } else if (state_key.equalsIgnoreCase("callerid")) {
+                        value.setText(phone_convertion(Tracer, mytag, loc_Value));
+                    } else {
+                        value.setText(translate.do_translate(activity, Tracer, loc_Value));
+                    }
+                }
             } catch (Exception e1) {
-                Tracer.d(mytag, "no translation for: " + loc_Value);
+                Tracer.d(mytag, "no translation for this STRING value: " + loc_Value);
                 value.setText(loc_Value);
             }
         }
@@ -284,6 +284,8 @@ public abstract class display_sensor_info {
     public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
         try {
             String convert_phone = PhoneNumberUtils.formatNumber(phone);
+            // todo it remove the "-" like in jean-phillipe replace bye jeanphillipe
+            // Tracer.d(mytag, "phone convertion from:" + phone + " to " + convert_phone);
             return convert_phone;
         } catch (Exception ex) {
             ex.printStackTrace();

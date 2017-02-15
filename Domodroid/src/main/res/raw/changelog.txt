@@ -27,8 +27,11 @@
       * Added external domogik rest option.
       * Move MQ options in a new submenu.
       * Handle DT_colorCII.
+      * Close #149 Handle dt_scaling for sensor.
+      * Close #148 Handle SSL in Domogik administration view.
+      * Close #146 Rename don't work since new rest call.
       * Close #143 Missing Yahoo weather translation.
-      * Close #135 Multiple open/close view make crash as view is not removed first. .
+      * Close #135 Multiple open/close view make crash as view is not removed first.
       * Close #125 Refresh widgets if start on map.
       * Correct the double domogik rest call at start.
       * Re-enable the timer period in menu and code.

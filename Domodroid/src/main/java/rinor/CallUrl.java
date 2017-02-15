@@ -6,8 +6,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
@@ -19,12 +17,11 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.domogik.domodroid13.R;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -115,7 +112,6 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                 return result;
 
             }
-            return responseMessage;
         }
         return "NO CONNECTION";
     }

@@ -26,6 +26,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -54,6 +56,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
@@ -88,6 +91,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private SharedPreferences SP_params;
     private SharedPreferences.Editor SP_prefEditor;
     private AlertDialog.Builder AD_notSyncAlert;
+    private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
     private Dialog_Synchronize DIALOG_dialog_sync;
     private WidgetUpdate WU_widgetUpdate;
@@ -869,7 +873,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             if (load_parameters.loadSharedPreferencesFromFile(backupprefs, SP_prefEditor, Tracer)) {
                 LoadSelections();    // to set panel with known values
             }
-            run_sync_dialog();
+            run_sync_dialog(); //after reload prefs at start
 
         } else {
             Tracer.v(mytag, "Settings not reloaded : clear database..");
@@ -1023,6 +1027,32 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     private void run_sync_dialog() {
+        AD_wifi_prefered = new AlertDialog.Builder(this);
+        AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
+        AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
+        AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    String ssid = wifiInfo.getSSID();
+                    //replace and save "SSID" by SSID
+                    SP_prefEditor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length()-1));
+                    SP_prefEditor.commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG);
+                }
+                dialog.dismiss();
+            }
+        });
+        AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AD_wifi_prefered.show();
+
         //change sync parameter in case it fail.
         SP_prefEditor.putBoolean("SYNC", false);
         SP_prefEditor.commit();

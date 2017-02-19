@@ -1004,4 +1004,7 @@
     <string name="notification_error_ssl_idmismatch">ssl idmismatch</string>
     <string name="notification_error_ssl_expired">ssl expired</string>
     <string name="notification_error_ssl_date_invalid">ssl date invalid</string>
+    <string name="sync_wifi_preferred_title">Local or External sync</string>
+    <string name="sync_wifi_preferred_message">Is it your preferred WI-FI network use for local Domogik access ?</string>
+    <string name="error_getting_wifi_ssid">Error getting your current WI-FI SSID</string>
 </resources>

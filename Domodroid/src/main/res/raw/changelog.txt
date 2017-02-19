@@ -20,8 +20,11 @@
   </head>
   <body>
     $ 1.4
-      % Version 29
+      % Version 32
       _ 2017-xx-xx
+      % Version 31
+      _ 2017-02-19
+      * Try to correct android Play Store SSL issue.
       % Version 28
       _ 2017-02-15
       ! Important fill the local wifi SSID in server option to be used as local network otherwise external access will never work.

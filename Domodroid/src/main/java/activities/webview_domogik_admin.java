@@ -81,24 +81,52 @@ public class webview_domogik_admin extends Activity {
         //Allow to open webview even if untrusted SSL cert
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.notification_error_ssl_cert_invalid);
-            builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    handler.proceed();
+            if (!SP_params.getBoolean("SSL_Trusted", false)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
+                int message;
+                switch (error.getPrimaryError()) {
+                    case SslError.SSL_DATE_INVALID:
+                        message = R.string.notification_error_ssl_date_invalid;
+                        break;
+                    case SslError.SSL_EXPIRED:
+                        message = R.string.notification_error_ssl_expired;
+                        break;
+                    case SslError.SSL_IDMISMATCH:
+                        message = R.string.notification_error_ssl_idmismatch;
+                        break;
+                    case SslError.SSL_INVALID:
+                        message = R.string.notification_error_ssl_invalid;
+                        break;
+                    case SslError.SSL_NOTYETVALID:
+                        message = R.string.notification_error_ssl_not_yet_valid;
+                        break;
+                    case SslError.SSL_UNTRUSTED:
+                        message = R.string.notification_error_ssl_untrusted;
+                        break;
+                    default:
+                        message = R.string.notification_error_ssl_cert_invalid;
                 }
-            });
-            builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    handler.cancel();
-                }
-            });
-            final AlertDialog dialog = builder.create();
-            dialog.show();
+                builder.setMessage(message);
+                builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor prefeditor = SP_params.edit();
+                        prefeditor.putBoolean("SSL_Trusted", true);
+                        prefeditor.commit();
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                handler.proceed();
+            }
         }
     }
-
-
 }

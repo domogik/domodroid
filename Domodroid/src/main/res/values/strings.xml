@@ -998,4 +998,10 @@
     <string name="mq_settings">MQ configuration</string>
     <string name="wait_wifi_scan_result">Wait for wifi scan result</string>
     <string name="notification_error_ssl_cert_invalid">ssl cert invalid</string>
+    <string name="notification_error_ssl_untrusted">ssl untrusted</string>
+    <string name="notification_error_ssl_not_yet_valid">ssl not yet invalid</string>
+    <string name="notification_error_ssl_invalid">ssl invalid</string>
+    <string name="notification_error_ssl_idmismatch">ssl idmismatch</string>
+    <string name="notification_error_ssl_expired">ssl expired</string>
+    <string name="notification_error_ssl_date_invalid">ssl date invalid</string>
 </resources>

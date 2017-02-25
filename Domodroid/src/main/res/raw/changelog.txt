@@ -21,7 +21,9 @@
   <body>
     $ 1.4
       % Version 32
-      _ 2017-xx-xx
+      _ 2017-02-25
+      * #141 at sync ask user if it's is preferred wi-fi networks
+      * Save user choice to prefs for SSL error in domogik admins view
       % Version 31
       _ 2017-02-19
       * Try to correct android Play Store SSL issue.

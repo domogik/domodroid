@@ -63,7 +63,7 @@
         android:title="OUTSIDE_server_settings">
         <Preference
             android:enabled="false"
-           android:selectable="false"
+            android:selectable="false"
             android:shouldDisableView="false"
             android:summary="External options" />
         <EditTextPreference
@@ -138,6 +138,12 @@
             android:selectable="false"
             android:shouldDisableView="true"
             android:title="@string/Rinor_URL" />
+        <EditTextPreference
+            android:enabled="false"
+            android:key="prefered_wifi_ssid"
+            android:selectable="false"
+            android:shouldDisableView="true"
+            android:title="@string/OPTION_local_wifi_title" />
         <EditTextPreference
             android:enabled="false"
             android:key="external_URL"

@@ -251,12 +251,11 @@ public class Rest_com {
 
 }
 /*Todo replace by a simpler method
-      try (
-
-            String response = new CallUrl().execute(url, login, password, "3000", String.valueOf(SSL)).get();
-            json = new JSONArray(response);
+// for now i get: java.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare()
+      try {
+            result = new CallUrl().execute(url, login, password, "3000", String.valueOf(SSL)).get();
         } catch (Exception e) {
             Tracer.e(mytag, e.toString());
         }
-        return json;
+        return result;
   */

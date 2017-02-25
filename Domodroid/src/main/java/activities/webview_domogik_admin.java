@@ -1,10 +1,12 @@
 package activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -74,12 +76,57 @@ public class webview_domogik_admin extends Activity {
         // system behavior (probably exit the activity)
         return super.onKeyDown(keyCode, event);
     }
+
     private class MyWebViewClient extends WebViewClient {
         //Allow to open webview even if untrusted SSL cert
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler,
-                                       SslError error) {
-            handler.proceed();
+        public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+            if (!SP_params.getBoolean("SSL_Trusted", false)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
+                int message;
+                switch (error.getPrimaryError()) {
+                    case SslError.SSL_DATE_INVALID:
+                        message = R.string.notification_error_ssl_date_invalid;
+                        break;
+                    case SslError.SSL_EXPIRED:
+                        message = R.string.notification_error_ssl_expired;
+                        break;
+                    case SslError.SSL_IDMISMATCH:
+                        message = R.string.notification_error_ssl_idmismatch;
+                        break;
+                    case SslError.SSL_INVALID:
+                        message = R.string.notification_error_ssl_invalid;
+                        break;
+                    case SslError.SSL_NOTYETVALID:
+                        message = R.string.notification_error_ssl_not_yet_valid;
+                        break;
+                    case SslError.SSL_UNTRUSTED:
+                        message = R.string.notification_error_ssl_untrusted;
+                        break;
+                    default:
+                        message = R.string.notification_error_ssl_cert_invalid;
+                }
+                builder.setMessage(message);
+                builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor prefeditor = SP_params.edit();
+                        prefeditor.putBoolean("SSL_Trusted", true);
+                        prefeditor.commit();
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                handler.proceed();
+            }
         }
     }
 }

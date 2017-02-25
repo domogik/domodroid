@@ -997,4 +997,14 @@
     <string name="default_area_at_start">Default area to open</string>
     <string name="mq_settings">MQ configuration</string>
     <string name="wait_wifi_scan_result">Wait for wifi scan result</string>
+    <string name="notification_error_ssl_cert_invalid">ssl cert invalid</string>
+    <string name="notification_error_ssl_untrusted">ssl untrusted</string>
+    <string name="notification_error_ssl_not_yet_valid">ssl not yet invalid</string>
+    <string name="notification_error_ssl_invalid">ssl invalid</string>
+    <string name="notification_error_ssl_idmismatch">ssl idmismatch</string>
+    <string name="notification_error_ssl_expired">ssl expired</string>
+    <string name="notification_error_ssl_date_invalid">ssl date invalid</string>
+    <string name="sync_wifi_preferred_title">Local or External sync</string>
+    <string name="sync_wifi_preferred_message">Is it your preferred WI-FI network use for local Domogik access ?</string>
+    <string name="error_getting_wifi_ssid">Error getting your current WI-FI SSID</string>
 </resources>

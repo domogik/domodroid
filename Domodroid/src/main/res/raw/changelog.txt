@@ -20,6 +20,8 @@
   </head>
   <body>
     $ 1.4
+      % Version 33
+      _ 2017-xx-xx
       % Version 32
       _ 2017-02-25
       * #141 at sync ask user if it's is preferred wi-fi networks

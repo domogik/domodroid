@@ -12,7 +12,7 @@
             android:enabled="false"
             android:selectable="false"
             android:shouldDisableView="false"
-            android:summary="EASY configuration" />
+            android:summary="@string/OPTION_quick_configuration" />
         <Preference
             android:icon="@drawable/ic_qr_code"
             android:persistent="false"
@@ -28,7 +28,6 @@
         android:title="@string/OPTION_server_settings">
         <Preference
             android:enabled="false"
-            android:icon="@drawable/ic_settings_applications_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/OPTION_server_explain" />
@@ -60,12 +59,12 @@
 
     <PreferenceCategory
         android:persistent="false"
-        android:title="OUTSIDE_server_settings">
+        android:title="@string/OUTSIDE_server_settings">
         <Preference
             android:enabled="false"
             android:selectable="false"
             android:shouldDisableView="false"
-            android:summary="External options" />
+            android:summary="@string/OUTSIDE_External_options" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_external_IP_Title"
             android:icon="@drawable/ic_ip_address"
@@ -87,12 +86,12 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:persistent="false"
-        android:title="Common server_settings">
+        android:title="@string/OPTION_common_server_settings">
         <Preference
             android:enabled="false"
             android:selectable="false"
             android:shouldDisableView="false"
-            android:summary="Global options" />
+            android:summary="@string/OPTION_global_options" />
         <EditTextPreference
             android:dialogTitle="@string/OPTION_server_Path_Title"
             android:key="rinorPath"
@@ -125,7 +124,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:persistent="false"
-        android:title="Check server settings">
+        android:title="@string/OPTION_check_server_settings">
         <EditTextPreference
             android:enabled="false"
             android:key="UPDATE_URL"

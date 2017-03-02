@@ -6,22 +6,21 @@
     android:title="Preferences"
     tools:context="activities.Activity_Main">
     <PreferenceCategory
-        android:icon="@drawable/ic_widgets_black_24dp"
         android:persistent="false"
         android:title="@string/usage_settings">
         <Preference
             android:enabled="false"
-            android:icon="@drawable/ic_widgets_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/usage_explain" />
         <CheckBoxPreference
-            android:icon="@drawable/ic_subtitles_black_24dp"
+            android:icon="@drawable/ic_widgets_black_24dp"
             android:key="WIDGET_CHOICE"
             android:summaryOff="@string/widget_normal"
             android:summaryOn="@string/widgets_alternative"
             android:title="@string/widget_choice" />
         <CheckBoxPreference
+            android:icon="@drawable/ic_subtitles_black_24dp"
             android:key="widget_timestamp"
             android:summaryOff="@string/option_widget_timestamp_ago"
             android:summaryOn="@string/option_widget_timestamp_date"
@@ -33,6 +32,7 @@
             android:summaryOn="@string/Graph_achartengine"
             android:title="@string/graph_choice" />
         <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:icon="@drawable/ic_timeline_black_24dp"
             android:defaultValue="262"
             android:enabled="true"
             android:key="graphics_height_size"

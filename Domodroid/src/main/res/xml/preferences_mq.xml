@@ -6,7 +6,12 @@
     tools:context="activities.Activity_Main">
     <PreferenceCategory
         android:persistent="false"
-        android:title="MQ configuration">
+        android:title="@string/mq_settings">
+        <Preference
+            android:enabled="false"
+            android:selectable="false"
+            android:shouldDisableView="false"
+            android:summary="@string/OPTION_mq_explain" />
         <EditTextPreference
             android:enabled="true"
             android:icon="@drawable/ic_mq"

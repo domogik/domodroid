@@ -5,12 +5,10 @@
     android:title="Preferences"
     tools:context="activities.Activity_Main">
     <PreferenceCategory
-        android:icon="@drawable/ic_map_black_24dp"
         android:persistent="false"
-        android:title="@string/map_explain">
+        android:title="@string/map_settings">
         <Preference
             android:enabled="false"
-            android:icon="@drawable/ic_map_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/map_explain" />
@@ -30,6 +28,7 @@
                     android:title="@string/map_option_zoom" />
         -->
         <CheckBoxPreference
+            android:icon="@drawable/ic_map_black_24dp"
             android:key="START_ON_MAP"
             android:summaryOff="@string/map_option_start_off"
             android:summaryOn="@string/map_option_start_on"

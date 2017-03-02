@@ -11,18 +11,19 @@
         android:persistent="false"
         android:title="@string/OPTION_server_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_server"
             android:targetClass="activities.Preference"
-            android:action="preferences_server" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
     <Preference
+        android:icon="@drawable/ic_mq"
         android:persistent="false"
         android:title="@string/mq_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_mq"
             android:targetClass="activities.Preference"
-            android:action="preferences_mq" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
     <Preference
@@ -30,9 +31,9 @@
         android:persistent="false"
         android:title="@string/usage_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_widget"
             android:targetClass="activities.Preference"
-            android:action="preferences_widget" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
     <Preference
@@ -40,9 +41,9 @@
         android:persistent="false"
         android:title="@string/map_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_map"
             android:targetClass="activities.Preference"
-            android:action="preferences_map" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
     <Preference
@@ -50,9 +51,9 @@
         android:persistent="false"
         android:title="@string/house_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_house"
             android:targetClass="activities.Preference"
-            android:action="preferences_house" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
     <Preference
@@ -60,9 +61,9 @@
         android:persistent="false"
         android:title="@string/OPTION_butler_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_butler"
             android:targetClass="activities.Preference"
-            android:action="preferences_butler" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
     <Preference
@@ -70,9 +71,9 @@
         android:persistent="false"
         android:title="@string/debug_settings">
         <intent
-            android:targetPackage="org.domogik.domodroid13"
+            android:action="preferences_debug"
             android:targetClass="activities.Preference"
-            android:action="preferences_debug" />
+            android:targetPackage="org.domogik.domodroid13" />
     </Preference>
 
 </PreferenceScreen>

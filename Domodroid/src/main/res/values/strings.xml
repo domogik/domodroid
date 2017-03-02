@@ -1007,4 +1007,12 @@
     <string name="sync_wifi_preferred_title">Local or External sync</string>
     <string name="sync_wifi_preferred_message">Is it your preferred WI-FI network use for local Domogik access ?</string>
     <string name="error_getting_wifi_ssid">Error getting your current WI-FI SSID</string>
+    <string name="OUTSIDE_server_settings">External settings</string>
+    <string name="OUTSIDE_External_options">Outside settings to reach domogik</string>
+    <string name="OPTION_common_server_settings">Common server settings</string>
+    <string name="OPTION_global_options">Global options</string>
+    <string name="OPTION_check_server_settings">Check server settings</string>
+    <string name="OPTION_quick_configuration">Quick Configuration</string>
+    <string name="OPTION_mq_explain">This part is to configure the Message Queue</string>
+
 </resources>

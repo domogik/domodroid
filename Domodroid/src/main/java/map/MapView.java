@@ -1316,6 +1316,7 @@ public class MapView extends View {
             BitmapFactory.Options options2 = new BitmapFactory.Options();
             options2.inSampleSize = scale;
             FileInputStream fis = new FileInputStream(f);
+            //TODO #155
             b = BitmapFactory.decodeStream(fis, null, options2);
             fis.close();
         } catch (IOException e) {

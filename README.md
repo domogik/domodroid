@@ -3,10 +3,15 @@
 [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/newdomodroid)
 ![API](https://img.shields.io/badge/API-8%2B-green.svg?style=flat)
 
-domodroid
+Domodroid
 =========
 
 Android client for Domogik
+
+<a href="https://f-droid.org/repository/browse/?fdid=org.domogik.domodroid13" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
+<a href="https://play.google.com/store/apps/details?id=org.domogik.domodroid13" target="_blank">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80"/></a>
 
 This Branch is the Dev one with android studio.
 
@@ -30,7 +35,4 @@ This Branch is the Dev one with android studio.
  Domodroid. If not, see <http://www.gnu.org/licenses/>.
 
 ## Links
-* [Domodroid on Google Play](https://play.google.com/store/apps/details?id=org.domogik.domodroid13)
 * [Domogik](http://domogik.org)
-
-[![F-Droid](https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png)](https://f-droid.org/repository/browse/?fdid=org.domogik.domodroid13)

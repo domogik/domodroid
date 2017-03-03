@@ -35,6 +35,14 @@ import misc.tracerengine;
 
 public abstract class common_method {
 
+    /**
+     *  This method save the parameters to a file
+     *
+     * @param Tracer tracerengine
+     * @param prefEditor A SharedPreferences.Editor
+     * @param mytag a tag to know where the method was called
+     * @param context a Context used to write file
+     */
     public static void save_params_to_file(tracerengine Tracer, SharedPreferences.Editor prefEditor, String mytag, Context context) {
         //#76
         prefEditor.commit();
@@ -42,6 +50,11 @@ public abstract class common_method {
         saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), context, Tracer, mytag);
     }
 
+    /**
+     *  This method sympli refresh the current view
+     *
+     * @param widgetHandler an Handler used to callback
+     */
     public static void refresh_the_views(Handler widgetHandler) {
         //Refresh the view
         Bundle b = new Bundle();
@@ -51,6 +64,14 @@ public abstract class common_method {
         widgetHandler.sendMessage(msg);
     }
 
+    /**
+     *  This method really save the file to a destination
+     *
+     * @param dst destination of the file
+     * @param context Context used to write file
+     * @param Tracer tracerengine Used to log essentially
+     * @param mytag a tag to know wher method was called from
+     */
     private static void saveSharedPreferencesToFile(File dst, Context context, tracerengine Tracer, String mytag) {
         ObjectOutputStream output = null;
         try {

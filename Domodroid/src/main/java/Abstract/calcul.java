@@ -21,9 +21,14 @@ package Abstract;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-
 public abstract class calcul {
 
+    /**
+     * Method to round a doucle to 2 decimals
+     *
+      * @param value as double
+     * @return a double round to 2 decimals
+     */
     public static double Round_double(double value) {
         if (2 < 0) throw new IllegalArgumentException();
 
@@ -32,6 +37,13 @@ public abstract class calcul {
         return bd.doubleValue();
     }
 
+    /**
+     * Method to round a float to 'n' decimals
+     *
+     * @param Rval float to round
+     * @param Rpl number of decimals wanted
+     * @return a float rounded to RpL legnth
+     */
     public static float Round_float(float Rval, int Rpl) {
         float p = (float) Math.pow(10, Rpl);
         Rval = Rval * p;

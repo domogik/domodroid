@@ -10,6 +10,10 @@ import java.lang.reflect.Method;
 
 public abstract class gethostname {
 
+    /**
+     *
+      * @return The hostname of the device
+     */
     public static String getHostName() {
         try {
             Method getString = Build.class.getDeclaredMethod("getString", String.class);

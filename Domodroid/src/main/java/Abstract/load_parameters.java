@@ -18,6 +18,14 @@ import misc.tracerengine;
 public class load_parameters {
     static String mytag="load_parameters";
 
+    /**
+     * Method to reload a file containing Preferences saved
+     *
+     * @param src a file where params where saved
+     * @param SP_prefEditor SharedPreferences.Edtor
+     * @param Tracer Tracerengine used for log
+     * @return True if success
+     */
     public static Boolean loadSharedPreferencesFromFile(File src, SharedPreferences.Editor SP_prefEditor, tracerengine Tracer) {
         Boolean result= false;
         ObjectInputStream input = null;
@@ -61,6 +69,12 @@ public class load_parameters {
         return result;
     }
 
+    /**
+     * Somes basic preferences need to be initialise if not exist
+     *
+     * @param SP_params SharedPreferences
+     * @param SP_prefEditor SharedPreferences.Editor
+     */
     public static void load_preferences(SharedPreferences SP_params, SharedPreferences.Editor SP_prefEditor) {
         //Load default value to avoid crash.
         String currlogpath = SP_params.getString("LOGNAME", "");

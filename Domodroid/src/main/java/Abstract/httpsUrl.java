@@ -25,6 +25,14 @@ import javax.net.ssl.X509TrustManager;
 
 public abstract class httpsUrl {
     //todo add tracerengine here too handle log.
+
+    /**
+     *
+     * @param urlString the full url to join
+     * @param login for credentials
+     * @param password for credentials
+     * @return An HttpsURLConnection with credentials and accepting Self-signed cert
+     */
     public static HttpsURLConnection setUpHttpsConnection(String urlString, String login, String password) {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
@@ -69,6 +77,11 @@ public abstract class httpsUrl {
         }
     }
 
+    /**
+     *
+     * @param is InputStream to decode
+     * @return a String from request
+     */
     public static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();

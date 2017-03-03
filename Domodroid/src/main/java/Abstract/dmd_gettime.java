@@ -18,6 +18,10 @@ public class dmd_gettime {
         return StringDateToDate(GetUTCdatetimeAsString());
     }
 
+    /**
+     *
+     * @return a String containing current date in UTC timezone
+     */
     public static String GetUTCdatetimeAsString()
     {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
@@ -27,6 +31,11 @@ public class dmd_gettime {
         return utcTime;
     }
 
+    /**
+     *
+     * @param StrDate A date in string format
+     * @return the same date in Date format
+     */
     public static Date StringDateToDate(String StrDate)
     {
         Date dateToReturn = null;

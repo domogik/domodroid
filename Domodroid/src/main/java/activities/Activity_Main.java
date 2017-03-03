@@ -282,22 +282,31 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
-                        /*
-                        //todo #141 ask user if it's is prefered wifi SSID.
-                        ConnectivityManager connectivityManager
-                                = (ConnectivityManager) (context.getSystemService(Context.CONNECTIVITY_SERVICE));
-                        NetworkInfo[] netInfo = connectivityManager.getAllNetworkInfo();
-                        for (NetworkInfo ni : netInfo) {
-                            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                                if (ni.isConnected()) {
+                        AD_wifi_prefered = new AlertDialog.Builder(Activity_Main.this);
+                        AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
+                        AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
+                        AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
                                     WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
-                                    WifiInfo wifiInfo;
-                                    wifiInfo = wifiManager.getConnectionInfo();
-                                    String ssid = wifiInfo.getSSID().replace("\"", "");
-                                    SP_prefEditor.putString("prefered_wifi_ssid",ssid);
-                                            SP_prefEditor.commit();
+                                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                                    String ssid = wifiInfo.getSSID();
+                                    //replace and save "SSID" by SSID
+                                    SP_prefEditor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length()-1));
+                                    SP_prefEditor.commit();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG);
                                 }
-                        }*/
+                                dialog.dismiss();
+                            }
+                        });
+                        AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AD_wifi_prefered.show();
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
                         common_method.save_params_to_file(Tracer, SP_prefEditor, mytag, getApplicationContext());
@@ -1027,32 +1036,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     private void run_sync_dialog() {
-        AD_wifi_prefered = new AlertDialog.Builder(this);
-        AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
-        AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
-        AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
-                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                    String ssid = wifiInfo.getSSID();
-                    //replace and save "SSID" by SSID
-                    SP_prefEditor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length()-1));
-                    SP_prefEditor.commit();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG);
-                }
-                dialog.dismiss();
-            }
-        });
-        AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AD_wifi_prefered.show();
-
         //change sync parameter in case it fail.
         SP_prefEditor.putBoolean("SYNC", false);
         SP_prefEditor.commit();

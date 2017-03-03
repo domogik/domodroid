@@ -17,7 +17,7 @@
     </Preference>
 
     <Preference
-        android:icon="@drawable/ic_mq"
+        android:icon="@drawable/ic_mq_24dp"
         android:persistent="false"
         android:title="@string/mq_settings">
         <intent

@@ -183,7 +183,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     }
 
     private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-        // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
             Handler handler = new Handler(activity.getMainLooper());
@@ -208,9 +207,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                      Tracer.i(mytag, "Sending to Rinor : <" + state_progress + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          send_command.send_it(activity, Tracer, command_id, null, state_progress, api_version);
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          //Clean all text from allEds
                                          for (int i = 0; i < allEds.size(); i++) {
                                              allEds.get(i).setText("");

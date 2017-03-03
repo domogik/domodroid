@@ -529,7 +529,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     }
 
     private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-        // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
             Handler temphandler = new Handler(activity.getMainLooper());
@@ -575,10 +574,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                              }
                                          }
                                      } else {
-                                         // in 0.7 api
-                                         // Url2send = "cmd/id/" + command_id + "?" + command_type + "=" + value;
-                                         // in 0.6 api
-                                         // Url2send = "command/" + type + "/" + address + "/setcolor/" + value;
                                          if ((argb != 0) && switch_state) {
                                              String srgb = Integer.toHexString(argb);
                                              if (srgb.length() > 6)
@@ -599,9 +594,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      updating = 1;
                                      JSONObject json_Ack = null;
                                      try {
-                                         //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          send_command.send_it(activity, Tracer, command_id, command_type, String.valueOf(state_progress), api_version);
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                      }

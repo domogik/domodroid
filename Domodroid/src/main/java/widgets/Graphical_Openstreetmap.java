@@ -188,7 +188,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
                                                             Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                                                             activity.startActivity(unrestrictedIntent);
                                                         } catch (ActivityNotFoundException innerEx) {
-                                                            //todo to translate
                                                             Toast.makeText(activity, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
                                                         }
                                                     }

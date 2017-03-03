@@ -45,7 +45,7 @@ public class config_with_qrcode extends AppCompatActivity {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 contents = data.getStringExtra("SCAN_RESULT"); //this is the result
-                showDialog(config_with_qrcode.this, getString(R.string.qr_code_is_valid), contents, getString(R.string.ok), getString(R.string.reloadNO)).show();
+                showDialog(config_with_qrcode.this, getString(R.string.qr_code_is_valid), contents, getString(R.string.continue1), getString(R.string.abort)).show();
             } else if (resultCode == RESULT_CANCELED) {
                 //showDialog(config_with_qrcode.this, "Qrcode results", "No results from qrcode scanner", "Yes", "No").show();
             }

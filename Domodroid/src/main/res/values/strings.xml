@@ -1015,5 +1015,6 @@
     <string name="OPTION_quick_configuration">Quick Configuration</string>
     <string name="OPTION_mq_explain">This part is to configure the Message Queue</string>
     <string name="OPTION_mq_explain1">Note that this is only available on local network not when outside house.</string>
-
+    <string name="abort">Abort</string>
+    <string name="continue1">Continue</string>
 </resources>

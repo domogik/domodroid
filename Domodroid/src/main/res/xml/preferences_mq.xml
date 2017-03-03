@@ -12,6 +12,11 @@
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/OPTION_mq_explain" />
+        <Preference
+            android:enabled="false"
+            android:selectable="false"
+            android:shouldDisableView="false"
+            android:summary="@string/OPTION_mq_explain1" />
         <EditTextPreference
             android:enabled="true"
             android:icon="@drawable/ic_mq"

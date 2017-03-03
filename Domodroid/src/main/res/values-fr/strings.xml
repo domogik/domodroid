@@ -165,7 +165,8 @@
     <string name="map_autozoom">Zoom automatique en map:</string>
     <string name="map_autozoom_on">Image redimensionnée à la taille de l\'écran</string>
     <string name="map_autozoom_off">Image non redimensionnée</string>
-    <string name="OPTION_server_settings">Configurer Serveur</string>
+    <string name="OPTION_server_settings">Configurer le Serveur</string>
+    <string name="OPTION_server_qrcode">Configurer avec un QR code</string>
     <string name="OPTION_server_bt_apply">Appliquer</string>
     <string name="OPTION_server_bt_cancel">Annuler</string>
     <string name="OPTION_server_explain">Cet écran permet la configuration du serveur</string>
@@ -190,7 +191,6 @@
     <string name="OPTION_your_name">Votre nom</string>
     <string name="OPTION_your_name_desc">Définissez votre nom</string>
     <string name="OPTION_butler_explain">Cet écran permet la configuration du majordome</string>
-    <string name="OPTION_server_qrcode">Conf. auto. via QRcode</string>
     <string name="toast_crash">Domodroid a planté</string>
     <string name="usage_settings">Configurer Widget</string>
     <string name="usage_bt_apply">Appliquer</string>
@@ -212,7 +212,7 @@
     <string name="Rinor_URL">Url utilisée pour joindre Rest</string>
     <string name="MQ_address">Adresse de MQ</string>
     <string name="Mq_sub_port">Port sub de MQ</string>
-    <string name="Mq_pub_port">Port pub de MQ</string>
+    <string name="Mq_pub_port">Port sub de MQ</string>
     <string name="usage_byusagecheckbox">Forcer par usage pour 0.3:</string>
     <string name="usage_byusage">Organisation par usage ou device</string>
     <string name="usage_byhouse">Organisation comme maison</string>
@@ -404,7 +404,7 @@
     <string name="info3200">Non disponible</string>
     <string name="not_available">Non disponible</string>
     <string name="rain">Pluie</string>
-    <string name="rain_and_snow">Pluie et neige</string>
+    <string name="rain_and_snow">Neige et pluie</string>
     <string name="butler">Majordome</string>
     <string name="action_settings">Paramètres</string>
     <string name="title_activity_main">Domogik Majordome</string>
@@ -438,15 +438,15 @@
     <string name="sat">Sam.</string>
     <string name="fri">Ven</string>
     <string name="forecast_0_day">Prévision 0 jour</string>
-    <string name="forecast_2_condition_code">Prévision 2 Code</string>
-    <string name="forecast_2_day">Prévision 2 jour</string>
-    <string name="forecast_4_condition_code">Prévision 4 Code</string>
     <string name="forecast_1_day">Prévision 1 jour</string>
     <string name="forecast_3_day">Prévision 3 jour</string>
+    <string name="forecast_2_day">Prévision 2 jour</string>
+    <string name="forecast_4_day">Prévision 4 jour</string>
     <string name="forecast_0_condition_code">Prévision 0 Code</string>
     <string name="forecast_1_condition_code">Prévision 1 Code</string>
+    <string name="forecast_2_condition_code">Prévision 2 Code</string>
     <string name="forecast_3_condition_code">Prévision 3 Code</string>
-    <string name="forecast_4_day">Prévision 4 jour</string>
+    <string name="forecast_4_condition_code">Prévision 4 Code</string>
     <string name="forecast_0_condition_text">Prévision 0 Texte</string>
     <string name="forecast_1_condition_text">Prévision 1 Texte</string>
     <string name="forecast_2_condition_text">Prévision 2 Texte</string>
@@ -512,7 +512,6 @@
     <string name="fog">Brouillard</string>
     <string name="inactive">Inactif</string>
     <string name="active">Actif</string>
-    <string name="sms_sended">SMS envoyé</string>
     <string name="ok" tools:ignore="ButtonCase">Ok</string>
     <string name="sensor_script_info_binary">Script capteur binaire</string>
     <string name="sensor_script_info_number">Script capteur numérique</string>
@@ -639,8 +638,8 @@
     <string name="make">Fabricant</string>
     <string name="carid">Identifiant voiture</string>
     <string name="ignition_status">Moteur</string>
-    <string name="low_beam_status">Feux de position</string>
     <string name="high_beam_status">Feux de croisement</string>
+    <string name="low_beam_status">Feux de position</string>
     <string name="head_light_status">Feux de route</string>
     <string name="left_indicator_status">Clignotant gauche</string>
     <string name="right_indicator_status">Clignotant droit</string>
@@ -649,8 +648,8 @@
     <string name="front_fog_light_status">Feux antibrouillard avant</string>
     <string name="lock_status">Etat fermeture</string>
     <string name="odometer">Compteur kilométrique</string>
-    <string name="position">Position</string>
     <string name="location">Position</string>
+    <string name="position">Position</string>
     <string name="fuel_level">Niveau de carburant</string>
     <string name="set_away">Définir absent</string>
     <string name="away">Parti</string>
@@ -724,7 +723,6 @@
     <string name="True">Vrai</string>
     <string name="year">Année</string>
     <string name="command_sent">Commande envoyé à rest!</string>
-    <string name="command_sending">Envoi de la commande à rest...</string>
     <string name="heavyraininhour">Pluie battante dans l\'heure</string>
     <string name="raininhour">Pluie dans l\'heure</string>
     <string name="rainlevel55mn">Niveau de pluie à 55min</string>
@@ -756,6 +754,7 @@
     <string name="master_bedroom">Chambre principale</string>
     <string name="outside">A l\'extérieur</string>
     <string name="upstairs">Etage supérieur</string>
+    <string name="contact_devs">Ceci n\'est pas encore supporté, contacter les devs.</string>
     <string name="qr_code_is_valid">Le Qrcode est valide:</string>
     <string name="no_qrcode_scanner">Pas d\'applications pour lire les QRcode</string>
     <string name="no_qrcode_question">Télécharger un lecteur de Qrcode depuis le market ?</string>
@@ -773,7 +772,6 @@
     <string name="vigilancecolorflood">Couleur Vigilance Inondation</string>
     <string name="vigilancecolorheat">Couleur Vigilance Canicule</string>
     <string name="vigilancecolorsnow">Couleur Vigilance Neige</string>
-    <string name="no_vigilance">Aucun risque</string>
     <string name="wind">Vent</string>
     <string name="flood">Inondation</string>
     <string name="snow_ice">Neige/verglas</string>
@@ -781,9 +779,11 @@
     <string name="intense_cold">Grand froid</string>
     <string name="avalanches">Avalanches</string>
     <string name="submersion_wave">Vague submersion</string>
-    <string name="contact_devs">Ceci n\'est pas encore supporté, contacter les devs.</string>
-    <string name="sms_not_sended">SMS pas envoyé</string>
+    <string name="no_vigilance">Aucun risque</string>
     <string name="too_many_sms_were_sent_in_too_little_time.">Trop de sms envoyé en trop peu de temps.</string>
+    <string name="sms_sended">SMS envoyé</string>
+    <string name="sms_not_sended">SMS pas envoyé</string>
+    <string name="command_sending">Envoi de la commande à rest...</string>
     <string name="loading_data_from_rest">Chargement des valeurs depuis rest....</string>
     <string name="domogik_admin_page">Administration de domogik</string>
     <string name="next">Suiv.</string>

@@ -20,6 +20,11 @@ public class Connectivity {
     public static boolean on_other_network = false;
     static String mytag = "Connectivity";
 
+    /**
+     * Method to check the current availability of internet on the device
+     *
+     * @return a boolean depending on internet connection True if connected else False
+     */
     public static boolean IsInternetAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) (context.getSystemService(Context.CONNECTIVITY_SERVICE));

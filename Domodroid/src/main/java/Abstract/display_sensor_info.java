@@ -281,6 +281,13 @@ public abstract class display_sensor_info {
         }
     }
 
+    /**
+     *
+     * @param Tracer Tracerengine used for logging
+     * @param mytag Tag to know where it was called from
+     * @param phone a String to convert
+     * @return the convertion to Locale User phone number display
+     */
     public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
         try {
             String convert_phone = PhoneNumberUtils.formatNumber(phone);
@@ -294,6 +301,14 @@ public abstract class display_sensor_info {
         }
     }
 
+    /**
+     *
+     * @param Tracer Tracerengine used for logging
+     * @param mytag Tag to know where it was called from
+     * @param number in float format
+     * @param origin_number in string format
+     * @return A string convert to number but return as string in User Locale format
+     */
     public static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
         try {
             String convert_number = NumberFormat.getInstance().format(number);
@@ -305,6 +320,12 @@ public abstract class display_sensor_info {
         }
     }
 
+    /**
+     *
+     * @param timeStampStr the timestamp to convert
+     * @param context Context used to get date format
+     * @return a Timestamp convert to date
+     */
     public static String timestamp_convertion(String timeStampStr, Context context) {
         try {
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
@@ -316,8 +337,14 @@ public abstract class display_sensor_info {
         }
     }
 
+    /**
+     *
+     * @param Tracer Tracerengine used for logging
+     * @param mytag Tag to know where it was called from
+     * @param hour a String from domogik in hh:mm:ss
+     * @return hour in User Locale language
+     */
     public static String hour_convertion(tracerengine Tracer, String mytag, String hour) {
-        // Convert value to hour and in local language
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
         Date testDate = null;
         try {

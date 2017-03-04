@@ -6,8 +6,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import static activities.Activity_Main.context;
 
@@ -26,6 +24,7 @@ public class Connectivity {
      * @return a boolean depending on internet connection True if connected else False
      */
     public static boolean IsInternetAvailable() {
+        pref_utils prefUtils = new pref_utils(context);
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) (context.getSystemService(Context.CONNECTIVITY_SERVICE));
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -42,9 +41,8 @@ public class Connectivity {
                     WifiInfo wifiInfo;
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-                        String ssid = wifiInfo.getSSID().replace("\"", "");
-                        String prefered_wifi = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).getString("prefered_wifi_ssid", "");
-                        if (ssid.equals(prefered_wifi)) {
+                        String prefered_wifi = prefUtils.PreferedWifiSsid();
+                        if (wifiInfo.getSSID().replace("\"", "").equals(prefered_wifi)) {
                             on_prefered_Wifi = true;
                         } else {
                             on_prefered_Wifi = false;

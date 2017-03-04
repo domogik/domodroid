@@ -30,11 +30,11 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.preference.ListPreference;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -47,7 +47,7 @@ import org.domogik.domodroid13.R;
 
 import java.util.List;
 
-import Abstract.common_method;
+import Abstract.pref_utils;
 import database.Cache_management;
 import misc.tracerengine;
 
@@ -60,6 +60,7 @@ public class Preference extends PreferenceActivity implements
     private WifiManager mWifiManager;
     CharSequence[] entries = null;
     ListPreference prefered_wifi_ssid;
+    private pref_utils prefUtils;
 
 
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class Preference extends PreferenceActivity implements
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        prefUtils = new pref_utils(this);
     }
 
     @Override
@@ -249,7 +251,7 @@ public class Preference extends PreferenceActivity implements
 
         //Save to file
         String mytag = "Preference";
-        common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
+        prefUtils.save_params_to_file(Tracer, prefEditor, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
         external_urlAccess = params.getString("external_URL", "1.1.1.1");

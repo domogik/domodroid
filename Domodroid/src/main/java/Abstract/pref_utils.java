@@ -2,7 +2,16 @@ package Abstract;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+import misc.tracerengine;
 
 /**
  * Created by tiki on 04/03/2017.
@@ -88,6 +97,9 @@ public class pref_utils {
         editor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length() - 1));
         editor.commit();
     }
+    public String PreferedWifiSsid() {
+        return prefs.getString("prefered_wifi_ssid", "");
+    }
 
     /**
      * @param cached_dump      dump sensor value to save them
@@ -115,4 +127,47 @@ public class pref_utils {
         editor.commit();
     }
 
+    /**
+     * This method save the parameters to a file
+     *
+     * @param Tracer     tracerengine
+     * @param prefEditor A SharedPreferences.Editor
+     * @param mytag      a tag to know where the method was called
+     * @param context    a Context used to write file
+     */
+    public static void save_params_to_file(tracerengine Tracer, SharedPreferences.Editor prefEditor, String mytag, Context context) {
+        //#76
+        prefEditor.commit();
+        Tracer.i(mytag, "Saving pref to file");
+        saveSharedPreferencesToFile(new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings"), context, Tracer, mytag);
+    }
+
+    /**
+     * This method really save the file to a destination
+     *
+     * @param dst     destination of the file
+     * @param context Context used to write file
+     * @param Tracer  tracerengine Used to log essentially
+     * @param mytag   a tag to know wher method was called from
+     */
+    private static void saveSharedPreferencesToFile(File dst, Context context, tracerengine Tracer, String mytag) {
+        ObjectOutputStream output = null;
+        try {
+            output = new ObjectOutputStream(new FileOutputStream(dst));
+            output.writeObject(PreferenceManager.getDefaultSharedPreferences(context).getAll());
+        } catch (FileNotFoundException e) {
+            Tracer.e(mytag, "Files error: " + e.toString());
+        } catch (IOException e) {
+            Tracer.e(mytag, "IO error: " + e.toString());
+        } finally {
+            try {
+                if (output != null) {
+                    output.flush();
+                    output.close();
+                }
+            } catch (IOException ex) {
+                Tracer.e(mytag, "IO error: " + ex.toString());
+            }
+        }
+    }
 }

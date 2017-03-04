@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Abstract.common_method;
+import Abstract.pref_utils;
 import Entity.Entity_client;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
@@ -64,6 +65,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final TextView TV_name;
     private final int id;
     final float api_version;
+    private final pref_utils prefUtils;
     tracerengine Tracer = null;
     final Activity activity;
     private String icon;
@@ -94,6 +96,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         FrameLayout myself = this;
         this.name = name;
         this.state_key = state_key;
+
+        prefUtils = new pref_utils(activity.getApplicationContext());
 
         //global variable
         api_version = params.getFloat("API_VERSION", 0);
@@ -218,7 +222,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     Tracer.get_engine().remove_one_feature_association(id, place_id, place_type);
                     // #76
                     prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, activity);
                     common_method.refresh_the_views(widgetHandler);
@@ -258,7 +262,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                            prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                             change_this_icon(icon_status);
                             dialog.cancel();
                         }
@@ -271,14 +275,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "down");
             prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
             // #76
-            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(activity.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
             // #76
             prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         }
     }

@@ -67,7 +67,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import Abstract.common_method;
 import Abstract.load_parameters;
 import Abstract.pref_utils;
 import Dialog.Dialog_House;
@@ -305,7 +304,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         AD_wifi_prefered.show();
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        common_method.save_params_to_file(Tracer, prefUtils.editor, mytag, getApplicationContext());
+                        prefUtils.save_params_to_file(Tracer, prefUtils.editor, mytag, getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();

@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Abstract.common_method;
+import Abstract.pref_utils;
 import adapter.ArrayAdapterWithIcon;
 import database.Cache_management;
 import database.DmdContentProvider;
@@ -50,6 +51,7 @@ import misc.tracerengine;
 public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickListener {
 
     public final FrameLayout container = null;
+    private final pref_utils prefUtils;
     private FrameLayout myself = null;
     private final Context context;
     private final int id_room;
@@ -75,6 +77,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
         this.widgetHandler = handler;
         domodb = new DomodroidDB(this.Tracer, this.Activity, params);
         prefEditor = params1.edit();
+        prefUtils = new pref_utils(context);
 
         setOnLongClickListener(this);
         mytag = "Graphical_Room(" + id_room + ")";
@@ -115,7 +118,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
                     prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
                     prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view
@@ -145,7 +148,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().descUpdate(id_room, result, "room");
                     // #76
                     prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                     TV_name.setText(result);
                 }
             });
@@ -183,7 +186,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                            pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
                             change_this_icon(icon);
                             dialog.cancel();
                         }
@@ -195,13 +198,13 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_room(id_room, area_id, "room", "down");
             prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_room(id_room, area_id, "room", "up");
             prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         }
     }

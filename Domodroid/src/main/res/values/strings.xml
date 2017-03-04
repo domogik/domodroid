@@ -1017,4 +1017,7 @@
     <string name="OPTION_mq_explain1">Note that this is only available on local network not when outside house.</string>
     <string name="abort">Abort</string>
     <string name="continue1">Continue</string>
+    <string name="map_help_navigation_drawer">You can switch map or add a new one directly from the navigation drawer.</string>
+    <string name="one_finger_move_gestureworks">one finger move</string>
+    <string name="one_finger_tap_gestureworks">one finger tap</string>
 </resources>

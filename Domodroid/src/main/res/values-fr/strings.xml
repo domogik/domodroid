@@ -862,4 +862,5 @@
     <string name="OPTION_mq_explain1">Notez que ceci n\'est valable que lors de l\'accès en local à Domogik, pas depuis l\'exterieur.</string>
     <string name="abort">Annuler</string>
     <string name="continue1">Continuer</string>
+    <string name="map_help_navigation_drawer">Vous pouvez changer de carte ou en ajouter une nouvelle directement depuis le menu latéral.</string>
 </resources>

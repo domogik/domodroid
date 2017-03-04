@@ -45,7 +45,17 @@
                 android:text="@string/map_help_text"
                 android:textColor="#999999"
                 android:textSize="15sp" />
-
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="5dip"
+                android:paddingRight="5dip"
+                android:paddingTop="10dip"
+                android:text="@string/map_help_navigation_drawer"
+                android:textColor="#999999"
+                android:textSize="15sp" />
             <TableLayout
                 android:id="@+id/tableLayout1"
                 android:layout_width="wrap_content"
@@ -63,7 +73,8 @@
                         android:layout_height="120dip"
                         android:paddingLeft="20dip"
                         android:paddingRight="20dip"
-                        android:src="@drawable/one_finger_tap_gestureworks" />
+                        android:src="@drawable/one_finger_tap_gestureworks"
+                        android:contentDescription="@string/one_finger_tap_gestureworks" />
 
                     <ImageView
                         android:id="@+id/imageView2"
@@ -71,7 +82,8 @@
                         android:layout_height="120dip"
                         android:paddingLeft="20dip"
                         android:paddingRight="20dip"
-                        android:src="@drawable/one_finger_move_gestureworks" />
+                        android:src="@drawable/one_finger_move_gestureworks"
+                        android:contentDescription="@string/one_finger_move_gestureworks" />
 
                 </TableRow>
 

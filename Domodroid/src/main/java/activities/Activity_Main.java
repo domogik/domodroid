@@ -24,16 +24,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -71,6 +69,7 @@ import java.util.Vector;
 
 import Abstract.common_method;
 import Abstract.load_parameters;
+import Abstract.pref_utils;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
@@ -78,6 +77,7 @@ import Entity.Entity_Area;
 import Entity.Entity_Room;
 import database.Cache_management;
 import database.WidgetUpdate;
+import metrics.MetricsServiceReceiver;
 import misc.changelog;
 import misc.tracerengine;
 import mq.Main;
@@ -88,8 +88,6 @@ import widgets.Basic_Graphical_zone;
 public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
     public static Context context;
-    private SharedPreferences SP_params;
-    private SharedPreferences.Editor SP_prefEditor;
     private AlertDialog.Builder AD_notSyncAlert;
     private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
@@ -141,6 +139,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private Intent intent_for_metrics;
     private AlarmManager processTimer_for_metrics;
 
+    private pref_utils prefUtils;
+
     /**
      * Called when the activity is first created.
      */
@@ -163,15 +163,14 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         Activity_Main.context = getApplicationContext();
         myself = this;
-        if (android.os.Build.VERSION.SDK_INT == 8) // FROYO (8)
+        if (Build.VERSION.SDK_INT == 8) // FROYO (8)
         {
-            java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
-            java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
+            System.setProperty("java.net.preferIPv4Stack", "true");
+            System.setProperty("java.net.preferIPv6Addresses", "false");
         }
 
-        SP_params = PreferenceManager.getDefaultSharedPreferences(this);
-        SP_prefEditor = SP_params.edit();
-        Tracer = tracerengine.getInstance(SP_params, this);
+        prefUtils = new pref_utils(this);
+        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
         setContentView(R.layout.activity_home);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -181,10 +180,10 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
         }
         //Register metrics
-        if (SP_params.getBoolean("domodroid_metrics", true)) {
+        if (prefUtils.metricsEnabled()) {
             int repeatTime = 30;  //Repeat alarm time in seconds
             processTimer_for_metrics = (AlarmManager) getSystemService(ALARM_SERVICE);
-            intent_for_metrics = new Intent(this, metrics.MetricsServiceReceiver.class);
+            intent_for_metrics = new Intent(this, MetricsServiceReceiver.class);
             pendingIntent_for_metrics = PendingIntent.getBroadcast(this, 0, intent_for_metrics, PendingIntent.FLAG_UPDATE_CURRENT);
             //get metrics every 30s
             processTimer_for_metrics.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent_for_metrics);
@@ -232,9 +231,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
         //load_preferences(); //moved to abstract
-        load_parameters.load_preferences(SP_params, SP_prefEditor);
+        load_parameters.load_preferences(prefUtils.prefs, prefUtils.editor);
 
-        Tracer.set_profile(SP_params);
+        Tracer.set_profile(prefUtils.prefs);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
         File nomedia = new File(Environment.getExternalStorageDirectory() + "/domodroid/.nomedia");
         try {
@@ -289,11 +288,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
                                     WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
-                                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                                    String ssid = wifiInfo.getSSID();
                                     //replace and save "SSID" by SSID
-                                    SP_prefEditor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length()-1));
-                                    SP_prefEditor.commit();
+                                    prefUtils.savePreferedWifiSsid(wifiManager.getConnectionInfo().getSSID());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG);
@@ -309,7 +305,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         AD_wifi_prefered.show();
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        common_method.save_params_to_file(Tracer, SP_prefEditor, mytag, getApplicationContext());
+                        common_method.save_params_to_file(Tracer, prefUtils.editor, mytag, getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();
@@ -428,7 +424,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         house.setLayoutParams(param);
         house.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (SP_params.getBoolean("SYNC", false)) {
+                if (prefUtils.SyncCompleted()) {
                     loadWigets(0, "root");
                     historyPosition++;
                     try {
@@ -466,7 +462,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         map.setLayoutParams(param);
         map.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (SP_params.getBoolean("SYNC", false)) {
+                if (prefUtils.SyncCompleted()) {
                     //dont_freeze=true;		//To avoid WidgetUpdate engine freeze
                     Tracer.w(mytag, "Before call to Map, Disconnect widgets from engine !");
                     if (WU_widgetUpdate != null) {
@@ -491,7 +487,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
         init_done = false;
         // Detect if it's the 1st use after installation...
-        if (!SP_params.getBoolean("SPLASH", false)) {
+        if (!prefUtils.SplashDisplayed()) {
             // Yes, 1st use !
             init_done = false;
             reload = false;
@@ -534,7 +530,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             // This method will be followed by 'onResume()'
             end_of_init_requested = true;
         }
-        if (SP_params.getBoolean("SYNC", false)) {
+        if (prefUtils.SyncCompleted()) {
             //A config exists and a sync as been done by past.
             if (WU_widgetUpdate == null) {
                 Tracer.i(mytag, "OnCreate Params splash is false and WidgetUpdate is null startCacheengine!");
@@ -558,7 +554,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     public void onResume() {
         super.onResume();
         //get metrics every 30s
-        if (SP_params.getBoolean("domodroid_metrics", true)) {
+        if (prefUtils.metricsEnabled()) {
             int repeatTime = 30;  //Repeat alarm time in seconds
             AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
@@ -568,7 +564,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         Tracer.v(mytag + ".onResume", "Check if initialize requested !");
         if (!init_done) {
             Tracer.v(mytag + ".onResume", "Init not done!");
-            if (SP_params.getBoolean("SPLASH", false)) {
+            if (prefUtils.SplashDisplayed()) {
                 Tracer.v(mytag + ".onResume", "params Splash is false !");
                 //cache_ready = false;
                 //try to solve 1rst launch and orientation problem
@@ -599,7 +595,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             }
         }
         //Stop metrics.
-        if (SP_params.getBoolean("domodroid_metrics", true)) {
+        if (prefUtils.metricsEnabled()) {
             processTimer_for_metrics.cancel(pendingIntent_for_metrics);
         }
     }
@@ -616,31 +612,28 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         super.onDestroy();
         this.WM_Agent = null;
         widgetHandler = null;
-        if (SP_params.getFloat("API_VERSION", 0) >= 0.9f) {
-            SharedPreferences.Editor prefEditor = SP_params.edit();
+        if (prefUtils.DomogikApiVersion() >= 0.9f) {
             JSONArray cached_dump = null;
             if (WU_widgetUpdate != null) {
                 Tracer.d("#124", "dump cache");
                 try {
                     cached_dump = WU_widgetUpdate.dump_cache_to_json();
                     // save last value to sharedparams to load them later
-                    prefEditor.putString("sensor_saved_value", cached_dump.toString());
                     Tracer.d("#124", cached_dump.toString());
                     Tracer.d("#124", "dump cached");
                     // save current time stamp to know when the pass was exit.
                     long currentTimestamp = (System.currentTimeMillis() / 1000);
                     Tracer.d("#124", "sensor_saved_timestamp" + currentTimestamp);
-                    prefEditor.putString("sensor_saved_timestamp", String.valueOf(currentTimestamp));
+                    prefUtils.SaveSensor_saved_value(cached_dump.toString(), String.valueOf(currentTimestamp));
                 } catch (JSONException e) {
                     Tracer.e("#124", "sensor_saved at exit error");
                     e.printStackTrace();
                 }
             }
-            prefEditor.commit();
         }
 
         //Stop metrics.
-        if (SP_params.getBoolean("domodroid_metrics", true)) {
+        if (prefUtils.metricsEnabled()) {
             processTimer_for_metrics.cancel(pendingIntent_for_metrics);
         }
 
@@ -705,12 +698,10 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 createAlert();
         }
         //splash
-        if (!SP_params.getBoolean("SPLASH", false)) {
+        if (!prefUtils.SplashDisplayed()) {
             Dialog_Splash dialog_splash = new Dialog_Splash(this);
             dialog_splash.show();
-            SP_prefEditor.clear();
-            SP_prefEditor.putBoolean("SPLASH", true);
-            SP_prefEditor.commit();
+            prefUtils.SaveSplashDisplayed(true);
             return;
         }
         end_of_init_requested = false;
@@ -830,10 +821,10 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             e.printStackTrace();
         }
 
-        if ((SP_params.getBoolean("START_ON_MAP", false) && (!Tracer.force_Main))) {
+        if ((prefUtils.StartOnMap() && (!Tracer.force_Main))) {
             //#125 wait cache ready
             //Solve #2029
-            if (SP_params.getBoolean("SYNC", false)) {
+            if (prefUtils.SyncCompleted()) {
                 Tracer.v(mytag, "Direct start on Map requested...");
                 Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
                 INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
@@ -845,7 +836,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             }
         } else {
             Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            if (SP_params.getBoolean("SYNC", false)) {
+            if (prefUtils.SyncCompleted()) {
                 if (!init_done) {
                     historyPosition = 0;
                     try {
@@ -879,7 +870,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             // If answer is 'yes', load preferences from backup
             Tracer.v(mytag, "reload settings..");
             //loadSharedPreferencesFromFile(backupprefs); //moved to Abstract
-            if (load_parameters.loadSharedPreferencesFromFile(backupprefs, SP_prefEditor, Tracer)) {
+            if (load_parameters.loadSharedPreferencesFromFile(backupprefs, prefUtils.editor, Tracer)) {
                 LoadSelections();    // to set panel with known values
             }
             run_sync_dialog(); //after reload prefs at start
@@ -968,26 +959,26 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     VG_parent.addView(LL_house_map);    // House & map
                     if (!by_usage) {
                         // Version 0.2 or un-force by_usage : display house, map and areas
-                        LL_area = WM_Agent.loadAreaWidgets(this, LL_area, SP_params);
+                        LL_area = WM_Agent.loadAreaWidgets(this, LL_area, prefUtils.prefs);
                         VG_parent.addView(LL_area);    //and areas
 
-                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, SP_params, mytype);//add widgets in root
+                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, prefUtils.prefs, mytype);//add widgets in root
                     } else {
                         // by_usage
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
                         int load_area;
                         try {
-                            load_area = Integer.valueOf(SP_params.getString("load_area_at_start", "1"));
+                            load_area = prefUtils.AreaToStartIn();
                         } catch (Exception e) {
                             Tracer.e(mytag, e.toString());
                             load_area = 1;
                         }
                         //LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
-                        LL_room = WM_Agent.loadRoomWidgets(this, load_area, LL_room, SP_params);    //List of known usages 'as rooms'
+                        LL_room = WM_Agent.loadRoomWidgets(this, load_area, LL_room, prefUtils.prefs);    //List of known usages 'as rooms'
                         VG_parent.addView(LL_room);
 
                         //LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
-                        LL_activ = WM_Agent.loadActivWidgets(this, load_area, "area", LL_activ, SP_params, mytype);//add widgets in area 1
+                        LL_activ = WM_Agent.loadActivWidgets(this, load_area, "area", LL_activ, prefUtils.prefs, mytype);//add widgets in area 1
                     }
                     VG_parent.addView(LL_activ);
                 /*Should never arrive in this type.
@@ -1002,7 +993,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     break;
                 case "statistics":
                     //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
-                    LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, SP_params, mytype);
+                    LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, prefUtils.prefs, mytype);
                     VG_parent.addView(LL_activ);
 
                     break;
@@ -1011,15 +1002,15 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     if (!by_usage) {
                         VG_parent.addView(LL_house_map);    // House & map
                     }
-                    LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, SP_params);//Add room in this area
+                    LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, prefUtils.prefs);//Add room in this area
                     VG_parent.addView(LL_room);
 
-                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this area
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, prefUtils.prefs, mytype);//add widgets in this area
                     VG_parent.addView(LL_activ);
 
                     break;
                 case "room":
-                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, SP_params, mytype);//add widgets in this room
+                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, prefUtils.prefs, mytype);//add widgets in this room
                     VG_parent.addView(LL_activ);
                     break;
             }
@@ -1032,21 +1023,20 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     private void LoadSelections() {
-        by_usage = SP_params.getBoolean("BY_USAGE", false);
+        by_usage = prefUtils.WidgetByUsage();
     }
 
     private void run_sync_dialog() {
         //change sync parameter in case it fail.
-        SP_prefEditor.putBoolean("SYNC", false);
-        SP_prefEditor.commit();
+        prefUtils.SaveSyncCompleted(false);
         if (!(WU_widgetUpdate == null)) {
             WU_widgetUpdate.Disconnect(0);    //Disconnect all widgets owned by Main
         }
         if (DIALOG_dialog_sync == null)
-            DIALOG_dialog_sync = new Dialog_Synchronize(Tracer, this, SP_params);
+            DIALOG_dialog_sync = new Dialog_Synchronize(Tracer, this, prefUtils.prefs);
         DIALOG_dialog_sync.reload = reload;
         DIALOG_dialog_sync.setOnDismissListener(sync_listener);
-        DIALOG_dialog_sync.setParams(SP_params);
+        DIALOG_dialog_sync.setParams(prefUtils.prefs);
         DIALOG_dialog_sync.show();
         DIALOG_dialog_sync.startSync();
     }
@@ -1078,7 +1068,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             Tracer.i(mytag, "Starting WidgetUpdate cache engine !");
             WU_widgetUpdate = WidgetUpdate.getInstance();
             WU_widgetUpdate.set_handler(sbanim, 0);    //put our main handler into cache engine (as Main)
-            Boolean result = WU_widgetUpdate.init(Tracer, this, SP_params);
+            Boolean result = WU_widgetUpdate.init(Tracer, this, prefUtils.prefs);
             Tracer.i(mytag, "widgetupdate_wakup");
             WU_widgetUpdate.wakeup();
             if (!result)
@@ -1091,13 +1081,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        if (SP_params.getBoolean("SYNC", false)) {
-            float api_version = SP_params.getFloat("API_VERSION", 0);
+        if (prefUtils.SyncCompleted()) {
+            float api_version = prefUtils.DomogikApiVersion();
             if (api_version < 0.7f) {
                 menu.findItem(R.id.menu_butler).setVisible(false);
             }
         }
-        menu.findItem(R.id.menu_exit).setVisible(!SP_params.getBoolean("START_ON_MAP", false));
+        menu.findItem(R.id.menu_exit).setVisible(!prefUtils.StartOnMap());
 
         return true;
     }
@@ -1122,7 +1112,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 onBackPressed();
                 return true;
             case R.id.menu_butler:
-                if (SP_params.getBoolean("SYNC", false)) {
+                if (prefUtils.SyncCompleted()) {
                     Intent intent = new Intent(this, Main.class);
                     this.startActivity(intent);
                     return true;
@@ -1154,7 +1144,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 return true;
             case R.id.menu_house_config:
                 Tracer.v(mytag + ".onclick()", "Call to House settings screen");
-                Dialog_House DIALOG_house_set = new Dialog_House(Tracer, SP_params, myself);
+                Dialog_House DIALOG_house_set = new Dialog_House(Tracer, prefUtils.prefs, myself);
                 DIALOG_house_set.show();
                 DIALOG_house_set.setOnDismissListener(house_listener);
                 return true;
@@ -1170,7 +1160,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 return true;
             case R.id.menu_stats:
                 try {
-                    if (SP_params.getBoolean("SYNC", false)) {
+                    if (prefUtils.SyncCompleted()) {
                         loadWigets(0, "statistics");
                         historyPosition++;
                         try {
@@ -1239,7 +1229,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         //on orientation change when user have to reload saved parameters.
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
-        if (SP_params.getBoolean("SYNC", false))
+        if (prefUtils.SyncCompleted())
             refresh();
     }
 
@@ -1282,32 +1272,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon}));
         Tracer.d(mytag, "Update navigation drawer listview");
     }
-
-    /*
-    private void load_preferences() {
-        //Load default value to avoid crash.
-        String currlogpath = SP_params.getString("LOGNAME", "");
-        if (currlogpath.equals("")) {
-            //Not yet existing prefs : Configure debugging by default, to configure Tracer
-            currlogpath = Environment.getExternalStorageDirectory() + "/domodroid/.log/";
-            SP_prefEditor.putString("LOGPATH", currlogpath);
-            SP_prefEditor.putString("LOGNAME", "Domodroid.txt");
-            SP_prefEditor.putBoolean("SYSTEMLOG", false);
-            SP_prefEditor.putBoolean("TEXTLOG", false);
-            SP_prefEditor.putBoolean("SCREENLOG", false);
-            SP_prefEditor.putBoolean("LOGCHANGED", true);
-            SP_prefEditor.putBoolean("LOGAPPEND", false);
-            //set other default value
-            SP_prefEditor.putBoolean("twocol_lanscape", true);
-            SP_prefEditor.putBoolean("twocol_portrait", true);
-        } else {
-            SP_prefEditor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
-        }
-        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
-        SP_prefEditor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
-        SP_prefEditor.commit();
-    }
-    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1532,8 +1532,7 @@ public class MapView extends View {
                 mat.matrix.getValues(value);
                 currentScale *= value[0];
                 //Save current zoom scale
-                prefUtils.editor.putFloat("Mapscale", currentScale);
-                prefUtils.editor.commit();    //To save it really !
+                prefUtils.SaveMapScale(currentScale);
                 value[0] = 1;
                 value[4] = 1;
                 mat.matrix.setValues(value);
@@ -1779,8 +1778,7 @@ public class MapView extends View {
             currentScale = currentScalewidth;
         }
         //Save current zoom scale
-        prefUtils.editor.putFloat("Mapscale", currentScale);
-        prefUtils.editor.commit();    //To save it really !
+        prefUtils.SaveMapScale(currentScale);
         return currentScale;
     }
 

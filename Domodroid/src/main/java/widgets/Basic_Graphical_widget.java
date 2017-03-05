@@ -222,7 +222,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     Tracer.get_engine().remove_one_feature_association(id, place_id, place_type);
                     // #76
                     prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-                    prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, activity);
                     common_method.refresh_the_views(widgetHandler);
@@ -262,7 +262,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                            prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                            prefUtils.save_params_to_file(Tracer, mytag, getContext());
                             change_this_icon(icon_status);
                             dialog.cancel();
                         }
@@ -275,14 +275,14 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "down");
             prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
             // #76
-            prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(activity.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
             // #76
             prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-            prefUtils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         }
     }

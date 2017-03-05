@@ -56,7 +56,7 @@ public class Activity_About extends AppCompatActivity implements OnClickListener
 
         prefUtils = new pref_utils(this);
         Tracer = tracerengine.getInstance(prefUtils.prefs, this);
-        TV_domogikversionText.setText(getText(R.string.domogik_version) + prefUtils.DomogikVersion());
+        TV_domogikversionText.setText(getText(R.string.domogik_version) + prefUtils.GetDomogikVersion());
         //display domodroid version
         TextView TV_versionText = (TextView) findViewById(R.id.versionText);
         if (TV_versionText != null) {

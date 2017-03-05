@@ -251,7 +251,7 @@ public class Preference extends PreferenceActivity implements
 
         //Save to file
         String mytag = "Preference";
-        prefUtils.save_params_to_file(Tracer, prefEditor, mytag, this);
+        prefUtils.save_params_to_file(Tracer, mytag, this);
 
         urlAccess = params.getString("URL", "1.1.1.1");
         external_urlAccess = params.getString("external_URL", "1.1.1.1");

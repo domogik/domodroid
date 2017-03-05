@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -739,8 +738,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             case R.id.map_menu_help:
                 Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
                 dialog_help.show();
-                prefUtils.editor.putBoolean("SPLASH", true);
-                prefUtils.editor.commit();
+                prefUtils.SetSplashDisplayed(true);
                 return true;
             case R.id.map_menu_exit:
                 Intent intent = new Intent(this, Activity_Main.class);

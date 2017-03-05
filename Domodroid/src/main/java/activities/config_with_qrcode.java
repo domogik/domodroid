@@ -143,19 +143,18 @@ public class config_with_qrcode extends AppCompatActivity {
                             Tracer.e(mytag, "ERROR getting external SSL information");
                         }
                         String butler_name = jsonresult.getString("butler_name").replace("u'", "").replace("'", "");
-                        prefUtils.editor.putString("rinorIP", rinor_IP);
-                        prefUtils.editor.putString("rinorPort", rest_port);
-                        prefUtils.editor.putString("rinorPath", rest_path);
-                        prefUtils.editor.putBoolean("ssl_activate", SSL);
-                        prefUtils.editor.putBoolean("ssl_external_activate", external_ssl);
-                        prefUtils.editor.putString("MQaddress", mq_ip);
-                        prefUtils.editor.putString("MQsubport", mq_port_sub);
-                        prefUtils.editor.putString("MQpubport", mq_port_pub);
-                        prefUtils.editor.putString("MQreq_repport", mq_port_req_rep);
-                        prefUtils.editor.putString("dmg_butler_name", butler_name);
-                        prefUtils.editor.putString("rinorexternal_IP", External_IP);
-                        prefUtils.editor.putString("rinor_external_Port", External_port);
-                        prefUtils.editor.commit();
+                        prefUtils.SetRestIp(rinor_IP);
+                        prefUtils.SetRestPort(rest_port);
+                        prefUtils.SetRestPath(rest_path);
+                        prefUtils.SetRestSSL(SSL);
+                        prefUtils.SetExternalRestSSL(external_ssl);
+                        prefUtils.SetMqAddress(mq_ip);
+                        prefUtils.SetMqSubPort(mq_port_sub);
+                        prefUtils.SetMqPubPort(mq_port_pub);
+                        prefUtils.SetMqReqRepPort(mq_port_req_rep);
+                        prefUtils.SetButlerName(butler_name);
+                        prefUtils.SetExternalRestIp(External_IP);
+                        prefUtils.SetExternalRestPort(External_port);
                         config_with_qrcode.this.finish();
 
                     } catch (JSONException e) {

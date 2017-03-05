@@ -60,7 +60,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         message = (TextView) findViewById(R.id.message);
         cancelButton = (Button) findViewById(R.id.CancelButton);
         cancelButton.setOnClickListener(this);
-        last_device_update = pref_utils.prefs.getString("last_device_update", "1900-01-01 00:00:00");
+        last_device_update = prefUtils.GetLastDeviceUpdate();
 
         handler = new Handler() {
             @Override
@@ -129,8 +129,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
         public LoadConfig() {
             super();
-            urlAccess = pref_utils.prefs.getString("rinor_IP", "1.1.1.1") + ":" + pref_utils.prefs.getString("rinorPort", "40405")
-                    + pref_utils.prefs.getString("rinorPath", "/");
+            urlAccess = prefUtils.GetRestIp() + ":" + prefUtils.GetRestPort() + prefUtils.GetRestPath();
             urlAccess = urlAccess.replaceAll("[\r\n]+", "");
             //Try to solve #1623
             urlAccess = urlAccess.replaceAll(" ", "%20");
@@ -142,20 +141,20 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 format_urlAccess = urlAccess;
             else
                 format_urlAccess = urlAccess.concat("/");
-            pref_utils.editor.putString("URL", format_urlAccess);
-            pref_utils.editor.commit();
-            urlAccess = pref_utils.prefs.getString("URL", "1.1.1.1");
+            prefUtils.SetUrl(format_urlAccess);
+            urlAccess = prefUtils.GetUrl();
+
             if (db == null)
                 db = new DomodroidDB(Tracer, activity);
             try {
-                previous_api_version = pref_utils.prefs.getFloat("API_VERSION", 0);
+                previous_api_version = prefUtils.GetDomogikApiVersion();
                 Tracer.d(mytag, "Previous Api version value exist");
             } catch (Exception e) {
                 e.printStackTrace();
                 Tracer.d(mytag, "Can't grab previous value");
             }
             try {
-                by_usage = pref_utils.prefs.getBoolean("BY_USAGE", false);
+                by_usage = prefUtils.GetWidgetByUsage();
                 Tracer.d(mytag, "Previous by usage value exist");
             } catch (Exception e) {
                 by_usage = true;
@@ -263,32 +262,32 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         db.updateDb();
                         // todo call a method to load saved preferences map_feature to db
                         try {
-                            json_AreaList = new JSONObject(pref_utils.prefs.getString("AREA_LIST", null));
+                            json_AreaList = new JSONObject(prefUtils.GetArea());
                             db.insertArea(json_AreaList);
                             Tracer.d(mytag, "inserting area to db");
                         } catch (Throwable t) {
-                            Tracer.e(mytag, "Could not parse malformed area JSON: \"" + pref_utils.prefs.getString("AREA_LIST", null) + "\"");
+                            Tracer.e(mytag, "Could not parse malformed area JSON: \"" + prefUtils.GetArea() + "\"");
                         }
                         try {
-                            json_RoomList = new JSONObject(pref_utils.prefs.getString("ROOM_LIST", null));
+                            json_RoomList = new JSONObject(prefUtils.GetRoom());
                             db.insertRoom(json_RoomList);
                             Tracer.d(mytag, "inserting room to db");
                         } catch (Throwable t) {
-                            Tracer.e(mytag, "Could not parse malformed room JSON: \"" + pref_utils.prefs.getString("ROOM_LIST", null) + "\"");
+                            Tracer.e(mytag, "Could not parse malformed room JSON: \"" + prefUtils.GetRoom() + "\"");
                         }
                         try {
-                            json_IconList = new JSONObject(pref_utils.prefs.getString("ICON_LIST", null));
+                            json_IconList = new JSONObject(prefUtils.GetIconList());
                             db.insertIcon(json_IconList);
                             Tracer.d(mytag, "inserting icon to db");
                         } catch (Throwable t) {
-                            Tracer.e(mytag, "Could not parse malformed icon JSON: \"" + pref_utils.prefs.getString("ICON_LIST", null) + "\"");
+                            Tracer.e(mytag, "Could not parse malformed icon JSON: \"" + prefUtils.GetIconList() + "\"");
                         }
                         try {
-                            json_FeatureAssociationList = new JSONObject(pref_utils.prefs.getString("FEATURE_LIST_association", null));
+                            json_FeatureAssociationList = new JSONObject(prefUtils.GetFeatureListAssociation());
                             db.insertFeatureAssociation(json_FeatureAssociationList);
                             Tracer.d(mytag, "inserting FeatureAssociationList to db");
                         } catch (Throwable t) {
-                            Tracer.e(mytag, "Could not parse malformed feature association JSON: \"" + pref_utils.prefs.getString("FEATURE_LIST_association", null) + "\"");
+                            Tracer.e(mytag, "Could not parse malformed feature association JSON: \"" + prefUtils.GetFeatureListAssociation() + "\"");
                         }
                     }
                     db.NewsyncDb();
@@ -546,7 +545,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     String MQsubport = json_rinor.getJSONObject("mq").getString("sub_port");
                     String MQpubport = json_rinor.getJSONObject("mq").getString("pub_port");
                     String MQreq_repport = json_rinor.getJSONObject("mq").getString("req_rep_port");
-                    pref_utils.editor.putString("MQaddress", MQaddress);
                     // #103 if MQadress=localhost
                     if (MQaddress.equals("localhost") || MQaddress.equals("127.0.0.1") || MQaddress.equals("0.0.0.0")) {
                         activity.runOnUiThread(new Runnable() {
@@ -563,10 +561,10 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                         });
                         //MQaddress = ""; //TODO save it as empty or just tell user the MQ will not work?
                     }
-                    pref_utils.editor.putString("MQaddress", MQaddress);
-                    pref_utils.editor.putString("MQsubport", MQsubport);
-                    pref_utils.editor.putString("MQpubport", MQpubport);
-                    pref_utils.editor.putString("MQreq_repport", MQreq_repport);
+                    prefUtils.SetMqAddress(MQaddress);
+                    prefUtils.SetMqSubPort(MQsubport);
+                    prefUtils.SetMqSubPort(MQpubport);
+                    prefUtils.SetMqReqRepPort(MQreq_repport);
                     publishProgress(12);
                 } catch (Exception e1) {
                     activity.runOnUiThread(new Runnable() {
@@ -619,7 +617,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
                 //todo #75 ask user how he want the default Area to be organize
                 //see https://github.com/domogik/domodroid/issues/75
-                String device_sync_order = pref_utils.prefs.getString("device_sync_order", "Usage");
+                String device_sync_order = prefUtils.GetDeviceSyncOrder();
                 Tracer.i(mytag, "Default area ordered by :" + device_sync_order);
 
                 //Create JSONObject
@@ -744,8 +742,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                             }
                             if (newer) {
                                 //store last update in prefs for next start
-                                pref_utils.editor.putString("last_device_update", df.format(timestamplast_device_update));
-                                pref_utils.editor.commit();
+                                prefUtils.SetLastDeviceUpdate(df.format(timestamplast_device_update));
                             }
                         } catch (Exception e) {
                             Tracer.e(mytag, "Error trying to parse /device and info_changed");
@@ -1224,21 +1221,21 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
             // Insert results into local database
             // And sharedpref
-            pref_utils.editor.putFloat("API_VERSION", Rinor_Api_Version);
-            pref_utils.editor.putString("DOMOGIK-VERSION", domogik_Version);
-            pref_utils.SaveSyncCompleted(true);
+            prefUtils.SetDomogikApiVersion(Rinor_Api_Version);
+            prefUtils.SetDomogikVersion(domogik_Version);
+            prefUtils.SetSyncCompleted(true);
             publishProgress(91);
             Tracer.v(mytag, "Updating database tables with new House configuration");
             try {
                 db.insertArea(json_AreaList);
-                pref_utils.editor.putString("AREA_LIST", db.request_json_Area().toString());
+                prefUtils.SetArea(db.request_json_Area().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
             publishProgress(92);
             try {
                 db.insertRoom(json_RoomList);
-                pref_utils.editor.putString("ROOM_LIST", db.request_json_Room().toString());
+                prefUtils.SetRoom(db.request_json_Room().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
@@ -1246,7 +1243,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             if (Rinor_Api_Version >= 0.7f) {
                 try {
                     db.insertIcon(json_IconList);
-                    pref_utils.editor.putString("ICON_LIST", db.request_json_Icon().toString());
+                    prefUtils.SetIconList(db.request_json_Icon().toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
@@ -1257,18 +1254,18 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     db.insertFeature(json_FeatureList);
                     //No need of db request method as feature only comes from rest
                     // in fact the best way for feature is to rename or change description directly in domogik.
-                    pref_utils.editor.putString("FEATURE_LIST", json_FeatureList.toString());
+                    prefUtils.SetFeatureList(json_FeatureList.toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
             } else {
                 //No need of db request method as feature only comes from rest
-                pref_utils.editor.putString("FEATURE_LIST", json_FeatureList1.toString());
+                prefUtils.SetFeatureList(json_FeatureList1.toString());
             }
             publishProgress(95);
             try {
                 db.insertFeatureAssociation(json_FeatureAssociationList);
-                pref_utils.editor.putString("FEATURE_LIST_association", db.request_json_Features_association().toString());
+                prefUtils.SetFeatureListAssociation(db.request_json_Features_association().toString());
             } catch (JSONException e) {
                 Tracer.e(mytag, e.toString());
             }
@@ -1276,15 +1273,15 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             if (Rinor_Api_Version <= 0.5f) {
                 try {
                     db.insertIcon(json_IconList);
-                    pref_utils.editor.putString("ICON_LIST", db.request_json_Icon().toString());
+                    prefUtils.SetIconList(db.request_json_Icon().toString());
                 } catch (JSONException e) {
                     Tracer.e(mytag, e.toString());
                 }
-                pref_utils.editor.putBoolean("BY_USAGE", false);
+                prefUtils.SetWidgetByUsage(false);
             } else if (Rinor_Api_Version >= 0.6f) {
                 if (Rinor_Api_Version >= 0.7f)
-                    pref_utils.editor.putBoolean("WIDGET_CHOICE", true);
-                pref_utils.editor.putBoolean("BY_USAGE", by_usage);
+                    prefUtils.SetAlternativeBinaryWidget(true);
+                prefUtils.SetWidgetByUsage(by_usage);
             }
             publishProgress(97);
             //Clear possible feature association with deleted device
@@ -1293,7 +1290,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             //refresh cache address
             Cache_management.checkcache(Tracer, activity);
             need_refresh = true;    // To notify main activity that screen must be refreshed
-            pref_utils.editor.commit();
+            prefUtils.commit();
 
         /*
             db.closeDb();

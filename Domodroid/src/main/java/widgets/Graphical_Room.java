@@ -118,7 +118,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
                     prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
                     prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                    pref_utils.save_params_to_file(Tracer, prefEditor, mytag, context);
+                    pref_utils.save_params_to_file(Tracer, mytag, context);
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view
@@ -148,7 +148,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().descUpdate(id_room, result, "room");
                     // #76
                     prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-                    pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    pref_utils.save_params_to_file(Tracer, mytag, getContext());
                     TV_name.setText(result);
                 }
             });
@@ -186,7 +186,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
                             prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                            pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                            pref_utils.save_params_to_file(Tracer, mytag, getContext());
                             change_this_icon(icon);
                             dialog.cancel();
                         }
@@ -198,13 +198,13 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_room(id_room, area_id, "room", "down");
             prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-            pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            pref_utils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_room(id_room, area_id, "room", "up");
             prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-            pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+            pref_utils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         }
     }

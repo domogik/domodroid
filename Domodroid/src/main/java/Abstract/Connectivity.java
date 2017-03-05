@@ -41,7 +41,7 @@ public class Connectivity {
                     WifiInfo wifiInfo;
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-                        String prefered_wifi = prefUtils.PreferedWifiSsid();
+                        String prefered_wifi = prefUtils.GetPreferedWifiSsid();
                         if (wifiInfo.getSSID().replace("\"", "").equals(prefered_wifi)) {
                             on_prefered_Wifi = true;
                         } else {

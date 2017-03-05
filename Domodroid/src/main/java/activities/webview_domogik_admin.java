@@ -44,8 +44,8 @@ public class webview_domogik_admin extends Activity {
 
             if (Abstract.Connectivity.on_prefered_Wifi) {
                 //If connected to default SSID use local adress
-                url = prefUtils.prefs.getString("rinorIP", "1.1.1.1");
-                port = prefUtils.prefs.getString("rinorPort", "");
+                url = prefUtils.GetRestIp();
+                port = prefUtils.GetRestPort();
                 SSL = prefUtils.prefs.getBoolean("ssl_activate", false);
             } else {
                 //If not connected to default SSID use external adress
@@ -81,7 +81,7 @@ public class webview_domogik_admin extends Activity {
         //Allow to open webview even if untrusted SSL cert
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            if (!prefUtils.prefs.getBoolean("SSL_Trusted", false)) {
+            if (!prefUtils.GetSslTrusted()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
                 int message;
                 switch (error.getPrimaryError()) {
@@ -110,8 +110,7 @@ public class webview_domogik_admin extends Activity {
                 builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        prefUtils.editor.putBoolean("SSL_Trusted", true);
-                        prefUtils.editor.commit();
+                        prefUtils.SetSslTrusted(true);
                         handler.proceed();
                     }
                 });

@@ -55,7 +55,7 @@ public abstract class display_sensor_info {
         TextView value1;
         pref_utils prefUtils = new pref_utils(context);
         if (Value_timestamp != 0) {
-            if (prefUtils.timestamp()) {
+            if (prefUtils.GetTimestamp()) {
                 timestamp.setText(timestamp_convertion(Value_timestamp.toString(), activity));
             } else {
                 timestamp.setReferenceTime(Value_timestamp);

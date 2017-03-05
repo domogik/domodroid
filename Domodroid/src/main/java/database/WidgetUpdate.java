@@ -1408,8 +1408,7 @@ public class WidgetUpdate {
                     //store last update in prefs for next start
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date tempdate = new Date();
-                    pref_utils.editor.putString("last_device_update", df.format(tempdate));
-                    pref_utils.editor.commit();
+                    pref_utils.SetLastDeviceUpdate(df.format(tempdate));
                 }
             } else {
                 Tracer.e(mytag, "NO CONNECTION");

@@ -178,7 +178,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);// set your own icon
         }
         //Register metrics
-        if (prefUtils.metricsEnabled()) {
+        if (prefUtils.GetMetricsEnabled()) {
             int repeatTime = 30;  //Repeat alarm time in seconds
             processTimer_for_metrics = (AlarmManager) getSystemService(ALARM_SERVICE);
             intent_for_metrics = new Intent(this, MetricsServiceReceiver.class);
@@ -287,7 +287,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                                 try {
                                     WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
                                     //replace and save "SSID" by SSID
-                                    prefUtils.savePreferedWifiSsid(wifiManager.getConnectionInfo().getSSID());
+                                    prefUtils.SetPreferedWifiSsid(wifiManager.getConnectionInfo().getSSID());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG);
@@ -303,7 +303,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         AD_wifi_prefered.show();
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
-                        prefUtils.save_params_to_file(Tracer, prefUtils.editor, mytag, getApplicationContext());
+                        prefUtils.save_params_to_file(Tracer, mytag, getApplicationContext());
                         Tracer.i(mytag, "sync dialog requires a refresh !");
                         reload = true;    // Sync being done, consider shared prefs are OK
                         VG_parent.removeAllViews();
@@ -422,7 +422,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         house.setLayoutParams(param);
         house.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (prefUtils.SyncCompleted()) {
+                if (prefUtils.GetSyncCompleted()) {
                     loadWigets(0, "root");
                     historyPosition++;
                     try {
@@ -460,7 +460,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         map.setLayoutParams(param);
         map.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (prefUtils.SyncCompleted()) {
+                if (prefUtils.GetSyncCompleted()) {
                     //dont_freeze=true;		//To avoid WidgetUpdate engine freeze
                     Tracer.w(mytag, "Before call to Map, Disconnect widgets from engine !");
                     if (WU_widgetUpdate != null) {
@@ -485,7 +485,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
         init_done = false;
         // Detect if it's the 1st use after installation...
-        if (!prefUtils.SplashDisplayed()) {
+        if (!prefUtils.GetSplashDisplayed()) {
             // Yes, 1st use !
             init_done = false;
             reload = false;
@@ -528,7 +528,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             // This method will be followed by 'onResume()'
             end_of_init_requested = true;
         }
-        if (prefUtils.SyncCompleted()) {
+        if (prefUtils.GetSyncCompleted()) {
             //A config exists and a sync as been done by past.
             if (WU_widgetUpdate == null) {
                 Tracer.i(mytag, "OnCreate Params splash is false and WidgetUpdate is null startCacheengine!");
@@ -552,7 +552,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     public void onResume() {
         super.onResume();
         //get metrics every 30s
-        if (prefUtils.metricsEnabled()) {
+        if (prefUtils.GetMetricsEnabled()) {
             int repeatTime = 30;  //Repeat alarm time in seconds
             AlarmManager processTimer = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intent = new Intent(this, metrics.MetricsServiceReceiver.class);
@@ -562,7 +562,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         Tracer.v(mytag + ".onResume", "Check if initialize requested !");
         if (!init_done) {
             Tracer.v(mytag + ".onResume", "Init not done!");
-            if (prefUtils.SplashDisplayed()) {
+            if (prefUtils.GetSplashDisplayed()) {
                 Tracer.v(mytag + ".onResume", "params Splash is false !");
                 //cache_ready = false;
                 //try to solve 1rst launch and orientation problem
@@ -593,7 +593,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             }
         }
         //Stop metrics.
-        if (prefUtils.metricsEnabled()) {
+        if (prefUtils.GetMetricsEnabled()) {
             processTimer_for_metrics.cancel(pendingIntent_for_metrics);
         }
     }
@@ -610,7 +610,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         super.onDestroy();
         this.WM_Agent = null;
         widgetHandler = null;
-        if (prefUtils.DomogikApiVersion() >= 0.9f) {
+        if (prefUtils.GetDomogikApiVersion() >= 0.9f) {
             JSONArray cached_dump = null;
             if (WU_widgetUpdate != null) {
                 Tracer.d("#124", "dump cache");
@@ -622,7 +622,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     // save current time stamp to know when the pass was exit.
                     long currentTimestamp = (System.currentTimeMillis() / 1000);
                     Tracer.d("#124", "sensor_saved_timestamp" + currentTimestamp);
-                    prefUtils.SaveSensor_saved_value(cached_dump.toString(), String.valueOf(currentTimestamp));
+                    prefUtils.SetSensor_saved_value(cached_dump.toString(), String.valueOf(currentTimestamp));
                 } catch (JSONException e) {
                     Tracer.e("#124", "sensor_saved at exit error");
                     e.printStackTrace();
@@ -631,7 +631,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         }
 
         //Stop metrics.
-        if (prefUtils.metricsEnabled()) {
+        if (prefUtils.GetMetricsEnabled()) {
             processTimer_for_metrics.cancel(pendingIntent_for_metrics);
         }
 
@@ -696,10 +696,10 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 createAlert();
         }
         //splash
-        if (!prefUtils.SplashDisplayed()) {
+        if (!prefUtils.GetSplashDisplayed()) {
             Dialog_Splash dialog_splash = new Dialog_Splash(this);
             dialog_splash.show();
-            prefUtils.SaveSplashDisplayed(true);
+            prefUtils.SetSplashDisplayed(true);
             return;
         }
         end_of_init_requested = false;
@@ -819,10 +819,10 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             e.printStackTrace();
         }
 
-        if ((prefUtils.StartOnMap() && (!Tracer.force_Main))) {
+        if ((prefUtils.GetStartOnMap() && (!Tracer.force_Main))) {
             //#125 wait cache ready
             //Solve #2029
-            if (prefUtils.SyncCompleted()) {
+            if (prefUtils.GetSyncCompleted()) {
                 Tracer.v(mytag, "Direct start on Map requested...");
                 Tracer.Map_as_main = true;        //Memorize that Map is now the main screen
                 INTENT_map = new Intent(Activity_Main.this, Activity_Map.class);
@@ -834,7 +834,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             }
         } else {
             Tracer.force_Main = false;    //Reset flag 'called from Map view'
-            if (prefUtils.SyncCompleted()) {
+            if (prefUtils.GetSyncCompleted()) {
                 if (!init_done) {
                     historyPosition = 0;
                     try {
@@ -923,7 +923,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
                         int load_area;
                         try {
-                            load_area = prefUtils.AreaToStartIn();
+                            load_area = prefUtils.GetAreaToStartIn();
                         } catch (Exception e) {
                             Tracer.e(mytag, e.toString());
                             load_area = 1;
@@ -978,12 +978,12 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     private void LoadSelections() {
-        by_usage = prefUtils.WidgetByUsage();
+        by_usage = prefUtils.GetWidgetByUsage();
     }
 
     private void run_sync_dialog() {
         //change sync parameter in case it fail.
-        prefUtils.SaveSyncCompleted(false);
+        prefUtils.SetSyncCompleted(false);
         if (!(WU_widgetUpdate == null)) {
             WU_widgetUpdate.Disconnect(0);    //Disconnect all widgets owned by Main
         }
@@ -1035,13 +1035,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        if (prefUtils.SyncCompleted()) {
-            float api_version = prefUtils.DomogikApiVersion();
+        if (prefUtils.GetSyncCompleted()) {
+            float api_version = prefUtils.GetDomogikApiVersion();
             if (api_version < 0.7f) {
                 menu.findItem(R.id.menu_butler).setVisible(false);
             }
         }
-        menu.findItem(R.id.menu_exit).setVisible(!prefUtils.StartOnMap());
+        menu.findItem(R.id.menu_exit).setVisible(!prefUtils.GetStartOnMap());
 
         return true;
     }
@@ -1066,7 +1066,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 onBackPressed();
                 return true;
             case R.id.menu_butler:
-                if (prefUtils.SyncCompleted()) {
+                if (prefUtils.GetSyncCompleted()) {
                     Intent intent = new Intent(this, Main.class);
                     this.startActivity(intent);
                     return true;
@@ -1114,7 +1114,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 return true;
             case R.id.menu_stats:
                 try {
-                    if (prefUtils.SyncCompleted()) {
+                    if (prefUtils.GetSyncCompleted()) {
                         loadWigets(0, "statistics");
                         historyPosition++;
                         try {
@@ -1183,7 +1183,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         //on orientation change when user have to reload saved parameters.
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
-        if (prefUtils.SyncCompleted())
+        if (prefUtils.GetSyncCompleted())
             refresh();
     }
 

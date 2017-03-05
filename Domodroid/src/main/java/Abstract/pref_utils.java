@@ -144,7 +144,7 @@ public class pref_utils {
     /**
      * @param sync status of the sync
      */
-    public void SaveSyncCompleted(Boolean sync) {
+    public static void SaveSyncCompleted(Boolean sync) {
         editor.putBoolean("SYNC", sync);
         editor.commit();
     }

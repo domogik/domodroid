@@ -1226,7 +1226,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             // And sharedpref
             pref_utils.editor.putFloat("API_VERSION", Rinor_Api_Version);
             pref_utils.editor.putString("DOMOGIK-VERSION", domogik_Version);
-            pref_utils.editor.putBoolean("SYNC", true);
+            pref_utils.SaveSyncCompleted(true);
             publishProgress(91);
             Tracer.v(mytag, "Updating database tables with new House configuration");
             try {

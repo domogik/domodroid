@@ -46,7 +46,6 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import database.WidgetUpdate;
-import misc.Color_Result;
 import misc.tracerengine;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {

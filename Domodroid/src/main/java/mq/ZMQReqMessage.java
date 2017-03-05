@@ -4,10 +4,8 @@ package mq;
  * Created by tiki on 11/10/2016.
  */
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.zeromq.ZMQ;

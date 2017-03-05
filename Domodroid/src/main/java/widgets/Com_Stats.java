@@ -17,30 +17,25 @@
  */
 package widgets;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import activities.Gradients_Manager;
-
-import org.domogik.domodroid13.R;
-
-import rinor.Stats_Com;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
+
+import org.domogik.domodroid13.R;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import activities.Gradients_Manager;
+import misc.tracerengine;
+import rinor.Stats_Com;
 
 public class Com_Stats extends FrameLayout {
 

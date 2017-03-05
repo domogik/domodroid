@@ -3,12 +3,14 @@ package mq;
 /**
  * Created by mpunie on 12/05/2015.
  */
-import android.os.AsyncTask;
+
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import misc.tracerengine;
 
 import org.zeromq.ZMQ;
+
+import misc.tracerengine;
 
 class ZMQTask extends AsyncTask<ZMQService, Void, Void> {
 	private tracerengine Tracer = null;

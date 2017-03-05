@@ -1,9 +1,9 @@
 package rinor;
 
+import android.util.Log;
+
 import java.util.Timer;
 import java.util.TimerTask;
-
-import android.util.Log;
 
 //import com.orhanobut.logger.Logger;
 

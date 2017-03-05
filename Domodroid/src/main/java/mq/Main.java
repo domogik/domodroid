@@ -19,8 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-//import com.orhanobut.logger.Logger;
-
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import activities.Preference;
+
+//import com.orhanobut.logger.Logger;
 
 // TTS
 

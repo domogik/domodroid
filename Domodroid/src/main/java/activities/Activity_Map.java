@@ -42,8 +42,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-//import com.orhanobut.logger.Logger;
-
 import org.domogik.domodroid13.R;
 
 import java.io.File;
@@ -68,6 +66,8 @@ import database.WidgetUpdate;
 import map.MapView;
 import misc.CopyFile;
 import misc.tracerengine;
+
+//import com.orhanobut.logger.Logger;
 
 public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     /**

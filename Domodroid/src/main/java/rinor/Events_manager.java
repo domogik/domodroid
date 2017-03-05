@@ -1,20 +1,13 @@
 package rinor;
 
 import android.app.Activity;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.Toast;
-
-//import com.orhanobut.logger.Logger;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -28,6 +21,8 @@ import database.Cache_Feature_Element;
 import database.JSONParser;
 import database.WidgetUpdate;
 import misc.tracerengine;
+
+//import com.orhanobut.logger.Logger;
 
 public class Events_manager {
     private static Events_manager instance;

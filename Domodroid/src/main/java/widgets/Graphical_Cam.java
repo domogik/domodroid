@@ -30,7 +30,6 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Activity_Cam;
-
 import database.WidgetUpdate;
 import misc.tracerengine;
 

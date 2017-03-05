@@ -1,18 +1,11 @@
 package mq;
 
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zeromq.ZMQ;
-
-import java.lang.reflect.Method;
-import java.net.URLEncoder;
-
-import misc.tracerengine;
-import rinor.Rest_com;
 
 /**
  * Created by mpunie on 13/05/2015.

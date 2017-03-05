@@ -1,15 +1,14 @@
 package mq;
 
-import java.util.Locale;
-
-import misc.tracerengine;
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
+
+import java.util.Locale;
+
+import misc.tracerengine;
 
 class Speaker implements OnInitListener {
     private tracerengine Tracer = null;

@@ -25,14 +25,14 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.webkit.WebView;
 
-//import com.orhanobut.logger.Logger;
-
 import org.domogik.domodroid13.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+//import com.orhanobut.logger.Logger;
 
 public class changelog {
 

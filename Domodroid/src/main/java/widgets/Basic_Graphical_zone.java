@@ -17,11 +17,6 @@
  */
 package widgets;
 
-import Abstract.translate;
-import activities.Gradients_Manager;
-import activities.Graphics_Manager;
-import misc.tracerengine;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,11 +24,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
+
+import Abstract.translate;
+import activities.Gradients_Manager;
+import activities.Graphics_Manager;
+import misc.tracerengine;
 
 public class Basic_Graphical_zone extends FrameLayout implements OnClickListener {
 

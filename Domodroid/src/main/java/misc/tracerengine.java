@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-//import com.orhanobut.logger.Logger;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -14,6 +12,8 @@ import java.util.Date;
 
 import Abstract.pref_utils;
 import database.WidgetUpdate;
+
+//import com.orhanobut.logger.Logger;
 
 public class tracerengine {
     private static tracerengine instance;

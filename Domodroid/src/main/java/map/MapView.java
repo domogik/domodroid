@@ -1683,7 +1683,7 @@ public class MapView extends View {
                     addMode = true;
                 }
             }
-            Snackbar.make(getRootView(), "Place it somewhere else", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(getRootView(), R.string.widget_replace_somewher, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(activity.getString(R.string.map_button2))) {
             Tracer.d(mytag, "Delete");
             for (final Entity_Map featureMap : listFeatureMap) {

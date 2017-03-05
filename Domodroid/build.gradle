@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'hugo' // call after applying android plugin
 sourceCompatibility = 1.7 //changed from 1.6
 
 android {

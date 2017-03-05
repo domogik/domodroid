@@ -640,7 +640,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     public void onPanelOpened(Sliding_Drawer panel) {
         //todo disable menu if set in option
-        if (!prefUtils.prefs.getBoolean("map_menu_disable", false)) {
+        if (!prefUtils.GetMapMenuDisabled()) {
             if (Tracer != null)
                 Tracer.v(mytag, "onPanelOpened panel request to be displayed");
         }
@@ -649,7 +649,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.map_menu_exit).setVisible(prefUtils.prefs.getBoolean("START_ON_MAP", false));
+        menu.findItem(R.id.map_menu_exit).setVisible(prefUtils.GetStartOnMap());
         return true;
     }
 

@@ -22,7 +22,6 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,12 +58,10 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Area";
     private String icon;
     private final Activity Activity;
-    private final SharedPreferences params;
     private final Handler widgetHandler;
     private final DomodroidDB domodb;
-    private final SharedPreferences.Editor prefEditor;
 
-    public Graphical_Area(SharedPreferences params, tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
+    public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
         FrameLayout myself = this;
         this.Tracer = Trac;
@@ -72,11 +69,9 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         this.id_area = id;
         this.context = context;
         this.Activity = (android.app.Activity) context;
-        this.params = params;
         this.widgetHandler = handler;
         setOnLongClickListener(this);
         domodb = new DomodroidDB(this.Tracer, this.Activity);
-        prefEditor = this.params.edit();
         mytag = "Graphical_Area(" + id_area + ")";
         prefUtils = new pref_utils(context);
 
@@ -125,10 +120,10 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area, "area");
                     Tracer.get_engine().remove_one_icon(id_area, "area");
                     // #76
-                    prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-                    prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-                    prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                    prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
+                    prefUtils.SetArea(domodb.request_json_Area().toString());
+                    prefUtils.SetRoom(domodb.request_json_Room().toString());
+                    prefUtils.SetIconList(domodb.request_json_Icon().toString());
+                    prefUtils.SetFeatureListAssociation(domodb.request_json_Features_association().toString());
                     prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     // recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
@@ -158,7 +153,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id_area, result, "area");
                     //#76
-                    prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+                    prefUtils.SetArea(domodb.request_json_Area().toString());
                     prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     TV_name.setText(result);
                 }
@@ -196,7 +191,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
-                            prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
+                            prefUtils.SetIconList(domodb.request_json_Icon().toString());
                             prefUtils.save_params_to_file(Tracer, mytag, getContext());
                             change_this_icon(icon);
                             dialog.cancel();
@@ -208,13 +203,13 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         } else if (action.equals(context.getString(R.string.move_down))) {
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_area(id_area, 0, "area", "down");
-            prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+            prefUtils.SetArea(domodb.request_json_Area().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_area(id_area, 0, "area", "up");
-            prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
+            prefUtils.SetArea(domodb.request_json_Area().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
         }

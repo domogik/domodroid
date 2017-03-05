@@ -22,7 +22,6 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Handler;
@@ -114,7 +113,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private String parameters;
     private int dev_id;
     private final int session_type;
-    private final SharedPreferences params;
     private SimpleDateFormat format;
     private TextView state_key_view;
     private String stateS;
@@ -123,23 +121,20 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private boolean isopen = false;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                             final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                             final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
-
         onCreate();
     }
 
@@ -149,14 +144,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         this.parameters = feature.getParameters();
         this.id = feature.getId();
         this.isopen = false;
-        try {
-            int graphics_height_size = params.getInt("graphics_height_size", 262);
-            this.Float_graph_size = Float.valueOf(graphics_height_size);
-        } catch (Exception e) {
-            //This is due to old way to store it as a string
-            String graph_size = params.getString("graph_size", "262.5");
-            this.Float_graph_size = Float.valueOf(graph_size);
-        }
+        int graphics_height_size = prefUtils.GetWidgetGraphSize();
+        this.Float_graph_size = Float.valueOf(graphics_height_size);
+
         format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
 

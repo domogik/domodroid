@@ -19,11 +19,9 @@ package widgets;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -70,7 +68,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private String timestamp;
     private String parameters;
     private final int session_type;
-    private final SharedPreferences params;
     private int dpiClassification;
     private final int update;
     private TextView state_key_view;
@@ -81,23 +78,21 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private boolean isopen = false;
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
                           final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         this.update = update;
         onCreate();
     }
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
                           final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         this.update = update;
         onCreate();
     }
@@ -108,14 +103,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         this.state_key = feature.getState_key();
         mytag = "Graphical_Info (" + dev_id + ")";
         this.isopen = false;
-        try {
-            int graphics_height_size = params.getInt("graphics_height_size", 262);
-            this.Float_graph_size = Float.valueOf(graphics_height_size);
-        } catch (Exception e) {
-            //This is due to old way to store it as a string
-            String graph_size = params.getString("graph_size", "262.5");
-            this.Float_graph_size = Float.valueOf(graph_size);
-        }
+        int graphics_height_size = prefUtils.GetWidgetGraphSize();
+        this.Float_graph_size = Float.valueOf(graphics_height_size);
+
         try {
             stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
@@ -160,7 +150,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
-            canvas = new Graphical_Info_View(activity, Tracer, activity, params, parameters);
+            canvas = new Graphical_Info_View(activity, Tracer, activity, parameters);
             canvas.dev_id = dev_id;
             canvas.id = feature.getId();
             canvas.state_key = state_key;

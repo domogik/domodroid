@@ -63,13 +63,13 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
             }
             try {
 
-                Float api_version = pref_utils.prefs.getFloat("API_VERSION", 0);
+                Float api_version = prefUtils.GetDomogikApiVersion();
                 try {
                     tags.put("domogik_api_version", api_version.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                String domogik_version = pref_utils.prefs.getString("DOMOGIK-VERSION", "");
+                String domogik_version = prefUtils.GetDomogikVersion();
                 try {
                     tags.put("domogik_version", domogik_version);
                 } catch (JSONException e) {

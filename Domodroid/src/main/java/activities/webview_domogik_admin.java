@@ -46,12 +46,12 @@ public class webview_domogik_admin extends Activity {
                 //If connected to default SSID use local adress
                 url = prefUtils.GetRestIp();
                 port = prefUtils.GetRestPort();
-                SSL = prefUtils.prefs.getBoolean("ssl_activate", false);
+                SSL = prefUtils.GetRestSsl();
             } else {
                 //If not connected to default SSID use external adress
-                url = prefUtils.prefs.getString("rinorexternal_IP", "1.1.1.1");
-                port = prefUtils.prefs.getString("rinor_external_Port", "");
-                SSL = prefUtils.prefs.getBoolean("ssl_external_activate", false);
+                url = prefUtils.GetExternalRestIp();
+                port = prefUtils.GetExternalRestPort();
+                SSL = prefUtils.GetExternalRestSsl();
             }
             if (!SSL) {
                 myWebView.loadUrl("http://" + url + ":" + port);

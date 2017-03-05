@@ -18,7 +18,7 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
+
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -68,25 +68,23 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     private final Entity_Feature feature;
     private final int session_type;
-    private final SharedPreferences params;
+
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                    final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                    final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         onCreate();
     }
 

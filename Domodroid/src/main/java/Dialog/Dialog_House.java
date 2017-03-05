@@ -262,8 +262,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
                 //#76
-                pref_utils.SetRoom(domodb.request_json_Room().toString());
-                pref_utils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
+                prefUtils.SetRoom(domodb.request_json_Room().toString());
+                prefUtils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
                 loadSpinnerData();
             }
         });
@@ -291,8 +291,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", lastid + 1);
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
                 //#76
-                pref_utils.SetArea(domodb.request_json_Area().toString());
-                pref_utils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
+                prefUtils.SetArea(domodb.request_json_Area().toString());
+                prefUtils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
                 loadSpinnerData();
             }
         });
@@ -332,8 +332,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
                 //#76
-                pref_utils.SetFeatureListAssociation(domodb.request_json_Area().toString());
-                pref_utils.save_params_to_file(Tracer,  mytag, activity.getApplicationContext());
+                prefUtils.SetFeatureListAssociation(domodb.request_json_Area().toString());
+                prefUtils.save_params_to_file(Tracer,  mytag, activity.getApplicationContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, activity);
                 loadSpinnerData();
@@ -377,8 +377,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("reference", reference);
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                 //#76
-                pref_utils.SetIconList(domodb.request_json_Icon().toString());
-                pref_utils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
+                prefUtils.SetIconList(domodb.request_json_Icon().toString());
+                prefUtils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
                 loadSpinnerData();
             }
         });

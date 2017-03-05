@@ -622,7 +622,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     // save current time stamp to know when the pass was exit.
                     long currentTimestamp = (System.currentTimeMillis() / 1000);
                     Tracer.d("#124", "sensor_saved_timestamp" + currentTimestamp);
-                    prefUtils.SetSensor_saved_value(cached_dump.toString(), String.valueOf(currentTimestamp));
+                    prefUtils.SetSensorSavedValueAndTimestamp(cached_dump.toString(), String.valueOf(currentTimestamp));
                 } catch (JSONException e) {
                     Tracer.e("#124", "sensor_saved at exit error");
                     e.printStackTrace();

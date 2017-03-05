@@ -140,12 +140,12 @@ public class WidgetUpdate {
         this.Tracer = Trac;
         WidgetUpdate.activity = activity;
         activated = true;
-        login = pref_utils.prefs.getString("http_auth_username", "Anonymous");
-        password = pref_utils.prefs.getString("http_auth_password", "");
-        SSL = pref_utils.prefs.getBoolean("ssl_activate", false);
-        api_version = pref_utils.prefs.getFloat("API_VERSION", 0);
-        last_device_update = pref_utils.prefs.getString("last_device_update", "1900-01-01 00:00:00");
-        last_sensor_update = pref_utils.prefs.getString("last_sensor_update", "1900-01-01 00:00:00");
+        login = prefUtils.GetRestAuthUsername();
+        password = prefUtils.GetRestAuthPassword();
+        SSL = prefUtils.GetRestSsl();
+        api_version = prefUtils.GetDomogikApiVersion();
+        last_device_update = prefUtils.GetLastDeviceUpdate();
+        last_sensor_update = prefUtils.GetLastSensorUpdate();
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -213,7 +213,7 @@ public class WidgetUpdate {
                     if (eventsManager == null) {
                         eventsManager = Events_manager.getInstance(activity);
                     }
-                    eventsManager.init(Tracer, myselfHandler, cache, pref_utils.prefs, instance);
+                    eventsManager.init(Tracer, myselfHandler, cache, prefUtils.prefs, instance);
                     /*
                     if(parent[0] != null) {
 						parent[0].sendEmptyMessage(8999);	//Forward event to Main
@@ -592,7 +592,7 @@ public class WidgetUpdate {
             //timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
             // dame but using the user option timer
-            timer.schedule(doAsynchronousTask, 0, pref_utils.prefs.getInt("UPDATE_TIMER", 300) * 1000);
+            timer.schedule(doAsynchronousTask, 0, prefUtils.GetRestUpdateTimer() * 1000);
         }
     }
 
@@ -716,15 +716,15 @@ public class WidgetUpdate {
                 if (Tracer != null)
                     Tracer.d(mytag, "Request to server for stats update...");
 
-                String request = pref_utils.prefs.getString("UPDATE_URL", null);
-                String URL = pref_utils.prefs.getString("URL", "1.1.1.1");
+                String request = prefUtils.GetUpdateUrl();
+                String URL = prefUtils.GetUrl();
                 //Because in old time it was the full request that was used and saved, not only the real UPDATE_PATH
                 //like "https://192.168.0.1:40406/rest/sensor" instead of just "sensor"
                 try {
                     request = request.replace(URL, "");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    request = pref_utils.prefs.getString("UPDATE_URL", null);
+                    request = prefUtils.GetUpdateUrl();
                 }
 
                 Tracer.i(mytag, "urlupdate saved = " + request);
@@ -783,7 +783,7 @@ public class WidgetUpdate {
                                 }
                             } else if (api_version == 0.9f) {
                                 //load timestamp apps was closed
-                                String sensor_saved_timestamp = pref_utils.prefs.getString("sensor_saved_timestamp", "0");
+                                String sensor_saved_timestamp = prefUtils.GetSensorSavedTimestamp();
                                 Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
 
                                 //Modify request to match the timestamp
@@ -814,7 +814,7 @@ public class WidgetUpdate {
                                 }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
-                                String strJson = pref_utils.prefs.getString("sensor_saved_value", "0");
+                                String strJson = prefUtils.GetSensorSavedValue();
                                 if (strJson != null) {
                                     //TODO load stored last_value
                                     JSONArray jsonData = new JSONArray(strJson);
@@ -1357,12 +1357,12 @@ public class WidgetUpdate {
                 Boolean SSL = false;
                 if (Abstract.Connectivity.on_prefered_Wifi) {
                     //If connected to default SSID use local adress
-                    url = pref_utils.prefs.getString("URL", "1.1.1.1");
-                    SSL = pref_utils.prefs.getBoolean("ssl_activate", false);
+                    url = prefUtils.GetUrl();
+                    SSL = prefUtils.GetRestSsl();
                 } else {
                     //If not connected to default SSID use external adress
-                    url = pref_utils.prefs.getString("external_URL", "1.1.1.1");
-                    SSL = pref_utils.prefs.getBoolean("ssl_external_activate", false);
+                    url = prefUtils.GetExternalRestIp();
+                    SSL = prefUtils.GetExternalRestSsl();
                 }
 
                 //Todo Move this method somewhere else and make it reusable.
@@ -1408,7 +1408,7 @@ public class WidgetUpdate {
                     //store last update in prefs for next start
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date tempdate = new Date();
-                    pref_utils.SetLastDeviceUpdate(df.format(tempdate));
+                    prefUtils.SetLastDeviceUpdate(df.format(tempdate));
                 }
             } else {
                 Tracer.e(mytag, "NO CONNECTION");
@@ -1570,8 +1570,8 @@ public class WidgetUpdate {
 
     public JSONObject zmqrequest() throws JSONException {
         ZMQReqMessage REQ = new ZMQReqMessage(myselfHandler);
-        String ip = pref_utils.prefs.getString("MQaddress", "");    // TODO : use a R. for the default value
-        String port = pref_utils.prefs.getString("MQreq_repport", "40410");    // TODO : use a R. for the default value
+        String ip = prefUtils.GetMqAddress();    // TODO : use a R. for the default value
+        String port = prefUtils.GetMqReqRepPort();    // TODO : use a R. for the default value
         final String pub_url = "tcp://" + ip + ":" + port;
         Log.d(mytag, "req address : " + pub_url);
         JSONArray json_widget_state_0_5 = new JSONArray();

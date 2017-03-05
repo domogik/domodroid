@@ -62,7 +62,7 @@ public class Entity_Feature {
         this.activity = activity;
         prefUtils = new pref_utils(activity.getApplicationContext());
         try {
-            Develop = pref_utils.prefs.getBoolean("DEV", false);
+            Develop = prefUtils.GetDebugIdShow();
         } catch (Exception e) {
             Develop = false;
         }

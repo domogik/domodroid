@@ -159,9 +159,7 @@ public class Preference extends PreferenceActivity implements
                                           String key) {
         updatePreferences(findPreference(key));
         if (key.equals("load_area_at_start")) {
-            SharedPreferences.Editor pref_editor = sharedPreferences.edit();
-            pref_editor.putBoolean("BY_USAGE", true);
-            pref_editor.commit();
+            prefUtils.SetWidgetByUsage(true);
         }
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
@@ -196,38 +194,38 @@ public class Preference extends PreferenceActivity implements
         super.onDestroy();
 
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
-        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String temp = params.getString("rinorIP", "");
-        String extrenal_temp = params.getString("rinorexternal_IP", "");
-        Boolean SSL = params.getBoolean("ssl_activate", false);
-        SharedPreferences.Editor prefEditor;
+        String temp = prefUtils.GetRestIp();
+        String extrenal_temp = prefUtils.GetExternalRestIp();
+        Boolean SSL = prefUtils.GetRestSsl();
+        Boolean ExternalSSL = prefUtils.GetExternalRestSsl();
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-            prefEditor = params.edit();
             if (SSL) {
-                prefEditor.putString("rinor_IP", "https://" + temp);
-                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp);
+                prefUtils.SetRestIp("https://" + temp);
             } else {
-                prefEditor.putString("rinor_IP", "http://" + temp);
-                prefEditor.putString("rinor_external_IP", "http://" + extrenal_temp);
+                prefUtils.SetRestIp("http://" + temp);
             }
-            prefEditor.commit();
+            if (ExternalSSL) {
+                prefUtils.SetExternalRestIp("https://" + extrenal_temp);
+            } else {
+                prefUtils.SetExternalRestIp("http://" + extrenal_temp);
+
+            }
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-            prefEditor = params.edit();
             if (SSL) {
-                prefEditor.putString("rinor_IP", temp.replace("https://", ""));
-                prefEditor.putString("rinor_external_IP", extrenal_temp.replace("https://", ""));
+                prefUtils.SetRestIp(temp.replace("https://", ""));
             } else {
-                prefEditor.putString("rinor_IP", temp.replace("http://", ""));
-                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp.replace("http://", ""));
+                prefUtils.SetRestIp(temp.replace("http://", ""));
             }
-            prefEditor.commit();
+            if (ExternalSSL) {
+                prefUtils.SetExternalRestIp(extrenal_temp.replace("https://", ""));
+            } else {
+                prefUtils.SetExternalRestIp("https://" + extrenal_temp.replace("http://", ""));
+
+            }
         }
 
         //refresh URL address
-        prefEditor = params.edit();
-        String urlAccess = params.getString("rinor_IP", "1.1.1.1") + ":" + params.getString("rinorPort", "40405") + params.getString("rinorPath", "/");
+        String urlAccess = prefUtils.GetRestIp() + ":" + prefUtils.GetRestPort() + prefUtils.GetRestPath();
         urlAccess = urlAccess.replaceAll("[\r\n]+", "");
         urlAccess = urlAccess.replaceAll(" ", "%20");
         String format_urlAccess;
@@ -235,9 +233,9 @@ public class Preference extends PreferenceActivity implements
             format_urlAccess = urlAccess;
         else
             format_urlAccess = urlAccess.concat("/");
-        prefEditor.putString("URL", format_urlAccess);
+        prefUtils.SetUrl(format_urlAccess);
 
-        String external_urlAccess = params.getString("rinor_external_IP", "1.1.1.1") + ":" + params.getString("rinor_external_Port", "40405") + params.getString("rinorPath", "/");
+        String external_urlAccess = prefUtils.GetExternalRestIp() + ":" + prefUtils.GetExternalRestPort() + prefUtils.GetRestPath();
         external_urlAccess = external_urlAccess.replaceAll("[\r\n]+", "");
         external_urlAccess = external_urlAccess.replaceAll(" ", "%20");
         String external_format_urlAccess;
@@ -245,16 +243,12 @@ public class Preference extends PreferenceActivity implements
             external_format_urlAccess = external_urlAccess;
         else
             external_format_urlAccess = external_urlAccess.concat("/");
-        prefEditor.putString("external_URL", external_format_urlAccess);
-
-        prefEditor.commit();
+        prefUtils.SetExternalUrl(external_format_urlAccess);
 
         //Save to file
         String mytag = "Preference";
         prefUtils.save_params_to_file(Tracer, mytag, this);
 
-        urlAccess = params.getString("URL", "1.1.1.1");
-        external_urlAccess = params.getString("external_URL", "1.1.1.1");
         //refresh cache address.
         Cache_management.checkcache(Tracer, myself);
         Tracer.d(mytag, "End destroy activity");

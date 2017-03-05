@@ -563,7 +563,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     }
                     prefUtils.SetMqAddress(MQaddress);
                     prefUtils.SetMqSubPort(MQsubport);
-                    prefUtils.SetMqSubPort(MQpubport);
+                    prefUtils.SetMqPubPort(MQpubport);
                     prefUtils.SetMqReqRepPort(MQreq_repport);
                     publishProgress(12);
                 } catch (Exception e1) {
@@ -1205,8 +1205,8 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 try {
                     String External_port = json_rinor.getJSONObject("external").getString("external_ip");
                     String External_IP = json_rinor.getJSONObject("external").getString("external_port");
-                    prefEditor.putString("rinor_external_IP", External_IP);
-                    prefEditor.putString("rinor_external_Port", External_port);
+                    prefUtils.SetExternalRestIp( External_IP);
+                    prefUtils.SetExternalRestPort(External_port);
                 } catch (Exception e1) {
                     activity.runOnUiThread(new Runnable() {
                         public void run() {

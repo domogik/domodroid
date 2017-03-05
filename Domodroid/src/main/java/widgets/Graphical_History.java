@@ -18,12 +18,10 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,7 +74,6 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private String state_key;
     private int dev_id;
     private final int session_type;
-    private final SharedPreferences params;
     private boolean isopen = false;
     private int nb_item_for_history;
     private TextView state_key_view;
@@ -88,22 +85,20 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
     private int sizeint;
 
     public Graphical_History(tracerengine Trac,
-                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                              final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_History(tracerengine Trac,
-                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                              final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         onCreate();
     }
 
@@ -114,7 +109,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         this.id = feature.getId();
         this.isopen = false;
         try {
-            String params_nb_item_for_history = params.getString("history_length", "5");
+            String params_nb_item_for_history = prefUtils.GetWidgetHistoryLength();
             this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
         } catch (Exception e) {
             Tracer.e(mytag, "Error getting number of item to display");
@@ -183,8 +178,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                         LL_featurePan.removeView(resultView);
                         LL_featurePan.removeView(TV_Value);
                         LL_featurePan.removeView(TV_Timestamp);
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
-                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                        if (prefUtils.GetWidgetTimestamp()) {
                             TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);

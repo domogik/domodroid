@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Abstract.pref_utils;
 import database.WidgetUpdate;
 
 public class tracerengine {
@@ -39,6 +40,7 @@ public class tracerengine {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
     private static FileWriter txtFile = null;
+    private static pref_utils prefUtils = null;
 
     public Boolean DBEngine_running = false;
     public Boolean force_Main = false;
@@ -56,6 +58,8 @@ public class tracerengine {
         tracerengine.context = context;
         force_Main = false;
         Map_as_main = false;
+        prefUtils = new pref_utils(context);
+
     }
 
     public static tracerengine getInstance(SharedPreferences params, Context context) {
@@ -178,10 +182,8 @@ public class tracerengine {
 
                     }
                 }
-                SharedPreferences.Editor prefEditor = settings.edit();
-                prefEditor.putBoolean("LOGCHANGED", false);
-                prefEditor.putBoolean("TEXTLOG", to_txtFile);    //In case open fails.... don't retry till next change !
-                prefEditor.commit();
+                prefUtils.SetDebugLocCanged(false);
+                prefUtils.SetDebugTextlog(to_txtFile);
 
             }
             // Nothing changed
@@ -212,9 +214,9 @@ public class tracerengine {
         try {
             //Todo find a way to be sure toast works 100%
             //activity.runOnUiThread(new Runnable() {
-                //public void run() {
-                    Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
-               // }
+            //public void run() {
+            Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
+            // }
             //});
         } catch (Exception e) {
             Log.e("tracerengine screenlog", "Tracerengine ScreenLog: " + e.toString());

@@ -18,9 +18,7 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,7 +30,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import activities.Activity_Cam;
-import activities.Activity_Main;
+
 import database.WidgetUpdate;
 import misc.tracerengine;
 
@@ -45,31 +43,28 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private static FrameLayout myself = null;
     private String name_cam;
     private final Entity_Feature feature;
-    private final SharedPreferences params;
     private final int session_type;
     private Boolean realtime = false;
     Activity activity;
 
     public Graphical_Cam(tracerengine Trac,
-                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                          final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Cam(tracerengine Trac,
-                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                          final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }

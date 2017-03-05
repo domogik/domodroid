@@ -84,7 +84,7 @@ public class pref_utils {
     /**
      * @return Domogik version code
      */
-    public String GetDomogikVersion() {
+    public static String GetDomogikVersion() {
         return prefs.getString("DOMOGIK-VERSION", "");
     }
 
@@ -174,19 +174,8 @@ public class pref_utils {
     /**
      * @return timestamp or ago from options
      */
-    public boolean GetTimestamp() {
+    public boolean GetWidgetTimestamp() {
         return prefs.getBoolean("widget_timestamp", false);
-    }
-
-
-    /**
-     * @param cached_dump      dump sensor value to save them
-     * @param currentTimestamp timestamp we saved the dump
-     */
-    public void SetSensor_saved_value(String cached_dump, String currentTimestamp) {
-        editor.putString("sensor_saved_value", cached_dump);
-        editor.putString("sensor_saved_timestamp", currentTimestamp);
-        commit();
     }
 
     /**
@@ -246,6 +235,14 @@ public class pref_utils {
      */
     public static void SetUpdateUrl(String urlUpdate) {
         editor.putString("UPDATE_URL", urlUpdate);
+        commit();
+    }
+
+    /**
+     * @param external_format_urlAccess the update external url to save
+     */
+    public void SetExternalUrl(String external_format_urlAccess) {
+        editor.putString("external_URL", external_format_urlAccess);
         commit();
     }
 
@@ -369,14 +366,6 @@ public class pref_utils {
     }
 
     /**
-     * @param currentScale the current map Scale to save
-     */
-    public void SaveMapScale(float currentScale) {
-        editor.putFloat("Mapscale", currentScale);
-        commit();
-    }
-
-    /**
      * This method really save the file to a destination
      *
      * @param dst     destination of the file
@@ -479,7 +468,7 @@ public class pref_utils {
         } else {
             editor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
         }
-        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
+        //editor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
         editor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
         commit();
     }
@@ -569,29 +558,60 @@ public class pref_utils {
     /**
      * @return SSL acces for domogik in locale access
      */
-    public static Boolean GetRestSSL() {
+    public static Boolean GetRestSsl() {
         return prefs.getBoolean("ssl_activate", false);
     }
 
     /**
      * @param ssl a boolean to save the ssl access state of domogik in locale
      */
-    public void SetRestSSL(Boolean ssl) {
+    public void SetRestSsl(Boolean ssl) {
         editor.putBoolean("ssl_activate", ssl);
         commit();
     }
 
     /**
-     * @return SSL acces for domogik in external access
+     * @return external_ip to join domogik from external access otherwise internal ip if not configure
      */
-    public static Boolean GetExternalRestSSL() {
-        return prefs.getBoolean("ssl_external_activate", false);
+    public static String GetExternalRestIp() {
+        return prefs.getString("rinor_external_IP", GetRestIp());
     }
+
+    /**
+     * @param external_ip to join domogik from external access
+     */
+    public void SetExternalRestIp(String external_ip) {
+        editor.putString("rinor_external_IP", external_ip);
+        commit();
+    }
+
+    /**
+     * @return external_port to join domogik from external access otherwise internal port if not configure
+     */
+    public static String GetExternalRestPort() {
+        return prefs.getString("rinor_external_Port", GetRestPort());
+    }
+
+    /**
+     * @param external_port to join domogik from external access
+     */
+    public void SetExternalRestPort(String external_port) {
+        editor.putString("rinor_external_Port", external_port);
+        commit();
+    }
+
+    /**
+     * @return SSL acces for domogik in external access otherwise internal ssl if not configure
+     */
+    public static Boolean GetExternalRestSsl() {
+        return prefs.getBoolean("ssl_external_activate", GetRestSsl());
+    }
+
 
     /**
      * @param external_ssl a boolean to save the ssl access state of domogik from external
      */
-    public void SetExternalRestSSL(Boolean external_ssl) {
+    public void SetExternalRestSsl(Boolean external_ssl) {
         editor.putBoolean("ssl_external_activate", external_ssl);
         commit();
     }
@@ -604,19 +624,209 @@ public class pref_utils {
         commit();
     }
 
+
     /**
-     * @param external_ip to join domogik from external access
+     * @return map menu disable status from options
      */
-    public void SetExternalRestIp(String external_ip) {
-        editor.putString("rinorexternal_IP", external_ip);
+    public boolean GetMapMenuDisabled() {
+        return prefs.getBoolean("map_menu_disable", false);
+    }
+
+    /**
+     * @return the current map Scale
+     */
+    public Float GetMapScale() {
+        return prefs.getFloat("Mapscale", 1);
+    }
+
+    /**
+     * @param currentScale the current map Scale to save
+     */
+    public void SetMapScale(float currentScale) {
+        editor.putFloat("Mapscale", currentScale);
         commit();
     }
 
     /**
-     * @param external_port to join domogik from external access
+     * @return true if autozoom is enable for map
      */
-    public void SetExternalRestPort(String external_port) {
-        editor.putString("rinor_external_Port", external_port);
+    public boolean GetMapAutozoom() {
+        return prefs.getBoolean("map_autozoom", false);
+    }
+
+
+    /**
+     * @return true if map is set to not display text
+     */
+    public boolean GetMapHideText() {
+        return prefs.getBoolean("HIDE", false);
+    }
+
+    /***
+     *
+     * @return true if Show device id is set in debug options
+     */
+    public static boolean GetDebugIdShow() {
+        return prefs.getBoolean("DEV", false);
+    }
+
+    /**
+     * @return the reresh timer period in seconds between 2 rest call
+     */
+    public static int GetRestUpdateTimer() {
+        return prefs.getInt("UPDATE_TIMER", 300);
+    }
+
+    /**
+     * @return true if user used alternative graph widget
+     */
+    public boolean GetAlternativeGraphWidget() {
+        return prefs.getBoolean("Graph_CHOICE", false);
+    }
+
+    /**
+     * TODO find what it's used really for???
+     *
+     * @return
+     */
+    public int GetMapGraphInt() {
+        return prefs.getInt("GRAPH", 3);
+    }
+
+    /**
+     * TODO find what it's used really for???
+     *
+     * @return
+     */
+    public int GetMapIntSize() {
+        return prefs.getInt("SIZE", 600);
+    }
+
+    /**
+     * @return time last sensor value was update
+     */
+    public static String GetLastSensorUpdate() {
+        return prefs.getString("last_sensor_update", "1900-01-01 00:00:00");
+    }
+
+    /**
+     * @return Username for credentials
+     */
+    public static String GetRestAuthUsername() {
+        return prefs.getString("http_auth_username", "Anonymous");
+    }
+
+    /**
+     * @return Password for credentials
+     */
+    public static String GetRestAuthPassword() {
+        return prefs.getString("http_auth_password", "");
+    }
+
+    /**
+     * #124
+     *
+     * @return Last timestamp when apps was closed
+     */
+    public String GetSensorSavedTimestamp() {
+        return prefs.getString("sensor_saved_timestamp", "0");
+    }
+
+    /**
+     * #124
+     *
+     * @return Last timestamp when apps was closed
+     */
+    public String GetSensorSavedValue() {
+        return prefs.getString("sensor_saved_value", "0");
+    }
+
+    /**
+     * #124
+     *
+     * @param cached_dump      dump sensor value to save them
+     * @param currentTimestamp timestamp we saved the dump
+     */
+    public void SetSensorSavedValueAndTimestamp(String cached_dump, String currentTimestamp) {
+        editor.putString("sensor_saved_value", cached_dump);
+        editor.putString("sensor_saved_timestamp", currentTimestamp);
         commit();
+    }
+
+    /**
+     * @return True if 2 columns are allow in Landscape mode
+     */
+    public static boolean GetTwoColumnsLandscape() {
+        return prefs.getBoolean("twocol_lanscape", false);
+    }
+
+    /**
+     * @return True if 2 columns are allow in Portrait mode
+     */
+    public static boolean GetTwoColumnsPortait() {
+        return prefs.getBoolean("twocol_portrait", false);
+    }
+
+    /**
+     * @return last known color, White by default
+     */
+    public String GetLastColorRgb() {
+        return prefs.getString("COLORRGB", "#FFFFFF");
+    }
+
+    public void SetColorRgb(String value) {
+        editor.putString("COLORRGB", "#" + value);
+        commit();
+    }
+
+    public Integer GetLastColorHue() {
+        return prefs.getInt("COLORHUE", 0);
+    }
+
+    public void SetColorHue(int progress) {
+        editor.putInt("COLORHUE", progress);
+        commit();
+    }
+
+    public Integer GetLastColorSaturation() {
+        return prefs.getInt("COLORSATURATION", 255);
+    }
+
+    public void SetColorSaturation(int progress) {
+        editor.putInt("COLORSATURATION", progress);
+        commit();
+    }
+
+    public Integer GetLastColorBrightness() {
+        return prefs.getInt("COLORBRIGHTNESS", 255);
+    }
+
+    public void SetColorBrightness(int progress) {
+        editor.putInt("COLORBRIGHTNESS", progress);
+        commit();
+    }
+
+    public void SetDebugLocCanged(boolean b) {
+        editor.putBoolean("LOGCHANGED", b);
+        commit();
+    }
+
+    public void SetDebugTextlog(Boolean to_txtFile) {
+        editor.putBoolean("TEXTLOG", to_txtFile);    //In case open fails.... don't retry till next change !
+        commit();
+    }
+
+    /**
+     * @return length of history value to retrieve in widgets
+     */
+    public String GetWidgetHistoryLength() {
+        return prefs.getString("history_length", "5");
+    }
+
+    /**
+     * @return the height of Graphics widget
+     */
+    public int GetWidgetGraphSize() {
+        return prefs.getInt("graphics_height_size", 262);
     }
 }

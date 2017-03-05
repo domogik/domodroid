@@ -19,7 +19,6 @@ package widgets;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -50,6 +49,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import Abstract.calcul;
+import Abstract.pref_utils;
 import misc.tracerengine;
 import rinor.Rest_com;
 
@@ -108,29 +108,25 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private int limit = 6;        // items returned by Rinor on stats arrays when 'hour' average
     private OnClickListener listener = null;
     private tracerengine Tracer = null;
-    private final String login;
-    private final String password;
     private final float size15;
     private final float size10;
     private final float size5;
     private final float size7;
     private final float api_version;
-    private Boolean SSL;
     private String unit = "";
     private Bitmap buffer;
     private Bitmap text;
     final Activity activity;
 
-    public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, SharedPreferences params, String parameters) {
+    public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, String parameters) {
         super(context);
         this.activity = activity;
         invalidate();
         this.Tracer = Trac;
         this.parameter = parameters;
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
+        pref_utils prefUtils = new pref_utils(activity.getApplicationContext());
+
+        api_version = prefUtils.GetDomogikApiVersion();
 
 
         try {

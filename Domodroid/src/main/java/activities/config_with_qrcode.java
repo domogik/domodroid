@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -146,8 +145,8 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefUtils.SetRestIp(rinor_IP);
                         prefUtils.SetRestPort(rest_port);
                         prefUtils.SetRestPath(rest_path);
-                        prefUtils.SetRestSSL(SSL);
-                        prefUtils.SetExternalRestSSL(external_ssl);
+                        prefUtils.SetRestSsl(SSL);
+                        prefUtils.SetExternalRestSsl(external_ssl);
                         prefUtils.SetMqAddress(mq_ip);
                         prefUtils.SetMqSubPort(mq_port_sub);
                         prefUtils.SetMqPubPort(mq_port_pub);

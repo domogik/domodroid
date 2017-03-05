@@ -1,14 +1,12 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +27,7 @@ import org.json.JSONObject;
 import java.util.TimerTask;
 
 import Abstract.display_sensor_info;
+import Abstract.pref_utils;
 import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
@@ -81,31 +80,29 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String t7s;
     private String t8s;
     private String t9s = "";
-    private final SharedPreferences params;
     private Boolean realtime = false;
     private JSONObject jparam;
     private final Entity_Feature feature;
     private String command_id = null;
     private String command_type = null;
     private final int session_type;
+    private pref_utils prefUtils;
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                            final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                            final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         onCreate();
     }
 
@@ -116,6 +113,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         String state_key = feature.getState_key();
         command_id = feature.getAddress();
         mytag = "Graphical_Color(" + dev_id + ")";
+        prefUtils = new pref_utils(activity.getApplicationContext());
 
         String value0;
         String value1;
@@ -335,8 +333,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         Long Value_timestamplong = null;
                         Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
-                        if (SP_params.getBoolean("widget_timestamp", false)) {
+                        if (prefUtils.GetWidgetTimestamp()) {
                             TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
                         } else {
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
@@ -624,12 +621,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	 */
 
     private void SaveSelections() {
-        SharedPreferences.Editor prefEditor = params.edit();
-        prefEditor.putInt("COLORHUE", seekBarHueBar.getProgress());
-        prefEditor.putInt("COLORSATURATION", seekBarRGBXBar.getProgress());
-        prefEditor.putInt("COLORBRIGHTNESS", seekBarRGBYBar.getProgress());
-        prefEditor.putString("COLORRGB", "#" + argbS);
-        prefEditor.commit();
+        prefUtils.SetColorHue(seekBarHueBar.getProgress());
+        prefUtils.SetColorSaturation(seekBarRGBXBar.getProgress());
+        prefUtils.SetColorBrightness(seekBarRGBYBar.getProgress());
+        prefUtils.SetColorRgb("#" + argbS);
         /*
         Tracer.i(mytag, "SaveSelections()");
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
@@ -639,9 +634,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     }
 
     private void LoadSelections() {
-        seekBarHueBar.setProgress(params.getInt("COLORHUE", 0));
-        seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION", 255));
-        seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS", 255));
+        seekBarHueBar.setProgress(prefUtils.GetLastColorHue());
+        seekBarRGBXBar.setProgress(prefUtils.GetLastColorSaturation());
+        seekBarRGBYBar.setProgress(prefUtils.GetLastColorBrightness());
         /*
         Tracer.i(mytag, "LoadSelections()");
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));

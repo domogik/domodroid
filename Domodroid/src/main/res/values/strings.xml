@@ -1033,4 +1033,5 @@
     <string name="room_moved_down">Room moved down</string>
     <string name="room_renamed">Room renamed</string>
     <string name="room_deleted">Room deleted</string>
+    <string name="widget_added">Widget added</string>
 </resources>

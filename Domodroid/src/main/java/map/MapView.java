@@ -17,6 +17,7 @@ import android.graphics.Typeface;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -1636,6 +1637,7 @@ public class MapView extends View {
                                     activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                                     initMap();
                                     dialog.cancel();
+                                    Snackbar.make(getRootView(), R.string.widget_icon_changed, Snackbar.LENGTH_LONG).show();
                                 }
                             }
                     );
@@ -1681,6 +1683,7 @@ public class MapView extends View {
                     addMode = true;
                 }
             }
+            Snackbar.make(getRootView(), "Place it somewhere else", Snackbar.LENGTH_LONG).show();
         } else if (action.equals(activity.getString(R.string.map_button2))) {
             Tracer.d(mytag, "Delete");
             for (final Entity_Map featureMap : listFeatureMap) {
@@ -1714,6 +1717,7 @@ public class MapView extends View {
                     initMap();
                 }
             }
+            Snackbar.make(getRootView(), R.string.widget_deleted, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(activity.getString(R.string.house_add_widget))) {
             int db_id = 0;
             if (temp_id != -1) {
@@ -1738,6 +1742,7 @@ public class MapView extends View {
             addMode = false;
             //refresh the map
             initMap();
+            Snackbar.make(getRootView(), R.string.widget_added, Snackbar.LENGTH_LONG).show();
         }
     }
 

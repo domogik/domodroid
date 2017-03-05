@@ -19,27 +19,28 @@ package Entity;
 
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 
+import Abstract.pref_utils;
 import database.DomodroidDB;
 import misc.tracerengine;
 
 public class Entity_Area {
+    private final pref_utils prefUtils;
     private String description;
     private int id;
     private String name;
     private final Activity activity;
     private tracerengine Tracer = null;
-    private final SharedPreferences params;
 
 
-    public Entity_Area(SharedPreferences params, tracerengine Trac, Activity activity, String description, int id, String name) {
+    public Entity_Area(tracerengine Trac, Activity activity, String description, int id, String name) {
         this.description = description;
         this.id = id;
         this.name = name;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
+        prefUtils = new pref_utils(activity.getApplicationContext());
+
     }
 
     public String getDescription() {
@@ -68,7 +69,7 @@ public class Entity_Area {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
+        DomodroidDB domodb = new DomodroidDB(Tracer, activity);
         domodb.owner = "entity_area";
         try {
             iconName = domodb.requestIcons(id, "area").getValue();

@@ -75,7 +75,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         this.params = params;
         this.widgetHandler = handler;
         setOnLongClickListener(this);
-        domodb = new DomodroidDB(this.Tracer, this.Activity, params);
+        domodb = new DomodroidDB(this.Tracer, this.Activity);
         prefEditor = this.params.edit();
         mytag = "Graphical_Area(" + id_area + ")";
         prefUtils = new pref_utils(context);
@@ -109,8 +109,9 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             alert.setMessage(R.string.Delete_feature_message);
             alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    DomodroidDB domodb = new DomodroidDB(Tracer, Activity, params);
-                    domodb.owner = "Widgets_Manager.loadRoomWidgets";
+                    //Todo remove if not needed
+                    //DomodroidDB domodb = new DomodroidDB(Tracer, Activity);
+                    //domodb.owner = "Widgets_Manager.loadRoomWidgets";
                     Tracer.v(mytag, "load widgets for area " + id_area);
                     Entity_Room[] listRoom = domodb.requestRoom(id_area);
 

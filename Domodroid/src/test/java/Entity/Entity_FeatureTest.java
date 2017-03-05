@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class Entity_FeatureTest extends AndroidTestCase {
-    Entity_Feature client = new Entity_Feature(null, null, null, null, 0, 0, null, null, null, null, null, null, null, null);
+    Entity_Feature client = new Entity_Feature(null, null, null, 0, 0, null, null, null, null, null, null, null, null);
 
 
     protected void setUp() throws Exception {

@@ -6,10 +6,13 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 
 import misc.tracerengine;
 
@@ -20,8 +23,8 @@ import misc.tracerengine;
  */
 public class pref_utils {
     private Context Context;
-    public SharedPreferences prefs;
-    public SharedPreferences.Editor editor;
+    public static SharedPreferences prefs;
+    public static SharedPreferences.Editor editor;
 
     /**
      * Constructor
@@ -91,12 +94,31 @@ public class pref_utils {
     }
 
     /**
+     * @param usage saved by usage or not
+     */
+    public void SetWidgetByUsage(Boolean usage) {
+        editor.putBoolean("BY_USAGE", usage);
+        editor.commit();
+    }
+
+    /**
      * @param ssid save "prefered wifi SSID" in preferences
      */
     public void savePreferedWifiSsid(String ssid) {
         editor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length() - 1));
         editor.commit();
     }
+
+    /**
+     * @return timestamp or ago from options
+     */
+    public boolean timestamp() {
+        return prefs.getBoolean("widget_timestamp", false);
+    }
+
+    /**
+     * @return "prefered wifi SSID" from preferences
+     */
     public String PreferedWifiSsid() {
         return prefs.getString("prefered_wifi_ssid", "");
     }
@@ -124,6 +146,38 @@ public class pref_utils {
      */
     public void SaveSyncCompleted(Boolean sync) {
         editor.putBoolean("SYNC", sync);
+        editor.commit();
+    }
+
+    /**
+     * @param room a json representation of db room
+     */
+    public static void SaveRoom(String room) {
+        editor.putString("ROOM_LIST", room);
+        editor.commit();
+    }
+
+    /**
+     * @param area a json representation of db area
+     */
+    public static void SaveArea(String area) {
+        editor.putString("AREA_LIST", area);
+        editor.commit();
+    }
+
+    /**
+     * @param FeatureListAssociation a json representation of db FeatureListAssociation
+     */
+    public static void SaveFeatureListAssociation(String FeatureListAssociation) {
+        editor.putString("FEATURE_LIST_association", FeatureListAssociation);
+        editor.commit();
+    }
+
+    /**
+     * @param IconList a json representation of db Icon
+     */
+    public static void SaveIconList(String IconList) {
+        editor.putString("ICON_LIST", IconList);
         editor.commit();
     }
 
@@ -169,5 +223,84 @@ public class pref_utils {
                 Tracer.e(mytag, "IO error: " + ex.toString());
             }
         }
+    }
+
+    /**
+     * Method to reload a file containing Preferences saved
+     *
+     * @param src    a file where params where saved
+     * @param Tracer Tracerengine used for log
+     * @return True if success
+     */
+    public Boolean loadSharedPreferencesFromFile(File src, tracerengine Tracer) {
+        Boolean result = false;
+        ObjectInputStream input = null;
+        String mytag = "loadSharedPreferencesFromFile";
+        try {
+            input = new ObjectInputStream(new FileInputStream(src));
+            editor.clear();
+            Map<String, ?> entries = (Map<String, ?>) input.readObject();
+            for (Map.Entry<String, ?> entry : entries.entrySet()) {
+                Object v = entry.getValue();
+                String key = entry.getKey();
+                Tracer.i(mytag, "Loading pref : " + key + " -> " + v.toString());
+                if (v instanceof Boolean)
+                    editor.putBoolean(key, (Boolean) v);
+                else if (v instanceof Float)
+                    editor.putFloat(key, (Float) v);
+                else if (v instanceof Integer)
+                    editor.putInt(key, (Integer) v);
+                else if (v instanceof Long)
+                    editor.putLong(key, (Long) v);
+                else if (v instanceof String)
+                    editor.putString(key, (String) v);
+            }
+            editor.commit();
+            result = true;
+        } catch (IOException e) {
+            Tracer.e(mytag, "Can't load preferences file");
+            Tracer.e(mytag, e.toString());
+        } catch (ClassNotFoundException e) {
+            Tracer.e(mytag, "Can't load preferences file");
+            Tracer.e(mytag, e.toString());
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException ex) {
+                Tracer.e(mytag, "Can't load preferences file");
+                Tracer.e(mytag, ex.toString());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Somes basic preferences need to be initialise if not exist
+     */
+    public static void load_preferences() {
+        //Load default value to avoid crash.
+        String currlogpath = prefs.getString("LOGNAME", "");
+        String mytag = "load_preferences";
+        if (currlogpath.equals("")) {
+            //Not yet existing prefs : Configure debugging by default, to configure Tracer
+            currlogpath = Environment.getExternalStorageDirectory() + "/domodroid/.log/";
+            editor.putString("LOGPATH", currlogpath);
+            editor.putString("LOGNAME", "Domodroid.txt");
+            editor.putBoolean("SYSTEMLOG", false);
+            editor.putBoolean("TEXTLOG", false);
+            editor.putBoolean("SCREENLOG", false);
+            editor.putBoolean("LOGCHANGED", true);
+            editor.putBoolean("LOGAPPEND", false);
+            //set other default value
+            editor.putBoolean("twocol_lanscape", true);
+            editor.putBoolean("twocol_portrait", true);
+        } else {
+            editor.putBoolean("LOGCHANGED", true);        //To force Tracer to consider current settings
+        }
+        //prefEditor.putBoolean("SYSTEMLOG", false);		// For tests : no system logs....
+        editor.putBoolean("SYSTEMLOG", true);        // For tests : with system logs....
+        editor.commit();
     }
 }

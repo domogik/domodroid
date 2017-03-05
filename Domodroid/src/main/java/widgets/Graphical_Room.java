@@ -75,7 +75,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
         SharedPreferences params1 = params;
         this.Activity = (android.app.Activity) context;
         this.widgetHandler = handler;
-        domodb = new DomodroidDB(this.Tracer, this.Activity, params);
+        domodb = new DomodroidDB(this.Tracer, this.Activity);
         prefEditor = params1.edit();
         prefUtils = new pref_utils(context);
 
@@ -118,7 +118,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
                     prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
                     prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                    pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    pref_utils.save_params_to_file(Tracer, prefEditor, mytag, context);
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view

@@ -18,15 +18,16 @@
 package Entity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 
 import org.json.JSONObject;
 
+import Abstract.pref_utils;
 import activities.Graphics_Manager;
 import database.DomodroidDB;
 import misc.tracerengine;
 
 public class Entity_Feature {
+    private final pref_utils prefUtils;
     private int id;
     private JSONObject device;
     private String description;
@@ -43,10 +44,9 @@ public class Entity_Feature {
     private int state;
     private final Activity activity;
     private tracerengine Tracer = null;
-    private final SharedPreferences params;
     public Boolean Develop;
 
-    public Entity_Feature(SharedPreferences params, tracerengine Trac, Activity activity, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
+    public Entity_Feature(tracerengine Trac, Activity activity, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
         this.device_feature_model_id = device_feature_model_id;
         this.id = id;
         this.devId = devId;
@@ -60,9 +60,9 @@ public class Entity_Feature {
         this.value_type = value_type;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
+        prefUtils = new pref_utils(activity.getApplicationContext());
         try {
-            Develop = params.getBoolean("DEV", false);
+            Develop = pref_utils.prefs.getBoolean("DEV", false);
         } catch (Exception e) {
             Develop = false;
         }
@@ -207,7 +207,7 @@ public class Entity_Feature {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
+        DomodroidDB domodb = new DomodroidDB(Tracer, activity);
         domodb.owner = "entity_feature";
         try {
             iconName = domodb.requestIcons(id, "feature").getValue();

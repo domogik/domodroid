@@ -4,10 +4,8 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -27,6 +25,8 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import Abstract.pref_utils;
+
 import static activities.Activity_Main.context;
 
 /**
@@ -44,9 +44,11 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
     JSONObject measurements = new JSONObject();
     JSONObject tags = new JSONObject();
     static JSONObject metrics = new JSONObject();
+    private pref_utils prefUtils;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        prefUtils = new pref_utils(context);
         new getmetrics().execute();
     }
 
@@ -60,15 +62,14 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
             try {
-                SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
 
-                Float api_version = SP_params.getFloat("API_VERSION", 0);
+                Float api_version = pref_utils.prefs.getFloat("API_VERSION", 0);
                 try {
                     tags.put("domogik_api_version", api_version.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                String domogik_version = SP_params.getString("DOMOGIK-VERSION", "");
+                String domogik_version = pref_utils.prefs.getString("DOMOGIK-VERSION", "");
                 try {
                     tags.put("domogik_version", domogik_version);
                 } catch (JSONException e) {

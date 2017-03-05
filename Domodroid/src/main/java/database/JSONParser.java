@@ -17,13 +17,13 @@
  */
 package database;
 
+import android.view.Gravity;
+import android.widget.Toast;
+
 import org.domogik.domodroid13.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.view.Gravity;
-import android.widget.Toast;
 
 import Entity.Entity_Area;
 import Entity.Entity_Feature;
@@ -42,7 +42,7 @@ public class JSONParser {
 
         //parsing JSON area list
         for (int i = 0; i < itemArray.length(); i++) {
-            listArea[i] = new Entity_Area(null, null, null,
+            listArea[i] = new Entity_Area(null, null,
                     itemArray.getJSONObject(i).getString("description"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getString("name"));
@@ -61,8 +61,7 @@ public class JSONParser {
         for (int i = 0; i < itemArray.length(); i++) {
             if (itemArray.getJSONObject(i).getString("area_id").equals("")) area_id = 0;
             else area_id = itemArray.getJSONObject(i).getInt("area_id");
-            listRoom[i] = new Entity_Room(null, null, null,
-                    area_id,
+            listRoom[i] = new Entity_Room(null, null, area_id,
                     itemArray.getJSONObject(i).getString("description"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getString("name"));
@@ -78,7 +77,7 @@ public class JSONParser {
 
         //parsing JSON feature list
         for (int i = 0; i < itemArray.length(); i++) {
-            listFeature[i] = new Entity_Feature(null, null, null,
+            listFeature[i] = new Entity_Feature(null, null,
                     itemArray.getJSONObject(i).getString("device_feature_model_id"),
                     itemArray.getJSONObject(i).getInt("id"),
                     itemArray.getJSONObject(i).getJSONObject("device").getInt("id"),

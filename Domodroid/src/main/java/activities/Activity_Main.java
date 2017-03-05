@@ -67,7 +67,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import Abstract.load_parameters;
 import Abstract.pref_utils;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
@@ -229,8 +228,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception e) {
             Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
         }
-        //load_preferences(); //moved to abstract
-        load_parameters.load_preferences(prefUtils.prefs, prefUtils.editor);
+        //load_preferences(); //moved to prefUtils
+        prefUtils.load_preferences();
 
         Tracer.set_profile(prefUtils.prefs);
         // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
@@ -747,7 +746,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         }
         if (WM_Agent == null) {
             Tracer.v(mytag, "Starting wAgent !");
-            WM_Agent = new Widgets_Manager(Tracer, widgetHandler);
+            WM_Agent = new Widgets_Manager(this, Tracer, widgetHandler);
             WM_Agent.widgetupdate = WU_widgetUpdate;
         }
         /*
@@ -868,8 +867,8 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         if (reload) {
             // If answer is 'yes', load preferences from backup
             Tracer.v(mytag, "reload settings..");
-            //loadSharedPreferencesFromFile(backupprefs); //moved to Abstract
-            if (load_parameters.loadSharedPreferencesFromFile(backupprefs, prefUtils.editor, Tracer)) {
+            //loadSharedPreferencesFromFile(backupprefs); //moved to prefutils
+            if (prefUtils.loadSharedPreferencesFromFile(backupprefs, Tracer)) {
                 LoadSelections();    // to set panel with known values
             }
             run_sync_dialog(); //after reload prefs at start
@@ -897,49 +896,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         }
     }
 
-    /*
-    private void loadSharedPreferencesFromFile(File src) {
-        ObjectInputStream input = null;
-        try {
-            input = new ObjectInputStream(new FileInputStream(src));
-            SP_prefEditor.clear();
-            Map<String, ?> entries = (Map<String, ?>) input.readObject();
-            for (Entry<String, ?> entry : entries.entrySet()) {
-                Object v = entry.getValue();
-                String key = entry.getKey();
-                Tracer.i(mytag, "Loading pref : " + key + " -> " + v.toString());
-                if (v instanceof Boolean)
-                    SP_prefEditor.putBoolean(key, (Boolean) v);
-                else if (v instanceof Float)
-                    SP_prefEditor.putFloat(key, (Float) v);
-                else if (v instanceof Integer)
-                    SP_prefEditor.putInt(key, (Integer) v);
-                else if (v instanceof Long)
-                    SP_prefEditor.putLong(key, (Long) v);
-                else if (v instanceof String)
-                    SP_prefEditor.putString(key, (String) v);
-            }
-            SP_prefEditor.commit();
-            LoadSelections();    // to set panel with known values
-        } catch (IOException e) {
-            Tracer.e(mytag, "Can't load preferences file");
-            Tracer.e(mytag, e.toString());
-        } catch (ClassNotFoundException e) {
-            Tracer.e(mytag, "Can't load preferences file");
-            Tracer.e(mytag, e.toString());
-        } finally {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-            } catch (IOException ex) {
-                Tracer.e(mytag, "Can't load preferences file");
-                Tracer.e(mytag, ex.toString());
-            }
-        }
-    }
-    */
-
     private void loadWigets(int id, String type) {
         Tracer.i(mytag + ".loadWidgets", "Construct main View id=" + id + " type=" + type);
         VG_parent.removeAllViews();
@@ -958,10 +914,10 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     VG_parent.addView(LL_house_map);    // House & map
                     if (!by_usage) {
                         // Version 0.2 or un-force by_usage : display house, map and areas
-                        LL_area = WM_Agent.loadAreaWidgets(this, LL_area, prefUtils.prefs);
+                        LL_area = WM_Agent.loadAreaWidgets(LL_area);
                         VG_parent.addView(LL_area);    //and areas
 
-                        LL_activ = WM_Agent.loadActivWidgets(this, 1, "root", LL_activ, prefUtils.prefs, mytype);//add widgets in root
+                        LL_activ = WM_Agent.loadActivWidgets(1, "root", LL_activ, mytype);//add widgets in root
                     } else {
                         // by_usage
                         //TODO #19 change 1 in loadRoomWidgets by the right value.
@@ -973,11 +929,11 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                             load_area = 1;
                         }
                         //LL_room = WM_Agent.loadRoomWidgets(this, 1, LL_room, SP_params);    //List of known usages 'as rooms'
-                        LL_room = WM_Agent.loadRoomWidgets(this, load_area, LL_room, prefUtils.prefs);    //List of known usages 'as rooms'
+                        LL_room = WM_Agent.loadRoomWidgets(load_area, LL_room);    //List of known usages 'as rooms'
                         VG_parent.addView(LL_room);
 
                         //LL_activ = WM_Agent.loadActivWidgets(this, 1, "area", LL_activ, SP_params, mytype);//add widgets in area 1
-                        LL_activ = WM_Agent.loadActivWidgets(this, load_area, "area", LL_activ, prefUtils.prefs, mytype);//add widgets in area 1
+                        LL_activ = WM_Agent.loadActivWidgets(load_area, "area", LL_activ, mytype);//add widgets in area 1
                     }
                     VG_parent.addView(LL_activ);
                 /*Should never arrive in this type.
@@ -992,7 +948,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     break;
                 case "statistics":
                     //Only possible if by_usage (the 'stats' is never proposed with Version 0.2 or un-force by_usage)
-                    LL_activ = WM_Agent.loadActivWidgets(this, -1, type, LL_activ, prefUtils.prefs, mytype);
+                    LL_activ = WM_Agent.loadActivWidgets(-1, type, LL_activ, mytype);
                     VG_parent.addView(LL_activ);
 
                     break;
@@ -1001,15 +957,15 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     if (!by_usage) {
                         VG_parent.addView(LL_house_map);    // House & map
                     }
-                    LL_room = WM_Agent.loadRoomWidgets(this, id, LL_room, prefUtils.prefs);//Add room in this area
+                    LL_room = WM_Agent.loadRoomWidgets(id, LL_room);//Add room in this area
                     VG_parent.addView(LL_room);
 
-                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, prefUtils.prefs, mytype);//add widgets in this area
+                    LL_activ = WM_Agent.loadActivWidgets(id, type, LL_activ, mytype);//add widgets in this area
                     VG_parent.addView(LL_activ);
 
                     break;
                 case "room":
-                    LL_activ = WM_Agent.loadActivWidgets(this, id, type, LL_activ, prefUtils.prefs, mytype);//add widgets in this room
+                    LL_activ = WM_Agent.loadActivWidgets(id, type, LL_activ, mytype);//add widgets in this room
                     VG_parent.addView(LL_activ);
                     break;
             }
@@ -1032,10 +988,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             WU_widgetUpdate.Disconnect(0);    //Disconnect all widgets owned by Main
         }
         if (DIALOG_dialog_sync == null)
-            DIALOG_dialog_sync = new Dialog_Synchronize(Tracer, this, prefUtils.prefs);
+            DIALOG_dialog_sync = new Dialog_Synchronize(Tracer, this);
         DIALOG_dialog_sync.reload = reload;
         DIALOG_dialog_sync.setOnDismissListener(sync_listener);
-        DIALOG_dialog_sync.setParams(prefUtils.prefs);
         DIALOG_dialog_sync.show();
         DIALOG_dialog_sync.startSync();
     }
@@ -1067,7 +1022,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             Tracer.i(mytag, "Starting WidgetUpdate cache engine !");
             WU_widgetUpdate = WidgetUpdate.getInstance();
             WU_widgetUpdate.set_handler(sbanim, 0);    //put our main handler into cache engine (as Main)
-            Boolean result = WU_widgetUpdate.init(Tracer, this, prefUtils.prefs);
+            Boolean result = WU_widgetUpdate.init(Tracer, this);
             Tracer.i(mytag, "widgetupdate_wakup");
             WU_widgetUpdate.wakeup();
             if (!result)
@@ -1143,7 +1098,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 return true;
             case R.id.menu_house_config:
                 Tracer.v(mytag + ".onclick()", "Call to House settings screen");
-                Dialog_House DIALOG_house_set = new Dialog_House(Tracer, prefUtils.prefs, myself);
+                Dialog_House DIALOG_house_set = new Dialog_House(Tracer, this);
                 DIALOG_house_set.show();
                 DIALOG_house_set.setOnDismissListener(house_listener);
                 return true;

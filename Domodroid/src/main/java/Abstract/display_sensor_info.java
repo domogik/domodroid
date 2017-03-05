@@ -20,10 +20,8 @@ package Abstract;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.Gravity;
@@ -46,6 +44,8 @@ import java.util.StringTokenizer;
 import activities.Graphics_Manager;
 import misc.tracerengine;
 
+import static activities.Activity_Main.context;
+
 
 public abstract class display_sensor_info {
 
@@ -53,9 +53,9 @@ public abstract class display_sensor_info {
                                Activity activity, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
+        pref_utils prefUtils = new pref_utils(context);
         if (Value_timestamp != 0) {
-            if (SP_params.getBoolean("widget_timestamp", false)) {
+            if (prefUtils.timestamp()) {
                 timestamp.setText(timestamp_convertion(Value_timestamp.toString(), activity));
             } else {
                 timestamp.setReferenceTime(Value_timestamp);
@@ -282,10 +282,9 @@ public abstract class display_sensor_info {
     }
 
     /**
-     *
      * @param Tracer Tracerengine used for logging
-     * @param mytag Tag to know where it was called from
-     * @param phone a String to convert
+     * @param mytag  Tag to know where it was called from
+     * @param phone  a String to convert
      * @return the convertion to Locale User phone number display
      */
     public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
@@ -302,10 +301,9 @@ public abstract class display_sensor_info {
     }
 
     /**
-     *
-     * @param Tracer Tracerengine used for logging
-     * @param mytag Tag to know where it was called from
-     * @param number in float format
+     * @param Tracer        Tracerengine used for logging
+     * @param mytag         Tag to know where it was called from
+     * @param number        in float format
      * @param origin_number in string format
      * @return A string convert to number but return as string in User Locale format
      */
@@ -321,9 +319,8 @@ public abstract class display_sensor_info {
     }
 
     /**
-     *
      * @param timeStampStr the timestamp to convert
-     * @param context Context used to get date format
+     * @param context      Context used to get date format
      * @return a Timestamp convert to date
      */
     public static String timestamp_convertion(String timeStampStr, Context context) {
@@ -338,10 +335,9 @@ public abstract class display_sensor_info {
     }
 
     /**
-     *
      * @param Tracer Tracerengine used for logging
-     * @param mytag Tag to know where it was called from
-     * @param hour a String from domogik in hh:mm:ss
+     * @param mytag  Tag to know where it was called from
+     * @param hour   a String from domogik in hh:mm:ss
      * @return hour in User Locale language
      */
     public static String hour_convertion(tracerengine Tracer, String mytag, String hour) {

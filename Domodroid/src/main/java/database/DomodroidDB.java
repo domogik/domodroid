@@ -2,7 +2,6 @@ package database;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -10,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Abstract.pref_utils;
 import Entity.Entity_Area;
 import Entity.Entity_Feature;
 import Entity.Entity_Icon;
@@ -22,16 +22,16 @@ public class DomodroidDB {
     private final Activity activity;
     // Added by Doume to clarify debugging
     private final String mytag = this.getClass().getName();
+    private final pref_utils prefUtils;
     public String owner = "";
     private tracerengine Tracer = null;
-    private final SharedPreferences params;
 
     //////////////////////////////////////
 
-    public DomodroidDB(tracerengine Trac, Activity activity, SharedPreferences params) {
+    public DomodroidDB(tracerengine Trac, Activity activity) {
         this.activity = activity;
         this.Tracer = Trac;
-        this.params = params;
+        prefUtils = new pref_utils(activity.getApplicationContext());
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
     }
@@ -49,7 +49,7 @@ public class DomodroidDB {
         //delete all feature
         activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
         //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
+        DomodroidDB domodb = new DomodroidDB(Tracer, activity);
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
         Tracer.i(mytag, "load widgets for area 1");
         Entity_Room[] listRoom = domodb.requestRoom(1);
@@ -453,7 +453,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                areas[i] = new Entity_Area(params, Tracer, activity, curs.getString(0), curs.getInt(1), curs.getString(2));
+                areas[i] = new Entity_Area(Tracer, activity, curs.getString(0), curs.getInt(1), curs.getString(2));
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request area error");
@@ -530,7 +530,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                rooms[i] = new Entity_Room(params, Tracer, activity, curs.getInt(0), curs.getString(1),
+                rooms[i] = new Entity_Room(Tracer, activity, curs.getInt(0), curs.getString(1),
                         curs.getInt(2), curs.getString(3));
             }
         } catch (Exception e) {
@@ -724,7 +724,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                rooms[i] = new Entity_Room(params, Tracer, activity, curs.getInt(0), curs.getString(1),
+                rooms[i] = new Entity_Room(Tracer, activity, curs.getInt(0), curs.getString(1),
                         curs.getInt(2), curs.getString(3));
             }
         } catch (Exception e) {
@@ -824,7 +824,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                features[i] = new Entity_Feature(params, Tracer, activity, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4),
+                features[i] = new Entity_Feature(Tracer, activity, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4),
                         curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
             }
         } catch (Exception e) {
@@ -868,7 +868,7 @@ public class DomodroidDB {
                 if (iconName.equals("unknow"))
                     iconName = device_usage_id;
 
-                features[i] = new Entity_Map(params, Tracer, activity, curs.getString(0), Id, curs.getInt(2), iconName, curs.getString(4), curs.getString(5),
+                features[i] = new Entity_Map(Tracer, activity, curs.getString(0), Id, curs.getInt(2), iconName, curs.getString(4), curs.getString(5),
                         curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10), curs.getInt(12), curs.getInt(13), curs.getString(14));
             }
         } catch (Exception e) {
@@ -899,7 +899,7 @@ public class DomodroidDB {
                 //create the pseudo Entity_Map with all parameters present in table_feature_map : id, posx, posy and map_name
 
                 curs.moveToPosition(i);
-                features[i] = new Entity_Map(params, Tracer, activity, "", curs.getInt(0), 0, "", "", "",
+                features[i] = new Entity_Map(Tracer, activity, "", curs.getInt(0), 0, "", "", "",
                         "", "", "", "", "",
                         curs.getInt(1), curs.getInt(2), curs.getString(3));
             }
@@ -923,7 +923,7 @@ public class DomodroidDB {
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
                 curs.moveToPosition(i);
-                features[i] = new Entity_Feature(params, Tracer, activity, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
+                features[i] = new Entity_Feature(Tracer, activity, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
             }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature error");
@@ -940,7 +940,7 @@ public class DomodroidDB {
             Tracer.v(mytag + "(" + owner + ")", "requesting features by id" + id);
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_BY_ID, null, null, new String[]{(id)}, null);
             curs.moveToFirst();
-            feature = new Entity_Feature(params, Tracer, activity, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
+            feature = new Entity_Feature(Tracer, activity, curs.getString(0), curs.getInt(1), curs.getInt(2), curs.getString(3), curs.getString(4), curs.getString(5), curs.getString(6), curs.getString(7), curs.getString(8), curs.getString(9), curs.getString(10));
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request features by id error");
             Tracer.e(mytag, e.toString());

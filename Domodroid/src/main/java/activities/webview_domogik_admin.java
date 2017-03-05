@@ -2,10 +2,8 @@ package activities;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.webkit.SslErrorHandler;
@@ -16,6 +14,8 @@ import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
+import Abstract.pref_utils;
+
 /**
  * Created by tiki on 24/12/2016.
  */
@@ -23,12 +23,12 @@ import org.domogik.domodroid13.R;
 public class webview_domogik_admin extends Activity {
 
     private WebView webView;
-    private SharedPreferences SP_params;
     private WebView myWebView;
+    private pref_utils prefUtils;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SP_params = PreferenceManager.getDefaultSharedPreferences(this);
+        prefUtils = new pref_utils(this);
 
         setContentView(R.layout.domogik_admin_webview);
         myWebView = (WebView) findViewById(R.id.webview);
@@ -44,14 +44,14 @@ public class webview_domogik_admin extends Activity {
 
             if (Abstract.Connectivity.on_prefered_Wifi) {
                 //If connected to default SSID use local adress
-                url = SP_params.getString("rinorIP", "1.1.1.1");
-                port = SP_params.getString("rinorPort", "");
-                SSL = SP_params.getBoolean("ssl_activate", false);
+                url = prefUtils.prefs.getString("rinorIP", "1.1.1.1");
+                port = prefUtils.prefs.getString("rinorPort", "");
+                SSL = prefUtils.prefs.getBoolean("ssl_activate", false);
             } else {
                 //If not connected to default SSID use external adress
-                url = SP_params.getString("rinorexternal_IP", "1.1.1.1");
-                port = SP_params.getString("rinor_external_Port", "");
-                SSL = SP_params.getBoolean("ssl_external_activate", false);
+                url = prefUtils.prefs.getString("rinorexternal_IP", "1.1.1.1");
+                port = prefUtils.prefs.getString("rinor_external_Port", "");
+                SSL = prefUtils.prefs.getBoolean("ssl_external_activate", false);
             }
             if (!SSL) {
                 myWebView.loadUrl("http://" + url + ":" + port);
@@ -81,7 +81,7 @@ public class webview_domogik_admin extends Activity {
         //Allow to open webview even if untrusted SSL cert
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            if (!SP_params.getBoolean("SSL_Trusted", false)) {
+            if (!prefUtils.prefs.getBoolean("SSL_Trusted", false)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
                 int message;
                 switch (error.getPrimaryError()) {
@@ -110,9 +110,8 @@ public class webview_domogik_admin extends Activity {
                 builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor prefeditor = SP_params.edit();
-                        prefeditor.putBoolean("SSL_Trusted", true);
-                        prefeditor.commit();
+                        prefUtils.editor.putBoolean("SSL_Trusted", true);
+                        prefUtils.editor.commit();
                         handler.proceed();
                     }
                 });

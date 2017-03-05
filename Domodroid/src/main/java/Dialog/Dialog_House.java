@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -40,7 +39,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
     //private final Spinner spinner_room;
     //private final Spinner spinner_feature;
     //private final Spinner spinner_icon;
-    private final SharedPreferences params;
+
     private final Activity activity;
     private final pref_utils prefUtils;
     private tracerengine Tracer = null;
@@ -57,18 +56,15 @@ public class Dialog_House extends Dialog implements OnClickListener {
     private Entity_Room[] listRoom;
     private Entity_Feature[] listFeature;
     private final String mytag = this.getClass().getName();
-    private final SharedPreferences.Editor prefEditor;
 
-    public Dialog_House(tracerengine Trac, SharedPreferences params, Activity activity) {
+    public Dialog_House(tracerengine Trac, Activity activity) {
         super(activity);
         this.activity = activity;
-        this.params = params;
         this.Tracer = Trac;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
-        prefEditor = this.params.edit();
-        domodb = new DomodroidDB(Tracer, activity, params);
         prefUtils = new pref_utils(activity.getApplicationContext());
+        domodb = new DomodroidDB(Tracer, activity);
 
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
         cancelButton.setTag("house_cancel");
@@ -266,8 +262,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_ROOM, values);
                 //#76
-                prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-                pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                pref_utils.SaveRoom(domodb.request_json_Room().toString());
+                pref_utils.save_params_to_file(Tracer, prefUtils.editor, mytag, activity.getApplicationContext());
                 loadSpinnerData();
             }
         });
@@ -295,8 +291,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", lastid + 1);
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_AREA, values);
                 //#76
-                prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-                pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                pref_utils.SaveArea(domodb.request_json_Area().toString());
+                pref_utils.save_params_to_file(Tracer, prefUtils.editor, mytag, activity.getApplicationContext());
                 loadSpinnerData();
             }
         });
@@ -336,8 +332,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("id", (lastid + 1));
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
                 //#76
-                prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-                pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                pref_utils.SaveFeatureListAssociation(domodb.request_json_Area().toString());
+                pref_utils.save_params_to_file(Tracer, prefUtils.editor, mytag, activity.getApplicationContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, activity);
                 loadSpinnerData();
@@ -381,8 +377,8 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 values.put("reference", reference);
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                 //#76
-                prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                pref_utils.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                pref_utils.SaveIconList(domodb.request_json_Icon().toString());
+                pref_utils.save_params_to_file(Tracer, prefUtils.editor, mytag, activity.getApplicationContext());
                 loadSpinnerData();
             }
         });
@@ -397,19 +393,12 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 dismiss();
                 break;
             case "house_ok":
-                SharedPreferences.Editor prefEditor = params.edit();
                 try {
-                    prefEditor = params.edit();
                     //To allow the area view we have to remove by usage option
-                    prefEditor.putBoolean("BY_USAGE", false);
-                    prefEditor.commit();
-
+                    prefUtils.SetWidgetByUsage(false);
                 } catch (Exception e) {
                     Tracer.e(mytag, e.toString());
                 }
-
-                prefEditor.commit();
-
                 dismiss();
                 break;
             case "add_area":

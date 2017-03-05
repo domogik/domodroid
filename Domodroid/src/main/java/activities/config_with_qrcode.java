@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,6 +14,7 @@ import org.domogik.domodroid13.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Abstract.pref_utils;
 import misc.tracerengine;
 
 
@@ -22,10 +22,12 @@ public class config_with_qrcode extends AppCompatActivity {
     private static String contents;
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
+    private pref_utils prefUtils;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
+        prefUtils = new pref_utils(this);
+        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
 
         try {
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
@@ -73,8 +75,6 @@ public class config_with_qrcode extends AppCompatActivity {
                     try {
                         JSONObject jsonresult = null;
                         jsonresult = new JSONObject(contents);
-                        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor prefEditor;
                         String admin_url = jsonresult.getString("admin_url");
                         String[] separated = admin_url.split("://");
                         String[] separatedbis = separated[1].split(":");
@@ -143,20 +143,19 @@ public class config_with_qrcode extends AppCompatActivity {
                             Tracer.e(mytag, "ERROR getting external SSL information");
                         }
                         String butler_name = jsonresult.getString("butler_name").replace("u'", "").replace("'", "");
-                        prefEditor = params.edit();
-                        prefEditor.putString("rinorIP", rinor_IP);
-                        prefEditor.putString("rinorPort", rest_port);
-                        prefEditor.putString("rinorPath", rest_path);
-                        prefEditor.putBoolean("ssl_activate", SSL);
-                        prefEditor.putBoolean("ssl_external_activate", external_ssl);
-                        prefEditor.putString("MQaddress", mq_ip);
-                        prefEditor.putString("MQsubport", mq_port_sub);
-                        prefEditor.putString("MQpubport", mq_port_pub);
-                        prefEditor.putString("MQreq_repport", mq_port_req_rep);
-                        prefEditor.putString("dmg_butler_name", butler_name);
-                        prefEditor.putString("rinorexternal_IP", External_IP);
-                        prefEditor.putString("rinor_external_Port", External_port);
-                        prefEditor.commit();
+                        prefUtils.editor.putString("rinorIP", rinor_IP);
+                        prefUtils.editor.putString("rinorPort", rest_port);
+                        prefUtils.editor.putString("rinorPath", rest_path);
+                        prefUtils.editor.putBoolean("ssl_activate", SSL);
+                        prefUtils.editor.putBoolean("ssl_external_activate", external_ssl);
+                        prefUtils.editor.putString("MQaddress", mq_ip);
+                        prefUtils.editor.putString("MQsubport", mq_port_sub);
+                        prefUtils.editor.putString("MQpubport", mq_port_pub);
+                        prefUtils.editor.putString("MQreq_repport", mq_port_req_rep);
+                        prefUtils.editor.putString("dmg_butler_name", butler_name);
+                        prefUtils.editor.putString("rinorexternal_IP", External_IP);
+                        prefUtils.editor.putString("rinor_external_Port", External_port);
+                        prefUtils.editor.commit();
                         config_with_qrcode.this.finish();
 
                     } catch (JSONException e) {

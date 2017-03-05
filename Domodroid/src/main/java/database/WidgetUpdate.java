@@ -1,7 +1,6 @@
 package database;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +36,7 @@ import java.util.TimerTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import Abstract.pref_utils;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
@@ -53,7 +53,6 @@ public class WidgetUpdate {
     //implements Serializable {
     private static WidgetUpdate instance;
     private static final long serialVersionUID = 1L;
-    private SharedPreferences sharedparams;
 
     private boolean activated;
     private static Activity activity;
@@ -90,6 +89,7 @@ public class WidgetUpdate {
     // pos 1 = Map
     // pos 2 = MapView
     private static final Handler[] parent = new Handler[3];
+    private pref_utils prefUtils;
 
 	/*
      * This class is a background engine
@@ -128,7 +128,7 @@ public class WidgetUpdate {
 
     }
 
-    public Boolean init(tracerengine Trac, final Activity activity, SharedPreferences params) {
+    public Boolean init(tracerengine Trac, final Activity activity) {
         Boolean result = false;
         if (init_done) {
             Log.w("WidgetUpdate", "init already done");
@@ -136,16 +136,16 @@ public class WidgetUpdate {
         }
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
         sleeping = false;
-        this.sharedparams = params;
+        prefUtils = new pref_utils(activity.getApplicationContext());
         this.Tracer = Trac;
         WidgetUpdate.activity = activity;
         activated = true;
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
-        SSL = params.getBoolean("ssl_activate", false);
-        api_version = sharedparams.getFloat("API_VERSION", 0);
-        last_device_update = sharedparams.getString("last_device_update", "1900-01-01 00:00:00");
-        last_sensor_update = sharedparams.getString("last_sensor_update", "1900-01-01 00:00:00");
+        login = pref_utils.prefs.getString("http_auth_username", "Anonymous");
+        password = pref_utils.prefs.getString("http_auth_password", "");
+        SSL = pref_utils.prefs.getBoolean("ssl_activate", false);
+        api_version = pref_utils.prefs.getFloat("API_VERSION", 0);
+        last_device_update = pref_utils.prefs.getString("last_device_update", "1900-01-01 00:00:00");
+        last_sensor_update = pref_utils.prefs.getString("last_sensor_update", "1900-01-01 00:00:00");
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -157,7 +157,7 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        domodb = new DomodroidDB(Tracer, activity, params);
+        domodb = new DomodroidDB(Tracer, activity);
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
@@ -213,7 +213,7 @@ public class WidgetUpdate {
                     if (eventsManager == null) {
                         eventsManager = Events_manager.getInstance(activity);
                     }
-                    eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
+                    eventsManager.init(Tracer, myselfHandler, cache, pref_utils.prefs, instance);
                     /*
                     if(parent[0] != null) {
 						parent[0].sendEmptyMessage(8999);	//Forward event to Main
@@ -592,7 +592,7 @@ public class WidgetUpdate {
             //timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
             // dame but using the user option timer
-            timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300) * 1000);
+            timer.schedule(doAsynchronousTask, 0, pref_utils.prefs.getInt("UPDATE_TIMER", 300) * 1000);
         }
     }
 
@@ -716,15 +716,15 @@ public class WidgetUpdate {
                 if (Tracer != null)
                     Tracer.d(mytag, "Request to server for stats update...");
 
-                String request = sharedparams.getString("UPDATE_URL", null);
-                String URL = sharedparams.getString("URL", "1.1.1.1");
+                String request = pref_utils.prefs.getString("UPDATE_URL", null);
+                String URL = pref_utils.prefs.getString("URL", "1.1.1.1");
                 //Because in old time it was the full request that was used and saved, not only the real UPDATE_PATH
                 //like "https://192.168.0.1:40406/rest/sensor" instead of just "sensor"
                 try {
                     request = request.replace(URL, "");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    request = sharedparams.getString("UPDATE_URL", null);
+                    request = pref_utils.prefs.getString("UPDATE_URL", null);
                 }
 
                 Tracer.i(mytag, "urlupdate saved = " + request);
@@ -783,7 +783,7 @@ public class WidgetUpdate {
                                 }
                             } else if (api_version == 0.9f) {
                                 //load timestamp apps was closed
-                                String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                                String sensor_saved_timestamp = pref_utils.prefs.getString("sensor_saved_timestamp", "0");
                                 Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
 
                                 //Modify request to match the timestamp
@@ -814,7 +814,7 @@ public class WidgetUpdate {
                                 }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
-                                String strJson = sharedparams.getString("sensor_saved_value", "0");
+                                String strJson = pref_utils.prefs.getString("sensor_saved_value", "0");
                                 if (strJson != null) {
                                     //TODO load stored last_value
                                     JSONArray jsonData = new JSONArray(strJson);
@@ -1348,7 +1348,7 @@ public class WidgetUpdate {
     public void descUpdate(int id, String new_desc, String type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         boolean changed = false;
         try {
@@ -1357,12 +1357,12 @@ public class WidgetUpdate {
                 Boolean SSL = false;
                 if (Abstract.Connectivity.on_prefered_Wifi) {
                     //If connected to default SSID use local adress
-                    url = sharedparams.getString("URL", "1.1.1.1");
-                    SSL = sharedparams.getBoolean("ssl_activate", false);
+                    url = pref_utils.prefs.getString("URL", "1.1.1.1");
+                    SSL = pref_utils.prefs.getBoolean("ssl_activate", false);
                 } else {
                     //If not connected to default SSID use external adress
-                    url = sharedparams.getString("external_URL", "1.1.1.1");
-                    SSL = sharedparams.getBoolean("ssl_external_activate", false);
+                    url = pref_utils.prefs.getString("external_URL", "1.1.1.1");
+                    SSL = pref_utils.prefs.getBoolean("ssl_external_activate", false);
                 }
 
                 //Todo Move this method somewhere else and make it reusable.
@@ -1406,11 +1406,10 @@ public class WidgetUpdate {
                     //update db
                     domodb.update_name(id, new_desc, type);
                     //store last update in prefs for next start
-                    SharedPreferences.Editor prefEditor = sharedparams.edit();
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date tempdate = new Date();
-                    prefEditor.putString("last_device_update", df.format(tempdate));
-                    prefEditor.commit();
+                    pref_utils.editor.putString("last_device_update", df.format(tempdate));
+                    pref_utils.editor.commit();
                 }
             } else {
                 Tracer.e(mytag, "NO CONNECTION");
@@ -1489,7 +1488,7 @@ public class WidgetUpdate {
         //in case domogik MQ problem
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         switch (type) {
             case "area":
@@ -1514,7 +1513,7 @@ public class WidgetUpdate {
     public void remove_one_icon(int id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_icon(id, place_type);
 
@@ -1526,7 +1525,7 @@ public class WidgetUpdate {
     public void remove_one_feature_association(int id, int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_feature_association(id, place_id, place_type);
     }
@@ -1537,7 +1536,7 @@ public class WidgetUpdate {
     public void remove_one_FeatureMap(int id, int posx, int posy, String mapname) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_FeatureMap(id, posx, posy, mapname);
     }
@@ -1545,7 +1544,7 @@ public class WidgetUpdate {
     public void remove_one_feature_in_FeatureMap(int id) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_feature_in_FeatureMap(id);
     }
@@ -1556,7 +1555,7 @@ public class WidgetUpdate {
     public void remove_one_place_type_in_Featureassociation(int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_place_type_in_Featureassociation(place_id, place_type);
     }
@@ -1572,8 +1571,8 @@ public class WidgetUpdate {
 
     public JSONObject zmqrequest() throws JSONException {
         ZMQReqMessage REQ = new ZMQReqMessage(myselfHandler);
-        String ip = sharedparams.getString("MQaddress", "");    // TODO : use a R. for the default value
-        String port = sharedparams.getString("MQreq_repport", "40410");    // TODO : use a R. for the default value
+        String ip = pref_utils.prefs.getString("MQaddress", "");    // TODO : use a R. for the default value
+        String port = pref_utils.prefs.getString("MQreq_repport", "40410");    // TODO : use a R. for the default value
         final String pub_url = "tcp://" + ip + ":" + port;
         Log.d(mytag, "req address : " + pub_url);
         JSONArray json_widget_state_0_5 = new JSONArray();

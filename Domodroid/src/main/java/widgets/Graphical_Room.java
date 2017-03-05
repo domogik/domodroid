@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
@@ -124,6 +125,8 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     Message msg = new Message();
                     msg.setData(b);
                     widgetHandler.sendMessage(msg);
+                    Snackbar.make(getRootView(), R.string.room_deleted, Snackbar.LENGTH_LONG).show();
+
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -147,6 +150,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                     prefUtils.SetRoom(domodb.request_json_Room().toString());
                     prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     TV_name.setText(result);
+                    Snackbar.make(getRootView(), R.string.room_renamed, Snackbar.LENGTH_LONG).show();
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -186,6 +190,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             prefUtils.save_params_to_file(Tracer, mytag, getContext());
                             change_this_icon(icon);
                             dialog.cancel();
+                            Snackbar.make(getRootView(), R.string.widget_icon_changed, Snackbar.LENGTH_LONG).show();
                         }
                     }
             );
@@ -197,12 +202,14 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
             prefUtils.SetRoom(domodb.request_json_Room().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
+            Snackbar.make(getRootView(), R.string.room_moved_down, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_room(id_room, area_id, "room", "up");
             prefUtils.SetRoom(domodb.request_json_Room().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
+            Snackbar.make(getRootView(), R.string.room_moved_up, Snackbar.LENGTH_LONG).show();
         }
     }
 

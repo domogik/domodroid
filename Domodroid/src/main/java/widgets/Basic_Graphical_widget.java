@@ -201,6 +201,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     //prefUtils.SetFeatureList( domodb.request_json_FeatureList().toString());
                     //prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     TV_name.setText(result);
+                    Snackbar.make(getRootView(), R.string.widget_renamed, Snackbar.LENGTH_LONG).show();
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -223,7 +224,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, activity);
                     common_method.refresh_the_views(widgetHandler);
-                    Snackbar.make(getRootView(), "Widget deleted", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getRootView(), R.string.widget_deleted, Snackbar.LENGTH_LONG).show();
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -262,6 +263,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             prefUtils.save_params_to_file(Tracer, mytag, getContext());
                             change_this_icon(icon_status);
                             dialog.cancel();
+                            Snackbar.make(getRootView(), R.string.widget_icon_changed, Snackbar.LENGTH_LONG).show();
                         }
                     }
             );
@@ -274,6 +276,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             // #76
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
+            Snackbar.make(getRootView(), R.string.widget_moved_down, Snackbar.LENGTH_LONG).show();
+
         } else if (action.equals(activity.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_feature_association(id, place_id, place_type, "up");
@@ -281,6 +285,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             prefUtils.SetFeatureListAssociation(domodb.request_json_Features_association().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
             common_method.refresh_the_views(widgetHandler);
+            Snackbar.make(getRootView(), R.string.widget_moved_up, Snackbar.LENGTH_LONG).show();
+
         }
     }
 

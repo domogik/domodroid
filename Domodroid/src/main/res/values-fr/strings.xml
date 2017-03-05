@@ -827,10 +827,15 @@
     <string name="sms_not_sended">SMS pas envoyé</string>
     <string name="command_sending">Envoi de la commande à rest...</string>
     <string name="loading_data_from_rest">Chargement des valeurs depuis rest....</string>
+    <string name="underscore"> - </string>
     <string name="domogik_admin_page">Administration de domogik</string>
+    <string name="play">Jouer</string>
     <string name="next">Suiv.</string>
     <string name="previous">Préc.</string>
+    <string name="mute">Sourdine</string>
+    <string name="bass">Graves</string>
     <string name="volume">Volume</string>
+    <string name="treble">Aigues</string>
     <string name="erase_log_file">Effacer le fichier de log ?</string>
     <string name="sure_question">Sûr ?</string>
     <string name="reload">Recharger</string>
@@ -845,6 +850,7 @@
     <string name="Switch">Interrupteur</string>
     <string name="engine_speed">Vitesse Moteur</string>
     <string name="vehicle_speed">Vitesse Véhicule</string>
+    <string name="history_item_number">Nb de valeur a afficher dans l\'historique</string>
     <string name="LOGVIEW">Montrer le fichier de Log</string>
     <string name="mq_settings">Configuration de la MQ</string>
     <string name="wait_wifi_scan_result">Attendre le résultat du scan wifi</string>
@@ -862,5 +868,20 @@
     <string name="OPTION_mq_explain1">Notez que ceci n\'est valable que lors de l\'accès en local à Domogik, pas depuis l\'exterieur.</string>
     <string name="abort">Annuler</string>
     <string name="continue1">Continuer</string>
-    <string name="map_help_navigation_drawer">Vous pouvez changer de carte ou en ajouter une nouvelle directement depuis le menu latéral.</string>
+    <string name="map_help_navigation_drawer">Vous pouvez changer de carte ou en rajoute une directement depuis le menu latéral.</string>
+    <string name="widget_deleted">Widget supprimé</string>
+    <string name="widget_renamed">Widget renommé</string>
+    <string name="widget_icon_changed">Icône remplacée</string>
+    <string name="widget_moved_down">Widget descendu</string>
+    <string name="widget_moved_up">Widget monté</string>
+    <string name="area_deleted">Zone supprimée</string>
+    <string name="area_renamed">Zone renommée</string>
+    <string name="area_moved_down">Zone descendu</string>
+    <string name="area_moved_up">Zone montée</string>
+    <string name="room_moved_up">Pièce montée</string>
+    <string name="room_moved_down">Pièce descendue</string>
+    <string name="room_renamed">Pièce renommée</string>
+    <string name="room_deleted">Pièce supprimée</string>
+    <string name="widget_added">Widget ajouté</string>
+    <string name="widget_replace_somewher">Placez-le à un nouvel endroit.</string>
 </resources>

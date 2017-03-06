@@ -195,20 +195,12 @@ public class Preference extends PreferenceActivity implements
 
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
         String temp = prefUtils.GetRestIp();
-        String extrenal_temp = prefUtils.GetExternalRestIp();
         Boolean SSL = prefUtils.GetRestSsl();
-        Boolean ExternalSSL = prefUtils.GetExternalRestSsl();
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
             if (SSL) {
                 prefUtils.SetRestIp("https://" + temp);
             } else {
                 prefUtils.SetRestIp("http://" + temp);
-            }
-            if (ExternalSSL) {
-                prefUtils.SetExternalRestIp("https://" + extrenal_temp);
-            } else {
-                prefUtils.SetExternalRestIp("http://" + extrenal_temp);
-
             }
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
             if (SSL) {
@@ -216,11 +208,20 @@ public class Preference extends PreferenceActivity implements
             } else {
                 prefUtils.SetRestIp(temp.replace("http://", ""));
             }
+        }
+        String extrenal_temp = prefUtils.GetExternalRestIp();
+        Boolean ExternalSSL = prefUtils.GetExternalRestSsl();
+        if (!extrenal_temp.toLowerCase().startsWith("http://") && !extrenal_temp.toLowerCase().startsWith("https://")) {
+            if (ExternalSSL) {
+                prefUtils.SetExternalRestIp("https://" + extrenal_temp);
+            } else {
+                prefUtils.SetExternalRestIp("http://" + extrenal_temp);
+            }
+        } else if (extrenal_temp.toLowerCase().startsWith("http://") || extrenal_temp.toLowerCase().startsWith("https://")) {
             if (ExternalSSL) {
                 prefUtils.SetExternalRestIp(extrenal_temp.replace("https://", ""));
             } else {
                 prefUtils.SetExternalRestIp("https://" + extrenal_temp.replace("http://", ""));
-
             }
         }
 

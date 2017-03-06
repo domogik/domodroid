@@ -574,14 +574,14 @@ public class pref_utils {
      * @return external_ip to join domogik from external access otherwise internal ip if not configure
      */
     public static String GetExternalRestIp() {
-        return prefs.getString("rinor_external_IP", GetRestIp());
+        return prefs.getString("rinorexternal_IP", GetRestIp());
     }
 
     /**
      * @param external_ip to join domogik from external access
      */
     public void SetExternalRestIp(String external_ip) {
-        editor.putString("rinor_external_IP", external_ip);
+        editor.putString("rinorexternal_IP", external_ip);
         commit();
     }
 
@@ -604,7 +604,7 @@ public class pref_utils {
      * @return SSL acces for domogik in external access otherwise internal ssl if not configure
      */
     public static Boolean GetExternalRestSsl() {
-        return prefs.getBoolean("ssl_external_activate", GetRestSsl());
+        return prefs.getBoolean("ssl_external_activate", false);
     }
 
 

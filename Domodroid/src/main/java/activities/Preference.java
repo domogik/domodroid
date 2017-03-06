@@ -203,10 +203,12 @@ public class Preference extends PreferenceActivity implements
                 prefUtils.SetRestIp("http://" + temp);
             }
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
+            temp.replace("https://", "");
+            temp.replace("http://", "");
             if (SSL) {
-                prefUtils.SetRestIp(temp.replace("https://", ""));
+                prefUtils.SetRestIp("https://" + temp);
             } else {
-                prefUtils.SetRestIp(temp.replace("http://", ""));
+                prefUtils.SetRestIp("http://" + temp);
             }
         }
         String extrenal_temp = prefUtils.GetExternalRestIp();
@@ -218,10 +220,12 @@ public class Preference extends PreferenceActivity implements
                 prefUtils.SetExternalRestIp("http://" + extrenal_temp);
             }
         } else if (extrenal_temp.toLowerCase().startsWith("http://") || extrenal_temp.toLowerCase().startsWith("https://")) {
+            extrenal_temp.replace("https://", "");
+            extrenal_temp.replace("http://", "");
             if (ExternalSSL) {
-                prefUtils.SetExternalRestIp(extrenal_temp.replace("https://", ""));
+                prefUtils.SetExternalRestIp("https://" + extrenal_temp);
             } else {
-                prefUtils.SetExternalRestIp("https://" + extrenal_temp.replace("http://", ""));
+                prefUtils.SetExternalRestIp("http://" + extrenal_temp);
             }
         }
 

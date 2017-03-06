@@ -127,6 +127,12 @@
         android:title="@string/OPTION_check_server_settings">
         <EditTextPreference
             android:enabled="false"
+            android:key="prefered_wifi_ssid"
+            android:selectable="false"
+            android:shouldDisableView="true"
+            android:title="@string/OPTION_local_wifi_title" />
+        <EditTextPreference
+            android:enabled="false"
             android:key="UPDATE_URL"
             android:selectable="false"
             android:shouldDisableView="true"
@@ -137,12 +143,6 @@
             android:selectable="false"
             android:shouldDisableView="true"
             android:title="@string/Rinor_URL" />
-        <EditTextPreference
-            android:enabled="false"
-            android:key="prefered_wifi_ssid"
-            android:selectable="false"
-            android:shouldDisableView="true"
-            android:title="@string/OPTION_local_wifi_title" />
         <EditTextPreference
             android:enabled="false"
             android:key="external_URL"

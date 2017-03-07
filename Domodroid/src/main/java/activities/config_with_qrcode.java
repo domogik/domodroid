@@ -6,8 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -22,6 +25,7 @@ public class config_with_qrcode extends AppCompatActivity {
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
     private pref_utils prefUtils;
+    private Handler handler;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,34 @@ public class config_with_qrcode extends AppCompatActivity {
             //on catch, show the download dialog
             showDialog(config_with_qrcode.this, getString(R.string.no_qrcode_scanner), getString(R.string.no_qrcode_question), getString(R.string.reloadOK), getString(R.string.reloadNO)).show();
         }
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message mesg) {
+                Tracer.e("QRcode receive message=", mesg.toString());
+                if (mesg.what == 0) {
+                    Tracer.e(mytag, "No need password or already set ending");
+                    config_with_qrcode.this.finish();
+                } else if (mesg.what == 1) {
+                    Tracer.e(mytag, "Ask for credentials");
+                    askquestion(config_with_qrcode.this, 0, 2, "Http auth", "Do you need to set a User/Password to contact domogik rest server", getString(R.string.continue1), getString(R.string.abort), false).show();
+                } else if (mesg.what == 2) {
+                    Tracer.e(mytag, "Says to set credentials");
+                    askquestion(config_with_qrcode.this, 0, 3, "User", "type your Login", "Continue", "Abort", true).show();
+                } else if (mesg.what == 3) {
+                    Tracer.e(mytag, "Entered a login");
+                    Tracer.e(mytag, (String) mesg.obj);
+                    askquestion(config_with_qrcode.this, 0, 4, "password", "type your password", "Continue", "Abort", true).show();
+                } else if (mesg.what == 4) {
+                    Tracer.e(mytag, "Entered a password");
+                    Tracer.e(mytag, (String) mesg.obj);
+                    askquestion(config_with_qrcode.this, 0, 5, "Success", "All done", "Continue", "Abort", false).show();
+                } else if (mesg.what == 5) {
+                    //Tracer.e(mytag, mesg.obj.toString());
+                    Tracer.e(mytag, "all done");
+                    //todo save all
+                }
+            }
+        };
     }
 
     @Override
@@ -52,6 +84,35 @@ public class config_with_qrcode extends AppCompatActivity {
                 //showDialog(config_with_qrcode.this, "Qrcode results", "No results from qrcode scanner", "Yes", "No").show();
             }
         }
+    }
+
+    private AlertDialog askquestion(final Activity act, final int msg0, final int msg1, CharSequence title, CharSequence message, CharSequence buttonYes, final CharSequence buttonNo, final boolean textinput) {
+        //display an alertbox to remember user to set is password/login in options
+        final AlertDialog.Builder alert = new AlertDialog.Builder(act);
+        alert.setTitle(title);
+        alert.setMessage(message);
+        final EditText input = new EditText(getApplicationContext());
+        // Set an EditText view to get user input
+        if (textinput) {
+            alert.setView(input);
+        }
+        alert.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog_customname, int whichButton) {
+                if (msg1 == 5) {
+                    Message message1 = new Message();
+                    message1.what = msg1;
+                    if (textinput)
+                        message1.obj = input.getText();
+                    handler.sendMessage(message1);
+                } else handler.sendEmptyMessage(msg1);
+            }
+        });
+        alert.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog_customname, int whichButton) {
+                handler.sendEmptyMessage(msg0);
+            }
+        });
+        return alert.show();
     }
 
     private AlertDialog showDialog(final Activity act, final CharSequence title, CharSequence message, CharSequence buttonYes, final CharSequence buttonNo) {
@@ -154,8 +215,7 @@ public class config_with_qrcode extends AppCompatActivity {
                         prefUtils.SetButlerName(butler_name);
                         prefUtils.SetExternalRestIp(External_IP);
                         prefUtils.SetExternalRestPort(External_port);
-                        config_with_qrcode.this.finish();
-
+                        handler.sendEmptyMessage(1);
                     } catch (JSONException e) {
                         Tracer.e(mytag, "Error parsing answer of qrcode to json: " + e.toString());
                     }

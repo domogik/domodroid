@@ -100,7 +100,7 @@ public class pref_utils {
      * @return domogik api version
      */
     public static float GetDomogikApiVersion() {
-        return prefs.getFloat("API_VERSION", 0);
+        return prefs.getFloat("DOMOGIK-API_VERSION", 0);
     }
 
     /**

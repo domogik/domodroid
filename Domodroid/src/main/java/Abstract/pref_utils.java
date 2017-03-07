@@ -101,14 +101,14 @@ public class pref_utils {
      * @return domogik api version
      */
     public static float GetDomogikApiVersion() {
-        return prefs.getFloat("DOMOGIK-API_VERSION", 0);
+        return prefs.getFloat("API_VERSION", 0);
     }
 
     /**
      * @param Rinor_Api_Version save the current domogik Api version
      */
     public static void SetDomogikApiVersion(Float Rinor_Api_Version) {
-        editor.putFloat("DOMOGIK-API_VERSION", Rinor_Api_Version);
+        editor.putFloat("API_VERSION", Rinor_Api_Version);
         commit();
     }
 

@@ -129,21 +129,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
         public LoadConfig() {
             super();
-            urlAccess = prefUtils.GetRestIp() + ":" + prefUtils.GetRestPort() + prefUtils.GetRestPath();
-            urlAccess = urlAccess.replaceAll("[\r\n]+", "");
-            //Try to solve #1623
-            urlAccess = urlAccess.replaceAll(" ", "%20");
-            //todo try to see if this might help for all case
-            // urlAccess=URLEncoder.encode(urlAccess);
-            String format_urlAccess;
-            //add a '/' at the end of the IP address
-            if (urlAccess.lastIndexOf("/") == urlAccess.length() - 1)
-                format_urlAccess = urlAccess;
-            else
-                format_urlAccess = urlAccess.concat("/");
-            prefUtils.SetUrl(format_urlAccess);
-            urlAccess = prefUtils.GetUrl();
-
             if (db == null)
                 db = new DomodroidDB(Tracer, activity);
             try {
@@ -248,7 +233,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
             JSONObject json_Commands = null;
             JSONObject json_FeatureAssociationList = null;
             JSONObject json_IconList = null;
-            Tracer.i(mytag, "urlAccess = <" + urlAccess + ">");
             publishProgress(8);
             // grab a new method if sync by past that only erase what concern area id 1 if previous api >0.6f
             // and if syncing with the same api version

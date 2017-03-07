@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -182,14 +183,15 @@ public class pref_utils {
      * @return the Rest/Rinor IP save in preferences
      */
     public static String GetRestIp() {
-        return prefs.getString("rinor_IP", "1.1.1.1");
+        return prefs.getString("rinorIP", "1.1.1.1");
     }
 
     /**
      * @param rinor_IP the Rest/Rinor IP to save
      */
     public static void SetRestIp(String rinor_IP) {
-        editor.putString("rinor_IP", rinor_IP);
+        editor.putString("rinorIP", rinor_IP);
+        Log.e("pref_utils", "rinorIP=" + rinor_IP);
         commit();
     }
 
@@ -243,6 +245,7 @@ public class pref_utils {
      */
     public void SetExternalUrl(String external_format_urlAccess) {
         editor.putString("external_URL", external_format_urlAccess);
+        Log.e("pref_utils", "SetExternalUrl=" + external_format_urlAccess);
         commit();
     }
 
@@ -258,6 +261,7 @@ public class pref_utils {
      */
     public static void SetUrl(String format_urlAccess) {
         editor.putString("URL", format_urlAccess);
+        Log.e("pref_utils", "SetUrl=" + format_urlAccess);
         commit();
     }
 
@@ -582,6 +586,7 @@ public class pref_utils {
      */
     public void SetExternalRestIp(String external_ip) {
         editor.putString("rinorexternal_IP", external_ip);
+        Log.e("pref_utils", "rinorexternal_IP=" + external_ip);
         commit();
     }
 

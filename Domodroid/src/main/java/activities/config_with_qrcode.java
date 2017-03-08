@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 
 import org.domogik.domodroid13.R;
@@ -47,7 +48,7 @@ public class config_with_qrcode extends AppCompatActivity {
             public void handleMessage(Message mesg) {
                 Tracer.e("QRcode receive message=", mesg.toString());
                 if (mesg.what == 0) {
-                    Tracer.e(mytag, "No need password or already set ending");
+                    Tracer.e(mytag, "Quit Qrcode activity");
                     config_with_qrcode.this.finish();
                 } else if (mesg.what == 1) {
                     Tracer.e(mytag, "Ask for credentials");
@@ -57,16 +58,40 @@ public class config_with_qrcode extends AppCompatActivity {
                     askquestion(config_with_qrcode.this, 0, 3, "User", "type your Login", "Continue", "Abort", true).show();
                 } else if (mesg.what == 3) {
                     Tracer.e(mytag, "Entered a login");
-                    Tracer.e(mytag, (String) mesg.obj);
-                    askquestion(config_with_qrcode.this, 0, 4, "password", "type your password", "Continue", "Abort", true).show();
+                    if (mesg.obj != null) {
+                        try {
+                            Tracer.e(mytag, (String) mesg.obj);
+                            prefUtils.SetHttpAuthLogin((String) mesg.obj);
+                            askquestion(config_with_qrcode.this, 0, 4, "password", "type your password", "Continue", "Abort", true).show();
+                        } catch (Exception e) {
+                            handler.sendEmptyMessage(6);
+                        }
+                    } else {
+                        handler.sendEmptyMessage(6);
+                    }
                 } else if (mesg.what == 4) {
-                    Tracer.e(mytag, "Entered a password");
-                    Tracer.e(mytag, (String) mesg.obj);
-                    askquestion(config_with_qrcode.this, 0, 5, "Success", "All done", "Continue", "Abort", false).show();
+                    if (mesg.obj != null) {
+                        try {
+                            Tracer.e(mytag, (String) mesg.obj);
+                            prefUtils.SetHttpAuthPassword((String) mesg.obj);
+                            askquestion(config_with_qrcode.this, 0, 5, "Success", "All done", "Continue", "Abort", false).show();
+                        } catch (Exception e) {
+                            handler.sendEmptyMessage(7);
+                        }
+                    } else {
+                        handler.sendEmptyMessage(6);
+                    }
                 } else if (mesg.what == 5) {
                     //Tracer.e(mytag, mesg.obj.toString());
                     Tracer.e(mytag, "all done");
                     //todo save all
+                    handler.sendEmptyMessage(0);
+                } else if (mesg.what == 6) {
+                    Tracer.e(mytag, "Can't save login");
+                    askquestion(config_with_qrcode.this, 0, 0, "User", "Can't save login", "Continue", "", false).show();
+                } else if (mesg.what == 7) {
+                    Tracer.e(mytag, "Can't save password");
+                    askquestion(config_with_qrcode.this, 0, 0, "password", "Can't save password", "Continue", "", false).show();
                 }
             }
         };
@@ -98,11 +123,11 @@ public class config_with_qrcode extends AppCompatActivity {
         }
         alert.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog_customname, int whichButton) {
-                if (msg1 == 5) {
+                if (textinput) {
                     Message message1 = new Message();
                     message1.what = msg1;
-                    if (textinput)
-                        message1.obj = input.getText();
+                    Tracer.e(mytag, "input.getText=" + input.getText());
+                    message1.obj = input.getText().toString();
                     handler.sendMessage(message1);
                 } else handler.sendEmptyMessage(msg1);
             }

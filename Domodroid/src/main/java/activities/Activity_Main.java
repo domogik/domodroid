@@ -161,11 +161,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
         Activity_Main.context = getApplicationContext();
         myself = this;
-        if (Build.VERSION.SDK_INT == 8) // FROYO (8)
-        {
-            System.setProperty("java.net.preferIPv4Stack", "true");
-            System.setProperty("java.net.preferIPv6Addresses", "false");
-        }
 
         prefUtils = new pref_utils(this);
         Tracer = tracerengine.getInstance(prefUtils.prefs, this);

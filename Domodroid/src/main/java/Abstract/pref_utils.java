@@ -167,7 +167,7 @@ public class pref_utils {
     /**
      * @param ssid save "prefered wifi SSID" in preferences
      */
-    public void SetPreferedWifiSsid(String ssid) {
+    public static void SetPreferedWifiSsid(String ssid) {
         editor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length() - 1));
         commit();
     }
@@ -243,7 +243,7 @@ public class pref_utils {
     /**
      * @param external_format_urlAccess the update external url to save
      */
-    public void SetExternalUrl(String external_format_urlAccess) {
+    public static void SetExternalUrl(String external_format_urlAccess) {
         editor.putString("external_URL", external_format_urlAccess);
         Log.e("pref_utils", "SetExternalUrl=" + external_format_urlAccess);
         commit();
@@ -554,7 +554,7 @@ public class pref_utils {
     /**
      * @param b a boolean corresponding to answer choice to question about untrusted cert in admin view
      */
-    public void SetSslTrusted(boolean b) {
+    public static void SetSslTrusted(boolean b) {
         editor.putBoolean("SSL_Trusted", b);
         commit();
     }
@@ -569,7 +569,7 @@ public class pref_utils {
     /**
      * @param ssl a boolean to save the ssl access state of domogik in locale
      */
-    public void SetRestSsl(Boolean ssl) {
+    public static void SetRestSsl(Boolean ssl) {
         editor.putBoolean("ssl_activate", ssl);
         commit();
     }
@@ -584,7 +584,7 @@ public class pref_utils {
     /**
      * @param external_ip to join domogik from external access
      */
-    public void SetExternalRestIp(String external_ip) {
+    public static void SetExternalRestIp(String external_ip) {
         editor.putString("rinorexternal_IP", external_ip);
         Log.e("pref_utils", "rinorexternal_IP=" + external_ip);
         commit();
@@ -600,7 +600,7 @@ public class pref_utils {
     /**
      * @param external_port to join domogik from external access
      */
-    public void SetExternalRestPort(String external_port) {
+    public static void SetExternalRestPort(String external_port) {
         editor.putString("rinor_external_Port", external_port);
         commit();
     }
@@ -616,7 +616,7 @@ public class pref_utils {
     /**
      * @param external_ssl a boolean to save the ssl access state of domogik from external
      */
-    public void SetExternalRestSsl(Boolean external_ssl) {
+    public static void SetExternalRestSsl(Boolean external_ssl) {
         editor.putBoolean("ssl_external_activate", external_ssl);
         commit();
     }
@@ -624,7 +624,7 @@ public class pref_utils {
     /**
      * @param butler_name Set the butler name
      */
-    public void SetButlerName(String butler_name) {
+    public static void SetButlerName(String butler_name) {
         editor.putString("dmg_butler_name", butler_name);
         commit();
     }
@@ -647,7 +647,7 @@ public class pref_utils {
     /**
      * @param currentScale the current map Scale to save
      */
-    public void SetMapScale(float currentScale) {
+    public static void SetMapScale(float currentScale) {
         editor.putFloat("Mapscale", currentScale);
         commit();
     }
@@ -724,7 +724,7 @@ public class pref_utils {
     /**
      * @param login to be set for http auth method
      */
-    public void SetHttpAuthLogin(String login) {
+    public static void SetHttpAuthLogin(String login) {
         editor.putString("http_auth_username", login);
         Log.e("pref_utils", "http_auth_username=" + login);
 
@@ -741,7 +741,7 @@ public class pref_utils {
     /**
      * @param password to be set for http auth method
      */
-    public void SetHttpAuthPassword(String password) {
+    public static void SetHttpAuthPassword(String password) {
         editor.putString("http_auth_password", password);
         Log.e("pref_utils", "http_auth_password=" + password);
         commit();
@@ -771,7 +771,7 @@ public class pref_utils {
      * @param cached_dump      dump sensor value to save them
      * @param currentTimestamp timestamp we saved the dump
      */
-    public void SetSensorSavedValueAndTimestamp(String cached_dump, String currentTimestamp) {
+    public static void SetSensorSavedValueAndTimestamp(String cached_dump, String currentTimestamp) {
         editor.putString("sensor_saved_value", cached_dump);
         editor.putString("sensor_saved_timestamp", currentTimestamp);
         commit();
@@ -798,7 +798,7 @@ public class pref_utils {
         return prefs.getString("COLORRGB", "#FFFFFF");
     }
 
-    public void SetColorRgb(String value) {
+    public static void SetColorRgb(String value) {
         editor.putString("COLORRGB", "#" + value);
         commit();
     }
@@ -807,7 +807,7 @@ public class pref_utils {
         return prefs.getInt("COLORHUE", 0);
     }
 
-    public void SetColorHue(int progress) {
+    public static void SetColorHue(int progress) {
         editor.putInt("COLORHUE", progress);
         commit();
     }
@@ -816,7 +816,7 @@ public class pref_utils {
         return prefs.getInt("COLORSATURATION", 255);
     }
 
-    public void SetColorSaturation(int progress) {
+    public static void SetColorSaturation(int progress) {
         editor.putInt("COLORSATURATION", progress);
         commit();
     }
@@ -825,17 +825,17 @@ public class pref_utils {
         return prefs.getInt("COLORBRIGHTNESS", 255);
     }
 
-    public void SetColorBrightness(int progress) {
+    public static void SetColorBrightness(int progress) {
         editor.putInt("COLORBRIGHTNESS", progress);
         commit();
     }
 
-    public void SetDebugLocCanged(boolean b) {
+    public static void SetDebugLocCanged(boolean b) {
         editor.putBoolean("LOGCHANGED", b);
         commit();
     }
 
-    public void SetDebugTextlog(Boolean to_txtFile) {
+    public static void SetDebugTextlog(Boolean to_txtFile) {
         editor.putBoolean("TEXTLOG", to_txtFile);
         commit();
     }

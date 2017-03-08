@@ -24,7 +24,6 @@ public class config_with_qrcode extends AppCompatActivity {
     private static String contents;
     private final String mytag = this.getClass().getName();
     private static tracerengine Tracer = null;
-    private pref_utils prefUtils;
     private Handler handler;
     private String rinor_IP;
     private String rest_port;
@@ -41,8 +40,7 @@ public class config_with_qrcode extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefUtils = new pref_utils(this);
-        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
+        Tracer = tracerengine.getInstance(pref_utils.prefs, this);
 
         try {
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
@@ -64,54 +62,60 @@ public class config_with_qrcode extends AppCompatActivity {
                 } else if (mesg.what == 1) {
                     Tracer.e(mytag, "Qrcode as been read");
                     try {
-                        prefUtils.SetRestIp(rinor_IP);
-                        prefUtils.SetRestPort(rest_port);
-                        prefUtils.SetRestPath(rest_path);
-                        prefUtils.SetRestSsl(SSL);
-                        prefUtils.SetExternalRestSsl(external_ssl);
-                        prefUtils.SetMqAddress(mq_ip);
-                        prefUtils.SetMqSubPort(mq_port_sub);
-                        prefUtils.SetMqPubPort(mq_port_pub);
-                        prefUtils.SetMqReqRepPort(mq_port_req_rep);
-                        prefUtils.SetButlerName(butler_name);
-                        prefUtils.SetExternalRestIp(External_IP);
-                        prefUtils.SetExternalRestPort(External_port);
-                        askquestion(config_with_qrcode.this, 0, 2, "Http auth", "Do you need to set a User/Password to contact domogik rest server", getString(R.string.reloadOK), getString(R.string.reloadNO), false).show();
+                        pref_utils.SetRestIp(rinor_IP);
+                        pref_utils.SetRestPort(rest_port);
+                        pref_utils.SetRestPath(rest_path);
+                        pref_utils.SetRestSsl(SSL);
+                        pref_utils.SetExternalRestSsl(external_ssl);
+                        pref_utils.SetMqAddress(mq_ip);
+                        pref_utils.SetMqSubPort(mq_port_sub);
+                        pref_utils.SetMqPubPort(mq_port_pub);
+                        pref_utils.SetMqReqRepPort(mq_port_req_rep);
+                        pref_utils.SetButlerName(butler_name);
+                        pref_utils.SetExternalRestIp(External_IP);
+                        pref_utils.SetExternalRestPort(External_port);
+                        askquestion(config_with_qrcode.this, 2, 4, "Http auth", "Do you need to set a User/Password to contact domogik rest server", getString(R.string.reloadOK), getString(R.string.reloadNO), false).show();
                     } catch (Exception e) {
                         handler.sendEmptyMessage(20);
                     }
                 } else if (mesg.what == 2) {
+                    Tracer.e(mytag, "Answer No credentials");
+                    pref_utils.SetHttpAuthLogin("");
+                    pref_utils.SetHttpAuthPassword("");
+                    askquestion(config_with_qrcode.this, 0, 7, "Success", "All done", getString(R.string.continue1), getString(R.string.abort), false).show();
+                } else if (mesg.what == 4) {
                     Tracer.e(mytag, "Says to set credentials");
-                    askquestion(config_with_qrcode.this, 0, 3, "User", "type your Login", getString(R.string.continue1), getString(R.string.abort), true).show();
-                } else if (mesg.what == 3) {
+                    askquestion(config_with_qrcode.this, 0, 5, "User", "type your Login", getString(R.string.continue1), getString(R.string.abort), true).show();
+                } else if (mesg.what == 5) {
                     Tracer.e(mytag, "Entered a login");
                     if (mesg.obj != null) {
                         try {
                             Tracer.e(mytag, (String) mesg.obj);
-                            prefUtils.SetHttpAuthLogin((String) mesg.obj);
-                            askquestion(config_with_qrcode.this, 0, 4, "password", "type your password", getString(R.string.continue1), getString(R.string.abort), true).show();
+                            pref_utils.SetHttpAuthLogin((String) mesg.obj);
+                            askquestion(config_with_qrcode.this, 0, 6, "password", "type your password", getString(R.string.continue1), getString(R.string.abort), true).show();
                         } catch (Exception e) {
                             handler.sendEmptyMessage(21);
                         }
                     } else {
                         handler.sendEmptyMessage(21);
                     }
-                } else if (mesg.what == 4) {
+                } else if (mesg.what == 6) {
                     if (mesg.obj != null) {
                         try {
                             Tracer.e(mytag, (String) mesg.obj);
-                            prefUtils.SetHttpAuthPassword((String) mesg.obj);
-                            askquestion(config_with_qrcode.this, 0, 5, "Success", "All done", getString(R.string.continue1), getString(R.string.abort), false).show();
+                            pref_utils.SetHttpAuthPassword((String) mesg.obj);
+                            askquestion(config_with_qrcode.this, 0, 7, "Success", "All done", getString(R.string.reloadOK), "", false).show();
                         } catch (Exception e) {
                             handler.sendEmptyMessage(22);
                         }
                     } else {
                         handler.sendEmptyMessage(22);
                     }
-                } else if (mesg.what == 5) {
+                } else if (mesg.what == 7) {
                     //Tracer.e(mytag, mesg.obj.toString());
                     Tracer.e(mytag, "all done");
                     handler.sendEmptyMessage(0);
+
                     //let 20 value to intercept error
                 } else if (mesg.what == 20) {
                     Tracer.e(mytag, "Can't save server information");
@@ -194,7 +198,7 @@ public class config_with_qrcode extends AppCompatActivity {
                 } else if (title.equals(getString(R.string.qr_code_is_valid))) {
                     Tracer.d("preference", "We got a result from qrcode scanner:" + contents);
                     try {
-                        JSONObject jsonresult = null;
+                        JSONObject jsonresult;
                         jsonresult = new JSONObject(contents);
                         String admin_url = jsonresult.getString("admin_url");
                         String[] separated = admin_url.split("://");

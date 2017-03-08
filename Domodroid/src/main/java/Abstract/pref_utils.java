@@ -722,10 +722,29 @@ public class pref_utils {
     }
 
     /**
+     * @param login to be set for http auth method
+     */
+    public void SetHttpAuthLogin(String login) {
+        editor.putString("http_auth_username", login);
+        Log.e("pref_utils", "http_auth_username=" + login);
+
+        commit();
+    }
+
+    /**
      * @return Password for credentials
      */
     public static String GetRestAuthPassword() {
         return prefs.getString("http_auth_password", "");
+    }
+
+    /**
+     * @param password to be set for http auth method
+     */
+    public void SetHttpAuthPassword(String password) {
+        editor.putString("http_auth_password", password);
+        Log.e("pref_utils", "http_auth_password=" + password);
+        commit();
     }
 
     /**
@@ -835,36 +854,4 @@ public class pref_utils {
         return prefs.getInt("graphics_height_size", 262);
     }
 
-    /**
-     * @param login to be set for http auth method
-     */
-    public void SetHttpAuthLogin(String login) {
-        editor.putString("http_auth_username", login);
-        Log.e("pref_utils", "http_auth_username=" + login);
-
-        commit();
-    }
-
-    /**
-     * @return login for http auth
-     */
-    public String GetHttpAuthLogin() {
-        return prefs.getString("http_auth_username", "");
-    }
-
-    /**
-     * @param password to be set for http auth method
-     */
-    public void SetHttpAuthPassword(String password) {
-        editor.putString("http_auth_password", password);
-        Log.e("pref_utils", "http_auth_password=" + password);
-        commit();
-    }
-
-    /**
-     * @return password for http auth
-     */
-    public String GetHttpAuthPassword() {
-        return prefs.getString("http_auth_password", "");
-    }
 }

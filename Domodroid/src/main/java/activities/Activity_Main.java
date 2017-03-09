@@ -200,28 +200,33 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
 
-        //load default pref
-        //Added by Doume
-        try {
-            File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
-            if (!storage.exists()) {
-                boolean sucess = storage.mkdirs();
-                if (sucess == false)
-                    Tracer.i(mytag, "No dir .conf created");
+        String ExternalStorageState=Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(ExternalStorageState)){
+            //load default pref
+            //Added by Doume
+            try {
+                File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
+                if (!storage.exists()) {
+                    boolean sucess = storage.mkdirs();
+                    if (sucess == false)
+                        Tracer.i(mytag, "No dir .conf created");
+                }
+            } catch (Exception e) {
+                Tracer.e(mytag, "creating dir /.conf/ error " + e.toString());
             }
-        } catch (Exception e) {
-            Tracer.e(mytag, "creating dir /.conf/ error " + e.toString());
-        }
-        //Configure Tracer tool initial state
-        try {
-            File logpath = new File(Environment.getExternalStorageDirectory() + "/domodroid/.log/");
-            if (!logpath.exists()) {
-                boolean sucess = logpath.mkdirs();
-                if (sucess == false)
-                    Tracer.i(mytag, "No dir .log created");
+            //Configure Tracer tool initial state
+            try {
+                File logpath = new File(Environment.getExternalStorageDirectory() + "/domodroid/.log/");
+                if (!logpath.exists()) {
+                    boolean sucess = logpath.mkdirs();
+                    if (sucess == false)
+                        Tracer.i(mytag, "No dir .log created");
+                }
+            } catch (Exception e) {
+                Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
             }
-        } catch (Exception e) {
-            Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
+        }else{
+            //TODO tell user they're is a problem with getting access to external storage
         }
         //load_preferences(); //moved to prefUtils
         prefUtils.load_preferences();

@@ -375,7 +375,7 @@ public class pref_utils {
      * @param dst     destination of the file
      * @param context Context used to write file
      * @param Tracer  tracerengine Used to log essentially
-     * @param mytag   a tag to know wher method was called from
+     * @param mytag   a tag to know where method was called from
      */
     private static void saveSharedPreferencesToFile(File dst, Context context, tracerengine Tracer, String mytag) {
         ObjectOutputStream output = null;

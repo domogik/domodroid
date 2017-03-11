@@ -26,7 +26,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -200,8 +199,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
 
-        String ExternalStorageState=Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(ExternalStorageState)){
+        String ExternalStorageState = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(ExternalStorageState)) {
             //load default pref
             //Added by Doume
             try {
@@ -225,26 +224,26 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             } catch (Exception e) {
                 Tracer.e(mytag, "creating dir /.log/ error " + e.toString());
             }
-        }else{
-            //TODO tell user they're is a problem with getting access to external storage
-        }
-        //load_preferences(); //moved to prefUtils
-        prefUtils.load_preferences();
-
-        Tracer.set_profile(prefUtils.prefs);
-        // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
-        File nomedia = new File(Environment.getExternalStorageDirectory() + "/domodroid/.nomedia");
-        try {
-            if (!(nomedia.exists())) {
-                new FileOutputStream(nomedia).close();
-                boolean sucess = nomedia.createNewFile();
-                if (sucess == false)
-                    Tracer.i(mytag, "No File .nomedia created");
+            //load_preferences(); //moved to prefUtils
+            prefUtils.load_preferences();
+            Tracer.set_profile(prefUtils.prefs);
+            // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
+            File nomedia = new File(Environment.getExternalStorageDirectory() + "/domodroid/.nomedia");
+            try {
+                if (!(nomedia.exists())) {
+                    new FileOutputStream(nomedia).close();
+                    boolean sucess = nomedia.createNewFile();
+                    if (sucess == false)
+                        Tracer.i(mytag, "No File .nomedia created");
+                }
+            } catch (Exception e) {
+                Tracer.e(mytag, "creating file .nomedia error " + e.toString());
             }
-        } catch (Exception e) {
-            Tracer.e(mytag, "creating file .nomedia error " + e.toString());
+        } else {
+            //TODO tell user they're is a problem with getting access to external storage
+            Tracer.e(mytag, "problem with getting access to external storage");
+            Toast.makeText(context, "Problem with getting access to external storage", Toast.LENGTH_LONG).show();
         }
-
         appname = (ImageView) findViewById(R.id.app_name);
 
         //todo try to solve history problems like in:
@@ -290,7 +289,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                                     prefUtils.SetPreferedWifiSsid(wifiManager.getConnectionInfo().getSSID());
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG);
+                                    Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
                                 }
                                 dialog.dismiss();
                             }

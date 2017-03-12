@@ -118,11 +118,12 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private tracerengine Tracer = null;
     private ProgressDialog PG_dialog_message;
     private Boolean end_of_init_requested = true;
-    private Entity_Room[] listRoom;
-    private Entity_Area[] listArea;
-    private Menu mainMenu;
+    //Seems to be never used
+    // private Entity_Room[] listRoom;
+    //private Entity_Area[] listArea;
+    //private Toolbar toolbar;
 
-    private Toolbar toolbar;
+    private Menu mainMenu;
     private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -161,7 +162,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         Activity_Main.context = getApplicationContext();
         myself = this;
 
-        prefUtils = new pref_utils(this);
+        prefUtils = new pref_utils();
         Tracer = tracerengine.getInstance(prefUtils.prefs, this);
         setContentView(R.layout.activity_home);
 

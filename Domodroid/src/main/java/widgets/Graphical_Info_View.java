@@ -124,7 +124,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         invalidate();
         this.Tracer = Trac;
         this.parameter = parameters;
-        pref_utils prefUtils = new pref_utils(activity.getApplicationContext());
+        pref_utils prefUtils = new pref_utils();
 
         api_version = prefUtils.GetDomogikApiVersion();
 

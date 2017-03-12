@@ -40,7 +40,7 @@ public class Entity_Room {
         this.name = name;
         this.Tracer = Trac;
         this.activity = activity;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
 
     }
 

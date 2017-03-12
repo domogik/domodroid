@@ -17,7 +17,7 @@ public class Cache_management {
         // 3rd add it in path only if it is the case.
         // So when a user will remove it from association or map it will be removed from cache
         // And when it will be add, it will get back in cache.
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
 
         String urlUpdate = "";
         if (prefUtils.GetDomogikApiVersion() != 0) {

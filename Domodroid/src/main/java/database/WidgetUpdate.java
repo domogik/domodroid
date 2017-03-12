@@ -136,13 +136,12 @@ public class WidgetUpdate {
         }
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
         sleeping = false;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         this.Tracer = Trac;
         WidgetUpdate.activity = activity;
         activated = true;
         login = prefUtils.GetRestAuthUsername();
         password = prefUtils.GetRestAuthPassword();
-        SSL = prefUtils.GetRestSsl();
         api_version = prefUtils.GetDomogikApiVersion();
         last_device_update = prefUtils.GetLastDeviceUpdate();
         last_sensor_update = prefUtils.GetLastSensorUpdate();

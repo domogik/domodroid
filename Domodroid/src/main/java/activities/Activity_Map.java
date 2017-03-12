@@ -119,7 +119,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefUtils = new pref_utils(this);
+        prefUtils = new pref_utils();
         //com.orhanobut.logger.Logger.init(mytag).methodCount(0);
 
         //window manager to keep screen on

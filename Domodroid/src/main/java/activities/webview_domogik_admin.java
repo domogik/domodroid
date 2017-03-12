@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.domogik.domodroid13.R;
 
 import Abstract.pref_utils;
+import applications.domodroid;
 
 /**
  * Created by tiki on 24/12/2016.
@@ -28,7 +29,7 @@ public class webview_domogik_admin extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefUtils = new pref_utils(this);
+        prefUtils = new pref_utils();
 
         setContentView(R.layout.domogik_admin_webview);
         myWebView = (WebView) findViewById(R.id.webview);
@@ -46,18 +47,19 @@ public class webview_domogik_admin extends Activity {
                 //If connected to default SSID use local adress
                 url = prefUtils.GetRestIp();
                 port = prefUtils.GetRestPort();
-                SSL = prefUtils.GetRestSsl();
+                //SSL = prefUtils.GetRestSsl();
             } else {
                 //If not connected to default SSID use external adress
                 url = prefUtils.GetExternalRestIp();
                 port = prefUtils.GetExternalRestPort();
-                SSL = prefUtils.GetExternalRestSsl();
+                //SSL = prefUtils.GetExternalRestSsl();
             }
-            if (!SSL) {
-                myWebView.loadUrl("http://" + url + ":" + port);
+            /*if (!SSL) {
+                myWebView.loadUrl(url + ":" + port);
             } else {
                 myWebView.loadUrl("https://" + url + ":" + port);
-            }
+            }*/
+            myWebView.loadUrl(url + ":" + port);
         } else {
             Toast.makeText(this, R.string.no_connection, Toast.LENGTH_LONG).show();
             this.finish();

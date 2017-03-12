@@ -95,7 +95,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.name = name;
         this.state_key = state_key;
 
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
 
         //global variable
         api_version = prefUtils.GetDomogikApiVersion();

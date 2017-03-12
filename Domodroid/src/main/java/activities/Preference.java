@@ -103,7 +103,7 @@ public class Preference extends PreferenceActivity implements
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
         myself = this;
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        prefUtils = new pref_utils(this);
+        prefUtils = new pref_utils();
     }
 
     @Override
@@ -259,7 +259,8 @@ public class Preference extends PreferenceActivity implements
         Tracer.d(mytag, "End destroy activity");
         try {
             //because if not registered it crash.
-            unregisterReceiver(mWifiScanReceiver);
+            if (mWifiScanReceiver != null)
+                unregisterReceiver(mWifiScanReceiver);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

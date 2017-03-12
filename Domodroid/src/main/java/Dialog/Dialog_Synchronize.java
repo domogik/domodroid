@@ -54,7 +54,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         super(activity);
         this.activity = activity;
         this.Tracer = Trac;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_synchronize);
         message = (TextView) findViewById(R.id.message);

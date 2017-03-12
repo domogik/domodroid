@@ -60,7 +60,7 @@ public class Entity_Feature {
         this.value_type = value_type;
         this.Tracer = Trac;
         this.activity = activity;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         try {
             Develop = prefUtils.GetDebugIdShow();
         } catch (Exception e) {

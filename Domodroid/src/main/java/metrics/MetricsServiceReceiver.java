@@ -48,7 +48,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        prefUtils = new pref_utils(context);
+        prefUtils = new pref_utils();
         new getmetrics().execute();
     }
 

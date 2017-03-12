@@ -53,7 +53,7 @@ public abstract class display_sensor_info {
                                Activity activity, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        pref_utils prefUtils = new pref_utils(context);
+        pref_utils prefUtils = new pref_utils();
         if (Value_timestamp != 0) {
             if (prefUtils.GetWidgetTimestamp()) {
                 timestamp.setText(timestamp_convertion(Value_timestamp.toString(), activity));

@@ -55,7 +55,7 @@ class Widgets_Manager {
         this.widgetHandler = handler;
         this.activity = activity;
         this.Tracer = Trac;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         domodb = new DomodroidDB(Tracer, activity);
     }
 

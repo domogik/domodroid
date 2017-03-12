@@ -33,6 +33,7 @@ import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
 
 import Abstract.pref_utils;
+import applications.domodroid;
 import misc.changelog;
 import misc.tracerengine;
 
@@ -54,7 +55,7 @@ public class Activity_About extends AppCompatActivity implements OnClickListener
         //display domogik version
         TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
 
-        prefUtils = new pref_utils(this);
+        prefUtils = new pref_utils();
         Tracer = tracerengine.getInstance(prefUtils.prefs, this);
         TV_domogikversionText.setText(getText(R.string.domogik_version) + prefUtils.GetDomogikVersion());
         //display domodroid version

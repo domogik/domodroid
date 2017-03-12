@@ -63,7 +63,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
         this.Tracer = Trac;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         domodb = new DomodroidDB(Tracer, activity);
 
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
@@ -333,7 +333,7 @@ public class Dialog_House extends Dialog implements OnClickListener {
                 activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_INSERT_FEATURE_ASSOCIATION, values);
                 //#76
                 prefUtils.SetFeatureListAssociation(domodb.request_json_Area().toString());
-                prefUtils.save_params_to_file(Tracer,  mytag, activity.getApplicationContext());
+                prefUtils.save_params_to_file(Tracer, mytag, activity.getApplicationContext());
                 //A device as been add re-check the cache URL
                 Cache_management.checkcache(Tracer, activity);
                 loadSpinnerData();

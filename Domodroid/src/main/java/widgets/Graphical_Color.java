@@ -113,7 +113,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         String state_key = feature.getState_key();
         command_id = feature.getAddress();
         mytag = "Graphical_Color(" + dev_id + ")";
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
 
         String value0;
         String value1;

@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
+import applications.domodroid;
 import misc.tracerengine;
 
 /**
@@ -29,15 +30,20 @@ public class pref_utils {
 
     /**
      * Constructor
-     *
-     * @param Context
      */
-    public pref_utils(Context Context) {
-        this.Context = Context;
+    public pref_utils() {
+        this.Context = domodroid.GetInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(Context);
         editor = prefs.edit();
     }
-
+    /**
+     * Constructor
+     */
+    public pref_utils(Context context) {
+        this.Context = context;
+        prefs = PreferenceManager.getDefaultSharedPreferences(Context);
+        editor = prefs.edit();
+    }
     /**
      * Commit editor
      */

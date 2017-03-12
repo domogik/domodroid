@@ -31,7 +31,7 @@ public class DomodroidDB {
     public DomodroidDB(tracerengine Trac, Activity activity) {
         this.activity = activity;
         this.Tracer = Trac;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
     }

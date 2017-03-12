@@ -149,7 +149,7 @@ public class MapView extends View {
         super(activity);
         this.Tracer = tracerengine;
         this.activity = activity;
-        prefUtils = new pref_utils(activity.getApplicationContext());
+        prefUtils = new pref_utils();
         api_version = prefUtils.GetDomogikApiVersion();
 
         //activated=true;

@@ -24,7 +24,7 @@ public class Connectivity {
      * @return a boolean depending on internet connection True if connected else False
      */
     public static boolean IsInternetAvailable() {
-        pref_utils prefUtils = new pref_utils(context);
+        pref_utils prefUtils = new pref_utils();
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) (context.getSystemService(Context.CONNECTIVITY_SERVICE));
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

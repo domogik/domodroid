@@ -172,7 +172,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
                     Long Value_timestamplong = null;
                     Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-                    final String uri = String.format(Locale.ENGLISH, "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")");
+                    final String uri = "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")";
                     TV_Value.setOnClickListener(new OnClickListener() {
                                                     public void onClick(View v) {
                                                         try {

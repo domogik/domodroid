@@ -24,7 +24,7 @@ public class CopyFile {
             try {
                 if (!targetLocation.exists()) {
                     boolean sucess = targetLocation.mkdir();
-                    if (sucess == false)
+                    if (!sucess)
                         Log.i("CopyFile", "No " + targetLocation.toString() + " created");
                 }
                 String[] children = sourceLocation.list();

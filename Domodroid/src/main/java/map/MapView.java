@@ -241,7 +241,7 @@ public class MapView extends View {
             File f = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + files.elementAt(currentFile));
             Tracer.i(mytag, "Request to remove " + currentFile);
             boolean sucess = f.delete();
-            if (sucess == false)
+            if (!sucess)
                 Tracer.i(mytag, "No " + currentFile + " deleted");
             //remove feature of this map in table_feature_map
             Tracer.get_engine().cleanFeatureMap(map_name);

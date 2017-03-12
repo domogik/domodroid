@@ -204,7 +204,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 File storage = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/");
                 if (!storage.exists()) {
                     boolean sucess = storage.mkdirs();
-                    if (sucess == false)
+                    if (!sucess)
                         Tracer.i(mytag, "No dir .conf created");
                 }
             } catch (Exception e) {
@@ -215,7 +215,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 File logpath = new File(Environment.getExternalStorageDirectory() + "/domodroid/.log/");
                 if (!logpath.exists()) {
                     boolean sucess = logpath.mkdirs();
-                    if (sucess == false)
+                    if (!sucess)
                         Tracer.i(mytag, "No dir .log created");
                 }
             } catch (Exception e) {
@@ -230,7 +230,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 if (!(nomedia.exists())) {
                     new FileOutputStream(nomedia).close();
                     boolean sucess = nomedia.createNewFile();
-                    if (sucess == false)
+                    if (!sucess)
                         Tracer.i(mytag, "No File .nomedia created");
                 }
             } catch (Exception e) {
@@ -876,7 +876,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             try {
                 if (database.exists()) {
                     boolean sucess = database.delete();
-                    if (sucess == false)
+                    if (!sucess)
                         Tracer.i(mytag, "Database not deleted");
                 }
             } catch (Exception e) {

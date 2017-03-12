@@ -3,6 +3,7 @@ package applications;
 import android.app.Application;
 
 import com.github.anrwatchdog.ANRWatchDog;
+import com.squareup.leakcanary.LeakCanary;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -26,14 +27,19 @@ import static org.acra.ReportField.STACK_TRACE;
         resToastText = R.string.toast_crash)
 
 public class domodroid extends Application {
+    private static domodroid instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
         new ANRWatchDog().start();
+        LeakCanary.install(this);
+    }
 
-
+    public static domodroid GetInstance() {
+        return instance;
     }
 }

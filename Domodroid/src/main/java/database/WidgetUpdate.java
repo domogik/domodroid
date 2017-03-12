@@ -161,11 +161,7 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        if (DomodroidDB.getInstance() == null) {
-            domodb = new DomodroidDB(Tracer, activity);
-        } else {
-            domodb = DomodroidDB.getInstance();
-        }
+        domodb = DomodroidDB.getInstance(Tracer, activity);
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;

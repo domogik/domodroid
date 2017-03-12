@@ -207,12 +207,7 @@ public class Entity_Feature {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb;
-        if (DomodroidDB.getInstance() == null) {
-            domodb = new DomodroidDB(Tracer, activity);
-        } else {
-            domodb = DomodroidDB.getInstance();
-        }
+        DomodroidDB domodb = DomodroidDB.getInstance(Tracer, activity);
         domodb.owner = "entity_feature";
         try {
             iconName = domodb.requestIcons(id, "feature").getValue();

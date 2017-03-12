@@ -343,6 +343,12 @@ public class DmdContentProvider extends ContentProvider {
                     mDB.getWritableDatabase().execSQL("DELETE FROM table_icon WHERE reference=" + values.getAsString("reference") + " AND name='" + values.getAsString("name") + "'");
                 } catch (SQLException e) {
                     Tracer.e(mytag, "Error deleting icon: " + e.toString());
+                    Tracer.e(mytag, "Certainly missing name or reference");
+                    try {
+                        mDB.getWritableDatabase().execSQL("DELETE FROM table_icon WHERE reference=" + values.getAsString("reference"));
+                    } catch (SQLException e1) {
+                        Tracer.e(mytag, "Error deleting icon: " + e1.toString());
+                    }
                 }
                 break;
             case CLEAR_one_FEATURE:

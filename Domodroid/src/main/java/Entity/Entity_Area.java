@@ -69,12 +69,7 @@ public class Entity_Area {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb;
-        if (DomodroidDB.getInstance() == null) {
-            domodb = new DomodroidDB(Tracer, activity);
-        } else {
-            domodb = DomodroidDB.getInstance();
-        }
+        DomodroidDB domodb = DomodroidDB.getInstance(Tracer, activity);
         domodb.owner = "entity_area";
         try {
             iconName = domodb.requestIcons(id, "area").getValue();

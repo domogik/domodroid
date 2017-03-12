@@ -129,11 +129,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
 
         public LoadConfig() {
             super();
-            if (DomodroidDB.getInstance() == null) {
-                db = new DomodroidDB(Tracer, activity);
-            } else {
-                db = DomodroidDB.getInstance();
-            }
+            db = DomodroidDB.getInstance(Tracer, activity);
             try {
                 previous_api_version = prefUtils.GetDomogikApiVersion();
                 Tracer.d(mytag, "Previous Api version value exist");

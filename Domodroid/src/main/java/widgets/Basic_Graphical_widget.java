@@ -101,11 +101,8 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         api_version = prefUtils.GetDomogikApiVersion();
 
         this.widgetHandler = handler;
-        if (DomodroidDB.getInstance() == null) {
-            domodb = new DomodroidDB(this.Tracer, this.activity);
-        } else {
-            domodb = DomodroidDB.getInstance();
-        }
+        domodb = DomodroidDB.getInstance(this.Tracer, this.activity);
+
         setOnLongClickListener(this);
 
         //Fonts

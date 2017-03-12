@@ -72,11 +72,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         this.Activity = (android.app.Activity) context;
         this.widgetHandler = handler;
         setOnLongClickListener(this);
-        if (DomodroidDB.getInstance() == null) {
-            domodb = new DomodroidDB(this.Tracer, this.Activity);
-        } else {
-            domodb = DomodroidDB.getInstance();
-        }
+        domodb = DomodroidDB.getInstance(this.Tracer, this.Activity);
         mytag = "Graphical_Area(" + id_area + ")";
         prefUtils = new pref_utils();
 

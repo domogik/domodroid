@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,6 +57,8 @@ public class LogActivity extends AppCompatActivity {
             startService(serviceIntent);
             registerReceiver(broadcastReceiver, new IntentFilter(LogService.BROADCAST_FILE_LOG_UPDATE));
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("LogActivity", e.toString());
         }
     }
 
@@ -65,6 +68,8 @@ public class LogActivity extends AppCompatActivity {
         try {
             unregisterReceiver(broadcastReceiver);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("LogActivity", e.toString());
         }
     }
 

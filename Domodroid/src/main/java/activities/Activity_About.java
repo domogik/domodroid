@@ -33,7 +33,6 @@ import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
 
 import Abstract.pref_utils;
-import applications.domodroid;
 import misc.changelog;
 import misc.tracerengine;
 

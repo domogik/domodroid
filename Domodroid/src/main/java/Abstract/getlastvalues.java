@@ -21,7 +21,7 @@ import rinor.Rest_com;
 class getlastvalues {
 
     public static void getlastvalue(Activity activity, tracerengine Tracer, float api_version, ArrayList listItem, ListView listeChoices, String mytag, int dev_id,
-                                    String state_key, int nb_item_for_history, String login, String password, Boolean SSL, int id) {
+                                    String state_key, int nb_item_for_history, int id) {
         JSONObject json_LastValues = null;
         JSONArray itemArray = null;
         listeChoices = new ListView(activity);

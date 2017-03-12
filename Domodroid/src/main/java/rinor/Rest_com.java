@@ -53,7 +53,6 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import Event.ConnectivityChangeEvent;
 import applications.domodroid;
 import misc.tracerengine;
 

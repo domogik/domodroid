@@ -25,7 +25,7 @@ public class DomodroidDB {
     private final pref_utils prefUtils;
     public String owner = "";
     private tracerengine Tracer = null;
-
+    public static DomodroidDB instance;
     //////////////////////////////////////
 
     public DomodroidDB(tracerengine Trac, Activity activity) {
@@ -34,10 +34,11 @@ public class DomodroidDB {
         prefUtils = new pref_utils();
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
+        instance = this;
     }
 
-    public DomodroidDB getDomodroidDB() {
-        return this;
+    public static DomodroidDB getInstance() {
+        return instance;
     }
 
     public void updateDb() {
@@ -49,7 +50,12 @@ public class DomodroidDB {
         //delete all feature
         activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_CLEAR_FEATURE, null);
         //That should clear in all tables, call only for what refer to area id 1 if previous api >0.6f
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity);
+        DomodroidDB domodb;
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(Tracer, activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         domodb.owner = "Widgets_Manager.loadRoomWidgets";
         Tracer.i(mytag, "load widgets for area 1");
         Entity_Room[] listRoom = domodb.requestRoom(1);

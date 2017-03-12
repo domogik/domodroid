@@ -74,7 +74,11 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
         this.icon = icon;
         this.Activity = (android.app.Activity) context;
         this.widgetHandler = handler;
-        domodb = new DomodroidDB(this.Tracer, this.Activity);
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(this.Tracer, this.Activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         prefUtils = new pref_utils();
 
         setOnLongClickListener(this);

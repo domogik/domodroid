@@ -75,7 +75,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final String state_key;
     private int icon_status;
     private final Handler widgetHandler;
-    private final DomodroidDB domodb;
+    private DomodroidDB domodb = null;
     public Entity_client session = null;
     public Typeface typefaceweather;
     public Typeface typefaceawesome;
@@ -101,7 +101,11 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         api_version = prefUtils.GetDomogikApiVersion();
 
         this.widgetHandler = handler;
-        domodb = new DomodroidDB(this.Tracer, this.activity);
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(this.Tracer, this.activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         setOnLongClickListener(this);
 
         //Fonts

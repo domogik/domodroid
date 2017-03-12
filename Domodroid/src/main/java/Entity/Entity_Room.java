@@ -86,7 +86,12 @@ public class Entity_Room {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity);
+        DomodroidDB domodb;
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(Tracer, activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         domodb.owner = "entity_room";
         try {
             iconName = domodb.requestIcons(id, "room").getValue();

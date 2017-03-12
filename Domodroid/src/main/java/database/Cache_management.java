@@ -22,7 +22,12 @@ public class Cache_management {
         String urlUpdate = "";
         if (prefUtils.GetDomogikApiVersion() != 0) {
             if (prefUtils.GetDomogikApiVersion() <= 0.6f) {
-                DomodroidDB db = new DomodroidDB(Trac, activity);
+                DomodroidDB db;
+                if (DomodroidDB.getInstance() == null) {
+                    db = new DomodroidDB(Trac, activity);
+                } else {
+                    db = DomodroidDB.getInstance();
+                }
                 int[] listFeature_Association = db.requestAllFeatures_association();
                 Entity_Feature[] listFeature = db.requestFeatures();
                 urlUpdate = prefUtils.GetUrl() + "stats/multi/";

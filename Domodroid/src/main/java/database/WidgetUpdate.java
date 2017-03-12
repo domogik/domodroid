@@ -161,7 +161,11 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        domodb = new DomodroidDB(Tracer, activity);
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(Tracer, activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
@@ -525,11 +529,16 @@ public class WidgetUpdate {
      * Subscribe to the ConnectivityChangeEvent
      */
     public void onEvent(ConnectivityChangeEvent event) {
+        //todo find the good solution to stop/reload all the communication with domogik
+        /*
         if (event.isConnected()) {
-            //this.refreshNow();
+            if (ready) {
+                this.refreshNow();
+            }
         } else {
             this.cancel();
         }
+        */
     }
 
     public void resync() {

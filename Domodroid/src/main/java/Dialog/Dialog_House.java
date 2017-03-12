@@ -64,8 +64,11 @@ public class Dialog_House extends Dialog implements OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_house);
         prefUtils = new pref_utils();
-        domodb = new DomodroidDB(Tracer, activity);
-
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(Tracer, activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         Button cancelButton = (Button) findViewById(R.id.house_Cancel);
         cancelButton.setTag("house_cancel");
         cancelButton.setOnClickListener(this);

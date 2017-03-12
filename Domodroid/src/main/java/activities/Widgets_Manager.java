@@ -56,7 +56,11 @@ class Widgets_Manager {
         this.activity = activity;
         this.Tracer = Trac;
         prefUtils = new pref_utils();
-        domodb = new DomodroidDB(Tracer, activity);
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(Tracer, activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
     }
 
     public LinearLayout loadActivWidgets(int id,

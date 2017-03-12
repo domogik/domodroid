@@ -1035,7 +1035,12 @@ public class MapView extends View {
 
     private void showTopWidget(Entity_Map feature) {
         Tracer.d(mytag, "Show top Widget");
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity);
+        DomodroidDB domodb;
+        if (DomodroidDB.getInstance() == null) {
+            domodb = new DomodroidDB(Tracer, activity);
+        } else {
+            domodb = DomodroidDB.getInstance();
+        }
         domodb.owner = "MapView.showTopWidgets";
         if (panel_widget.getChildCount() != 0) {
             panel_widget.removeAllViews();

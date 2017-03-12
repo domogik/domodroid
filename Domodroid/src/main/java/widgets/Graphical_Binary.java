@@ -60,8 +60,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private boolean touching;
     private int updating = 0;
     private Message msg;
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     private static String mytag = "";
     private String stateS = "";
     private String Value_0 = "0";
@@ -77,7 +77,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     public Graphical_Binary(tracerengine Trac,
                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                             final Entity_Feature feature, Handler handler) {
-        super( activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -86,7 +86,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     public Graphical_Binary(tracerengine Trac,
                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                             final Entity_Map feature_map, Handler handler) {
-        super( activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

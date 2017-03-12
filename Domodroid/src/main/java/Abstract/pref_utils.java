@@ -24,7 +24,7 @@ import misc.tracerengine;
  * Common method to simplify preferences load  and saved
  */
 public class pref_utils {
-    private Context Context;
+    private Context context;
     public static SharedPreferences prefs;
     private static SharedPreferences.Editor editor;
 
@@ -32,18 +32,21 @@ public class pref_utils {
      * Constructor
      */
     public pref_utils() {
-        this.Context = domodroid.GetInstance();
-        prefs = PreferenceManager.getDefaultSharedPreferences(Context);
+        this.context = domodroid.GetInstance();
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         editor = prefs.edit();
+        Log.e("pref_utils","Creating instance..........");
     }
+
     /**
      * Constructor
      */
     public pref_utils(Context context) {
-        this.Context = context;
-        prefs = PreferenceManager.getDefaultSharedPreferences(Context);
+        this.context = context;
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         editor = prefs.edit();
     }
+
     /**
      * Commit editor
      */

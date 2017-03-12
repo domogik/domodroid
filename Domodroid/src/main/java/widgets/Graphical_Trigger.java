@@ -45,8 +45,8 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     private Thread threadCommande;
     private String type;
     private String command;
-    public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    public FrameLayout container = null;
+    public FrameLayout myself = null;
     private static String mytag;
     private Message msg;
     private String command_id;
@@ -59,7 +59,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     public Graphical_Trigger(tracerengine Trac,
                              final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                              final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -68,7 +68,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     public Graphical_Trigger(tracerengine Trac,
                              final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                              final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

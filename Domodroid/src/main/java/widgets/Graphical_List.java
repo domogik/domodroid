@@ -76,7 +76,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private Handler handler;
     private Message msg;
     private static String mytag = "Graphical_List";
-    public static FrameLayout container = null;
+    public FrameLayout container = null;
     public static FrameLayout myself = null;
     public Boolean with_list = true;
     private Boolean realtime = false;
@@ -105,7 +105,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     public Graphical_List(tracerengine Trac,
                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                           final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -114,7 +114,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     public Graphical_List(tracerengine Trac,
                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                           final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

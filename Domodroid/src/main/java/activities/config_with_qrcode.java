@@ -23,7 +23,7 @@ import misc.tracerengine;
 public class config_with_qrcode extends AppCompatActivity {
     private static String contents;
     private final String mytag = this.getClass().getName();
-    private static tracerengine Tracer = null;
+    private tracerengine Tracer = null;
     private Handler handler;
     private String rinor_IP;
     private String rest_port;

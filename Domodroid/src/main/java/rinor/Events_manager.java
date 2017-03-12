@@ -1,7 +1,6 @@
 package rinor;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -26,9 +25,8 @@ import misc.tracerengine;
 
 public class Events_manager {
     private static Events_manager instance;
-    private static Context context;
     private tracerengine Tracer;
-    private static Activity activity;
+    private Activity activity;
     private Handler state_engine_handler;
     private Handler events_engine_handler;
     private ArrayList<Cache_Feature_Element> engine_cache;
@@ -63,14 +61,11 @@ public class Events_manager {
     }
 
     public static Events_manager getInstance(final Activity activity) {
-
-        context = activity.getBaseContext();
         if (instance == null) {
             Log.i("Events_manager", "Creating instance........................");
             instance = new Events_manager(activity);
         }
         return instance;
-
     }
 
     public void init(tracerengine Trac,

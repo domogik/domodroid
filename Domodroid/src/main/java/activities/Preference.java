@@ -55,7 +55,7 @@ public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
     public static Preference myself = null;
     private final String mytag = this.getClass().getName();
-    private static tracerengine Tracer = null;
+    private tracerengine Tracer = null;
     private String action;
     private WifiManager mWifiManager;
     CharSequence[] entries = null;
@@ -255,7 +255,7 @@ public class Preference extends PreferenceActivity implements
         prefUtils.save_params_to_file(Tracer, mytag, this);
 
         //refresh cache address.
-        Cache_management.checkcache(Tracer, myself);
+        Cache_management.checkcache(Tracer, this);
         Tracer.d(mytag, "End destroy activity");
         try {
             //because if not registered it crash.

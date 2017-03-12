@@ -38,8 +38,8 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private String url;
     private static String mytag;
     private tracerengine Tracer = null;
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     private String name_cam;
     private final Entity_Feature feature;
     private final int session_type;
@@ -49,7 +49,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     public Graphical_Cam(tracerengine Trac,
                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                          final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.Tracer = Trac;
         this.activity = activity;
@@ -60,7 +60,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     public Graphical_Cam(tracerengine Trac,
                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                          final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.Tracer = Trac;
         this.activity = activity;

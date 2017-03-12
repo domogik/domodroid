@@ -28,8 +28,6 @@ import javax.net.ssl.HttpsURLConnection;
 import Event.ConnectivityChangeEvent;
 import applications.domodroid;
 
-import static activities.Activity_Main.context;
-
 /**
  * Created by fritz on 07/09/15.
  * Call with url,login,password,timeout
@@ -123,7 +121,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
     protected void onPreExecute() {
         // This method will called during doInBackground is in process
         // Here you can for example show a ProgressDialog
-        Toast.makeText(context, R.string.command_sending, Toast.LENGTH_SHORT).show();
+        Toast.makeText(domodroid.GetInstance(), R.string.command_sending, Toast.LENGTH_SHORT).show();
     }
 
     protected void onPostExecute(String string) {
@@ -132,26 +130,26 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         // switch send command answer
         switch (string) {
             case "ERROR":
-                Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
-                Toast.makeText(context, R.string.rest_connection_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rest_connection_error, Toast.LENGTH_LONG).show();
                 break;
             case "NO CONNECTION":
-                Toast.makeText(context, R.string.no_connection_send_command, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.no_connection_send_command, Toast.LENGTH_LONG).show();
                 break;
             case "UnknownHostException":
-                Toast.makeText(context, R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
                 break;
             case "ConnectTimeoutException":
-                Toast.makeText(context, R.string.timout_rest, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.timout_rest, Toast.LENGTH_LONG).show();
                 break;
             case "HttpHostConnectException":
-                Toast.makeText(context, R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
                 break;
             case "IOException":
-                Toast.makeText(context, R.string.rest_io_connection_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rest_io_connection_error, Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.command_sent, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

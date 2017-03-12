@@ -80,7 +80,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     public Typeface typefaceweather;
     public Typeface typefaceawesome;
 
-    public Basic_Graphical_widget(Activity activity, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, FrameLayout container, Handler handler) {
+    public Basic_Graphical_widget(Activity activity, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, Handler handler) {
         super(activity);
         this.Tracer = Trac;
         this.activity = activity;
@@ -90,7 +90,6 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         this.place_id = place_id;
         this.place_type = place_type;
         this.mytag = mytag;
-        FrameLayout container1 = container;
         FrameLayout myself = this;
         this.name = name;
         this.state_key = state_key;

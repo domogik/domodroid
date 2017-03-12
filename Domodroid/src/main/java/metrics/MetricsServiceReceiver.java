@@ -26,8 +26,8 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 import Abstract.pref_utils;
+import applications.domodroid;
 
-import static activities.Activity_Main.context;
 
 /**
  * Created by tiki on 29/10/2016.
@@ -102,7 +102,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                String deviceid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String deviceid = Settings.Secure.getString(domodroid.GetInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
                 try {
                     metrics.put("id", deviceid);
                 } catch (JSONException e) {

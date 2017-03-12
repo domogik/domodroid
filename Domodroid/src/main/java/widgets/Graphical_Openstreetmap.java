@@ -73,8 +73,8 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private static String mytag;
     private Message msg;
 
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
 
     private Boolean realtime = false;
     private Animation animation;
@@ -92,7 +92,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     public Graphical_Openstreetmap(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                    final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -101,7 +101,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     public Graphical_Openstreetmap(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                    final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

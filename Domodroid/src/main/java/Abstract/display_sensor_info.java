@@ -44,8 +44,6 @@ import java.util.StringTokenizer;
 import activities.Graphics_Manager;
 import misc.tracerengine;
 
-import static activities.Activity_Main.context;
-
 
 public abstract class display_sensor_info {
 

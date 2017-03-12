@@ -26,7 +26,6 @@ import org.greenrobot.eventbus.EventBus;
 import Abstract.pref_utils;
 import Event.ConnectivityChangeEvent;
 
-import static activities.Activity_Main.context;
 import static org.acra.ReportField.ANDROID_VERSION;
 import static org.acra.ReportField.LOGCAT;
 import static org.acra.ReportField.PHONE_MODEL;
@@ -59,7 +58,7 @@ public class domodroid extends Application {
         LeakCanary.install(this);
         Stetho.initializeWithDefaults(this);
 
-        prefUtils = new pref_utils();
+        prefUtils = new pref_utils(this);
 
         //manage connectivity state
         manageConnectivityState();
@@ -125,7 +124,7 @@ public class domodroid extends Application {
                 case ConnectivityManager.TYPE_WIFI:
                     isConnected = true;
                     isWifi = true;
-                    WifiManager wifiManager = (WifiManager) getSystemService(context.WIFI_SERVICE);
+                    WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiInfo;
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {

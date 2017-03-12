@@ -8,7 +8,6 @@ import misc.tracerengine;
 
 public class Cache_management {
     private static final String mytag = "Cache_management";
-    private static pref_utils prefUtils;
 
     public static void checkcache(tracerengine Trac, Activity activity) {
         // Change UrlAccess to make cache more light.
@@ -17,7 +16,7 @@ public class Cache_management {
         // 3rd add it in path only if it is the case.
         // So when a user will remove it from association or map it will be removed from cache
         // And when it will be add, it will get back in cache.
-        prefUtils = new pref_utils();
+        pref_utils prefUtils = new pref_utils();
 
         String urlUpdate = "";
         if (prefUtils.GetDomogikApiVersion() != 0) {

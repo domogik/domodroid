@@ -70,8 +70,6 @@ import Abstract.pref_utils;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
-import Entity.Entity_Area;
-import Entity.Entity_Room;
 import database.Cache_management;
 import database.WidgetUpdate;
 import metrics.MetricsServiceReceiver;
@@ -81,10 +79,9 @@ import mq.Main;
 import widgets.Basic_Graphical_zone;
 
 
-@SuppressWarnings({"static-access"})
 public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
-    public static Context context;
+    public Context context;
     private AlertDialog.Builder AD_notSyncAlert;
     private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
@@ -159,7 +156,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception ignored) {
         }
 
-        Activity_Main.context = getApplicationContext();
         myself = this;
 
         prefUtils = new pref_utils();
@@ -1014,7 +1010,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     private void startCacheEngine() {
-        Cache_management.checkcache(Tracer, myself);
+        Cache_management.checkcache(Tracer, Activity_Main.this);
         if (WU_widgetUpdate == null) {
             this.Create_message_box();
             PG_dialog_message.setMessage(getText(R.string.loading_cache));
@@ -1104,12 +1100,12 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 return true;
             case R.id.menu_preferences:
                 //Prepare a normal preferences activity.
-                Intent helpI = new Intent(Activity_Main.this, Preference.class);
+                Intent helpI = new Intent(this, Preference.class);
                 startActivity(helpI);
                 return true;
             case R.id.menu_about:
                 //dont_freeze=true;		//To avoid WidgetUpdate engine freeze
-                Intent helpI1 = new Intent(Activity_Main.this, Activity_About.class);
+                Intent helpI1 = new Intent(this, Activity_About.class);
                 startActivity(helpI1);
                 return true;
             case R.id.menu_stats:
@@ -1142,7 +1138,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 return true;
             case R.id.menu_domogik_admin:
                 //launch a webview of domogik admin
-                Intent intent_webview = new Intent(context, webview_domogik_admin.class);
+                Intent intent_webview = new Intent(this, webview_domogik_admin.class);
                 startActivity(intent_webview);
                 return true;
             default:

@@ -81,8 +81,8 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private Message msg;
     private static String mytag = "";
 
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     private final Boolean with_graph = true;
     private Boolean realtime = false;
     private GraphicalView mChart;
@@ -123,7 +123,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                             final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -132,7 +132,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     public Graphical_Info_with_achartengine(tracerengine Trac,
                                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                             final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

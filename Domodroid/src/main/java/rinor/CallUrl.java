@@ -59,7 +59,7 @@ class CallUrl extends AsyncTask<String, Void, String> {
                     HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                     DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                     httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-                    Log.e("connect_string", "url=" + url.toString());
+                    Log.e("connect_string", "url=" + url);
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                     final HttpResponse response;

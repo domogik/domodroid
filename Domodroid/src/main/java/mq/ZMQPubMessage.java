@@ -42,7 +42,7 @@ class ZMQPubMessage extends AsyncTask<String, Void, Integer> {
             Log.d("ZMQPubMessage doInBgd", URLEncoder.encode(jo.toString()));
             */
             String msg = jo.toString();
-            Log.d("ZMQPubMessage doInBgd", msg.toString());
+            Log.d("ZMQPubMessage doInBgd", msg);
 /*
             String url1 = "http://192.168.0.63:40406/rest/butler/discuss?callback=foo&data=" + URLEncoder.encode(msg);
             Log.d("ZMQPubMessage doInBgd", "answer= " + url.toString());

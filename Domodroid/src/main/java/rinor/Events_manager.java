@@ -206,7 +206,7 @@ public class Events_manager {
                                 while (!sleeping) {
                                     String result = subscriber.recvStr(0);
                                     Tracer.i(mytag, "MQ information receive: ");
-                                    Tracer.i(mytag, result.toString());
+                                    Tracer.i(mytag, result);
                                     if (result.contains("stored_value")) {
                                         try {
                                             JSONObject json_stats_04 = new JSONObject(result);

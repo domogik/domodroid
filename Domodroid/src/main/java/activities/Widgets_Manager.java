@@ -316,7 +316,7 @@ class Widgets_Manager {
                             Tracer.i(mytag, "   ==> Graphical_Color");
                         }
                     } else {
-                        Tracer.d(mytag, "feature model id:" + aListFeature.getDevice_feature_model_id().toString());
+                        Tracer.d(mytag, "feature model id:" + aListFeature.getDevice_feature_model_id());
                         Graphical_History info_with_history = new Graphical_History(Tracer, activity,
                                 widgetSize, session_type, id, zone, aListFeature, widgetHandler);
                         info_with_history.setLayoutParams(layout_param);

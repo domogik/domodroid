@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'hugo' // call after applying android plugin
+//apply plugin: 'com.vanniktech.android.junit.jacoco'
 sourceCompatibility = 1.7 //changed from 1.6
 
 android {
@@ -62,19 +63,31 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
     compile 'org.zeromq:jeromq:0.3.6'
-    //compile 'com.github.orhanobut:logger:1.12'
-    compile 'com.github.curioustechizen.android-ago:library:1.3.2'
     // Acra Application Crash Reports for Android libraries
     compile 'ch.acra:acra:4.9.2'
-    //Anr catch
+    // Anr catch Application Not Responding
     compile 'com.github.anrwatchdog:anrwatchdog:1.3.0'
-    //slider preferences
-    compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
-    //Openstreetmap api lib
+    // LeakCanary to find memory issue
+    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+
+    // Android ago is used to display a duration from now to the past
+    compile 'com.github.curioustechizen.android-ago:library:1.3.2'
+    // Openstreetmap api lib to dsiplay a mpa widget
     compile 'org.osmdroid:osmdroid-android:5.6.4'
+    // Slider preferences
+    compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     // Test libraries
     testCompile 'junit:junit:4.12'
-    //codecov
+    // Logger is a lib to easy the log mechanism
+    //compile 'com.github.orhanobut:logger:1.12'
+    // Eventbus should be use to simplify Widget_update, Events_manager and Rinor_event
+    //compile 'org.greenrobot:eventbus:3.0.0'
+    // SugarOrm to simplify sql and entity
+    //compile 'com.github.satyan:sugar:1.4'
+    // Jodatime to simplify playing with date
+    //compile 'net.danlew:android.joda:2.9.2'
+    // codecov
     //classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
+
 }
-//apply plugin: 'com.vanniktech.android.junit.jacoco'
+

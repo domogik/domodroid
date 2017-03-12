@@ -127,11 +127,7 @@ public class domodroid extends Application {
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                         String prefered_wifi = prefUtils.GetPreferedWifiSsid();
-                        if (wifiInfo.getSSID().replace("\"", "").equals(prefered_wifi)) {
-                            on_preferred_Wifi = true;
-                        } else {
-                            on_preferred_Wifi = false;
-                        }
+                        on_preferred_Wifi = wifiInfo.getSSID().replace("\"", "").equals(prefered_wifi);
                         //handle the case where user do not set is local SSID in options
                         if (prefered_wifi.equals("")) {
                             on_preferred_Wifi = true;

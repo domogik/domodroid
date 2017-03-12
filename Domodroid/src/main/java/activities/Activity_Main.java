@@ -81,7 +81,7 @@ import widgets.Basic_Graphical_zone;
 
 public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
-    private final Context context;
+    private final Context context = null;
     private AlertDialog.Builder AD_notSyncAlert;
     private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
@@ -282,7 +282,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
                                     //replace and save "SSID" by SSID
-                                    prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID().replace("\"", ""));
+                                    prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     Toast.makeText(domodroid.GetInstance(), R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();

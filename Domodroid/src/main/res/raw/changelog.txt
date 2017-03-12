@@ -24,7 +24,8 @@
       _ 2017-xx-xx
       * Correct a possible memory leak on devices < Android N caused by WIFI_SERVICE.
       * Try to reduce memory used with SharedPreferences.
-      * Some menu re-arrangement.
+      * #152 Some menu re-arrangement.
+      * Close #108 Preferences order
       % Version 32
       _ 2017-02-25
       * #141 at sync ask user if it's is preferred wi-fi networks.

@@ -53,6 +53,8 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import Event.ConnectivityChangeEvent;
+import applications.domodroid;
 import misc.tracerengine;
 
 
@@ -92,8 +94,8 @@ public class Rest_com {
 
         String result = "";
         //check if device is connected
-        if (Abstract.Connectivity.IsInternetAvailable()) {
-            if (Abstract.Connectivity.on_prefered_Wifi) {
+        if (domodroid.instance.isConnected()) {
+            if (domodroid.instance.on_preferred_Wifi) {
                 //If connected to default SSID use local adress
                 url = SP_params.getString("URL", "1.1.1.1") + request;
                 SSL = SP_params.getBoolean("ssl_activate", false);

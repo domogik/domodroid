@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import applications.domodroid;
 import misc.tracerengine;
 
 /**
@@ -23,7 +24,7 @@ public class send_command {
         String Url2send;
 
         String URL = null;
-        if (Abstract.Connectivity.on_prefered_Wifi) {
+        if (domodroid.instance.on_preferred_Wifi) {
             //If connected to default SSID use local adress
             URL = SP_params.getString("URL", "1.1.1.1");
             SSL = SP_params.getBoolean("ssl_activate", false);

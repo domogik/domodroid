@@ -81,13 +81,15 @@ dependencies {
     // Logger is a lib to easy the log mechanism
     //compile 'com.github.orhanobut:logger:1.12'
     // Eventbus should be use to simplify Widget_update, Events_manager and Rinor_event
-    //compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
     // SugarOrm to simplify sql and entity
     //compile 'com.github.satyan:sugar:1.4'
     // Jodatime to simplify playing with date
     //compile 'net.danlew:android.joda:2.9.2'
     // codecov
     //classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
-
+    // Stetho to debug throw chrome
+    compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.facebook.stetho:stetho-urlconnection:1.4.2'
 }
 

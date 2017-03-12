@@ -25,6 +25,9 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import Event.ConnectivityChangeEvent;
+import applications.domodroid;
+
 import static activities.Activity_Main.context;
 
 /**
@@ -49,7 +52,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         int timeout = Integer.parseInt(uri[3]);
         Boolean SSL = Boolean.valueOf(uri[4]);
         String result = "";
-        if (Abstract.Connectivity.IsInternetAvailable()) {
+        if (domodroid.instance.isConnected()) {
             String responseString = "ERROR";
             if (!SSL) {
                 try {

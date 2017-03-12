@@ -38,12 +38,12 @@ public class webview_domogik_admin extends Activity {
         webSettings.setJavaScriptEnabled(true);
 
         myWebView.setWebViewClient(new MyWebViewClient());
-        if (Abstract.Connectivity.IsInternetAvailable()) {
+        if (domodroid.instance.isConnected()) {
             String url;
             String port;
             Boolean SSL = false;
 
-            if (Abstract.Connectivity.on_prefered_Wifi) {
+            if (domodroid.instance.on_preferred_Wifi) {
                 //If connected to default SSID use local adress
                 url = prefUtils.GetRestIp();
                 port = prefUtils.GetRestPort();

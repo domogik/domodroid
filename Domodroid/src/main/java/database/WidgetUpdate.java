@@ -17,6 +17,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +42,8 @@ import Abstract.pref_utils;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.ConnectivityChangeEvent;
+import applications.domodroid;
 import misc.tracerengine;
 import mq.ZMQReqMessage;
 import rinor.Events_manager;
@@ -115,6 +119,7 @@ public class WidgetUpdate {
      *******************************************************************************/
     private WidgetUpdate() {
         super();
+        EventBus.getDefault().register(this);
         //com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
 
     }
@@ -512,6 +517,19 @@ public class WidgetUpdate {
     public void refreshNow() {
         if (doAsynchronousTask != null)
             doAsynchronousTask.run();    //To force immediate refresh
+    }
+
+
+    @Subscribe
+    /**
+     * Subscribe to the ConnectivityChangeEvent
+     */
+    public void onEvent(ConnectivityChangeEvent event) {
+        if (event.isConnected()) {
+            //this.refreshNow();
+        } else {
+            this.cancel();
+        }
     }
 
     public void resync() {
@@ -1351,10 +1369,10 @@ public class WidgetUpdate {
         }
         boolean changed = false;
         try {
-            if (Abstract.Connectivity.IsInternetAvailable()) {
+            if (domodroid.instance.isConnected()) {
                 String url = null;
                 Boolean SSL = false;
-                if (Abstract.Connectivity.on_prefered_Wifi) {
+                if (domodroid.instance.on_preferred_Wifi) {
                     //If connected to default SSID use local adress
                     url = prefUtils.GetUrl();
                     SSL = prefUtils.GetRestSsl();

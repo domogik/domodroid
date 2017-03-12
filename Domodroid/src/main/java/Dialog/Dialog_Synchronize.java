@@ -48,7 +48,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private float previous_api_version = 0f;
     private boolean by_usage;
     private int progress;
-    private String last_device_update;
+    private final String last_device_update;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity activity) {
         super(activity);

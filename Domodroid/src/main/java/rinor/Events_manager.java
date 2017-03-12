@@ -26,7 +26,7 @@ import misc.tracerengine;
 public class Events_manager {
     private static Events_manager instance;
     private tracerengine Tracer;
-    private Activity activity;
+    private final Activity activity;
     private Handler state_engine_handler;
     private Handler events_engine_handler;
     private ArrayList<Cache_Feature_Element> engine_cache;

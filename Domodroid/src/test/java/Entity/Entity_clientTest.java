@@ -7,7 +7,7 @@ import org.junit.Test;
  * Created by tiki on 09/06/2016.
  */
 public class Entity_clientTest {
-    private Entity_client client = new Entity_client(0, null, null, null, 0);
+    private final Entity_client client = new Entity_client(0, null, null, null, 0);
 
     @Test
     public void testGetClientType() throws Exception {

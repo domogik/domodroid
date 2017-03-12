@@ -29,7 +29,7 @@ public class tracerengine {
     private static Boolean Error = false;
     private static Boolean Verbose = false;
     private static Boolean Warning = false;
-    private Context context;
+    private final Context context;
     private static SharedPreferences settings = null;
 
     /*

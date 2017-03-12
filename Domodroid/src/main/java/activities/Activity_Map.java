@@ -105,7 +105,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private int mSelectedId;
+    private final int mSelectedId;
 
     private static final int PICK_IMAGE = 1;
     private pref_utils prefUtils;

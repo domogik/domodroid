@@ -40,10 +40,10 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
     private Float totalAllocatedSize = 0f;
     private Float usedSize = -1f;
     private Float maxmemavailable = 0f;
-    private DecimalFormat df = new DecimalFormat("#.##");
-    private JSONObject measurements = new JSONObject();
-    private JSONObject tags = new JSONObject();
-    private static JSONObject metrics = new JSONObject();
+    private final DecimalFormat df = new DecimalFormat("#.##");
+    private final JSONObject measurements = new JSONObject();
+    private final JSONObject tags = new JSONObject();
+    private static final JSONObject metrics = new JSONObject();
     private pref_utils prefUtils;
 
     @Override

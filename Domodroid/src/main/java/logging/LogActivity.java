@@ -30,9 +30,9 @@ import java.io.IOException;
 public class LogActivity extends AppCompatActivity {
 
     private TextView textView;
-    private String fileName = Environment.getExternalStorageDirectory() + "/domodroid/.log/Domodroid.txt";
+    private final String fileName = Environment.getExternalStorageDirectory() + "/domodroid/.log/Domodroid.txt";
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             setTextView();

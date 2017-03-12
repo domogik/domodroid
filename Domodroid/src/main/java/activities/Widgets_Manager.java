@@ -40,9 +40,9 @@ import widgets.Graphical_Trigger;
 
 class Widgets_Manager {
 
-    private DomodroidDB domodb;
-    private Activity activity;
-    private pref_utils prefUtils;
+    private final DomodroidDB domodb;
+    private final Activity activity;
+    private final pref_utils prefUtils;
     private int widgetSize;
     private boolean columns = false;
     private final Handler widgetHandler;

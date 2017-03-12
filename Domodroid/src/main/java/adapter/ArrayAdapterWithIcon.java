@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ArrayAdapterWithIcon extends ArrayAdapter<String> {
 
-    private List<Integer> images;
+    private final List<Integer> images;
 
     public ArrayAdapterWithIcon(Context context, List<String> items, List<Integer> images) {
         super(context, android.R.layout.select_dialog_item, items);

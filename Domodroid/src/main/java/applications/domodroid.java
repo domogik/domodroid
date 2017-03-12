@@ -43,7 +43,7 @@ import static org.acra.ReportField.STACK_TRACE;
 public class domodroid extends Application {
     public static domodroid instance;
     public static WifiInfo wifiInfo;
-    private String mytag = "domodroid application";
+    private final String mytag = "domodroid application";
     private pref_utils prefUtils;
 
     @Override

@@ -12,7 +12,7 @@ import android.util.Log;
  */
 public class LogService extends Service {
     public static final String BROADCAST_FILE_LOG_UPDATE = "org.domogik.domodroid13.log.update";
-    private String fileName = Environment.getExternalStorageDirectory() + "/domodroid/.log/Domodroid.txt";
+    private final String fileName = Environment.getExternalStorageDirectory() + "/domodroid/.log/Domodroid.txt";
 
     /**
      * The intent thanks to which is forwarded the alarm to display.

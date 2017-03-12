@@ -56,7 +56,7 @@ import rinor.Rest_com;
 public class Graphical_History extends Basic_Graphical_widget implements OnClickListener {
 
 
-    private ListView listeChoices = new ListView(activity);
+    private final ListView listeChoices = new ListView(activity);
     private ArrayList<HashMap<String, String>> listItem;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;

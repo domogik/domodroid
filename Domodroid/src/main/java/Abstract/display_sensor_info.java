@@ -287,10 +287,9 @@ public abstract class display_sensor_info {
      */
     public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
         try {
-            String convert_phone = PhoneNumberUtils.formatNumber(phone);
             // todo it remove the "-" like in jean-phillipe replace bye jeanphillipe
             // Tracer.d(mytag, "phone convertion from:" + phone + " to " + convert_phone);
-            return convert_phone;
+            return PhoneNumberUtils.formatNumber(phone);
         } catch (Exception ex) {
             ex.printStackTrace();
             Tracer.e(mytag + "Phone conversion", "Error: " + ex.toString());
@@ -307,8 +306,7 @@ public abstract class display_sensor_info {
      */
     public static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
         try {
-            String convert_number = NumberFormat.getInstance().format(number);
-            return convert_number;
+            return NumberFormat.getInstance().format(number);
         } catch (Exception ex) {
             ex.printStackTrace();
             Tracer.e(mytag + "value_convertion", "Error: " + ex.toString());

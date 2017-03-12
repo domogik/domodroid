@@ -26,9 +26,8 @@ public class dmd_gettime {
     {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        final String utcTime = sdf.format(new Date());
 
-        return utcTime;
+        return sdf.format(new Date());
     }
 
     /**

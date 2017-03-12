@@ -52,11 +52,9 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         this.id = id;
         this.name = name;
         this.type = type;
-        String icon1 = icon;
         //this.session_type = session_type;
         this.setPadding(5, 5, 5, 5);
         this.widgetHandler = handler;
-        tracerengine Tracer = Trac;
         setOnClickListener(this);
 
         //panel with border
@@ -95,7 +93,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //description
         TextView TV_description = new TextView(context);
         try {
-            TV_description.setText(context.getResources().getString(translate.do_translate(getContext(), Tracer, description)));
+            TV_description.setText(context.getResources().getString(translate.do_translate(getContext(), Trac, description)));
         } catch (Exception e) {
             String mytag = "Basic_Graphical_zone";
             TV_description.setText(description);

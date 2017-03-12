@@ -255,8 +255,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                             //icon is the name of the icon wich will be select
                             values.put("value", icon);
                             //reference is the id of the area, room, or feature
-                            int reference = id;
-                            values.put("reference", reference);
+                            values.put("reference", id);
                             activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
                             prefUtils.SetIconList(domodb.request_json_Icon().toString());

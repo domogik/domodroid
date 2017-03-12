@@ -753,7 +753,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     JSONArray listsensor = json_Sensors.names();
 
                     //Sort list sensors by sensors id
-                    List<Integer> sensoridlist = new ArrayList<Integer>();
+                    List<Integer> sensoridlist = new ArrayList<>();
                     if (list_sensors > 0) {
                         for (int y = 0; y < list_sensors; y++)
                             try {
@@ -944,7 +944,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     JSONArray listcommand = json_Commands.names();
 
                     //Sort list commands by commands id
-                    List<Integer> commandidlist = new ArrayList<Integer>();
+                    List<Integer> commandidlist = new ArrayList<>();
                     if (list_commands > 0) {
                         for (int y = 0; y < list_commands; y++)
                             try {

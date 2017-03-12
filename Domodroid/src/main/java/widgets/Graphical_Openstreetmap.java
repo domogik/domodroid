@@ -269,9 +269,9 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         OverlayItem myLocationOverlayItem = new OverlayItem("", "", startPoint);
         Drawable myCurrentLocationMarker = this.getResources().getDrawable(R.drawable.marker_default);
         myLocationOverlayItem.setMarker(myCurrentLocationMarker);
-        final ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        final ArrayList<OverlayItem> items = new ArrayList<>();
         items.add(myLocationOverlayItem);
-        ItemizedIconOverlay currentLocationOverlay = new ItemizedIconOverlay<OverlayItem>(items,
+        ItemizedIconOverlay currentLocationOverlay = new ItemizedIconOverlay<>(items,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                         return true;

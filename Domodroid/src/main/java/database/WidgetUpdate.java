@@ -298,13 +298,13 @@ public class WidgetUpdate {
 
                     //disable the dialog or replace by a toast: here the toast
                     // Display message something changed since last update
+                    // notify on map screen if a device change.
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(activity, activity.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
                         }
                     });
 
-                    //todo notify on map screen if a device change.
                 }
             }
         };

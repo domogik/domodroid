@@ -292,9 +292,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             dialog_help.show();
         }
         //update thread
-        sbanim = new Handler() {
+        sbanim = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 /*
                 if(msg.what==0){
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name2));
@@ -306,8 +306,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
 				}
 				 */
+                return true;
             }
-        };
+        });
 
         try {
             mapView.drawWidgets();
@@ -325,7 +326,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
             widgetUpdate.wakeup();
         }
-        tracerengine.set_engine(widgetUpdate);
+        Tracer.set_engine(widgetUpdate);
         Tracer.v(mytag, "WidgetUpdate engine connected !");
     }
 

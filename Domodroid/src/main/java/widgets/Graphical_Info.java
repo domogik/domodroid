@@ -203,14 +203,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             Tracer.i(mytag, "No unit for this feature");
         }
 
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 9999) {
                     //Message from widgetupdate
                     //state_engine send us a signal to notify TV_Value changed
                     if (session == null)
-                        return;
+                        return true;
 
                     String loc_Value = session.getValue();
                     String Value_timestamp = session.getTimestamp();
@@ -259,9 +259,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
                         t.printStackTrace();
                     }    //kill the handler thread itself
                 }
+                return true;
             }
-
-        };
+        });
         LL_infoPan.addView(state_key_view);
         //================================================================================
         /*

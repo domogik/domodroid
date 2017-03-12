@@ -26,7 +26,7 @@ import misc.tracerengine;
 public class pref_utils {
     private Context context;
     public static SharedPreferences prefs;
-    private static SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
     /**
      * Constructor
@@ -35,7 +35,7 @@ public class pref_utils {
         this.context = domodroid.GetInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         editor = prefs.edit();
-        Log.e("pref_utils","Creating instance..........");
+        Log.e("pref_utils", "Creating instance..........");
     }
 
     /**
@@ -50,7 +50,7 @@ public class pref_utils {
     /**
      * Commit editor
      */
-    public static void commit() {
+    public void commit() {
         editor.commit();
     }
 
@@ -71,7 +71,7 @@ public class pref_utils {
     /**
      * @param sync status of the sync
      */
-    public static void SetSyncCompleted(Boolean sync) {
+    public void SetSyncCompleted(Boolean sync) {
         editor.putBoolean("SYNC", sync);
         commit();
     }
@@ -94,14 +94,14 @@ public class pref_utils {
     /**
      * @return Domogik version code
      */
-    public static String GetDomogikVersion() {
+    public String GetDomogikVersion() {
         return prefs.getString("DOMOGIK-VERSION", "");
     }
 
     /**
      * @param domogik_Version save the current domogik version
      */
-    public static void SetDomogikVersion(String domogik_Version) {
+    public void SetDomogikVersion(String domogik_Version) {
         editor.putString("DOMOGIK-VERSION", domogik_Version);
         commit();
     }
@@ -109,14 +109,14 @@ public class pref_utils {
     /**
      * @return domogik api version
      */
-    public static float GetDomogikApiVersion() {
+    public float GetDomogikApiVersion() {
         return prefs.getFloat("API_VERSION", 0);
     }
 
     /**
      * @param Rinor_Api_Version save the current domogik Api version
      */
-    public static void SetDomogikApiVersion(Float Rinor_Api_Version) {
+    public void SetDomogikApiVersion(Float Rinor_Api_Version) {
         editor.putFloat("API_VERSION", Rinor_Api_Version);
         commit();
     }
@@ -138,14 +138,14 @@ public class pref_utils {
     /**
      * @return if user choice by usage
      */
-    public static boolean GetWidgetByUsage() {
+    public boolean GetWidgetByUsage() {
         return prefs.getBoolean("BY_USAGE", false);
     }
 
     /**
      * @param usage saved by usage or not
      */
-    public static void SetWidgetByUsage(Boolean usage) {
+    public void SetWidgetByUsage(Boolean usage) {
         editor.putBoolean("BY_USAGE", usage);
         commit();
     }
@@ -153,14 +153,14 @@ public class pref_utils {
     /**
      * @return if user choice alternative widget
      */
-    public static boolean GetAlternativeBinaryWidget() {
+    public boolean GetAlternativeBinaryWidget() {
         return prefs.getBoolean("WIDGET_CHOICE", false);
     }
 
     /**
      * @param binary_widget saved by usage or not
      */
-    public static void SetAlternativeBinaryWidget(Boolean binary_widget) {
+    public void SetAlternativeBinaryWidget(Boolean binary_widget) {
         editor.putBoolean("WIDGET_CHOICE", binary_widget);
         commit();
     }
@@ -176,7 +176,7 @@ public class pref_utils {
     /**
      * @param ssid save "prefered wifi SSID" in preferences
      */
-    public static void SetPreferedWifiSsid(String ssid) {
+    public void SetPreferedWifiSsid(String ssid) {
         editor.putString("prefered_wifi_ssid", ssid.substring(1, ssid.length() - 1));
         commit();
     }
@@ -191,14 +191,14 @@ public class pref_utils {
     /**
      * @return the Rest/Rinor IP save in preferences
      */
-    public static String GetRestIp() {
+    public String GetRestIp() {
         return prefs.getString("rinorIP", "1.1.1.1");
     }
 
     /**
      * @param rinor_IP the Rest/Rinor IP to save
      */
-    public static void SetRestIp(String rinor_IP) {
+    public void SetRestIp(String rinor_IP) {
         editor.putString("rinorIP", rinor_IP);
         Log.e("pref_utils", "rinorIP=" + rinor_IP);
         commit();
@@ -207,14 +207,14 @@ public class pref_utils {
     /**
      * @return the Rest/Rinor Port save in preferences
      */
-    public static String GetRestPort() {
+    public String GetRestPort() {
         return prefs.getString("rinorPort", "40405");
     }
 
     /**
      * @param rinorPort the Rest/Rinor Port to save
      */
-    public static void SetRestPort(String rinorPort) {
+    public void SetRestPort(String rinorPort) {
         editor.putString("rinorPort", rinorPort);
         commit();
     }
@@ -222,14 +222,14 @@ public class pref_utils {
     /**
      * @return the Rest/Rinor Path save in preferences
      */
-    public static String GetRestPath() {
+    public String GetRestPath() {
         return prefs.getString("rinorPath", "/");
     }
 
     /**
      * @param rinorPath the Rest/Rinor Path to save
      */
-    public static void SetRestPath(String rinorPath) {
+    public void SetRestPath(String rinorPath) {
         editor.putString("rinorPath", rinorPath);
         commit();
     }
@@ -237,14 +237,14 @@ public class pref_utils {
     /**
      * @return the update url save in preferences
      */
-    public static String GetUpdateUrl() {
+    public String GetUpdateUrl() {
         return prefs.getString("UPDATE_URL", "");
     }
 
     /**
      * @param urlUpdate the update url to save
      */
-    public static void SetUpdateUrl(String urlUpdate) {
+    public void SetUpdateUrl(String urlUpdate) {
         editor.putString("UPDATE_URL", urlUpdate);
         commit();
     }
@@ -252,7 +252,7 @@ public class pref_utils {
     /**
      * @param external_format_urlAccess the update external url to save
      */
-    public static void SetExternalUrl(String external_format_urlAccess) {
+    public void SetExternalUrl(String external_format_urlAccess) {
         editor.putString("external_URL", external_format_urlAccess);
         Log.e("pref_utils", "SetExternalUrl=" + external_format_urlAccess);
         commit();
@@ -261,14 +261,14 @@ public class pref_utils {
     /**
      * @return the Url save in preferences
      */
-    public static String GetUrl() {
+    public String GetUrl() {
         return prefs.getString("URL", "1.1.1.1");
     }
 
     /**
      * @param format_urlAccess Save the formated Url (IP:Port/path)
      */
-    public static void SetUrl(String format_urlAccess) {
+    public void SetUrl(String format_urlAccess) {
         editor.putString("URL", format_urlAccess);
         Log.e("pref_utils", "SetUrl=" + format_urlAccess);
         commit();
@@ -277,14 +277,14 @@ public class pref_utils {
     /**
      * @return the area save in preferences
      */
-    public static String GetArea() {
+    public String GetArea() {
         return prefs.getString("AREA_LIST", null);
     }
 
     /**
      * @param area a json representation of db area
      */
-    public static void SetArea(String area) {
+    public void SetArea(String area) {
         editor.putString("AREA_LIST", area);
         commit();
     }
@@ -292,14 +292,14 @@ public class pref_utils {
     /**
      * @return the room save in preferences
      */
-    public static String GetRoom() {
+    public String GetRoom() {
         return prefs.getString("ROOM_LIST", null);
     }
 
     /**
      * @param room a json representation of db room
      */
-    public static void SetRoom(String room) {
+    public void SetRoom(String room) {
         editor.putString("ROOM_LIST", room);
         commit();
     }
@@ -307,14 +307,14 @@ public class pref_utils {
     /**
      * @return the FeatureListAssociation save in preferences
      */
-    public static String GetFeatureListAssociation() {
+    public String GetFeatureListAssociation() {
         return prefs.getString("FEATURE_LIST_association", null);
     }
 
     /**
      * @param FeatureListAssociation a json representation of db FeatureListAssociation
      */
-    public static void SetFeatureListAssociation(String FeatureListAssociation) {
+    public void SetFeatureListAssociation(String FeatureListAssociation) {
         editor.putString("FEATURE_LIST_association", FeatureListAssociation);
         commit();
     }
@@ -322,14 +322,14 @@ public class pref_utils {
     /**
      * @return the FeatureList save in preferences
      */
-    public static String GetFeatureList() {
+    public String GetFeatureList() {
         return prefs.getString("FEATURE_LIST", null);
     }
 
     /**
      * @param FeatureList a json representation of db FeatureList
      */
-    public static void SetFeatureList(String FeatureList) {
+    public void SetFeatureList(String FeatureList) {
         editor.putString("FEATURE_LIST", FeatureList);
         commit();
     }
@@ -337,14 +337,14 @@ public class pref_utils {
     /**
      * @return the IconList save in preferences
      */
-    public static String GetIconList() {
+    public String GetIconList() {
         return prefs.getString("ICON_LIST", null);
     }
 
     /**
      * @param IconList a json representation of db Icon
      */
-    public static void SetIconList(String IconList) {
+    public void SetIconList(String IconList) {
         editor.putString("ICON_LIST", IconList);
         commit();
     }
@@ -352,14 +352,14 @@ public class pref_utils {
     /**
      * @return date as string where we save the last device update
      */
-    public static String GetLastDeviceUpdate() {
+    public String GetLastDeviceUpdate() {
         return prefs.getString("last_device_update", "1900-01-01 00:00:00");
     }
 
     /**
      * @param date where we save the last device update
      */
-    public static void SetLastDeviceUpdate(String date) {
+    public void SetLastDeviceUpdate(String date) {
         editor.putString("last_device_update", date);
         commit();
     }
@@ -371,7 +371,7 @@ public class pref_utils {
      * @param mytag   a tag to know where the method was called
      * @param context a Context used to write file
      */
-    public static void save_params_to_file(tracerengine Tracer, String mytag, Context context) {
+    public void save_params_to_file(tracerengine Tracer, String mytag, Context context) {
         //#76
         commit();
         Tracer.i(mytag, "Saving pref to file");
@@ -386,7 +386,7 @@ public class pref_utils {
      * @param Tracer  tracerengine Used to log essentially
      * @param mytag   a tag to know where method was called from
      */
-    private static void saveSharedPreferencesToFile(File dst, Context context, tracerengine Tracer, String mytag) {
+    private void saveSharedPreferencesToFile(File dst, Context context, tracerengine Tracer, String mytag) {
         ObjectOutputStream output = null;
         try {
             output = new ObjectOutputStream(new FileOutputStream(dst));
@@ -461,7 +461,7 @@ public class pref_utils {
     /**
      * Somes basic preferences need to be initialise if not exist
      */
-    public static void load_preferences() {
+    public void load_preferences() {
         //Load default value to avoid crash.
         String currlogpath = prefs.getString("LOGNAME", "");
         String mytag = "load_preferences";
@@ -489,21 +489,21 @@ public class pref_utils {
     /**
      * @return the order User choose to sync the default area
      */
-    public static String GetDeviceSyncOrder() {
+    public String GetDeviceSyncOrder() {
         return prefs.getString("device_sync_order", "Usage");
     }
 
     /**
      * @return the MQ address
      */
-    public static String GetMqAddress() {
+    public String GetMqAddress() {
         return prefs.getString("MQaddress", "");
     }
 
     /**
      * @param MQaddress MQ address to save
      */
-    public static void SetMqAddress(String MQaddress) {
+    public void SetMqAddress(String MQaddress) {
         editor.putString("MQaddress", MQaddress);
         commit();
     }
@@ -511,14 +511,14 @@ public class pref_utils {
     /**
      * @return the MQ Sub Port
      */
-    public static String GetMqSubPort() {
+    public String GetMqSubPort() {
         return prefs.getString("MQsubport", "");
     }
 
     /**
      * @param SubPort MQ Sub Port to save
      */
-    public static void SetMqSubPort(String SubPort) {
+    public void SetMqSubPort(String SubPort) {
         editor.putString("MQsubport", SubPort);
         commit();
     }
@@ -526,14 +526,14 @@ public class pref_utils {
     /**
      * @return the MQ Pub Port
      */
-    public static String GetMqPubPort() {
+    public String GetMqPubPort() {
         return prefs.getString("MQpubport", "");
     }
 
     /**
      * @param MQpubport MQ Pub Port to save
      */
-    public static void SetMqPubPort(String MQpubport) {
+    public void SetMqPubPort(String MQpubport) {
         editor.putString("MQpubport", MQpubport);
         commit();
     }
@@ -541,14 +541,14 @@ public class pref_utils {
     /**
      * @return the MQ req_rep Port
      */
-    public static String GetMqReqRepPort() {
+    public String GetMqReqRepPort() {
         return prefs.getString("MQreq_repport", "");
     }
 
     /**
      * @param MQreq_repport MQ req_rep Port to save
      */
-    public static void SetMqReqRepPort(String MQreq_repport) {
+    public void SetMqReqRepPort(String MQreq_repport) {
         editor.putString("MQreq_repport", MQreq_repport);
         commit();
     }
@@ -556,14 +556,14 @@ public class pref_utils {
     /**
      * @return the boolean corresponding to answer choice to question about untrusted cert in admin view
      */
-    public static Boolean GetSslTrusted() {
+    public Boolean GetSslTrusted() {
         return prefs.getBoolean("SSL_Trusted", false);
     }
 
     /**
      * @param b a boolean corresponding to answer choice to question about untrusted cert in admin view
      */
-    public static void SetSslTrusted(boolean b) {
+    public void SetSslTrusted(boolean b) {
         editor.putBoolean("SSL_Trusted", b);
         commit();
     }
@@ -571,14 +571,14 @@ public class pref_utils {
     /**
      * @return SSL acces for domogik in locale access
      */
-    public static Boolean GetRestSsl() {
+    public Boolean GetRestSsl() {
         return prefs.getBoolean("ssl_activate", false);
     }
 
     /**
      * @param ssl a boolean to save the ssl access state of domogik in locale
      */
-    public static void SetRestSsl(Boolean ssl) {
+    public void SetRestSsl(Boolean ssl) {
         editor.putBoolean("ssl_activate", ssl);
         commit();
     }
@@ -586,14 +586,14 @@ public class pref_utils {
     /**
      * @return external_ip to join domogik from external access otherwise internal ip if not configure
      */
-    public static String GetExternalRestIp() {
+    public String GetExternalRestIp() {
         return prefs.getString("rinorexternal_IP", GetRestIp());
     }
 
     /**
      * @param external_ip to join domogik from external access
      */
-    public static void SetExternalRestIp(String external_ip) {
+    public void SetExternalRestIp(String external_ip) {
         editor.putString("rinorexternal_IP", external_ip);
         Log.e("pref_utils", "rinorexternal_IP=" + external_ip);
         commit();
@@ -602,14 +602,14 @@ public class pref_utils {
     /**
      * @return external_port to join domogik from external access otherwise internal port if not configure
      */
-    public static String GetExternalRestPort() {
+    public String GetExternalRestPort() {
         return prefs.getString("rinor_external_Port", GetRestPort());
     }
 
     /**
      * @param external_port to join domogik from external access
      */
-    public static void SetExternalRestPort(String external_port) {
+    public void SetExternalRestPort(String external_port) {
         editor.putString("rinor_external_Port", external_port);
         commit();
     }
@@ -617,7 +617,7 @@ public class pref_utils {
     /**
      * @return SSL acces for domogik in external access otherwise internal ssl if not configure
      */
-    public static Boolean GetExternalRestSsl() {
+    public Boolean GetExternalRestSsl() {
         return prefs.getBoolean("ssl_external_activate", false);
     }
 
@@ -625,7 +625,7 @@ public class pref_utils {
     /**
      * @param external_ssl a boolean to save the ssl access state of domogik from external
      */
-    public static void SetExternalRestSsl(Boolean external_ssl) {
+    public void SetExternalRestSsl(Boolean external_ssl) {
         editor.putBoolean("ssl_external_activate", external_ssl);
         commit();
     }
@@ -633,7 +633,7 @@ public class pref_utils {
     /**
      * @param butler_name Set the butler name
      */
-    public static void SetButlerName(String butler_name) {
+    public void SetButlerName(String butler_name) {
         editor.putString("dmg_butler_name", butler_name);
         commit();
     }
@@ -656,7 +656,7 @@ public class pref_utils {
     /**
      * @param currentScale the current map Scale to save
      */
-    public static void SetMapScale(float currentScale) {
+    public void SetMapScale(float currentScale) {
         editor.putFloat("Mapscale", currentScale);
         commit();
     }
@@ -680,14 +680,14 @@ public class pref_utils {
      *
      * @return true if Show device id is set in debug options
      */
-    public static boolean GetDebugIdShow() {
+    public boolean GetDebugIdShow() {
         return prefs.getBoolean("DEV", false);
     }
 
     /**
      * @return the reresh timer period in seconds between 2 rest call
      */
-    public static int GetRestUpdateTimer() {
+    public int GetRestUpdateTimer() {
         return prefs.getInt("UPDATE_TIMER", 300);
     }
 
@@ -719,21 +719,21 @@ public class pref_utils {
     /**
      * @return time last sensor value was update
      */
-    public static String GetLastSensorUpdate() {
+    public String GetLastSensorUpdate() {
         return prefs.getString("last_sensor_update", "1900-01-01 00:00:00");
     }
 
     /**
      * @return Username for credentials
      */
-    public static String GetRestAuthUsername() {
+    public String GetRestAuthUsername() {
         return prefs.getString("http_auth_username", "Anonymous");
     }
 
     /**
      * @param login to be set for http auth method
      */
-    public static void SetHttpAuthLogin(String login) {
+    public void SetHttpAuthLogin(String login) {
         editor.putString("http_auth_username", login);
         Log.e("pref_utils", "http_auth_username=" + login);
 
@@ -743,14 +743,14 @@ public class pref_utils {
     /**
      * @return Password for credentials
      */
-    public static String GetRestAuthPassword() {
+    public String GetRestAuthPassword() {
         return prefs.getString("http_auth_password", "");
     }
 
     /**
      * @param password to be set for http auth method
      */
-    public static void SetHttpAuthPassword(String password) {
+    public void SetHttpAuthPassword(String password) {
         editor.putString("http_auth_password", password);
         Log.e("pref_utils", "http_auth_password=" + password);
         commit();
@@ -780,7 +780,7 @@ public class pref_utils {
      * @param cached_dump      dump sensor value to save them
      * @param currentTimestamp timestamp we saved the dump
      */
-    public static void SetSensorSavedValueAndTimestamp(String cached_dump, String currentTimestamp) {
+    public void SetSensorSavedValueAndTimestamp(String cached_dump, String currentTimestamp) {
         editor.putString("sensor_saved_value", cached_dump);
         editor.putString("sensor_saved_timestamp", currentTimestamp);
         commit();
@@ -789,14 +789,14 @@ public class pref_utils {
     /**
      * @return True if 2 columns are allow in Landscape mode
      */
-    public static boolean GetTwoColumnsLandscape() {
+    public boolean GetTwoColumnsLandscape() {
         return prefs.getBoolean("twocol_lanscape", false);
     }
 
     /**
      * @return True if 2 columns are allow in Portrait mode
      */
-    public static boolean GetTwoColumnsPortait() {
+    public boolean GetTwoColumnsPortait() {
         return prefs.getBoolean("twocol_portrait", false);
     }
 
@@ -807,7 +807,7 @@ public class pref_utils {
         return prefs.getString("COLORRGB", "#FFFFFF");
     }
 
-    public static void SetColorRgb(String value) {
+    public void SetColorRgb(String value) {
         editor.putString("COLORRGB", "#" + value);
         commit();
     }
@@ -816,7 +816,7 @@ public class pref_utils {
         return prefs.getInt("COLORHUE", 0);
     }
 
-    public static void SetColorHue(int progress) {
+    public void SetColorHue(int progress) {
         editor.putInt("COLORHUE", progress);
         commit();
     }
@@ -825,7 +825,7 @@ public class pref_utils {
         return prefs.getInt("COLORSATURATION", 255);
     }
 
-    public static void SetColorSaturation(int progress) {
+    public void SetColorSaturation(int progress) {
         editor.putInt("COLORSATURATION", progress);
         commit();
     }
@@ -834,17 +834,17 @@ public class pref_utils {
         return prefs.getInt("COLORBRIGHTNESS", 255);
     }
 
-    public static void SetColorBrightness(int progress) {
+    public void SetColorBrightness(int progress) {
         editor.putInt("COLORBRIGHTNESS", progress);
         commit();
     }
 
-    public static void SetDebugLocCanged(boolean b) {
+    public void SetDebugLocCanged(boolean b) {
         editor.putBoolean("LOGCHANGED", b);
         commit();
     }
 
-    public static void SetDebugTextlog(Boolean to_txtFile) {
+    public void SetDebugTextlog(Boolean to_txtFile) {
         editor.putBoolean("TEXTLOG", to_txtFile);
         commit();
     }

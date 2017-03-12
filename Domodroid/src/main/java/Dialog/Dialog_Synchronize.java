@@ -62,43 +62,43 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
         cancelButton.setOnClickListener(this);
         last_device_update = prefUtils.GetLastDeviceUpdate();
 
-        handler = new Handler() {
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 try {
                     String loc_Value = msg.getData().getString("message");
                     switch (loc_Value) {
                         case "sync_done":
                             sync.cancel(true);
                             dismiss();
-                            return;
+                            break;
                         case "conn_error":
                             message.setText(R.string.sync_rinor_error);
-                            return;
+                            break;
                         case "2_area":
                             message.setText(R.string.sync_2_error_area);
-                            return;
+                            break;
                         case "2_room":
                             message.setText(R.string.sync_2_error_room);
-                            return;
+                            break;
                         case "2_feature":
                             message.setText(R.string.sync_2_error_feature);
-                            return;
+                            break;
                         case "2_feature_association":
                             message.setText(R.string.sync_2_error_feature);
-                            return;
+                            break;
                         case "2_ui_config":
                             message.setText(R.string.sync_2_error_ui);
-                            return;
+                            break;
                         case "3_feature":
                             message.setText(R.string.sync_3_error_feature);
-                            return;
+                            break;
                         case "device":
                             message.setText(R.string.sync_4_error_device);
-                            return;
+                            break;
                         case "datatype":
                             message.setText(R.string.sync_4_error_datatype);
-                            return;
+                            break;
                     }
 
                 } catch (Exception e) {
@@ -106,9 +106,9 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     message.setText(R.string.connection_error);
                 }
                 message.setText(R.string.connection_error);
-
+                return true;
             }
-        };
+        });
     }
 
 

@@ -122,9 +122,9 @@ public class Com_Stats extends FrameLayout {
         period_eventsPS = (TextView) findViewById(R.id.PeventsPS);
         period_eventsBS = (TextView) findViewById(R.id.PeventsBS);
 
-        handler = new Handler() {
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 0) {
                     //Message from timer expired
                     if (stats != null) {
@@ -147,11 +147,12 @@ public class Com_Stats extends FrameLayout {
                         period_eventsBR.setText(Integer.toString(Stats_Com.periodic_events_recv_bytes));
                         period_eventsPS.setText(Integer.toString(Stats_Com.periodic_events_sent_packets));
                         period_eventsBS.setText(Integer.toString(Stats_Com.periodic_events_sent_bytes));
-                   }
+                    }
                 }
+                return true;
             }
 
-        };
+        });
         Tracer.i(mytag, "Instance created");
         Timer();
 

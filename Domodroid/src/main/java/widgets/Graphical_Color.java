@@ -301,9 +301,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             }
         }
         //LoadSelections();
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 argbS = "?";
                 if (msg.what == 2) {
                     Toast.makeText(getContext(), R.string.command_rejected, Toast.LENGTH_SHORT).show();
@@ -339,7 +339,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                             TV_Timestamp.setReferenceTime(Value_timestamplong);
                         }
                     } else
-                        return;
+                        return true;
 
                 }
                 switch (argbS) {
@@ -354,7 +354,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         LoadSelections();    //Recall last values known from shared preferences
 
                         // argb and argbS will be set when seekBars will be changed
-                        return;
+                        break;
                     default:
                         try {
                             argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
@@ -397,10 +397,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                 if ((r != 0) || (g != 0) || (b != 0)) {
                     SaveSelections();
                 }
-
+                return true;
             }
-
-        };
+        });
         updating = 0;
         //================================================================================
         /*

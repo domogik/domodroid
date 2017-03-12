@@ -206,9 +206,9 @@ public class WidgetUpdate {
         // Cache contains list of existing devices, now !
 
         ///////// Create an handler to exchange with Events_Manager///////////////////
-        myselfHandler = new Handler() {
+        myselfHandler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 //This handler will receive notifications from Events_Manager and from waitingThread running in background
                 // 1 message => 1 event : so, it's serialized !
                 if (msg.what == 8999) {
@@ -302,8 +302,9 @@ public class WidgetUpdate {
                     });
 
                 }
+                return true;
             }
-        };
+        });
         ///////// and pass to it now///////////////////
         Tracer.d(mytag, "Waiting thread started to notify main when cache ready !");
         new waitingThread().execute();

@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -70,6 +69,7 @@ import Abstract.pref_utils;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
+import applications.domodroid;
 import database.Cache_management;
 import database.WidgetUpdate;
 import metrics.MetricsServiceReceiver;
@@ -159,7 +159,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         myself = this;
 
         prefUtils = new pref_utils();
-        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
+        Tracer = tracerengine.getInstance(pref_utils.prefs, this);
         setContentView(R.layout.activity_home);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -223,7 +223,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             }
             //load_preferences(); //moved to prefUtils
             prefUtils.load_preferences();
-            Tracer.set_profile(prefUtils.prefs);
+            tracerengine.set_profile(pref_utils.prefs);
             // Create .nomedia file, that will prevent Android image gallery from showing domodroid file
             File nomedia = new File(Environment.getExternalStorageDirectory() + "/domodroid/.nomedia");
             try {
@@ -239,7 +239,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } else {
             //TODO tell user they're is a problem with getting access to external storage
             Tracer.e(mytag, "problem with getting access to external storage");
-            Toast.makeText(context, "Problem with getting access to external storage", Toast.LENGTH_LONG).show();
+            Toast.makeText(domodroid.GetInstance(), "Problem with getting access to external storage", Toast.LENGTH_LONG).show();
         }
         appname = (ImageView) findViewById(R.id.app_name);
 
@@ -281,12 +281,11 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
                                     //replace and save "SSID" by SSID
-                                    prefUtils.SetPreferedWifiSsid(wifiManager.getConnectionInfo().getSSID());
+                                    prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID().replace("\"", ""));
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(context, R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(domodroid.GetInstance(), R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
                                 }
                                 dialog.dismiss();
                             }
@@ -332,9 +331,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
 
         //update thread
-        sbanim = new Handler() {
+        sbanim = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 0) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name2));
                     getSupportActionBar().setLogo(R.drawable.app_name2);
@@ -377,8 +376,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     //refresh view when initial cache ready #33
                     refresh();
                 }
+                return true;
             }
-        };
+        });
 
         //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -493,9 +493,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
                     public void onClick(DialogInterface dialog, int which) {
                         Tracer.d(mytag, "Reload dialog returns : " + which);
-                        if (which == dialog.BUTTON_POSITIVE) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
                             reload = true;
-                        } else if (which == dialog.BUTTON_NEGATIVE) {
+                        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
                             reload = false;
                         }
                         check_answer();
@@ -684,7 +684,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     private void end_of_init() {
         // Finalize screen appearances
         if (Tracer == null)
-            Tracer = Tracer.getInstance(this);
+            Tracer = tracerengine.getInstance(this);
         Tracer.v(mytag, "end_of_init Main Screen..");
         if (!reload) {
             //alertDialog not sync splash
@@ -712,9 +712,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         //load widgets
         if (widgetHandler == null) {
             Tracer.v(mytag, "Starting WidgetHandler thread !");
-            widgetHandler = new Handler() {
+            widgetHandler = new Handler(new Handler.Callback() {
                 @Override
-                public void handleMessage(Message msg) {
+                public boolean handleMessage(Message msg) {
                     //#107 around here
                     Tracer.d("debug map bak #107", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
@@ -737,8 +737,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
                         Tracer.e("debug map bak", e.toString());
                     }
+                    return true;
                 }
-            };
+            });
         }
         if (WM_Agent == null) {
             Tracer.v(mytag, "Starting wAgent !");

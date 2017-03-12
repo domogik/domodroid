@@ -158,13 +158,13 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 String status;
                 if (msg.what == 9999) {
                     if (session == null)
-                        return;
+                        return true;
                     String new_val = session.getValue();
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
@@ -208,10 +208,9 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
                         t.printStackTrace();
                     }    //kill the handler thread itself
                 }
-
+                return true;
             }
-
-        };
+        });
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our TV_Value is changed

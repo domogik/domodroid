@@ -157,9 +157,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
         size7 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 7, metrics);
         size5 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 5, metrics);
 
-        handler = new Handler() {
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (!activate) {
                     Tracer.d(mytag, "Handler receives a request to die ");
                     //That seems to be a zombie
@@ -177,8 +177,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 } else {
                     invalidate();
                 }
+                return true;
             }
-        };
+        });
     }
 
     public void onClick(View v) {

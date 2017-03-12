@@ -86,12 +86,13 @@ public class Activity_Cam extends AppCompatActivity {
         mv.setDisplayMode(MjpegView.SIZE_BEST_FIT);
         mv.showFps(true);
 
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 TV_frameRate.setText(getText(R.string.frame_rate) + ": " + msg.what + " " + getText(R.string.fps));
+                return true;
             }
-        };
+        });
         mv.setHandler(handler);
     }
 

@@ -14,10 +14,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.facebook.stetho.Stetho;
-import com.github.anrwatchdog.ANRWatchDog;
 import com.squareup.leakcanary.LeakCanary;
 
-import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.domogik.domodroid13.R;
@@ -44,6 +42,7 @@ import static org.acra.ReportField.STACK_TRACE;
 
 public class domodroid extends Application {
     public static domodroid instance;
+    public static WifiInfo wifiInfo;
     private String mytag = "domodroid application";
     private pref_utils prefUtils;
 
@@ -52,8 +51,8 @@ public class domodroid extends Application {
         super.onCreate();
         instance = this;
         // The following line triggers the initialization of ACRA
-        ACRA.init(this);
-        new ANRWatchDog().start();
+        //ACRA.init(this);
+        //new ANRWatchDog().start();
         //Only to debug locally
         LeakCanary.install(this);
         Stetho.initializeWithDefaults(this);
@@ -125,7 +124,6 @@ public class domodroid extends Application {
                     isConnected = true;
                     isWifi = true;
                     WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-                    WifiInfo wifiInfo;
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                         String prefered_wifi = prefUtils.GetPreferedWifiSsid();

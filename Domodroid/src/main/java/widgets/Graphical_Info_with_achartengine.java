@@ -265,14 +265,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.i(mytag, "No unit for this feature");
         }
 
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 9999) {
                     //Message from widgetupdate
                     //state_engine send us a signal to notify TV_Value changed
                     if (session == null)
-                        return;
+                        return true;
 
                     String new_val = session.getValue();
                     String Value_timestamp = session.getTimestamp();
@@ -321,9 +321,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         t.printStackTrace();
                     }    //kill the handler thread itself
                 }
+                return true;
             }
-
-        };
+        });
 
         //================================================================================
         /*

@@ -175,9 +175,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 seekBarOnOff.setEnabled(false);
             }
         }
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (activate) {
                     Tracer.d(mytag, "Handler receives a request to die ");
                     if (realtime) {
@@ -226,7 +226,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                             } else if (msg.what == 9999) {
                                 //state_engine send us a signal to notify value changed
                                 if (session == null)
-                                    return;
+                                    return true;
                                 String new_val = session.getValue();
                                 String Timestamp = session.getTimestamp();
                                 Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
@@ -276,8 +276,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                         e.printStackTrace();
                     }
                 }
+                return true;
             }
-        };
+        });
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed

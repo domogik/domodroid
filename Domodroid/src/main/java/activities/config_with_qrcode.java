@@ -40,7 +40,8 @@ public class config_with_qrcode extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Tracer = tracerengine.getInstance(pref_utils.prefs, this);
+        final pref_utils prefUtils = new pref_utils();
+        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
 
         try {
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
@@ -52,9 +53,9 @@ public class config_with_qrcode extends AppCompatActivity {
             //on catch, show the download dialog
             showDialog(config_with_qrcode.this, getString(R.string.no_qrcode_scanner), getString(R.string.no_qrcode_question), getString(R.string.reloadOK), getString(R.string.reloadNO)).show();
         }
-        handler = new Handler() {
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message mesg) {
+            public boolean handleMessage(Message mesg) {
                 Tracer.e("QRcode receive message=", mesg.toString());
                 if (mesg.what == 0) {
                     Tracer.e(mytag, "Quit Qrcode activity");
@@ -62,26 +63,26 @@ public class config_with_qrcode extends AppCompatActivity {
                 } else if (mesg.what == 1) {
                     Tracer.e(mytag, "Qrcode as been read");
                     try {
-                        pref_utils.SetRestIp(rinor_IP);
-                        pref_utils.SetRestPort(rest_port);
-                        pref_utils.SetRestPath(rest_path);
-                        pref_utils.SetRestSsl(SSL);
-                        pref_utils.SetExternalRestSsl(external_ssl);
-                        pref_utils.SetMqAddress(mq_ip);
-                        pref_utils.SetMqSubPort(mq_port_sub);
-                        pref_utils.SetMqPubPort(mq_port_pub);
-                        pref_utils.SetMqReqRepPort(mq_port_req_rep);
-                        pref_utils.SetButlerName(butler_name);
-                        pref_utils.SetExternalRestIp(External_IP);
-                        pref_utils.SetExternalRestPort(External_port);
+                        prefUtils.SetRestIp(rinor_IP);
+                        prefUtils.SetRestPort(rest_port);
+                        prefUtils.SetRestPath(rest_path);
+                        prefUtils.SetRestSsl(SSL);
+                        prefUtils.SetExternalRestSsl(external_ssl);
+                        prefUtils.SetMqAddress(mq_ip);
+                        prefUtils.SetMqSubPort(mq_port_sub);
+                        prefUtils.SetMqPubPort(mq_port_pub);
+                        prefUtils.SetMqReqRepPort(mq_port_req_rep);
+                        prefUtils.SetButlerName(butler_name);
+                        prefUtils.SetExternalRestIp(External_IP);
+                        prefUtils.SetExternalRestPort(External_port);
                         askquestion(config_with_qrcode.this, 2, 4, "Http auth", "Do you need to set a User/Password to contact domogik rest server", getString(R.string.reloadOK), getString(R.string.reloadNO), false).show();
                     } catch (Exception e) {
                         handler.sendEmptyMessage(20);
                     }
                 } else if (mesg.what == 2) {
                     Tracer.e(mytag, "Answer No credentials");
-                    pref_utils.SetHttpAuthLogin("");
-                    pref_utils.SetHttpAuthPassword("");
+                    prefUtils.SetHttpAuthLogin("");
+                    prefUtils.SetHttpAuthPassword("");
                     askquestion(config_with_qrcode.this, 0, 7, "Success", "All done", getString(R.string.continue1), getString(R.string.abort), false).show();
                 } else if (mesg.what == 4) {
                     Tracer.e(mytag, "Says to set credentials");
@@ -91,7 +92,7 @@ public class config_with_qrcode extends AppCompatActivity {
                     if (mesg.obj != null) {
                         try {
                             Tracer.e(mytag, (String) mesg.obj);
-                            pref_utils.SetHttpAuthLogin((String) mesg.obj);
+                            prefUtils.SetHttpAuthLogin((String) mesg.obj);
                             askquestion(config_with_qrcode.this, 0, 6, "password", "type your password", getString(R.string.continue1), getString(R.string.abort), true).show();
                         } catch (Exception e) {
                             handler.sendEmptyMessage(21);
@@ -103,7 +104,7 @@ public class config_with_qrcode extends AppCompatActivity {
                     if (mesg.obj != null) {
                         try {
                             Tracer.e(mytag, (String) mesg.obj);
-                            pref_utils.SetHttpAuthPassword((String) mesg.obj);
+                            prefUtils.SetHttpAuthPassword((String) mesg.obj);
                             askquestion(config_with_qrcode.this, 0, 7, "Success", "All done", getString(R.string.reloadOK), "", false).show();
                         } catch (Exception e) {
                             handler.sendEmptyMessage(22);
@@ -133,9 +134,9 @@ public class config_with_qrcode extends AppCompatActivity {
                     Tracer.e(mytag, "No results from qrcode scanner");
                     askquestion(config_with_qrcode.this, 0, 0, "Qrcode results", "No results from qrcode scanner", getString(R.string.reloadOK), "", false).show();
                 }
-
+                return true;
             }
-        };
+        });
     }
 
     @Override

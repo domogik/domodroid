@@ -93,9 +93,9 @@ public class Events_manager {
             sleeping = false;
             start_listener();
         }
-        events_engine_handler = new Handler() {
+        events_engine_handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 9999) {
                     listener = null;    //It's dead
                     stats_com = null;    //let the instance to stop
@@ -108,8 +108,9 @@ public class Events_manager {
                         t.printStackTrace();
                     }
                 }
+                return true;
             }
-        };
+        });
         Tracer.w(mytag, "Events Manager ready");
         init_done = true;
     }    //End of Constructor

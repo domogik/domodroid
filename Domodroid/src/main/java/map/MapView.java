@@ -164,9 +164,9 @@ public class MapView extends View {
          * This view has only one handler for all mini widgets displayed on map
 		 * It'll receive a unique notification from WidgetUpdate when one or more values have changed
 		 */
-        handler = new Handler() {
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 9997) {
                     //state_engine send us a signal to notify at least one value changed
                     Tracer.d(mytag, "state engine notify change for mini widget(s) : refresh all of them !");
@@ -191,8 +191,9 @@ public class MapView extends View {
                         Tracer.i(mytag, "Cache engine has notified it's ready !");
                     initMap();
                 }
+                return true;
             }
-        };
+        });
 
 
         //End of create method ///////////////////////
@@ -207,7 +208,7 @@ public class MapView extends View {
             //MapView is'nt the first caller, so init is'nt required (already done by View)
             cache_engine.set_handler(handler, mytype);    //Put our main handler to cache engine (as MapView)
         }
-        tracerengine.set_engine(cache_engine);
+        Tracer.set_engine(cache_engine);
         Tracer.w(mytag, "WidgetUpdate engine connected !");
     }
 

@@ -191,9 +191,9 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         super.LL_topPan.removeView(super.LL_featurePan);
         super.LL_infoPan.addView(bodyPanHorizontal);
 
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 /// Deprecated method to die /////////////////////////////////////////
                 if (activate) {
                     Tracer.d(mytag, "Handler receives a request to die ");
@@ -215,7 +215,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                     if (msg.what == 9999) {
                         //state_engine send us a signal to notify value changed
                         if (session == null)
-                            return;
+                            return true;
                         try {
                             Tracer.d(mytag, "Handler receives a new value from cache_engine <" + session.getValue() + ">");
                             new_val = Integer.parseInt(session.getValue());
@@ -254,11 +254,10 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                             t.printStackTrace();
                         }    //kill the handler thread itself
                     }
-
-
                 }
+                return true;
             }
-        };
+        });
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed

@@ -79,13 +79,13 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         //To have the icon colored as it has no state
         change_this_icon(2);
         //handler to listen value change
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 String status;
                 if (msg.what == 9999) {
                     if (session == null)
-                        return;
+                        return true;
                     status = session.getValue();
                     if (status != null) {
                         Tracer.d(mytag, "Handler receives a new status <" + status + ">");
@@ -107,10 +107,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
                         Tracer.e(mytag, "Error in deleting container");
                     }    //kill the handler thread itself
                 }
-
+                return true;
             }
-
-        };
+        });
         //================================================================================
             /*
              * New mechanism to be notified by widgetupdate engine when our value is changed

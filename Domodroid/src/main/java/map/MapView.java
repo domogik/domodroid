@@ -875,13 +875,18 @@ public class MapView extends View {
                         paint_color.setStyle(Paint.Style.FILL);
                         String argbS;
                         //Process RGB value
-                        if (states.equals("off")) {
-                            argbS = "#000000";
-                        } else if (states.equals("on")) {
-                            argbS = prefUtils.GetLastColorRgb();    //Restore last known color, White by default
-                        } else {
-                            //To avoid http://tracker.domogik.org/issues/1972 here
-                            argbS = "#FFFFFF";
+                        switch (states) {
+                            case "off":
+                                argbS = "#000000";
+                                break;
+                            case "on":
+                                argbS = prefUtils.GetLastColorRgb();    //Restore last known color, White by default
+
+                                break;
+                            default:
+                                //To avoid http://tracker.domogik.org/issues/1972 here
+                                argbS = "#FFFFFF";
+                                break;
                         }
                         //Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
                         //Draw first a black background...

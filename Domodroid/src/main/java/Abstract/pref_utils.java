@@ -439,10 +439,7 @@ public class pref_utils {
             }
             commit();
             result = true;
-        } catch (IOException e) {
-            Tracer.e(mytag, "Can't load preferences file");
-            Tracer.e(mytag, e.toString());
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             Tracer.e(mytag, "Can't load preferences file");
             Tracer.e(mytag, e.toString());
         } finally {

@@ -1131,12 +1131,17 @@ public class DomodroidDB {
             Tracer.v(mytag + "(" + owner + ")", "requesting feature_id_sensor for id " + id);
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_appswidgets, null, null, new String[]{(id)}, null);
             curs.moveToFirst();
-            if (sensor_command.equals("sensor")) {
-                feature_id = curs.getInt(1);
-            } else if (sensor_command.equals("command")) {
-                feature_id = curs.getInt(2);
-            } else
-                feature_id = 0;
+            switch (sensor_command) {
+                case "sensor":
+                    feature_id = curs.getInt(1);
+                    break;
+                case "command":
+                    feature_id = curs.getInt(2);
+                    break;
+                default:
+                    feature_id = 0;
+                    break;
+            }
         } catch (Exception e) {
             Tracer.e(mytag + "(" + owner + ")", "request feature_id_sensor by id error");
             Tracer.e(mytag, e.toString());

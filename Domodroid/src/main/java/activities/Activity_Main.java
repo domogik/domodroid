@@ -30,6 +30,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -1184,7 +1185,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             refresh();
     }
 
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         menuItem.setChecked(true);
         mSelectedId = menuItem.getItemId();
         itemSelection(mSelectedId);

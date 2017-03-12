@@ -46,15 +46,16 @@ public class SVG {
      */
     private RectF limits = null;
 
+
+    private float surfaceWidth;
+    private float surfaceHeight;
+
     /**
      * Construct a new SVG.
      *
      * @param picture the parsed picture object.
-     * @param bounds the bounds computed from the "bounds" layer in the SVG.
+     * @param bounds  the bounds computed from the "bounds" layer in the SVG.
      */
-    private float surfaceWidth;
-    private float surfaceHeight;
-
     SVG(Picture picture, RectF bounds) {
         this.picture = picture;
         this.bounds = bounds;

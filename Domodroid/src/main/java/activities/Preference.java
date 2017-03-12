@@ -53,13 +53,13 @@ import misc.tracerengine;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    public static Preference myself = null;
+    private static Preference myself = null;
     private final String mytag = this.getClass().getName();
     private tracerengine Tracer = null;
     private String action;
     private WifiManager mWifiManager;
-    CharSequence[] entries = null;
-    ListPreference prefered_wifi_ssid;
+    private CharSequence[] entries = null;
+    private ListPreference prefered_wifi_ssid;
     private pref_utils prefUtils;
 
 

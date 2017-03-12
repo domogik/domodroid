@@ -84,7 +84,7 @@ public class Rest_com {
         return json;
     }
 
-    public static String connect_string(final Activity activity, tracerengine Tracer, String request, int timeout) {
+    private static String connect_string(final Activity activity, tracerengine Tracer, String request, int timeout) {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");

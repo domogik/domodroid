@@ -64,7 +64,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private final TextView TV_name;
     private final int id;
     final float api_version;
-    public final pref_utils prefUtils;
+    final pref_utils prefUtils;
     tracerengine Tracer = null;
     final Activity activity;
     private String icon;
@@ -76,9 +76,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     private int icon_status;
     private final Handler widgetHandler;
     private DomodroidDB domodb = null;
-    public Entity_client session = null;
-    public Typeface typefaceweather;
-    public Typeface typefaceawesome;
+    Entity_client session = null;
+    Typeface typefaceweather;
+    Typeface typefaceawesome;
 
     public Basic_Graphical_widget(Activity activity, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, Handler handler) {
         super(activity);

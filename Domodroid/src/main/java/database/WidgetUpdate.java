@@ -68,7 +68,7 @@ public class WidgetUpdate {
     private ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
     private Boolean locked = false;
     private Boolean timer_flag = false;
-    public Boolean ready = false;
+    private Boolean ready = false;
     private Handler mapView = null;
     private Events_manager eventsManager = null;
     private static Handler myselfHandler = null;

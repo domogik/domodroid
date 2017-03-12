@@ -81,7 +81,7 @@ import widgets.Basic_Graphical_zone;
 
 public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
-    public Context context;
+    private Context context;
     private AlertDialog.Builder AD_notSyncAlert;
     private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
@@ -1217,7 +1217,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         }
     }
 
-    public void update_navigation_menu() {
+    private void update_navigation_menu() {
         adapter_map.notifyDataSetChanged();
         listePlace.setAdapter(new SimpleAdapter(getBaseContext(), listItem,
                 R.layout.item_in_listview_navigation_drawer, new String[]{"name", "icon"}, new int[]{R.id.name, R.id.icon}));

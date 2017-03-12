@@ -44,7 +44,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private final Entity_Feature feature;
     private final int session_type;
     private Boolean realtime = false;
-    Activity activity;
+    private Activity activity;
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type,

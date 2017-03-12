@@ -8,7 +8,7 @@ public class ConnectivityChangeEvent {
     private boolean isConnected;
     private boolean isWifiConnected;
     private int networkType;
-    public Boolean on_preferred_Wifi;
+    private Boolean on_preferred_Wifi;
 
     public ConnectivityChangeEvent() {
     }

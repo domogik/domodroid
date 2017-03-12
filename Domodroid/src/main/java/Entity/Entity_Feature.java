@@ -44,7 +44,7 @@ public class Entity_Feature {
     private int state;
     private final Activity activity;
     private tracerengine Tracer = null;
-    public Boolean Develop;
+    private Boolean Develop;
 
     public Entity_Feature(tracerengine Trac, Activity activity, String device_feature_model_id, int id, int devId, String device_usage_id, String address, String device_type_id, String description, String name, String state_key, String parameters, String value_type) {
         this.device_feature_model_id = device_feature_model_id;

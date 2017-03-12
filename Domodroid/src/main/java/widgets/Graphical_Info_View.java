@@ -116,7 +116,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private String unit = "";
     private Bitmap buffer;
     private Bitmap text;
-    final Activity activity;
+    private final Activity activity;
 
     public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, String parameters) {
         super(context);

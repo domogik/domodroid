@@ -83,7 +83,7 @@ public class domodroid extends Application {
     /***
      * BroadCastr Receiver to listen to connectivity changes
      */
-    BroadcastReceiver connectivityChangedReceiever;
+    private BroadcastReceiver connectivityChangedReceiever;
     /**
      * To know if there is a connection (wifi or GPRS)
      */
@@ -104,7 +104,7 @@ public class domodroid extends Application {
     /**
      * Manage the connectivity state of the device
      */
-    public void manageConnectivityState() {
+    private void manageConnectivityState() {
         Log.e(mytag, "manageConnectivityState() called with: " + "");
         // Here we are because we receive either the boot completed event
         // either the connection changed event

@@ -26,7 +26,7 @@ public class DomodroidDB {
     private final pref_utils prefUtils;
     public String owner = "";
     private tracerengine Tracer = null;
-    public static DomodroidDB instance;
+    private static DomodroidDB instance;
     //////////////////////////////////////
 
     /**

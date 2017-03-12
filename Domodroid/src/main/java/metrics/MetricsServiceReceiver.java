@@ -36,14 +36,14 @@ import applications.domodroid;
 public class MetricsServiceReceiver extends BroadcastReceiver {
     private static final String mytag = "MetricsServiceReceiver";
     ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-    Float freeSize = 0f;
-    Float totalAllocatedSize = 0f;
-    Float usedSize = -1f;
-    Float maxmemavailable = 0f;
-    DecimalFormat df = new DecimalFormat("#.##");
-    JSONObject measurements = new JSONObject();
-    JSONObject tags = new JSONObject();
-    static JSONObject metrics = new JSONObject();
+    private Float freeSize = 0f;
+    private Float totalAllocatedSize = 0f;
+    private Float usedSize = -1f;
+    private Float maxmemavailable = 0f;
+    private DecimalFormat df = new DecimalFormat("#.##");
+    private JSONObject measurements = new JSONObject();
+    private JSONObject tags = new JSONObject();
+    private static JSONObject metrics = new JSONObject();
     private pref_utils prefUtils;
 
     @Override

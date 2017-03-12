@@ -9,8 +9,8 @@ import java.util.TimeZone;
  * Created by tiki on 14/11/2016.
  */
 
-public class dmd_gettime {
-    static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+class dmd_gettime {
+    private static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static Date GetUTCdatetimeAsDate()
     {
@@ -22,7 +22,7 @@ public class dmd_gettime {
      *
      * @return a String containing current date in UTC timezone
      */
-    public static String GetUTCdatetimeAsString()
+    private static String GetUTCdatetimeAsString()
     {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -35,7 +35,7 @@ public class dmd_gettime {
      * @param StrDate A date in string format
      * @return the same date in Date format
      */
-    public static Date StringDateToDate(String StrDate)
+    private static Date StringDateToDate(String StrDate)
     {
         Date dateToReturn = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);

@@ -285,7 +285,7 @@ public abstract class display_sensor_info {
      * @param phone  a String to convert
      * @return the convertion to Locale User phone number display
      */
-    public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
+    private static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
         try {
             // todo it remove the "-" like in jean-phillipe replace bye jeanphillipe
             // Tracer.d(mytag, "phone convertion from:" + phone + " to " + convert_phone);
@@ -304,7 +304,7 @@ public abstract class display_sensor_info {
      * @param origin_number in string format
      * @return A string convert to number but return as string in User Locale format
      */
-    public static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
+    private static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
         try {
             return NumberFormat.getInstance().format(number);
         } catch (Exception ex) {
@@ -336,7 +336,7 @@ public abstract class display_sensor_info {
      * @param hour   a String from domogik in hh:mm:ss
      * @return hour in User Locale language
      */
-    public static String hour_convertion(tracerengine Tracer, String mytag, String hour) {
+    private static String hour_convertion(tracerengine Tracer, String mytag, String hour) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
         Date testDate = null;
         try {

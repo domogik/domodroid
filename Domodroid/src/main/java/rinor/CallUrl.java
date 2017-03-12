@@ -33,7 +33,7 @@ import applications.domodroid;
  * Call with url,login,password,timeout
  * all those parameters should be String
  */
-public class CallUrl extends AsyncTask<String, Void, String> {
+class CallUrl extends AsyncTask<String, Void, String> {
     private final String mytag = this.getClass().getName();
     private boolean alreadyTriedAuthenticating = false;
     private Stats_Com stats_com = Stats_Com.getInstance();

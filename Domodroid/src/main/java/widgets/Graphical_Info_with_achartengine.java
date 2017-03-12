@@ -370,7 +370,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             case -1:
                 //user requires the 'Prev' period
                 period_type = sav_period;
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 if (time_end != null) {
                     long new_end = time_end.getTime();
                     new_end -= duration;
@@ -384,7 +384,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             case 0:
                 //user requires the 'Next' period
                 period_type = sav_period;
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 if (time_start != null) {
                     long new_start = time_start.getTime();
                     new_start += duration;
@@ -406,7 +406,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             default:
                 //period_type indicates the number of days to graph
                 // relative to 'now' date
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 long new_end_time = System.currentTimeMillis();
                 time_end.setTime(new_end_time);    //Get actual system time
                 new_end_time -= duration;

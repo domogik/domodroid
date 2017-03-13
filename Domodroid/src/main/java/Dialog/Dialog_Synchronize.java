@@ -698,7 +698,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                     if (Rinor_Api_Version >= 0.8f) {
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Date timestamplast_device_update;
-                        Date timestamplast_update = new Date();
+                        Date timestamplast_update;
                         boolean newer = false;
                         try {
                             timestamplast_device_update = df.parse(last_device_update);
@@ -719,7 +719,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                         Tracer.v(mytag, "device info_changed at: " + timestamplast_update.toString());
                                     }
                                 } catch (Exception E) {
-                                    timestamplast_update = new Date();
                                     Tracer.d(mytag, "Exception info_changed:" + E);
                                 }
                             }

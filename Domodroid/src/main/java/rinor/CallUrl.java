@@ -50,7 +50,7 @@ class CallUrl extends AsyncTask<String, Void, String> {
         Boolean SSL = Boolean.valueOf(uri[4]);
         String result = "";
         if (domodroid.instance.isConnected()) {
-            String responseString = "ERROR";
+            result = "ERROR";
             if (!SSL) {
                 try {
                     // Set timeout

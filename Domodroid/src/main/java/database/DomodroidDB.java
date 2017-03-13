@@ -239,9 +239,9 @@ public class DomodroidDB {
      * @throws JSONException
      */
     public void insertFeatureState(JSONObject json) throws JSONException {
-        String skey = null;
-        String Val = null;
-        int dev_id = 0;
+        String skey;
+        String Val;
+        int dev_id;
         ContentValues values = new ContentValues();
         JSONArray itemArray = json.getJSONArray("stats");
         String[] projection = {"COUNT(*)"};
@@ -267,7 +267,7 @@ public class DomodroidDB {
                 Val = "0";
             }
 
-            Cursor curs = null;
+            Cursor curs;
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE, projection, "device_id = ? AND key = ?",
                     new String[]{Integer.toString(dev_id) + " ", skey}, null);
             curs.moveToFirst();
@@ -619,7 +619,7 @@ public class DomodroidDB {
             json_AreaList.put("code", 0);
             json_AreaList.put("description", "None");
             JSONArray list = new JSONArray();
-            JSONObject map_area = null;
+            JSONObject map_area;
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_AREA, projection, null, null, null);
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
@@ -705,7 +705,7 @@ public class DomodroidDB {
             json_RoomList.put("code", 0);
             json_RoomList.put("description", "None");
             JSONArray rooms = new JSONArray();
-            JSONObject room = null;
+            JSONObject room;
             curs = activity.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ROOM, projection, null, null, "id Asc");
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
@@ -829,7 +829,7 @@ public class DomodroidDB {
             json_FeatureAssociationList.put("code", 0);
             json_FeatureAssociationList.put("description", "None");
             JSONArray ListFeature = new JSONArray();
-            JSONObject Widget = null;
+            JSONObject Widget;
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_ASSOCIATION_ALL, null, null, null, null);
             int count = curs.getCount();
             for (int i = 0; i < count; i++) {
@@ -960,7 +960,7 @@ public class DomodroidDB {
             json_IconList.put("code", 0);
             json_IconList.put("description", "None");
             JSONArray icons = new JSONArray();
-            JSONObject icon = null;
+            JSONObject icon;
             curs = activity.getContentResolver().query(DmdContentProvider.CONTENT_URI_REQUEST_ICON,
                     projection,
                     null,
@@ -1154,7 +1154,7 @@ public class DomodroidDB {
         String[] projection = {"value"};
         String sortOrder = "key ";
         try {
-            Cursor curs = null;
+            Cursor curs;
             curs = activity.managedQuery(DmdContentProvider.CONTENT_URI_REQUEST_FEATURE_STATE,
                     projection,
                     "device_id = ? AND key = ?",

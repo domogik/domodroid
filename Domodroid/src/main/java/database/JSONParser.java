@@ -30,6 +30,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Feature_Association;
 import Entity.Entity_Icon;
 import Entity.Entity_Room;
+import applications.domodroid;
 
 public class JSONParser {
     private final String mytag = this.getClass().getName();
@@ -117,7 +118,7 @@ public class JSONParser {
                 //todo need to say this to user and log it.
                 //add tracer access
                 // tracer.d(mytag,"json status erro");
-                Toast toast = Toast.makeText(null, R.string.error_sending_command, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(domodroid.GetInstance(), R.string.error_sending_command, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
                 toast.show();
                 return false;

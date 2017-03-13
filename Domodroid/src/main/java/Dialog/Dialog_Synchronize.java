@@ -535,14 +535,14 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                 Toast.makeText(activity, R.string.mq_domogik_conf_localhost, Toast.LENGTH_LONG).show();
                             }
                         });
-                        //MQaddress = ""; //TODO save it as empty or just tell user the MQ will not work?
+                        MQaddress = ""; //save it as empty and tell user the MQ will not work
                     } else if (MQaddress.equals("*")) {
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(activity, "MQ address in domogik config looks like a demo mode. It will not work correctly with Domodroid", Toast.LENGTH_LONG).show();
                             }
                         });
-                        //MQaddress = ""; //TODO save it as empty or just tell user the MQ will not work?
+                        MQaddress = ""; //save it as empty and tell user the MQ will not work
                     }
                     prefUtils.SetMqAddress(MQaddress);
                     prefUtils.SetMqSubPort(MQsubport);

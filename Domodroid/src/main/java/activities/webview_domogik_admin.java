@@ -1,5 +1,6 @@
 package activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.net.http.SslError;
@@ -27,6 +28,7 @@ public class webview_domogik_admin extends Activity {
     private WebView myWebView;
     private pref_utils prefUtils;
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefUtils = new pref_utils();

@@ -115,7 +115,7 @@ public class JSONParser {
     public static Boolean Ack(JSONObject json) {
         try {
             if (json.getString("status").equals("ERROR")) {
-                //todo need to say this to user and log it.
+                //todo log it.
                 //add tracer access
                 // tracer.d(mytag,"json status erro");
                 Toast toast = Toast.makeText(domodroid.GetInstance(), R.string.error_sending_command, Toast.LENGTH_SHORT);

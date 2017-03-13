@@ -43,7 +43,7 @@ public class webview_domogik_admin extends Activity {
         if (domodroid.instance.isConnected()) {
             String url;
             String port;
-            Boolean SSL = false;
+            //Boolean SSL = false;
 
             if (domodroid.instance.on_preferred_Wifi) {
                 //If connected to default SSID use local adress

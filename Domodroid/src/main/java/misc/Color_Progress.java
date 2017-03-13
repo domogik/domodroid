@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.SeekBar;
 
-public class Color_Progress extends SeekBar {
+public class Color_Progress extends android.support.v7.widget.AppCompatSeekBar {
 
     private final Paint mPaint;
     private float mCurrentHue = 0;

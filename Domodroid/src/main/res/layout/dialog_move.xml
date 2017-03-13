@@ -93,7 +93,9 @@
                 <TableRow
                     android:id="@+id/tableRow4"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"></TableRow>
+                    android:layout_height="wrap_content">
+
+                </TableRow>
 
                 <Button
                     android:id="@+id/OkButton"

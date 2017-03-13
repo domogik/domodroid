@@ -1,5 +1,6 @@
 package Abstract;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -31,6 +32,7 @@ public class pref_utils {
     /**
      * Constructor
      */
+    @SuppressLint("CommitPrefEdits")
     public pref_utils() {
         this.context = domodroid.GetInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -41,6 +43,7 @@ public class pref_utils {
     /**
      * Constructor
      */
+    @SuppressLint("CommitPrefEdits")
     public pref_utils(Context context) {
         this.context = context;
         prefs = PreferenceManager.getDefaultSharedPreferences(context);

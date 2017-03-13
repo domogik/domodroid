@@ -16,6 +16,7 @@ import org.zeromq.ZMQ;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import applications.domodroid;
 import database.Cache_Feature_Element;
 import database.JSONParser;
 import database.WidgetUpdate;
@@ -273,8 +274,7 @@ public class Events_manager {
                         return null;
                     }
                 } else {
-                    //todo say user MQ address or port is empty
-                    //Toast.makeText(null, R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
+                    Toast.makeText(domodroid.GetInstance(), R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
                     Tracer.d(mytag, "MQ adress or port is empty");
                 }
             } else if (api_version <= 0.6f) {

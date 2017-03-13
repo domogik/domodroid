@@ -128,7 +128,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 tv_edittext = new TextView(activity);
                 tv_edittext.setTextSize(20.0f);
                 //translate this command_type
-                String command_type_display = "";
+                String command_type_display;
                 try {
                     command_type_display = getContext().getString(translate.do_translate(getContext(), Tracer, command_type[current_parameter]));
                 } catch (Exception e1) {

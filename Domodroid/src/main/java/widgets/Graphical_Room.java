@@ -180,7 +180,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
                             //icon is the name of the icon wich will be select
                             values.put("value", icon);
                             //reference is the id of the area, room, or feature
-                            int reference = 0;
+                            int reference;
                             reference = id_room;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);

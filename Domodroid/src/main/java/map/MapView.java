@@ -449,7 +449,7 @@ public class MapView extends View {
             return;
         }
         locked = true;
-        int id = 0;
+        int id;
         // first try to process map switches, if any present in this map
         Tracer.d(mytag, "Processing map switches widgets list");
 
@@ -501,7 +501,7 @@ public class MapView extends View {
 
         for (Entity_Map featureMap : listFeatureMap) {
 
-            String states = "";
+            String states;
             JSONObject jparam = null;
 
             if (featureMap != null) {
@@ -719,7 +719,7 @@ public class MapView extends View {
 
                 } else if (featureMap.getValue_type().equals("number")) {
                     if (!parameters.contains("command")) {
-                        float formatedValue = 0;
+                        float formatedValue;
                         if (value != null && !value.equals("")) {
                             //formatedValue = Round(Float.parseFloat(value), 2);
                             formatedValue = Abstract.calcul.Round_float(Float.parseFloat(value), 2);
@@ -925,7 +925,7 @@ public class MapView extends View {
 
                     } else if (featureMap.getValue_type().equals("scaling")) {
                         if (!parameters.contains("command")) {
-                            float formatedValue = 0;
+                            float formatedValue;
                             if (value != null && !value.equals("")) {
                                 //formatedValue = Round(Float.parseFloat(value), 2);
                                 formatedValue = Abstract.calcul.Round_float(Float.parseFloat(value), 2);
@@ -1066,7 +1066,7 @@ public class MapView extends View {
             label = label + " (" + DevId + ")";
 
         String[] model = device_type_id.split("\\.");
-        String type = "";
+        String type;
         try {
             type = model[1];
         } catch (Exception e) {
@@ -1409,7 +1409,7 @@ public class MapView extends View {
                         pos_X1 = 0;
                         //Display widget
                     } else if (!longclic) {
-                        boolean widgetActiv = false;
+                        boolean widgetActiv;
                         //Switch if it's a map
                         for (Entity_Map switchesMap : listMapSwitches) {
                             //Correct +20 by dip
@@ -1645,7 +1645,7 @@ public class MapView extends View {
                                     //icon is the name of the icon wich will be select
                                     values.put("value", icon);
                                     //reference is the id of the area, room, or feature
-                                    int reference = 0;
+                                    int reference;
                                     reference = featureMap.getId();
                                     values.put("reference", reference);
                                     activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
@@ -1761,9 +1761,9 @@ public class MapView extends View {
     }
 
     private String getFileAsString(File file) {
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        DataInputStream dis = null;
+        FileInputStream fis;
+        BufferedInputStream bis;
+        DataInputStream dis;
         StringBuilder sb = new StringBuilder();
         try {
             fis = new FileInputStream(file);

@@ -833,7 +833,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             FileDescriptor fd = pfd.getFileDescriptor();
             input = new FileInputStream(fd);
             output = new FileOutputStream(outputFilePath);
-            int read = 0;
+            int read;
             byte[] bytes = new byte[4096];
             while ((read = input.read(bytes)) != -1) {
                 output.write(bytes, 0, read);

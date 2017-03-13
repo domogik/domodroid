@@ -159,7 +159,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
     }
 
     public static String POST(String url) {
-        InputStream inputStream = null;
+        InputStream inputStream;
         String result = "";
         try {
             HttpClient httpclient = new DefaultHttpClient();
@@ -192,7 +192,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String result = "";
         while ((line = bufferedReader.readLine()) != null)
             result += line;

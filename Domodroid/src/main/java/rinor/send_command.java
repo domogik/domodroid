@@ -18,12 +18,12 @@ public class send_command {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
-        Boolean SSL = false;
+        Boolean SSL;
 
         String mytag = "send_it";
         String Url2send;
 
-        String URL = null;
+        String URL;
         if (domodroid.instance.on_preferred_Wifi) {
             //If connected to default SSID use local adress
             URL = SP_params.getString("URL", "1.1.1.1");

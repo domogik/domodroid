@@ -87,9 +87,9 @@ public class Rest_com {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
-        Boolean SSL = false;
+        Boolean SSL;
 
-        String url = null;
+        String url;
 
         String result = "";
         //check if device is connected

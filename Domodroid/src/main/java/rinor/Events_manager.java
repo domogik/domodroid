@@ -291,7 +291,7 @@ public class Events_manager {
                 //And send it to server....to create an event ticket
                 String request = ticket_request;
                 JSONObject event = new JSONObject();
-                Boolean ack = false;
+                Boolean ack;
                 Tracer.i(mytag, "ListenerThread starts the loop");
                 String ticket = "";
                 int counter_max = 5 * 60 * 1000;        //5 minutes max between 2 retry
@@ -337,7 +337,7 @@ public class Events_manager {
                         //And try to reconnect
 
                     }
-                    int error = 1;
+                    int error;
 
                     // Try to connect to server and send request
                     stats_com.add(Stats_Com.EVENTS_SEND, request.length());
@@ -380,9 +380,9 @@ public class Events_manager {
                             //Tracer.w(mytag,"Processing event");
 
                             // First, take the ticket ID to resubmit an event request....
-                            int list_size = 0;
+                            int list_size;
                             if (event != null) {
-                                String device_id = "";
+                                String device_id;
                                 try {
                                     list_size = event.getJSONArray("event").length();
                                 } catch (Exception e) {
@@ -416,7 +416,7 @@ public class Events_manager {
                                         break;        //Force to redo the loop from while(alive)
                                     }
                                     //json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
-                                    int data_size = 0;
+                                    int data_size;
                                     try {
                                         data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
                                     } catch (Exception e) {

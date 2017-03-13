@@ -359,7 +359,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         float step = (gridStopX - gridStartX) / (values.size() - 1);
         int top = 0;
         String top_txt = "";
-        int rythm = 1;
+        int rythm;
         int curr = 0;
 
         Paint paint = new Paint();
@@ -480,10 +480,10 @@ public class Graphical_Info_View extends View implements OnClickListener {
             }
 
             // bottom texts
-            int bottom_val1 = 0;
-            int bottom_val2 = 0;
+            int bottom_val1;
+            int bottom_val2;
             int hour = values.get(i + 1).get(4).intValue();
-            String bottom_txt = "";
+            String bottom_txt;
 
             if (limit == 6) {
                 //day or week
@@ -643,7 +643,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                     return null;
                 }
                 Tracer.d(mytag, "UpdateThread (" + dev_id + ") Refreshing graph");
-                JSONArray itemArray = null;
+                JSONArray itemArray;
                 JSONArray valueArray = null;
                 if (api_version <= 0.6f) {
                     itemArray = json_GraphValues.getJSONArray("stats");
@@ -706,12 +706,12 @@ public class Graphical_Info_View extends View implements OnClickListener {
 
                     if (i < valueArray.length() - 1) {
                         // It's not the last component
-                        int loc_hour, loc_hour_next = 0;
-                        int loc_day, loc_day_next = 0;
-                        int loc_week, loc_week_next = 0;
+                        int loc_hour, loc_hour_next;
+                        int loc_day, loc_day_next;
+                        int loc_week, loc_week_next;
                         int loc_year = 0;
-                        int loc_month = 0;
-                        float loc_value = 0;
+                        int loc_month;
+                        float loc_value;
 
                         if (limit == 6) {
                             // range between 1 to 8 days (average per hour)
@@ -892,7 +892,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
     }
 
     private void compute_period() {
-        long duration = 0;
+        long duration;
         //Calendar cal = Calendar.getInstance(); // The 'now' time
 
         switch (period_type) {

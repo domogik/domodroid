@@ -605,7 +605,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         this.WM_Agent = null;
         widgetHandler = null;
         if (prefUtils.GetDomogikApiVersion() >= 0.9f) {
-            JSONArray cached_dump = null;
+            JSONArray cached_dump;
             if (WU_widgetUpdate != null) {
                 Tracer.d("#124", "dump cache");
                 try {

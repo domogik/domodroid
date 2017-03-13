@@ -330,7 +330,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
                         Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
 
-                        Long Value_timestamplong = null;
+                        Long Value_timestamplong;
                         Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                         if (prefUtils.GetWidgetTimestamp()) {

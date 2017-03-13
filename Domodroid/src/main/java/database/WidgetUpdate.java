@@ -133,7 +133,7 @@ public class WidgetUpdate {
     }
 
     public Boolean init(tracerengine Trac, final Activity activity) {
-        Boolean result = false;
+        Boolean result;
         if (init_done) {
             Log.w("WidgetUpdate", "init already done");
             return true;
@@ -362,7 +362,7 @@ public class WidgetUpdate {
         for (int i = 0; i < cache.size(); i++) {
             Cache_Feature_Element cache_entry = cache.get(i);
             ArrayList<Entity_client> clients_list = null;
-            ArrayList<Entity_client> temp_list = null;
+            ArrayList<Entity_client> temp_list;
 
             if (cache_entry != null) {
                 clients_list = cache_entry.clients_list;
@@ -375,7 +375,7 @@ public class WidgetUpdate {
                     int deleted = 0;
                     for (int j = 0; j < cs; j++) {
                         //Tracer.i(mytag, "   Processing client "+j+"/"+(cs-1));
-                        Entity_client curclient = null;
+                        Entity_client curclient;
 
                         try {
                             curclient = clients_list.get(j);
@@ -429,7 +429,7 @@ public class WidgetUpdate {
         locked = true;
         for (int i = 0; i < size; i++) {
             Cache_Feature_Element cache_entry = cache.get(i);
-            ArrayList<Entity_client> clients_list = null;
+            ArrayList<Entity_client> clients_list;
             if (cache_entry == null) {
                 Tracer.e(mytag, "Cache entry # " + i + "   empty ! ");
             } else {
@@ -467,7 +467,7 @@ public class WidgetUpdate {
 
         for (int i = 0; i < size; i++) {
             Cache_Feature_Element cache_entry = cache.get(i);
-            ArrayList<Entity_client> clients_list = null;
+            ArrayList<Entity_client> clients_list;
             if (cache_entry == null) {
                 Tracer.e(mytag, "Cache entry # " + i + "   empty ! ");
             } else {
@@ -914,7 +914,7 @@ public class WidgetUpdate {
                             if (api_version >= 0.8f) {
                                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 Date timestamplast_device_update;
-                                Date timestamplast_update = new Date();
+                                Date timestamplast_update;
                                 boolean newer = false;
                                 try {
                                     timestamplast_device_update = df.parse(last_device_update);

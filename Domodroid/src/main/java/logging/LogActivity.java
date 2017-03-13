@@ -122,7 +122,7 @@ public class LogActivity extends AppCompatActivity {
             FileReader fileReader = new FileReader(new File(fileName));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            String line = "";
+            String line;
             StringBuilder builder = new StringBuilder("");
             while ((line = bufferedReader.readLine()) != null) {
                 builder.insert(0, line + "\n");

@@ -23,7 +23,7 @@ class getlastvalues {
     public static void getlastvalue(Activity activity, tracerengine Tracer, float api_version, String mytag, int dev_id,
                                     String state_key, int nb_item_for_history, int id) {
         JSONObject json_LastValues = null;
-        JSONArray itemArray = null;
+        JSONArray itemArray;
         ListView listeChoices = new ListView(activity);
         ArrayList listItem = new ArrayList<>();
         try {

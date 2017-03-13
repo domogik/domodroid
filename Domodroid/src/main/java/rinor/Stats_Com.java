@@ -106,9 +106,9 @@ public class Stats_Com {
 
     private String get_Period_String(int seconds) {
         String result = "";
-        int hours = 0;
-        int minutes = 0;
-        int reste = 0;
+        int hours;
+        int minutes;
+        int reste;
 
         if (seconds != 0) {
 

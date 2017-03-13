@@ -167,7 +167,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
                     TV_Value.setAnimation(animation);
 
-                    Long Value_timestamplong = null;
+                    Long Value_timestamplong;
                     Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
                     final String uri = "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")";
                     TV_Value.setOnClickListener(new OnClickListener() {

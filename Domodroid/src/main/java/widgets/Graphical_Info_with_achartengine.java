@@ -277,7 +277,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                     String Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
 
-                    Long Value_timestamplong = null;
+                    Long Value_timestamplong;
                     Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
                     display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
@@ -362,7 +362,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     }
 
     private void compute_period() {
-        long duration = 0;
+        long duration;
         //Calendar cal = Calendar.getInstance(); // The 'now' time
 
         switch (period_type) {
@@ -486,7 +486,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.e(mytag, "Error with json");
         }
 
-        JSONArray itemArray = null;
+        JSONArray itemArray;
         JSONArray valueArray = new JSONArray();
         if (api_version <= 0.6f) {
             itemArray = json_GraphValues.getJSONArray("stats");
@@ -592,7 +592,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 calendar.set(Calendar.HOUR, 12);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.YEAR, year);
-                Date date1 = new Date();
+                Date date1;
                 date1 = calendar.getTime();
                 if ((day + 1) != day_next) {
                     //ruptur : simulate next missing steps
@@ -647,7 +647,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 calendar.set(Calendar.DAY_OF_WEEK, 5);
                 calendar.set(Calendar.WEEK_OF_YEAR, week);
                 calendar.set(Calendar.YEAR, year);
-                Date date1 = new Date();
+                Date date1;
                 date1 = calendar.getTime();
                 if (week != 52 && (week < week_next)) {
                     //no day change

@@ -172,7 +172,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
                     TV_Value.setAnimation(animation);
 
-                    Long Value_timestamplong = null;
+                    Long Value_timestamplong;
                     Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
                     if (feature.getDevice_feature_model_id().startsWith("DT_Color")) {
                         LL_featurePan.removeView(resultView);
@@ -304,7 +304,7 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
 
         protected Void doInBackground(Void... params) {
             JSONObject json_LastValues = null;
-            JSONArray itemArray = null;
+            JSONArray itemArray;
             try {
                 if (api_version <= 0.6f) {
                     Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");

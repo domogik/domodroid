@@ -206,7 +206,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                     }    //kill the handler thread itself
                     ///////////////////////////////////////////////////////////////////
                 } else {
-                    int new_val = 0;
+                    int new_val;
                     if (msg.what == 9999) {
                         //state_engine send us a signal to notify value changed
                         if (session == null)

@@ -453,7 +453,7 @@ class Widgets_Manager {
         Tracer.d(mytag + " loadAreaWidgets", "Areas list size : " + listArea.length);
         //New list item that will contains list of area
         Activity_Main.listItem = new ArrayList<>();
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map;
 
         LinearLayout.LayoutParams layout_param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
         LinearLayout mainPan = new LinearLayout(activity);
@@ -485,7 +485,6 @@ class Widgets_Manager {
                 } catch (Exception e) {
                     Tracer.i(mytag, "No specific icon for this area");
                 }
-                tmpPan = null;
                 tmpPan = new FrameLayout(activity);
                 Tracer.d(mytag + " loadRoomWidgets", "Adding area : " + area.getName());
                 String name = area.getName();
@@ -566,7 +565,6 @@ class Widgets_Manager {
                 //iconId="usage";
                 iconId = room.getName();
             }
-            tmpPan = null;
             tmpPan = new FrameLayout(activity);
             String ref = room.getDescription();
             if (ref.length() == 0)

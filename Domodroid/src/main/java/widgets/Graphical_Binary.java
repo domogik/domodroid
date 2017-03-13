@@ -50,15 +50,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
     private TextView state;
     private SeekBar seekBarOnOff;
-    private String address;
-    private String state_progress;
     private String value0;
     private String value1;
-    private String type;
     private final boolean activate = false;
     private Animation animation;
     private boolean touching;
-    private int updating = 0;
     private Message msg;
     public FrameLayout container = null;
     private FrameLayout myself = null;
@@ -94,7 +90,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
     private void onCreate() {
         myself = this;
-        this.address = feature.getAddress();
+        String address = feature.getAddress();
         String usage = feature.getIcon_name();
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
@@ -136,7 +132,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         }
 
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
+        String type = model[0];
         Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + feature.getDevice_type() + "> value0 = " + value0 + "  value1 = " + value1);
 
         //state
@@ -331,10 +327,11 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
     public void onStartTrackingTouch(SeekBar arg0) {
         touching = true;
-        updating = 3;
+        int updating = 3;
     }
 
     public void onStopTrackingTouch(SeekBar arg0) {
+        String state_progress;
         if (arg0.getProgress() < 20) {
             if (api_version >= 0.7f) {
                 state_progress = "0";

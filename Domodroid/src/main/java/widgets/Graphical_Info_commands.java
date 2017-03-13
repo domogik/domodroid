@@ -49,13 +49,11 @@ import rinor.send_command;
 public class Graphical_Info_commands extends Basic_Graphical_widget {
 
 
-    private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private EditText value1 = null;
     private Message msg;
     private static String mytag;
     public FrameLayout container = null;
-    private FrameLayout myself = null;
     private Boolean realtime = false;
     private int dpiClassification;
     private JSONObject jparam;
@@ -99,7 +97,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         } catch (Exception e) {
             stateS = state_key;
         }
-        myself = this;
+        FrameLayout myself = this;
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         //Label Text size according to the screen size
@@ -147,7 +145,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 ed.setTextSize(18);
                 ed.setTextColor(Color.BLACK);
                 ed.setMinWidth((int) (size120));
-                featurePan2 = new LinearLayout(activity);
+                LinearLayout featurePan2 = new LinearLayout(activity);
                 featurePan2.setPadding(5, 10, 5, 10);
                 featurePan2.addView(tv_edittext);
                 featurePan2.addView(ed);

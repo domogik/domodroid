@@ -36,10 +36,6 @@ import applications.domodroid;
 public class MetricsServiceReceiver extends BroadcastReceiver {
     private static final String mytag = "MetricsServiceReceiver";
     ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-    private Float freeSize = 0f;
-    private Float totalAllocatedSize = 0f;
-    private Float usedSize = -1f;
-    private Float maxmemavailable = 0f;
     private final DecimalFormat df = new DecimalFormat("#.##");
     private final JSONObject measurements = new JSONObject();
     private final JSONObject tags = new JSONObject();
@@ -118,14 +114,14 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    maxmemavailable = Float.valueOf(info.maxMemory());
+                    Float maxmemavailable = Float.valueOf(info.maxMemory());
                     maxmemavailable = maxmemavailable / 1024; //in KB
                     maxmemavailable = maxmemavailable / 1024; //in MB
                     measurements.put("memory_total", df.format(maxmemavailable));
                     measurements.put("unit", 1);
-                    freeSize = Float.valueOf(info.freeMemory());
-                    totalAllocatedSize = Float.valueOf(info.totalMemory());
-                    usedSize = totalAllocatedSize - freeSize;
+                    Float freeSize = Float.valueOf(info.freeMemory());
+                    Float totalAllocatedSize = Float.valueOf(info.totalMemory());
+                    Float usedSize = totalAllocatedSize - freeSize;
                     freeSize = freeSize / 1024; //in KB
                     freeSize = freeSize / 1024; //in MB
                     totalAllocatedSize = totalAllocatedSize / 1024; //in KB

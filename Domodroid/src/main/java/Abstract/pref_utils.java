@@ -156,8 +156,8 @@ public class pref_utils {
     /**
      * @return if user choice alternative widget
      */
-    public boolean GetAlternativeBinaryWidget() {
-        return prefs.getBoolean("WIDGET_CHOICE", false);
+    public boolean GetNoAlternativeBinaryWidget() {
+        return !prefs.getBoolean("WIDGET_CHOICE", false);
     }
 
     /**
@@ -642,8 +642,8 @@ public class pref_utils {
     /**
      * @return map menu disable status from options
      */
-    public boolean GetMapMenuDisabled() {
-        return prefs.getBoolean("map_menu_disable", false);
+    public boolean GetNotMapMenuDisabled() {
+        return !prefs.getBoolean("map_menu_disable", false);
     }
 
     /**
@@ -672,8 +672,8 @@ public class pref_utils {
     /**
      * @return true if map is set to not display text
      */
-    public boolean GetMapHideText() {
-        return prefs.getBoolean("HIDE", false);
+    public boolean GetNotMapHideText() {
+        return !prefs.getBoolean("HIDE", false);
     }
 
     /***

@@ -56,9 +56,7 @@ import rinor.Rest_com;
 
 public class Graphical_Info_View extends View implements OnClickListener {
 
-    private final String parameter;
     private int width;
-    private int height;
     private Canvas can;
     private Canvas can2;
     private final Vector<Vector<Float>> values;
@@ -114,8 +112,6 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private final float size7;
     private final float api_version;
     private String unit = "";
-    private Bitmap buffer;
-    private Bitmap text;
     private final Activity activity;
 
     public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, String parameters) {
@@ -123,7 +119,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         this.activity = activity;
         invalidate();
         this.Tracer = Trac;
-        this.parameter = parameters;
+        String parameter = parameters;
         pref_utils prefUtils = new pref_utils();
 
         api_version = prefUtils.GetDomogikApiVersion();
@@ -263,9 +259,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         width = getMeasuredWidth();
-        height = getMeasuredHeight();
-        buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-        text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        int height = getMeasuredHeight();
+        Bitmap buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        Bitmap text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
         can = new Canvas(buffer);
         can2 = new Canvas(text);
 

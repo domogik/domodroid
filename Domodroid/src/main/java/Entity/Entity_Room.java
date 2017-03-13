@@ -25,7 +25,6 @@ import database.DomodroidDB;
 import misc.tracerengine;
 
 public class Entity_Room {
-    private final pref_utils prefUtils;
     private int area_id;
     private String description;
     private int id;
@@ -40,7 +39,7 @@ public class Entity_Room {
         this.name = name;
         this.Tracer = Trac;
         this.activity = activity;
-        prefUtils = new pref_utils();
+        pref_utils prefUtils = new pref_utils();
 
     }
 

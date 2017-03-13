@@ -49,11 +49,9 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
     private Button ON;
     private Button OFF;
     private TextView state;
-    private String address;
     private String state_progress;
     private String value0;
     private String value1;
-    private String type;
     private final boolean activate = false;
     private Animation animation;
     private int updating = 0;
@@ -93,7 +91,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
 
     private void onCreate() {
         myself = this;
-        this.address = feature.getAddress();
+        String address = feature.getAddress();
         String usage = feature.getIcon_name();
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
@@ -147,7 +145,7 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
         }
 
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
+        String type = model[0];
         Tracer.d(mytag, "model_id = <" + feature.getDevice_type_id() + "> type = <" + type + "> value0 = " + value0 + "  value1 = " + value1);
 
         //state

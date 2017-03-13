@@ -40,10 +40,8 @@ import rinor.send_command;
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
     private Graphical_Trigger_Button trigger;
-    private String address;
     private Handler handler;
     private Thread threadCommande;
-    private String type;
     private String command;
     public FrameLayout container = null;
     public FrameLayout myself = null;
@@ -75,7 +73,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
     }
 
     private void onCreate() {
-        this.address = feature.getAddress();
+        String address = feature.getAddress();
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
@@ -126,7 +124,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         }
 
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
+        String type = model[0];
 
         TextView state = new TextView(activity);
         state.setTextColor(Color.BLACK);

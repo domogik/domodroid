@@ -29,7 +29,6 @@ public class tracerengine {
     private static Boolean Error = false;
     private static Boolean Verbose = false;
     private static Boolean Warning = false;
-    private final Context context;
     private static SharedPreferences settings = null;
 
     /*
@@ -56,7 +55,7 @@ public class tracerengine {
      *******************************************************************************/
     private tracerengine(Context context) {
         super();
-        this.context = context;
+        Context context1 = context;
         force_Main = false;
         Map_as_main = false;
         prefUtils = new pref_utils(context);

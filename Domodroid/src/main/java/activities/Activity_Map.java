@@ -75,7 +75,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
      */
     private static final long serialVersionUID = 1L;
     private Sliding_Drawer panel;
-    private Sliding_Drawer topPanel;
     public static Dialog dialog_feature;
     private Entity_Feature[] listFeature;
     private HashMap map;
@@ -86,8 +85,6 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     private ListView listeMap;
     private ArrayList<HashMap<String, String>> listItem;
-    private Animation animation1;
-    private Animation animation2;
 
     private WidgetUpdate widgetUpdate;
     private static Handler sbanim;
@@ -102,10 +99,8 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private Menu mainMenu;
 
     private Toolbar toolbar;
-    private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private final int mSelectedId = 0;
 
     private static final int PICK_IMAGE = 1;
     private pref_utils prefUtils;
@@ -170,9 +165,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
 
-        animation1 = new AlphaAnimation(0.0f, 1.0f);
+        Animation animation1 = new AlphaAnimation(0.0f, 1.0f);
         animation1.setDuration(500);
-        animation2 = new AlphaAnimation(1.0f, 0.0f);
+        Animation animation2 = new AlphaAnimation(1.0f, 0.0f);
         animation2.setDuration(500);
 
         //read files from SDCARD + create directory
@@ -192,7 +187,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         build_maps_list();
 
         //sliding drawer
-        topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
+        Sliding_Drawer topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
         panel.setOnPanelListener(this);
         panel.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -641,7 +636,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     public void onPanelOpened(Sliding_Drawer panel) {
         //todo disable menu if set in option
-        if (!prefUtils.GetMapMenuDisabled()) {
+        if (prefUtils.GetNotMapMenuDisabled()) {
             if (Tracer != null)
                 Tracer.v(mytag, "onPanelOpened panel request to be displayed");
         }
@@ -795,11 +790,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         //save selected item so it will remains same even after orientation change
+        int mSelectedId = 0;
         outState.putInt("SELECTED_ID", mSelectedId);
     }
 
     private void initView() {
-        mDrawer = (NavigationView) findViewById(R.id.map_drawer);
+        NavigationView mDrawer = (NavigationView) findViewById(R.id.map_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_map_layout);
     }
 

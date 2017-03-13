@@ -196,13 +196,11 @@ public class DmdContentProvider extends ContentProvider {
 
     }
 
-    private pref_utils prefUtils;
-
     @Override
     public boolean onCreate() {
         mDB = new DatabaseHelper(getContext());
         Context context = getContext();
-        prefUtils = new pref_utils(context);
+        pref_utils prefUtils = new pref_utils(context);
         Tracer = tracerengine.getInstance(prefUtils.prefs, context);
         return true;
 

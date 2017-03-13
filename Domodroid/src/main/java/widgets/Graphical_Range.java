@@ -48,18 +48,13 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
     private TextView state;
     private SeekBar seekBarVaria;
-    private String address;
-    private int state_progress;
     private int scale;
     private int valueMin = 0;
     private int valueMax = 100;
     private int CustomMax;
-    private String type;
-    private static int stateThread;
     private final boolean activate = false;
     private Animation animation;
     private boolean touching;
-    private int updating = 0;
     public FrameLayout container = null;
     private final FrameLayout myself = null;
     private static String mytag;
@@ -96,10 +91,10 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
-        this.address = feature.getAddress();
+        String address = feature.getAddress();
         mytag = "Graphical_Range(" + dev_id + ")";
 
-        stateThread = 1;
+        int stateThread = 1;
         try {
             this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
@@ -145,7 +140,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
             test_unite = "%";
         }
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
+        String type = model[0];
 
         //linearlayout horizontal body
         LinearLayout bodyPanHorizontal = new LinearLayout(activity);
@@ -305,13 +300,13 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
     public void onStartTrackingTouch(SeekBar arg0) {
         touching = true;
-        updating = 3;
+        int updating = 3;
     }
 
 
     public void onStopTrackingTouch(SeekBar arg0) {
         //send the correct value by replacing it with a converted one.
-        state_progress = arg0.getProgress() + valueMin;
+        int state_progress = arg0.getProgress() + valueMin;
         send_command.send_it(activity, Tracer, command_id, command_type, String.valueOf(state_progress), api_version);
         touching = false;
     }

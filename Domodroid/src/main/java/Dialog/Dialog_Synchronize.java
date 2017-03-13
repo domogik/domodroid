@@ -47,7 +47,6 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
     private final String mytag = this.getClass().getName();
     private float previous_api_version = 0f;
     private boolean by_usage;
-    private int progress;
     private final String last_device_update;
 
     public Dialog_Synchronize(tracerengine Trac, final Activity activity) {
@@ -288,6 +287,7 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                 publishProgress(10);
             }
 
+            int progress;
             if (Rinor_Api_Version <= 0.5f) {
                 json_AreaList = Rest_com.connect_jsonobject(activity, Tracer, "base/area/list/", 30000);
                 if (json_AreaList == null || json_AreaList.toString().equals("{}")) {

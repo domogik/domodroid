@@ -69,7 +69,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private TextView state;
-    private int id;
     private static String mytag;
     private Message msg;
 
@@ -80,7 +79,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private Animation animation;
     private final Entity_Feature feature;
     private String state_key;
-    private int dev_id;
     private final int session_type;
     private boolean isopen = false;
     private Float Float_graph_size;
@@ -109,9 +107,9 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
     private void onCreate() {
         String parameters = feature.getParameters();
-        this.dev_id = feature.getDevId();
+        int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
-        this.id = feature.getId();
+        int id = feature.getId();
         this.isopen = false;
         int graphics_height_size = prefUtils.GetWidgetGraphSize();
         this.Float_graph_size = Float.valueOf(graphics_height_size);

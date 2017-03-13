@@ -61,7 +61,9 @@ public class domodroid extends Application {
 
         //manage connectivity state
         manageConnectivityState();
-        connectivityChangedReceiever = new BroadcastReceiver() {
+        /**
+         BroadCastr Receiver to listen to connectivity changes
+         */BroadcastReceiver connectivityChangedReceiever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 manageConnectivityState();
@@ -80,10 +82,6 @@ public class domodroid extends Application {
     /***********************************************************
      *  Manage Connectivity
      **********************************************************/
-    /***
-     * BroadCastr Receiver to listen to connectivity changes
-     */
-    private BroadcastReceiver connectivityChangedReceiever;
     /**
      * To know if there is a connection (wifi or GPRS)
      */

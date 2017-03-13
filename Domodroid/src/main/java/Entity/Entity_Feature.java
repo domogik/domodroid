@@ -27,7 +27,6 @@ import database.DomodroidDB;
 import misc.tracerengine;
 
 public class Entity_Feature {
-    private final pref_utils prefUtils;
     private int id;
     private JSONObject device;
     private String description;
@@ -60,7 +59,7 @@ public class Entity_Feature {
         this.value_type = value_type;
         this.Tracer = Trac;
         this.activity = activity;
-        prefUtils = new pref_utils();
+        pref_utils prefUtils = new pref_utils();
         try {
             Develop = prefUtils.GetDebugIdShow();
         } catch (Exception e) {

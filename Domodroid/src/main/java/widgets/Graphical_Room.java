@@ -53,7 +53,6 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 
     public final FrameLayout container = null;
     private final pref_utils prefUtils;
-    private FrameLayout myself = null;
     private final Context context;
     private final int id_room;
     private final int area_id;
@@ -66,7 +65,7 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
 
     public Graphical_Room(tracerengine Trac, Context context, int area_id, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
         super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
-        this.myself = this;
+        FrameLayout myself = this;
         this.Tracer = Trac;
         this.id_room = id;
         this.area_id = area_id;

@@ -85,7 +85,6 @@ public class WidgetUpdate {
     private Boolean SSL;
     private float api_version;
     private String last_device_update;
-    private String last_sensor_update;
 
     //
     // Table of handlers to notify
@@ -149,7 +148,7 @@ public class WidgetUpdate {
         password = prefUtils.GetRestAuthPassword();
         api_version = prefUtils.GetDomogikApiVersion();
         last_device_update = prefUtils.GetLastDeviceUpdate();
-        last_sensor_update = prefUtils.GetLastSensorUpdate();
+        String last_sensor_update = prefUtils.GetLastSensorUpdate();
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {

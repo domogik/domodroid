@@ -37,24 +37,20 @@ import misc.changelog;
 import misc.tracerengine;
 
 public class Activity_About extends AppCompatActivity implements OnClickListener {
-    //private PowerManager.WakeLock mWakeLock;
-    private String pn = "";
     private final String mytag = this.getClass().getName();
     private Button showchangelog;
     private tracerengine Tracer = null;
 
-    private pref_utils prefUtils;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pn = getPackageName();
+        String pn = getPackageName();
 
         setContentView(R.layout.activity_about);
         //display domogik version
         TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
 
-        prefUtils = new pref_utils();
+        pref_utils prefUtils = new pref_utils();
         Tracer = tracerengine.getInstance(prefUtils.prefs, this);
         TV_domogikversionText.setText(getText(R.string.domogik_version) + prefUtils.GetDomogikVersion());
         //display domodroid version

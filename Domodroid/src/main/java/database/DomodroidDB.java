@@ -23,7 +23,6 @@ public class DomodroidDB {
     private final Activity activity;
     // Added by Doume to clarify debugging
     private static final String mytag = "DomodroidDB";
-    private final pref_utils prefUtils;
     public String owner = "";
     private tracerengine Tracer = null;
     private static DomodroidDB instance;
@@ -38,7 +37,7 @@ public class DomodroidDB {
     private DomodroidDB(tracerengine Trac, Activity activity) {
         this.activity = activity;
         this.Tracer = Trac;
-        prefUtils = new pref_utils();
+        pref_utils prefUtils = new pref_utils();
         tracerengine.refresh_settings();
         Tracer.i(mytag, "Instance started...");
         instance = this;

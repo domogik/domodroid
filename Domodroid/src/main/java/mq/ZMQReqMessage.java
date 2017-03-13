@@ -11,14 +11,13 @@ import android.util.Log;
 import org.zeromq.ZMQ;
 
 public class ZMQReqMessage extends AsyncTask<String, Void, String> {
-    private final Handler uiThreadHandler;
 
     private String MQaddress;
     private String MQreq_repport;
     private final String mytag = this.getClass().getName();
 
     public ZMQReqMessage(Handler uiThreadHandler) {
-        this.uiThreadHandler = uiThreadHandler;
+        Handler uiThreadHandler1 = uiThreadHandler;
     }
 
     @Override

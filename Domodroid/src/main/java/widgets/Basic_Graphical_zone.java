@@ -37,7 +37,6 @@ import misc.tracerengine;
 
 public class Basic_Graphical_zone extends FrameLayout implements OnClickListener {
 
-    private final LinearLayout LL_background;
     private final ImageView IV_img;
     final TextView TV_name;
     private final int id;
@@ -58,7 +57,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         setOnClickListener(this);
 
         //panel with border
-        LL_background = new LinearLayout(context);
+        LinearLayout LL_background = new LinearLayout(context);
         if (widgetSize == 0)
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         else

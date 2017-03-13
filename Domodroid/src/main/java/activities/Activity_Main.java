@@ -112,7 +112,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private Boolean init_done = false;
     private final File backupprefs = new File(Environment.getExternalStorageDirectory() + "/domodroid/.conf/settings");
     private final Thread waiting_thread = null;
-    private Activity_Main myself = null;
     private tracerengine Tracer = null;
     private ProgressDialog PG_dialog_message;
     private Boolean end_of_init_requested = true;
@@ -122,7 +121,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     //private Toolbar toolbar;
 
     private Menu mainMenu;
-    private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private int mSelectedId;
@@ -132,7 +130,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private SimpleAdapter adapter_map;
 
     private PendingIntent pendingIntent_for_metrics;
-    private Intent intent_for_metrics;
     private AlarmManager processTimer_for_metrics;
 
     private pref_utils prefUtils;
@@ -157,7 +154,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         } catch (Exception ignored) {
         }
 
-        myself = this;
+        Activity_Main myself = this;
 
         prefUtils = new pref_utils();
         Tracer = tracerengine.getInstance(pref_utils.prefs, this);
@@ -173,7 +170,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         if (prefUtils.GetMetricsEnabled()) {
             int repeatTime = 30;  //Repeat alarm time in seconds
             processTimer_for_metrics = (AlarmManager) getSystemService(ALARM_SERVICE);
-            intent_for_metrics = new Intent(this, MetricsServiceReceiver.class);
+            Intent intent_for_metrics = new Intent(this, MetricsServiceReceiver.class);
             pendingIntent_for_metrics = PendingIntent.getBroadcast(this, 0, intent_for_metrics, PendingIntent.FLAG_UPDATE_CURRENT);
             //get metrics every 30s
             processTimer_for_metrics.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent_for_metrics);
@@ -1200,7 +1197,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     private void initView() {
-        mDrawer = (NavigationView) findViewById(R.id.home_drawer);
+        NavigationView mDrawer = (NavigationView) findViewById(R.id.home_drawer);
         mDrawer.setNavigationItemSelectedListener(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_home_layout);
     }

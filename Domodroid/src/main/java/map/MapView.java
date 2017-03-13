@@ -83,8 +83,6 @@ public class MapView extends View {
     private Matrix origin;
     private SVG svg;
     private float currentScale = 1;
-    private float currentScalewidth = 1;
-    private float currentScaleheight = 1;
     private int screenwidth;
     private int screenheight;
     private int widgetSize;
@@ -98,7 +96,6 @@ public class MapView extends View {
     private boolean map_autozoom = false;
     public int temp_id;
     public int map_id;
-    private final String map_name = "";
 
     private Paint paint_map;
     private Paint paint_text;
@@ -113,7 +110,6 @@ public class MapView extends View {
     private int formatMode;
     private String svg_string;
     private int currentFile = 0;
-    private String type;
     private final float api_version;
 
     private float pos_X0 = 0;
@@ -134,7 +130,6 @@ public class MapView extends View {
     private final int mytype = 2;
     private WidgetUpdate cache_engine = null;
     private final float scale;
-    private String Address;
     private String state_progress;
     //Declare this flag globally
     private boolean longclic = false;
@@ -143,7 +138,6 @@ public class MapView extends View {
     private String command_id = null;
     private String command_type = null;
     private final float dip20;
-    private boolean navigationdraweropen;
 
     public MapView(tracerengine tracerengine, Activity activity) {
         super(activity);
@@ -244,6 +238,7 @@ public class MapView extends View {
             if (!sucess)
                 Tracer.i(mytag, "No " + currentFile + " deleted");
             //remove feature of this map in table_feature_map
+            String map_name = "";
             Tracer.get_engine().cleanFeatureMap(map_name);
             //All device on this map as been delete re-check the cache URL
             Cache_management.checkcache(Tracer, activity);
@@ -660,7 +655,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!prefUtils.GetMapHideText())
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
@@ -688,7 +683,7 @@ public class MapView extends View {
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                 paint_text);
                         paint_text.setTypeface(Typeface.DEFAULT);
-                        if (!prefUtils.GetMapHideText())
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -698,7 +693,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!prefUtils.GetMapHideText())
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -710,7 +705,7 @@ public class MapView extends View {
                     for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                     paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                    if (!prefUtils.GetMapHideText()) {
+                    if (prefUtils.GetNotMapHideText()) {
                         canvasWidget.drawText(value,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
@@ -796,7 +791,7 @@ public class MapView extends View {
 
                             }
                         }
-                        if (!prefUtils.GetMapHideText())
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
@@ -810,7 +805,7 @@ public class MapView extends View {
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                 paint_text);
-                        if (!prefUtils.GetMapHideText()) {
+                        if (prefUtils.GetNotMapHideText()) {
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -825,7 +820,7 @@ public class MapView extends View {
                             (featureMap.getPosx() * currentScale) + text_Offset_X,
                             (featureMap.getPosy() * currentScale) + text_Offset_Y,
                             paint_text);
-                    if (!prefUtils.GetMapHideText()) {
+                    if (prefUtils.GetNotMapHideText()) {
                         canvasWidget.drawText(label,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -853,7 +848,7 @@ public class MapView extends View {
                     for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                     paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                    if (!prefUtils.GetMapHideText()) {
+                    if (prefUtils.GetNotMapHideText()) {
                         if (parameters.contains("command"))
                             canvasWidget.drawText(value,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
@@ -911,7 +906,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!prefUtils.GetMapHideText())
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
@@ -922,7 +917,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!prefUtils.GetMapHideText())
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -1002,7 +997,7 @@ public class MapView extends View {
 
                                 }
                             }
-                            if (!prefUtils.GetMapHideText())
+                            if (prefUtils.GetNotMapHideText())
                                 canvasWidget.drawText(label,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
@@ -1016,7 +1011,7 @@ public class MapView extends View {
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                     paint_text);
-                            if (!prefUtils.GetMapHideText()) {
+                            if (prefUtils.GetNotMapHideText()) {
                                 canvasWidget.drawText(label,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -1083,7 +1078,7 @@ public class MapView extends View {
             if (type.equals("rgb_leds") && (State_key.equals("command"))) {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
-                if (!prefUtils.GetAlternativeBinaryWidget()) {
+                if (prefUtils.GetNoAlternativeBinaryWidget()) {
                     Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
                             widgetSize, 0, Id, zone, feature, handler);
                     onoff.container = (FrameLayout) panel_widget;
@@ -1098,7 +1093,7 @@ public class MapView extends View {
             }
         } else if (feature.getValue_type().equals("boolean") || feature.getValue_type().equals("bool")) {
             if (parameters.contains("command")) {
-                if (!prefUtils.GetAlternativeBinaryWidget()) {
+                if (prefUtils.GetNoAlternativeBinaryWidget()) {
                     Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
                             widgetSize, 0, Id, zone, feature, handler);
                     onoff.container = (FrameLayout) panel_widget;
@@ -1451,9 +1446,10 @@ public class MapView extends View {
                                     switch (featureMap.getValue_type()) {
                                         case "trigger":
                                             //#51 change widget for 0.4 if it's not a command
+                                            String address;
                                             if (featureMap.getParameters().contains("command")) {
                                                 Tracer.d(mytag, "This is a Trigger launching it");
-                                                this.Address = featureMap.getAddress();
+                                                address = featureMap.getAddress();
                                                 if (api_version >= 0.7f) {
                                                     try {
                                                         JSONObject jparam = new JSONObject(featureMap.getParameters());
@@ -1496,9 +1492,9 @@ public class MapView extends View {
                                                     break;
                                             }
 
-                                            this.Address = featureMap.getAddress();
+                                            address = featureMap.getAddress();
                                             String[] model = featureMap.getDevice_type_id().split("\\.");
-                                            this.type = model[0];
+                                            String type = model[0];
                                             this.state_progress = featureMap.getCurrentState();
                                             if (api_version >= 0.7f) {
                                                 try {
@@ -1569,7 +1565,7 @@ public class MapView extends View {
 
     public final Runnable mLongPressed = new Runnable() {
         public void run() {
-            if (!prefUtils.GetMapMenuDisabled()) {
+            if (prefUtils.GetNotMapMenuDisabled()) {
                 longclic = true;
                 //Code for long click
                 Tracer.v(mytag, "Long press :)");
@@ -1791,8 +1787,8 @@ public class MapView extends View {
         activity.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, tv, true);
         int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
 
-        currentScalewidth = (float) screenwidth / (float) image_width;
-        currentScaleheight = (float) (screenheight - actionBarHeight) / (float) image_height;
+        float currentScalewidth = (float) screenwidth / (float) image_width;
+        float currentScaleheight = (float) (screenheight - actionBarHeight) / (float) image_height;
         //select witch scale is the best
         if (currentScaleheight < currentScalewidth) {
             currentScale = currentScaleheight;
@@ -1865,7 +1861,7 @@ public class MapView extends View {
     }
 
     public void set_navigationdraweropen(boolean navigationdraweropen) {
-        this.navigationdraweropen = navigationdraweropen;
+        boolean navigationdraweropen1 = navigationdraweropen;
     }
 
 

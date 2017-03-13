@@ -83,7 +83,6 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
 
     public FrameLayout container = null;
     private FrameLayout myself = null;
-    private final Boolean with_graph = true;
     private Boolean realtime = false;
     private GraphicalView mChart;
 
@@ -760,6 +759,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     }
 
     public void onClick(View arg0) {
+        Boolean with_graph = true;
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;

@@ -116,7 +116,7 @@ class Widgets_Manager {
                     if (aListFeature.getDevice_type().equals("rgb_leds") && (State_key.equals("command"))) {
                         //ignore it : it'll have another device for Color, displaying the switch !)
                     } else {
-                        if (!prefUtils.GetAlternativeBinaryWidget()) {
+                        if (prefUtils.GetNoAlternativeBinaryWidget()) {
                             Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
                                     widgetSize, session_type, id, zone, aListFeature, widgetHandler);
                             onoff.container = tmpPan;
@@ -132,7 +132,7 @@ class Widgets_Manager {
                     }
                 } else if (Value_type.equals("boolean") || Value_type.equals("bool")) {
                     if (parameters.contains("command")) {
-                        if (!prefUtils.GetAlternativeBinaryWidget()) {
+                        if (prefUtils.GetNoAlternativeBinaryWidget()) {
                             Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
                                     widgetSize, session_type, id, zone, aListFeature, widgetHandler);
                             onoff.container = tmpPan;

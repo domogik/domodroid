@@ -53,10 +53,8 @@ import misc.tracerengine;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    private static Preference myself = null;
     private final String mytag = this.getClass().getName();
     private tracerengine Tracer = null;
-    private String action;
     private WifiManager mWifiManager;
     private CharSequence[] entries = null;
     private ListPreference prefered_wifi_ssid;
@@ -101,7 +99,7 @@ public class Preference extends PreferenceActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
-        myself = this;
+        Preference myself = this;
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         prefUtils = new pref_utils();
     }
@@ -110,7 +108,7 @@ public class Preference extends PreferenceActivity implements
     protected void onResume() {
         super.onResume();
         setPreferenceScreen(null);
-        action = getIntent().getAction();
+        String action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
             registerReceiver(mWifiScanReceiver,

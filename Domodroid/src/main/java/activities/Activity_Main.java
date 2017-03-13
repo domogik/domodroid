@@ -235,7 +235,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 Tracer.e(mytag, "creating file .nomedia error " + e.toString());
             }
         } else {
-            //TODO tell user they're is a problem with getting access to external storage
             Tracer.e(mytag, "problem with getting access to external storage");
             Toast.makeText(domodroid.GetInstance(), "Problem with getting access to external storage", Toast.LENGTH_LONG).show();
         }

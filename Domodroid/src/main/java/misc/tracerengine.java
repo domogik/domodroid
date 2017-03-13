@@ -212,13 +212,8 @@ public class tracerengine {
     private static void screenlog(String tag, String msg) {
         //com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         try {
-            //Todo find a way to be sure toast works 100%
-            //activity.runOnUiThread(new Runnable() {
-            //public void run() {
             Toast.makeText(domodroid.GetInstance(), tag + ":" + msg, Toast.LENGTH_SHORT).show();
-            // }
-            //});
-        } catch (Exception e) {
+            } catch (Exception e) {
             Log.e("tracerengine screenlog", "Tracerengine ScreenLog: " + e.toString());
         }
     }

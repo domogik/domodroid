@@ -4,10 +4,10 @@
         android:id="@+id/menu_reload"
         android:orderInCategory="100"
         android:title="@string/reload"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_empty"
         android:orderInCategory="100"
         android:title="@string/empty"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

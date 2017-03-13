@@ -7,7 +7,7 @@
         android:id="@+id/menu_overflow"
         android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"
         android:orderInCategory="11111"
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/map_menu_add"

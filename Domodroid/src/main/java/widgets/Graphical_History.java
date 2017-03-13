@@ -20,6 +20,7 @@ package widgets;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -145,6 +146,9 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
         //TV_Value
         TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            TV_Value.setTextIsSelectable(true);
+        }
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 

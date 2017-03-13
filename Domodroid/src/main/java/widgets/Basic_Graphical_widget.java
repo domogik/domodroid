@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.view.Gravity;
@@ -151,6 +152,9 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         TV_name.setText(name);
         TV_name.setTextSize(14);
         TV_name.setTextColor(Color.BLACK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            TV_name.setTextIsSelectable(true);
+        }
         TV_name.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 
         LL_infoPan.addView(TV_name);

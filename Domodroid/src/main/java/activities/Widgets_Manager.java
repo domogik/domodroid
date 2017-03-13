@@ -417,15 +417,7 @@ class Widgets_Manager {
                 // todo add missing datatype from 0.4 see all datatype that have no parent but values.
                 //String but carreful
                 //datetime done
-                //ColorCII
                 //Char
-                //DayOfWeek
-                //HVACVent
-                //HVACFan
-                //HVACMode
-                //HVACHeat
-                //UPSEvent
-                //UPSState
                 //DT_Char
 
                 if (columns) {

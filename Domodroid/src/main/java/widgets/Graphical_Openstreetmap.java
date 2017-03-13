@@ -49,7 +49,6 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 import Abstract.display_sensor_info;
 import Abstract.translate;

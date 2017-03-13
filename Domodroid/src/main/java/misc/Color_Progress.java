@@ -10,7 +10,6 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.SeekBar;
 
 public class Color_Progress extends android.support.v7.widget.AppCompatSeekBar {
 

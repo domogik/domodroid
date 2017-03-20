@@ -62,7 +62,7 @@ public class domodroid extends Application {
         //manage connectivity state
         manageConnectivityState();
         /**
-         BroadCastr Receiver to listen to connectivity changes
+         BroadCast Receiver to listen to connectivity changes
          */BroadcastReceiver connectivityChangedReceiever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -124,10 +124,10 @@ public class domodroid extends Application {
                     WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-                        String prefered_wifi = prefUtils.GetPreferedWifiSsid();
-                        on_preferred_Wifi = wifiInfo.getSSID().replace("\"", "").equals(prefered_wifi);
+                        String preferred_wifi = prefUtils.GetPreferedWifiSsid();
+                        on_preferred_Wifi = wifiInfo.getSSID().replace("\"", "").equals(preferred_wifi);
                         //handle the case where user do not set is local SSID in options
-                        if (prefered_wifi.equals("")) {
+                        if (preferred_wifi.equals("")) {
                             on_preferred_Wifi = true;
                         }
                     }

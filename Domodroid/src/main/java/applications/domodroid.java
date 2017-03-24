@@ -63,7 +63,8 @@ public class domodroid extends Application {
         manageConnectivityState();
         /**
          BroadCast Receiver to listen to connectivity changes
-         */BroadcastReceiver connectivityChangedReceiever = new BroadcastReceiver() {
+         */
+        BroadcastReceiver connectivityChangedReceiever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 manageConnectivityState();

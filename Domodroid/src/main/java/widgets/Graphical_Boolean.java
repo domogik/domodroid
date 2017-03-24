@@ -35,6 +35,8 @@ import android.widget.Toast;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,6 +48,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -80,6 +83,8 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
     private int id;
     private int currentint;
     private int sizeint;
+    private String status;
+    private String Value_timestamp;
 
     public Graphical_Boolean(tracerengine Trac,
                              final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -104,7 +109,19 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         this.address = feature.getAddress();
         this.usage = feature.getIcon_name();
         this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
+
+        try {
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+        } catch (Exception e) {
+            this.stateS = state_key;
+        }
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+
         this.parameters = feature.getParameters();
         mytag = "Graphical_Boolean(" + dev_id + ")";
         this.id = feature.getId();
@@ -117,11 +134,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
             this.nb_item_for_history = 5;
         }
 
-        try {
-            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
-        } catch (Exception e) {
-            this.stateS = state_key;
-        }
 
         try {
             JSONObject jparam = new JSONObject(parameters.replaceAll("&quot;", "\""));
@@ -172,52 +184,13 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what == 9999) {
+                if (msg.what == 9989) {
                     if (session == null)
                         return;
-                    String status = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
-
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
                     if (status != null) {
-                        Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
-
-                        Long Value_timestamplong = null;
-                        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
-
-                        if (prefUtils.GetWidgetTimestamp()) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-                        } else {
-                            TV_Timestamp.setReferenceTime(Value_timestamplong);
-                        }
-                        try {
-                            if (status.equals(value0) || status.equals("0")) {
-                                bool.setImageResource(R.drawable.boolean_off);
-                                //change color if statue=low to (usage, o) means off
-                                //note sure if it must be kept as set previously as default color.
-                                change_this_icon(0);
-                                try {
-                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-                                } catch (Exception e1) {
-                                    state.setText(stateS + " : " + Value_0);
-                                }
-                            } else if (status.equals(value1) || status.equals("1")) {
-                                bool.setImageResource(R.drawable.boolean_on);
-                                //change color if statue=high to (usage, 2) means on
-                                change_this_icon(2);
-                                try {
-                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
-                                } catch (Exception e1) {
-                                    state.setText(stateS + " : " + Value_1);
-                                }
-                            } else {
-                                bool.setImageResource(R.drawable.boolean_n_a);
-                                change_this_icon(0);
-                                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, "unknown")));
-                            }
-                        } catch (Exception e) {
-                            Tracer.e(mytag, "handler error device " + name);
-                            e.printStackTrace();
-                        }
+                        update_display();
                     }
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
@@ -231,6 +204,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                         container.recomputeViewAttributes(myself);
                     }
                     try {
+                        EventBus.getDefault().unregister(this);
                         finalize();
                     } catch (Throwable t) {
                     }    //kill the handler thread itself
@@ -242,20 +216,19 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
-		 * 
+		 *
+		 * Using also GreenRobotEventBus for transition.
+		 *
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -265,11 +238,28 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
-    @Override
-    protected void onWindowVisibilityChanged(int visibility) {
-
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    private void onEvent(Entity_client_event_value event) {
+        // your implementation
+        if (event.Entity_client_event_get_id() == dev_id || event.Entity_client_event_get_id() == feature.getId()) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
     }
 
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+    }
+
+    /**
+     * Expand or reduce widgets on click
+     *
+     * @param arg0 the current view
+     */
     public void onClick(View arg0) {
         //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
         float size = ((nb_item_for_history * 35) + 0.5f) * activity.getResources().getDisplayMetrics().density + 0.5f;
@@ -294,6 +284,55 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
 
     }
 
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
+        Long Value_timestamplong = null;
+        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+        if (prefUtils.GetWidgetTimestamp()) {
+            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
+        } else {
+            TV_Timestamp.setReferenceTime(Value_timestamplong);
+        }
+        try {
+            if (status.equals(value0) || status.equals("0")) {
+                bool.setImageResource(R.drawable.boolean_off);
+                //change color if statue=low to (usage, o) means off
+                //note sure if it must be kept as set previously as default color.
+                change_this_icon(0);
+                try {
+                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                } catch (Exception e1) {
+                    state.setText(stateS + " : " + Value_0);
+                }
+            } else if (status.equals(value1) || status.equals("1")) {
+                bool.setImageResource(R.drawable.boolean_on);
+                //change color if statue=high to (usage, 2) means on
+                change_this_icon(2);
+                try {
+                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                } catch (Exception e1) {
+                    state.setText(stateS + " : " + Value_1);
+                }
+            } else {
+                bool.setImageResource(R.drawable.boolean_n_a);
+                change_this_icon(0);
+                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, "unknown")));
+            }
+        } catch (Exception e) {
+            Tracer.e(mytag, "handler error device " + name);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Grab history for this widgets in asynctask.
+     *
+     */
     private class display_last_value extends AsyncTask<Void, Integer, Void> {
 
         @Override

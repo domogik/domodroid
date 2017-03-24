@@ -19,6 +19,10 @@ package Entity;
 
 import android.os.Handler;
 
+import org.greenrobot.eventbus.EventBus;
+
+import Event.Entity_client_event_value;
+
 
 public class Entity_client {
     private int client_type = -1;        // 0= Main , 1 = Map, 2 = MapView
@@ -130,5 +134,10 @@ public class Entity_client {
         return client_handler;
     }
 
+    public void client_value_update(String val, String valtimestamp) {
+        setValue(val);
+        setTimestamp(valtimestamp);
+        EventBus.getDefault().post(new Entity_client_event_value(val, valtimestamp, devId));
+    }
 
 }

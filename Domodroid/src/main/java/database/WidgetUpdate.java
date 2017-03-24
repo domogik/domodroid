@@ -332,6 +332,7 @@ public class WidgetUpdate {
         if (stats_com != null)
             stats_com.cancel();
         stats_com = null;
+        EventBus.getDefault().unregister(this);
         Tracer.d(mytag, "cache engine cancel requested : Waiting for events_manager dead !");
 
     }
@@ -1211,8 +1212,8 @@ public class WidgetUpdate {
                         //Notify each connected client
                         Handler client = cache.get(cache_position).clients_list.get(j).getClientHandler();
                         if (client != null) {
-                            cache.get(cache_position).clients_list.get(j).setValue(Val);    //update the session structure with new value
-                            cache.get(cache_position).clients_list.get(j).setTimestamp(Value_timestamp);    //update the session structure with new value
+                            cache.get(cache_position).clients_list.get(j).client_value_update(Val, Value_timestamp);    //update the session structure with new value
+
                             if (cache.get(cache_position).clients_list.get(j).is_Miniwidget()) {
                                 // This client is a mapView's miniwidget
                                 // Don't' notify it immediately

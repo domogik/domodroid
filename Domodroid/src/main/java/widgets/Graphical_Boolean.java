@@ -242,9 +242,10 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
      * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
      */
     @Subscribe
-    private void onEvent(Entity_client_event_value event) {
+    public void onEvent(Entity_client_event_value event) {
         // your implementation
-        if (event.Entity_client_event_get_id() == dev_id || event.Entity_client_event_get_id() == feature.getId()) {
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
             status = event.Entity_client_event_get_val();
             Value_timestamp = event.Entity_client_event_get_timestamp();
             update_display();
@@ -289,7 +290,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
         Long Value_timestamplong = null;
         Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
@@ -331,7 +332,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
 
     /**
      * Grab history for this widgets in asynctask.
-     *
      */
     private class display_last_value extends AsyncTask<Void, Integer, Void> {
 

@@ -241,18 +241,7 @@ public class WidgetUpdate {
                             mapView = null;
                             //mapView will be set by update_cache_device if at least one mini widget has to be notified
                             update_cache_device(event.device_id, event.key, event.Value, event.Timestamp);
-                            //todo remove this part as mapview should handle eventbus send by cache_update
-                            if (mapView != null) {
-                                //It was a mini widget, not yet notified : do it now..
-                                try {
-                                    Tracer.i(mytag, "Handler send a notification to MapView");
-                                    mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
-                                } catch (Exception e) {
-                                    Tracer.e(mytag, e.toString());
-                                }
-                            }
-                            //event = eventsManager.get_event();		//Try to get the next...
-                        } // if event
+                        }
                     } else {
                         Tracer.d(mytag, "No Events_Manager known ! ! ! ");
                     }
@@ -1155,16 +1144,6 @@ public class WidgetUpdate {
             }
 
         } // end of for loop on stats result
-        if (mapView != null) {
-            //At least 1 mini widget has to be notified
-            // send a 'group' notification to MapView !
-            try {
-                Tracer.i(mytag, "cache engine send a unique notification to MapView");
-                mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
-            } catch (Exception e) {
-                Tracer.e(mytag, e.toString());
-            }
-        }
         mapView = null;
         Tracer.i(mytag, "cache size = " + cache.size());
 

@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +48,7 @@ import Abstract.pref_utils;
 import Abstract.translate;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import activities.Activity_Map;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
@@ -161,18 +164,7 @@ public class MapView extends View {
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                if (msg.what == 9997) {
-                    //todo replace by eventbus
-                    //state_engine send us a signal to notify at least one value changed
-                    Tracer.d(mytag, "state engine notify change for mini widget(s) : refresh all of them !");
-                    for (Entity_Map featureMap : listFeatureMap) {
-                        // if a miniwidget was connected to engine, session's value could have changed....
-                        if (featureMap.getSession() != null) {
-                            featureMap.setCurrentState(featureMap.getSession().getValue());
-                        }
-                    }
-                    refreshMap();
-                } else if (msg.what == 9998) {
+                if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
                     try {
@@ -190,9 +182,27 @@ public class MapView extends View {
             }
         });
 
+        EventBus.getDefault().register(this);
 
         //End of create method ///////////////////////
 
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        Tracer.d(mytag, "state engine notify change for mini widget(s) : refresh all of them !");
+        for (Entity_Map featureMap : listFeatureMap) {
+            // if a miniwidget was connected to engine, session's value could have changed....
+            if (featureMap.getSession() != null) {
+                featureMap.setCurrentState(featureMap.getSession().getValue());
+            }
+        }
+        refreshMap();
     }
 
     private void startCacheEngine() {

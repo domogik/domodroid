@@ -88,8 +88,8 @@ public class WidgetConfigure extends Activity {
         final Context context = new ContextThemeWrapper(this, android.R.style.Theme_Holo_Light);
 
         final ListView lv1 = (ListView) findViewById(R.id.listview1); // period
-        final ListView lv2 = (ListView) findViewById(R.id.listview2); // nodes
-        final ListView lv3 = (ListView) findViewById(R.id.listview3); // nodes
+        final ListView lv2 = (ListView) findViewById(R.id.listview2); // sensors
+        final ListView lv3 = (ListView) findViewById(R.id.listview3); // commands
 
         //Check if Domodroid is sync with a server
         if (!SP_params.getBoolean("SYNC", false)) {
@@ -153,11 +153,6 @@ public class WidgetConfigure extends Activity {
                 }
 
             }
-            final SimpleAdapter adapter_feature_sensors = new SimpleAdapter(getBaseContext(), listItem_sensors,
-                    R.layout.item_feature_list_add_feature_map, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
-            final SimpleAdapter adapter_feature_commands = new SimpleAdapter(getBaseContext(), listItem_commands,
-                    R.layout.item_feature_list_add_feature_map, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
-
             // Populate lv1
             ArrayList<HashMap<String, String>> list1 = new ArrayList<>();
             String[] periods = {"sensor", "command", "both"};
@@ -168,70 +163,82 @@ public class WidgetConfigure extends Activity {
             }
             final SimpleAdapter sa2 = new SimpleAdapter(context, list1, R.layout.widget_periodselection,
                     new String[]{"line1"}, new int[]{R.id.line_a});
+            final SimpleAdapter adapter_feature_sensors = new SimpleAdapter(getBaseContext(), listItem_sensors,
+                    R.layout.item_feature_list_add_feature_map, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
+            final SimpleAdapter adapter_feature_commands = new SimpleAdapter(getBaseContext(), listItem_commands,
+                    R.layout.item_feature_list_add_feature_map, new String[]{"name", "type", "state_key", "icon"}, new int[]{R.id.name, R.id.description, R.id.state_key, R.id.icon});
+
+
             if ((listItem_sensors != null) && (listItem_sensors.size() > 0)) {
+
+                lv2.setAdapter(adapter_feature_sensors);
+                lv2.setOnItemClickListener(new OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                        Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + arg);
+                        HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature_sensors.getItem(position);
+                        int name = (int) obj.get("feature_id");
+                        Log.e("WidgetConfigure", "feature_sensors=" + name);
+                        device_feature_id_sensor = name;
+
+                        lv2.setVisibility(View.GONE);
+
+
+                    }
+                });
+                lv3.setAdapter(adapter_feature_commands);
+                lv3.setOnItemClickListener(new OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+                        Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + arg);
+                        HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature_commands.getItem(position);
+                        int name = (int) obj.get("feature_id");
+                        Log.e("WidgetConfigure", "feature_commands=" + name);
+                        device_feature_id_command = name;
+
+
+                        lv3.setVisibility(View.GONE);
+
+                    }
+                });
                 lv1.setAdapter(sa2);
                 lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + id);
 
-                        lv2.setAdapter(adapter_feature_sensors);
-                        lv2.setOnItemClickListener(new OnItemClickListener() {
-                            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-                                Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + arg);
-                                HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature_sensors.getItem(position);
-                                int name = (int) obj.get("feature_id");
-                                Log.e("WidgetConfigure", "feature_sensors=" + name);
-                                device_feature_id_sensor = name;
+                        lv1.setVisibility(View.GONE);
+                        if (position == 0 || position == 2) {
 
-                                lv2.setVisibility(View.GONE);
+                            lv2.setVisibility(View.VISIBLE);
+                            lv2.requestFocus();
+                        }
+                        if (position == 1 || position == 2) {
 
-                                lv3.setAdapter(adapter_feature_commands);
-                                lv3.setOnItemClickListener(new OnItemClickListener() {
-                                    public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-                                        Log.e("WidgetConfigure", "onItemClick : " + position + "position at " + arg);
-                                        HashMap<String, Object> obj = (HashMap<String, Object>) adapter_feature_commands.getItem(position);
-                                        int name = (int) obj.get("feature_id");
-                                        Log.e("WidgetConfigure", "feature_commands=" + name);
-                                        device_feature_id_command = name;
+                            lv3.setVisibility(View.VISIBLE);
+                            lv3.requestFocus();
+                        }
+                        LinearLayout ll = (LinearLayout) findViewById(R.id.final_instructions);
+                        ll.setVisibility(View.VISIBLE);
+                        ll.requestFocus();
+                        Button btn = (Button) findViewById(R.id.save);
 
-                                        LinearLayout ll = (LinearLayout) findViewById(R.id.final_instructions);
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
 
-                                        lv3.setVisibility(View.GONE);
-                                        ll.setVisibility(View.VISIBLE);
-                                        ll.requestFocus();
-                                        Button btn = (Button) findViewById(R.id.save);
-
-                                        btn.setOnClickListener(new View.OnClickListener() {
-                                            public void onClick(View v) {
-
-                                                configureWidget(getApplicationContext());
-                                                Log.e("WidgetConfigure", "configureWidget");
-                                                // Make sure we pass back the original appWidgetId before closing the activity
-                                                Intent resultValue = new Intent();
-                                                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-                                                setResult(RESULT_OK, resultValue);
-                                                Log.e("WidgetConfigure", "resultValue");
-                                                //dialog.dismiss();
-                                                finish();
-                                            }
-                                        });
-                                    }
-                                });
-
-                                lv3.setVisibility(View.VISIBLE);
-                                lv3.requestFocus();
+                                configureWidget(getApplicationContext());
+                                Log.e("WidgetConfigure", "configureWidget");
+                                // Make sure we pass back the original appWidgetId before closing the activity
+                                Intent resultValue = new Intent();
+                                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                                setResult(RESULT_OK, resultValue);
+                                Log.e("WidgetConfigure", "resultValue");
+                                //dialog.dismiss();
+                                finish();
                             }
                         });
-
-                        lv1.setVisibility(View.GONE);
-
-                        lv2.setVisibility(View.VISIBLE);
-                        lv2.requestFocus();
                     }
                 });
-
                 lv1.setVisibility(View.VISIBLE);
                 lv1.requestFocus();
+
 
             } else {
                 //dialog.dismiss();

@@ -1189,27 +1189,8 @@ public class WidgetUpdate {
                 result = true;
                 if (cache.get(cache_position).clients_list != null) {
                     for (int j = 0; j < cache.get(cache_position).clients_list.size(); j++) {
-                        //Notify each connected client
-                        Handler client = cache.get(cache_position).clients_list.get(j).getClientHandler();
-                        if (client != null) {
-                            cache.get(cache_position).clients_list.get(j).client_value_update(Val, Value_timestamp);    //update the session structure with new value
-                            if (cache.get(cache_position).clients_list.get(j).is_Miniwidget()) {
-                                // This client is a mapView's miniwidget
-                                // Don't' notify it immediately
-                                // A unique notification will be done by Handler, or higher level after all updates processed !
-                                mapView = client;
-                            }
-                            /* normally no more needed as it's done by eventbus when a value is update
-                             else {
-                                // It's not a mini_widget : notify it now
-                                try {
-                                    Tracer.i(mytag, "cache engine send (" + Val + ") to client <" + cache.get(cache_position).clients_list.get(j).getName() + ">");
-                                    client.sendEmptyMessage(9999);    //notify the widget a new value is ready for display
-                                } catch (Exception e) {
-                                    Tracer.e(mytag, e.toString());
-                                }
-                            }*/
-                        } // test of valid client handler
+                        //update the session structure with new value it will also notify widgets
+                        cache.get(cache_position).clients_list.get(j).client_value_update(Val, Value_timestamp);
                     }
                 }
 

@@ -137,6 +137,7 @@ public class Entity_client {
     public void client_value_update(String val, String valtimestamp) {
         setValue(val);
         setTimestamp(valtimestamp);
+        //Notify each registered widget
         EventBus.getDefault().post(new Entity_client_event_value(val, valtimestamp, devId));
     }
 

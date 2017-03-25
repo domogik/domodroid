@@ -1218,7 +1218,9 @@ public class WidgetUpdate {
                                 // Don't' notify it immediately
                                 // A unique notification will be done by Handler, or higher level after all updates processed !
                                 mapView = client;
-                            } else {
+                            }
+                            /* normally no more needed as it's done by eventbus when a value is update
+                             else {
                                 // It's not a mini_widget : notify it now
                                 try {
                                     Tracer.i(mytag, "cache engine send (" + Val + ") to client <" + cache.get(cache_position).clients_list.get(j).getName() + ">");
@@ -1226,7 +1228,7 @@ public class WidgetUpdate {
                                 } catch (Exception e) {
                                     Tracer.e(mytag, e.toString());
                                 }
-                            }
+                            }*/
                         } // test of valid client handler
                     }
                 }

@@ -1082,6 +1082,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 //dont_kill = false;		//To force OnDestroy() to also kill engines
                 //And stop main program
                 finish();
+                domodroid.onDestroy();
                 /*todo uncomment this block to really quit the apps
                 //but it ctash in on destroy as some values are not initialize
                 Intent intent = new Intent(this, Activity_Main.class);

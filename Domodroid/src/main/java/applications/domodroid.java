@@ -166,4 +166,9 @@ public class domodroid extends Application {
     public final boolean isConnected() {
         return isConnected;
     }
+
+    public static void onDestroy() {
+        int id= android.os.Process.myPid();
+        android.os.Process.killProcess(id);
+    }
 }

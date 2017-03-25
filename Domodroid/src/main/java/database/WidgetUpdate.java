@@ -241,6 +241,7 @@ public class WidgetUpdate {
                             mapView = null;
                             //mapView will be set by update_cache_device if at least one mini widget has to be notified
                             update_cache_device(event.device_id, event.key, event.Value, event.Timestamp);
+                            //todo remove this part as mapview should handle eventbus send by cache_update
                             if (mapView != null) {
                                 //It was a mini widget, not yet notified : do it now..
                                 try {

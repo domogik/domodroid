@@ -162,6 +162,7 @@ public class MapView extends View {
             @Override
             public boolean handleMessage(Message msg) {
                 if (msg.what == 9997) {
+                    //todo replace by eventbus
                     //state_engine send us a signal to notify at least one value changed
                     Tracer.d(mytag, "state engine notify change for mini widget(s) : refresh all of them !");
                     for (Entity_Map featureMap : listFeatureMap) {

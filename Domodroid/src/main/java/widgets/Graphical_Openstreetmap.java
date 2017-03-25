@@ -40,6 +40,8 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
@@ -56,6 +58,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 
@@ -86,6 +89,9 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private String stateS;
 
     private String test_unite;
+    private String Value_timestamp;
+    private String status;
+    private int dev_id;
 
     public Graphical_Openstreetmap(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -107,20 +113,25 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
     private void onCreate() {
         String parameters = feature.getParameters();
-        int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
-        int id = feature.getId();
         this.isopen = false;
         int graphics_height_size = prefUtils.GetWidgetGraphSize();
         this.Float_graph_size = Float.valueOf(graphics_height_size);
+        try {
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+        } catch (Exception e) {
+            this.stateS = state_key;
+        }
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
 
         myself = this;
         mytag = "Graphical_History(" + dev_id + ")";
-        try {
-            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
-        } catch (Exception e) {
-            stateS = state_key;
-        }
+
         if (stateS.equals("null"))
             stateS = state_key;
         test_unite = "";
@@ -163,36 +174,12 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         Handler handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                String status;
-                if (msg.what == 9999) {
+                if (msg.what == 9989) {
                     if (session == null)
                         return true;
-                    String new_val = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
-                    TV_Value.setAnimation(animation);
-
-                    Long Value_timestamplong;
-                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-                    final String uri = "geo:" + new_val + "?q=" + new_val + "(" + name + "-" + state_key + ")";
-                    TV_Value.setOnClickListener(new OnClickListener() {
-                                                    public void onClick(View v) {
-                                                        try {
-                                                            Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                            activity.startActivity(unrestrictedIntent);
-                                                        } catch (ActivityNotFoundException innerEx) {
-                                                            Toast.makeText(activity, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                                }
-
-                    );
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-                    //TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
-                    //TV_Value.setText(new_val + " \uF064");
-                    //To have the icon colored as it has no state
-                    change_this_icon(2);
-
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
@@ -220,16 +207,13 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
-            }
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our TV_Value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current TV_Value in session
+                    EventBus.getDefault().register(this);
                 }
 
             } catch (Exception e) {
@@ -240,6 +224,50 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+        TV_Value.setAnimation(animation);
+
+        Long Value_timestamplong;
+        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+        final String uri = "geo:" + status + "?q=" + status + "(" + name + "-" + state_key + ")";
+        TV_Value.setOnClickListener(new OnClickListener() {
+                                        public void onClick(View v) {
+                                            try {
+                                                Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                activity.startActivity(unrestrictedIntent);
+                                            } catch (ActivityNotFoundException innerEx) {
+                                                Toast.makeText(activity, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    }
+
+        );
+        display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+        //TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+        //TV_Value.setText(new_val + " \uF064");
+        //To have the icon colored as it has no state
+        change_this_icon(2);
+
+    }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {

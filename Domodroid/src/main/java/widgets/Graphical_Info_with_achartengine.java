@@ -277,39 +277,21 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.i(mytag, "No unit for this feature");
         }
 
-        Handler handler = new Handler(new Handler.Callback() {
+        Handler handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 if (msg.what == 9989) {
                     //Message from widgetupdate
                     //state_engine send us a signal to notify TV_Value changed
                     if (session == null)
-                        return true;
-
+                        return ;
                     status = session.getValue();
                     Value_timestamp = session.getTimestamp();
                     Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
 
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
                 }
-                return true;
             }
-        });
+        };
 
         //================================================================================
         /*

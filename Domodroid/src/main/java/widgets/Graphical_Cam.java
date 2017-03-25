@@ -91,36 +91,16 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         //To have the icon colored as it has no state
         change_this_icon(2);
         //handler to listen value change
-        Handler handler = new Handler(new Handler.Callback() {
+        Handler handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 if (msg.what == 9989) {
                     if (session == null)
-                        return true;
+                        return;
                     status = session.getValue();
-                    if (status != null) {
-                        Tracer.d(mytag, "Handler receives a new status <" + status + ">");
-                    }
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        Tracer.e(mytag, "Error in deleting container");
-                    }    //kill the handler thread itself
                 }
-                return true;
             }
-        });
+        };
         //================================================================================
             /*
              * New mechanism to be notified by widgetupdate engine when our value is changed

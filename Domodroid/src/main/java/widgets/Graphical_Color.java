@@ -311,40 +311,21 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             }
         }
         //LoadSelections();
-        Handler handler = new Handler(new Handler.Callback() {
+        Handler handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 argbS = "?";
                 if (msg.what == 2) {
                     Toast.makeText(getContext(), R.string.command_rejected, Toast.LENGTH_SHORT).show();
-
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-
-                    myself.setVisibility(GONE);
-
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
-
                 } else if (msg.what == 9989) {
-                    if (session != null) {
-                        argbS = session.getValue();
-                        Value_timestamp = session.getTimestamp();
-                        update_display();
-                    } else
-                        return true;
+                    if (session == null)
+                        return;
+                    argbS = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
                 }
-
-                return true;
             }
-        });
+        };
         updating = 0;
         //================================================================================
         /*

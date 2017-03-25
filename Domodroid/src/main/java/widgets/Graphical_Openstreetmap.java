@@ -171,35 +171,18 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
-        Handler handler = new Handler(new Handler.Callback() {
+        Handler handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 if (msg.what == 9989) {
                     if (session == null)
-                        return true;
+                        return ;
                     status = session.getValue();
                     Value_timestamp = session.getTimestamp();
                     update_display();
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
                 }
-                return true;
             }
-        });
+        };
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our TV_Value is changed

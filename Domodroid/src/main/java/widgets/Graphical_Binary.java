@@ -186,9 +186,9 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 seekBarOnOff.setEnabled(false);
             }
         }
-        Handler handler = new Handler(new Handler.Callback() {
+        Handler handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 if (activate) {
                     Tracer.d(mytag, "Handler receives a request to die ");
                     if (realtime) {
@@ -223,26 +223,10 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                                 } else if (msg.what == 9989) {
                                     //state_engine send us a signal to notify value changed
                                     if (session == null)
-                                        return true;
+                                        return ;
                                     status = session.getValue();
                                     Value_timestamp = session.getTimestamp();
                                     update_display();
-                                } else if (msg.what == 9998) {
-                                    // state_engine send us a signal to notify it'll die !
-                                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                                    session = null;
-                                    realtime = false;
-                                    //removeView(background);
-                                    myself.setVisibility(GONE);
-                                    if (container != null) {
-                                        container.removeView(myself);
-                                        container.recomputeViewAttributes(myself);
-                                    }
-                                    try {
-                                        finalize();
-                                    } catch (Throwable t) {
-                                        t.printStackTrace();
-                                    }    //kill the handler thread itself
                                 }
                             }
                         }
@@ -251,9 +235,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                         e.printStackTrace();
                     }
                 }
-                return true;
             }
-        });
+        };
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed

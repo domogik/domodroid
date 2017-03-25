@@ -339,21 +339,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                     status = session.getValue();
                     Value_timestamp = session.getTimestamp();
                     update_display();
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "cache engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                    }    //kill the handler thread itself
                 }
             }
 

@@ -197,58 +197,23 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         super.LL_topPan.removeView(super.LL_featurePan);
         super.LL_infoPan.addView(bodyPanHorizontal);
 
-        Handler handler = new Handler(new Handler.Callback() {
+        Handler handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
-                /// Deprecated method to die /////////////////////////////////////////
-                if (activate) {
-                    Tracer.d(mytag, "Handler receives a request to die ");
-                    //That seems to be a zombie
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
+            public void handleMessage(Message msg) {
+                if (msg.what == 9989) {
+                    //state_engine send us a signal to notify value changed
+                    if (session == null)
+                        return;
                     try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
-                    ///////////////////////////////////////////////////////////////////
-                } else {
-                    if (msg.what == 9989) {
-                        //state_engine send us a signal to notify value changed
-                        if (session == null)
-                            return true;
-                        try {
-                            status = Integer.parseInt(session.getValue());
-                        } catch (Exception e) {
-                            status = 0;
-                        }
-                        Value_timestamp = session.getTimestamp();
-                        update_display();
-                    } else if (msg.what == 9998) {
-                        // state_engine send us a signal to notify it'll die !
-                        Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                        session = null;
-                        realtime = false;
-                        removeView(LL_background);
-                        myself.setVisibility(GONE);
-                        if (container != null) {
-                            container.removeView(myself);
-                            container.recomputeViewAttributes(myself);
-                        }
-                        try {
-                            finalize();
-                        } catch (Throwable t) {
-                            t.printStackTrace();
-                        }    //kill the handler thread itself
+                        status = Integer.parseInt(session.getValue());
+                    } catch (Exception e) {
+                        status = 0;
                     }
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
                 }
-                return true;
             }
-        });
+        };
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed

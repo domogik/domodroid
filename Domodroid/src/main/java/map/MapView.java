@@ -164,15 +164,7 @@ public class MapView extends View {
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        Tracer.d(mytag, "Could not finished");
-                    }
-                } else if (msg.what == 8999) {
+                if (msg.what == 8999) {
                     //Cache engine is ready for use....
                     if (Tracer != null)
                         Tracer.i(mytag, "Cache engine has notified it's ready !");

@@ -72,7 +72,7 @@
             android:authorities="database.DmdContentProvider"
             android:multiprocess="true" />
 
-        <!-- AppWidets widget -->
+        <!-- AppWidets widget not used for the moment
         <receiver android:name="appWidgets.AppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -82,8 +82,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_meta" />
         </receiver>
-
-        <!-- AppWidets Configure activity -->
+        -->
+        <!-- AppWidets Configure activity not used for the moment
         <activity
             android:name="appWidgets.WidgetConfigure"
             android:theme="@android:style/Theme.Dialog">
@@ -91,7 +91,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
+        -->
         <!-- Domogik webview activity -->
         <activity
             android:name="activities.webview_domogik_admin"

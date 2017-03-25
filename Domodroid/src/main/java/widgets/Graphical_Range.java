@@ -32,6 +32,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +41,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.send_command;
@@ -68,6 +71,10 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     private final Entity_Feature feature;
     private final int session_type;
     private JSONObject jparam;
+    private int dev_id;
+    private String state_key;
+    private int status;
+    private String Value_timestamp;
 
     public Graphical_Range(tracerengine Trac,
                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -89,17 +96,21 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 
     private void onCreate() {
         String state_key = feature.getState_key();
-        int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
         String address = feature.getAddress();
-        mytag = "Graphical_Range(" + dev_id + ")";
-
-        int stateThread = 1;
         try {
             this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
             this.stateS = state_key;
         }
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+        mytag = "Graphical_Range(" + dev_id + ")";
+        int stateThread = 1;
 
         //get parameters
         try {
@@ -206,32 +217,17 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
                     }    //kill the handler thread itself
                     ///////////////////////////////////////////////////////////////////
                 } else {
-                    int new_val;
-                    if (msg.what == 9999) {
+                    if (msg.what == 9989) {
                         //state_engine send us a signal to notify value changed
                         if (session == null)
                             return true;
                         try {
-                            Tracer.d(mytag, "Handler receives a new value from cache_engine <" + session.getValue() + ">");
-                            new_val = Integer.parseInt(session.getValue());
+                            status = Integer.parseInt(session.getValue());
                         } catch (Exception e) {
-                            new_val = 0;
+                            status = 0;
                         }
-                        String Timestamp = session.getTimestamp();
-                        Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
-
-                        //#1649
-                        //Value min and max should be the limit of the widget
-                        if (new_val <= valueMin) {
-                            state.setText(stateS + " : " + valueMin + " " + test_unite);
-                        } else if (new_val > valueMin && new_val < valueMax) {
-                            state.setText(stateS + " : " + new_val + " " + test_unite);
-                        } else if (new_val >= valueMax) {
-                            state.setText(stateS + " : " + valueMax + " " + test_unite);
-                        }
-                        state.setAnimation(animation);
-                        new SBAnim(seekBarVaria.getProgress(), new_val - valueMin).execute();
-
+                        Value_timestamp = session.getTimestamp();
+                        update_display();
                     } else if (msg.what == 9998) {
                         // state_engine send us a signal to notify it'll die !
                         Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
@@ -260,16 +256,13 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    EventBus.getDefault().register(this);
                 }
 
             } catch (Exception e) {
@@ -280,6 +273,39 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = Integer.parseInt(event.Entity_client_event_get_val());
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+        //#1649
+        //Value min and max should be the limit of the widget
+        if (status <= valueMin) {
+            state.setText(stateS + " : " + valueMin + " " + test_unite);
+        } else if (status > valueMin && status < valueMax) {
+            state.setText(stateS + " : " + status + " " + test_unite);
+        } else if (status >= valueMax) {
+            state.setText(stateS + " : " + valueMax + " " + test_unite);
+        }
+        state.setAnimation(animation);
+        new SBAnim(seekBarVaria.getProgress(), status - valueMin).execute();
+    }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
         //#1649

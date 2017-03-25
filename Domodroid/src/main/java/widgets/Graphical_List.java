@@ -44,6 +44,8 @@ import android.widget.Toast;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +59,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -89,7 +92,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private String cmd_requested = null;
     private String address;
     private String type;
-    private int id;
     private Entity_Feature feature;
     private String state_key;
     private String parameters;
@@ -102,6 +104,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private int nb_item_for_history;
     private int currentint;
     private int sizeint;
+    private String status;
+    private String Value_timestamp;
+    private TextView state_key_view;
 
     public Graphical_List(tracerengine Trac,
                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -122,10 +127,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     }
 
     public void onCreate() {
+        this.myself = this;
         this.state_key = feature.getState_key();
-        this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
-        this.id = feature.getId();
         this.address = feature.getAddress();
         this.isopen = false;
         try {
@@ -137,20 +141,23 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         }
         String[] model = feature.getDevice_type_id().split("\\.");
         this.type = model[0];
-        String packageName = activity.getPackageName();
-        this.myself = this;
+        try {
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+        } catch (Exception e) {
+            this.stateS = state_key;
+        }
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+        mytag = "Graphical_List (" + dev_id + ")";
         setOnLongClickListener(this);
         setOnClickListener(this);
 
-        mytag = "Graphical_List (" + dev_id + ")";
-
         //state key
-        final TextView state_key_view = new TextView(activity);
-        try {
-            stateS = getResources().getString(translate.do_translate(activity, Tracer, state_key));
-        } catch (Exception e) {
-            stateS = state_key;
-        }
+        state_key_view = new TextView(activity);
         state_key_view.setText(stateS);
         state_key_view.setTextColor(Color.parseColor("#333333"));
 
@@ -159,6 +166,7 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         TV_Value.setTextSize(28);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             TV_Value.setTextIsSelectable(true);
+            TV_Value.setOnClickListener(this);
         }
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
@@ -323,38 +331,14 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                 if (msg.what == 2) {
                     Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
 
-                } else if (msg.what == 9999) {
-
+                } else if (msg.what == 9989) {
                     //Message from cache engine
                     //state_engine send us a signal to notify value changed
                     if (session == null)
                         return;
-
-                    String new_val = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Value_timestamp);
-
-                    Long Value_timestamplong = null;
-                    Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
-
-                    if (prefUtils.GetWidgetTimestamp()) {
-                        TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), activity));
-                    } else {
-                        TV_Timestamp.setReferenceTime(Value_timestamplong);
-                    }
-                    if (api_version > 0.7f) {
-                        try {
-                            display_sensor_info.display(Tracer, Values.getString(new_val), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
-                        } catch (Exception e) {
-                            display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
-                            Tracer.e(mytag, "Can not convert new_val " + e.toString());
-                        }
-                    } else {
-                        display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
-                    }
-                    //To have the icon colored as it has no state
-                    change_this_icon(2);
-
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
                 } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "cache engine disappeared ===> Harakiri !");
@@ -382,16 +366,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
-            }
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    EventBus.getDefault().register(this);
                 }
 
             } catch (Exception e) {
@@ -401,6 +382,49 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....
 
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+
+        Long Value_timestamplong = null;
+        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+
+        if (prefUtils.GetWidgetTimestamp()) {
+            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), activity));
+        } else {
+            TV_Timestamp.setReferenceTime(Value_timestamplong);
+        }
+        if (api_version > 0.7f) {
+            try {
+                display_sensor_info.display(Tracer, Values.getString(status), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+            } catch (Exception e) {
+                display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                Tracer.e(mytag, "Can not convert new_val " + e.toString());
+            }
+        } else {
+            display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+        }
+        //To have the icon colored as it has no state
+        change_this_icon(2);
     }
 
     private void Hide(Boolean command) {
@@ -506,9 +530,9 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
                             "/last/" + nb_item_for_history +
                             "/", 30000);
                 } else if (api_version >= 0.7f) {
-                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "sensorhistory/id/" + dev_id + "/last/" + nb_item_for_history);
                     //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + id +
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + dev_id +
                             "/last/" + nb_item_for_history + "", 30000);
                     json_LastValues = new JSONObject();
                     json_LastValues.put("stats", json_LastValues_0_4);

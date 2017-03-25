@@ -26,9 +26,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import activities.Activity_Cam;
 import database.WidgetUpdate;
 import misc.tracerengine;
@@ -45,6 +49,9 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private final int session_type;
     private Boolean realtime = false;
     private final Activity activity;
+    private String state_key;
+    private int dev_id;
+    private String status;
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -71,9 +78,14 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private void onCreate() {
         myself = this;
         this.url = feature.getAddress();
-        int dev_id = feature.getDevId();
         this.name_cam = feature.getName();
-        String state_key = feature.getState_key();
+        state_key = feature.getState_key();
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
         mytag = "Graphical_Cam(" + dev_id + ")";
         setOnClickListener(this);
         //To have the icon colored as it has no state
@@ -82,8 +94,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         Handler handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                String status;
-                if (msg.what == 9999) {
+                if (msg.what == 9989) {
                     if (session == null)
                         return true;
                     status = session.getValue();
@@ -116,19 +127,14 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
              *
              */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null)
-
-        {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+        if (cache_engine != null) {
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -136,6 +142,20 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         }
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            //Not used in this widgets
+            //Value_timestamp = event.Entity_client_event_get_timestamp();
+        }
     }
 
     public void onClick(View v) {

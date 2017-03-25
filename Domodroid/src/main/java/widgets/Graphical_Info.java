@@ -38,6 +38,8 @@ import android.widget.TextView;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +48,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 
@@ -76,6 +79,9 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private float Float_graph_size;
 
     private boolean isopen = false;
+    private int dev_id;
+    private String Value_timestamp;
+    private String status;
 
     public Graphical_Info(tracerengine Trac,
                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
@@ -98,20 +104,25 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     }
 
     private void onCreate() {
+        myself = this;
         this.parameters = feature.getParameters();
-        int dev_id = feature.getDevId();
         this.state_key = feature.getState_key();
-        mytag = "Graphical_Info (" + dev_id + ")";
         this.isopen = false;
         int graphics_height_size = prefUtils.GetWidgetGraphSize();
         this.Float_graph_size = Float.valueOf(graphics_height_size);
-
         try {
-            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            stateS = state_key;
+            this.stateS = state_key;
         }
-        myself = this;
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+        mytag = "Graphical_Info (" + this.dev_id + ")";
+
         setOnClickListener(this);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -131,6 +142,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         TV_Value.setTextSize(28);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             TV_Value.setTextIsSelectable(true);
+            TV_Value.setOnClickListener(this);
         }
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
@@ -210,43 +222,16 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         Handler handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                if (msg.what == 9999) {
+                if (msg.what == 9989) {
                     //Message from widgetupdate
                     //state_engine send us a signal to notify TV_Value changed
                     if (session == null)
                         return true;
-
-                    String loc_Value = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
-
-                    Long Value_timestamplong;
-                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-
-                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-
-                    //Change icon if in %
-                    if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
-                        if (Float.parseFloat(loc_Value) >= 60) {
-                            //To have the icon colored if TV_Value beetwen 30 and 60
-                            change_this_icon(2);
-                        } else if (Float.parseFloat(loc_Value) >= 30) {
-                            //To have the icon colored if TV_Value >30
-                            change_this_icon(1);
-                        } else {
-                            //To have the icon colored if TV_Value <30
-                            change_this_icon(0);
-                        }
-                    } else {
-                        // #93
-                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0") || loc_Value.equals("0.0")) {
-                            change_this_icon(0);
-                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        } else change_this_icon(2);
-                    }
-                } else if (msg.what == 9998)
-
-                {
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
+                    update_display();
+                } else if (msg.what == 9998) {
                     // state_engine send us a signal to notify it'll die !
                     Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
                     session = null;
@@ -273,19 +258,14 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null)
-
-        {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+        if (cache_engine != null) {
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our TV_Value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current TV_Value in session
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -297,14 +277,50 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        // View is now detached, and about to be destroyed
-        try {
-            Tracer.get_engine().unsubscribe(session);
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+
+        Long Value_timestamplong;
+        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+
+        display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
+        //Change icon if in %
+        if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+            if (Float.parseFloat(status) >= 60) {
+                //To have the icon colored if TV_Value beetwen 30 and 60
+                change_this_icon(2);
+            } else if (Float.parseFloat(status) >= 30) {
+                //To have the icon colored if TV_Value >30
+                change_this_icon(1);
+            } else {
+                //To have the icon colored if TV_Value <30
+                change_this_icon(0);
+            }
+        } else {
+            // #93
+            if (status.equals("off") || status.equals("false") || status.equals("0") || status.equals("0.0")) {
+                change_this_icon(0);
+                //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+            } else change_this_icon(2);
         }
     }
 

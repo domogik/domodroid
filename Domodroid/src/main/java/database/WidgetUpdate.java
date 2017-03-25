@@ -1213,7 +1213,6 @@ public class WidgetUpdate {
                         Handler client = cache.get(cache_position).clients_list.get(j).getClientHandler();
                         if (client != null) {
                             cache.get(cache_position).clients_list.get(j).client_value_update(Val, Value_timestamp);    //update the session structure with new value
-
                             if (cache.get(cache_position).clients_list.get(j).is_Miniwidget()) {
                                 // This client is a mapView's miniwidget
                                 // Don't' notify it immediately

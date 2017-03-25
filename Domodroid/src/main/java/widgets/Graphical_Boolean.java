@@ -80,7 +80,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
     private Boolean realtime = false;
     private int nb_item_for_history;
     private boolean isopen = false;
-    private int id;
     private int currentint;
     private int sizeint;
     private String status;
@@ -124,7 +123,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
 
         this.parameters = feature.getParameters();
         mytag = "Graphical_Boolean(" + dev_id + ")";
-        this.id = feature.getId();
         this.isopen = false;
         try {
             String params_nb_item_for_history = prefUtils.GetWidgetHistoryLength();
@@ -351,9 +349,9 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
                     Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
                     json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
                 } else if (api_version >= 0.7f) {
-                    Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/last/" + nb_item_for_history);
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "sensorhistory/id/" + dev_id + "/last/" + nb_item_for_history);
                     //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", 30000);
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + dev_id + "/last/" + nb_item_for_history + "", 30000);
                     json_LastValues = new JSONObject();
                     json_LastValues.put("stats", json_LastValues_0_4);
 

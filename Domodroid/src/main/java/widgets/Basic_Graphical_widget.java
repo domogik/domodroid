@@ -38,6 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -308,6 +309,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         // View is now detached, and about to be destroyed
         try {
             Tracer.get_engine().unsubscribe(session);
+            EventBus.getDefault().unregister(this); //stop listening eventbus for this widgets
         } catch (Exception e) {
             e.printStackTrace();
         }

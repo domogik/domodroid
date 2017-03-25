@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.Color_Progress;
 import misc.Color_RGBField;
@@ -87,6 +90,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String command_type = null;
     private final int session_type;
     private pref_utils prefUtils;
+    private String state_key;
+    private int dev_id;
+    private String Value_timestamp;
 
     public Graphical_Color(tracerengine Trac,
                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -108,13 +114,17 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     private void onCreate() {
         myself = this;
-        int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
-        String state_key = feature.getState_key();
+        state_key = feature.getState_key();
         command_id = feature.getAddress();
-        mytag = "Graphical_Color(" + dev_id + ")";
         prefUtils = new pref_utils();
-
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+        mytag = "Graphical_Color(" + dev_id + ")";
         String value0;
         String value1;
         try {
@@ -323,80 +333,15 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         t.printStackTrace();
                     }    //kill the handler thread itself
 
-                } else if (msg.what == 9999) {
+                } else if (msg.what == 9989) {
                     if (session != null) {
                         argbS = session.getValue();
-                        String Value_timestamp = session.getTimestamp();
-
-                        Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
-
-                        Long Value_timestamplong;
-                        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-
-                        if (prefUtils.GetWidgetTimestamp()) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-                        } else {
-                            TV_Timestamp.setReferenceTime(Value_timestamplong);
-                        }
+                        Value_timestamp = session.getTimestamp();
+                        update_display();
                     } else
                         return true;
-
                 }
-                switch (argbS) {
-                    case "off":
-                        switch_state = false;
-                        argbS = "000000";
-                        argb = 0;
-                        break;
-                    case "on":
-                        seekBarOnOff.setProgress(100);
-                        switch_state = true;
-                        LoadSelections();    //Recall last values known from shared preferences
 
-                        // argb and argbS will be set when seekBars will be changed
-                        break;
-                    default:
-                        try {
-                            argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
-                            //Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
-                            argb = Integer.parseInt(argbS, 16);
-                            //Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
-                        } catch (Exception e) {
-                            argb = 1;
-                        }
-                        break;
-                }
-                int value_save = argb;
-                r = ((argb >> 16) & 0xFF);
-                g = ((argb >> 8) & 0xFF);
-                b = ((argb) & 0xFF);
-
-
-                if (argb == 0) {
-                    seekBarOnOff.setProgress(0);
-                    switch_state = false;
-                } else {
-                    seekBarOnOff.setProgress(100);
-                }
-                //Convert RGB to HSV color, and set sliders
-                float hsv[] = new float[3];
-
-                Color.colorToHSV(value_save, hsv);
-                //Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
-                //Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
-
-                //Seekbars are in range 0-255 : convert HSV values
-                //Hue is an angle : convert it to linear
-                seekBarHueBar.setProgress((int) (255f - (hsv[0] * 255f / 360)));
-                seekBarRGBXBar.setProgress((int) (hsv[1] * 255f));
-                seekBarRGBYBar.setProgress((int) (hsv[2] * 255f));
-
-                title7.setText(t7s + " : " + r);
-                title8.setText(t8s + " : " + g);
-                title9.setText(t9s + " : " + b);
-                if ((r != 0) || (g != 0) || (b != 0)) {
-                    SaveSelections();
-                }
                 return true;
             }
         });
@@ -408,16 +353,13 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    EventBus.getDefault().register(this);
                 }
 
             } catch (Exception e) {
@@ -428,6 +370,92 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
         //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            argbS = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + argbS + "> at " + Value_timestamp);
+
+        Long Value_timestamplong;
+        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+
+        if (prefUtils.GetWidgetTimestamp()) {
+            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
+        } else {
+            TV_Timestamp.setReferenceTime(Value_timestamplong);
+        }
+
+        switch (argbS) {
+            case "off":
+                switch_state = false;
+                argbS = "000000";
+                argb = 0;
+                break;
+            case "on":
+                seekBarOnOff.setProgress(100);
+                switch_state = true;
+                LoadSelections();    //Recall last values known from shared preferences
+
+                // argb and argbS will be set when seekBars will be changed
+                break;
+            default:
+                try {
+                    argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
+                    //Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
+                    argb = Integer.parseInt(argbS, 16);
+                    //Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
+                } catch (Exception e) {
+                    argb = 1;
+                }
+                break;
+        }
+        int value_save = argb;
+        r = ((argb >> 16) & 0xFF);
+        g = ((argb >> 8) & 0xFF);
+        b = ((argb) & 0xFF);
+
+
+        if (argb == 0) {
+            seekBarOnOff.setProgress(0);
+            switch_state = false;
+        } else {
+            seekBarOnOff.setProgress(100);
+        }
+        //Convert RGB to HSV color, and set sliders
+        float hsv[] = new float[3];
+
+        Color.colorToHSV(value_save, hsv);
+        //Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
+        //Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
+
+        //Seekbars are in range 0-255 : convert HSV values
+        //Hue is an angle : convert it to linear
+        seekBarHueBar.setProgress((int) (255f - (hsv[0] * 255f / 360)));
+        seekBarRGBXBar.setProgress((int) (hsv[1] * 255f));
+        seekBarRGBYBar.setProgress((int) (hsv[2] * 255f));
+
+        title7.setText(t7s + " : " + r);
+        title8.setText(t8s + " : " + g);
+        title9.setText(t9s + " : " + b);
+        if ((r != 0) || (g != 0) || (b != 0)) {
+            SaveSelections();
+        }
+    }
 
     public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
         if (arg0.getTag().equals("onoff")) {

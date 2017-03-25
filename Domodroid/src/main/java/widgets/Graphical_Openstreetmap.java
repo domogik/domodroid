@@ -143,6 +143,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         TV_Value.setTextSize(28);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             TV_Value.setTextIsSelectable(true);
+            TV_Value.setOnClickListener(this);
         }
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);

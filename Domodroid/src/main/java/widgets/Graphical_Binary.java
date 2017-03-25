@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +44,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.send_command;
@@ -69,6 +72,12 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String command_type = null;
     private final Entity_Feature feature;
     private final int session_type;
+    private String address;
+    private String usage;
+    private String state_key;
+    private int dev_id;
+    private String status;
+    private String Value_timestamp;
 
     public Graphical_Binary(tracerengine Trac,
                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -90,19 +99,25 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
     private void onCreate() {
         myself = this;
-        String address = feature.getAddress();
-        String usage = feature.getIcon_name();
-        String state_key = feature.getState_key();
-        int dev_id = feature.getDevId();
-        String parameters = feature.getParameters();
-        mytag = "Graphical_Binary(" + dev_id + ")";
-
+        this.address = feature.getAddress();
+        this.usage = feature.getIcon_name();
+        this.state_key = feature.getState_key();
 
         try {
             this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
             this.stateS = state_key;
         }
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+
+        String parameters = feature.getParameters();
+        mytag = "Graphical_Binary(" + dev_id + ")";
+
 
         //get parameters
 
@@ -197,76 +212,40 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                     try {
                         Bundle b = msg.getData();
                         if ((b != null) && (b.getString("message") != null)) {
-                            if (b.getString("message").equals(value0)) {
-                                String new_val = session.getValue();
-                                String Timestamp = session.getTimestamp();
-                                Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
-                                try {
-                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-                                } catch (Exception e1) {
-                                    state.setText(stateS + " : " + Value_0);
-                                }
-                                new SBAnim(seekBarOnOff.getProgress(), 0).execute();
-                            } else if (b.getString("message").equals(value1)) {
-                                try {
-                                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
-                                } catch (Exception e1) {
-                                    state.setText(stateS + " : " + Value_1);
-                                }
-                                new SBAnim(seekBarOnOff.getProgress(), 40).execute();
-                            }
-                            state.setAnimation(animation);
-                        } else {
-                            if (msg.what == 2) {
-                                Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
-                            } else if (msg.what == 9999) {
-                                //state_engine send us a signal to notify value changed
-                                if (session == null)
-                                    return true;
-                                String new_val = session.getValue();
-                                String Timestamp = session.getTimestamp();
-                                Tracer.d(mytag, "Handler receives a new value <" + new_val + "> at " + Timestamp);
-                                if (new_val.equals(value0)) {
-                                    try {
-                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-                                    } catch (Exception e1) {
-                                        state.setText(stateS + " : " + Value_0);
+                            if (b.getString("message").equals(value0) || b.getString("message").equals(value1)) {
+                                status = session.getValue();
+                                Value_timestamp = session.getTimestamp();
+                                update_display();
+                                state.setAnimation(animation);
+                            } else {
+                                if (msg.what == 2) {
+                                    Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
+                                } else if (msg.what == 9989) {
+                                    //state_engine send us a signal to notify value changed
+                                    if (session == null)
+                                        return true;
+                                    status = session.getValue();
+                                    Value_timestamp = session.getTimestamp();
+                                    update_display();
+                                } else if (msg.what == 9998) {
+                                    // state_engine send us a signal to notify it'll die !
+                                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
+                                    session = null;
+                                    realtime = false;
+                                    //removeView(background);
+                                    myself.setVisibility(GONE);
+                                    if (container != null) {
+                                        container.removeView(myself);
+                                        container.recomputeViewAttributes(myself);
                                     }
-                                    new SBAnim(seekBarOnOff.getProgress(), 0).execute();
-                                } else if (new_val.equals(value1)) {
                                     try {
-                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
-                                    } catch (Exception e1) {
-                                        state.setText(stateS + " : " + Value_1);
-                                    }
-                                    new SBAnim(seekBarOnOff.getProgress(), 40).execute();
-                                } else {
-                                    try {
-                                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, new_val)));
-                                    } catch (Exception e1) {
-                                        state.setText(stateS + " : " + new_val);
-                                    }
-                                    new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+                                        finalize();
+                                    } catch (Throwable t) {
+                                        t.printStackTrace();
+                                    }    //kill the handler thread itself
                                 }
-                            } else if (msg.what == 9998) {
-                                // state_engine send us a signal to notify it'll die !
-                                Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                                session = null;
-                                realtime = false;
-                                //removeView(background);
-                                myself.setVisibility(GONE);
-                                if (container != null) {
-                                    container.removeView(myself);
-                                    container.recomputeViewAttributes(myself);
-                                }
-                                try {
-                                    finalize();
-                                } catch (Throwable t) {
-                                    t.printStackTrace();
-                                }    //kill the handler thread itself
                             }
                         }
-
                     } catch (Exception e) {
                         Tracer.e(mytag, "Handler error for device " + name);
                         e.printStackTrace();
@@ -282,16 +261,13 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -301,6 +277,50 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
         //================================================================================
         //updateTimer();	//Don't use anymore cyclic refresh....
 
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+        if (status.equals(value0)) {
+            try {
+                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+            } catch (Exception e1) {
+                state.setText(stateS + " : " + Value_0);
+            }
+            new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+        } else if (status.equals(value1)) {
+            try {
+                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+            } catch (Exception e1) {
+                state.setText(stateS + " : " + Value_1);
+            }
+            new SBAnim(seekBarOnOff.getProgress(), 40).execute();
+        } else {
+            try {
+                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, status)));
+            } catch (Exception e1) {
+                state.setText(stateS + " : " + status);
+            }
+            new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+        }
     }
 
     public void onProgressChanged(SeekBar seekBarOnOff, int progress, boolean fromTouch) {
@@ -323,7 +343,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 break;
         }
     }
-
 
     public void onStartTrackingTouch(SeekBar arg0) {
         touching = true;

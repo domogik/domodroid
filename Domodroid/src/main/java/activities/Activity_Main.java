@@ -328,9 +328,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
         }
 
         //update thread
-        sbanim = new Handler(new Handler.Callback() {
+        sbanim = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 if (msg.what == 0) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name2));
                     getSupportActionBar().setLogo(R.drawable.app_name2);
@@ -373,9 +373,9 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                     //refresh view when initial cache ready #33
                     refresh();
                 }
-                return true;
+                return ;
             }
-        });
+        };
 
         //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

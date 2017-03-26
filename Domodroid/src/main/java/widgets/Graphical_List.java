@@ -362,28 +362,33 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
 
-        Long Value_timestamplong = null;
-        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+                Long Value_timestamplong = null;
+                Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-        if (prefUtils.GetWidgetTimestamp()) {
-            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), activity));
-        } else {
-            TV_Timestamp.setReferenceTime(Value_timestamplong);
-        }
-        if (api_version > 0.7f) {
-            try {
-                display_sensor_info.display(Tracer, Values.getString(status), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
-            } catch (Exception e) {
-                display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
-                Tracer.e(mytag, "Can not convert new_val " + e.toString());
+                if (prefUtils.GetWidgetTimestamp()) {
+                    TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamp.toString(), activity));
+                } else {
+                    TV_Timestamp.setReferenceTime(Value_timestamplong);
+                }
+                if (api_version > 0.7f) {
+                    try {
+                        display_sensor_info.display(Tracer, Values.getString(status), Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                    } catch (Exception e) {
+                        display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                        Tracer.e(mytag, "Can not convert new_val " + e.toString());
+                    }
+                } else {
+                    display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
+                }
+                //To have the icon colored as it has no state
+                change_this_icon(2);
             }
-        } else {
-            display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, "");
-        }
-        //To have the icon colored as it has no state
-        change_this_icon(2);
+        });
     }
 
     private void Hide(Boolean command) {
@@ -392,13 +397,14 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             TV_Value.setText(Html.fromHtml("&#xf13a;"), TextView.BufferType.SPANNABLE);
         }
         isopen = false;
-        super.LL_background.removeView(featurePan2);
-        super.LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        LL_background.removeView(featurePan2);
+        LL_background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
         if (command) {
             String text_to_display = activity.getResources().getString(R.string.command_sent) + " " + state_key;
             Toast.makeText(getContext(), text_to_display, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {

@@ -256,44 +256,49 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
-        Long Value_timestamplong = null;
-        Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+                Long Value_timestamplong = null;
+                Value_timestamplong = Value_timestamplong.valueOf(Value_timestamp) * 1000;
 
-        if (prefUtils.GetWidgetTimestamp()) {
-            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-        } else {
-            TV_Timestamp.setReferenceTime(Value_timestamplong);
-        }
-        try {
-            if (status.equals(value0) || status.equals("0")) {
-                bool.setImageResource(R.drawable.boolean_off);
-                //change color if statue=low to (usage, o) means off
-                //note sure if it must be kept as set previously as default color.
-                change_this_icon(0);
-                try {
-                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-                } catch (Exception e1) {
-                    state.setText(stateS + " : " + Value_0);
+                if (prefUtils.GetWidgetTimestamp()) {
+                    TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
+                } else {
+                    TV_Timestamp.setReferenceTime(Value_timestamplong);
                 }
-            } else if (status.equals(value1) || status.equals("1")) {
-                bool.setImageResource(R.drawable.boolean_on);
-                //change color if statue=high to (usage, 2) means on
-                change_this_icon(2);
                 try {
-                    state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
-                } catch (Exception e1) {
-                    state.setText(stateS + " : " + Value_1);
+                    if (status.equals(value0) || status.equals("0")) {
+                        bool.setImageResource(R.drawable.boolean_off);
+                        //change color if statue=low to (usage, o) means off
+                        //note sure if it must be kept as set previously as default color.
+                        change_this_icon(0);
+                        try {
+                            state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                        } catch (Exception e1) {
+                            state.setText(stateS + " : " + Value_0);
+                        }
+                    } else if (status.equals(value1) || status.equals("1")) {
+                        bool.setImageResource(R.drawable.boolean_on);
+                        //change color if statue=high to (usage, 2) means on
+                        change_this_icon(2);
+                        try {
+                            state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                        } catch (Exception e1) {
+                            state.setText(stateS + " : " + Value_1);
+                        }
+                    } else {
+                        bool.setImageResource(R.drawable.boolean_n_a);
+                        change_this_icon(0);
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, "unknown")));
+                    }
+                } catch (Exception e) {
+                    Tracer.e(mytag, "handler error device " + name);
+                    e.printStackTrace();
                 }
-            } else {
-                bool.setImageResource(R.drawable.boolean_n_a);
-                change_this_icon(0);
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, "unknown")));
             }
-        } catch (Exception e) {
-            Tracer.e(mytag, "handler error device " + name);
-            e.printStackTrace();
-        }
+        });
     }
 
     /**

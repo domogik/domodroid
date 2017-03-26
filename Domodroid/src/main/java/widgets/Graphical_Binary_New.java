@@ -240,28 +240,33 @@ public class Graphical_Binary_New extends Basic_Graphical_widget implements OnCl
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
-        if (status.equals(value0)) {
-            try {
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-            } catch (Exception e1) {
-                state.setText(stateS + " : " + Value_0);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+                if (status.equals(value0)) {
+                    try {
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                    } catch (Exception e1) {
+                        state.setText(stateS + " : " + Value_0);
+                    }
+                    change_this_icon(0);
+                } else if (status.equals(value1)) {
+                    try {
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                    } catch (Exception e1) {
+                        state.setText(stateS + " : " + Value_1);
+                    }
+                    change_this_icon(2);
+                } else {
+                    try {
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, status)));
+                    } catch (Exception e1) {
+                        state.setText(stateS + " : " + status);
+                    }
+                }
             }
-            change_this_icon(0);
-        } else if (status.equals(value1)) {
-            try {
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
-            } catch (Exception e1) {
-                state.setText(stateS + " : " + Value_1);
-            }
-            change_this_icon(2);
-        } else {
-            try {
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, status)));
-            } catch (Exception e1) {
-                state.setText(stateS + " : " + status);
-            }
-        }
+        });
     }
 
     public void onClick(View v) {

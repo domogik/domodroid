@@ -352,72 +352,78 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + argbS + "> at " + Value_timestamp);
 
-        Long Value_timestamplong;
-        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + argbS + "> at " + Value_timestamp);
 
-        if (prefUtils.GetWidgetTimestamp()) {
-            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-        } else {
-            TV_Timestamp.setReferenceTime(Value_timestamplong);
-        }
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
-        switch (argbS) {
-            case "off":
-                switch_state = false;
-                argbS = "000000";
-                argb = 0;
-                break;
-            case "on":
-                seekBarOnOff.setProgress(100);
-                switch_state = true;
-                LoadSelections();    //Recall last values known from shared preferences
-
-                // argb and argbS will be set when seekBars will be changed
-                break;
-            default:
-                try {
-                    argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
-                    //Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
-                    argb = Integer.parseInt(argbS, 16);
-                    //Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
-                } catch (Exception e) {
-                    argb = 1;
+                if (prefUtils.GetWidgetTimestamp()) {
+                    TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
+                } else {
+                    TV_Timestamp.setReferenceTime(Value_timestamplong);
                 }
-                break;
-        }
-        int value_save = argb;
-        r = ((argb >> 16) & 0xFF);
-        g = ((argb >> 8) & 0xFF);
-        b = ((argb) & 0xFF);
+
+                switch (argbS) {
+                    case "off":
+                        switch_state = false;
+                        argbS = "000000";
+                        argb = 0;
+                        break;
+                    case "on":
+                        seekBarOnOff.setProgress(100);
+                        switch_state = true;
+                        LoadSelections();    //Recall last values known from shared preferences
+
+                        // argb and argbS will be set when seekBars will be changed
+                        break;
+                    default:
+                        try {
+                            argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
+                            //Tracer.d(mytag,"Handler ==> argbS after extraction = <"+argbS+">" );
+                            argb = Integer.parseInt(argbS, 16);
+                            //Tracer.d(mytag,"Handler ==> argb after parsing = <"+argb+">" );
+                        } catch (Exception e) {
+                            argb = 1;
+                        }
+                        break;
+                }
+                int value_save = argb;
+                r = ((argb >> 16) & 0xFF);
+                g = ((argb >> 8) & 0xFF);
+                b = ((argb) & 0xFF);
 
 
-        if (argb == 0) {
-            seekBarOnOff.setProgress(0);
-            switch_state = false;
-        } else {
-            seekBarOnOff.setProgress(100);
-        }
-        //Convert RGB to HSV color, and set sliders
-        float hsv[] = new float[3];
+                if (argb == 0) {
+                    seekBarOnOff.setProgress(0);
+                    switch_state = false;
+                } else {
+                    seekBarOnOff.setProgress(100);
+                }
+                //Convert RGB to HSV color, and set sliders
+                float hsv[] = new float[3];
 
-        Color.colorToHSV(value_save, hsv);
-        //Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
-        //Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
+                Color.colorToHSV(value_save, hsv);
+                //Tracer.d(mytag,"Handler ==> RGB ("+value_save+") values after process = <"+r+"> <"+g+"> <"+b+">" );
+                //Tracer.d(mytag,"Handler ==> HSV values after process = <"+hsv[0]+"> <"+hsv[1]+"> <"+hsv[2]+">" );
 
-        //Seekbars are in range 0-255 : convert HSV values
-        //Hue is an angle : convert it to linear
-        seekBarHueBar.setProgress((int) (255f - (hsv[0] * 255f / 360)));
-        seekBarRGBXBar.setProgress((int) (hsv[1] * 255f));
-        seekBarRGBYBar.setProgress((int) (hsv[2] * 255f));
+                //Seekbars are in range 0-255 : convert HSV values
+                //Hue is an angle : convert it to linear
+                seekBarHueBar.setProgress((int) (255f - (hsv[0] * 255f / 360)));
+                seekBarRGBXBar.setProgress((int) (hsv[1] * 255f));
+                seekBarRGBYBar.setProgress((int) (hsv[2] * 255f));
 
-        title7.setText(t7s + " : " + r);
-        title8.setText(t8s + " : " + g);
-        title9.setText(t9s + " : " + b);
-        if ((r != 0) || (g != 0) || (b != 0)) {
-            SaveSelections();
-        }
+                title7.setText(t7s + " : " + r);
+                title8.setText(t8s + " : " + g);
+                title9.setText(t9s + " : " + b);
+                if ((r != 0) || (g != 0) || (b != 0)) {
+                    SaveSelections();
+                }
+            }
+        });
     }
 
     public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {

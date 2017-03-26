@@ -176,7 +176,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag,  session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
                     status = session.getValue();
@@ -212,30 +212,35 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
-        TV_Value.setAnimation(animation);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+                TV_Value.setAnimation(animation);
 
-        Long Value_timestamplong;
-        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-        final String uri = "geo:" + status + "?q=" + status + "(" + name + "-" + state_key + ")";
-        TV_Value.setOnClickListener(new OnClickListener() {
-                                        public void onClick(View v) {
-                                            try {
-                                                Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                                                activity.startActivity(unrestrictedIntent);
-                                            } catch (ActivityNotFoundException innerEx) {
-                                                Toast.makeText(activity, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+                final String uri = "geo:" + status + "?q=" + status + "(" + name + "-" + state_key + ")";
+                TV_Value.setOnClickListener(new OnClickListener() {
+                                                public void onClick(View v) {
+                                                    try {
+                                                        Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                        activity.startActivity(unrestrictedIntent);
+                                                    } catch (ActivityNotFoundException innerEx) {
+                                                        Toast.makeText(activity, R.string.missing_maps_applications, Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }
 
-        );
-        display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-        //TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
-        //TV_Value.setText(new_val + " \uF064");
-        //To have the icon colored as it has no state
-        change_this_icon(2);
+                );
+                display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                //TV_Value.setTypeface(typefaceawesome, Typeface.NORMAL);
+                //TV_Value.setText(new_val + " \uF064");
+                //To have the icon colored as it has no state
+                change_this_icon(2);
 
+            }
+        });
     }
 
     @Override

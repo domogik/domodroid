@@ -224,29 +224,34 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
-        if (status.equals(value0)) {
-            try {
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
-            } catch (Exception e1) {
-                state.setText(stateS + " : " + Value_0);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+                if (status.equals(value0)) {
+                    try {
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_0)));
+                    } catch (Exception e1) {
+                        state.setText(stateS + " : " + Value_0);
+                    }
+                    new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+                } else if (status.equals(value1)) {
+                    try {
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
+                    } catch (Exception e1) {
+                        state.setText(stateS + " : " + Value_1);
+                    }
+                    new SBAnim(seekBarOnOff.getProgress(), 40).execute();
+                } else {
+                    try {
+                        state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, status)));
+                    } catch (Exception e1) {
+                        state.setText(stateS + " : " + status);
+                    }
+                    new SBAnim(seekBarOnOff.getProgress(), 0).execute();
+                }
             }
-            new SBAnim(seekBarOnOff.getProgress(), 0).execute();
-        } else if (status.equals(value1)) {
-            try {
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, Value_1)));
-            } catch (Exception e1) {
-                state.setText(stateS + " : " + Value_1);
-            }
-            new SBAnim(seekBarOnOff.getProgress(), 40).execute();
-        } else {
-            try {
-                state.setText(stateS + " : " + activity.getString(translate.do_translate(getContext(), Tracer, status)));
-            } catch (Exception e1) {
-                state.setText(stateS + " : " + status);
-            }
-            new SBAnim(seekBarOnOff.getProgress(), 0).execute();
-        }
+        });
     }
 
     public void onProgressChanged(SeekBar seekBarOnOff, int progress, boolean fromTouch) {

@@ -243,18 +243,23 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
-        //#1649
-        //Value min and max should be the limit of the widget
-        if (status <= valueMin) {
-            state.setText(stateS + " : " + valueMin + " " + test_unite);
-        } else if (status > valueMin && status < valueMax) {
-            state.setText(stateS + " : " + status + " " + test_unite);
-        } else if (status >= valueMax) {
-            state.setText(stateS + " : " + valueMax + " " + test_unite);
-        }
-        state.setAnimation(animation);
-        new SBAnim(seekBarVaria.getProgress(), status - valueMin).execute();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+                //#1649
+                //Value min and max should be the limit of the widget
+                if (status <= valueMin) {
+                    state.setText(stateS + " : " + valueMin + " " + test_unite);
+                } else if (status > valueMin && status < valueMax) {
+                    state.setText(stateS + " : " + status + " " + test_unite);
+                } else if (status >= valueMax) {
+                    state.setText(stateS + " : " + valueMax + " " + test_unite);
+                }
+                state.setAnimation(animation);
+                new SBAnim(seekBarVaria.getProgress(), status - valueMin).execute();
+            }
+        });
     }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {

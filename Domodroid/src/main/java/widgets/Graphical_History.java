@@ -219,51 +219,56 @@ public class Graphical_History extends Basic_Graphical_widget implements OnClick
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
-        TV_Value.setAnimation(animation);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+                TV_Value.setAnimation(animation);
 
-        Long Value_timestamplong;
-        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-        if (feature.getDevice_feature_model_id().startsWith("DT_Color")) {
-            LL_featurePan.removeView(resultView);
-            LL_featurePan.removeView(TV_Value);
-            LL_featurePan.removeView(TV_Timestamp);
-            if (prefUtils.GetWidgetTimestamp()) {
-                TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-            } else {
-                TV_Timestamp.setReferenceTime(Value_timestamplong);
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+                if (feature.getDevice_feature_model_id().startsWith("DT_Color")) {
+                    LL_featurePan.removeView(resultView);
+                    LL_featurePan.removeView(TV_Value);
+                    LL_featurePan.removeView(TV_Timestamp);
+                    if (prefUtils.GetWidgetTimestamp()) {
+                        TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
+                    } else {
+                        TV_Timestamp.setReferenceTime(Value_timestamplong);
+                    }
+                    if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color RGBHexa=" + status);
+                        status = "#" + status.toUpperCase();
+                        resultView.color = status;
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color RGB=" + status);
+                        resultView.colorrgb = status;
+
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color CMYK=" + status);
+                        resultView.colorCMYK = status;
+                    } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCII.")) {
+                        //Color result
+                        //16 means that you should interpret the string as 16-based (hexadecimal)
+                        Tracer.d(mytag, "debug_color ColorCII=" + status);
+                        resultView.colorCII = status;
+                    }
+                    LL_featurePan.addView(resultView);
+                    LL_featurePan.addView(TV_Timestamp);
+                } else {
+                    display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                }
+
+                //To have the icon colored as it has no state
+                change_this_icon(2);
             }
-            if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa.")) {
-                //Color result
-                //16 means that you should interpret the string as 16-based (hexadecimal)
-                Tracer.d(mytag, "debug_color RGBHexa=" + status);
-                status = "#" + status.toUpperCase();
-                resultView.color = status;
-            } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGB.")) {
-                //Color result
-                //16 means that you should interpret the string as 16-based (hexadecimal)
-                Tracer.d(mytag, "debug_color RGB=" + status);
-                resultView.colorrgb = status;
-
-            } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCMYK.")) {
-                //Color result
-                //16 means that you should interpret the string as 16-based (hexadecimal)
-                Tracer.d(mytag, "debug_color CMYK=" + status);
-                resultView.colorCMYK = status;
-            } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCII.")) {
-                //Color result
-                //16 means that you should interpret the string as 16-based (hexadecimal)
-                Tracer.d(mytag, "debug_color ColorCII=" + status);
-                resultView.colorCII = status;
-            }
-            LL_featurePan.addView(resultView);
-            LL_featurePan.addView(TV_Timestamp);
-        } else {
-            display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, feature.getParameters(), TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-        }
-
-        //To have the icon colored as it has no state
-        change_this_icon(2);
+        });
     }
 
     public void onClick(View arg0) {

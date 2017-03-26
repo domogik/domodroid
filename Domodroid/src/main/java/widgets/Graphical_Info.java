@@ -263,32 +263,38 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
      * or when an eventbus is receive
      */
     private void update_display() {
-        Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
 
-        Long Value_timestamplong;
-        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
 
-        display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
 
-        //Change icon if in %
-        if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
-            if (Float.parseFloat(status) >= 60) {
-                //To have the icon colored if TV_Value beetwen 30 and 60
-                change_this_icon(2);
-            } else if (Float.parseFloat(status) >= 30) {
-                //To have the icon colored if TV_Value >30
-                change_this_icon(1);
-            } else {
-                //To have the icon colored if TV_Value <30
-                change_this_icon(0);
+                display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
+                //Change icon if in %
+                if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+                    if (Float.parseFloat(status) >= 60) {
+                        //To have the icon colored if TV_Value beetwen 30 and 60
+                        change_this_icon(2);
+                    } else if (Float.parseFloat(status) >= 30) {
+                        //To have the icon colored if TV_Value >30
+                        change_this_icon(1);
+                    } else {
+                        //To have the icon colored if TV_Value <30
+                        change_this_icon(0);
+                    }
+                } else {
+                    // #93
+                    if (status.equals("off") || status.equals("false") || status.equals("0") || status.equals("0.0")) {
+                        change_this_icon(0);
+                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                    } else change_this_icon(2);
+                }
             }
-        } else {
-            // #93
-            if (status.equals("off") || status.equals("false") || status.equals("0") || status.equals("0.0")) {
-                change_this_icon(0);
-                //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-            } else change_this_icon(2);
-        }
+        });
     }
 
     public void onClick(View arg0) {

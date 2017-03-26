@@ -118,6 +118,7 @@ public class WidgetUpdate {
      *******************************************************************************/
     private WidgetUpdate() {
         super();
+        //subscribe to network change to restart events_manager or stop MQ listening.
         EventBus.getDefault().register(this);
         //com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
 
@@ -271,19 +272,8 @@ public class WidgetUpdate {
 
                 } else if (msg.what == 9903) {
                     //New or update device detected by MQ
-                    //Notify on main screen
+                    //Notify on screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
-                    //disable the dialog or replace by a toast: here the old dialog
-                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(activity);
-                    //dialog_device_update.setTitle(activity.getText(R.string.domogik_information));
-                    //dialog_device_update.setMessage(activity.getText(R.string.device_update_message));
-                    //if (!(activity).isFinishing()) {
-                    //    dialog_device_update.show();
-                    //}
-
-                    //disable the dialog or replace by a toast: here the toast
-                    // Display message something changed since last update
-                    // notify on map screen if a device change.
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(activity, activity.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
@@ -304,9 +294,38 @@ public class WidgetUpdate {
         return result;
     }
 
+
+    @Subscribe
+    /**
+     * Subscribe to the ConnectivityChangeEvent
+     */
+    public void onEvent(ConnectivityChangeEvent event) {
+        //todo find the good solution to stop/reload all the communication with domogik
+        Tracer.e(mytag, "Receive event about connectivity");
+        /*if (event.isConnected()) {
+            if (event.getOn_preferred_Wifi()) {
+                this.init(Tracer, activity);
+                if (eventsManager == null) {
+                    eventsManager = Events_manager.getInstance(activity);
+                }
+                //eventsManager.init(Tracer, myselfHandler, cache, prefUtils.prefs, instance);
+            } else {
+                if (api_version >= 0.7f) {
+                    //to free the mq listener
+                    if (eventsManager != null)
+                        eventsManager.Destroy();
+                }
+            }
+        } else {
+            //this.cancel();
+        }
+*/
+    }
+
     /*
      * Allow callers to set their handler in table
      */
+
     public void set_handler(Handler parent, int type) {
         //type = 0 if View , or 1 if Map, or 2 if MapView
         if ((type >= 0) && (type <= 2))
@@ -507,23 +526,6 @@ public class WidgetUpdate {
             doAsynchronousTask.run();    //To force immediate refresh
     }
 
-
-    @Subscribe
-    /**
-     * Subscribe to the ConnectivityChangeEvent
-     */
-    public void onEvent(ConnectivityChangeEvent event) {
-        //todo find the good solution to stop/reload all the communication with domogik
-        /*
-        if (event.isConnected()) {
-            if (ready) {
-                this.refreshNow();
-            }
-        } else {
-            this.cancel();
-        }
-        */
-    }
 
     public void resync() {
         //May be URL has been changed : force engine to reconstruct cache

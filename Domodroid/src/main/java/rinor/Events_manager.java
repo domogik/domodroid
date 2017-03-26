@@ -187,7 +187,7 @@ public class Events_manager {
             //For 0.4 with zeromMQ
             if (api_version >= 0.7f) {
                 if (MQaddress != null && MQsubport != null) {
-                    if (!MQaddress.equals("") && !MQsubport.equals("")) {
+                    if (!MQaddress.equals("") && !MQsubport.equals("") && !MQaddress.equals("127.0.0.1") && !MQaddress.equals("0.0.0.0")) {
                         try {
                             //TODO find a way to know when ZeroMQ didn't response anymore.
 
@@ -274,7 +274,7 @@ public class Events_manager {
                         return null;
                     }
                 } else {
-                    Toast.makeText(domodroid.GetInstance(), R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
+                    Toast.makeText(domodroid.GetInstance(), R.string.events_error_mq_config, Toast.LENGTH_LONG).show();
                     Tracer.d(mytag, "MQ adress or port is empty");
                 }
             } else if (api_version <= 0.6f) {

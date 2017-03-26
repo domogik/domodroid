@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
@@ -61,12 +60,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     private int argb = 0;
     private String argbS = "";
-    private Message msg;
     private static String mytag;
     public FrameLayout container = null;
     private FrameLayout myself = null;
     private Boolean switch_state = false;
-    private TimerTask doAsynchronousTask;
 
     private Color currentColor;
     private SeekBar seekBarOnOff;
@@ -83,7 +80,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String t7s;
     private String t8s;
     private String t9s = "";
-    private Boolean realtime = false;
+
     private JSONObject jparam;
     private final Entity_Feature feature;
     private String command_id = null;
@@ -310,22 +307,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                 seekBarOnOff.setEnabled(false);
             }
         }
-        //LoadSelections();
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                argbS = "?";
-                if (msg.what == 2) {
-                    Toast.makeText(getContext(), R.string.command_rejected, Toast.LENGTH_SHORT).show();
-                } else if (msg.what == 9989) {
-                    if (session == null)
-                        return;
-                    argbS = session.getValue();
-                    Value_timestamp = session.getTimestamp();
-                    update_display();
-                }
-            }
-        };
+
         updating = 0;
         //================================================================================
         /*
@@ -334,12 +316,13 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    argbS = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
 
@@ -348,7 +331,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
     /**
@@ -603,18 +585,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                      }
-                                     /*
-                                     try {
-                                        Boolean ack = JSONParser.Ack(json_Ack);
-                                         if (!ack) {
-                                             Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
-                                             Toast.makeText(activity, "Received error from Rinor", Toast.LENGTH_LONG).show();
-                                             handler.sendEmptyMessage(2);
-                                         }
-                                     } catch (Exception e) {
-                                         e.printStackTrace();
-                                     }
-                                    */
                                  }
                              }
             );

@@ -267,7 +267,7 @@ public class MapView extends View {
                         featureMap.getDevId(),
                         featureMap.getState_key(),
                         "mini widget",
-                        handler,
+
                         mytype);
                 cursession.setType(true);    //It's a mini widget !
             } else if (api_version >= 0.7f) {
@@ -275,7 +275,7 @@ public class MapView extends View {
                         featureMap.getId(),
                         "",
                         "mini widget",
-                        handler,
+
                         mytype);
                 cursession.setType(true);    //It's a mini widget !
             }

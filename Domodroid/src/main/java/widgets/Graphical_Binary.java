@@ -22,9 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -32,7 +30,6 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 import org.greenrobot.eventbus.EventBus;
@@ -55,10 +52,8 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private SeekBar seekBarOnOff;
     private String value0;
     private String value1;
-    private final boolean activate = false;
     private Animation animation;
     private boolean touching;
-    private Message msg;
     public FrameLayout container = null;
     private FrameLayout myself = null;
     private static String mytag = "";
@@ -67,7 +62,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
     private String Value_1 = "1";
     private JSONObject jparam;
     private Entity_client session = null;
-    private Boolean realtime = false;
     private String command_id = null;
     private String command_type = null;
     private final Entity_Feature feature;
@@ -186,57 +180,7 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
                 seekBarOnOff.setEnabled(false);
             }
         }
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (activate) {
-                    Tracer.d(mytag, "Handler receives a request to die ");
-                    if (realtime) {
-                        Tracer.get_engine().unsubscribe(session);
-                        session = null;
-                        realtime = false;
-                    }
-                    //That seems to be a zombie
-                    //removeView(background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
-                } else {
-                    try {
-                        Bundle b = msg.getData();
-                        if ((b != null) && (b.getString("message") != null)) {
-                            if (b.getString("message").equals(value0) || b.getString("message").equals(value1)) {
-                                status = session.getValue();
-                                Value_timestamp = session.getTimestamp();
-                                update_display();
-                                state.setAnimation(animation);
-                            } else {
-                                if (msg.what == 2) {
-                                    Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
-                                } else if (msg.what == 9989) {
-                                    //state_engine send us a signal to notify value changed
-                                    if (session == null)
-                                        return ;
-                                    status = session.getValue();
-                                    Value_timestamp = session.getTimestamp();
-                                    update_display();
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Handler error for device " + name);
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
+
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -244,12 +188,13 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
@@ -258,8 +203,6 @@ public class Graphical_Binary extends Basic_Graphical_widget implements OnSeekBa
 
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
-
     }
 
     /**

@@ -84,9 +84,9 @@ public class Graphical_Trigger_Button extends LinearLayout {
         this.addView(sign);
 
 
-        handler = new Handler(new Handler.Callback() {
+        handler = new Handler() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public void handleMessage(Message msg) {
                 if (msg.what == 0) {
                     switch (icon_name) {
                         case "send next":
@@ -148,9 +148,9 @@ public class Graphical_Trigger_Button extends LinearLayout {
                             break;
                     }
                 }
-                return true;
+                return ;
             }
-        });
+        };
     }
 
 

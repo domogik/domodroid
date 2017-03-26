@@ -383,7 +383,7 @@ public class WidgetUpdate {
                                 Tracer.i(mytag, "remove client # " + j + " <" + curclient.getName() + "> from list " + name);
                                 curclient.setClientId(-1);    //note client disconnected
                                 curclient.setClientType(-1);    //this entry is'nt owned by anybody
-                                curclient.setHandler(null);    //And must not be notified anymore
+                                //curclient.setHandler(null);    //And must not be notified anymore
                                 temp_list.remove(j - deleted);
                                 deleted++;
                                 if (temp_list.size() == 0) {
@@ -475,10 +475,7 @@ public class WidgetUpdate {
 
                         int cat = clients_list.get(j).getClientType();
                         String client_name = clients_list.get(j).getName();
-                        Handler h = clients_list.get(j).getClientHandler();
                         String state = "connected";
-                        if (h == null)
-                            state = "zombie";
                         String type = "widget";
                         if (clients_list.get(j).is_Miniwidget())
                             type = "mini widget";
@@ -1232,8 +1229,8 @@ public class WidgetUpdate {
 
     /*
      * Method offered to clients, to subscribe to a device/skey value-changed event
-     * 	The client must provide a Handler, to be notified
-     * 	Parameter : Object Entity_client containing references to device , and handler for callbacks
+     *
+     * 	Parameter : Object Entity_client containing references to device
      *  Result : false if subscription failed (already exist, or unknown device )
      *  		 true : subscription accepted : Entity_client contains resulting state
      */
@@ -1244,9 +1241,7 @@ public class WidgetUpdate {
 
         if (client == null)
             return result;
-        Handler h = client.getClientHandler();
-        if (h == null)
-            return result;
+
         device = client.getDevId();
         skey = client.getskey();
 

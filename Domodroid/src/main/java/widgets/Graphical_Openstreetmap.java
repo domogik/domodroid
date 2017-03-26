@@ -25,7 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,12 +72,11 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private RelativeTimeTextView TV_Timestamp;
     private TextView state;
     private static String mytag;
-    private Message msg;
+
 
     public FrameLayout container = null;
     private FrameLayout myself = null;
 
-    private Boolean realtime = false;
     private Animation animation;
     private final Entity_Feature feature;
     private String state_key;
@@ -171,18 +169,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         super.LL_featurePan.addView(TV_Timestamp);
         super.LL_infoPan.addView(state_key_view);
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9989) {
-                    if (session == null)
-                        return ;
-                    status = session.getValue();
-                    Value_timestamp = session.getTimestamp();
-                    update_display();
-                }
-            }
-        };
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
@@ -190,12 +176,13 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag,  session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our TV_Value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current TV_Value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
 
@@ -204,7 +191,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
     /**

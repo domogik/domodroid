@@ -17,8 +17,6 @@
  */
 package Entity;
 
-import android.os.Handler;
-
 import org.greenrobot.eventbus.EventBus;
 
 import Event.Entity_client_event_value;
@@ -34,15 +32,13 @@ public class Entity_client {
     private String client_name;            // To have a clear debugging !
     private String timestamp;
     private Boolean miniwidget;
-    private Handler client_handler = null;
 
 
-    public Entity_client(int devId, String skey, String Name, Handler handler, int session_type) {
+    public Entity_client(int devId, String skey, String Name, int session_type) {
         //super();
         this.devId = devId;
         this.skey = skey;
         this.client_name = Name;
-        this.client_handler = handler;
         this.client_id = -1;    //Initially not connected
         this.client_type = session_type;
         this.miniwidget = false;    //By default, it's not a map widget
@@ -87,9 +83,6 @@ public class Entity_client {
         this.miniwidget = type;
     }
 
-    public void setHandler(Handler handler) {
-        this.client_handler = handler;
-    }
 
     /*
      * Public methods to get content
@@ -128,10 +121,6 @@ public class Entity_client {
 
     public Boolean is_Miniwidget() {
         return miniwidget;
-    }
-
-    public Handler getClientHandler() {
-        return client_handler;
     }
 
     public void client_value_update(String val, String valtimestamp) {

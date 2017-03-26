@@ -21,7 +21,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -47,7 +47,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private String name_cam;
     private final Entity_Feature feature;
     private final int session_type;
-    private Boolean realtime = false;
     private final Activity activity;
     private String state_key;
     private int dev_id;
@@ -90,30 +89,20 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
         setOnClickListener(this);
         //To have the icon colored as it has no state
         change_this_icon(2);
-        //handler to listen value change
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9989) {
-                    if (session == null)
-                        return;
-                    status = session.getValue();
-                }
-            }
-        };
+
         //================================================================================
-            /*
-             * New mechanism to be notified by widgetupdate engine when our value is changed
-             *
-             */
+        /*
+         * New mechanism to be notified by widgetupdate engine when our value is changed
+        *
+        */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
                     //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    status = session.getValue();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
@@ -121,7 +110,6 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
     /**

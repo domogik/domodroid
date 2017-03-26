@@ -645,6 +645,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 			Tracer = null;
 		}
 		 */
+        domodroid.onDestroy();
     }
 
     private void Create_message_box() {
@@ -709,9 +710,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         //load widgets
         if (widgetHandler == null) {
             Tracer.v(mytag, "Starting WidgetHandler thread !");
-            widgetHandler = new Handler(new Handler.Callback() {
+            widgetHandler = new Handler() {
                 @Override
-                public boolean handleMessage(Message msg) {
+                public void handleMessage(Message msg) {
                     //#107 around here
                     Tracer.d("debug map bak #107", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
@@ -734,9 +735,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
                         Tracer.e("debug map bak", e.toString());
                     }
-                    return true;
+                    return;
                 }
-            });
+            };
         }
         if (WM_Agent == null) {
             Tracer.v(mytag, "Starting wAgent !");

@@ -24,7 +24,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -77,13 +76,10 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
     private LinearLayout featurePan2;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
-    private Handler handler;
-    private Message msg;
     private static String mytag = "Graphical_List";
     public FrameLayout container = null;
     public static FrameLayout myself = null;
     public Boolean with_list = true;
-    private Boolean realtime = false;
     private String[] known_values;
     private String[] real_values;
     JSONObject Values = null;
@@ -323,27 +319,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
         super.LL_featurePan.addView(TV_Value);
         super.LL_featurePan.addView(TV_Timestamp);
 
-
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-
-                if (msg.what == 2) {
-                    Toast.makeText(getContext(), R.string.command_failed, Toast.LENGTH_SHORT).show();
-
-                } else if (msg.what == 9989) {
-                    //Message from cache engine
-                    //state_engine send us a signal to notify value changed
-                    if (session == null)
-                        return;
-                    status = session.getValue();
-                    Value_timestamp = session.getTimestamp();
-                    update_display();
-                }
-            }
-
-        };    //End of handler
-
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -351,12 +326,13 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
 
@@ -365,8 +341,6 @@ public class Graphical_List extends Basic_Graphical_widget implements OnClickLis
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
-
     }
 
     /**

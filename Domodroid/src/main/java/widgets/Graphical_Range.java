@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -61,9 +60,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
     public FrameLayout container = null;
     private final FrameLayout myself = null;
     private static String mytag;
-    private Message msg;
 
-    private Boolean realtime = false;
     private String stateS = "";
     private String test_unite;
     private String command_id = null;
@@ -197,23 +194,7 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
         super.LL_topPan.removeView(super.LL_featurePan);
         super.LL_infoPan.addView(bodyPanHorizontal);
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9989) {
-                    //state_engine send us a signal to notify value changed
-                    if (session == null)
-                        return;
-                    try {
-                        status = Integer.parseInt(session.getValue());
-                    } catch (Exception e) {
-                        status = 0;
-                    }
-                    Value_timestamp = session.getTimestamp();
-                    update_display();
-                }
-            }
-        };
+
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -221,12 +202,17 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    try {
+                        status = Integer.parseInt(session.getValue());
+                    } catch (Exception e) {
+                        status = 0;
+                    }
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
 
@@ -235,7 +221,6 @@ public class Graphical_Range extends Basic_Graphical_widget implements SeekBar.O
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
 

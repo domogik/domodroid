@@ -22,7 +22,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
+
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -60,18 +60,17 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private Graphical_Info_View canvas;
-    private Message msg;
     private static String mytag;
     public FrameLayout container = null;
     private FrameLayout myself = null;
     public Boolean with_graph = true;
-    private Boolean realtime = false;
+
     private final Entity_Feature feature;
     private String state_key;
-    private String timestamp;
+
     private String parameters;
     private final int session_type;
-    private int dpiClassification;
+
     private final int update;
     private TextView state_key_view;
     private String stateS;
@@ -219,21 +218,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             Tracer.i(mytag, "No unit for this feature");
         }
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9989) {
-                    //Message from widgetupdate
-                    //state_engine send us a signal to notify TV_Value changed
-                    if (session == null)
-                        return ;
-                    status = session.getValue();
-                    Value_timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + status + "> at " + Value_timestamp);
-                    update_display();
-                }
-            }
-        };
+
         LL_infoPan.addView(state_key_view);
         //================================================================================
         /*
@@ -242,12 +227,13 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our TV_Value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current TV_Value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
@@ -256,8 +242,6 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
-
     }
 
     /**

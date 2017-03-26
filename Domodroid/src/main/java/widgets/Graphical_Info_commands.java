@@ -21,7 +21,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Message;
+
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -51,10 +51,9 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     private View featurePan2_buttons;
     private EditText value1 = null;
-    private Message msg;
+
     private static String mytag;
     public FrameLayout container = null;
-    private Boolean realtime = false;
     private int dpiClassification;
     private JSONObject jparam;
     private String command_id = null;
@@ -70,7 +69,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     public Graphical_Info_commands(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                    final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag,  handler);
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -79,7 +78,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     public Graphical_Info_commands(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
                                    final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag,  handler);
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

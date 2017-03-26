@@ -21,7 +21,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.os.Message;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -40,13 +40,13 @@ import rinor.send_command;
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
     private Graphical_Trigger_Button trigger;
-    private Handler handler;
+
     private Thread threadCommande;
     private String command;
     public FrameLayout container = null;
     public FrameLayout myself = null;
     private static String mytag;
-    private Message msg;
+
     private String command_id;
     private String command_type;
 

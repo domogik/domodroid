@@ -77,7 +77,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
     private final int session_type;
     private String usage;
     private String address;
-    private Boolean realtime = false;
     private int nb_item_for_history;
     private boolean isopen = false;
     private int currentint;
@@ -179,21 +178,7 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
         super.LL_featurePan.addView(bool);
         super.LL_featurePan.addView(TV_Timestamp);
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9989) {
-                    if (session == null)
-                        return;
-                    status = session.getValue();
-                    Value_timestamp = session.getTimestamp();
-                    if (status != null) {
-                        update_display();
-                    }
-                }
-            }
 
-        };
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our value is changed
@@ -203,12 +188,13 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
-            session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9989);    //Force to consider current value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
                     EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
@@ -216,7 +202,6 @@ public class Graphical_Boolean extends Basic_Graphical_widget implements View.On
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
     }
 
     /**

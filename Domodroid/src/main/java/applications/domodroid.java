@@ -14,8 +14,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.facebook.stetho.Stetho;
+import com.github.anrwatchdog.ANRWatchDog;
 import com.squareup.leakcanary.LeakCanary;
 
+import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.domogik.domodroid13.R;
@@ -51,20 +53,17 @@ public class domodroid extends Application {
         super.onCreate();
         instance = this;
         // The following line triggers the initialization of ACRA
-        //ACRA.init(this);
-        //new ANRWatchDog().start();
+        ACRA.init(this);
+        new ANRWatchDog().start();
         //Only to debug locally
         LeakCanary.install(this);
-        Stetho.initializeWithDefaults(this);
+        //Stetho.initializeWithDefaults(this);
 
         prefUtils = new pref_utils(this);
 
         //manage connectivity state
         manageConnectivityState();
-        /**
-         BroadCast Receiver to listen to connectivity changes
-         */
-        BroadcastReceiver connectivityChangedReceiever = new BroadcastReceiver() {
+        connectivityChangedReceiever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 manageConnectivityState();
@@ -83,6 +82,10 @@ public class domodroid extends Application {
     /***********************************************************
      *  Manage Connectivity
      **********************************************************/
+    /***
+     * BroadCastr Receiver to listen to connectivity changes
+     */
+    private BroadcastReceiver connectivityChangedReceiever;
     /**
      * To know if there is a connection (wifi or GPRS)
      */
@@ -125,10 +128,10 @@ public class domodroid extends Application {
                     WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-                        String preferred_wifi = prefUtils.GetPreferedWifiSsid();
-                        on_preferred_Wifi = wifiInfo.getSSID().replace("\"", "").equals(preferred_wifi);
+                        String prefered_wifi = prefUtils.GetPreferedWifiSsid();
+                        on_preferred_Wifi = wifiInfo.getSSID().replace("\"", "").equals(prefered_wifi);
                         //handle the case where user do not set is local SSID in options
-                        if (preferred_wifi.equals("")) {
+                        if (prefered_wifi.equals("")) {
                             on_preferred_Wifi = true;
                         }
                     }
@@ -168,7 +171,7 @@ public class domodroid extends Application {
     }
 
     public static void onDestroy() {
-        int id= android.os.Process.myPid();
+        int id = android.os.Process.myPid();
         android.os.Process.killProcess(id);
     }
 }

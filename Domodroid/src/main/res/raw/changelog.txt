@@ -22,6 +22,7 @@
     $ 1.4
       % Version 33
       _ 2017-xx-xx
+      * #142 Check MQ configuration at sync and after.
       * More lib inside like LeakCanay and Greenrobot Eventbus.
       * Correct a possible memory leak on devices < Android N caused by WIFI_SERVICE.
       * Try to reduce memory used with SharedPreferences.

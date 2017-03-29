@@ -17,9 +17,11 @@
  */
 package Abstract;
 
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+
+import org.greenrobot.eventbus.EventBus;
+
+import Event.Event_base_message;
 
 public abstract class common_method {
     /**
@@ -28,12 +30,8 @@ public abstract class common_method {
      * @param widgetHandler an Handler used to callback
      */
     public static void refresh_the_views(Handler widgetHandler) {
-        //Refresh the view
-        Bundle b = new Bundle();
-        b.putBoolean("refresh", true);
-        Message msg = new Message();
-        msg.setData(b);
-        widgetHandler.sendMessage(msg);
+        //Notigy to Refresh the view
+        EventBus.getDefault().post(new Event_base_message("refresh"));
     }
 
 

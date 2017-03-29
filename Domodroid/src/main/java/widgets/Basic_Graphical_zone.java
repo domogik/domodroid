@@ -19,9 +19,6 @@ package widgets;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +27,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import Abstract.translate;
+import Event.Event_to_navigate_house;
 import activities.Gradients_Manager;
 import activities.Graphics_Manager;
 import misc.tracerengine;
@@ -42,18 +42,16 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
     private final int id;
     //private int session_type;
     final String name;
-    private final Handler widgetHandler;
     private final String type;
 
     //public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
-    public Basic_Graphical_zone(tracerengine Trac, Context context, int id, String name, String description, String icon, int widgetSize, String type, Handler handler) {
+    public Basic_Graphical_zone(tracerengine Trac, Context context, int id, String name, String description, String icon, int widgetSize, String type) {
         super(context);
         this.id = id;
         this.name = name;
         this.type = type;
         //this.session_type = session_type;
         this.setPadding(5, 5, 5, 5);
-        this.widgetHandler = handler;
         setOnClickListener(this);
 
         //panel with border
@@ -111,14 +109,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
     }
 
     public void onClick(View v) {
-        Bundle b = new Bundle();
-        b.putInt("id", id);
-        b.putString("name", name);
-        b.putString("type", type);
-        Message msg = new Message();
-        msg.setData(b);
-        widgetHandler.sendMessage(msg);
-
+        EventBus.getDefault().post(new Event_to_navigate_house(id, type, name));
     }
 
     void change_this_icon(String icon) {

@@ -22,9 +22,6 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -59,18 +56,16 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Area";
     private String icon;
     private final Activity Activity;
-    private final Handler widgetHandler;
     private final DomodroidDB domodb;
 
-    public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
-        super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
+    public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize) {
+        super(Trac, context, id, name_area, description_area, icon, widgetSize, "area");
         FrameLayout myself = this;
         this.Tracer = Trac;
         this.icon = icon;
         this.id_area = id;
         this.context = context;
         this.Activity = (android.app.Activity) context;
-        this.widgetHandler = handler;
         setOnLongClickListener(this);
         domodb = DomodroidDB.getInstance(this.Tracer, this.Activity);
         mytag = "Graphical_Area(" + id_area + ")";

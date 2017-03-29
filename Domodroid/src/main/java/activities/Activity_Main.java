@@ -74,6 +74,7 @@ import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
 import Event.Event_base_message;
+import Event.Event_to_navigate_house;
 import applications.domodroid;
 import database.Cache_management;
 import database.WidgetUpdate;
@@ -93,7 +94,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
     private Dialog_Synchronize DIALOG_dialog_sync;
     private WidgetUpdate WU_widgetUpdate;
     private Handler sbanim;
-    private static Handler widgetHandler;
     private Intent INTENT_map = null;
     private ImageView appname;
 
@@ -311,12 +311,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                         }
                         Bundle b = new Bundle();
                         //Notify sync complete to parent Dialog
-                        b.putInt("id", 0);
-                        b.putString("type", "root");
-                        Message msg = new Message();
-                        msg.setData(b);
-                        if (widgetHandler != null)
-                            widgetHandler.sendMessage(msg);    // That should force to refresh Views
+                        // That should force to refresh Views
+                        EventBus.getDefault().post(new Event_to_navigate_house(0, "root", ""));
                         /* */
                         if (WU_widgetUpdate != null) {
                             WU_widgetUpdate.Disconnect(0);    //That should disconnect all opened widgets from cache engine
@@ -387,13 +383,13 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 Graphics_Manager.Names_Agent(this, "House"),
                 "",
                 "house",
-                0, "", null);
+                0, "");
         house.setPadding(0, 0, 5, 0);
         map = new Basic_Graphical_zone(Tracer, getApplicationContext(), 0,
                 Graphics_Manager.Names_Agent(this, "Map"),
                 "",
                 "map",
-                0, "", null);
+                0, "");
         map.setPadding(5, 0, 0, 0);
 
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
@@ -559,6 +555,32 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_to_navigate_house
+     * to load widgets
+     */
+    public void onEvent(Event_to_navigate_house event) {
+        //#107 around here
+        Tracer.d("debug map bak #107", " history= " + history.toString() + " hystoryposition= " + historyPosition);
+        try {
+            historyPosition++;
+            loadWigets(event.getid(), event.gettype());
+            //redraw the scrollview at the top position of the screen
+            SV_Main_ScrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    SV_Main_ScrollView.scrollTo(0, 0);
+                }
+            });
+            Tracer.v(mytag, "add history " + event.getid() + " " + event.gettype());
+            history.add(historyPosition, new String[]{event.getid() + "", event.gettype()});
+        } catch (Exception e) {
+            Tracer.e(mytag, "handler error into loadWidgets");
+            Tracer.e("debug map bak", e.toString());
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -620,7 +642,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     public void onDestroy() {
         super.onDestroy();
         this.WM_Agent = null;
-        widgetHandler = null;
         if (prefUtils.GetDomogikApiVersion() >= 0.9f) {
             JSONArray cached_dump;
             if (WU_widgetUpdate != null) {
@@ -726,37 +747,9 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         }
 
 
-        //load widgets
-        if (widgetHandler == null) {
-            Tracer.v(mytag, "Starting WidgetHandler thread !");
-            widgetHandler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    //#107 around here
-                    Tracer.d("debug map bak #107", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
-                    try {
-                        historyPosition++;
-                        loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-                        //redraw the scrollview at the top position of the screen
-                        SV_Main_ScrollView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                SV_Main_ScrollView.scrollTo(0, 0);
-                            }
-                        });
-                        Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
-                        history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
-                    } catch (Exception e) {
-                        Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
-                        Tracer.e("debug map bak", e.toString());
-                    }
-                    return;
-                }
-            };
-        }
         if (WM_Agent == null) {
             Tracer.v(mytag, "Starting wAgent !");
-            WM_Agent = new Widgets_Manager(this, Tracer, widgetHandler);
+            WM_Agent = new Widgets_Manager(this, Tracer);
             WM_Agent.widgetupdate = WU_widgetUpdate;
         }
         /*
@@ -1090,7 +1083,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 //Disconnect all opened sessions....
                 Tracer.v(mytag + "Exit", "Stopping WidgetUpdate thread !");
                 this.WM_Agent = null;
-                widgetHandler = null;
                 Tracer.set_engine(null);
                 if (!(WU_widgetUpdate == null)) {
                     WU_widgetUpdate.Disconnect(0);    //Disconnect all widgets owned by Main

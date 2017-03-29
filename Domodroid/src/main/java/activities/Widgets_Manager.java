@@ -1,7 +1,6 @@
 package activities;
 
 import android.app.Activity;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
@@ -45,14 +44,12 @@ class Widgets_Manager {
     private final pref_utils prefUtils;
     private int widgetSize;
     private boolean columns = false;
-    private final Handler widgetHandler;
     public WidgetUpdate widgetupdate = null;
     private tracerengine Tracer = null;
     private final String mytag = this.getClass().getName();
 
-    public Widgets_Manager(Activity activity, tracerengine Trac, Handler handler) {
+    public Widgets_Manager(Activity activity, tracerengine Trac) {
         super();
-        this.widgetHandler = handler;
         this.activity = activity;
         this.Tracer = Trac;
         prefUtils = new pref_utils();
@@ -482,7 +479,7 @@ class Widgets_Manager {
                 String name = area.getName();
                 name = Graphics_Manager.Names_Agent(activity, name);
 
-                Graphical_Area graph_area = new Graphical_Area(Tracer, activity, Id, name, area.getDescription(), iconId, widgetSize, widgetHandler);
+                Graphical_Area graph_area = new Graphical_Area(Tracer, activity, Id, name, area.getDescription(), iconId, widgetSize);
 
                 //Fill List from value
                 map = new HashMap<>();
@@ -565,7 +562,7 @@ class Widgets_Manager {
             String name = room.getName();
             name = Graphics_Manager.Names_Agent(activity, name);
 
-            Graphical_Room graph_room = new Graphical_Room(Tracer, activity, area_id, room_id, name, room.getDescription(), iconId, widgetSize, widgetHandler);
+            Graphical_Room graph_room = new Graphical_Room(Tracer, activity, area_id, room_id, name, room.getDescription(), iconId, widgetSize);
             tmpPan.addView(graph_room);
 
             //Fill List from value

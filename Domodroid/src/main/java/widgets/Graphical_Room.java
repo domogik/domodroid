@@ -22,7 +22,6 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -58,11 +57,10 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
     private String mytag = "Graphical_Room";
     private String icon;
     private final Activity Activity;
-    private final Handler widgetHandler;
     private final DomodroidDB domodb;
 
-    public Graphical_Room(tracerengine Trac, Context context, int area_id, int id, String name_room, String description_room, String icon, int widgetSize, Handler handler) {
-        super(Trac, context, id, name_room, description_room, icon, widgetSize, "room", handler);
+    public Graphical_Room(tracerengine Trac, Context context, int area_id, int id, String name_room, String description_room, String icon, int widgetSize) {
+        super(Trac, context, id, name_room, description_room, icon, widgetSize, "room");
         FrameLayout myself = this;
         this.Tracer = Trac;
         this.id_room = id;
@@ -70,7 +68,6 @@ public class Graphical_Room extends Basic_Graphical_zone implements OnLongClickL
         this.context = context;
         this.icon = icon;
         this.Activity = (android.app.Activity) context;
-        this.widgetHandler = handler;
         domodb = DomodroidDB.getInstance(this.Tracer, this.Activity);
         prefUtils = new pref_utils();
 

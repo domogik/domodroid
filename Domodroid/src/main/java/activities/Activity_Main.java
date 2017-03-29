@@ -309,7 +309,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                             Tracer.i(mytag, "OnCreate WidgetUpdate is null startCacheengine!");
                             startCacheEngine(); //if sync dialog is closed
                         }
-                        Bundle b = new Bundle();
                         //Notify sync complete to parent Dialog
                         // That should force to refresh Views
                         EventBus.getDefault().post(new Event_to_navigate_house(0, "root", ""));
@@ -345,15 +344,6 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
                 } else if (msg.what == 3) {
                     appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
                     getSupportActionBar().setLogo(R.drawable.app_name4);
-                } else if (msg.what == 8000) {
-                    Tracer.d(mytag, "Request to display message : 8000");
-                    /*
-                    if(dialog_message == null) {
-						Create_message_box();
-					}
-					dialog_message.setMessage("Starting cache engine...");
-					dialog_message.show();
-					 */
                 }
                 return;
             }

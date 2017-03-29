@@ -2,7 +2,6 @@ package database;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -71,7 +70,6 @@ public class WidgetUpdate {
     private Boolean locked = false;
     private Boolean timer_flag = false;
     private Boolean ready = false;
-    private Handler mapView = null;
     private Events_manager eventsManager = null;
     private static Handler myselfHandler = null;
     private int last_ticket = -1;
@@ -167,11 +165,6 @@ public class WidgetUpdate {
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
-        /*
-        if(parent[0] != null) {
-			parent[0].sendEmptyMessage(8000);	//Ask main to display message
-		}
-		 */
         Tracer.d(mytag, "cache engine starting timer for periodic cache update");
         Timer();        //and initiate the cyclic timer
 
@@ -229,7 +222,6 @@ public class WidgetUpdate {
                                 last_ticket = event.item;
                             }
 
-                            mapView = null;
                             //mapView will be set by update_cache_device if at least one mini widget has to be notified
                             update_cache_device(event.device_id, event.key, event.Value, event.Timestamp);
                         }
@@ -770,14 +762,9 @@ public class WidgetUpdate {
                                         Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                     }
                                 });
-                                Bundle b = new Bundle();
                                 //Notify error to parent Dialog
-                                b.putString("message", "datatype");
-                                Message msg = new Message();
-                                msg.setData(b);
-                                //stop();
+                                EventBus.getDefault().post(new Event_base_message("datatype"));
                                 //todo stop Widgetupdate
-                                //handler.sendMessage(msg);
                                 return null;
                             }
                             Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
@@ -797,13 +784,9 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    Bundle b = new Bundle();
                                     //Notify error to parent Dialog
-                                    b.putString("message", "datatype");
-                                    Message msg = new Message();
-                                    msg.setData(b);
+                                    EventBus.getDefault().post(new Event_base_message("datatype"));
                                     //todo stop Widgetupdate
-                                    //handler.sendMessage(msg);
                                     return null;
                                 }
                             } else if (api_version == 0.9f) {
@@ -828,13 +811,9 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    Bundle b = new Bundle();
                                     //Notify error to parent Dialog
-                                    b.putString("message", "datatype");
-                                    Message msg = new Message();
-                                    msg.setData(b);
+                                    EventBus.getDefault().post(new Event_base_message("sensor_list_error"));
                                     //todo stop Widgetupdate
-                                    //handler.sendMessage(msg);
                                     return null;
                                 }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
@@ -898,13 +877,9 @@ public class WidgetUpdate {
                                                 Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                             }
                                         });
-                                        Bundle b = new Bundle();
                                         //Notify error to parent Dialog
-                                        b.putString("message", "datatype");
-                                        Message msg = new Message();
-                                        msg.setData(b);
+                                        EventBus.getDefault().post(new Event_base_message("sensor_list_error"));
                                         //todo stop Widgetupdate
-                                        //handler.sendMessage(msg);
                                         return null;
                                     }
                                 }
@@ -940,13 +915,9 @@ public class WidgetUpdate {
                                                     Toast.makeText(activity, R.string.rest_error_getting_device, Toast.LENGTH_LONG).show();
                                                 }
                                             });
-                                            Bundle b = new Bundle();
                                             //Notify error to parent Dialog
-                                            b.putString("message", "datatype");
-                                            Message msg = new Message();
-                                            msg.setData(b);
+                                            EventBus.getDefault().post(new Event_base_message("device_list_error"));
                                             //todo stop Widgetupdate
-                                            //handler.sendMessage(msg);
                                             return null;
                                         }
                                     } else if (api_version >= 0.9f) {
@@ -961,13 +932,9 @@ public class WidgetUpdate {
                                                     Toast.makeText(activity, R.string.rest_error_getting_device, Toast.LENGTH_LONG).show();
                                                 }
                                             });
-                                            Bundle b = new Bundle();
                                             //Notify error to parent Dialog
-                                            b.putString("message", "datatype");
-                                            Message msg = new Message();
-                                            msg.setData(b);
+                                            EventBus.getDefault().post(new Event_base_message("device_list_error"));
                                             //todo stop Widgetupdate
-                                            //handler.sendMessage(msg);
                                             return null;
                                         }
                                     }
@@ -1084,7 +1051,6 @@ public class WidgetUpdate {
         } catch (JSONException e) {
             Tracer.e(mytag, e.toString());
         }
-        mapView = null;
         for (int i = 0; i < itemArray.length(); i++) {
             //force to process to true for all item and then to false if something wrong
             //then if false it will not update the cache value, avoiding display of null value.
@@ -1154,7 +1120,6 @@ public class WidgetUpdate {
             }
 
         } // end of for loop on stats result
-        mapView = null;
         Tracer.i(mytag, "cache size = " + cache.size());
 
         return updated_items;

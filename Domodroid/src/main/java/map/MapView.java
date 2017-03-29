@@ -1160,7 +1160,7 @@ public class MapView extends View {
                 /*todo when #89
                 Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
                 Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, activity, URL,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 */
@@ -1284,7 +1284,7 @@ public class MapView extends View {
                 /*todo when #89
                 Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
                 Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, activity, URL,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 */

@@ -12,6 +12,9 @@ public class Event_base_message {
     // "stats_error" ex 8002 handler
     // "cache_ready" ex 8999 handler
     // "refresh" to refresh the current view
+    // TODO "device_list_error" (not handle fo the moment
+    // TODO "sensor_list_error" (not handle fo the moment
+    // TODO "datatype" (not handle fo the moment
     // more to come...
     public Event_base_message(String val) {
         message = val;

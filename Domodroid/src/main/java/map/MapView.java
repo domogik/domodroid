@@ -16,7 +16,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -1870,5 +1869,10 @@ public class MapView extends View {
         boolean navigationdraweropen1 = navigationdraweropen;
     }
 
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().register(this);
+    }
 
 }

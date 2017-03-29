@@ -1085,12 +1085,12 @@ public class MapView extends View {
             } else {
                 if (prefUtils.GetNoAlternativeBinaryWidget()) {
                     Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     onoff.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     onoff_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
@@ -1100,37 +1100,37 @@ public class MapView extends View {
             if (parameters.contains("command")) {
                 if (prefUtils.GetNoAlternativeBinaryWidget()) {
                     Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     onoff.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     onoff_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
             } else {
                 Graphical_Boolean bool = new Graphical_Boolean(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 bool.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
         } else if (feature.getValue_type().equals("range")) {
             Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                    widgetSize, 0, Id, zone, feature, handler);
+                    widgetSize, 0, Id, zone, feature);
             variator.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
             if (parameters.contains("command")) {
                 Graphical_Trigger trigger = new Graphical_Trigger(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
                 Graphical_Info info = new Graphical_Info(Tracer, activity,
-                        widgetSize, 0, Id, zone, update_timer, feature, handler);
+                        widgetSize, 0, Id, zone, update_timer, feature);
                 info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
@@ -1142,19 +1142,19 @@ public class MapView extends View {
                 //display range widget for DT_scaling command with number
                 if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")) {
                     Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     variator.container = (FrameLayout) panel_widget;
                     panel_widget.addView(variator);
                 } else {
                     Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
                 }
             } else if (prefUtils.GetAlternativeGraphWidget()) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info1.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 /*todo when #89
@@ -1167,29 +1167,29 @@ public class MapView extends View {
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
                 Graphical_Info info = new Graphical_Info(Tracer, activity,
-                        widgetSize, 0, Id, zone, update_timer, feature, handler);
+                        widgetSize, 0, Id, zone, update_timer, feature);
                 info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else if (feature.getValue_type().equals("list")) {
             Graphical_List list = new Graphical_List(Tracer, activity,
-                    widgetSize, 0, Id, zone, feature, handler);
+                    widgetSize, 0, Id, zone, feature);
             list.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
             Graphical_Color color = new Graphical_Color(Tracer, activity,
-                    widgetSize, 0, Id, zone, feature, handler);
+                    widgetSize, 0, Id, zone, feature);
             color.container = (FrameLayout) panel_widget;
             panel_widget.addView(color);
         } else if (feature.getValue_type().equals("video")) {
             if (!parameters.contains("command")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 cam.container = (FrameLayout) panel_widget;
                 panel_widget.addView(cam);
             } else {
                 Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             }
@@ -1198,39 +1198,39 @@ public class MapView extends View {
             Tracer.i(mytag, "parameters=" + parameters);
             if (feature.getDevice_feature_model_id().contains("call")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             } else if (feature.getDevice_feature_model_id().contains("camera")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 panel_widget.addView(cam);
             } else if (parameters.contains("command")) {
                 if (State_key.equals("Set RGB color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_Color colorw = new Graphical_Color(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     colorw.container = (FrameLayout) panel_widget;
                     panel_widget.addView(colorw);
                 } else {
                     Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                            widgetSize, 0, Id, zone, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
                     info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
                 }
             } else if (feature.getValue_type().equals("video")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 cam.container = (FrameLayout) panel_widget;
                 panel_widget.addView(cam);
             } else if (feature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
                 Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 Openstreetmap.container = (FrameLayout) panel_widget;
                 panel_widget.addView(Openstreetmap);
             } else {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             }
@@ -1239,19 +1239,19 @@ public class MapView extends View {
                 || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
                 || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")) {
             Graphical_List list = new Graphical_List(Tracer, activity,
-                    widgetSize, 0, Id, zone, feature, handler);
+                    widgetSize, 0, Id, zone, feature);
             list.with_list = parameters.contains("command");
             list.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
             if (!parameters.contains("command")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             } else {
                 Graphical_List list = new Graphical_List(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 list.container = (FrameLayout) panel_widget;
                 list.with_list = parameters.contains("command");
                 panel_widget.addView(list);
@@ -1259,12 +1259,12 @@ public class MapView extends View {
         } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
             if (!parameters.contains("command")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             } else {
                 Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             }
@@ -1272,13 +1272,13 @@ public class MapView extends View {
             if (parameters.contains("command")) {
                 //display range widget for DT_scaling command with number
                 Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 variator.container = (FrameLayout) panel_widget;
                 panel_widget.addView(variator);
             } else if (prefUtils.GetAlternativeGraphWidget()) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
-                        widgetSize, 0, Id, zone, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 info1.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 /*todo when #89
@@ -1290,13 +1290,13 @@ public class MapView extends View {
                 */
             } else {
                 Graphical_Info info = new Graphical_Info(Tracer, activity,
-                        widgetSize, 0, Id, zone, update_timer, feature, handler);
+                        widgetSize, 0, Id, zone, update_timer, feature);
                 info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else {
             Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",
-                    widgetSize, 0, zone, mytag, handler);
+                    widgetSize, 0, zone, mytag);
             panel_widget.addView(basic_widget);
         }
 
@@ -1872,7 +1872,7 @@ public class MapView extends View {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().unregister(this);
     }
 
 }

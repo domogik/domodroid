@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.View;
@@ -76,13 +75,12 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
     final String name;
     private final String state_key;
     private int icon_status;
-    private final Handler widgetHandler;
     private DomodroidDB domodb = null;
     Entity_client session = null;
     final Typeface typefaceweather;
     final Typeface typefaceawesome;
 
-    public Basic_Graphical_widget(Activity activity, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag, Handler handler) {
+    public Basic_Graphical_widget(Activity activity, tracerengine Trac, int id, String name, String state_key, String icon, int widgetSize, int place_id, String place_type, String mytag) {
         super(activity);
         this.Tracer = Trac;
         this.activity = activity;
@@ -101,7 +99,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
         //global variable
         api_version = prefUtils.GetDomogikApiVersion();
 
-        this.widgetHandler = handler;
+        //this.widgetHandler = handler;
         domodb = DomodroidDB.getInstance(this.Tracer, this.activity);
 
         setOnLongClickListener(this);

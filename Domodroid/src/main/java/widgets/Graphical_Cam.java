@@ -20,8 +20,6 @@ package widgets;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -54,8 +52,8 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
-                         final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
+                         final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
         this.Tracer = Trac;
         this.activity = activity;
@@ -65,8 +63,8 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
 
     public Graphical_Cam(tracerengine Trac,
                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
-                         final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
+                         final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.Tracer = Trac;
         this.activity = activity;
@@ -100,7 +98,7 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
             session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    //each time our value change, the engine will call handler
+                    //update value
                     status = session.getValue();
                     //register eventbus for new value
                     EventBus.getDefault().register(this);

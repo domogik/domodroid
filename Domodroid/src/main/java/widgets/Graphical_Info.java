@@ -21,8 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Handler;
-
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -84,8 +82,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     public Graphical_Info(tracerengine Trac,
                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
-                          final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
+                          final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
         this.session_type = session_type;
         this.update = update;
@@ -94,8 +92,8 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
     public Graphical_Info(tracerengine Trac,
                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
-                          final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
+                          final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
         this.update = update;

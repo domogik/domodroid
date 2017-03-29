@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -93,8 +92,8 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
     public Graphical_Openstreetmap(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
-                                   final Entity_Feature feature, Handler handler) {
-        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
+                                   final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
         this.session_type = session_type;
         onCreate();
@@ -102,8 +101,8 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
     public Graphical_Openstreetmap(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
-                                   final Entity_Map feature_map, Handler handler) {
-        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, handler);
+                                   final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
         onCreate();

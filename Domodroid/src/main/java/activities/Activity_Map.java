@@ -645,6 +645,8 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        //hide somes menus if not start directly in map
+        menu.findItem(R.id.map_menu_preferences).setVisible(prefUtils.GetStartOnMap());
         menu.findItem(R.id.map_menu_exit).setVisible(prefUtils.GetStartOnMap());
         return true;
     }
@@ -736,8 +738,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
                 dialog_help.show();
                 prefUtils.SetSplashDisplayed(true);
                 return true;
+            case R.id.map_menu_preferences:
+                Intent intent = new Intent(this, Preference.class);
+                startActivity(intent);
+                return true;
             case R.id.map_menu_exit:
-                Intent intent = new Intent(this, Activity_Main.class);
+                intent = new Intent(this, Activity_Main.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("Exit me", true);
                 startActivity(intent);

@@ -228,7 +228,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
                     prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     //recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, activity);
-                    common_method.refresh_the_views(widgetHandler);
+                    common_method.refresh_the_views();
                     Snackbar.make(getRootView(), R.string.widget_deleted, Snackbar.LENGTH_LONG).show();
                 }
             });
@@ -279,7 +279,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             prefUtils.SetFeatureListAssociation(domodb.request_json_Features_association().toString());
             // #76
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
-            common_method.refresh_the_views(widgetHandler);
+            common_method.refresh_the_views();
             Snackbar.make(getRootView(), R.string.widget_moved_down, Snackbar.LENGTH_LONG).show();
 
         } else if (action.equals(activity.getString(R.string.move_up))) {
@@ -288,7 +288,7 @@ public class Basic_Graphical_widget extends FrameLayout implements OnLongClickLi
             // #76
             prefUtils.SetFeatureListAssociation(domodb.request_json_Features_association().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
-            common_method.refresh_the_views(widgetHandler);
+            common_method.refresh_the_views();
             Snackbar.make(getRootView(), R.string.widget_moved_up, Snackbar.LENGTH_LONG).show();
 
         }

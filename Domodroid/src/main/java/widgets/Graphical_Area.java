@@ -22,9 +22,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -129,11 +127,7 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     // recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view
-                    Bundle b = new Bundle();
-                    b.putBoolean("refresh", true);
-                    Message msg = new Message();
-                    msg.setData(b);
-                    widgetHandler.sendMessage(msg);
+                    common_method.refresh_the_views();
                     Snackbar.make(getRootView(), R.string.area_deleted, Snackbar.LENGTH_LONG).show();
                 }
             });
@@ -209,14 +203,14 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             Tracer.get_engine().move_one_area(id_area, 0, "area", "down");
             prefUtils.SetArea(domodb.request_json_Area().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
-            common_method.refresh_the_views(widgetHandler);
+            common_method.refresh_the_views();
             Snackbar.make(getRootView(), R.string.area_moved_down, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_area(id_area, 0, "area", "up");
             prefUtils.SetArea(domodb.request_json_Area().toString());
             prefUtils.save_params_to_file(Tracer, mytag, getContext());
-            common_method.refresh_the_views(widgetHandler);
+            common_method.refresh_the_views();
             Snackbar.make(getRootView(), R.string.area_moved_up, Snackbar.LENGTH_LONG).show();
 
         }

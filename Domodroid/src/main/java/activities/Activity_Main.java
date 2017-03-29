@@ -553,6 +553,8 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
             dialog_stats_error.setTitle(R.string.domogik_error);
             dialog_stats_error.setMessage(R.string.stats_error);
             dialog_stats_error.show();
+        } else if (event_base_message.getmessage().equals("refresh")) {
+            refresh();
         }
 
     }
@@ -661,6 +663,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 			Tracer = null;
 		}
 		 */
+        EventBus.getDefault().unregister(this);
         domodroid.onDestroy();
     }
 
@@ -732,21 +735,17 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     //#107 around here
                     Tracer.d("debug map bak #107", msg.getData().toString() + " history= " + history.toString() + " hystoryposition= " + historyPosition);
                     try {
-                        if (msg.getData().getBoolean("refresh")) {
-                            refresh();
-                        } else if (!msg.getData().getBoolean("refresh")) {
-                            historyPosition++;
-                            loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
-                            //redraw the scrollview at the top position of the screen
-                            SV_Main_ScrollView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SV_Main_ScrollView.scrollTo(0, 0);
-                                }
-                            });
-                            Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
-                            history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
-                        }
+                        historyPosition++;
+                        loadWigets(msg.getData().getInt("id"), msg.getData().getString("type"));
+                        //redraw the scrollview at the top position of the screen
+                        SV_Main_ScrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                SV_Main_ScrollView.scrollTo(0, 0);
+                            }
+                        });
+                        Tracer.v(mytag + ".widgetHandler", "add history " + msg.getData().getInt("id") + " " + msg.getData().getString("type"));
+                        history.add(historyPosition, new String[]{msg.getData().getInt("id") + "", msg.getData().getString("type")});
                     } catch (Exception e) {
                         Tracer.e(mytag + ".widgetHandler", "handler error into loadWidgets");
                         Tracer.e("debug map bak", e.toString());

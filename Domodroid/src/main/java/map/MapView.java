@@ -30,6 +30,7 @@ import android.widget.Toast;
 import org.domogik.domodroid13.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +50,7 @@ import Abstract.translate;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import Event.Entity_client_event_value;
+import Event.Event_base_message;
 import activities.Activity_Map;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
@@ -160,24 +162,25 @@ public class MapView extends View {
         /*
          * This view has only one handler for all mini widgets displayed on map
 		 * It'll receive a unique notification from WidgetUpdate when one or more values have changed
+		 * It used now eventbus directly
 		 */
-        handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == 8999) {
-                    //Cache engine is ready for use....
-                    if (Tracer != null)
-                        Tracer.i(mytag, "Cache engine has notified it's ready !");
-                    initMap();
-                }
-                return true;
-            }
-        });
-
         EventBus.getDefault().register(this);
 
         //End of create method ///////////////////////
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_base_message
+     */
+    public void onEvent(Event_base_message event_base_message) {
+        if (event_base_message.getmessage().equals("cache_ready")) {
+            //Cache engine is ready for use....
+            if (Tracer != null)
+                Tracer.i(mytag, "Cache engine has notified it's ready !");
+            initMap();
+        }
     }
 
     /**

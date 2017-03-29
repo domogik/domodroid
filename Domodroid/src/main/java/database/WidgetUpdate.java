@@ -19,6 +19,7 @@ import org.apache.http.protocol.HTTP;
 import org.domogik.domodroid13.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +44,7 @@ import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
 import Event.ConnectivityChangeEvent;
+import Event.Event_base_message;
 import applications.domodroid;
 import misc.tracerengine;
 import mq.ZMQReqMessage;
@@ -211,19 +213,7 @@ public class WidgetUpdate {
             public boolean handleMessage(Message msg) {
                 //This handler will receive notifications from Events_Manager and from waitingThread running in background
                 // 1 message => 1 event : so, it's serialized !
-                if (msg.what == 8999) {
-                    // Cache engine being ready, we can start events manager
-                    Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
-                    if (eventsManager == null) {
-                        eventsManager = Events_manager.getInstance(activity);
-                    }
-                    eventsManager.init(Tracer, myselfHandler, cache, prefUtils.prefs, instance);
-                    /*
-                    if(parent[0] != null) {
-						parent[0].sendEmptyMessage(8999);	//Forward event to Main
-					}
-					 */
-                } else if (msg.what == 9900) {
+                if (msg.what == 9900) {
                     if (eventsManager != null) {
                         callback_counts++;
                         Rinor_event event = eventsManager.get_event();
@@ -322,6 +312,25 @@ public class WidgetUpdate {
 */
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_base_message
+     */
+    public void onEvent(Event_base_message event_base_message) {
+        if (event_base_message.getmessage().equals("cache_ready")) {
+            // Cache engine being ready, we can start events manager
+            Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
+            if (eventsManager == null) {
+                eventsManager = Events_manager.getInstance(activity);
+            }
+            eventsManager.init(Tracer, myselfHandler, cache, prefUtils.prefs, instance);
+                    /*
+                    if(parent[0] != null) {
+						parent[0].sendEmptyMessage(8999);	//Forward event to Main
+					}
+					 */
+        }
+    }
     /*
      * Allow callers to set their handler in table
      */
@@ -640,7 +649,9 @@ public class WidgetUpdate {
                 eventsManager.cache_out_of_date = false;
             }
             if (ready) {    //Notify cache is ready
-                if (parent[0] != null) {
+                //Notify each registered widget
+                EventBus.getDefault().post(new Event_base_message("cache_ready"));
+                /*if (parent[0] != null) {
                     parent[0].sendEmptyMessage(8999);
                 }
                 if (parent[1] != null) {
@@ -648,7 +659,7 @@ public class WidgetUpdate {
                 }
                 if (parent[2] != null) {
                     parent[2].sendEmptyMessage(8999);
-                }
+                }*/
 
             }
         } catch (Exception e) {
@@ -680,23 +691,25 @@ public class WidgetUpdate {
             }
             if (myselfHandler != null) {
                 //Tracer.d(mytag,"cache engine ready  ! Notify it....");
-                myselfHandler.sendEmptyMessage(8999);    // cache engine ready.....
+                //myselfHandler.sendEmptyMessage(8999);    // cache engine ready.....
+                //Notify each registered widget
+                EventBus.getDefault().post(new Event_base_message("cache_ready"));
             }
             if (parent[0] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify Main activity....");
-                parent[0].sendEmptyMessage(8999);    //hide Toast message
+                //parent[0].sendEmptyMessage(8999);    //hide Toast message
             } else {
                 Tracer.d(mytag, "cache engine ready  ! No Main activity....");
             }
             if (parent[1] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify Map activity....");
-                parent[1].sendEmptyMessage(8999);    //hide Toast message
+                //parent[1].sendEmptyMessage(8999);    //hide Toast message
             } else {
                 Tracer.d(mytag, "cache engine ready  ! No Map activity....");
             }
             if (parent[2] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify MapView activity....");
-                parent[2].sendEmptyMessage(8999);    //hide Toast message
+                //parent[2].sendEmptyMessage(8999);    //hide Toast message
             } else {
                 Tracer.d(mytag, "cache engine ready  ! No MapView activity....");
             }
@@ -1058,16 +1071,14 @@ public class WidgetUpdate {
             return 0;
         }
         if (itemArray == null) {
-            if (parent[0] != null) {
-                parent[0].sendEmptyMessage(8001);    //Ask main to display message
-            }
+            //Ask main to display message
+            EventBus.getDefault().post(new Event_base_message("domogik_error"));
             return 0;
         }
         try {
             if (itemArray.getJSONObject(0).getString("Error").length() > 0) {
-                if (parent[0] != null) {
-                    parent[0].sendEmptyMessage(8002);    //Ask main to display message
-                }
+                //Ask main to display message
+                EventBus.getDefault().post(new Event_base_message("stats_error"));
                 return 0;
             }
         } catch (JSONException e) {

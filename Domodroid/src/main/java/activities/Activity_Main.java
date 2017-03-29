@@ -56,6 +56,9 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -70,6 +73,7 @@ import Abstract.pref_utils;
 import Dialog.Dialog_House;
 import Dialog.Dialog_Splash;
 import Dialog.Dialog_Synchronize;
+import Event.Event_base_message;
 import applications.domodroid;
 import database.Cache_management;
 import database.WidgetUpdate;
@@ -175,6 +179,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
             //get metrics every 30s
             processTimer_for_metrics.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), repeatTime * 1000, pendingIntent_for_metrics);
         }
+        //subscribe to message event.
+        EventBus.getDefault().register(this);
 
         initView();
 
@@ -352,28 +358,8 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 					dialog_message.setMessage("Starting cache engine...");
 					dialog_message.show();
 					 */
-                } else if (msg.what == 8001) {
-                    AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
-                    dialog_stats_error.setTitle(R.string.domogik_error);
-                    dialog_stats_error.setMessage(R.string.stats_error);
-                    dialog_stats_error.show();
-                } else if (msg.what == 8002) {
-                    AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
-                    dialog_stats_error.setTitle(R.string.domogik_error);
-                    dialog_stats_error.setMessage("ERROR");
-                    dialog_stats_error.show();
-                } else if (msg.what == 8999) {
-                    //Cache engine is ready for use....
-                    if (Tracer != null)
-                        Tracer.i(mytag, "Cache engine has notified it's ready !");
-                    //cache_ready=true;
-                    if (end_of_init_requested)
-                        end_of_init();
-                    PG_dialog_message.dismiss();
-                    //refresh view when initial cache ready #33
-                    refresh();
                 }
-                return ;
+                return;
             }
         };
 
@@ -539,6 +525,36 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
         Tracer.v(mytag, "OnCreate() complete !");
         // End of onCreate (UIThread)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_base_message
+     */
+    public void onEvent(Event_base_message event_base_message) {
+        if (event_base_message.getmessage().equals("cache_ready")) {
+            //Cache engine is ready for use....
+            if (Tracer != null)
+                Tracer.i(mytag, "Cache engine has notified it's ready !");
+            //cache_ready=true;
+            if (end_of_init_requested)
+                end_of_init();
+            PG_dialog_message.dismiss();
+            //refresh view when initial cache ready #33
+            refresh();
+        } else if (event_base_message.getmessage().equals("stats_error")) {
+            AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
+            dialog_stats_error.setTitle(R.string.domogik_error);
+            dialog_stats_error.setMessage("ERROR");
+            dialog_stats_error.show();
+
+        } else if (event_base_message.getmessage().equals("stats_error")) {
+            AlertDialog.Builder dialog_stats_error = new AlertDialog.Builder(Activity_Main.this);
+            dialog_stats_error.setTitle(R.string.domogik_error);
+            dialog_stats_error.setMessage(R.string.stats_error);
+            dialog_stats_error.show();
+        }
+
     }
 
     @Override

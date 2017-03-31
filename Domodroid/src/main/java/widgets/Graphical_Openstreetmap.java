@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -40,6 +41,7 @@ import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
@@ -47,6 +49,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.PathOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +62,7 @@ import Entity.Entity_client;
 import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
+import rinor.Rest_com;
 
 import static activities.Activity_Main.SV_Main_ScrollView;
 
@@ -72,7 +76,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private TextView state;
     private static String mytag;
 
-
+    private int nb_item_for_history;
     public FrameLayout container = null;
     private FrameLayout myself = null;
 
@@ -89,6 +93,8 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private String Value_timestamp;
     private String status;
     private int dev_id;
+    private OverlayItem myLocationOverlayItem;
+    private PathOverlay myPath;
 
     public Graphical_Openstreetmap(tracerengine Trac,
                                    final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
@@ -125,9 +131,16 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
             this.dev_id = feature.getId();
             this.state_key = ""; //for entity_client
         }
-
+        try {
+            String params_nb_item_for_history = prefUtils.GetWidgetHistoryLength();
+            //this.nb_item_for_history = Integer.valueOf(params_nb_item_for_history);
+            this.nb_item_for_history = 50;
+        } catch (Exception e) {
+            Tracer.e(mytag, "Error getting number of item to display");
+            this.nb_item_for_history = 5;
+        }
         myself = this;
-        mytag = "Graphical_History(" + dev_id + ")";
+        mytag = "Graphical_Openstreetmap(" + dev_id + ")";
 
         if (stateS.equals("null"))
             stateS = state_key;
@@ -203,6 +216,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
             status = event.Entity_client_event_get_val();
             Value_timestamp = event.Entity_client_event_get_timestamp();
             update_display();
+            update_map_position();
         }
     }
 
@@ -269,7 +283,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         //Center on position
         mapController.setCenter(startPoint);
         //Add a marker on position
-        OverlayItem myLocationOverlayItem = new OverlayItem("", "", startPoint);
+        myLocationOverlayItem = new OverlayItem("", "", startPoint);
         Drawable myCurrentLocationMarker = this.getResources().getDrawable(R.drawable.marker_default);
         myLocationOverlayItem.setMarker(myCurrentLocationMarker);
         final ArrayList<OverlayItem> items = new ArrayList<>();
@@ -284,85 +298,123 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
                         return true;
                     }
                 }, activity);
-        this.osmMapview.getOverlays().add(currentLocationOverlay);
+        osmMapview.getOverlays().add(currentLocationOverlay);
     }
 
-    private void display_history_position_on_map() {
-        //todo add a way to handle history position to display them on Openstreetmap
-        /*
-        JSONObject json_LastValues = null;
-        JSONArray itemArray = null;
-
-        listItem = new ArrayList<>();
-        try {
-            if (api_version <= 0.6f) {
-                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
-                json_LastValues = Rest_com.connect_jsonobject(Tracer, url + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", login, password, 10000, SSL);
-            } else if (api_version >= 0.7f) {
-                Tracer.i(mytag, "UpdateThread (" + id + ") : " + url + "sensorhistory/id/" + id + "/last/5");
-                //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(Tracer, url + "sensorhistory/id/" + id + "/last/" + nb_item_for_history + "", login, password, 10000, SSL);
-                json_LastValues = new JSONObject();
-                json_LastValues.put("stats", json_LastValues_0_4);
-
-            }
-            itemArray = json_LastValues.getJSONArray("stats");
-            if (api_version <= 0.6f) {
-                for (int i = itemArray.length(); i >= 0; i--) {
-                    try {
-                        HashMap<String, String> map = new HashMap<>();
-                        try {
-                            map.put("TV_Value", activity.getString(translate.do_translate(getactivity(), Tracer, itemArray.getJSONObject(i).getString("TV_Value"))));
-                        } catch (Exception e1) {
-                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
-                        }
-                        map.put("date", itemArray.getJSONObject(i).getString("date"));
-                        listItem.add(map);
-                        Tracer.d(mytag, map.toString());
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json TV_Value");
-                    }
-                }
-            } else if (api_version >= 0.7f) {
-                for (int i = 0; i < itemArray.length(); i++) {
-                    try {
-                        HashMap<String, String> map = new HashMap<>();
-                        try {
-                            map.put("TV_Value", activity.getString(translate.do_translate(getactivity(), Tracer, itemArray.getJSONObject(i).getString("value_str"))));
-                        } catch (Exception e1) {
-                            map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
-                        }
-                        if (api_version == 0.7f) {
-                            map.put("date", itemArray.getJSONObject(i).getString("date"));
-                        } else if (api_version >= 0.8f) {
-                            String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
-                            map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, activity));
-                        }
-                        listItem.add(map);
-                        Tracer.d(mytag, map.toString());
-                    } catch (Exception e) {
-                        Tracer.e(mytag, "Error getting json TV_Value");
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            //return null;
-            Tracer.e(mytag, "Error fetching json object");
-        }
-
-        SimpleAdapter adapter_feature = new SimpleAdapter(this.activity, listItem,
-                R.layout.item_history_in_graphical_history, new String[]{"TV_Value", "date"}, new int[]{R.id.value, R.id.date});
-        listeChoices.setAdapter(adapter_feature);
-        listeChoices.setScrollingCacheEnabled(false);
-        */
-    }
-
-    public void onClick(View arg0) {
+    private void update_map_position() {
         //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
         float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;
         int sizeint = (int) size;
         int currentint = LL_background.getHeight();
+        Tracer.d(mytag, "display_position_on_map");
+        display_position_on_map();
+        Tracer.d(mytag, "addView(osmMapview)");
+        LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+        try {
+            LL_background.removeView(osmMapview);
+        } catch (Exception e) {
+            //to avoid #135
+        }
+        LL_background.addView(osmMapview);
+        osmMapview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
+                int action = event.getActionMasked();
+                switch (action) {
+                    case MotionEvent.ACTION_UP:
+                        SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                return true;
+            }
+        });
+        display_history_position_on_map sync = new display_history_position_on_map();
+        sync.execute();
+        this.isopen = true;
+    }
+
+    private class display_history_position_on_map extends AsyncTask<Void, Integer, Void> {
+        //todo add a way to handle history position to display them on Openstreetmap
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(activity, R.string.loading_data_from_rest, Toast.LENGTH_SHORT).show();
+        }
+
+        protected void onPostExecute(Void result) {
+            osmMapview.getOverlays().add(myPath);
+            osmMapview.invalidate();
+            Tracer.d(mytag, "OnostExecute");
+        }
+
+
+        protected Void doInBackground(Void... params) {
+            JSONObject json_LastValues = null;
+            JSONArray itemArray;
+            try {
+                if (api_version <= 0.6f) {
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");
+                    json_LastValues = Rest_com.connect_jsonobject(activity, Tracer, "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/", 30000);
+                } else if (api_version >= 0.7f) {
+                    Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "sensorhistory/id/" + dev_id + "/last/" + nb_item_for_history);
+                    //Don't forget old "dev_id"+"state_key" is replaced by "id"
+                    JSONArray json_LastValues_0_4 = Rest_com.connect_jsonarray(activity, Tracer, "sensorhistory/id/" + dev_id + "/last/" + nb_item_for_history + "", 30000);
+                    json_LastValues = new JSONObject();
+                    json_LastValues.put("stats", json_LastValues_0_4);
+                    Tracer.d(mytag, "json value GPS position" + json_LastValues.toString());
+
+                }
+                itemArray = json_LastValues.getJSONArray("stats");
+                if (api_version <= 0.6f) {
+                    for (int i = itemArray.length(); i >= 0; i--) {
+                        try {
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("TV_Value"));
+                            //map.put("date", itemArray.getJSONObject(i).getString("date"));
+                            listItem.add(map);
+                            Tracer.d(mytag, map.toString());
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Error getting json TV_Value");
+                        }
+                    }
+                } else if (api_version >= 0.7f) {
+                    for (int i = 0; i < itemArray.length(); i++) {
+                        try {
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put("TV_Value", itemArray.getJSONObject(i).getString("value_str"));
+                            /*if (api_version == 0.7f) {
+                                map.put("date", itemArray.getJSONObject(i).getString("date"));
+                            } else if (api_version >= 0.8f) {
+                                String currenTimestamp = String.valueOf((long) (itemArray.getJSONObject(i).getInt("timestamp")) * 1000);
+                                map.put("date", display_sensor_info.timestamp_convertion(currenTimestamp, activity));
+                            }*/
+                            listItem.add(map);
+                            Tracer.d(mytag, map.toString());
+                        } catch (Exception e) {
+                            Tracer.e(mytag, "Error getting json TV_Value");
+                        }
+                    }
+                }
+                myPath = new PathOverlay(Color.RED, activity);
+                for (int j = 0; j < listItem.size(); j++) {
+                    String[] position = listItem.get(j).get("TV_Value").split(",");
+                    Float lat = Float.parseFloat(position[0]);
+                    Float lon = Float.parseFloat(position[1]);
+                    GeoPoint gPt0 = new GeoPoint(lat, lon);
+                    myPath.addPoint(gPt0);
+                }
+            } catch (JSONException e) {
+                //return null;
+                Tracer.e(mytag, "Error fetching json object");
+            }
+            return null;
+        }
+    }
+
+    public void onClick(View arg0) {
+        listItem = new ArrayList<>();
         if (!isopen) {
             Tracer.d(mytag, "on click");
             try {
@@ -371,31 +423,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Tracer.d(mytag, "display_position_on_map");
-            display_position_on_map();
-            Tracer.d(mytag, "addView(osmMapview)");
-            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
-            try {
-                LL_background.removeView(osmMapview);
-            } catch (Exception e) {
-                //to avoid #135
-            }
-            LL_background.addView(osmMapview);
-            this.osmMapview.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
-                    int action = event.getActionMasked();
-                    switch (action) {
-                        case MotionEvent.ACTION_UP:
-                            SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
-                            break;
-                    }
-                    return false;
-                }
-            });
-            this.isopen = true;
-
+            update_map_position();
         } else {
             this.isopen = false;
             LL_background.removeView(osmMapview);

@@ -87,7 +87,6 @@ import widgets.Basic_Graphical_zone;
 
 public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
-    private final Context context = null;
     private AlertDialog.Builder AD_notSyncAlert;
     private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
@@ -763,7 +762,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     HashMap<String, String> map = listItem.get(position);
                     if (map.get("type").equals("action")) {
-                        if (map.get("name").equals(context.getApplicationContext().getResources().getString(R.string.action_back))) {
+                        if (map.get("name").equals(getResources().getString(R.string.action_back))) {
                             Tracer.v(mytag, "clic move back in navigation drawer");
                             if (historyPosition != 0) {
                                 historyPosition--;

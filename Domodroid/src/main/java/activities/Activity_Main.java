@@ -277,27 +277,29 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
-                        AD_wifi_prefered = new AlertDialog.Builder(Activity_Main.this);
-                        AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
-                        AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
-                        AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    //replace and save "SSID" by SSID
-                                    prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(domodroid.GetInstance(), R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
+                        if (prefUtils.GetPreferedWifiSsid().equals("")) {
+                            AD_wifi_prefered = new AlertDialog.Builder(Activity_Main.this);
+                            AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
+                            AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
+                            AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        //replace and save "SSID" by SSID
+                                        prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(domodroid.GetInstance(), R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
+                                    }
+                                    dialog.dismiss();
                                 }
-                                dialog.dismiss();
-                            }
-                        });
-                        AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        AD_wifi_prefered.show();
+                            });
+                            AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AD_wifi_prefered.show();
+                        }
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
                         prefUtils.save_params_to_file(Tracer, mytag, getApplicationContext());

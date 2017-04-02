@@ -69,7 +69,6 @@ import static activities.Activity_Main.SV_Main_ScrollView;
 public class Graphical_Openstreetmap extends Basic_Graphical_widget implements OnClickListener {
 
 
-    private org.osmdroid.views.MapView osmMapview;
     private ArrayList<HashMap<String, String>> listItem;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
@@ -93,6 +92,7 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     private String Value_timestamp;
     private String status;
     private int dev_id;
+    private org.osmdroid.views.MapView osmMapview;
     private OverlayItem myLocationOverlayItem;
     private PathOverlay myPath;
 
@@ -258,7 +258,38 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
+    }
 
+    private void update_map_position() {
+        //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
+        float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;
+        int sizeint = (int) size;
+        int currentint = LL_background.getHeight();
+        LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+        try {
+            LL_background.removeView(osmMapview);
+        } catch (Exception e) {
+            //to avoid #135
+        }
+        Tracer.d(mytag, "display_position_on_map");
+        display_position_on_map();
+        LL_background.addView(osmMapview);
+        osmMapview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
+                int action = event.getActionMasked();
+                switch (action) {
+                    case MotionEvent.ACTION_UP:
+                        SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                return true;
+            }
+        });
+        //display_history_position_on_map sync = new display_history_position_on_map();
+        //sync.execute();
+        this.isopen = true;
     }
 
     private void display_position_on_map() {
@@ -301,39 +332,6 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         osmMapview.getOverlays().add(currentLocationOverlay);
     }
 
-    private void update_map_position() {
-        //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
-        float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;
-        int sizeint = (int) size;
-        int currentint = LL_background.getHeight();
-        Tracer.d(mytag, "display_position_on_map");
-        display_position_on_map();
-        Tracer.d(mytag, "addView(osmMapview)");
-        LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
-        try {
-            LL_background.removeView(osmMapview);
-        } catch (Exception e) {
-            //to avoid #135
-        }
-        LL_background.addView(osmMapview);
-        osmMapview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                SV_Main_ScrollView.requestDisallowInterceptTouchEvent(true);
-                int action = event.getActionMasked();
-                switch (action) {
-                    case MotionEvent.ACTION_UP:
-                        SV_Main_ScrollView.requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return true;
-            }
-        });
-        display_history_position_on_map sync = new display_history_position_on_map();
-        sync.execute();
-        this.isopen = true;
-    }
-
     private class display_history_position_on_map extends AsyncTask<Void, Integer, Void> {
         //todo add a way to handle history position to display them on Openstreetmap
 
@@ -345,8 +343,8 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
 
         protected void onPostExecute(Void result) {
             osmMapview.getOverlays().add(myPath);
-            osmMapview.invalidate();
-            Tracer.d(mytag, "OnostExecute");
+            //osmMapview.invalidate();
+            Tracer.d(mytag, "OnPostExecute");
         }
 
 

@@ -550,8 +550,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
      * to load widgets
      */
     public void onEvent(Event_to_navigate_house event) {
-        //#107 around here
-        Tracer.d("debug map bak #107", " history= " + history.toString() + " hystoryposition= " + historyPosition);
         try {
             historyPosition++;
             loadWigets(event.getid(), event.gettype());
@@ -825,7 +823,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 AD_notSyncAlert.show();
             }
         } else {
-            Tracer.force_Main = false;    //Reset flag 'called from Map view'
             if (prefUtils.GetSyncCompleted()) {
                 if (!init_done) {
                     historyPosition = 0;

@@ -87,7 +87,6 @@ import widgets.Basic_Graphical_zone;
 
 public class Activity_Main extends AppCompatActivity implements OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private final String mytag = this.getClass().getName();
-    private final Context context = null;
     private AlertDialog.Builder AD_notSyncAlert;
     private AlertDialog.Builder AD_wifi_prefered;
     private Widgets_Manager WM_Agent;
@@ -278,27 +277,29 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
 
                     // Is it success or fail ?
                     if (((Dialog_Synchronize) dialog).need_refresh) {
-                        AD_wifi_prefered = new AlertDialog.Builder(Activity_Main.this);
-                        AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
-                        AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
-                        AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    //replace and save "SSID" by SSID
-                                    prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(domodroid.GetInstance(), R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
+                        if (prefUtils.GetPreferedWifiSsid().equals("")) {
+                            AD_wifi_prefered = new AlertDialog.Builder(Activity_Main.this);
+                            AD_wifi_prefered.setTitle(getText(R.string.sync_wifi_preferred_title));
+                            AD_wifi_prefered.setMessage(getText(R.string.sync_wifi_preferred_message));
+                            AD_wifi_prefered.setPositiveButton(getText(R.string.reloadOK), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        //replace and save "SSID" by SSID
+                                        prefUtils.SetPreferedWifiSsid(domodroid.wifiInfo.getSSID());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(domodroid.GetInstance(), R.string.error_getting_wifi_ssid, Toast.LENGTH_LONG).show();
+                                    }
+                                    dialog.dismiss();
                                 }
-                                dialog.dismiss();
-                            }
-                        });
-                        AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        AD_wifi_prefered.show();
+                            });
+                            AD_wifi_prefered.setNegativeButton(getText(R.string.reloadNO), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            AD_wifi_prefered.show();
+                        }
                         // Sync has been successful : Force to refresh current main view
                         // Store settings to SDcard
                         prefUtils.save_params_to_file(Tracer, mytag, getApplicationContext());
@@ -551,8 +552,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
      * to load widgets
      */
     public void onEvent(Event_to_navigate_house event) {
-        //#107 around here
-        Tracer.d("debug map bak #107", " history= " + history.toString() + " hystoryposition= " + historyPosition);
         try {
             historyPosition++;
             loadWigets(event.getid(), event.gettype());
@@ -763,7 +762,7 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     HashMap<String, String> map = listItem.get(position);
                     if (map.get("type").equals("action")) {
-                        if (map.get("name").equals(context.getApplicationContext().getResources().getString(R.string.action_back))) {
+                        if (map.get("name").equals(getResources().getString(R.string.action_back))) {
                             Tracer.v(mytag, "clic move back in navigation drawer");
                             if (historyPosition != 0) {
                                 historyPosition--;
@@ -826,7 +825,6 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                 AD_notSyncAlert.show();
             }
         } else {
-            Tracer.force_Main = false;    //Reset flag 'called from Map view'
             if (prefUtils.GetSyncCompleted()) {
                 if (!init_done) {
                     historyPosition = 0;

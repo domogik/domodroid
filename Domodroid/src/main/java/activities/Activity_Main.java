@@ -1186,8 +1186,8 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         //save selected item so it will remains same even after orientation change
         outState.putInt("SELECTED_ID", mSelectedId);
     }

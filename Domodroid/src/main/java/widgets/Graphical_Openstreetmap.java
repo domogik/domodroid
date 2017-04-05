@@ -265,7 +265,10 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;
         int sizeint = (int) size;
         int currentint = LL_background.getHeight();
-        LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+        if (!this.isopen) {
+            //if not open extend layout size to handle map view
+            LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, currentint + sizeint));
+        }
         try {
             LL_background.removeView(osmMapview);
         } catch (Exception e) {

@@ -139,6 +139,14 @@ public class pref_utils {
     }
 
     /**
+     *
+     * @param area_select area user want to start directly in
+     */
+    public void SetAreaToStartIn(String area_select) {
+        editor.putString("load_area_at_start", area_select);
+    }
+
+    /**
      * @return if user choice by usage
      */
     public boolean GetWidgetByUsage() {

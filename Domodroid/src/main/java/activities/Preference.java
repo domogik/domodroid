@@ -129,6 +129,7 @@ public class Preference extends PreferenceActivity implements
             addPreferencesFromResource(R.xml.preferences_map);
         } else if (action != null && action.equals("preferences_house")) {
             addPreferencesFromResource(R.xml.preferences_house);
+            //TODO #19 get list of area/room to allow user select where to directly start
         } else if (action != null && action.equals("preferences_butler")) {
             addPreferencesFromResource(R.xml.preferences_butler);
         } else if (action != null && action.equals("preferences_debug")) {
@@ -158,6 +159,8 @@ public class Preference extends PreferenceActivity implements
         updatePreferences(findPreference(key));
         if (key.equals("load_area_at_start")) {
             prefUtils.SetWidgetByUsage(true);
+            //Todo #19 save correct value to be able to load it later.
+            prefUtils.SetAreaToStartIn(key);
         }
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {

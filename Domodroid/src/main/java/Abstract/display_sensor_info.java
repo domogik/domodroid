@@ -80,7 +80,6 @@ public abstract class display_sensor_info {
                         value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;
                     case "°":
-                        //TODO find how to update the rotate when a new value is receive from events or mq
                         //remove the textView from parent LinearLayout
                         LL_featurePan.removeView(value);
                         LL_featurePan.removeView(timestamp);

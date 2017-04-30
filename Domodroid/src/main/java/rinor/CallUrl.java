@@ -26,6 +26,7 @@ import java.net.UnknownHostException;
 import javax.net.ssl.HttpsURLConnection;
 
 import applications.domodroid;
+import database.WidgetUpdate;
 
 /**
  * Created by fritz on 07/09/15.
@@ -149,6 +150,9 @@ class CallUrl extends AsyncTask<String, Void, String> {
                 break;
             default:
                 Toast.makeText(domodroid.GetInstance(), R.string.command_sent, Toast.LENGTH_SHORT).show();
+                // Todo check if connected to MQ before if not ask immediate refresh with rest.
+                WidgetUpdate.getInstance().eventsManager.cache_out_of_date = true;
+                WidgetUpdate.getInstance().wakeup();
                 break;
         }
     }

@@ -70,7 +70,7 @@ public class WidgetUpdate {
     private Boolean locked = false;
     private Boolean timer_flag = false;
     private Boolean ready = false;
-    private Events_manager eventsManager = null;
+    public Events_manager eventsManager = null;
     private static Handler myselfHandler = null;
     private int last_ticket = -1;
     private int last_position = -1;

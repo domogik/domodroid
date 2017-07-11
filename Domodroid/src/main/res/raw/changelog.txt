@@ -22,6 +22,8 @@
     $ 1.4
       % Version 33
       _ 2017-xx-xx
+      * #157 Refresh sensor value after a command is sent.
+      * #37 Widget OpenstreetMap as an auto update position mechanism.
       * Close #156 Don't ask user preferred wifi at each sync.
       * Close #107 map back navigation bug.
       * #142 Check MQ configuration at sync and after.

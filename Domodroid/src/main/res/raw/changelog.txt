@@ -20,6 +20,9 @@
   </head>
   <body>
     $ 1.4
+      % Version 34
+      _ 2017-xx-xx
+
       % Version 33
       _ 2017-07-18
       * #159 Remove white screen at start.

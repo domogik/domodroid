@@ -142,6 +142,7 @@ public class Activity_Main extends AppCompatActivity implements OnClickListener,
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppBaseTheme);
         super.onCreate(savedInstanceState);
         if (getIntent().getBooleanExtra("Exit me", false)) {
             finish();

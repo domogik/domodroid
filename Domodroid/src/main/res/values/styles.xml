@@ -35,5 +35,8 @@
         <item name="android:padding">7dp</item>
     </style>
 
+    <style name="splashTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+    </style>
 
 </resources>

@@ -56,7 +56,7 @@ public class domodroid extends Application {
         ACRA.init(this);
         new ANRWatchDog().start();
         //Only to debug locally
-        LeakCanary.install(this);
+        //LeakCanary.install(this);
         //Stetho.initializeWithDefaults(this);
 
         prefUtils = new pref_utils(this);

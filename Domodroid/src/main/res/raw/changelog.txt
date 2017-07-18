@@ -20,10 +20,29 @@
   </head>
   <body>
     $ 1.4
+      % Version 33
+      _ 2017-xx-xx
+      * #159 Remove white screen at start.
+      * #157 Refresh sensor value after a command is sent.
+      * #37 Widget OpenstreetMap as an auto update position mechanism.
+      * Close #156 Don't ask user preferred wifi at each sync.
+      * Close #107 map back navigation bug.
+      * #142 Check MQ configuration at sync and after.
+      * More lib inside like LeakCanay and Greenrobot Eventbus.
+      * Correct a possible memory leak on devices < Android N caused by WIFI_SERVICE.
+      * Try to reduce memory used with SharedPreferences.
+      * A big underground works on preferences.
+      * #153 Ask user if he need credentials (login/password) after qrcode results.
+      * #152 Some menu re-arrangement.
+      * Close #108 Preferences order
+      * Close #102 Qrcode is fully available now and with more information in domogik 0.6 dev.
+      * #5 avoid try to write and get Exception if no access.
+      * #38 still more translation from transifex.
+      * Lots of comment add in source code to help myself :).
       % Version 32
       _ 2017-02-25
-      * #141 at sync ask user if it's is preferred wi-fi networks
-      * Save user choice to prefs for SSL error in domogik admins view
+      * #141 at sync ask user if it's is preferred wi-fi networks.
+      * Save user choice to prefs for SSL error in domogik admins view.
       % Version 31
       _ 2017-02-19
       * Try to correct android Play Store SSL issue.

@@ -10,6 +10,12 @@ import misc.tracerengine;
 
 public abstract class translate {
 
+    /**
+     * @param context Context to get resources
+     * @param Tracer  Tracerngine used to log
+     * @param name    Value to translate
+     * @return An integer from R.STRING containing the value translate in Locale device language
+     */
     public static int do_translate(Context context, tracerengine Tracer, String name) {
         String mytag = "do_translate";
         //Set to lower case here to simplify other calls
@@ -19,7 +25,7 @@ public abstract class translate {
             temp_name = "False";
         } else if (temp_name.equals("true")) {
             temp_name = "True";
-        }else if (temp_name.equals("switch")) {
+        } else if (temp_name.equals("switch")) {
             temp_name = "Switch";
         }
         //To avoid space or - in name in strings.xml

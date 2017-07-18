@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,7 +16,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -28,6 +27,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,9 +44,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import Abstract.pref_utils;
 import Abstract.translate;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
+import Event.Event_base_message;
 import activities.Activity_Map;
 import activities.Graphics_Manager;
 import activities.Sliding_Drawer;
@@ -71,6 +76,7 @@ import widgets.Graphical_Range;
 import widgets.Graphical_Trigger;
 
 public class MapView extends View {
+    private final pref_utils prefUtils;
     private Bitmap map;
     private Bitmap widget;
     public int width;
@@ -81,8 +87,6 @@ public class MapView extends View {
     private Matrix origin;
     private SVG svg;
     private float currentScale = 1;
-    private float currentScalewidth = 1;
-    private float currentScaleheight = 1;
     private int screenwidth;
     private int screenheight;
     private int widgetSize;
@@ -93,11 +97,9 @@ public class MapView extends View {
     private static int text_Offset_X;
     private static int text_Offset_Y;
     private int moves;
-    private SharedPreferences.Editor prefEditor;
     private boolean map_autozoom = false;
     public int temp_id;
     public int map_id;
-    private final String map_name = "";
 
     private Paint paint_map;
     private Paint paint_text;
@@ -112,8 +114,6 @@ public class MapView extends View {
     private int formatMode;
     private String svg_string;
     private int currentFile = 0;
-    private String type;
-    private SharedPreferences params;
     private final float api_version;
 
     private float pos_X0 = 0;
@@ -134,7 +134,6 @@ public class MapView extends View {
     private final int mytype = 2;
     private WidgetUpdate cache_engine = null;
     private final float scale;
-    private String Address;
     private String state_progress;
     //Declare this flag globally
     private boolean longclic = false;
@@ -143,14 +142,13 @@ public class MapView extends View {
     private String command_id = null;
     private String command_type = null;
     private final float dip20;
-    private boolean navigationdraweropen;
 
-    public MapView(tracerengine tracerengine, Activity activity, SharedPreferences params) {
+    public MapView(tracerengine tracerengine, Activity activity) {
         super(activity);
         this.Tracer = tracerengine;
         this.activity = activity;
-        this.params = params;
-        api_version = params.getFloat("API_VERSION", 0);
+        prefUtils = new pref_utils();
+        api_version = prefUtils.GetDomogikApiVersion();
 
         //activated=true;
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -163,40 +161,42 @@ public class MapView extends View {
         /*
          * This view has only one handler for all mini widgets displayed on map
 		 * It'll receive a unique notification from WidgetUpdate when one or more values have changed
+		 * It used now eventbus directly
 		 */
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9997) {
-                    //state_engine send us a signal to notify at least one value changed
-                    Tracer.d(mytag, "state engine notify change for mini widget(s) : refresh all of them !");
-                    for (Entity_Map featureMap : listFeatureMap) {
-                        // if a miniwidget was connected to engine, session's value could have changed....
-                        if (featureMap.getSession() != null) {
-                            featureMap.setCurrentState(featureMap.getSession().getValue());
-                        }
-                    }
-                    refreshMap();
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        Tracer.d(mytag, "Could not finished");
-                    }
-                } else if (msg.what == 8999) {
-                    //Cache engine is ready for use....
-                    if (Tracer != null)
-                        Tracer.i(mytag, "Cache engine has notified it's ready !");
-                    initMap();
-                }
-            }
-        };
-
+        EventBus.getDefault().register(this);
 
         //End of create method ///////////////////////
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_base_message
+     */
+    public void onEvent(Event_base_message event_base_message) {
+        if (event_base_message.getmessage().equals("cache_ready")) {
+            //Cache engine is ready for use....
+            if (Tracer != null)
+                Tracer.i(mytag, "Cache engine has notified it's ready !");
+            initMap();
+        }
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        Tracer.d(mytag, "state engine notify change for mini widget(s) : refresh all of them !");
+        for (Entity_Map featureMap : listFeatureMap) {
+            // if a miniwidget was connected to engine, session's value could have changed....
+            if (featureMap.getSession() != null) {
+                featureMap.setCurrentState(featureMap.getSession().getValue());
+            }
+        }
+        refreshMap();
     }
 
     private void startCacheEngine() {
@@ -207,7 +207,7 @@ public class MapView extends View {
             //MapView is'nt the first caller, so init is'nt required (already done by View)
             cache_engine.set_handler(handler, mytype);    //Put our main handler to cache engine (as MapView)
         }
-        tracerengine.set_engine(cache_engine);
+        Tracer.set_engine(cache_engine);
         Tracer.w(mytag, "WidgetUpdate engine connected !");
     }
 
@@ -240,9 +240,10 @@ public class MapView extends View {
             File f = new File(Environment.getExternalStorageDirectory() + "/domodroid/" + files.elementAt(currentFile));
             Tracer.i(mytag, "Request to remove " + currentFile);
             boolean sucess = f.delete();
-            if (sucess == false)
+            if (!sucess)
                 Tracer.i(mytag, "No " + currentFile + " deleted");
             //remove feature of this map in table_feature_map
+            String map_name = "";
             Tracer.get_engine().cleanFeatureMap(map_name);
             //All device on this map as been delete re-check the cache URL
             Cache_management.checkcache(Tracer, activity);
@@ -268,7 +269,7 @@ public class MapView extends View {
                         featureMap.getDevId(),
                         featureMap.getState_key(),
                         "mini widget",
-                        handler,
+
                         mytype);
                 cursession.setType(true);    //It's a mini widget !
             } else if (api_version >= 0.7f) {
@@ -276,7 +277,7 @@ public class MapView extends View {
                         featureMap.getId(),
                         "",
                         "mini widget",
-                        handler,
+
                         mytype);
                 cursession.setType(true);    //It's a mini widget !
             }
@@ -314,10 +315,10 @@ public class MapView extends View {
         }
 
         //Load current scale if it exists.
-        if (params.getFloat("Mapscale", 1) != 1) {
-            currentScale = params.getFloat("Mapscale", 1);
+        if (prefUtils.GetMapScale() != 1) {
+            currentScale = prefUtils.GetMapScale();
         }
-        map_autozoom = params.getBoolean("map_autozoom", false);
+        map_autozoom = prefUtils.GetMapAutozoom();
         origin = new Matrix();
         mat = new TransformManager();
         //TODO try to solve drag and zoom problem.
@@ -453,7 +454,7 @@ public class MapView extends View {
             return;
         }
         locked = true;
-        int id = 0;
+        int id;
         // first try to process map switches, if any present in this map
         Tracer.d(mytag, "Processing map switches widgets list");
 
@@ -505,7 +506,7 @@ public class MapView extends View {
 
         for (Entity_Map featureMap : listFeatureMap) {
 
-            String states = "";
+            String states;
             JSONObject jparam = null;
 
             if (featureMap != null) {
@@ -630,7 +631,7 @@ public class MapView extends View {
                         if (states.equals("#off")) {
                             argbS = "#000000";
                         } else if (argbS.equals("on")) {
-                            argbS = params.getString("COLORRGB", "#FFFFFF");    //Restore last known color, White by default
+                            argbS = prefUtils.GetLastColorRgb();
                         } else {
                             //To avoid http://tracker.domogik.org/issues/1972 here
                             argbS = "#FFFFFF";
@@ -659,7 +660,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false))
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
@@ -687,7 +688,7 @@ public class MapView extends View {
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                 paint_text);
                         paint_text.setTypeface(Typeface.DEFAULT);
-                        if (!params.getBoolean("HIDE", false))
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -697,7 +698,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false))
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -709,7 +710,7 @@ public class MapView extends View {
                     for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                     paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                    if (!params.getBoolean("HIDE", false)) {
+                    if (prefUtils.GetNotMapHideText()) {
                         canvasWidget.drawText(value,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
@@ -723,7 +724,7 @@ public class MapView extends View {
 
                 } else if (featureMap.getValue_type().equals("number")) {
                     if (!parameters.contains("command")) {
-                        float formatedValue = 0;
+                        float formatedValue;
                         if (value != null && !value.equals("")) {
                             //formatedValue = Round(Float.parseFloat(value), 2);
                             formatedValue = Abstract.calcul.Round_float(Float.parseFloat(value), 2);
@@ -795,7 +796,7 @@ public class MapView extends View {
 
                             }
                         }
-                        if (!params.getBoolean("HIDE", false))
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
@@ -809,7 +810,7 @@ public class MapView extends View {
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                 paint_text);
-                        if (!params.getBoolean("HIDE", false)) {
+                        if (prefUtils.GetNotMapHideText()) {
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -824,7 +825,7 @@ public class MapView extends View {
                             (featureMap.getPosx() * currentScale) + text_Offset_X,
                             (featureMap.getPosy() * currentScale) + text_Offset_Y,
                             paint_text);
-                    if (!params.getBoolean("HIDE", false)) {
+                    if (prefUtils.GetNotMapHideText()) {
                         canvasWidget.drawText(label,
                                 (featureMap.getPosx() * currentScale) + text_Offset_X,
                                 (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -852,7 +853,7 @@ public class MapView extends View {
                     for (int j = 1; j < 5; j++)
                         paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                     paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                    if (!params.getBoolean("HIDE", false)) {
+                    if (prefUtils.GetNotMapHideText()) {
                         if (parameters.contains("command"))
                             canvasWidget.drawText(value,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
@@ -874,13 +875,18 @@ public class MapView extends View {
                         paint_color.setStyle(Paint.Style.FILL);
                         String argbS;
                         //Process RGB value
-                        if (states.equals("off")) {
-                            argbS = "#000000";
-                        } else if (states.equals("on")) {
-                            argbS = params.getString("COLORRGB", "#FFFFFF");    //Restore last known color, White by default
-                        } else {
-                            //To avoid http://tracker.domogik.org/issues/1972 here
-                            argbS = "#FFFFFF";
+                        switch (states) {
+                            case "off":
+                                argbS = "#000000";
+                                break;
+                            case "on":
+                                argbS = prefUtils.GetLastColorRgb();    //Restore last known color, White by default
+
+                                break;
+                            default:
+                                //To avoid http://tracker.domogik.org/issues/1972 here
+                                argbS = "#FFFFFF";
+                                break;
                         }
                         //Tracer.e(mytag,"Drawing color for "+featureMap.getName()+" RGB Value = "+Integer.toHexString(loc_argb));
                         //Draw first a black background...
@@ -905,7 +911,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false))
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (25 * (int) scale),
@@ -916,7 +922,7 @@ public class MapView extends View {
                         for (int j = 1; j < 5; j++)
                             paint_text.setShadowLayer(2 * j, 0, 0, Color.BLACK);
                         paint_text.setTextSize(texsize * scale + 0.5f - 2);
-                        if (!params.getBoolean("HIDE", false))
+                        if (prefUtils.GetNotMapHideText())
                             canvasWidget.drawText(label,
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -924,7 +930,7 @@ public class MapView extends View {
 
                     } else if (featureMap.getValue_type().equals("scaling")) {
                         if (!parameters.contains("command")) {
-                            float formatedValue = 0;
+                            float formatedValue;
                             if (value != null && !value.equals("")) {
                                 //formatedValue = Round(Float.parseFloat(value), 2);
                                 formatedValue = Abstract.calcul.Round_float(Float.parseFloat(value), 2);
@@ -996,7 +1002,7 @@ public class MapView extends View {
 
                                 }
                             }
-                            if (!params.getBoolean("HIDE", false))
+                            if (prefUtils.GetNotMapHideText())
                                 canvasWidget.drawText(label,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y + (6 * (int) scale),
@@ -1010,7 +1016,7 @@ public class MapView extends View {
                                     (featureMap.getPosx() * currentScale) + text_Offset_X,
                                     (featureMap.getPosy() * currentScale) + text_Offset_Y,
                                     paint_text);
-                            if (!params.getBoolean("HIDE", false)) {
+                            if (prefUtils.GetNotMapHideText()) {
                                 canvasWidget.drawText(label,
                                         (featureMap.getPosx() * currentScale) + text_Offset_X,
                                         (featureMap.getPosy() * currentScale) + text_Offset_Y + (15 * (int) scale),
@@ -1035,7 +1041,7 @@ public class MapView extends View {
 
     private void showTopWidget(Entity_Map feature) {
         Tracer.d(mytag, "Show top Widget");
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
+        DomodroidDB domodb = DomodroidDB.getInstance(Tracer, activity);
         domodb.owner = "MapView.showTopWidgets";
         if (panel_widget.getChildCount() != 0) {
             panel_widget.removeAllViews();
@@ -1046,8 +1052,8 @@ public class MapView extends View {
         String State_key = feature.getState_key();
         String Address = feature.getAddress();
         String zone = "";
-        int Graph = params.getInt("GRAPH", 3);
-        int update_timer = params.getInt("UPDATE_TIMER", 300);
+        int Graph = prefUtils.GetMapGraphInt();
+        int update_timer = prefUtils.GetRestUpdateTimer();
         int DevId = feature.getDevId();
         int Id = feature.getId();
 
@@ -1061,11 +1067,11 @@ public class MapView extends View {
             iconName = feature.getDevice_usage_id();
 
         //add debug option to change label adding its Id
-        if (params.getBoolean("DEV", false))
+        if (prefUtils.GetDebugIdShow())
             label = label + " (" + DevId + ")";
 
         String[] model = device_type_id.split("\\.");
-        String type = "";
+        String type;
         try {
             type = model[1];
         } catch (Exception e) {
@@ -1077,55 +1083,55 @@ public class MapView extends View {
             if (type.equals("rgb_leds") && (State_key.equals("command"))) {
                 //ignore it : it'll have another device for Color, displaying the switch !)
             } else {
-                if (!params.getBoolean("WIDGET_CHOICE", false)) {
+                if (prefUtils.GetNoAlternativeBinaryWidget()) {
                     Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Binary.container = (FrameLayout) panel_widget;
+                            widgetSize, 0, Id, zone, feature);
+                    onoff.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Binary_New.container = (FrameLayout) panel_widget;
+                            widgetSize, 0, Id, zone, feature);
+                    onoff_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
 
             }
         } else if (feature.getValue_type().equals("boolean") || feature.getValue_type().equals("bool")) {
             if (parameters.contains("command")) {
-                if (!params.getBoolean("WIDGET_CHOICE", false)) {
+                if (prefUtils.GetNoAlternativeBinaryWidget()) {
                     Graphical_Binary onoff = new Graphical_Binary(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Binary.container = (FrameLayout) panel_widget;
+                            widgetSize, 0, Id, zone, feature);
+                    onoff.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff);
                 } else {
                     Graphical_Binary_New onoff_New = new Graphical_Binary_New(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Binary_New.container = (FrameLayout) panel_widget;
+                            widgetSize, 0, Id, zone, feature);
+                    onoff_New.container = (FrameLayout) panel_widget;
                     panel_widget.addView(onoff_New);
                 }
             } else {
                 Graphical_Boolean bool = new Graphical_Boolean(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Boolean.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, feature);
+                bool.container = (FrameLayout) panel_widget;
                 panel_widget.addView(bool);
             }
         } else if (feature.getValue_type().equals("range")) {
             Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                    widgetSize, 0, Id, zone, params, feature, handler);
-            Graphical_Range.container = (FrameLayout) panel_widget;
+                    widgetSize, 0, Id, zone, feature);
+            variator.container = (FrameLayout) panel_widget;
             panel_widget.addView(variator);
         } else if (feature.getValue_type().equals("trigger")) {
             //#51 change widget for 0.4 if it's not a command
             if (parameters.contains("command")) {
                 Graphical_Trigger trigger = new Graphical_Trigger(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Trigger.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, feature);
+                trigger.container = (FrameLayout) panel_widget;
                 panel_widget.addView(trigger);
                 Tracer.i(mytag, "   ==> Graphical_Trigger");
             } else {
                 Graphical_Info info = new Graphical_Info(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
-                Graphical_Info.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, update_timer, feature);
+                info.container = (FrameLayout) panel_widget;
                 info.with_graph = false;
                 panel_widget.addView(info);
                 Tracer.i(mytag, "   ==> Graphical_Info");
@@ -1136,54 +1142,55 @@ public class MapView extends View {
                 //display range widget for DT_scaling command with number
                 if (feature.getDevice_feature_model_id().startsWith("DT_Scaling")) {
                     Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Range.container = (FrameLayout) panel_widget;
+                            widgetSize, 0, Id, zone, feature);
+                    variator.container = (FrameLayout) panel_widget;
                     panel_widget.addView(variator);
                 } else {
                     Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
-                    Graphical_Info_commands.container = (FrameLayout) panel_widget;
+                            widgetSize, 0, Id, zone, feature);
+                    info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
                 }
-            } else if (params.getBoolean("Graph_CHOICE", false)) {
+            } else if (prefUtils.GetAlternativeGraphWidget()) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, feature);
+                info1.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 /*todo when #89
                 Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
                 Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, activity, URL,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 */
             } else {
                 Tracer.i(mytag, "Graphical_Info created");
                 Graphical_Info info = new Graphical_Info(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
-                Graphical_Info.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, update_timer, feature);
+                info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else if (feature.getValue_type().equals("list")) {
             Graphical_List list = new Graphical_List(Tracer, activity,
-                    widgetSize, 0, Id, zone, params, feature, handler);
-            Graphical_List.container = (FrameLayout) panel_widget;
+                    widgetSize, 0, Id, zone, feature);
+            list.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (State_key.equals("color")) {
-            Graphical_Color colorw = new Graphical_Color(Tracer, activity,
-                    widgetSize, 0, Id, zone, params, feature, handler);
-            Graphical_Color.container = (FrameLayout) panel_widget;
-            panel_widget.addView(colorw);
+            Graphical_Color color = new Graphical_Color(Tracer, activity,
+                    widgetSize, 0, Id, zone, feature);
+            color.container = (FrameLayout) panel_widget;
+            panel_widget.addView(color);
         } else if (feature.getValue_type().equals("video")) {
             if (!parameters.contains("command")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                cam.container = (FrameLayout) panel_widget;
                 panel_widget.addView(cam);
             } else {
                 Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Info_commands.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, feature);
+                info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             }
 
@@ -1191,34 +1198,40 @@ public class MapView extends View {
             Tracer.i(mytag, "parameters=" + parameters);
             if (feature.getDevice_feature_model_id().contains("call")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             } else if (feature.getDevice_feature_model_id().contains("camera")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
                 panel_widget.addView(cam);
             } else if (parameters.contains("command")) {
                 if (State_key.equals("Set RGB color")) {
                     Tracer.d(mytag, "add Graphical_Color for " + label + " (" + DevId + ") key=" + State_key);
                     Graphical_Color colorw = new Graphical_Color(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
+                    colorw.container = (FrameLayout) panel_widget;
                     panel_widget.addView(colorw);
                 } else {
                     Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                            widgetSize, 0, Id, zone, params, feature, handler);
+                            widgetSize, 0, Id, zone, feature);
+                    info_commands.container = (FrameLayout) panel_widget;
                     panel_widget.addView(info_commands);
                 }
             } else if (feature.getValue_type().equals("video")) {
                 Graphical_Cam cam = new Graphical_Cam(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                cam.container = (FrameLayout) panel_widget;
                 panel_widget.addView(cam);
             } else if (feature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
                 Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                Openstreetmap.container = (FrameLayout) panel_widget;
                 panel_widget.addView(Openstreetmap);
             } else {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             }
         } else if (feature.getDevice_feature_model_id().startsWith("DT_HVACVent") || feature.getDevice_feature_model_id().startsWith("DT_HVACFan")
@@ -1226,59 +1239,64 @@ public class MapView extends View {
                 || feature.getDevice_feature_model_id().startsWith("DT_HeatingPilotWire") || feature.getDevice_feature_model_id().startsWith("DT_DayOfWeek")
                 || feature.getDevice_feature_model_id().startsWith("DT_UPSState") || feature.getDevice_feature_model_id().startsWith("DT_UPSEvent")) {
             Graphical_List list = new Graphical_List(Tracer, activity,
-                    widgetSize, 0, Id, zone, params, feature, handler);
+                    widgetSize, 0, Id, zone, feature);
             list.with_list = parameters.contains("command");
+            list.container = (FrameLayout) panel_widget;
             panel_widget.addView(list);
         } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorCII")) {
             if (!parameters.contains("command")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             } else {
                 Graphical_List list = new Graphical_List(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                list.container = (FrameLayout) panel_widget;
                 list.with_list = parameters.contains("command");
                 panel_widget.addView(list);
             }
         } else if (feature.getDevice_feature_model_id().startsWith("DT_ColorRGBHexa")) {
             if (!parameters.contains("command")) {
                 Graphical_History info_with_history = new Graphical_History(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                info_with_history.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_with_history);
             } else {
                 Graphical_Info_commands info_commands = new Graphical_Info_commands(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, feature);
+                info_commands.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info_commands);
             }
         } else if (feature.getValue_type().equals("scaling")) {
             if (parameters.contains("command")) {
                 //display range widget for DT_scaling command with number
                 Graphical_Range variator = new Graphical_Range(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Range.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, feature);
+                variator.container = (FrameLayout) panel_widget;
                 panel_widget.addView(variator);
-            } else if (params.getBoolean("Graph_CHOICE", false)) {
+            } else if (prefUtils.GetAlternativeGraphWidget()) {
                 Tracer.i(mytag, "Graphical_Info_with_achartengine created");
                 Graphical_Info_with_achartengine info1 = new Graphical_Info_with_achartengine(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, feature, handler);
-                Graphical_Info_with_achartengine.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, feature);
+                info1.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 /*todo when #89
                 Tracer.i(mytag, "Graphical_Info_with_mpandroidchart created");
                 Graphical_Info_with_mpandroidchart info1 = new Graphical_Info_with_mpandroidchart(Tracer, activity, URL,
-                        widgetSize, 0, Id, zone, params, feature, handler);
+                        widgetSize, 0, Id, zone, params, feature);
                 Graphical_Info_with_mpandroidchart.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info1);
                 */
             } else {
                 Graphical_Info info = new Graphical_Info(Tracer, activity,
-                        widgetSize, 0, Id, zone, params, update_timer, feature, handler);
-                Graphical_Info.container = (FrameLayout) panel_widget;
+                        widgetSize, 0, Id, zone, update_timer, feature);
+                info.container = (FrameLayout) panel_widget;
                 panel_widget.addView(info);
             }
         } else {
-            Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(params, activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",
-                    widgetSize, 0, zone, mytag, null, handler);
+            Basic_Graphical_widget basic_widget = new Basic_Graphical_widget(activity, Tracer, Id, activity.getString(R.string.contact_devs), "", "",
+                    widgetSize, 0, zone, mytag);
             panel_widget.addView(basic_widget);
         }
 
@@ -1308,14 +1326,15 @@ public class MapView extends View {
             //			fis.close();
             //
             int scale = 1;
-            if (options.outHeight > params.getInt("SIZE", 600) || options.outWidth > params.getInt("SIZE", 600)) {
-                scale = (int) Math.pow(2, (int) Math.round(Math.log(params.getInt("SIZE", 600) / (double) Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
+            if (options.outHeight > prefUtils.GetMapIntSize() || options.outWidth > prefUtils.GetMapIntSize()) {
+                scale = (int) Math.pow(2, (int) Math.round(Math.log(prefUtils.GetMapIntSize() / (double) Math.max(options.outHeight, options.outWidth)) / Math.log(0.5)));
             }
 
             //Decode with inSampleSize
             BitmapFactory.Options options2 = new BitmapFactory.Options();
             options2.inSampleSize = scale;
             FileInputStream fis = new FileInputStream(f);
+            //TODO #155
             b = BitmapFactory.decodeStream(fis, null, options2);
             fis.close();
         } catch (IOException e) {
@@ -1395,7 +1414,7 @@ public class MapView extends View {
                         pos_X1 = 0;
                         //Display widget
                     } else if (!longclic) {
-                        boolean widgetActiv = false;
+                        boolean widgetActiv;
                         //Switch if it's a map
                         for (Entity_Map switchesMap : listMapSwitches) {
                             //Correct +20 by dip
@@ -1432,9 +1451,10 @@ public class MapView extends View {
                                     switch (featureMap.getValue_type()) {
                                         case "trigger":
                                             //#51 change widget for 0.4 if it's not a command
+                                            String address;
                                             if (featureMap.getParameters().contains("command")) {
                                                 Tracer.d(mytag, "This is a Trigger launching it");
-                                                this.Address = featureMap.getAddress();
+                                                address = featureMap.getAddress();
                                                 if (api_version >= 0.7f) {
                                                     try {
                                                         JSONObject jparam = new JSONObject(featureMap.getParameters());
@@ -1477,9 +1497,9 @@ public class MapView extends View {
                                                     break;
                                             }
 
-                                            this.Address = featureMap.getAddress();
+                                            address = featureMap.getAddress();
                                             String[] model = featureMap.getDevice_type_id().split("\\.");
-                                            this.type = model[0];
+                                            String type = model[0];
                                             this.state_progress = featureMap.getCurrentState();
                                             if (api_version >= 0.7f) {
                                                 try {
@@ -1531,9 +1551,7 @@ public class MapView extends View {
                 mat.matrix.getValues(value);
                 currentScale *= value[0];
                 //Save current zoom scale
-                prefEditor = params.edit();
-                prefEditor.putFloat("Mapscale", currentScale);
-                prefEditor.commit();    //To save it really !
+                prefUtils.SetMapScale(currentScale);
                 value[0] = 1;
                 value[4] = 1;
                 mat.matrix.setValues(value);
@@ -1552,7 +1570,7 @@ public class MapView extends View {
 
     public final Runnable mLongPressed = new Runnable() {
         public void run() {
-            if (!params.getBoolean("map_menu_disable", false)) {
+            if (prefUtils.GetNotMapMenuDisabled()) {
                 longclic = true;
                 //Code for long click
                 Tracer.v(mytag, "Long press :)");
@@ -1632,12 +1650,13 @@ public class MapView extends View {
                                     //icon is the name of the icon wich will be select
                                     values.put("value", icon);
                                     //reference is the id of the area, room, or feature
-                                    int reference = 0;
+                                    int reference;
                                     reference = featureMap.getId();
                                     values.put("reference", reference);
                                     activity.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                                     initMap();
                                     dialog.cancel();
+                                    Snackbar.make(getRootView(), R.string.widget_icon_changed, Snackbar.LENGTH_LONG).show();
                                 }
                             }
                     );
@@ -1683,6 +1702,7 @@ public class MapView extends View {
                     addMode = true;
                 }
             }
+            Snackbar.make(getRootView(), R.string.widget_replace_somewher, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(activity.getString(R.string.map_button2))) {
             Tracer.d(mytag, "Delete");
             for (final Entity_Map featureMap : listFeatureMap) {
@@ -1716,6 +1736,7 @@ public class MapView extends View {
                     initMap();
                 }
             }
+            Snackbar.make(getRootView(), R.string.widget_deleted, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(activity.getString(R.string.house_add_widget))) {
             int db_id = 0;
             if (temp_id != -1) {
@@ -1740,13 +1761,14 @@ public class MapView extends View {
             addMode = false;
             //refresh the map
             initMap();
+            Snackbar.make(getRootView(), R.string.widget_added, Snackbar.LENGTH_LONG).show();
         }
     }
 
     private String getFileAsString(File file) {
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
-        DataInputStream dis = null;
+        FileInputStream fis;
+        BufferedInputStream bis;
+        DataInputStream dis;
         StringBuilder sb = new StringBuilder();
         try {
             fis = new FileInputStream(file);
@@ -1770,8 +1792,8 @@ public class MapView extends View {
         activity.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, tv, true);
         int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
 
-        currentScalewidth = (float) screenwidth / (float) image_width;
-        currentScaleheight = (float) (screenheight - actionBarHeight) / (float) image_height;
+        float currentScalewidth = (float) screenwidth / (float) image_width;
+        float currentScaleheight = (float) (screenheight - actionBarHeight) / (float) image_height;
         //select witch scale is the best
         if (currentScaleheight < currentScalewidth) {
             currentScale = currentScaleheight;
@@ -1779,9 +1801,7 @@ public class MapView extends View {
             currentScale = currentScalewidth;
         }
         //Save current zoom scale
-        prefEditor = params.edit();
-        prefEditor.putFloat("Mapscale", currentScale);
-        prefEditor.commit();    //To save it really !
+        prefUtils.SetMapScale(currentScale);
         return currentScale;
     }
 
@@ -1807,10 +1827,6 @@ public class MapView extends View {
 
     public void setUpdate(int update) {
         this.update = update;
-    }
-
-    public void setParams(SharedPreferences params) {
-        this.params = params;
     }
 
     public void setPanel_widget(ViewGroup panel_widget) {
@@ -1850,8 +1866,13 @@ public class MapView extends View {
     }
 
     public void set_navigationdraweropen(boolean navigationdraweropen) {
-        this.navigationdraweropen = navigationdraweropen;
+        boolean navigationdraweropen1 = navigationdraweropen;
     }
 
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
+    }
 
 }

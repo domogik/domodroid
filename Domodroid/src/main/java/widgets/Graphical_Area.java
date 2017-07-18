@@ -22,10 +22,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
@@ -40,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import Abstract.common_method;
+import Abstract.pref_utils;
 import Entity.Entity_Room;
 import adapter.ArrayAdapterWithIcon;
 import database.Cache_management;
@@ -53,29 +51,26 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
     private final FrameLayout container = null;
     private final Context context;
     private final int id_area;
+    private final pref_utils prefUtils;
     private tracerengine Tracer = null;
     private String mytag = "Graphical_Area";
     private String icon;
     private final Activity Activity;
-    private final SharedPreferences params;
-    private final Handler widgetHandler;
     private final DomodroidDB domodb;
-    private final SharedPreferences.Editor prefEditor;
 
-    public Graphical_Area(SharedPreferences params, tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize, Handler handler) {
-        super(Trac, context, id, name_area, description_area, icon, widgetSize, "area", handler);
+    public Graphical_Area(tracerengine Trac, Context context, int id, String name_area, String description_area, String icon, int widgetSize) {
+        super(Trac, context, id, name_area, description_area, icon, widgetSize, "area");
         FrameLayout myself = this;
         this.Tracer = Trac;
         this.icon = icon;
         this.id_area = id;
         this.context = context;
         this.Activity = (android.app.Activity) context;
-        this.params = params;
-        this.widgetHandler = handler;
         setOnLongClickListener(this);
-        domodb = new DomodroidDB(this.Tracer, this.Activity, params);
-        prefEditor = this.params.edit();
+        domodb = DomodroidDB.getInstance(this.Tracer, this.Activity);
         mytag = "Graphical_Area(" + id_area + ")";
+        prefUtils = new pref_utils();
+
     }
 
     public boolean onLongClick(View v) {
@@ -105,8 +100,9 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
             alert.setMessage(R.string.Delete_feature_message);
             alert.setPositiveButton(R.string.reloadOK, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog_customname, int whichButton) {
-                    DomodroidDB domodb = new DomodroidDB(Tracer, Activity, params);
-                    domodb.owner = "Widgets_Manager.loadRoomWidgets";
+                    //Todo remove if not needed
+                    //DomodroidDB domodb = new DomodroidDB(Tracer, Activity);
+                    //domodb.owner = "Widgets_Manager.loadRoomWidgets";
                     Tracer.v(mytag, "load widgets for area " + id_area);
                     Entity_Room[] listRoom = domodb.requestRoom(id_area);
 
@@ -120,19 +116,16 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     Tracer.get_engine().remove_one_place_type_in_Featureassociation(id_area, "area");
                     Tracer.get_engine().remove_one_icon(id_area, "area");
                     // #76
-                    prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-                    prefEditor.putString("ROOM_LIST", domodb.request_json_Room().toString());
-                    prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                    prefEditor.putString("FEATURE_LIST_association", domodb.request_json_Features_association().toString());
-                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    prefUtils.SetArea(domodb.request_json_Area().toString());
+                    prefUtils.SetRoom(domodb.request_json_Room().toString());
+                    prefUtils.SetIconList(domodb.request_json_Icon().toString());
+                    prefUtils.SetFeatureListAssociation(domodb.request_json_Features_association().toString());
+                    prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     // recheck cache element to remove those no more need.
                     Cache_management.checkcache(Tracer, Activity);
                     //Refresh the view
-                    Bundle b = new Bundle();
-                    b.putBoolean("refresh", true);
-                    Message msg = new Message();
-                    msg.setData(b);
-                    widgetHandler.sendMessage(msg);
+                    common_method.refresh_the_views();
+                    Snackbar.make(getRootView(), R.string.area_deleted, Snackbar.LENGTH_LONG).show();
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -153,9 +146,10 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                     String result = input.getText().toString();
                     Tracer.get_engine().descUpdate(id_area, result, "area");
                     //#76
-                    prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-                    common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                    prefUtils.SetArea(domodb.request_json_Area().toString());
+                    prefUtils.save_params_to_file(Tracer, mytag, getContext());
                     TV_name.setText(result);
+                    Snackbar.make(getRootView(), R.string.area_renamed, Snackbar.LENGTH_LONG).show();
                 }
             });
             alert.setNegativeButton(R.string.reloadNO, new DialogInterface.OnClickListener() {
@@ -186,15 +180,16 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
                             //icon is the name of the icon wich will be select
                             values.put("value", icon);
                             //reference is the id of the area, room, or feature
-                            int reference = 0;
+                            int reference;
                             reference = id_area;
                             values.put("reference", reference);
                             context.getContentResolver().insert(DmdContentProvider.CONTENT_URI_UPDATE_ICON_NAME, values);
                             // #76
-                            prefEditor.putString("ICON_LIST", domodb.request_json_Icon().toString());
-                            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
+                            prefUtils.SetIconList(domodb.request_json_Icon().toString());
+                            prefUtils.save_params_to_file(Tracer, mytag, getContext());
                             change_this_icon(icon);
                             dialog.cancel();
+                            Snackbar.make(getRootView(), R.string.widget_icon_changed, Snackbar.LENGTH_LONG).show();
                         }
                     }
             );
@@ -203,15 +198,18 @@ public class Graphical_Area extends Basic_Graphical_zone implements OnLongClickL
         } else if (action.equals(context.getString(R.string.move_down))) {
             Tracer.d(mytag, "moving down");
             Tracer.get_engine().move_one_area(id_area, 0, "area", "down");
-            prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-            common_method.refresh_the_views(widgetHandler);
+            prefUtils.SetArea(domodb.request_json_Area().toString());
+            prefUtils.save_params_to_file(Tracer, mytag, getContext());
+            common_method.refresh_the_views();
+            Snackbar.make(getRootView(), R.string.area_moved_down, Snackbar.LENGTH_LONG).show();
         } else if (action.equals(context.getString(R.string.move_up))) {
             Tracer.d(mytag, "moving up");
             Tracer.get_engine().move_one_area(id_area, 0, "area", "up");
-            prefEditor.putString("AREA_LIST", domodb.request_json_Area().toString());
-            common_method.save_params_to_file(Tracer, prefEditor, mytag, getContext());
-            common_method.refresh_the_views(widgetHandler);
+            prefUtils.SetArea(domodb.request_json_Area().toString());
+            prefUtils.save_params_to_file(Tracer, mytag, getContext());
+            common_method.refresh_the_views();
+            Snackbar.make(getRootView(), R.string.area_moved_up, Snackbar.LENGTH_LONG).show();
+
         }
     }
 }

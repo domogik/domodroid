@@ -1,12 +1,5 @@
 package misc;
 
-import java.util.List;
-
-import org.domogik.domodroid13.R;
-
-import Abstract.translate;
-import activities.Graphics_Manager;
-
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -15,6 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.domogik.domodroid13.R;
+
+import java.util.List;
+
+import Abstract.translate;
+import activities.Graphics_Manager;
 
 public class List_Icon_Adapter extends ArrayAdapter<String> {
     private tracerengine Tracer = null;

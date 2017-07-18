@@ -15,7 +15,7 @@
     * You should have received a copy of the GNU General Public License along with
     * Domodroid. If not, see <http://www.gnu.org/licenses/>.
     -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Domodroid</string>
     <string name="button2">Kenrouedad</string>
     <string name="button4">Diwar-benn</string>

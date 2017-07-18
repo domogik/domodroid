@@ -4,7 +4,6 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -12,10 +11,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
+import Abstract.pref_utils;
 import misc.tracerengine;
 
 public class DmdContentProvider extends ContentProvider {
@@ -201,8 +200,8 @@ public class DmdContentProvider extends ContentProvider {
     public boolean onCreate() {
         mDB = new DatabaseHelper(getContext());
         Context context = getContext();
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
-        Tracer = tracerengine.getInstance(SP_params, context);
+        pref_utils prefUtils = new pref_utils(context);
+        Tracer = tracerengine.getInstance(prefUtils.prefs, context);
         return true;
 
     }
@@ -342,6 +341,12 @@ public class DmdContentProvider extends ContentProvider {
                     mDB.getWritableDatabase().execSQL("DELETE FROM table_icon WHERE reference=" + values.getAsString("reference") + " AND name='" + values.getAsString("name") + "'");
                 } catch (SQLException e) {
                     Tracer.e(mytag, "Error deleting icon: " + e.toString());
+                    Tracer.e(mytag, "Certainly missing name or reference");
+                    try {
+                        mDB.getWritableDatabase().execSQL("DELETE FROM table_icon WHERE reference=" + values.getAsString("reference"));
+                    } catch (SQLException e1) {
+                        Tracer.e(mytag, "Error deleting icon: " + e1.toString());
+                    }
                 }
                 break;
             case CLEAR_one_FEATURE:

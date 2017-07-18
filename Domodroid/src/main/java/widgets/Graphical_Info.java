@@ -19,11 +19,8 @@ package widgets;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -39,6 +36,8 @@ import android.widget.TextView;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,8 +46,8 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
-import misc.Color_Result;
 import misc.tracerengine;
 
 public class Graphical_Info extends Basic_Graphical_widget implements OnClickListener {
@@ -59,19 +58,17 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
     private Graphical_Info_View canvas;
-    private Message msg;
     private static String mytag;
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     public Boolean with_graph = true;
-    private Boolean realtime = false;
+
     private final Entity_Feature feature;
     private String state_key;
-    private String timestamp;
+
     private String parameters;
     private final int session_type;
-    private final SharedPreferences params;
-    private int dpiClassification;
+
     private final int update;
     private TextView state_key_view;
     private String stateS;
@@ -79,49 +76,50 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
     private float Float_graph_size;
 
     private boolean isopen = false;
+    private int dev_id;
+    private String Value_timestamp;
+    private String status;
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
-                          final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
+                          final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         this.update = update;
         onCreate();
     }
 
     public Graphical_Info(tracerengine Trac,
-                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params, final int update,
-                          final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                          final Activity activity, int widgetSize, int session_type, int place_id, String place_type, final int update,
+                          final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         this.update = update;
         onCreate();
     }
 
     private void onCreate() {
-        this.parameters = feature.getParameters();
-        int dev_id = feature.getDevId();
-        this.state_key = feature.getState_key();
-        mytag = "Graphical_Info (" + dev_id + ")";
-        this.isopen = false;
-        try {
-            int graphics_height_size = params.getInt("graphics_height_size", 262);
-            this.Float_graph_size = Float.valueOf(graphics_height_size);
-        } catch (Exception e) {
-            //This is due to old way to store it as a string
-            String graph_size = params.getString("graph_size", "262.5");
-            this.Float_graph_size = Float.valueOf(graph_size);
-        }
-        try {
-            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
-        } catch (Exception e) {
-            stateS = state_key;
-        }
         myself = this;
+        this.parameters = feature.getParameters();
+        this.state_key = feature.getState_key();
+        this.isopen = false;
+        int graphics_height_size = prefUtils.GetWidgetGraphSize();
+        this.Float_graph_size = Float.valueOf(graphics_height_size);
+        try {
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+        } catch (Exception e) {
+            this.stateS = state_key;
+        }
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+        mytag = "Graphical_Info (" + this.dev_id + ")";
+
         setOnClickListener(this);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -139,6 +137,10 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
         //TV_Value
         TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            TV_Value.setTextIsSelectable(true);
+            TV_Value.setOnClickListener(this);
+        }
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
@@ -160,7 +162,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             featurePan2.setGravity(Gravity.CENTER_VERTICAL);
             featurePan2.setPadding(5, 10, 5, 10);
             //canvas
-            canvas = new Graphical_Info_View(activity, Tracer, activity, params, parameters);
+            canvas = new Graphical_Info_View(activity, Tracer, activity, parameters);
             canvas.dev_id = dev_id;
             canvas.id = feature.getId();
             canvas.state_key = state_key;
@@ -168,7 +170,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
             LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             featurePan2_buttons = layoutInflater.inflate(R.layout.graph_buttons, null);
-            View v = null;
+            View v;
 
             v = featurePan2_buttons.findViewById(R.id.bt_prev);
             if (v != null)
@@ -214,65 +216,7 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
             Tracer.i(mytag, "No unit for this feature");
         }
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9999) {
-                    //Message from widgetupdate
-                    //state_engine send us a signal to notify TV_Value changed
-                    if (session == null)
-                        return;
 
-                    String loc_Value = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + loc_Value + "> at " + Value_timestamp);
-
-                    Long Value_timestamplong = null;
-                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-
-                    display_sensor_info.display(Tracer, loc_Value, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-
-                    //Change icon if in %
-                    if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
-                        if (Float.parseFloat(loc_Value) >= 60) {
-                            //To have the icon colored if TV_Value beetwen 30 and 60
-                            change_this_icon(2);
-                        } else if (Float.parseFloat(loc_Value) >= 30) {
-                            //To have the icon colored if TV_Value >30
-                            change_this_icon(1);
-                        } else {
-                            //To have the icon colored if TV_Value <30
-                            change_this_icon(0);
-                        }
-                    } else {
-                        // #93
-                        if (loc_Value.equals("off") || loc_Value.equals("false") || loc_Value.equals("0") || loc_Value.equals("0.0")) {
-                            change_this_icon(0);
-                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        } else change_this_icon(2);
-                    }
-                } else if (msg.what == 9998)
-
-                {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
-                }
-            }
-
-        };
         LL_infoPan.addView(state_key_view);
         //================================================================================
         /*
@@ -280,19 +224,15 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null)
-
-        {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+        if (cache_engine != null) {
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our TV_Value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -300,19 +240,59 @@ public class Graphical_Info extends Basic_Graphical_widget implements OnClickLis
 
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
-
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        // View is now detached, and about to be destroyed
-        try {
-            Tracer.get_engine().unsubscribe(session);
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
         }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+
+                display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
+                //Change icon if in %
+                if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+                    if (Float.parseFloat(status) >= 60) {
+                        //To have the icon colored if TV_Value beetwen 30 and 60
+                        change_this_icon(2);
+                    } else if (Float.parseFloat(status) >= 30) {
+                        //To have the icon colored if TV_Value >30
+                        change_this_icon(1);
+                    } else {
+                        //To have the icon colored if TV_Value <30
+                        change_this_icon(0);
+                    }
+                } else {
+                    // #93
+                    if (status.equals("off") || status.equals("false") || status.equals("0") || status.equals("0.0")) {
+                        change_this_icon(0);
+                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                    } else change_this_icon(2);
+                }
+            }
+        });
     }
 
     public void onClick(View arg0) {

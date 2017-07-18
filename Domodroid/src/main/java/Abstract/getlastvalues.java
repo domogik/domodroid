@@ -18,14 +18,14 @@ import rinor.Rest_com;
  * Created by tiki on 04/12/2016.
  */
 
-public class getlastvalues {
+class getlastvalues {
 
-    public static void getlastvalue(Activity activity, tracerengine Tracer, float api_version, ArrayList listItem, ListView listeChoices, String mytag, int dev_id,
-                                    String state_key, int nb_item_for_history, String login, String password, Boolean SSL, int id) {
+    public static void getlastvalue(Activity activity, tracerengine Tracer, float api_version, String mytag, int dev_id,
+                                    String state_key, int nb_item_for_history, int id) {
         JSONObject json_LastValues = null;
-        JSONArray itemArray = null;
-        listeChoices = new ListView(activity);
-        listItem = new ArrayList<>();
+        JSONArray itemArray;
+        ListView listeChoices = new ListView(activity);
+        ArrayList listItem = new ArrayList<>();
         try {
             if (api_version <= 0.6f) {
                 Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "stats/" + dev_id + "/" + state_key + "/last/" + nb_item_for_history + "/");

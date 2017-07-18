@@ -9,7 +9,7 @@ import org.junit.Test;
  * Created by tiki on 06/06/2016.
  */
 public class Entity_AreaTest extends AndroidTestCase {
-    Entity_Area area = new Entity_Area(null, null, null, null, 0, null);
+    private final Entity_Area area = new Entity_Area(null, null, null, 0, null);
 
     @Test
     public void testSetGetDescription() throws Exception {

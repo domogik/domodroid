@@ -19,7 +19,6 @@ package widgets;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -50,15 +49,14 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 import Abstract.calcul;
+import Abstract.pref_utils;
 import misc.tracerengine;
 import rinor.Rest_com;
 
 
 public class Graphical_Info_View extends View implements OnClickListener {
 
-    private final String parameter;
     private int width;
-    private int height;
     private Canvas can;
     private Canvas can2;
     private final Vector<Vector<Float>> values;
@@ -108,29 +106,23 @@ public class Graphical_Info_View extends View implements OnClickListener {
     private int limit = 6;        // items returned by Rinor on stats arrays when 'hour' average
     private OnClickListener listener = null;
     private tracerengine Tracer = null;
-    private final String login;
-    private final String password;
     private final float size15;
     private final float size10;
     private final float size5;
     private final float size7;
     private final float api_version;
-    private Boolean SSL;
     private String unit = "";
-    private Bitmap buffer;
-    private Bitmap text;
-    final Activity activity;
+    private final Activity activity;
 
-    public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, SharedPreferences params, String parameters) {
+    public Graphical_Info_View(final Activity activity, tracerengine Trac, Context context, String parameters) {
         super(context);
         this.activity = activity;
         invalidate();
         this.Tracer = Trac;
-        this.parameter = parameters;
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
-        api_version = params.getFloat("API_VERSION", 0);
-        SSL = params.getBoolean("ssl_activate", false);
+        String parameter = parameters;
+        pref_utils prefUtils = new pref_utils();
+
+        api_version = prefUtils.GetDomogikApiVersion();
 
 
         try {
@@ -181,6 +173,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                 } else {
                     invalidate();
                 }
+                return ;
             }
         };
     }
@@ -266,9 +259,9 @@ public class Graphical_Info_View extends View implements OnClickListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         width = getMeasuredWidth();
-        height = getMeasuredHeight();
-        buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-        text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        int height = getMeasuredHeight();
+        Bitmap buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        Bitmap text = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
         can = new Canvas(buffer);
         can2 = new Canvas(text);
 
@@ -366,7 +359,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
         float step = (gridStopX - gridStartX) / (values.size() - 1);
         int top = 0;
         String top_txt = "";
-        int rythm = 1;
+        int rythm;
         int curr = 0;
 
         Paint paint = new Paint();
@@ -487,10 +480,10 @@ public class Graphical_Info_View extends View implements OnClickListener {
             }
 
             // bottom texts
-            int bottom_val1 = 0;
-            int bottom_val2 = 0;
+            int bottom_val1;
+            int bottom_val2;
             int hour = values.get(i + 1).get(4).intValue();
-            String bottom_txt = "";
+            String bottom_txt;
 
             if (limit == 6) {
                 //day or week
@@ -650,7 +643,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
                     return null;
                 }
                 Tracer.d(mytag, "UpdateThread (" + dev_id + ") Refreshing graph");
-                JSONArray itemArray = null;
+                JSONArray itemArray;
                 JSONArray valueArray = null;
                 if (api_version <= 0.6f) {
                     itemArray = json_GraphValues.getJSONArray("stats");
@@ -713,12 +706,12 @@ public class Graphical_Info_View extends View implements OnClickListener {
 
                     if (i < valueArray.length() - 1) {
                         // It's not the last component
-                        int loc_hour, loc_hour_next = 0;
-                        int loc_day, loc_day_next = 0;
-                        int loc_week, loc_week_next = 0;
+                        int loc_hour, loc_hour_next;
+                        int loc_day, loc_day_next;
+                        int loc_week, loc_week_next;
                         int loc_year = 0;
-                        int loc_month = 0;
-                        float loc_value = 0;
+                        int loc_month;
+                        float loc_value;
 
                         if (limit == 6) {
                             // range between 1 to 8 days (average per hour)
@@ -899,14 +892,14 @@ public class Graphical_Info_View extends View implements OnClickListener {
     }
 
     private void compute_period() {
-        long duration = 0;
+        long duration;
         //Calendar cal = Calendar.getInstance(); // The 'now' time
 
         switch (period_type) {
             case -1:
                 //user requires the 'Prev' period
                 period_type = sav_period;
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 if (time_end != null) {
                     long new_end = time_end.getTime();
                     new_end -= duration;
@@ -920,7 +913,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             case 0:
                 //user requires the 'Next' period
                 period_type = sav_period;
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 if (time_start != null) {
                     long new_start = time_start.getTime();
                     new_start += duration;
@@ -942,7 +935,7 @@ public class Graphical_Info_View extends View implements OnClickListener {
             default:
                 //period_type indicates the number of days to graph
                 // relative to 'now' date
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 long new_end_time = System.currentTimeMillis();
                 time_end.setTime(new_end_time);    //Get actual system time
                 new_end_time -= duration;

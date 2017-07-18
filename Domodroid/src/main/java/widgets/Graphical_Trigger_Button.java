@@ -1,7 +1,5 @@
 package widgets;
 
-import org.domogik.domodroid13.*;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -12,6 +10,8 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.domogik.domodroid13.R;
 
 public class Graphical_Trigger_Button extends LinearLayout {
     private boolean touching;
@@ -148,7 +148,7 @@ public class Graphical_Trigger_Button extends LinearLayout {
                             break;
                     }
                 }
-
+                return ;
             }
         };
     }

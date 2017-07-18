@@ -22,11 +22,9 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -50,6 +48,8 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 import org.achartengine.util.MathHelper;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +66,7 @@ import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.tracerengine;
 import rinor.Rest_com;
@@ -77,15 +78,11 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private LinearLayout chartContainer;
     private TextView TV_Value;
     private RelativeTimeTextView TV_Timestamp;
-    private int id;
 
-    private Message msg;
     private static String mytag = "";
 
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
-    private final Boolean with_graph = true;
-    private Boolean realtime = false;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     private GraphicalView mChart;
 
     private String step = "hour";
@@ -114,58 +111,55 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     private String parameters;
     private int dev_id;
     private final int session_type;
-    private final SharedPreferences params;
     private SimpleDateFormat format;
     private TextView state_key_view;
     private String stateS;
     private String test_unite;
     private Float Float_graph_size;
     private boolean isopen = false;
+    private String status;
+    private String Value_timestamp;
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                            final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                                            final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Info_with_achartengine(tracerengine Trac,
-                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                            final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                                            final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                                            final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
-
         onCreate();
     }
 
     private void onCreate() {
+        myself = this;
         this.state_key = feature.getState_key();
         this.dev_id = feature.getDevId();
         this.parameters = feature.getParameters();
-        this.id = feature.getId();
         this.isopen = false;
-        try {
-            int graphics_height_size = params.getInt("graphics_height_size", 262);
-            this.Float_graph_size = Float.valueOf(graphics_height_size);
-        } catch (Exception e) {
-            //This is due to old way to store it as a string
-            String graph_size = params.getString("graph_size", "262.5");
-            this.Float_graph_size = Float.valueOf(graph_size);
-        }
-        format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
+        int graphics_height_size = prefUtils.GetWidgetGraphSize();
+        this.Float_graph_size = Float.valueOf(graphics_height_size);
 
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
-            stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
+            this.stateS = getResources().getString(translate.do_translate(getContext(), Tracer, state_key));
         } catch (Exception e) {
-            stateS = state_key;
+            this.stateS = state_key;
         }
-        myself = this;
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
+        mytag = "Graphical_Info_with_achartengine (" + dev_id + ")";
         setOnClickListener(this);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -251,6 +245,10 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
         //TV_Value
         TV_Value = new TextView(activity);
         TV_Value.setTextSize(28);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            TV_Value.setTextIsSelectable(true);
+            TV_Value.setOnClickListener(this);
+        }
         TV_Value.setTextColor(Color.BLACK);
         TV_Value.setGravity(Gravity.RIGHT);
 
@@ -275,95 +273,79 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.i(mytag, "No unit for this feature");
         }
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == 9999) {
-                    //Message from widgetupdate
-                    //state_engine send us a signal to notify TV_Value changed
-                    if (session == null)
-                        return;
-
-                    String new_val = session.getValue();
-                    String Value_timestamp = session.getTimestamp();
-                    Tracer.d(mytag, "Handler receives a new TV_Value <" + new_val + "> at " + Value_timestamp);
-
-                    Long Value_timestamplong = null;
-                    Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-
-                    display_sensor_info.display(Tracer, new_val, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
-
-                    //Change icon if in %
-                    if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
-                        if (Float.parseFloat(new_val) >= 60) {
-                            //To have the icon colored if TV_Value beetwen 30 and 60
-                            change_this_icon(2);
-                        } else if (Float.parseFloat(new_val) >= 30) {
-                            //To have the icon colored if TV_Value >30
-                            change_this_icon(1);
-                        } else {
-                            //To have the icon colored if TV_Value <30
-                            change_this_icon(0);
-                        }
-                    } else {
-                        // #93
-                        if (new_val.equals("off") || new_val.equals("false") || new_val.equals("0") || new_val.equals("0.0")) {
-                            change_this_icon(0);
-                            //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
-                        } else {
-                            change_this_icon(2);
-                        }
-                    }
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
-                }
-            }
-
-        };
-
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
 		 * 
 		 */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null)
-
-        {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(id, "", mytag, handler, session_type);
-            }
+        if (cache_engine != null) {
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our TV_Value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current TV_Value in session
+                    status = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
-
     }
 
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    private void update_display() {
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + status + "> at " + Value_timestamp);
+
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+
+                display_sensor_info.display(Tracer, status, Value_timestamplong, mytag, parameters, TV_Value, TV_Timestamp, activity, LL_featurePan, typefaceweather, typefaceawesome, state_key, state_key_view, stateS, test_unite);
+
+                //Change icon if in %
+                if ((state_key.equalsIgnoreCase("humidity")) || (state_key.equalsIgnoreCase("percent")) || (test_unite.equals("%"))) {
+                    if (Float.parseFloat(status) >= 60) {
+                        //To have the icon colored if TV_Value beetwen 30 and 60
+                        change_this_icon(2);
+                    } else if (Float.parseFloat(status) >= 30) {
+                        //To have the icon colored if TV_Value >30
+                        change_this_icon(1);
+                    } else {
+                        //To have the icon colored if TV_Value <30
+                        change_this_icon(0);
+                    }
+                } else {
+                    // #93
+                    if (status.equals("off") || status.equals("false") || status.equals("0") || status.equals("0.0")) {
+                        change_this_icon(0);
+                        //set featuremap.state to 1 so it could select the correct icon in entity_map.get_ressources
+                    } else {
+                        change_this_icon(2);
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
@@ -373,14 +355,14 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     }
 
     private void compute_period() {
-        long duration = 0;
+        long duration;
         //Calendar cal = Calendar.getInstance(); // The 'now' time
 
         switch (period_type) {
             case -1:
                 //user requires the 'Prev' period
                 period_type = sav_period;
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 if (time_end != null) {
                     long new_end = time_end.getTime();
                     new_end -= duration;
@@ -394,7 +376,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             case 0:
                 //user requires the 'Next' period
                 period_type = sav_period;
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 if (time_start != null) {
                     long new_start = time_start.getTime();
                     new_start += duration;
@@ -416,7 +398,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             default:
                 //period_type indicates the number of days to graph
                 // relative to 'now' date
-                duration = 86400l * 1000l * period_type;
+                duration = 86400L * 1000L * period_type;
                 long new_end_time = System.currentTimeMillis();
                 time_end.setTime(new_end_time);    //Get actual system time
                 new_end_time -= duration;
@@ -483,9 +465,9 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                         "/interval/" + step +
                         "/selector/avg", 30000);
             } else if (api_version >= 0.7f) {
-                Tracer.i(mytag, "UpdateThread (" + id + ") : " + "sensorhistory/id/" + id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
+                Tracer.i(mytag, "UpdateThread (" + dev_id + ") : " + "sensorhistory/id/" + dev_id + "/from/" + startTimestamp + "/to/" + currentTimestamp + "/interval/" + step + "/selector/avg");
                 //Don't forget old "dev_id"+"state_key" is replaced by "id"
-                json_GraphValues = Rest_com.connect_jsonobject(activity, Tracer, "sensorhistory/id/" + id +
+                json_GraphValues = Rest_com.connect_jsonobject(activity, Tracer, "sensorhistory/id/" + dev_id +
                         "/from/" + startTimestamp +
                         "/to/" + currentTimestamp +
                         "/interval/" + step +
@@ -497,7 +479,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
             Tracer.e(mytag, "Error with json");
         }
 
-        JSONArray itemArray = null;
+        JSONArray itemArray;
         JSONArray valueArray = new JSONArray();
         if (api_version <= 0.6f) {
             itemArray = json_GraphValues.getJSONArray("stats");
@@ -603,7 +585,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 calendar.set(Calendar.HOUR, 12);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.YEAR, year);
-                Date date1 = new Date();
+                Date date1;
                 date1 = calendar.getTime();
                 if ((day + 1) != day_next) {
                     //ruptur : simulate next missing steps
@@ -658,7 +640,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
                 calendar.set(Calendar.DAY_OF_WEEK, 5);
                 calendar.set(Calendar.WEEK_OF_YEAR, week);
                 calendar.set(Calendar.YEAR, year);
-                Date date1 = new Date();
+                Date date1;
                 date1 = calendar.getTime();
                 if (week != 52 && (week < week_next)) {
                     //no day change
@@ -770,6 +752,7 @@ public class Graphical_Info_with_achartengine extends Basic_Graphical_widget imp
     }
 
     public void onClick(View arg0) {
+        Boolean with_graph = true;
         if (with_graph) {
             //Done correct 350px because it's the source of http://tracker.domogik.org/issues/1804
             float size = Float_graph_size * activity.getResources().getDisplayMetrics().density + 0.5f;

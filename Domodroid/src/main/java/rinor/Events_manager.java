@@ -1,20 +1,12 @@
 package rinor;
 
 import android.app.Activity;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.Toast;
-
-//import com.orhanobut.logger.Logger;
 
 import org.domogik.domodroid13.R;
 import org.json.JSONException;
@@ -24,16 +16,18 @@ import org.zeromq.ZMQ;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import applications.domodroid;
 import database.Cache_Feature_Element;
 import database.JSONParser;
 import database.WidgetUpdate;
 import misc.tracerengine;
 
+//import com.orhanobut.logger.Logger;
+
 public class Events_manager {
     private static Events_manager instance;
-    private static Context context;
     private tracerengine Tracer;
-    private static Activity activity;
+    private final Activity activity;
     private Handler state_engine_handler;
     private Handler events_engine_handler;
     private ArrayList<Cache_Feature_Element> engine_cache;
@@ -68,14 +62,11 @@ public class Events_manager {
     }
 
     public static Events_manager getInstance(final Activity activity) {
-
-        context = activity.getBaseContext();
         if (instance == null) {
             Log.i("Events_manager", "Creating instance........................");
             instance = new Events_manager(activity);
         }
         return instance;
-
     }
 
     public void init(tracerengine Trac,
@@ -103,9 +94,9 @@ public class Events_manager {
             sleeping = false;
             start_listener();
         }
-        events_engine_handler = new Handler() {
+        events_engine_handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 9999) {
                     listener = null;    //It's dead
                     stats_com = null;    //let the instance to stop
@@ -118,8 +109,9 @@ public class Events_manager {
                         t.printStackTrace();
                     }
                 }
+                return true;
             }
-        };
+        });
         Tracer.w(mytag, "Events Manager ready");
         init_done = true;
     }    //End of Constructor
@@ -195,7 +187,7 @@ public class Events_manager {
             //For 0.4 with zeromMQ
             if (api_version >= 0.7f) {
                 if (MQaddress != null && MQsubport != null) {
-                    if (!MQaddress.equals("") && !MQsubport.equals("")) {
+                    if (!MQaddress.equals("") && !MQsubport.equals("") && !MQaddress.equals("127.0.0.1") && !MQaddress.equals("0.0.0.0")) {
                         try {
                             //TODO find a way to know when ZeroMQ didn't response anymore.
 
@@ -215,7 +207,7 @@ public class Events_manager {
                                 while (!sleeping) {
                                     String result = subscriber.recvStr(0);
                                     Tracer.i(mytag, "MQ information receive: ");
-                                    Tracer.i(mytag, result.toString());
+                                    Tracer.i(mytag, result);
                                     if (result.contains("stored_value")) {
                                         try {
                                             JSONObject json_stats_04 = new JSONObject(result);
@@ -282,8 +274,7 @@ public class Events_manager {
                         return null;
                     }
                 } else {
-                    //todo say user MQ address or port is empty
-                    //Toast.makeText(null, R.string.events_error_mq_config,Toast.LENGTH_LONG).show();
+                    Toast.makeText(domodroid.GetInstance(), R.string.events_error_mq_config, Toast.LENGTH_LONG).show();
                     Tracer.d(mytag, "MQ adress or port is empty");
                 }
             } else if (api_version <= 0.6f) {
@@ -300,7 +291,7 @@ public class Events_manager {
                 //And send it to server....to create an event ticket
                 String request = ticket_request;
                 JSONObject event = new JSONObject();
-                Boolean ack = false;
+                Boolean ack;
                 Tracer.i(mytag, "ListenerThread starts the loop");
                 String ticket = "";
                 int counter_max = 5 * 60 * 1000;        //5 minutes max between 2 retry
@@ -346,7 +337,7 @@ public class Events_manager {
                         //And try to reconnect
 
                     }
-                    int error = 1;
+                    int error;
 
                     // Try to connect to server and send request
                     stats_com.add(Stats_Com.EVENTS_SEND, request.length());
@@ -389,9 +380,9 @@ public class Events_manager {
                             //Tracer.w(mytag,"Processing event");
 
                             // First, take the ticket ID to resubmit an event request....
-                            int list_size = 0;
+                            int list_size;
                             if (event != null) {
-                                String device_id = "";
+                                String device_id;
                                 try {
                                     list_size = event.getJSONArray("event").length();
                                 } catch (Exception e) {
@@ -425,7 +416,7 @@ public class Events_manager {
                                         break;        //Force to redo the loop from while(alive)
                                     }
                                     //json_ValuesList = event.getJSONArray("event").getJSONObject(i).getJSONObject("data").getJSONArray("value");
-                                    int data_size = 0;
+                                    int data_size;
                                     try {
                                         data_size = event.getJSONArray("event").getJSONObject(i).getJSONArray("data").length();
                                     } catch (Exception e) {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -15,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.domogik.domodroid13.R;
-
-import java.util.ArrayList;
 
 import video.MjpegInputStream;
 import video.MjpegView;
@@ -89,12 +86,13 @@ public class Activity_Cam extends AppCompatActivity {
         mv.setDisplayMode(MjpegView.SIZE_BEST_FIT);
         mv.showFps(true);
 
-        Handler handler = new Handler() {
+        Handler handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 TV_frameRate.setText(getText(R.string.frame_rate) + ": " + msg.what + " " + getText(R.string.fps));
+                return true;
             }
-        };
+        });
         mv.setHandler(handler);
     }
 

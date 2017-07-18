@@ -30,11 +30,11 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.preference.ListPreference;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -47,19 +47,18 @@ import org.domogik.domodroid13.R;
 
 import java.util.List;
 
-import Abstract.common_method;
+import Abstract.pref_utils;
 import database.Cache_management;
 import misc.tracerengine;
 
 public class Preference extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    public static Preference myself = null;
     private final String mytag = this.getClass().getName();
-    private static tracerengine Tracer = null;
-    private String action;
+    private tracerengine Tracer = null;
     private WifiManager mWifiManager;
-    CharSequence[] entries = null;
-    ListPreference prefered_wifi_ssid;
+    private CharSequence[] entries = null;
+    private ListPreference prefered_wifi_ssid;
+    private pref_utils prefUtils;
 
 
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -100,15 +99,16 @@ public class Preference extends PreferenceActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Tracer = tracerengine.getInstance(PreferenceManager.getDefaultSharedPreferences(this), this);
-        myself = this;
-        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        Preference myself = this;
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        prefUtils = new pref_utils();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setPreferenceScreen(null);
-        action = getIntent().getAction();
+        String action = getIntent().getAction();
         if (action != null && action.equals("preferences_server")) {
             addPreferencesFromResource(R.xml.preferences_server);
             registerReceiver(mWifiScanReceiver,
@@ -129,6 +129,7 @@ public class Preference extends PreferenceActivity implements
             addPreferencesFromResource(R.xml.preferences_map);
         } else if (action != null && action.equals("preferences_house")) {
             addPreferencesFromResource(R.xml.preferences_house);
+            //TODO #19 get list of area/room to allow user select where to directly start
         } else if (action != null && action.equals("preferences_butler")) {
             addPreferencesFromResource(R.xml.preferences_butler);
         } else if (action != null && action.equals("preferences_debug")) {
@@ -157,9 +158,9 @@ public class Preference extends PreferenceActivity implements
                                           String key) {
         updatePreferences(findPreference(key));
         if (key.equals("load_area_at_start")) {
-            SharedPreferences.Editor pref_editor = sharedPreferences.edit();
-            pref_editor.putBoolean("BY_USAGE", true);
-            pref_editor.commit();
+            prefUtils.SetWidgetByUsage(true);
+            //Todo #19 save correct value to be able to load it later.
+            prefUtils.SetAreaToStartIn(key);
         }
         // show the current value in the settings screen
         for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
@@ -194,38 +195,43 @@ public class Preference extends PreferenceActivity implements
         super.onDestroy();
 
         //Create and correct rinor_Ip to add http:// on start or remove http:// to be used by mq and sync part
-        SharedPreferences params = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String temp = params.getString("rinorIP", "");
-        String extrenal_temp = params.getString("rinorexternal_IP", "");
-        Boolean SSL = params.getBoolean("ssl_activate", false);
-        SharedPreferences.Editor prefEditor;
+        String temp = prefUtils.GetRestIp();
+        Boolean SSL = prefUtils.GetRestSsl();
         if (!temp.toLowerCase().startsWith("http://") && !temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-            prefEditor = params.edit();
             if (SSL) {
-                prefEditor.putString("rinor_IP", "https://" + temp);
-                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp);
+                prefUtils.SetRestIp("https://" + temp);
             } else {
-                prefEditor.putString("rinor_IP", "http://" + temp);
-                prefEditor.putString("rinor_external_IP", "http://" + extrenal_temp);
+                prefUtils.SetRestIp("http://" + temp);
             }
-            prefEditor.commit();
         } else if (temp.toLowerCase().startsWith("http://") || temp.toLowerCase().startsWith("https://")) {
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-            prefEditor = params.edit();
+            temp = temp.replace("https://", "");
+            temp = temp.replace("http://", "");
             if (SSL) {
-                prefEditor.putString("rinor_IP", temp.replace("https://", ""));
-                prefEditor.putString("rinor_external_IP", extrenal_temp.replace("https://", ""));
+                prefUtils.SetRestIp("https://" + temp);
             } else {
-                prefEditor.putString("rinor_IP", temp.replace("http://", ""));
-                prefEditor.putString("rinor_external_IP", "https://" + extrenal_temp.replace("http://", ""));
+                prefUtils.SetRestIp("http://" + temp);
             }
-            prefEditor.commit();
+        }
+        String extrenal_temp = prefUtils.GetExternalRestIp();
+        Boolean ExternalSSL = prefUtils.GetExternalRestSsl();
+        if (!extrenal_temp.toLowerCase().startsWith("http://") && !extrenal_temp.toLowerCase().startsWith("https://")) {
+            if (ExternalSSL) {
+                prefUtils.SetExternalRestIp("https://" + extrenal_temp);
+            } else {
+                prefUtils.SetExternalRestIp("http://" + extrenal_temp);
+            }
+        } else if (extrenal_temp.toLowerCase().startsWith("http://") || extrenal_temp.toLowerCase().startsWith("https://")) {
+            extrenal_temp = extrenal_temp.replace("https://", "");
+            extrenal_temp = extrenal_temp.replace("http://", "");
+            if (ExternalSSL) {
+                prefUtils.SetExternalRestIp("https://" + extrenal_temp);
+            } else {
+                prefUtils.SetExternalRestIp("http://" + extrenal_temp);
+            }
         }
 
         //refresh URL address
-        prefEditor = params.edit();
-        String urlAccess = params.getString("rinor_IP", "1.1.1.1") + ":" + params.getString("rinorPort", "40405") + params.getString("rinorPath", "/");
+        String urlAccess = prefUtils.GetRestIp() + ":" + prefUtils.GetRestPort() + prefUtils.GetRestPath();
         urlAccess = urlAccess.replaceAll("[\r\n]+", "");
         urlAccess = urlAccess.replaceAll(" ", "%20");
         String format_urlAccess;
@@ -233,9 +239,9 @@ public class Preference extends PreferenceActivity implements
             format_urlAccess = urlAccess;
         else
             format_urlAccess = urlAccess.concat("/");
-        prefEditor.putString("URL", format_urlAccess);
+        prefUtils.SetUrl(format_urlAccess);
 
-        String external_urlAccess = params.getString("rinor_external_IP", "1.1.1.1") + ":" + params.getString("rinor_external_Port", "40405") + params.getString("rinorPath", "/");
+        String external_urlAccess = prefUtils.GetExternalRestIp() + ":" + prefUtils.GetExternalRestPort() + prefUtils.GetRestPath();
         external_urlAccess = external_urlAccess.replaceAll("[\r\n]+", "");
         external_urlAccess = external_urlAccess.replaceAll(" ", "%20");
         String external_format_urlAccess;
@@ -243,22 +249,19 @@ public class Preference extends PreferenceActivity implements
             external_format_urlAccess = external_urlAccess;
         else
             external_format_urlAccess = external_urlAccess.concat("/");
-        prefEditor.putString("external_URL", external_format_urlAccess);
-
-        prefEditor.commit();
+        prefUtils.SetExternalUrl(external_format_urlAccess);
 
         //Save to file
         String mytag = "Preference";
-        common_method.save_params_to_file(Tracer, prefEditor, mytag, this);
+        prefUtils.save_params_to_file(Tracer, mytag, this);
 
-        urlAccess = params.getString("URL", "1.1.1.1");
-        external_urlAccess = params.getString("external_URL", "1.1.1.1");
         //refresh cache address.
-        Cache_management.checkcache(Tracer, myself);
+        Cache_management.checkcache(Tracer, this);
         Tracer.d(mytag, "End destroy activity");
         try {
             //because if not registered it crash.
-            unregisterReceiver(mWifiScanReceiver);
+            if (mWifiScanReceiver != null)
+                unregisterReceiver(mWifiScanReceiver);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

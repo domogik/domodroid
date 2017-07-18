@@ -18,7 +18,6 @@
 package Entity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 
 import misc.tracerengine;
 
@@ -31,10 +30,10 @@ public class Entity_Map extends Entity_Feature {
     private Boolean isalive = true;
     private Entity_client session;        //Structure to connect to WidgetUpdate, and receive notifications on change
 
-    public Entity_Map(SharedPreferences params, tracerengine Trac, Activity activity, String device_feature_model_id, int id, int devId, String device_usage_id, String address,
+    public Entity_Map( tracerengine Trac, Activity activity, String device_feature_model_id, int id, int devId, String device_usage_id, String address,
                       String device_type_id, String description, String name, String state_key, String parameters, String value_type,
                       int posx, int posy, String map) {
-        super(params, Trac, activity, device_feature_model_id, id, devId, device_usage_id, address, device_type_id,
+        super(Trac, activity, device_feature_model_id, id, devId, device_usage_id, address, device_type_id,
                 description, name, state_key, parameters, value_type);
         this.id = id;
         this.posx = posx;

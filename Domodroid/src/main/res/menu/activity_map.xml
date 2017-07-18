@@ -7,7 +7,7 @@
         android:id="@+id/menu_overflow"
         android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"
         android:orderInCategory="11111"
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/map_menu_add"
@@ -30,6 +30,11 @@
                 android:id="@+id/map_menu_help"
                 android:icon="@drawable/ic_action_help"
                 android:title="@string/map_button3" />
+            <!-- menu_preferences -->
+            <item
+                android:id="@+id/map_menu_preferences"
+                android:icon="@drawable/icon_menu_options"
+                android:title="@string/home_button2" />
             <item
                 android:id="@+id/map_menu_exit"
                 android:icon="@drawable/icon_menu_exit"

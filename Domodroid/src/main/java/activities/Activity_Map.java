@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,7 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -44,8 +42,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-//import com.orhanobut.logger.Logger;
-
 import org.domogik.domodroid13.R;
 
 import java.io.File;
@@ -60,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import Abstract.pref_utils;
 import Abstract.translate;
 import Dialog.Dialog_Map_Help;
 import Dialog.Dialog_Map_Move;
@@ -70,27 +67,24 @@ import map.MapView;
 import misc.CopyFile;
 import misc.tracerengine;
 
+//import com.orhanobut.logger.Logger;
+
 public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
     private Sliding_Drawer panel;
-    private Sliding_Drawer topPanel;
     public static Dialog dialog_feature;
     private Entity_Feature[] listFeature;
     private HashMap map;
 
     private Vector<String> list_usable_files;
     private MapView mapView;
-    private SharedPreferences.Editor prefEditor;
-    private SharedPreferences params;
     private ViewGroup panel_widget;
 
     private ListView listeMap;
     private ArrayList<HashMap<String, String>> listItem;
-    private Animation animation1;
-    private Animation animation2;
 
     private WidgetUpdate widgetUpdate;
     private static Handler sbanim;
@@ -105,12 +99,11 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     private Menu mainMenu;
 
     private Toolbar toolbar;
-    private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private int mSelectedId;
 
     private static final int PICK_IMAGE = 1;
+    private pref_utils prefUtils;
 
     /*
      * WARNING : this class does'nt access anymore directly the database
@@ -121,16 +114,14 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        params = PreferenceManager.getDefaultSharedPreferences(this);
+        prefUtils = new pref_utils();
         //com.orhanobut.logger.Logger.init(mytag).methodCount(0);
 
         //window manager to keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Tracer = tracerengine.getInstance(params, this);
-        prefEditor = params.edit();
-        mapView = new MapView(Tracer, this, params);
-        mapView.setParams(params);
+        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
+        mapView = new MapView(Tracer, this);
         // not needed as it is already done in mapview
         // mapView.setUpdate(params.getInt("UPDATE_TIMER", 300));
         setContentView(R.layout.activity_map);
@@ -174,9 +165,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         };
         mDrawerLayout.setDrawerListener(drawerToggle);
 
-        animation1 = new AlphaAnimation(0.0f, 1.0f);
+        Animation animation1 = new AlphaAnimation(0.0f, 1.0f);
         animation1.setDuration(500);
-        animation2 = new AlphaAnimation(1.0f, 0.0f);
+        Animation animation2 = new AlphaAnimation(1.0f, 0.0f);
         animation2.setDuration(500);
 
         //read files from SDCARD + create directory
@@ -196,7 +187,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
         build_maps_list();
 
         //sliding drawer
-        topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
+        Sliding_Drawer topPanel = panel = (Sliding_Drawer) findViewById(R.id.map_slidingdrawer);
         panel.setOnPanelListener(this);
         panel.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -296,9 +287,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             dialog_help.show();
         }
         //update thread
-        sbanim = new Handler() {
+        sbanim = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 /*
                 if(msg.what==0){
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name2));
@@ -310,8 +301,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 					appname.setImageDrawable(getResources().getDrawable(R.drawable.app_name4));
 				}
 				 */
+                return true;
             }
-        };
+        });
 
         try {
             mapView.drawWidgets();
@@ -329,7 +321,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
             widgetUpdate.wakeup();
         }
-        tracerengine.set_engine(widgetUpdate);
+        Tracer.set_engine(widgetUpdate);
         Tracer.v(mytag, "WidgetUpdate engine connected !");
     }
 
@@ -590,7 +582,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onResume() {
         super.onResume();
         if (Tracer == null) {
-            Tracer = tracerengine.getInstance(params, this);
+            Tracer = tracerengine.getInstance(prefUtils.prefs, this);
         }
         Tracer.v(mytag, "Onresume Try to connect on cache engine !");
 
@@ -644,7 +636,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
 
     public void onPanelOpened(Sliding_Drawer panel) {
         //todo disable menu if set in option
-        if (!params.getBoolean("map_menu_disable", false)) {
+        if (prefUtils.GetNotMapMenuDisabled()) {
             if (Tracer != null)
                 Tracer.v(mytag, "onPanelOpened panel request to be displayed");
         }
@@ -653,7 +645,9 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.map_menu_exit).setVisible(params.getBoolean("START_ON_MAP", false));
+        //hide somes menus if not start directly in map
+        menu.findItem(R.id.map_menu_preferences).setVisible(prefUtils.GetStartOnMap());
+        menu.findItem(R.id.map_menu_exit).setVisible(prefUtils.GetStartOnMap());
         return true;
     }
 
@@ -742,11 +736,14 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             case R.id.map_menu_help:
                 Dialog_Map_Help dialog_help = new Dialog_Map_Help(this);
                 dialog_help.show();
-                prefEditor.putBoolean("SPLASH", true);
-                prefEditor.commit();
+                prefUtils.SetSplashDisplayed(true);
+                return true;
+            case R.id.map_menu_preferences:
+                Intent intent = new Intent(this, Preference.class);
+                startActivity(intent);
                 return true;
             case R.id.map_menu_exit:
-                Intent intent = new Intent(this, Activity_Main.class);
+                intent = new Intent(this, Activity_Main.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("Exit me", true);
                 startActivity(intent);
@@ -799,11 +796,12 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         //save selected item so it will remains same even after orientation change
+        int mSelectedId = 0;
         outState.putInt("SELECTED_ID", mSelectedId);
     }
 
     private void initView() {
-        mDrawer = (NavigationView) findViewById(R.id.map_drawer);
+        NavigationView mDrawer = (NavigationView) findViewById(R.id.map_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_map_layout);
     }
 
@@ -841,7 +839,7 @@ public class Activity_Map extends AppCompatActivity implements OnPanelListener {
             FileDescriptor fd = pfd.getFileDescriptor();
             input = new FileInputStream(fd);
             output = new FileOutputStream(outputFilePath);
-            int read = 0;
+            int read;
             byte[] bytes = new byte[4096];
             while ((read = input.read(bytes)) != -1) {
                 output.write(bytes, 0, read);

@@ -18,21 +18,20 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import activities.Activity_Cam;
-import activities.Activity_Main;
 import database.WidgetUpdate;
 import misc.tracerengine;
 
@@ -41,35 +40,34 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private String url;
     private static String mytag;
     private tracerengine Tracer = null;
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     private String name_cam;
     private final Entity_Feature feature;
-    private final SharedPreferences params;
     private final int session_type;
-    private Boolean realtime = false;
-    Activity activity;
+    private final Activity activity;
+    private String state_key;
+    private int dev_id;
+    private String status;
 
     public Graphical_Cam(tracerengine Trac,
-                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                         final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                         final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Cam(tracerengine Trac,
-                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                         final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                         final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                         final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
@@ -77,72 +75,53 @@ public class Graphical_Cam extends Basic_Graphical_widget implements OnClickList
     private void onCreate() {
         myself = this;
         this.url = feature.getAddress();
-        int dev_id = feature.getDevId();
         this.name_cam = feature.getName();
-        String state_key = feature.getState_key();
+        state_key = feature.getState_key();
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
         mytag = "Graphical_Cam(" + dev_id + ")";
         setOnClickListener(this);
         //To have the icon colored as it has no state
         change_this_icon(2);
-        //handler to listen value change
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                String status;
-                if (msg.what == 9999) {
-                    if (session == null)
-                        return;
-                    status = session.getValue();
-                    if (status != null) {
-                        Tracer.d(mytag, "Handler receives a new status <" + status + ">");
-                    }
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-                    myself.setVisibility(GONE);
-                    if (container != null) {
-                        container.removeView(myself);
-                        container.recomputeViewAttributes(myself);
-                    }
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        Tracer.e(mytag, "Error in deleting container");
-                    }    //kill the handler thread itself
-                }
 
-            }
-
-        };
         //================================================================================
-            /*
-             * New mechanism to be notified by widgetupdate engine when our value is changed
-             *
-             */
+        /*
+         * New mechanism to be notified by widgetupdate engine when our value is changed
+        *
+        */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null)
-
-        {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
+        if (cache_engine != null) {
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
             try {
                 if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
+                    //update value
+                    status = session.getValue();
+                    //register eventbus for new value
+                    EventBus.getDefault().register(this);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            status = event.Entity_client_event_get_val();
+            //Not used in this widgets
+            //Value_timestamp = event.Entity_client_event_get_timestamp();
+        }
     }
 
     public void onClick(View v) {

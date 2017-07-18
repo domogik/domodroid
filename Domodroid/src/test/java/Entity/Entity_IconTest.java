@@ -7,7 +7,7 @@ import org.junit.Test;
  * Created by tiki on 08/06/2016.
  */
 public class Entity_IconTest {
-    Entity_Icon icon = new Entity_Icon(null, null, 0);
+    private final Entity_Icon icon = new Entity_Icon(null, null, 0);
 
     @Test
     public void testSetGetReference() throws Exception {

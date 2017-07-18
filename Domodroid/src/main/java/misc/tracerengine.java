@@ -5,14 +5,16 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-//import com.orhanobut.logger.Logger;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Abstract.pref_utils;
+import applications.domodroid;
 import database.WidgetUpdate;
+
+//import com.orhanobut.logger.Logger;
 
 public class tracerengine {
     private static tracerengine instance;
@@ -27,7 +29,6 @@ public class tracerengine {
     private static Boolean Error = false;
     private static Boolean Verbose = false;
     private static Boolean Warning = false;
-    private static Context context;
     private static SharedPreferences settings = null;
 
     /*
@@ -35,10 +36,11 @@ public class tracerengine {
      * and will offer to all users using Tracer to also retrieve instance
      * of state engine.....
      */
-    private static WidgetUpdate state_engine = null;
+    private WidgetUpdate state_engine = null;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
     private static FileWriter txtFile = null;
+    private static pref_utils prefUtils = null;
 
     public Boolean DBEngine_running = false;
     public Boolean force_Main = false;
@@ -53,9 +55,11 @@ public class tracerengine {
      *******************************************************************************/
     private tracerengine(Context context) {
         super();
-        tracerengine.context = context;
+        Context context1 = context;
         force_Main = false;
         Map_as_main = false;
+        prefUtils = new pref_utils(context);
+
     }
 
     public static tracerengine getInstance(SharedPreferences params, Context context) {
@@ -178,10 +182,8 @@ public class tracerengine {
 
                     }
                 }
-                SharedPreferences.Editor prefEditor = settings.edit();
-                prefEditor.putBoolean("LOGCHANGED", false);
-                prefEditor.putBoolean("TEXTLOG", to_txtFile);    //In case open fails.... don't retry till next change !
-                prefEditor.commit();
+                prefUtils.SetDebugLocCanged(false);
+                prefUtils.SetDebugTextlog(to_txtFile);
 
             }
             // Nothing changed
@@ -210,13 +212,8 @@ public class tracerengine {
     private static void screenlog(String tag, String msg) {
         //com.orhanobut.logger.Logger.init("tracerengine").methodCount(0);
         try {
-            //Todo find a way to be sure toast works 100%
-            //activity.runOnUiThread(new Runnable() {
-                //public void run() {
-                    Toast.makeText(context, tag + ":" + msg, Toast.LENGTH_SHORT).show();
-               // }
-            //});
-        } catch (Exception e) {
+            Toast.makeText(domodroid.GetInstance(), tag + ":" + msg, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
             Log.e("tracerengine screenlog", "Tracerengine ScreenLog: " + e.toString());
         }
     }
@@ -312,8 +309,8 @@ public class tracerengine {
         return state_engine;
     }
 
-    public static void set_engine(WidgetUpdate engine) {
-        state_engine = engine;
+    public void set_engine(WidgetUpdate engine) {
+        this.state_engine = engine;
     }
 
 }

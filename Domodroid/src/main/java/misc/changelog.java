@@ -25,14 +25,14 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.webkit.WebView;
 
-//import com.orhanobut.logger.Logger;
-
 import org.domogik.domodroid13.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+//import com.orhanobut.logger.Logger;
 
 public class changelog {
 
@@ -171,13 +171,7 @@ public class changelog {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(VERSION_KEY, thisVersion);
-        // // on SDK-Versions > 9 you should use this:
-        // if(Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-        // editor.commit();
-        // } else {
-        // editor.apply();
-        // }
-        editor.commit();
+        editor.apply();
     }
 
     /**

@@ -1,14 +1,11 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,21 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.TimerTask;
-
 import Abstract.display_sensor_info;
+import Abstract.pref_utils;
 import Abstract.translate;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.Entity_client_event_value;
 import database.WidgetUpdate;
 import misc.Color_Progress;
 import misc.Color_RGBField;
@@ -59,12 +57,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 
     private int argb = 0;
     private String argbS = "";
-    private Message msg;
     private static String mytag;
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
+    public FrameLayout container = null;
+    private FrameLayout myself = null;
     private Boolean switch_state = false;
-    private TimerTask doAsynchronousTask;
 
     private Color currentColor;
     private SeekBar seekBarOnOff;
@@ -81,42 +77,48 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     private String t7s;
     private String t8s;
     private String t9s = "";
-    private final SharedPreferences params;
-    private Boolean realtime = false;
+
     private JSONObject jparam;
     private final Entity_Feature feature;
     private String command_id = null;
     private String command_type = null;
     private final int session_type;
+    private pref_utils prefUtils;
+    private String state_key;
+    private int dev_id;
+    private String Value_timestamp;
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                           final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                           final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Color(tracerengine Trac,
-                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                           final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                           final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                           final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         onCreate();
     }
 
     private void onCreate() {
         myself = this;
-        int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
-        String state_key = feature.getState_key();
+        state_key = feature.getState_key();
         command_id = feature.getAddress();
+        prefUtils = new pref_utils();
+        if (api_version <= 0.6f) {
+            this.dev_id = feature.getDevId();
+        } else if (api_version >= 0.7f) {
+            this.dev_id = feature.getId();
+            this.state_key = ""; //for entity_client
+        }
         mytag = "Graphical_Color(" + dev_id + ")";
-
         String value0;
         String value1;
         try {
@@ -302,49 +304,66 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                 seekBarOnOff.setEnabled(false);
             }
         }
-        //LoadSelections();
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                argbS = "?";
-                if (msg.what == 2) {
-                    Toast.makeText(getContext(), R.string.command_rejected, Toast.LENGTH_SHORT).show();
 
-                } else if (msg.what == 9998) {
-                    // state_engine send us a signal to notify it'll die !
-                    Tracer.d(mytag, "state engine disappeared ===> Harakiri !");
-                    session = null;
-                    realtime = false;
-                    removeView(LL_background);
-
-                    myself.setVisibility(GONE);
-
-                    try {
-                        finalize();
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }    //kill the handler thread itself
-
-                } else if (msg.what == 9999) {
-                    if (session != null) {
-                        argbS = session.getValue();
-                        String Value_timestamp = session.getTimestamp();
-
-                        Tracer.d(mytag, "Handler receives a new value <" + argbS + "> at " + Value_timestamp);
-
-                        Long Value_timestamplong = null;
-                        Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
-
-                        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
-                        if (SP_params.getBoolean("widget_timestamp", false)) {
-                            TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
-                        } else {
-                            TV_Timestamp.setReferenceTime(Value_timestamplong);
-                        }
-                    } else
-                        return;
-
+        updating = 0;
+        //================================================================================
+        /*
+         * New mechanism to be notified by widgetupdate engine when our value is changed
+		 * 
+		 */
+        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
+        if (cache_engine != null) {
+            session = new Entity_client(dev_id, state_key, mytag, session_type);
+            try {
+                if (Tracer.get_engine().subscribe(session)) {
+                    argbS = session.getValue();
+                    Value_timestamp = session.getTimestamp();
+                    update_display();
+                    //register eventbus for new value
+                    EventBus.getDefault().register(this);
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //================================================================================
+    }
+
+    /**
+     * @param event an Entity_client_event_value from EventBus when a new value is received from widgetupdate.
+     */
+    @Subscribe
+    public void onEvent(Entity_client_event_value event) {
+        // your implementation
+        Tracer.d(mytag, "Receive event from Eventbus" + event.Entity_client_event_get_id() + " With value" + event.Entity_client_event_get_val());
+        if (event.Entity_client_event_get_id() == dev_id) {
+            argbS = event.Entity_client_event_get_val();
+            Value_timestamp = event.Entity_client_event_get_timestamp();
+            update_display();
+        }
+    }
+
+    /**
+     * Update the current widget information at creation
+     * or when an eventbus is receive
+     */
+    private void update_display() {
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Tracer.d(mytag, "update_display id:" + dev_id + " <" + argbS + "> at " + Value_timestamp);
+
+                Long Value_timestamplong;
+                Value_timestamplong = Long.valueOf(Value_timestamp) * 1000;
+
+                if (prefUtils.GetWidgetTimestamp()) {
+                    TV_Timestamp.setText(display_sensor_info.timestamp_convertion(Value_timestamplong.toString(), activity));
+                } else {
+                    TV_Timestamp.setReferenceTime(Value_timestamplong);
+                }
+
                 switch (argbS) {
                     case "off":
                         switch_state = false;
@@ -357,7 +376,7 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                         LoadSelections();    //Recall last values known from shared preferences
 
                         // argb and argbS will be set when seekBars will be changed
-                        return;
+                        break;
                     default:
                         try {
                             argbS = argbS.substring(1);    //It's the form #RRGGBB : ignore the #
@@ -400,38 +419,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                 if ((r != 0) || (g != 0) || (b != 0)) {
                     SaveSelections();
                 }
-
             }
-
-        };
-        updating = 0;
-        //================================================================================
-        /*
-         * New mechanism to be notified by widgetupdate engine when our value is changed
-		 * 
-		 */
-        WidgetUpdate cache_engine = WidgetUpdate.getInstance();
-        if (cache_engine != null) {
-            if (api_version <= 0.6f) {
-                session = new Entity_client(dev_id, state_key, mytag, handler, session_type);
-            } else if (api_version >= 0.7f) {
-                session = new Entity_client(feature.getId(), "", mytag, handler, session_type);
-            }
-            try {
-                if (Tracer.get_engine().subscribe(session)) {
-                    realtime = true;        //we're connected to engine
-                    //each time our value change, the engine will call handler
-                    handler.sendEmptyMessage(9999);    //Force to consider current value in session
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        //================================================================================
-        //updateTimer();	//Don't use anymore cyclic refresh....
+        });
     }
-
 
     public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
         if (arg0.getTag().equals("onoff")) {
@@ -529,7 +519,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     }
 
     private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-        // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
             Handler temphandler = new Handler(activity.getMainLooper());
@@ -575,10 +564,6 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                              }
                                          }
                                      } else {
-                                         // in 0.7 api
-                                         // Url2send = "cmd/id/" + command_id + "?" + command_type + "=" + value;
-                                         // in 0.6 api
-                                         // Url2send = "command/" + type + "/" + address + "/setcolor/" + value;
                                          if ((argb != 0) && switch_state) {
                                              String srgb = Integer.toHexString(argb);
                                              if (srgb.length() > 6)
@@ -599,24 +584,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
                                      updating = 1;
                                      JSONObject json_Ack = null;
                                      try {
-                                         //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          send_command.send_it(activity, Tracer, command_id, command_type, String.valueOf(state_progress), api_version);
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send, login, password,3000);
                                      } catch (Exception e) {
                                          Tracer.e(mytag, "Rinor exception sending command <" + e.getMessage() + ">");
                                      }
-                                     /*
-                                     try {
-                                        Boolean ack = JSONParser.Ack(json_Ack);
-                                         if (!ack) {
-                                             Tracer.i(mytag, "Received error from Rinor : <" + json_Ack.toString() + ">");
-                                             Toast.makeText(activity, "Received error from Rinor", Toast.LENGTH_LONG).show();
-                                             handler.sendEmptyMessage(2);
-                                         }
-                                     } catch (Exception e) {
-                                         e.printStackTrace();
-                                     }
-                                    */
                                  }
                              }
             );
@@ -631,12 +602,10 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
 	 */
 
     private void SaveSelections() {
-        SharedPreferences.Editor prefEditor = params.edit();
-        prefEditor.putInt("COLORHUE", seekBarHueBar.getProgress());
-        prefEditor.putInt("COLORSATURATION", seekBarRGBXBar.getProgress());
-        prefEditor.putInt("COLORBRIGHTNESS", seekBarRGBYBar.getProgress());
-        prefEditor.putString("COLORRGB", "#" + argbS);
-        prefEditor.commit();
+        prefUtils.SetColorHue(seekBarHueBar.getProgress());
+        prefUtils.SetColorSaturation(seekBarRGBXBar.getProgress());
+        prefUtils.SetColorBrightness(seekBarRGBYBar.getProgress());
+        prefUtils.SetColorRgb("#" + argbS);
         /*
         Tracer.i(mytag, "SaveSelections()");
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));
@@ -646,9 +615,9 @@ public class Graphical_Color extends Basic_Graphical_widget implements OnSeekBar
     }
 
     private void LoadSelections() {
-        seekBarHueBar.setProgress(params.getInt("COLORHUE", 0));
-        seekBarRGBXBar.setProgress(params.getInt("COLORSATURATION", 255));
-        seekBarRGBYBar.setProgress(params.getInt("COLORBRIGHTNESS", 255));
+        seekBarHueBar.setProgress(prefUtils.GetLastColorHue());
+        seekBarRGBXBar.setProgress(prefUtils.GetLastColorSaturation());
+        seekBarRGBYBar.setProgress(prefUtils.GetLastColorBrightness());
         /*
         Tracer.i(mytag, "LoadSelections()");
 		Tracer.i(mytag,"Hue    = "+params.getInt("COLORHUE",0));

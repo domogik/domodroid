@@ -5,13 +5,11 @@
     android:title="Preferences"
     tools:context="activities.Activity_Main">
     <PreferenceCategory
-        android:icon="@drawable/ic_home_black_24dp"
         android:persistent="false"
         android:title="@string/house_settings">
 
         <Preference
             android:enabled="false"
-            android:icon="@drawable/ic_home_black_24dp"
             android:selectable="false"
             android:shouldDisableView="false"
             android:summary="@string/house_explain" />
@@ -23,14 +21,15 @@
             android:summary="@string/OPTION_only_0_4_more"
             android:title="@string/OPTION_Device_sync_organization" />
         <CheckBoxPreference
+            android:icon="@drawable/ic_home_black_24dp"
             android:key="BY_USAGE"
             android:summaryOff="@string/usage_byhouse"
             android:summaryOn="@string/usage_byusage"
             android:title="@string/usage_byusagecheckbox" />
         <EditTextPreference
-            android:enabled="false"
             android:defaultValue="1"
             android:dialogTitle="@string/default_area_at_start"
+            android:enabled="false"
             android:inputType="number"
             android:key="load_area_at_start"
             android:summary="@string/soon"

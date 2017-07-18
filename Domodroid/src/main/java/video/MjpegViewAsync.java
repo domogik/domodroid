@@ -1,8 +1,6 @@
 package video;
 
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,6 +14,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.io.IOException;
 
 public class MjpegViewAsync extends SurfaceView implements SurfaceHolder.Callback {
     public final static int POSITION_UPPER_LEFT = 9;

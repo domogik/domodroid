@@ -17,50 +17,45 @@
  */
 package widgets;
 
-import Abstract.translate;
-import activities.Gradients_Manager;
-import activities.Graphics_Manager;
-import misc.tracerengine;
-
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
+
+import org.greenrobot.eventbus.EventBus;
+
+import Abstract.translate;
+import Event.Event_to_navigate_house;
+import activities.Gradients_Manager;
+import activities.Graphics_Manager;
+import misc.tracerengine;
 
 public class Basic_Graphical_zone extends FrameLayout implements OnClickListener {
 
-    private final LinearLayout LL_background;
     private final ImageView IV_img;
     final TextView TV_name;
     private final int id;
     //private int session_type;
     final String name;
-    private final Handler widgetHandler;
     private final String type;
 
     //public Graphical_Feature(Context context,int id,String name_room, String description_room, String icon, int widgetSize, int session_type) {
-    public Basic_Graphical_zone(tracerengine Trac, Context context, int id, String name, String description, String icon, int widgetSize, String type, Handler handler) {
+    public Basic_Graphical_zone(tracerengine Trac, Context context, int id, String name, String description, String icon, int widgetSize, String type) {
         super(context);
         this.id = id;
         this.name = name;
         this.type = type;
-        String icon1 = icon;
         //this.session_type = session_type;
         this.setPadding(5, 5, 5, 5);
-        this.widgetHandler = handler;
-        tracerengine Tracer = Trac;
         setOnClickListener(this);
 
         //panel with border
-        LL_background = new LinearLayout(context);
+        LinearLayout LL_background = new LinearLayout(context);
         if (widgetSize == 0)
             LL_background.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         else
@@ -95,7 +90,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
         //description
         TextView TV_description = new TextView(context);
         try {
-            TV_description.setText(context.getResources().getString(translate.do_translate(getContext(), Tracer, description)));
+            TV_description.setText(context.getResources().getString(translate.do_translate(getContext(), Trac, description)));
         } catch (Exception e) {
             String mytag = "Basic_Graphical_zone";
             TV_description.setText(description);
@@ -114,14 +109,7 @@ public class Basic_Graphical_zone extends FrameLayout implements OnClickListener
     }
 
     public void onClick(View v) {
-        Bundle b = new Bundle();
-        b.putInt("id", id);
-        b.putString("name", name);
-        b.putString("type", type);
-        Message msg = new Message();
-        msg.setData(b);
-        widgetHandler.sendMessage(msg);
-
+        EventBus.getDefault().post(new Event_to_navigate_house(id, type, name));
     }
 
     void change_this_icon(String icon) {

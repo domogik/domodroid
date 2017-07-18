@@ -27,7 +27,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -49,13 +48,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
-import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
-import java.net.URL;
 import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import applications.domodroid;
 import misc.tracerengine;
 
 
@@ -85,18 +83,18 @@ public class Rest_com {
         return json;
     }
 
-    public static String connect_string(final Activity activity, tracerengine Tracer, String request, int timeout) {
+    private static String connect_string(final Activity activity, tracerengine Tracer, String request, int timeout) {
         SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         final String login = SP_params.getString("http_auth_username", "Anonymous");
         final String password = SP_params.getString("http_auth_password", "");
-        Boolean SSL = false;
+        Boolean SSL;
 
-        String url = null;
+        String url;
 
         String result = "";
         //check if device is connected
-        if (Abstract.Connectivity.IsInternetAvailable()) {
-            if (Abstract.Connectivity.on_prefered_Wifi) {
+        if (domodroid.instance.isConnected()) {
+            if (domodroid.instance.on_preferred_Wifi) {
                 //If connected to default SSID use local adress
                 url = SP_params.getString("URL", "1.1.1.1") + request;
                 SSL = SP_params.getBoolean("ssl_activate", false);

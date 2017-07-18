@@ -1,11 +1,10 @@
 package database;
 
-import misc.tracerengine;
-import Entity.Entity_Feature;
-
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import Abstract.pref_utils;
+import Entity.Entity_Feature;
+import misc.tracerengine;
 
 public class Cache_management {
     private static final String mytag = "Cache_management";
@@ -17,15 +16,15 @@ public class Cache_management {
         // 3rd add it in path only if it is the case.
         // So when a user will remove it from association or map it will be removed from cache
         // And when it will be add, it will get back in cache.
-        SharedPreferences sharedparams = PreferenceManager.getDefaultSharedPreferences(activity);
-        float api_version = sharedparams.getFloat("API_VERSION", 0);
+        pref_utils prefUtils = new pref_utils();
+
         String urlUpdate = "";
-        if (api_version != 0) {
-            if (api_version <= 0.6f) {
-                DomodroidDB db = new DomodroidDB(Trac, activity, sharedparams);
+        if (prefUtils.GetDomogikApiVersion() != 0) {
+            if (prefUtils.GetDomogikApiVersion() <= 0.6f) {
+                DomodroidDB db = DomodroidDB.getInstance(Trac, activity);
                 int[] listFeature_Association = db.requestAllFeatures_association();
                 Entity_Feature[] listFeature = db.requestFeatures();
-                urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "stats/multi/";
+                urlUpdate = prefUtils.GetUrl() + "stats/multi/";
                 Trac.i(mytag, "urlupdate= " + urlUpdate);
                 int compteur = 0;
                 for (Entity_Feature feature : listFeature) {
@@ -41,10 +40,8 @@ public class Cache_management {
                 }
                 Trac.v(mytag, "prepare UPDATE_URL items=" + String.valueOf(compteur));
                 Trac.i(mytag, "urlupdate= " + urlUpdate);
-                SharedPreferences.Editor prefEditor = sharedparams.edit();
-                prefEditor.putString("UPDATE_URL", urlUpdate);
+                prefUtils.SetUpdateUrl(urlUpdate);
                 //need_refresh = true;	// To notify main activity that screen must be refreshed
-                prefEditor.commit();
                 //TODO restart the cache-engine.
                 //Empty it then refill it with right value
                 WidgetUpdate WU_widgetUpdate = WidgetUpdate.getInstance();
@@ -52,21 +49,19 @@ public class Cache_management {
                     WU_widgetUpdate.refreshNow();
                     Trac.d(mytag, "launching a widget update refresh");
                 } else {
-                    WU_widgetUpdate.init(Trac, activity, sharedparams);
+                    WU_widgetUpdate.init(Trac, activity);
                     Trac.d(mytag, "launching a widget update init");
                 }
-            } else if (api_version >= 0.7f) {
-                if (api_version >= 0.7f)
-                    urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "sensor/";
+            } else if (prefUtils.GetDomogikApiVersion() >= 0.7f) {
+                if (prefUtils.GetDomogikApiVersion() >= 0.7f)
+                    urlUpdate = prefUtils.GetUrl() + "sensor/";
                 //todo for #124 but later
                 /*
                 if (api_version >= 0.9f)
                     urlUpdate = sharedparams.getString("URL", "1.1.1.1") + "sensor/since/";
                 */
-                SharedPreferences.Editor prefEditor = sharedparams.edit();
-                prefEditor.putString("UPDATE_URL", urlUpdate);
+                prefUtils.SetUpdateUrl(urlUpdate);
                 //need_refresh = true;	// To notify main activity that screen must be refreshed
-                prefEditor.commit();
             }
         }
 

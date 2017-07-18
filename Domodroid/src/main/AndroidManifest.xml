@@ -25,7 +25,7 @@
             android:name="activities.Activity_Main"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/splashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -72,6 +72,26 @@
             android:authorities="database.DmdContentProvider"
             android:multiprocess="true" />
 
+        <!-- AppWidets widget not used for the moment
+        <receiver android:name="appWidgets.AppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="org.domodroid13.appwidgets.SHOW_NOTIFICATION" />/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_meta" />
+        </receiver>
+        -->
+        <!-- AppWidets Configure activity not used for the moment
+        <activity
+            android:name="appWidgets.WidgetConfigure"
+            android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        -->
         <!-- Domogik webview activity -->
         <activity
             android:name="activities.webview_domogik_admin"

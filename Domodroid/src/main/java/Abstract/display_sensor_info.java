@@ -20,10 +20,8 @@ package Abstract;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.Gravity;
@@ -53,9 +51,9 @@ public abstract class display_sensor_info {
                                Activity activity, LinearLayout LL_featurePan, Typeface typefaceweather, Typeface typefaceawesome,
                                String state_key, TextView state_key_view, String stateS, String test_unite) {
         TextView value1;
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(activity);
+        pref_utils prefUtils = new pref_utils();
         if (Value_timestamp != 0) {
-            if (SP_params.getBoolean("widget_timestamp", false)) {
+            if (prefUtils.GetWidgetTimestamp()) {
                 timestamp.setText(timestamp_convertion(Value_timestamp.toString(), activity));
             } else {
                 timestamp.setReferenceTime(Value_timestamp);
@@ -82,7 +80,6 @@ public abstract class display_sensor_info {
                         value.setText(value_convertion(Tracer, mytag, formatedValue, loc_Value) + " " + test_unite);
                         break;
                     case "°":
-                        //TODO find how to update the rotate when a new value is receive from events or mq
                         //remove the textView from parent LinearLayout
                         LL_featurePan.removeView(value);
                         LL_featurePan.removeView(timestamp);
@@ -281,12 +278,17 @@ public abstract class display_sensor_info {
         }
     }
 
-    public static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
+    /**
+     * @param Tracer Tracerengine used for logging
+     * @param mytag  Tag to know where it was called from
+     * @param phone  a String to convert
+     * @return the convertion to Locale User phone number display
+     */
+    private static String phone_convertion(tracerengine Tracer, String mytag, String phone) {
         try {
-            String convert_phone = PhoneNumberUtils.formatNumber(phone);
             // todo it remove the "-" like in jean-phillipe replace bye jeanphillipe
             // Tracer.d(mytag, "phone convertion from:" + phone + " to " + convert_phone);
-            return convert_phone;
+            return PhoneNumberUtils.formatNumber(phone);
         } catch (Exception ex) {
             ex.printStackTrace();
             Tracer.e(mytag + "Phone conversion", "Error: " + ex.toString());
@@ -294,10 +296,16 @@ public abstract class display_sensor_info {
         }
     }
 
-    public static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
+    /**
+     * @param Tracer        Tracerengine used for logging
+     * @param mytag         Tag to know where it was called from
+     * @param number        in float format
+     * @param origin_number in string format
+     * @return A string convert to number but return as string in User Locale format
+     */
+    private static String value_convertion(tracerengine Tracer, String mytag, Float number, String origin_number) {
         try {
-            String convert_number = NumberFormat.getInstance().format(number);
-            return convert_number;
+            return NumberFormat.getInstance().format(number);
         } catch (Exception ex) {
             ex.printStackTrace();
             Tracer.e(mytag + "value_convertion", "Error: " + ex.toString());
@@ -305,6 +313,11 @@ public abstract class display_sensor_info {
         }
     }
 
+    /**
+     * @param timeStampStr the timestamp to convert
+     * @param context      Context used to get date format
+     * @return a Timestamp convert to date
+     */
     public static String timestamp_convertion(String timeStampStr, Context context) {
         try {
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
@@ -316,8 +329,13 @@ public abstract class display_sensor_info {
         }
     }
 
-    public static String hour_convertion(tracerengine Tracer, String mytag, String hour) {
-        // Convert value to hour and in local language
+    /**
+     * @param Tracer Tracerengine used for logging
+     * @param mytag  Tag to know where it was called from
+     * @param hour   a String from domogik in hh:mm:ss
+     * @return hour in User Locale language
+     */
+    private static String hour_convertion(tracerengine Tracer, String mytag, String hour) {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
         Date testDate = null;
         try {

@@ -22,11 +22,7 @@
 package activities;
 
 
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,12 +32,11 @@ import android.widget.TextView;
 import org.domogik.domodroid13.BuildConfig;
 import org.domogik.domodroid13.R;
 
+import Abstract.pref_utils;
 import misc.changelog;
 import misc.tracerengine;
 
 public class Activity_About extends AppCompatActivity implements OnClickListener {
-    //private PowerManager.WakeLock mWakeLock;
-    private String pn = "";
     private final String mytag = this.getClass().getName();
     private Button showchangelog;
     private tracerengine Tracer = null;
@@ -49,15 +44,15 @@ public class Activity_About extends AppCompatActivity implements OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pn = getPackageName();
+        String pn = getPackageName();
 
         setContentView(R.layout.activity_about);
         //display domogik version
         TextView TV_domogikversionText = (TextView) findViewById(R.id.domogikversionText);
 
-        SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(this);
-        Tracer = tracerengine.getInstance(SP_params, this);
-        TV_domogikversionText.setText(getText(R.string.domogik_version) + SP_params.getString("DOMOGIK-VERSION", ""));
+        pref_utils prefUtils = new pref_utils();
+        Tracer = tracerengine.getInstance(prefUtils.prefs, this);
+        TV_domogikversionText.setText(getText(R.string.domogik_version) + prefUtils.GetDomogikVersion());
         //display domodroid version
         TextView TV_versionText = (TextView) findViewById(R.id.versionText);
         if (TV_versionText != null) {

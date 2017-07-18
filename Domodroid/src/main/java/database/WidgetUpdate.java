@@ -1,9 +1,7 @@
 package database;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -18,6 +16,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,9 +38,13 @@ import java.util.TimerTask;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import Abstract.pref_utils;
 import Entity.Entity_Feature;
 import Entity.Entity_Map;
 import Entity.Entity_client;
+import Event.ConnectivityChangeEvent;
+import Event.Event_base_message;
+import applications.domodroid;
 import misc.tracerengine;
 import mq.ZMQReqMessage;
 import rinor.Events_manager;
@@ -53,7 +58,6 @@ public class WidgetUpdate {
     //implements Serializable {
     private static WidgetUpdate instance;
     private static final long serialVersionUID = 1L;
-    private SharedPreferences sharedparams;
 
     private boolean activated;
     private static Activity activity;
@@ -65,9 +69,8 @@ public class WidgetUpdate {
     private ArrayList<Cache_Feature_Element> cache = new ArrayList<>();
     private Boolean locked = false;
     private Boolean timer_flag = false;
-    public Boolean ready = false;
-    private Handler mapView = null;
-    private Events_manager eventsManager = null;
+    private Boolean ready = false;
+    public Events_manager eventsManager = null;
     private static Handler myselfHandler = null;
     private int last_ticket = -1;
     private int last_position = -1;
@@ -82,7 +85,6 @@ public class WidgetUpdate {
     private Boolean SSL;
     private float api_version;
     private String last_device_update;
-    private String last_sensor_update;
 
     //
     // Table of handlers to notify
@@ -90,6 +92,7 @@ public class WidgetUpdate {
     // pos 1 = Map
     // pos 2 = MapView
     private static final Handler[] parent = new Handler[3];
+    private pref_utils prefUtils;
 
 	/*
      * This class is a background engine
@@ -115,6 +118,8 @@ public class WidgetUpdate {
      *******************************************************************************/
     private WidgetUpdate() {
         super();
+        //subscribe to network change to restart events_manager or stop MQ listening.
+        EventBus.getDefault().register(this);
         //com.orhanobut.logger.Logger.init("WidgetUpdate").methodCount(0);
 
     }
@@ -128,24 +133,23 @@ public class WidgetUpdate {
 
     }
 
-    public Boolean init(tracerengine Trac, final Activity activity, SharedPreferences params) {
-        Boolean result = false;
+    public Boolean init(tracerengine Trac, final Activity activity) {
+        Boolean result;
         if (init_done) {
             Log.w("WidgetUpdate", "init already done");
             return true;
         }
         stats_com = Stats_Com.getInstance();    //Create a statistic counter, with all 0 values
         sleeping = false;
-        this.sharedparams = params;
+        prefUtils = new pref_utils();
         this.Tracer = Trac;
         WidgetUpdate.activity = activity;
         activated = true;
-        login = params.getString("http_auth_username", "Anonymous");
-        password = params.getString("http_auth_password", "");
-        SSL = params.getBoolean("ssl_activate", false);
-        api_version = sharedparams.getFloat("API_VERSION", 0);
-        last_device_update = sharedparams.getString("last_device_update", "1900-01-01 00:00:00");
-        last_sensor_update = sharedparams.getString("last_sensor_update", "1900-01-01 00:00:00");
+        login = prefUtils.GetRestAuthUsername();
+        password = prefUtils.GetRestAuthPassword();
+        api_version = prefUtils.GetDomogikApiVersion();
+        last_device_update = prefUtils.GetLastDeviceUpdate();
+        String last_sensor_update = prefUtils.GetLastSensorUpdate();
         /*
         if(Tracer != null) {
 			if(Tracer.DBEngine_running) {
@@ -157,15 +161,10 @@ public class WidgetUpdate {
 		}
 		 */
         Tracer.d(mytag, "Initial start requested....");
-        domodb = new DomodroidDB(Tracer, activity, params);
+        domodb = DomodroidDB.getInstance(Tracer, activity);
         domodb.owner = mytag;
         timer_flag = false;
         ready = false;
-        /*
-        if(parent[0] != null) {
-			parent[0].sendEmptyMessage(8000);	//Ask main to display message
-		}
-		 */
         Tracer.d(mytag, "cache engine starting timer for periodic cache update");
         Timer();        //and initiate the cyclic timer
 
@@ -202,24 +201,12 @@ public class WidgetUpdate {
         // Cache contains list of existing devices, now !
 
         ///////// Create an handler to exchange with Events_Manager///////////////////
-        myselfHandler = new Handler() {
+        myselfHandler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 //This handler will receive notifications from Events_Manager and from waitingThread running in background
                 // 1 message => 1 event : so, it's serialized !
-                if (msg.what == 8999) {
-                    // Cache engine being ready, we can start events manager
-                    Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
-                    if (eventsManager == null) {
-                        eventsManager = Events_manager.getInstance(activity);
-                    }
-                    eventsManager.init(Tracer, myselfHandler, cache, sharedparams, instance);
-                    /*
-                    if(parent[0] != null) {
-						parent[0].sendEmptyMessage(8999);	//Forward event to Main
-					}
-					 */
-                } else if (msg.what == 9900) {
+                if (msg.what == 9900) {
                     if (eventsManager != null) {
                         callback_counts++;
                         Rinor_event event = eventsManager.get_event();
@@ -235,20 +222,9 @@ public class WidgetUpdate {
                                 last_ticket = event.item;
                             }
 
-                            mapView = null;
                             //mapView will be set by update_cache_device if at least one mini widget has to be notified
                             update_cache_device(event.device_id, event.key, event.Value, event.Timestamp);
-                            if (mapView != null) {
-                                //It was a mini widget, not yet notified : do it now..
-                                try {
-                                    Tracer.i(mytag, "Handler send a notification to MapView");
-                                    mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
-                                } catch (Exception e) {
-                                    Tracer.e(mytag, e.toString());
-                                }
-                            }
-                            //event = eventsManager.get_event();		//Try to get the next...
-                        } // if event
+                        }
                     } else {
                         Tracer.d(mytag, "No Events_Manager known ! ! ! ");
                     }
@@ -278,28 +254,18 @@ public class WidgetUpdate {
 
                 } else if (msg.what == 9903) {
                     //New or update device detected by MQ
-                    //Notify on main screen
+                    //Notify on screen
                     Tracer.i(mytag, "Handler send a notification to MainView");
-                    //disable the dialog or replace by a toast: here the old dialog
-                    //AlertDialog.Builder dialog_device_update = new AlertDialog.Builder(activity);
-                    //dialog_device_update.setTitle(activity.getText(R.string.domogik_information));
-                    //dialog_device_update.setMessage(activity.getText(R.string.device_update_message));
-                    //if (!(activity).isFinishing()) {
-                    //    dialog_device_update.show();
-                    //}
-
-                    //disable the dialog or replace by a toast: here the toast
-                    // Display message something changed since last update
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(activity, activity.getText(R.string.device_update_message), Toast.LENGTH_LONG).show();
                         }
                     });
 
-                    //todo notify on map screen if a device change.
                 }
+                return true;
             }
-        };
+        });
         ///////// and pass to it now///////////////////
         Tracer.d(mytag, "Waiting thread started to notify main when cache ready !");
         new waitingThread().execute();
@@ -310,9 +276,57 @@ public class WidgetUpdate {
         return result;
     }
 
+
+    @Subscribe
+    /**
+     * Subscribe to the ConnectivityChangeEvent
+     */
+    public void onEvent(ConnectivityChangeEvent event) {
+        //todo find the good solution to stop/reload all the communication with domogik
+        Tracer.e(mytag, "Receive event about connectivity");
+        /*if (event.isConnected()) {
+            if (event.getOn_preferred_Wifi()) {
+                this.init(Tracer, activity);
+                if (eventsManager == null) {
+                    eventsManager = Events_manager.getInstance(activity);
+                }
+                //eventsManager.init(Tracer, myselfHandler, cache, prefUtils.prefs, instance);
+            } else {
+                if (api_version >= 0.7f) {
+                    //to free the mq listener
+                    if (eventsManager != null)
+                        eventsManager.Destroy();
+                }
+            }
+        } else {
+            //this.cancel();
+        }
+*/
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_base_message
+     */
+    public void onEvent(Event_base_message event_base_message) {
+        if (event_base_message.getmessage().equals("cache_ready")) {
+            // Cache engine being ready, we can start events manager
+            Tracer.d(mytag, "Main thread handler : Cache engine is now ready....");
+            if (eventsManager == null) {
+                eventsManager = Events_manager.getInstance(activity);
+            }
+            eventsManager.init(Tracer, myselfHandler, cache, prefUtils.prefs, instance);
+                    /*
+                    if(parent[0] != null) {
+						parent[0].sendEmptyMessage(8999);	//Forward event to Main
+					}
+					 */
+        }
+    }
     /*
      * Allow callers to set their handler in table
      */
+
     public void set_handler(Handler parent, int type) {
         //type = 0 if View , or 1 if Map, or 2 if MapView
         if ((type >= 0) && (type <= 2))
@@ -328,6 +342,7 @@ public class WidgetUpdate {
         if (stats_com != null)
             stats_com.cancel();
         stats_com = null;
+        EventBus.getDefault().unregister(this);
         Tracer.d(mytag, "cache engine cancel requested : Waiting for events_manager dead !");
 
     }
@@ -358,7 +373,7 @@ public class WidgetUpdate {
         for (int i = 0; i < cache.size(); i++) {
             Cache_Feature_Element cache_entry = cache.get(i);
             ArrayList<Entity_client> clients_list = null;
-            ArrayList<Entity_client> temp_list = null;
+            ArrayList<Entity_client> temp_list;
 
             if (cache_entry != null) {
                 clients_list = cache_entry.clients_list;
@@ -371,7 +386,7 @@ public class WidgetUpdate {
                     int deleted = 0;
                     for (int j = 0; j < cs; j++) {
                         //Tracer.i(mytag, "   Processing client "+j+"/"+(cs-1));
-                        Entity_client curclient = null;
+                        Entity_client curclient;
 
                         try {
                             curclient = clients_list.get(j);
@@ -388,7 +403,7 @@ public class WidgetUpdate {
                                 Tracer.i(mytag, "remove client # " + j + " <" + curclient.getName() + "> from list " + name);
                                 curclient.setClientId(-1);    //note client disconnected
                                 curclient.setClientType(-1);    //this entry is'nt owned by anybody
-                                curclient.setHandler(null);    //And must not be notified anymore
+                                //curclient.setHandler(null);    //And must not be notified anymore
                                 temp_list.remove(j - deleted);
                                 deleted++;
                                 if (temp_list.size() == 0) {
@@ -425,7 +440,7 @@ public class WidgetUpdate {
         locked = true;
         for (int i = 0; i < size; i++) {
             Cache_Feature_Element cache_entry = cache.get(i);
-            ArrayList<Entity_client> clients_list = null;
+            ArrayList<Entity_client> clients_list;
             if (cache_entry == null) {
                 Tracer.e(mytag, "Cache entry # " + i + "   empty ! ");
             } else {
@@ -463,7 +478,7 @@ public class WidgetUpdate {
 
         for (int i = 0; i < size; i++) {
             Cache_Feature_Element cache_entry = cache.get(i);
-            ArrayList<Entity_client> clients_list = null;
+            ArrayList<Entity_client> clients_list;
             if (cache_entry == null) {
                 Tracer.e(mytag, "Cache entry # " + i + "   empty ! ");
             } else {
@@ -480,10 +495,7 @@ public class WidgetUpdate {
 
                         int cat = clients_list.get(j).getClientType();
                         String client_name = clients_list.get(j).getName();
-                        Handler h = clients_list.get(j).getClientHandler();
                         String state = "connected";
-                        if (h == null)
-                            state = "zombie";
                         String type = "widget";
                         if (clients_list.get(j).is_Miniwidget())
                             type = "mini widget";
@@ -514,6 +526,7 @@ public class WidgetUpdate {
         if (doAsynchronousTask != null)
             doAsynchronousTask.run();    //To force immediate refresh
     }
+
 
     public void resync() {
         //May be URL has been changed : force engine to reconstruct cache
@@ -592,7 +605,7 @@ public class WidgetUpdate {
             //timer.schedule(doAsynchronousTask, 0, 125 * 1000);    // for tests with Events_Manager
             // 2'05 is a bit more than events timeout by server (2')
             // dame but using the user option timer
-            timer.schedule(doAsynchronousTask, 0, sharedparams.getInt("UPDATE_TIMER", 300) * 1000);
+            timer.schedule(doAsynchronousTask, 0, prefUtils.GetRestUpdateTimer() * 1000);
         }
     }
 
@@ -628,7 +641,9 @@ public class WidgetUpdate {
                 eventsManager.cache_out_of_date = false;
             }
             if (ready) {    //Notify cache is ready
-                if (parent[0] != null) {
+                //Notify each registered widget
+                EventBus.getDefault().post(new Event_base_message("cache_ready"));
+                /*if (parent[0] != null) {
                     parent[0].sendEmptyMessage(8999);
                 }
                 if (parent[1] != null) {
@@ -636,7 +651,7 @@ public class WidgetUpdate {
                 }
                 if (parent[2] != null) {
                     parent[2].sendEmptyMessage(8999);
-                }
+                }*/
 
             }
         } catch (Exception e) {
@@ -668,23 +683,25 @@ public class WidgetUpdate {
             }
             if (myselfHandler != null) {
                 //Tracer.d(mytag,"cache engine ready  ! Notify it....");
-                myselfHandler.sendEmptyMessage(8999);    // cache engine ready.....
+                //myselfHandler.sendEmptyMessage(8999);    // cache engine ready.....
+                //Notify each registered widget
+                EventBus.getDefault().post(new Event_base_message("cache_ready"));
             }
             if (parent[0] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify Main activity....");
-                parent[0].sendEmptyMessage(8999);    //hide Toast message
+                //parent[0].sendEmptyMessage(8999);    //hide Toast message
             } else {
                 Tracer.d(mytag, "cache engine ready  ! No Main activity....");
             }
             if (parent[1] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify Map activity....");
-                parent[1].sendEmptyMessage(8999);    //hide Toast message
+                //parent[1].sendEmptyMessage(8999);    //hide Toast message
             } else {
                 Tracer.d(mytag, "cache engine ready  ! No Map activity....");
             }
             if (parent[2] != null) {
                 Tracer.d(mytag, "cache engine ready  ! Notify MapView activity....");
-                parent[2].sendEmptyMessage(8999);    //hide Toast message
+                //parent[2].sendEmptyMessage(8999);    //hide Toast message
             } else {
                 Tracer.d(mytag, "cache engine ready  ! No MapView activity....");
             }
@@ -716,15 +733,15 @@ public class WidgetUpdate {
                 if (Tracer != null)
                     Tracer.d(mytag, "Request to server for stats update...");
 
-                String request = sharedparams.getString("UPDATE_URL", null);
-                String URL = sharedparams.getString("URL", "1.1.1.1");
+                String request = prefUtils.GetUpdateUrl();
+                String URL = prefUtils.GetUrl();
                 //Because in old time it was the full request that was used and saved, not only the real UPDATE_PATH
                 //like "https://192.168.0.1:40406/rest/sensor" instead of just "sensor"
                 try {
                     request = request.replace(URL, "");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    request = sharedparams.getString("UPDATE_URL", null);
+                    request = prefUtils.GetUpdateUrl();
                 }
 
                 Tracer.i(mytag, "urlupdate saved = " + request);
@@ -745,14 +762,9 @@ public class WidgetUpdate {
                                         Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                     }
                                 });
-                                Bundle b = new Bundle();
                                 //Notify error to parent Dialog
-                                b.putString("message", "datatype");
-                                Message msg = new Message();
-                                msg.setData(b);
-                                //stop();
+                                EventBus.getDefault().post(new Event_base_message("datatype"));
                                 //todo stop Widgetupdate
-                                //handler.sendMessage(msg);
                                 return null;
                             }
                             Tracer.d(mytag, "json_widget_state for <0.6 API=" + json_widget_state.toString());
@@ -772,18 +784,14 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    Bundle b = new Bundle();
                                     //Notify error to parent Dialog
-                                    b.putString("message", "datatype");
-                                    Message msg = new Message();
-                                    msg.setData(b);
+                                    EventBus.getDefault().post(new Event_base_message("datatype"));
                                     //todo stop Widgetupdate
-                                    //handler.sendMessage(msg);
                                     return null;
                                 }
                             } else if (api_version == 0.9f) {
                                 //load timestamp apps was closed
-                                String sensor_saved_timestamp = sharedparams.getString("sensor_saved_timestamp", "0");
+                                String sensor_saved_timestamp = prefUtils.GetSensorSavedTimestamp();
                                 Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
 
                                 //Modify request to match the timestamp
@@ -803,18 +811,14 @@ public class WidgetUpdate {
                                             Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    Bundle b = new Bundle();
                                     //Notify error to parent Dialog
-                                    b.putString("message", "datatype");
-                                    Message msg = new Message();
-                                    msg.setData(b);
+                                    EventBus.getDefault().post(new Event_base_message("sensor_list_error"));
                                     //todo stop Widgetupdate
-                                    //handler.sendMessage(msg);
                                     return null;
                                 }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
-                                String strJson = sharedparams.getString("sensor_saved_value", "0");
+                                String strJson = prefUtils.GetSensorSavedValue();
                                 if (strJson != null) {
                                     //TODO load stored last_value
                                     JSONArray jsonData = new JSONArray(strJson);
@@ -873,13 +877,9 @@ public class WidgetUpdate {
                                                 Toast.makeText(activity, R.string.rest_error_getting_sensors, Toast.LENGTH_LONG).show();
                                             }
                                         });
-                                        Bundle b = new Bundle();
                                         //Notify error to parent Dialog
-                                        b.putString("message", "datatype");
-                                        Message msg = new Message();
-                                        msg.setData(b);
+                                        EventBus.getDefault().post(new Event_base_message("sensor_list_error"));
                                         //todo stop Widgetupdate
-                                        //handler.sendMessage(msg);
                                         return null;
                                     }
                                 }
@@ -892,7 +892,7 @@ public class WidgetUpdate {
                             if (api_version >= 0.8f) {
                                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 Date timestamplast_device_update;
-                                Date timestamplast_update = new Date();
+                                Date timestamplast_update;
                                 boolean newer = false;
                                 try {
                                     timestamplast_device_update = df.parse(last_device_update);
@@ -915,13 +915,9 @@ public class WidgetUpdate {
                                                     Toast.makeText(activity, R.string.rest_error_getting_device, Toast.LENGTH_LONG).show();
                                                 }
                                             });
-                                            Bundle b = new Bundle();
                                             //Notify error to parent Dialog
-                                            b.putString("message", "datatype");
-                                            Message msg = new Message();
-                                            msg.setData(b);
+                                            EventBus.getDefault().post(new Event_base_message("device_list_error"));
                                             //todo stop Widgetupdate
-                                            //handler.sendMessage(msg);
                                             return null;
                                         }
                                     } else if (api_version >= 0.9f) {
@@ -936,13 +932,9 @@ public class WidgetUpdate {
                                                     Toast.makeText(activity, R.string.rest_error_getting_device, Toast.LENGTH_LONG).show();
                                                 }
                                             });
-                                            Bundle b = new Bundle();
                                             //Notify error to parent Dialog
-                                            b.putString("message", "datatype");
-                                            Message msg = new Message();
-                                            msg.setData(b);
+                                            EventBus.getDefault().post(new Event_base_message("device_list_error"));
                                             //todo stop Widgetupdate
-                                            //handler.sendMessage(msg);
                                             return null;
                                         }
                                     }
@@ -1046,22 +1038,19 @@ public class WidgetUpdate {
             return 0;
         }
         if (itemArray == null) {
-            if (parent[0] != null) {
-                parent[0].sendEmptyMessage(8001);    //Ask main to display message
-            }
+            //Ask main to display message
+            EventBus.getDefault().post(new Event_base_message("domogik_error"));
             return 0;
         }
         try {
             if (itemArray.getJSONObject(0).getString("Error").length() > 0) {
-                if (parent[0] != null) {
-                    parent[0].sendEmptyMessage(8002);    //Ask main to display message
-                }
+                //Ask main to display message
+                EventBus.getDefault().post(new Event_base_message("stats_error"));
                 return 0;
             }
         } catch (JSONException e) {
             Tracer.e(mytag, e.toString());
         }
-        mapView = null;
         for (int i = 0; i < itemArray.length(); i++) {
             //force to process to true for all item and then to false if something wrong
             //then if false it will not update the cache value, avoiding display of null value.
@@ -1131,17 +1120,6 @@ public class WidgetUpdate {
             }
 
         } // end of for loop on stats result
-        if (mapView != null) {
-            //At least 1 mini widget has to be notified
-            // send a 'group' notification to MapView !
-            try {
-                Tracer.i(mytag, "cache engine send a unique notification to MapView");
-                mapView.sendEmptyMessage(9997);    //notify the group of widgets a new value is there
-            } catch (Exception e) {
-                Tracer.e(mytag, e.toString());
-            }
-        }
-        mapView = null;
         Tracer.i(mytag, "cache size = " + cache.size());
 
         return updated_items;
@@ -1186,26 +1164,8 @@ public class WidgetUpdate {
                 result = true;
                 if (cache.get(cache_position).clients_list != null) {
                     for (int j = 0; j < cache.get(cache_position).clients_list.size(); j++) {
-                        //Notify each connected client
-                        Handler client = cache.get(cache_position).clients_list.get(j).getClientHandler();
-                        if (client != null) {
-                            cache.get(cache_position).clients_list.get(j).setValue(Val);    //update the session structure with new value
-                            cache.get(cache_position).clients_list.get(j).setTimestamp(Value_timestamp);    //update the session structure with new value
-                            if (cache.get(cache_position).clients_list.get(j).is_Miniwidget()) {
-                                // This client is a mapView's miniwidget
-                                // Don't' notify it immediately
-                                // A unique notification will be done by Handler, or higher level after all updates processed !
-                                mapView = client;
-                            } else {
-                                // It's not a mini_widget : notify it now
-                                try {
-                                    Tracer.i(mytag, "cache engine send (" + Val + ") to client <" + cache.get(cache_position).clients_list.get(j).getName() + ">");
-                                    client.sendEmptyMessage(9999);    //notify the widget a new value is ready for display
-                                } catch (Exception e) {
-                                    Tracer.e(mytag, e.toString());
-                                }
-                            }
-                        } // test of valid client handler
+                        //update the session structure with new value it will also notify widgets
+                        cache.get(cache_position).clients_list.get(j).client_value_update(Val, Value_timestamp);
                     }
                 }
 
@@ -1247,8 +1207,8 @@ public class WidgetUpdate {
 
     /*
      * Method offered to clients, to subscribe to a device/skey value-changed event
-     * 	The client must provide a Handler, to be notified
-     * 	Parameter : Object Entity_client containing references to device , and handler for callbacks
+     *
+     * 	Parameter : Object Entity_client containing references to device
      *  Result : false if subscription failed (already exist, or unknown device )
      *  		 true : subscription accepted : Entity_client contains resulting state
      */
@@ -1259,9 +1219,7 @@ public class WidgetUpdate {
 
         if (client == null)
             return result;
-        Handler h = client.getClientHandler();
-        if (h == null)
-            return result;
+
         device = client.getDevId();
         skey = client.getskey();
 
@@ -1348,21 +1306,21 @@ public class WidgetUpdate {
     public void descUpdate(int id, String new_desc, String type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         boolean changed = false;
         try {
-            if (Abstract.Connectivity.IsInternetAvailable()) {
+            if (domodroid.instance.isConnected()) {
                 String url = null;
                 Boolean SSL = false;
-                if (Abstract.Connectivity.on_prefered_Wifi) {
+                if (domodroid.instance.on_preferred_Wifi) {
                     //If connected to default SSID use local adress
-                    url = sharedparams.getString("URL", "1.1.1.1");
-                    SSL = sharedparams.getBoolean("ssl_activate", false);
+                    url = prefUtils.GetUrl();
+                    SSL = prefUtils.GetRestSsl();
                 } else {
                     //If not connected to default SSID use external adress
-                    url = sharedparams.getString("external_URL", "1.1.1.1");
-                    SSL = sharedparams.getBoolean("ssl_external_activate", false);
+                    url = prefUtils.GetExternalRestIp();
+                    SSL = prefUtils.GetExternalRestSsl();
                 }
 
                 //Todo Move this method somewhere else and make it reusable.
@@ -1371,7 +1329,7 @@ public class WidgetUpdate {
                         Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                         HttpClient httpclient = new DefaultHttpClient();
                         HttpPut httpput = new HttpPut(url + "device/" + feature.getDevId());
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        List<NameValuePair> nameValuePairs = new ArrayList<>(1);
                         nameValuePairs.add(new BasicNameValuePair("description", new_desc));
                         httpput.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
                         HttpResponse response = httpclient.execute(httpput);
@@ -1385,7 +1343,7 @@ public class WidgetUpdate {
                         Entity_Feature feature = domodb.requestFeaturesbyid(Integer.toString(id));
                         HttpsURLConnection urlConnection = Abstract.httpsUrl.setUpHttpsConnection(url + "device/" + feature.getDevId(), login, password);
                         urlConnection.setRequestMethod("PUT");
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                        List<NameValuePair> nameValuePairs = new ArrayList<>(1);
                         nameValuePairs.add(new BasicNameValuePair("description", new_desc));
                         String result = null;
                         urlConnection.setDoOutput(true);
@@ -1406,11 +1364,9 @@ public class WidgetUpdate {
                     //update db
                     domodb.update_name(id, new_desc, type);
                     //store last update in prefs for next start
-                    SharedPreferences.Editor prefEditor = sharedparams.edit();
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date tempdate = new Date();
-                    prefEditor.putString("last_device_update", df.format(tempdate));
-                    prefEditor.commit();
+                    prefUtils.SetLastDeviceUpdate(df.format(tempdate));
                 }
             } else {
                 Tracer.e(mytag, "NO CONNECTION");
@@ -1489,7 +1445,7 @@ public class WidgetUpdate {
         //in case domogik MQ problem
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         switch (type) {
             case "area":
@@ -1514,7 +1470,7 @@ public class WidgetUpdate {
     public void remove_one_icon(int id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_icon(id, place_type);
 
@@ -1526,7 +1482,7 @@ public class WidgetUpdate {
     public void remove_one_feature_association(int id, int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_feature_association(id, place_id, place_type);
     }
@@ -1537,7 +1493,7 @@ public class WidgetUpdate {
     public void remove_one_FeatureMap(int id, int posx, int posy, String mapname) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_FeatureMap(id, posx, posy, mapname);
     }
@@ -1545,7 +1501,7 @@ public class WidgetUpdate {
     public void remove_one_feature_in_FeatureMap(int id) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_feature_in_FeatureMap(id);
     }
@@ -1556,7 +1512,7 @@ public class WidgetUpdate {
     public void remove_one_place_type_in_Featureassociation(int place_id, String place_type) {
         if (domodb == null) {
             Tracer.d(mytag, "domodb is null");
-            this.init(Tracer, activity, sharedparams);
+            this.init(Tracer, activity);
         }
         domodb.remove_one_place_type_in_Featureassociation(place_id, place_type);
     }
@@ -1572,8 +1528,8 @@ public class WidgetUpdate {
 
     public JSONObject zmqrequest() throws JSONException {
         ZMQReqMessage REQ = new ZMQReqMessage(myselfHandler);
-        String ip = sharedparams.getString("MQaddress", "");    // TODO : use a R. for the default value
-        String port = sharedparams.getString("MQreq_repport", "40410");    // TODO : use a R. for the default value
+        String ip = prefUtils.GetMqAddress();    // TODO : use a R. for the default value
+        String port = prefUtils.GetMqReqRepPort();    // TODO : use a R. for the default value
         final String pub_url = "tcp://" + ip + ":" + port;
         Log.d(mytag, "req address : " + pub_url);
         JSONArray json_widget_state_0_5 = new JSONArray();

@@ -27,7 +27,6 @@ class TransformManager {
     private float lastPosY = 0;
     //float lastScale = 1;
     public final Matrix matrix = new Matrix();
-    private int screenMode = 2;
     private final float[] value = new float[9];
     private final int[] pos = new int[2];
     private final float[] savedValue = new float[9];
@@ -140,7 +139,7 @@ class TransformManager {
     }
 
     public void setLandscapeMode() {
-        screenMode = 2;
+        int screenMode = 2;
         matrix.getValues(value);
         value[0] = 1;
         value[4] = 1;

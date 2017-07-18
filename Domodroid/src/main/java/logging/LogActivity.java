@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,9 +31,9 @@ import java.io.IOException;
 public class LogActivity extends AppCompatActivity {
 
     private TextView textView;
-    private String fileName = Environment.getExternalStorageDirectory() + "/domodroid/.log/Domodroid.txt";
+    private final String fileName = Environment.getExternalStorageDirectory() + "/domodroid/.log/Domodroid.txt";
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             setTextView();
@@ -56,6 +57,8 @@ public class LogActivity extends AppCompatActivity {
             startService(serviceIntent);
             registerReceiver(broadcastReceiver, new IntentFilter(LogService.BROADCAST_FILE_LOG_UPDATE));
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("LogActivity", e.toString());
         }
     }
 
@@ -65,6 +68,8 @@ public class LogActivity extends AppCompatActivity {
         try {
             unregisterReceiver(broadcastReceiver);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("LogActivity", e.toString());
         }
     }
 
@@ -117,7 +122,7 @@ public class LogActivity extends AppCompatActivity {
             FileReader fileReader = new FileReader(new File(fileName));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            String line = "";
+            String line;
             StringBuilder builder = new StringBuilder("");
             while ((line = bufferedReader.readLine()) != null) {
                 builder.insert(0, line + "\n");

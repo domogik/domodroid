@@ -4,10 +4,8 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -27,7 +25,9 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-import static activities.Activity_Main.context;
+import Abstract.pref_utils;
+import applications.domodroid;
+
 
 /**
  * Created by tiki on 29/10/2016.
@@ -36,17 +36,15 @@ import static activities.Activity_Main.context;
 public class MetricsServiceReceiver extends BroadcastReceiver {
     private static final String mytag = "MetricsServiceReceiver";
     ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-    Float freeSize = 0f;
-    Float totalAllocatedSize = 0f;
-    Float usedSize = -1f;
-    Float maxmemavailable = 0f;
-    DecimalFormat df = new DecimalFormat("#.##");
-    JSONObject measurements = new JSONObject();
-    JSONObject tags = new JSONObject();
-    static JSONObject metrics = new JSONObject();
+    private final DecimalFormat df = new DecimalFormat("#.##");
+    private final JSONObject measurements = new JSONObject();
+    private final JSONObject tags = new JSONObject();
+    private static final JSONObject metrics = new JSONObject();
+    private pref_utils prefUtils;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        prefUtils = new pref_utils();
         new getmetrics().execute();
     }
 
@@ -60,15 +58,14 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
             try {
-                SharedPreferences SP_params = PreferenceManager.getDefaultSharedPreferences(context);
 
-                Float api_version = SP_params.getFloat("API_VERSION", 0);
+                Float api_version = prefUtils.GetDomogikApiVersion();
                 try {
                     tags.put("domogik_api_version", api_version.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                String domogik_version = SP_params.getString("DOMOGIK-VERSION", "");
+                String domogik_version = prefUtils.GetDomogikVersion();
                 try {
                     tags.put("domogik_version", domogik_version);
                 } catch (JSONException e) {
@@ -101,7 +98,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                String deviceid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                String deviceid = Settings.Secure.getString(domodroid.GetInstance().getContentResolver(), Settings.Secure.ANDROID_ID);
                 try {
                     metrics.put("id", deviceid);
                 } catch (JSONException e) {
@@ -117,14 +114,14 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    maxmemavailable = Float.valueOf(info.maxMemory());
+                    Float maxmemavailable = Float.valueOf(info.maxMemory());
                     maxmemavailable = maxmemavailable / 1024; //in KB
                     maxmemavailable = maxmemavailable / 1024; //in MB
                     measurements.put("memory_total", df.format(maxmemavailable));
                     measurements.put("unit", 1);
-                    freeSize = Float.valueOf(info.freeMemory());
-                    totalAllocatedSize = Float.valueOf(info.totalMemory());
-                    usedSize = totalAllocatedSize - freeSize;
+                    Float freeSize = Float.valueOf(info.freeMemory());
+                    Float totalAllocatedSize = Float.valueOf(info.totalMemory());
+                    Float usedSize = totalAllocatedSize - freeSize;
                     freeSize = freeSize / 1024; //in KB
                     freeSize = freeSize / 1024; //in MB
                     totalAllocatedSize = totalAllocatedSize / 1024; //in KB
@@ -162,7 +159,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
     }
 
     public static String POST(String url) {
-        InputStream inputStream = null;
+        InputStream inputStream;
         String result = "";
         try {
             HttpClient httpclient = new DefaultHttpClient();
@@ -195,7 +192,7 @@ public class MetricsServiceReceiver extends BroadcastReceiver {
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String result = "";
         while ((line = bufferedReader.readLine()) != null)
             result += line;

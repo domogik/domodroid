@@ -18,11 +18,8 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -41,45 +38,40 @@ import rinor.send_command;
 public class Graphical_Trigger extends Basic_Graphical_widget implements OnClickListener {
 
     private Graphical_Trigger_Button trigger;
-    private String address;
-    private Handler handler;
+
     private Thread threadCommande;
-    private String type;
     private String command;
-    public static FrameLayout container = null;
-    public static FrameLayout myself = null;
+    public FrameLayout container = null;
+    public FrameLayout myself = null;
     private static String mytag;
-    private Message msg;
+
     private String command_id;
     private String command_type;
 
     private final Entity_Feature feature;
     private final int session_type;
-    private final SharedPreferences params;
     private JSONObject jparam;
 
     public Graphical_Trigger(tracerengine Trac,
-                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                             final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                             final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Trigger(tracerengine Trac,
-                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                             final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                             final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                             final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         onCreate();
     }
 
     private void onCreate() {
-        this.address = feature.getAddress();
+        String address = feature.getAddress();
         String state_key = feature.getState_key();
         int dev_id = feature.getDevId();
         String parameters = feature.getParameters();
@@ -130,7 +122,7 @@ public class Graphical_Trigger extends Basic_Graphical_widget implements OnClick
         }
 
         String[] model = feature.getDevice_type_id().split("\\.");
-        type = model[0];
+        String type = model[0];
 
         TextView state = new TextView(activity);
         state.setTextColor(Color.BLACK);

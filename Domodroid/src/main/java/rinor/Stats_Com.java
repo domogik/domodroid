@@ -1,9 +1,9 @@
 package rinor;
 
+import android.util.Log;
+
 import java.util.Timer;
 import java.util.TimerTask;
-
-import android.util.Log;
 
 //import com.orhanobut.logger.Logger;
 
@@ -106,9 +106,9 @@ public class Stats_Com {
 
     private String get_Period_String(int seconds) {
         String result = "";
-        int hours = 0;
-        int minutes = 0;
-        int reste = 0;
+        int hours;
+        int minutes;
+        int reste;
 
         if (seconds != 0) {
 

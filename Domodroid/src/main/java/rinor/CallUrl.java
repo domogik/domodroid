@@ -25,14 +25,15 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static activities.Activity_Main.context;
+import applications.domodroid;
+import database.WidgetUpdate;
 
 /**
  * Created by fritz on 07/09/15.
  * Call with url,login,password,timeout
  * all those parameters should be String
  */
-public class CallUrl extends AsyncTask<String, Void, String> {
+class CallUrl extends AsyncTask<String, Void, String> {
     private final String mytag = this.getClass().getName();
     private boolean alreadyTriedAuthenticating = false;
     private Stats_Com stats_com = Stats_Com.getInstance();
@@ -49,8 +50,8 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         int timeout = Integer.parseInt(uri[3]);
         Boolean SSL = Boolean.valueOf(uri[4]);
         String result = "";
-        if (Abstract.Connectivity.IsInternetAvailable()) {
-            String responseString = "ERROR";
+        if (domodroid.instance.isConnected()) {
+            result = "ERROR";
             if (!SSL) {
                 try {
                     // Set timeout
@@ -59,7 +60,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
                     HttpConnectionParams.setSoTimeout(httpParameters, timeout);
                     DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
                     httpclient.getCredentialsProvider().setCredentials(new AuthScope(null, -1), new UsernamePasswordCredentials(login + ":" + password));
-                    Log.e("connect_string", "url=" + url.toString());
+                    Log.e("connect_string", "url=" + url);
                     HttpGet httpget = new HttpGet(url);
                     httpget.addHeader("Authorization", "Basic " + Base64.encodeToString((login + ":" + password).getBytes(), Base64.NO_WRAP));
                     final HttpResponse response;
@@ -120,7 +121,7 @@ public class CallUrl extends AsyncTask<String, Void, String> {
     protected void onPreExecute() {
         // This method will called during doInBackground is in process
         // Here you can for example show a ProgressDialog
-        Toast.makeText(context, R.string.command_sending, Toast.LENGTH_SHORT).show();
+        Toast.makeText(domodroid.GetInstance(), R.string.command_sending, Toast.LENGTH_SHORT).show();
     }
 
     protected void onPostExecute(String string) {
@@ -129,26 +130,29 @@ public class CallUrl extends AsyncTask<String, Void, String> {
         // switch send command answer
         switch (string) {
             case "ERROR":
-                Toast.makeText(context, R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
-                Toast.makeText(context, R.string.rest_connection_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rinor_command_exception, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rest_connection_error, Toast.LENGTH_LONG).show();
                 break;
             case "NO CONNECTION":
-                Toast.makeText(context, R.string.no_connection_send_command, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.no_connection_send_command, Toast.LENGTH_LONG).show();
                 break;
             case "UnknownHostException":
-                Toast.makeText(context, R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.host_un_resolvable, Toast.LENGTH_LONG).show();
                 break;
             case "ConnectTimeoutException":
-                Toast.makeText(context, R.string.timout_rest, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.timout_rest, Toast.LENGTH_LONG).show();
                 break;
             case "HttpHostConnectException":
-                Toast.makeText(context, R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rest_host_connection_exception, Toast.LENGTH_LONG).show();
                 break;
             case "IOException":
-                Toast.makeText(context, R.string.rest_io_connection_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.rest_io_connection_error, Toast.LENGTH_LONG).show();
                 break;
             default:
-                Toast.makeText(context, R.string.command_sent, Toast.LENGTH_SHORT).show();
+                Toast.makeText(domodroid.GetInstance(), R.string.command_sent, Toast.LENGTH_SHORT).show();
+                // Todo check if connected to MQ before if not ask immediate refresh with rest.
+                WidgetUpdate.getInstance().eventsManager.cache_out_of_date = true;
+                WidgetUpdate.getInstance().wakeup();
                 break;
         }
     }

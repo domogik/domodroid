@@ -17,30 +17,25 @@
  */
 package widgets;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import activities.Gradients_Manager;
-
-import org.domogik.domodroid13.R;
-
-import rinor.Stats_Com;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-
-import misc.tracerengine;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
+
+import org.domogik.domodroid13.R;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import activities.Gradients_Manager;
+import misc.tracerengine;
+import rinor.Stats_Com;
 
 public class Com_Stats extends FrameLayout {
 
@@ -127,9 +122,9 @@ public class Com_Stats extends FrameLayout {
         period_eventsPS = (TextView) findViewById(R.id.PeventsPS);
         period_eventsBS = (TextView) findViewById(R.id.PeventsBS);
 
-        handler = new Handler() {
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
+            public boolean handleMessage(Message msg) {
                 if (msg.what == 0) {
                     //Message from timer expired
                     if (stats != null) {
@@ -152,11 +147,12 @@ public class Com_Stats extends FrameLayout {
                         period_eventsBR.setText(Integer.toString(Stats_Com.periodic_events_recv_bytes));
                         period_eventsPS.setText(Integer.toString(Stats_Com.periodic_events_sent_packets));
                         period_eventsBS.setText(Integer.toString(Stats_Com.periodic_events_sent_bytes));
-                   }
+                    }
                 }
+                return true;
             }
 
-        };
+        });
         Tracer.i(mytag, "Instance created");
         Timer();
 

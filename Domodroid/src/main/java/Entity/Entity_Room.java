@@ -19,8 +19,8 @@ package Entity;
 
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 
+import Abstract.pref_utils;
 import database.DomodroidDB;
 import misc.tracerengine;
 
@@ -31,17 +31,16 @@ public class Entity_Room {
     private String name;
     private final Activity activity;
     private tracerengine Tracer = null;
-    private final SharedPreferences params;
 
-
-    public Entity_Room(SharedPreferences params, tracerengine Trac, Activity activity, int area_id, String description, int id, String name) {
+    public Entity_Room(tracerengine Trac, Activity activity, int area_id, String description, int id, String name) {
         this.area_id = area_id;
         this.description = description;
         this.id = id;
         this.name = name;
         this.Tracer = Trac;
         this.activity = activity;
-        this.params = params;
+        pref_utils prefUtils = new pref_utils();
+
     }
 
 
@@ -86,7 +85,7 @@ public class Entity_Room {
 
     public String getIcon_name() {
         String iconName = "unknow";
-        DomodroidDB domodb = new DomodroidDB(Tracer, activity, params);
+        DomodroidDB domodb = DomodroidDB.getInstance(Tracer, activity);
         domodb.owner = "entity_room";
         try {
             iconName = domodb.requestIcons(id, "room").getValue();

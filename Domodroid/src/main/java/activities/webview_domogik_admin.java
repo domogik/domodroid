@@ -1,11 +1,10 @@
 package activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.webkit.SslErrorHandler;
@@ -16,6 +15,9 @@ import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
 
+import Abstract.pref_utils;
+import applications.domodroid;
+
 /**
  * Created by tiki on 24/12/2016.
  */
@@ -23,12 +25,13 @@ import org.domogik.domodroid13.R;
 public class webview_domogik_admin extends Activity {
 
     private WebView webView;
-    private SharedPreferences SP_params;
     private WebView myWebView;
+    private pref_utils prefUtils;
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SP_params = PreferenceManager.getDefaultSharedPreferences(this);
+        prefUtils = new pref_utils();
 
         setContentView(R.layout.domogik_admin_webview);
         myWebView = (WebView) findViewById(R.id.webview);
@@ -37,27 +40,28 @@ public class webview_domogik_admin extends Activity {
         webSettings.setJavaScriptEnabled(true);
 
         myWebView.setWebViewClient(new MyWebViewClient());
-        if (Abstract.Connectivity.IsInternetAvailable()) {
+        if (domodroid.instance.isConnected()) {
             String url;
             String port;
-            Boolean SSL = false;
+            //Boolean SSL = false;
 
-            if (Abstract.Connectivity.on_prefered_Wifi) {
+            if (domodroid.instance.on_preferred_Wifi) {
                 //If connected to default SSID use local adress
-                url = SP_params.getString("rinorIP", "1.1.1.1");
-                port = SP_params.getString("rinorPort", "");
-                SSL = SP_params.getBoolean("ssl_activate", false);
+                url = prefUtils.GetRestIp();
+                port = prefUtils.GetRestPort();
+                //SSL = prefUtils.GetRestSsl();
             } else {
                 //If not connected to default SSID use external adress
-                url = SP_params.getString("rinorexternal_IP", "1.1.1.1");
-                port = SP_params.getString("rinor_external_Port", "");
-                SSL = SP_params.getBoolean("ssl_external_activate", false);
+                url = prefUtils.GetExternalRestIp();
+                port = prefUtils.GetExternalRestPort();
+                //SSL = prefUtils.GetExternalRestSsl();
             }
-            if (!SSL) {
-                myWebView.loadUrl("http://" + url + ":" + port);
+            /*if (!SSL) {
+                myWebView.loadUrl(url + ":" + port);
             } else {
                 myWebView.loadUrl("https://" + url + ":" + port);
-            }
+            }*/
+            myWebView.loadUrl(url + ":" + port);
         } else {
             Toast.makeText(this, R.string.no_connection, Toast.LENGTH_LONG).show();
             this.finish();
@@ -81,7 +85,7 @@ public class webview_domogik_admin extends Activity {
         //Allow to open webview even if untrusted SSL cert
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            if (!SP_params.getBoolean("SSL_Trusted", false)) {
+            if (!prefUtils.GetSslTrusted()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(myWebView.getContext());
                 int message;
                 switch (error.getPrimaryError()) {
@@ -110,9 +114,7 @@ public class webview_domogik_admin extends Activity {
                 builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor prefeditor = SP_params.edit();
-                        prefeditor.putBoolean("SSL_Trusted", true);
-                        prefeditor.commit();
+                        prefUtils.SetSslTrusted(true);
                         handler.proceed();
                     }
                 });

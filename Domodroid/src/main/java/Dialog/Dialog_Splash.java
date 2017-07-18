@@ -1,13 +1,13 @@
 package Dialog;
 
-import org.domogik.domodroid13.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+
+import org.domogik.domodroid13.R;
 
 public class Dialog_Splash extends Dialog implements OnClickListener {
     private final Button okButton;

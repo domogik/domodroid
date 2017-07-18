@@ -18,11 +18,9 @@
 package widgets;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Message;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -50,14 +48,11 @@ import rinor.send_command;
 public class Graphical_Info_commands extends Basic_Graphical_widget {
 
 
-    private LinearLayout featurePan2;
     private View featurePan2_buttons;
     private EditText value1 = null;
-    private Message msg;
+
     private static String mytag;
-    public static FrameLayout container = null;
-    private static FrameLayout myself = null;
-    private Boolean realtime = false;
+    public FrameLayout container = null;
     private int dpiClassification;
     private JSONObject jparam;
     private String command_id = null;
@@ -68,25 +63,23 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
 
     private final Entity_Feature feature;
     private final int session_type;
-    private final SharedPreferences params;
+
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                   final Entity_Feature feature, Handler handler) {
-        super(params, activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                                   final Entity_Feature feature) {
+        super(activity, Trac, feature.getId(), feature.getDescription(), feature.getState_key(), feature.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature;
-        this.params = params;
         this.session_type = session_type;
         onCreate();
     }
 
     public Graphical_Info_commands(tracerengine Trac,
-                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type, SharedPreferences params,
-                                   final Entity_Map feature_map, Handler handler) {
-        super(params, activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag, container, handler);
+                                   final Activity activity, int widgetSize, int session_type, int place_id, String place_type,
+                                   final Entity_Map feature_map) {
+        super(activity, Trac, feature_map.getId(), feature_map.getDescription(), feature_map.getState_key(), feature_map.getIcon_name(), widgetSize, place_id, place_type, mytag);
         this.feature = feature_map;
         this.session_type = session_type;
-        this.params = params;
         onCreate();
     }
 
@@ -102,7 +95,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
         } catch (Exception e) {
             stateS = state_key;
         }
-        myself = this;
+        FrameLayout myself = this;
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         //Label Text size according to the screen size
@@ -133,7 +126,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 tv_edittext = new TextView(activity);
                 tv_edittext.setTextSize(20.0f);
                 //translate this command_type
-                String command_type_display = "";
+                String command_type_display;
                 try {
                     command_type_display = getContext().getString(translate.do_translate(getContext(), Tracer, command_type[current_parameter]));
                 } catch (Exception e1) {
@@ -150,7 +143,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                 ed.setTextSize(18);
                 ed.setTextColor(Color.BLACK);
                 ed.setMinWidth((int) (size120));
-                featurePan2 = new LinearLayout(activity);
+                LinearLayout featurePan2 = new LinearLayout(activity);
                 featurePan2.setPadding(5, 10, 5, 10);
                 featurePan2.addView(tv_edittext);
                 featurePan2.addView(ed);
@@ -183,7 +176,6 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
     }
 
     private class CommandeThread extends AsyncTask<Void, Integer, Void> {
-        // TODO change this to use the send_commands method
         @Override
         protected Void doInBackground(Void... params) {
             Handler handler = new Handler(activity.getMainLooper());
@@ -208,9 +200,7 @@ public class Graphical_Info_commands extends Basic_Graphical_widget {
                                      Tracer.i(mytag, "Sending to Rinor : <" + state_progress + ">");
                                      JSONObject json_Ack = null;
                                      try {
-                                         //new CallUrl().execute(Url2send, login, password, "3000", String.valueOf(SSL));
                                          send_command.send_it(activity, Tracer, command_id, null, state_progress, api_version);
-                                         //json_Ack = Rest_com.connect_jsonobject(Url2send,login,password,3000);
                                          //Clean all text from allEds
                                          for (int i = 0; i < allEds.size(); i++) {
                                              allEds.get(i).setText("");

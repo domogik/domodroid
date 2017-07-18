@@ -7,7 +7,7 @@ import org.junit.Test;
  * Created by tiki on 09/06/2016.
  */
 public class Entity_clientTest {
-    Entity_client client = new Entity_client(0, null, null, null, 0);
+    private final Entity_client client = new Entity_client(0, null, null,  0);
 
     @Test
     public void testGetClientType() throws Exception {
@@ -100,8 +100,4 @@ public class Entity_clientTest {
         Assert.assertEquals(true, type);
     }
 
-    @Test
-    public void testGetClientHandler() throws Exception {
-        //// TODO: 09/06/2016 handler in test
-    }
 }

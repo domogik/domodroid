@@ -22,6 +22,7 @@
     $ 1.4
       % Version 33
       _ 2017-xx-xx
+      * #159 Remove white screen at start.
       * #157 Refresh sensor value after a command is sent.
       * #37 Widget OpenstreetMap as an auto update position mechanism.
       * Close #156 Don't ask user preferred wifi at each sync.

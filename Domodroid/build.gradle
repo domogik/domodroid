@@ -57,12 +57,12 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
-    compile 'org.zeromq:jeromq:0.3.6'
+    compile 'org.zeromq:jeromq:0.4.2'
     // Acra Application Crash Reports for Android libraries
     compile 'ch.acra:acra:4.9.2'
     // Anr catch Application Not Responding
@@ -71,9 +71,9 @@ dependencies {
     compile 'com.squareup.leakcanary:leakcanary-android:1.5'
 
     // Android ago is used to display a duration from now to the past
-    compile 'com.github.curioustechizen.android-ago:library:1.3.2'
+    compile 'com.github.curioustechizen.android-ago:library:1.3.3'
     // Openstreetmap api lib to dsiplay a mpa widget
-    compile 'org.osmdroid:osmdroid-android:5.6.4'
+    compile 'org.osmdroid:osmdroid-android:5.6.5'
     // Slider preferences
     compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     // Test libraries

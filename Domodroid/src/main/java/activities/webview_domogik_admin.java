@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,8 +28,8 @@ public class webview_domogik_admin extends Activity {
 
     private WebView myWebView;
     private pref_utils prefUtils;
-    boolean loadingFinished = true;
-    boolean redirect = false;
+    private boolean loadingFinished = true;
+    private boolean redirect = false;
 
     @SuppressLint("SetJavaScriptEnabled")
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class webview_domogik_admin extends Activity {
                     WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 loadingFinished = false;
-                this.dialog.setMessage("Loading...");
+                this.dialog.setMessage(getApplicationContext().getString(R.string.loading));
                 this.dialog.setCancelable(false);
                 this.dialog.show();
             }

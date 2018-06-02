@@ -850,6 +850,8 @@
     <string name="Switch">Interrupteur</string>
     <string name="engine_speed">Vitesse Moteur</string>
     <string name="vehicle_speed">Vitesse Véhicule</string>
+    <string name="no_connection">Pas de connexion</string>
+    <string name="send_alert">Envoyer alerte</string>
     <string name="history_item_number">Nb de valeur a afficher dans l\'historique</string>
     <string name="LOGVIEW">Montrer le fichier de Log</string>
     <string name="mq_settings">Configuration de la MQ</string>
@@ -884,4 +886,5 @@
     <string name="room_deleted">Pièce supprimée</string>
     <string name="widget_added">Widget ajouté</string>
     <string name="widget_replace_somewher">Placez-le à un nouvel endroit.</string>
+    <string name="empty">Vide</string>
 </resources>

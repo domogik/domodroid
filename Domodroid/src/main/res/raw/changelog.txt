@@ -20,6 +20,8 @@
   </head>
   <body>
     $ 1.4
+      % Version 36
+      _ 2018-xx-XX
       % Version 35
       _ 2018-10-29
       * Correct SQL injection #165

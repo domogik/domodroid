@@ -1110,7 +1110,12 @@ public class Dialog_Synchronize extends Dialog implements OnClickListener {
                                     parent_again = true;
                                 }
                             }
-                            parent_type = parent_type.replace("DT_", "");
+                            try {
+                                parent_type = parent_type.replace("DT_", "");
+                            } catch (Exception e) {
+                                Tracer.e(mytag, "ERROR while try to convert data_type!!!! ");
+                                parent_type="";
+                            }
                             parent_type = parent_type.toLowerCase();
                             try {
                                 device_feature1.putOpt("value_type", parent_type);

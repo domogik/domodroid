@@ -20,6 +20,9 @@
   </head>
   <body>
     $ 1.4
+      % Version 35
+      _ 2018-10-29
+      * Correct SQL injection #165
       % Version 34
       _ 2018-10-29
       * Correct an error while parsing device commands

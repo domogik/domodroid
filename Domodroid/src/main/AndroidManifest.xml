@@ -70,7 +70,8 @@
         <provider
             android:name="database.DmdContentProvider"
             android:authorities="database.DmdContentProvider"
-            android:multiprocess="true" />
+            android:multiprocess="true"
+            android:exported="false"/>
 
         <!-- AppWidets widget not used for the moment
         <receiver android:name="appWidgets.AppWidget">

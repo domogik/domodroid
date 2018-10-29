@@ -21,7 +21,7 @@
   <body>
     $ 1.4
       % Version 34
-      _ 2018-xx-xx
+      _ 2018-10-29
       * Correct an error while parsing device commands
       * #38 fr vigipollen plugin
       * #38 for vigipollen plugin

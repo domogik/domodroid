@@ -94,24 +94,24 @@ public class WidgetUpdate {
     private static final Handler[] parent = new Handler[3];
     private pref_utils prefUtils;
 
-	/*
+    /*
      * This class is a background engine
-	 * 		On instantiation, it connects to Rinor server, and submit queries 
-	 * 		each 'update' timer, to update local database values for all known devices
-	 * When variable 'activated' is set to false, the thread is kept alive, 
-	 *     but each timer is ignored (no more requests to server...)
-	 * When variable 'activated' is true, each timer generates a database update with server's response
-	 */
+     * 		On instantiation, it connects to Rinor server, and submit queries
+     * 		each 'update' timer, to update local database values for all known devices
+     * When variable 'activated' is set to false, the thread is kept alive,
+     *     but each timer is ignored (no more requests to server...)
+     * When variable 'activated' is true, each timer generates a database update with server's response
+     */
     /*
      * New concept introduced by Doume at 2013/02/15
-	 * This engine will maintain a cache of state values
-	 * This cache will be updated after each request to server (in parallel to database during transition phase)
-	 * 	When a value change, this engine will notify each client having subscribed to the device
-	 * 		for an immediate screen update
-	 * 		so, clients have not to use anymore a timer to display the changes
-	 * May be in future, this engine will also use Rest events with server, to avoid
-	 * 		use of timer and delayed updates
-	 */
+     * This engine will maintain a cache of state values
+     * This cache will be updated after each request to server (in parallel to database during transition phase)
+     * 	When a value change, this engine will notify each client having subscribed to the device
+     * 		for an immediate screen update
+     * 		so, clients have not to use anymore a timer to display the changes
+     * May be in future, this engine will also use Rest events with server, to avoid
+     * 		use of timer and delayed updates
+     */
 
     /*******************************************************************************
      * Internal Constructor
@@ -792,7 +792,7 @@ public class WidgetUpdate {
                             } else if (api_version == 0.9f) {
                                 //load timestamp apps was closed
                                 String sensor_saved_timestamp = prefUtils.GetSensorSavedTimestamp();
-                                Log.e("#124 sensor_timestamp", sensor_saved_timestamp);
+                                Log.e("#124 sensor_timestamp: ", sensor_saved_timestamp);
 
                                 //Modify request to match the timestamp
                                 String request_since;
@@ -818,11 +818,16 @@ public class WidgetUpdate {
                                 }
                                 Tracer.d(mytag, "json_widget_state for 0.9 API=" + json_widget_state_0_6.toString());
 
-                                String strJson = prefUtils.GetSensorSavedValue();
-                                if (strJson != null) {
+                                String strJson;
+                                try {
+                                    Tracer.d(mytag, "124 prefUtils.GetSensorSavedValue(): " + prefUtils.GetSensorSavedValue());
+                                    strJson = prefUtils.GetSensorSavedValue();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    strJson = null;
+                                }
+                                if (strJson != null && strJson != "0") {
                                     //TODO load stored last_value
-                                    JSONArray jsonData = new JSONArray(strJson);
-                                    Log.e("#124 json saved", jsonData.toString());
                                     String tmp_key;
                                     for (int i = 0; i < json_widget_state_0_6.length(); i++) {
                                         json_widget_state_0_4.put(json_widget_state_0_6.getJSONObject(i));
@@ -834,33 +839,39 @@ public class WidgetUpdate {
                                     final JSONArray finalJson_widget_state_0_ = json_widget_state_0_6;
                                     activity.runOnUiThread(new Runnable() {
                                         public void run() {
-                                            Toast.makeText(activity, "json length from rest sensor/since= " + finalJson_widget_state_0_.length(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(activity, "json length from rest sensor/since= " + finalJson_widget_state_0_.length(), Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                    for (int i = 0; i < jsonData.length(); i++) {
-                                        json_widget_state_0_4.put(jsonData.getJSONObject(i));
-                                        Log.e("#124", "json creating from saved: " + jsonData.getJSONObject(i).toString());
-                                        Log.e("#124", "json creating from saved: " + json_widget_state_0_4.length());
+                                    try {
+                                        JSONArray jsonData = new JSONArray(strJson);
+                                        Log.e("#124 json saved: ", jsonData.toString());
+                                        for (int i = 0; i < jsonData.length(); i++) {
+                                            json_widget_state_0_4.put(jsonData.getJSONObject(i));
+                                            Log.e("#124", "json creating from saved: " + jsonData.getJSONObject(i).toString());
+                                            Log.e("#124", "json creating from saved: " + json_widget_state_0_4.length());
 
+                                        }
+                                        //#124 Todo compare saved value and load value from domogik to remove old ones.
+
+                                        //TODO remove when ok
+                                        //Display message something changed since last update
+                                        final JSONArray finalJson_widget_state_0_1 = jsonData;
+                                        activity.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast.makeText(activity, "json length from from saved: " + finalJson_widget_state_0_1.length(), Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                        Log.e("#124", "json combined: " + json_widget_state_0_4.toString());
+                                        //TODO remove when ok
+                                        final JSONArray finalJson_widget_state_0_2 = json_widget_state_0_4;
+                                        activity.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toast.makeText(activity, "json total: " + finalJson_widget_state_0_2.length(), Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                    //#124 Todo compare saved value and load value from domogik to remove old ones.
-
-                                    //TODO remove when ok
-                                    //Display message something changed since last update
-                                    final JSONArray finalJson_widget_state_0_1 = jsonData;
-                                    activity.runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            Toast.makeText(activity, "json length from from saved: " + finalJson_widget_state_0_1.length(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    Log.e("#124", "json combined: " + json_widget_state_0_4.toString());
-                                    //TODO remove when ok
-                                    final JSONArray finalJson_widget_state_0_2 = json_widget_state_0_4;
-                                    activity.runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            Toast.makeText(activity, "json total: " + finalJson_widget_state_0_2.length(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
                                 } else {
                                     Tracer.d(mytag, "#124 json saved is null");
                                     activity.runOnUiThread(new Runnable() {
@@ -922,7 +933,9 @@ public class WidgetUpdate {
                                         }
                                     } else if (api_version >= 0.9f) {
                                         //todo be sure last_device_update is in the right timestamp format???
-                                        request = request + "since/" + last_device_update;
+                                        //TODO #124
+                                        //Tracer.e(mytag, "#124 last_device_update to use in since: " + prefUtils.GetSensorSavedTimestamp());
+                                        request = request + "since/" + prefUtils.GetSensorSavedTimestamp();
                                         json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                         if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                             // Cannot get data_type from Rinor server.....
@@ -979,7 +992,7 @@ public class WidgetUpdate {
                         // TODO handle "Host name may not be null" to avoid white page in domodroid
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(activity, R.string.Error + e.toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, R.string.Error + e.toString(), Toast.LENGTH_LONG).show();
                             }
                         });
                         return null;
@@ -1007,8 +1020,8 @@ public class WidgetUpdate {
      */
     /*
      * Private method to update values in cache, and eventually notify all connected clients
-	 * Parameter : result of Rest request (multiple stats)
-	 */
+     * Parameter : result of Rest request (multiple stats)
+     */
     private int update_cache(JSONObject json_widget_state) {
         int updated_items = 0;
         Boolean to_process = false;
@@ -1399,7 +1412,7 @@ public class WidgetUpdate {
             order) {
         domodb.move_one_area(id, place_id, place_type, order);
     }
-        /*
+    /*
      * This one allow room to permut (for moving up or down)
      */
 

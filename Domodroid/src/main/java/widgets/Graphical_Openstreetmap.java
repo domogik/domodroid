@@ -1,17 +1,17 @@
 /*
  * This file is part of Domodroid.
- * 
+ *
  * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
- * 
+ *
  * Domodroid is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -184,8 +184,8 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
         //================================================================================
         /*
          * New mechanism to be notified by widgetupdate engine when our TV_Value is changed
-		 * 
-		 */
+         *
+         */
         WidgetUpdate cache_engine = WidgetUpdate.getInstance();
         if (cache_engine != null) {
             session = new Entity_client(dev_id, state_key, mytag, session_type);
@@ -296,11 +296,14 @@ public class Graphical_Openstreetmap extends Basic_Graphical_widget implements O
     }
 
     private void display_position_on_map() {
-        //Get value display to set lat/lon of current position
-        String[] position = TV_Value.getText().toString().split(",");
-        Float lat = Float.parseFloat(position[0]);
-        Float lon = Float.parseFloat(position[1]);
-
+        Float lat = Float.parseFloat("0");
+        Float lon = Float.parseFloat("0");
+        if (TV_Value.getText().toString() != null && TV_Value.getText().toString() != "") {
+            //Get value display to set lat/lon of current position
+            String[] position = TV_Value.getText().toString().split(",");
+            lat = Float.parseFloat(position[0]);
+            lon = Float.parseFloat(position[1]);
+        }
         osmMapview = new org.osmdroid.views.MapView(activity);
         //important! set your user agent to prevent getting banned from the osm servers
         org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);

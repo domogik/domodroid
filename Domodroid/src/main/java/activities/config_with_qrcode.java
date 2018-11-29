@@ -200,7 +200,13 @@ public class config_with_qrcode extends AppCompatActivity {
                     Tracer.d("preference", "We got a result from qrcode scanner:" + contents);
                     try {
                         JSONObject jsonresult;
-                        jsonresult = new JSONObject(contents);
+                        contents=contents.replace("u'","'");
+                        try{
+                            jsonresult = new JSONObject(contents);
+                        } catch (Exception e){
+                            Tracer.d(mytag, "Error parsing jsonresult:" +e.toString());
+                            jsonresult = new JSONObject();
+                        }
                         String admin_url = jsonresult.getString("admin_url");
                         String[] separated = admin_url.split("://");
                         String[] separatedbis = separated[1].split(":");
@@ -254,20 +260,20 @@ public class config_with_qrcode extends AppCompatActivity {
                         External_IP = "";
                         External_port = "";
                         try {
-                            External_IP = jsonresult.getString("u'external_ip'").replace("u'", "").replace("'", "");
-                            External_port = jsonresult.getString("u'external_port'").replace("u'", "").replace("'", "");
+                            External_IP = jsonresult.getString("external_ip");
+                            External_port = jsonresult.getString("external_port");
                         } catch (Exception e1) {
                             Tracer.e(mytag, "ERROR getting external IP PORT information");
                         }
                         external_ssl = false;
                         try {
-                            if (jsonresult.getString("u'external_ssl'").toLowerCase().equals("u'y'")) {
+                            if (jsonresult.getString("external_ssl").toLowerCase().equals("y")) {
                                 external_ssl = true;
                             }
                         } catch (Exception e1) {
                             Tracer.e(mytag, "ERROR getting external SSL information");
                         }
-                        butler_name = jsonresult.getString("butler_name").replace("u'", "").replace("'", "");
+                        butler_name = jsonresult.getString("butler_name");
                         handler.sendEmptyMessage(1);
                     } catch (JSONException e) {
                         Tracer.e(mytag, "Error parsing answer of qrcode to json: " + e.toString());

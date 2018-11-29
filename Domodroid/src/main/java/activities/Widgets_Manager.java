@@ -109,7 +109,14 @@ class Widgets_Manager {
 
             Tracer.i(mytag, "Call to process device : " + DevId + " Address : " + Address + " Value_type : " + Value_type + " Label : " + label + " Key : " + State_key);
             try {
-                if (Value_type.equals("binary")) {
+                if (aListFeature.getDevice_feature_model_id().startsWith("DT_CoordD")) {
+                    Graphical_Openstreetmap Openstreetmap = new Graphical_Openstreetmap(Tracer, activity,
+                            widgetSize, session_type, id, zone, aListFeature);
+                    Openstreetmap.setLayoutParams(layout_param);
+                    Openstreetmap.container = tmpPan;
+                    tmpPan.addView(Openstreetmap);
+                    Tracer.i(mytag, "   ==> Openstreetmap");
+                } else if (Value_type.equals("binary")) {
                     if (aListFeature.getDevice_type().equals("rgb_leds") && (State_key.equals("command"))) {
                         //ignore it : it'll have another device for Color, displaying the switch !)
                     } else {
@@ -240,7 +247,8 @@ class Widgets_Manager {
                         list.container = tmpPan;
                         tmpPan.addView(list);
                         Tracer.i(mytag, "   ==> Graphical_List");
-                    } else {
+                    }
+                    else {
                         //This is a DT_ColorRGB or DT_ColorCMYK
                         if (!aListFeature.getParameters().contains("command_type")) {
                             //sensor parts

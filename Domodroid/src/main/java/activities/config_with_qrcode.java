@@ -145,7 +145,12 @@ public class config_with_qrcode extends AppCompatActivity {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 contents = data.getStringExtra("SCAN_RESULT"); //this is the result
-                showDialog(config_with_qrcode.this, getString(R.string.qr_code_is_valid), contents, getString(R.string.continue1), getString(R.string.abort)).show();
+                //display the Qrcode result only for debug
+                if (pref_utils.prefs.getBoolean("LOG_VERBOSE", false) || pref_utils.prefs.getBoolean("LOG_DEBUG", false)) {
+                    showDialog(config_with_qrcode.this, getString(R.string.qr_code_is_valid), contents, getString(R.string.continue1), getString(R.string.abort)).show();
+                } else {
+                    showDialog(config_with_qrcode.this, getString(R.string.qr_code_is_valid), "", getString(R.string.continue1), getString(R.string.abort)).show();
+                }
             } else if (resultCode == RESULT_CANCELED) {
                 handler.sendEmptyMessage(24);
             }

@@ -9,6 +9,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.domogik.domodroid13.R;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zeromq.ZMQ;
@@ -16,6 +19,8 @@ import org.zeromq.ZMQ;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
+import Event.ConnectivityChangeEvent;
+import Event.Event_base_message;
 import applications.domodroid;
 import database.Cache_Feature_Element;
 import database.JSONParser;
@@ -44,6 +49,7 @@ public class Events_manager {
     private Boolean init_done = false;
     private Boolean com_broken = false;
     private Boolean sleeping = false;
+    private Boolean mq_sleeping = false;
     private float api_version;
     private String MQaddress;
     private String MQsubport;
@@ -114,6 +120,10 @@ public class Events_manager {
         });
         Tracer.w(mytag, "Events Manager ready");
         init_done = true;
+
+        //subscribe to message event.
+        EventBus.getDefault().register(this);
+
     }    //End of Constructor
 
     public void set_sleeping() {
@@ -125,9 +135,19 @@ public class Events_manager {
 		 */
     }
 
+    public void set_MQ_sleeping() {
+        Tracer.d(mytag, "Pause requested for MQ...");
+        mq_sleeping = true;
+    }
+
     public void wakeup() {
         Tracer.d(mytag, "Wake up requested...");
         sleeping = false;
+    }
+
+    public void MQ_wakeup() {
+        Tracer.d(mytag, "Wake up requested. for MQ..");
+        mq_sleeping = false;
     }
 
     /*
@@ -138,6 +158,25 @@ public class Events_manager {
         // to local handler, to complete the destroy
         Tracer.d(mytag, "events engine Destroy() requested : Let the Listener thread to exit !");
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Subscribe to Event_base_message
+     */
+    public void onEvent(ConnectivityChangeEvent ConnectivityChangeEvent) {
+        if (ConnectivityChangeEvent.isConnected()) {
+            if (!ConnectivityChangeEvent.getOn_preferred_Wifi()) {
+                //#141 find a way to stop mq on restore it after
+                Tracer.e(mytag, "Not on preferred wifi");
+                set_MQ_sleeping();
+                wakeup();
+            } else {
+                MQ_wakeup();
+            }
+        } else {
+            set_sleeping();
+        }
     }
 
     private void start_listener() {
@@ -204,7 +243,7 @@ public class Events_manager {
                             Tracer.d(mytag, "subscriber.subscribe(device.update)");
 
                             while (alive) {
-                                while (!sleeping) {
+                                while (!mq_sleeping) {
                                     String result = subscriber.recvStr(0);
                                     Tracer.i(mytag, "MQ information receive: ");
                                     Tracer.i(mytag, result);
@@ -245,6 +284,7 @@ public class Events_manager {
                                         break;
                                     }
                                 }
+                                Tracer.d(mytag, "MQ as been set to sleep");
                             }
                             subscriber.close();
                             zmqContext.term();

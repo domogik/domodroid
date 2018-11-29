@@ -350,6 +350,7 @@
     <string name="init_in_process">Initialization in process....</string>
     <string name="please_wait">Please wait....</string>
     <string name="loading_cache">Loading initial cache from Domogik server....</string>
+    <string name="loading">Loading...</string>
     <string name="go_Main">Display Main screen (views)</string>
     <string name="go_to_Map">Switch to map </string>
     <string name="map_option_start">Start directly on Map view</string>
@@ -1036,4 +1037,24 @@
     <string name="widget_added">Widget added</string>
     <string name="widget_replace_somewher">Place it somewhere else</string>
     <string name="empty">Empty</string>
+    <string name="vigilancecolordepartement">Vigilance Departement</string>
+    <string name="vigilancecolorcupressaceae">Vigilance Cupressaceae</string>
+    <string name="vigilancecolorhazel">Vigilance Hazel</string>
+    <string name="vigilancecoloralder">Vigilance Alder</string>
+    <string name="vigilancecolorpoplar">Vigilance Poplar</string>
+    <string name="vigilancecolorwillow">Vigilance Willow</string>
+    <string name="vigilancecolorash">Vigilance Ash</string>
+    <string name="vigilancecolorhomebeam">Vigilance Homebeam</string>
+    <string name="vigilancecolorbirsh">Vigilance Birsh</string>
+    <string name="vigilancecolorplane">Vigilance Plane</string>
+    <string name="vigilancecoloroak">Vigilance Oak</string>
+    <string name="vigilancecolorolive">Vigilance Olive</string>
+    <string name="vigilancecolorlinden">Vigilance Linden</string>
+    <string name="vigilancecolorchestnut">Vigilance Chestnut</string>
+    <string name="vigilancecolorsorrel">Vigilance Sorrel</string>
+    <string name="vigilancecolorgrasses">Vigilance Grasses</string>
+    <string name="vigilancecolorplantain">Vigilance Plantain</string>
+    <string name="vigilancecolornettles">Vigilance Nettles</string>
+    <string name="vigilancecolormugwort">Vigilance Mugwort</string>
+    <string name="vigilancecolorragweed">Vigilance Ragweed</string>
 </resources>

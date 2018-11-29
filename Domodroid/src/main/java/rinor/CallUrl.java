@@ -151,8 +151,11 @@ class CallUrl extends AsyncTask<String, Void, String> {
             default:
                 Toast.makeText(domodroid.GetInstance(), R.string.command_sent, Toast.LENGTH_SHORT).show();
                 // Todo check if connected to MQ before if not ask immediate refresh with rest.
-                WidgetUpdate.getInstance().eventsManager.cache_out_of_date = true;
-                WidgetUpdate.getInstance().wakeup();
+                // for the moment just refresh if outside wifi preferred network.
+                if (!domodroid.GetInstance().on_preferred_Wifi) {
+                    WidgetUpdate.getInstance().eventsManager.cache_out_of_date = true;
+                    WidgetUpdate.getInstance().wakeup();
+                }
                 break;
         }
     }

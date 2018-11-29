@@ -131,9 +131,11 @@ public class LogActivity extends AppCompatActivity {
             bufferedReader.close();
 
         } catch (FileNotFoundException e) {
+            Toast.makeText(getApplicationContext(), "Error in log " + e.toString(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Error in log " + e.toString(), Toast.LENGTH_LONG).show();
         }
     }
 

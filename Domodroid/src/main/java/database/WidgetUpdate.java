@@ -1167,11 +1167,11 @@ public class WidgetUpdate {
             last_position = cache_position;        //Keep the position, for next search
             if ((cache.get(cache_position).Value.equals(Val))) {
                 //value not changed
-                Tracer.i(mytag, "cache engine no value change for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
+                Tracer.v(mytag, "cache engine no value change for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
 
             } else {
                 //value changed : has to notify clients....
-                Tracer.i(mytag, "cache engine update value changed for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
+                Tracer.v(mytag, "cache engine update value changed for (" + dev_id + ") (" + skey + ") (" + Val + ") with timestamp=" + Value_timestamp);
                 cache.get(cache_position).Value = Val;
                 cache.get(cache_position).Value_timestamp = Value_timestamp;
                 result = true;

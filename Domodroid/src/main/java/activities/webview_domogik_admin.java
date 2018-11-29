@@ -2,7 +2,9 @@ package activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -24,9 +26,10 @@ import applications.domodroid;
 
 public class webview_domogik_admin extends Activity {
 
-    private WebView webView;
     private WebView myWebView;
     private pref_utils prefUtils;
+    private boolean loadingFinished = true;
+    private boolean redirect = false;
 
     @SuppressLint("SetJavaScriptEnabled")
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,32 @@ public class webview_domogik_admin extends Activity {
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        myWebView.setWebViewClient(new MyWebViewClient());
+        myWebView.setWebViewClient(new MyWebViewClient() {
+            private final ProgressDialog dialog = new ProgressDialog(webview_domogik_admin.this);
+
+            @Override
+            public void onPageStarted(
+                    WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                loadingFinished = false;
+                this.dialog.setMessage(getApplicationContext().getString(R.string.loading));
+                this.dialog.setCancelable(false);
+                this.dialog.show();
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (!redirect) {
+                    loadingFinished = true;
+                }
+
+                if (loadingFinished && !redirect) {
+                    this.dialog.dismiss();
+                } else {
+                    redirect = false;
+                }
+            }
+        });
         if (domodroid.instance.isConnected()) {
             String url;
             String port;
@@ -61,6 +89,11 @@ public class webview_domogik_admin extends Activity {
             } else {
                 myWebView.loadUrl("https://" + url + ":" + port);
             }*/
+            if (!loadingFinished) {
+                redirect = true;
+            }
+
+            loadingFinished = false;
             myWebView.loadUrl(url + ":" + port);
         } else {
             Toast.makeText(this, R.string.no_connection, Toast.LENGTH_LONG).show();

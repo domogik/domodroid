@@ -850,6 +850,8 @@
     <string name="Switch">Interrupteur</string>
     <string name="engine_speed">Vitesse Moteur</string>
     <string name="vehicle_speed">Vitesse Véhicule</string>
+    <string name="no_connection">Pas de connexion</string>
+    <string name="send_alert">Envoyer alerte</string>
     <string name="history_item_number">Nb de valeur a afficher dans l\'historique</string>
     <string name="LOGVIEW">Montrer le fichier de Log</string>
     <string name="mq_settings">Configuration de la MQ</string>
@@ -884,4 +886,25 @@
     <string name="room_deleted">Pièce supprimée</string>
     <string name="widget_added">Widget ajouté</string>
     <string name="widget_replace_somewher">Placez-le à un nouvel endroit.</string>
+    <string name="empty">Vide</string>
+    <string name="vigilancecolordepartement">Vigilance Département</string>
+    <string name="vigilancecolorcupressaceae">Vigilance Cupressacées</string>
+    <string name="vigilancecolorhazel">Vigilance Noisetier</string>
+    <string name="vigilancecoloralder">Vigilance Aulne</string>
+    <string name="vigilancecolorpoplar">Vigilance Peuplier</string>
+    <string name="vigilancecolorwillow">Vigilance Saule</string>
+    <string name="vigilancecolorash">Vigilance Frêne</string>
+    <string name="vigilancecolorhomebeam">Vigilance Charme</string>
+    <string name="vigilancecolorbirsh">Vigilance Bouleau</string>
+    <string name="vigilancecolorplane">Vigilance Platane</string>
+    <string name="vigilancecoloroak">Vigilance Chêne</string>
+    <string name="vigilancecolorolive">Vigilance Olivier</string>
+    <string name="vigilancecolorlinden">Vigilance Tilleul</string>
+    <string name="vigilancecolorchestnut">Vigilance Chataîgnier</string>
+    <string name="vigilancecolorsorrel">Vigilance Rumex</string>
+    <string name="vigilancecolorgrasses">Vigilance Graminées</string>
+    <string name="vigilancecolorplantain">Vigilance Plantain</string>
+    <string name="vigilancecolornettles">Vigilance Urticacées</string>
+    <string name="vigilancecolormugwort">Vigilance Armoises</string>
+    <string name="vigilancecolorragweed">Vigilance Ambroisies</string>
 </resources>

@@ -20,9 +20,28 @@
   </head>
   <body>
     $ 1.4
+      % Version 36
+      _ 2018-xx-XX
+      % Version 35
+      _ 2018-10-29
+      * Correct SQL injection #165
       % Version 34
-      _ 2017-xx-xx
-
+      _ 2018-10-29
+      * Correct an error while parsing device commands
+      * #38 fr vigipollen plugin
+      * #38 for vigipollen plugin
+      * #38 fr from transifex
+      * #38 br from transifex
+      * just update some dependencies
+      * #38 for admin web view
+      * Page Loading dialog box in admin view.
+      * Display log opening error in log view
+      * #153 Show QR code content only in debug or verbose log level
+      * #141 still working to cut MQ and reload it if not @ home.
+      * change log level for some value
+      * #157 update only if not connect to preferred wifi to avoid problems …
+      * updating library
+      * Working on #141 Stop Mq if connected outside home.
       % Version 33
       _ 2017-07-18
       * #159 Remove white screen at start.

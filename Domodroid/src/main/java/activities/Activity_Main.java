@@ -37,6 +37,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -555,6 +556,8 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
     public void onEvent(Event_to_navigate_house event) {
         try {
             historyPosition++;
+            Tracer.v(mytag, "add history " + event.getid() + " " + event.gettype());
+            history.add(historyPosition, new String[]{event.getid() + "", event.gettype()});
             loadWigets(event.getid(), event.gettype());
             //redraw the scrollview at the top position of the screen
             SV_Main_ScrollView.post(new Runnable() {
@@ -563,11 +566,11 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
                     SV_Main_ScrollView.scrollTo(0, 0);
                 }
             });
-            Tracer.v(mytag, "add history " + event.getid() + " " + event.gettype());
-            history.add(historyPosition, new String[]{event.getid() + "", event.gettype()});
+
         } catch (Exception e) {
             Tracer.e(mytag, "handler error into loadWidgets");
             Tracer.e("debug map bak", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -1206,9 +1209,16 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
     private void refresh() {
         try {
-            loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+        if (history != null) {
+            Log.e(mytag, String.valueOf(history));
+            if (String.valueOf(history) != "[]") {
+                //history.add(historyPosition, new String[]{"0", "root"});
+                loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+            }
+        }
         } catch (Exception e) {
             Tracer.e(mytag, "Can not refresh this view");
+            //e.printStackTrace();
         }
     }
 

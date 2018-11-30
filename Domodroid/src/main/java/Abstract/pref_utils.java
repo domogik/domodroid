@@ -61,7 +61,7 @@ public class pref_utils {
      * @return metrics checkbox from options
      */
     public boolean GetMetricsEnabled() {
-        return prefs.getBoolean("domodroid_metrics", true);
+        return prefs.getBoolean("domodroid_metrics", false);
     }
 
     /**

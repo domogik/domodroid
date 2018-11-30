@@ -1,17 +1,17 @@
 /*
  * This file is part of Domodroid.
- * 
+ *
  * Domodroid is Copyright (C) 2011 Pierre LAINE, Maxime CHOFARDET
- * 
+ *
  * Domodroid is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * Domodroid is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * Domodroid. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -1209,13 +1209,13 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
 
     private void refresh() {
         try {
-        if (history != null) {
-            Log.e(mytag, String.valueOf(history));
-            if (String.valueOf(history) != "[]") {
-                //history.add(historyPosition, new String[]{"0", "root"});
-                loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+            if (history != null) {
+                Log.e(mytag, String.valueOf(history));
+                if (String.valueOf(history) != "[]") {
+                    //history.add(historyPosition, new String[]{"0", "root"});
+                    loadWigets(Integer.parseInt(history.elementAt(historyPosition)[0]), history.elementAt(historyPosition)[1]);
+                }
             }
-        }
         } catch (Exception e) {
             Tracer.e(mytag, "Can not refresh this view");
             //e.printStackTrace();

@@ -4,7 +4,7 @@ apply plugin: 'hugo' // call after applying android plugin
 sourceCompatibility = 1.7 //changed from 1.6
 
 android {
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '28.0.3'
     compileSdkVersion 25
 
     //only if you use Apache packages

@@ -638,18 +638,18 @@ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
         if (prefUtils.GetDomogikApiVersion() >= 0.9f) {
             JSONArray cached_dump;
             if (WU_widgetUpdate != null) {
-                Tracer.d("#124", "dump cache");
+                Tracer.d(mytag + "#124", "dump cache");
                 try {
                     cached_dump = WU_widgetUpdate.dump_cache_to_json();
                     // save last value to sharedparams to load them later
-                    Tracer.d("#124", cached_dump.toString());
-                    Tracer.d("#124", "dump cached");
+                    Tracer.d(mytag + "#124", cached_dump.toString());
+                    Tracer.d(mytag + "#124", "dump cached");
                     // save current time stamp to know when the pass was exit.
                     long currentTimestamp = (System.currentTimeMillis() / 1000);
-                    Tracer.d("#124", "sensor_saved_timestamp: " + currentTimestamp);
+                    Tracer.d(mytag + "#124", "sensor_saved_timestamp: " + currentTimestamp);
                     prefUtils.SetSensorSavedValueAndTimestamp(cached_dump.toString(), String.valueOf(currentTimestamp));
                 } catch (JSONException e) {
-                    Tracer.e("#124", "sensor_saved at exit error");
+                    Tracer.e(mytag + "#124", "sensor_saved at exit error");
                     e.printStackTrace();
                 }
             }

@@ -831,8 +831,8 @@ public class WidgetUpdate {
                                     String tmp_key;
                                     for (int i = 0; i < json_widget_state_0_6.length(); i++) {
                                         json_widget_state_0_4.put(json_widget_state_0_6.getJSONObject(i));
-                                        Log.e("#124", "json creating from domogik: " + json_widget_state_0_6.getJSONObject(i).toString());
-                                        Log.e("#124", "json creating from domogik: " + json_widget_state_0_4.length());
+                                        Log.d(mytag + "#124", "json creating from domogik: " + json_widget_state_0_6.getJSONObject(i).toString());
+                                        //Log.e(mytag + "#124", "json creating from domogik: " + json_widget_state_0_4.length());
                                     }
                                     //TODO remove when ok
                                     // Display message something changed since last update
@@ -844,11 +844,11 @@ public class WidgetUpdate {
                                     });
                                     try {
                                         JSONArray jsonData = new JSONArray(strJson);
-                                        Log.e("#124 json saved: ", jsonData.toString());
+                                        Log.d(mytag + "#124 json saved: ", jsonData.toString());
                                         for (int i = 0; i < jsonData.length(); i++) {
                                             json_widget_state_0_4.put(jsonData.getJSONObject(i));
-                                            Log.e("#124", "json creating from saved: " + jsonData.getJSONObject(i).toString());
-                                            Log.e("#124", "json creating from saved: " + json_widget_state_0_4.length());
+                                            Log.d(mytag + "#124", "json creating from saved: " + jsonData.getJSONObject(i).toString());
+                                            //Log.e(mytag + "#124", "json creating from saved: " + json_widget_state_0_4.length());
 
                                         }
                                         //#124 Todo compare saved value and load value from domogik to remove old ones.
@@ -861,7 +861,7 @@ public class WidgetUpdate {
                                                 Toast.makeText(activity, "json length from from saved: " + finalJson_widget_state_0_1.length(), Toast.LENGTH_LONG).show();
                                             }
                                         });
-                                        Log.e("#124", "json combined: " + json_widget_state_0_4.toString());
+                                        Log.d(mytag + "#124", "json combined: " + json_widget_state_0_4.toString());
                                         //TODO remove when ok
                                         final JSONArray finalJson_widget_state_0_2 = json_widget_state_0_4;
                                         activity.runOnUiThread(new Runnable() {

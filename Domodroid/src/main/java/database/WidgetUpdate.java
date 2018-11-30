@@ -916,8 +916,7 @@ public class WidgetUpdate {
                                     //change url to get device instead of sensor
                                     request = request.replace("sensor", "device");
                                     //Grab device list
-                                    //if (api_version == 0.8f) {
-                                    if (api_version >= 0.8f) {
+                                    if (api_version == 0.8f) {
                                         json_device_state_0_4 = Rest_com.connect_jsonarray(activity, Tracer, request, 30000);
                                         if (json_widget_state_0_4 == null || (json_widget_state_0_4.toString().equals("[]"))) {
                                             // Cannot get data_type from Rinor server.....
@@ -932,7 +931,7 @@ public class WidgetUpdate {
                                             //todo stop Widgetupdate
                                             return null;
                                         }
-                                    /*} else if (api_version >= 0.9f) {
+                                    } else if (api_version >= 0.9f) {
                                         //todo be sure last_device_update is in the right timestamp format???
                                         //TODO #124
                                         //Tracer.e(mytag, "#124 last_device_update to use in since: " + prefUtils.GetSensorSavedTimestamp());
@@ -950,9 +949,9 @@ public class WidgetUpdate {
                                             EventBus.getDefault().post(new Event_base_message("device_list_error"));
                                             //todo stop Widgetupdate
                                             return null;
-                                        }*/
+                                        }
                                     }
-                                    Tracer.d(mytag, "json_widget_device for 0.8 API=" + json_device_state_0_4.toString());
+                                    Tracer.d(mytag, "json_widget_device update for 0.8 & more API=" + json_device_state_0_4.toString());
                                     //test if info_changed:
                                     for (int i = 0; i < json_device_state_0_4.length(); i++) {
                                         try {

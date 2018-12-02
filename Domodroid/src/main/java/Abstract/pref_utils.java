@@ -139,7 +139,6 @@ public class pref_utils {
     }
 
     /**
-     *
      * @param area_select area user want to start directly in
      */
     public void SetAreaToStartIn(String area_select) {
@@ -780,6 +779,16 @@ public class pref_utils {
      */
     public String GetSensorSavedValue() {
         return prefs.getString("sensor_saved_value", "0");
+    }
+
+    /**
+     * #124
+     *
+     * @param currentTimestamp timestamp
+     */
+    public void SetSensorSavedTimestamp(String currentTimestamp) {
+        editor.putString("sensor_saved_timestamp", currentTimestamp);
+        commit();
     }
 
     /**

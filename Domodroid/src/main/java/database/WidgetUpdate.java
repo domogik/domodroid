@@ -582,6 +582,8 @@ public class WidgetUpdate {
                         if (activated) {
                             try {
                                 Tracer.d(mytag, "new UpdateThread().execute() from timer");
+                                //To force get all value not only since a certain timestamp in API>0.9
+                                prefUtils.SetSensorSavedTimestamp("0");
                                 new UpdateThread().execute(); //on timer
                             } catch (Exception e) {
                                 Tracer.e(mytag, e.toString());
